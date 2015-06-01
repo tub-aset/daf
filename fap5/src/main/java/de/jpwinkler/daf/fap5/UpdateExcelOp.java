@@ -2,14 +2,16 @@ package de.jpwinkler.daf.fap5;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.commons.io.FileUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -26,7 +28,7 @@ public class UpdateExcelOp extends AbstractStepImpl implements ModelOperationImp
 
     private static final Logger LOGGER = Logger.getLogger(UpdateExcelOp.class.getName());
 
-    private static final int START_COLUMN = 23;
+    private static final int START_COLUMN = 24;
 
     private short percentFormat;
 
@@ -40,9 +42,16 @@ public class UpdateExcelOp extends AbstractStepImpl implements ModelOperationImp
         }
 
         try {
-            final String sourceExcel = getStringVariable("sourceExcel");
-            final String targetExcel = getStringVariable("targetExcel");
-            final Workbook workbook = new XSSFWorkbook(new File(sourceExcel));
+            final File excelFile = new File(getStringVariable("excelFile"));
+            final File backupExcelFile = new File(getStringVariable("backupExcelFile"));
+
+            if (backupExcelFile.exists()) {
+                throw new RuntimeException("Backup file already exists.");
+            }
+
+            FileUtils.copyFile(excelFile, backupExcelFile);
+
+            final Workbook workbook = new XSSFWorkbook(new FileInputStream(excelFile));
 
             percentFormat = workbook.createDataFormat().getFormat("0 %");
 
@@ -80,13 +89,13 @@ public class UpdateExcelOp extends AbstractStepImpl implements ModelOperationImp
                 }
             }
 
-            try (FileOutputStream fileOutputStream = new FileOutputStream(targetExcel)) {
-                try (BufferedOutputStream bos = new BufferedOutputStream(fileOutputStream)) {
-                    workbook.write(bos);
-                }
+            try (OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(excelFile))) {
+                workbook.write(outputStream);
             }
 
-        } catch (InvalidFormatException | IOException e) {
+            workbook.close();
+
+        } catch (final IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }

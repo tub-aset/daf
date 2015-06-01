@@ -189,7 +189,7 @@ public class DoorsApplicationImpl implements DoorsApplication {
 
         final String[] cmdLine = new String[] { "C:\\Program Files (x86)\\DOORS 9.5.2.0\\bin\\doors.exe", "-b", f.getAbsolutePath(), "-d", doorsServer, "-u", user, "-P", "xxxx" };
 
-        LOGGER.info(String.format("Running doors in batch mode. Command line: %s", String.join(" ", cmdLine)));
+        LOGGER.info(String.format("Running DOORS in batch mode. Command line: %s", String.join(" ", cmdLine)));
 
         cmdLine[cmdLine.length - 1] = password;
 
