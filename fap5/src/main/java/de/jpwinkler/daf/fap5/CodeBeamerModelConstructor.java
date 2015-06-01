@@ -87,6 +87,7 @@ public class CodeBeamerModelConstructor extends RuleBasedModelConstructor {
             addMetric(model, CodeBeamerConstants.METRIC_MATURITY_OPEN, (double) context.getMarkerCount(CodeBeamerConstants.MARKER_MATURITY_OPEN) / reqCount);
             addMetric(model, CodeBeamerConstants.METRIC_MATURITY_SPECIFIED, (double) context.getMarkerCount(CodeBeamerConstants.MARKER_MATURITY_SPECIFIED) / reqCount);
             addMetric(model, CodeBeamerConstants.METRIC_MATURITY_FOLLOW_UP, (double) context.getMarkerCount(CodeBeamerConstants.MARKER_MATURITY_FOLLOW_UP) / reqCount);
+            addMetric(model, CodeBeamerConstants.METRIC_MATURITY_FOLLOW_UP_HASHTAGS, (double) context.getMarkerCount(CodeBeamerConstants.MARKER_MATURITY_FOLLOW_UP_HASHTAGS) / reqCount);
             addMetric(model, CodeBeamerConstants.METRIC_MATURITY_AGREED, (double) context.getMarkerCount(CodeBeamerConstants.MARKER_MATURITY_AGREED) / reqCount);
         }
     }

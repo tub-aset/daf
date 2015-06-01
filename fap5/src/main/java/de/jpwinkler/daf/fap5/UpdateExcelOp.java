@@ -26,7 +26,7 @@ public class UpdateExcelOp extends AbstractStepImpl implements ModelOperationImp
 
     private static final Logger LOGGER = Logger.getLogger(UpdateExcelOp.class.getName());
 
-    private static final int START_COLUMN = 24;
+    private static final int START_COLUMN = 23;
 
     private short percentFormat;
 
@@ -62,18 +62,19 @@ public class UpdateExcelOp extends AbstractStepImpl implements ModelOperationImp
                         updateRowCellPercent(row, START_COLUMN + 2, model.getDoubleMetric(CodeBeamerConstants.METRIC_MATURITY_OPEN));
                         updateRowCellPercent(row, START_COLUMN + 3, model.getDoubleMetric(CodeBeamerConstants.METRIC_MATURITY_SPECIFIED));
                         updateRowCellPercent(row, START_COLUMN + 4, model.getDoubleMetric(CodeBeamerConstants.METRIC_MATURITY_FOLLOW_UP));
-                        updateRowCellPercent(row, START_COLUMN + 5, model.getDoubleMetric(CodeBeamerConstants.METRIC_MATURITY_AGREED));
+                        updateRowCellPercent(row, START_COLUMN + 5, model.getDoubleMetric(CodeBeamerConstants.METRIC_MATURITY_FOLLOW_UP_HASHTAGS));
+                        updateRowCellPercent(row, START_COLUMN + 6, model.getDoubleMetric(CodeBeamerConstants.METRIC_MATURITY_AGREED));
                     }
                     final Integer emptyObjectType = model.getIntMetric(CodeBeamerConstants.METRIC_EMPTY_OBJECT_TYPE);
                     final Integer requirementAsHeading = model.getIntMetric(CodeBeamerConstants.METRIC_HEADING_AS_REQUIREMENT_COUNT);
                     final Integer informationWithLink = model.getIntMetric(CodeBeamerConstants.METRIC_INFORMATION_WITH_LINK);
                     final Integer requirementWithoutLink = model.getIntMetric(CodeBeamerConstants.METRIC_REQUIREMENT_WITHOUT_LINK);
-                    updateRowCell(row, START_COLUMN + 6, emptyObjectType);
-                    updateRowCell(row, START_COLUMN + 7, requirementAsHeading);
-                    updateRowCell(row, START_COLUMN + 8, informationWithLink);
-                    updateRowCell(row, START_COLUMN + 9, requirementWithoutLink);
+                    updateRowCell(row, START_COLUMN + 7, emptyObjectType);
+                    updateRowCell(row, START_COLUMN + 8, requirementAsHeading);
+                    updateRowCell(row, START_COLUMN + 9, informationWithLink);
+                    updateRowCell(row, START_COLUMN + 10, requirementWithoutLink);
 
-                    updateRowCell(row, START_COLUMN + 10, emptyObjectType + requirementAsHeading + informationWithLink + requirementWithoutLink);
+                    updateRowCell(row, START_COLUMN + 11, emptyObjectType + requirementAsHeading + informationWithLink + requirementWithoutLink);
                 } else {
                     LOGGER.warning(String.format("No module found for module name %s.", rowDocName));
                 }

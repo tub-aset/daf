@@ -24,7 +24,11 @@ public class MaturityRule extends AbstractRule {
             context.addMarker(object, new Marker(CodeBeamerConstants.MARKER_MATURITY_SPECIFIED));
             break;
         case "follow_up":
-            context.addMarker(object, new Marker(CodeBeamerConstants.MARKER_MATURITY_FOLLOW_UP));
+            if (object.getAttributes().get("comment") != null && object.getAttributes().get("comment").contains("###")) {
+                context.addMarker(object, new Marker(CodeBeamerConstants.MARKER_MATURITY_FOLLOW_UP_HASHTAGS));
+            } else {
+                context.addMarker(object, new Marker(CodeBeamerConstants.MARKER_MATURITY_FOLLOW_UP));
+            }
             break;
         case "agreed":
             context.addMarker(object, new Marker(CodeBeamerConstants.MARKER_MATURITY_AGREED));

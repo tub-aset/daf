@@ -47,11 +47,13 @@ public final class CodeBeamerConstants {
     public static final String METRIC_MATURITY_OPEN = "maturityOpen";
     public static final String METRIC_MATURITY_SPECIFIED = "maturitySpecified";
     public static final String METRIC_MATURITY_FOLLOW_UP = "maturityFollowUp";
+    public static final String METRIC_MATURITY_FOLLOW_UP_HASHTAGS = "maturityFollowUpHashTags";
     public static final String METRIC_MATURITY_AGREED = "maturityAgreed";
 
     public static final String MARKER_MATURITY_OPEN = "maturity_open";
     public static final String MARKER_MATURITY_AGREED = "maturity_agreed";
     public static final String MARKER_MATURITY_FOLLOW_UP = "maturity_follow_up";
+    public static final String MARKER_MATURITY_FOLLOW_UP_HASHTAGS = "maturity_follow_up_hashtags";
     public static final String MARKER_MATURITY_SPECIFIED = "maturity_specified";
     public static final long SEVERITY_EMPTY_OBJECT_TYPE = 30;
     public static final String MARKER_EMPTY_OBJECT_TYPE = "empty_object_type";
