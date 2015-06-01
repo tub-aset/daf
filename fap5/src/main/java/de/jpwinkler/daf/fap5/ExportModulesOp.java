@@ -22,7 +22,7 @@ public class ExportModulesOp extends AbstractStepImpl implements ModelOperationI
     @Override
     public ModelObject execute() {
 
-        final DoorsApplication app = DoorsApplicationFactory.getBatchModeDoorsApplication(getStringVariable("database"), "", getStringVariable("username"), getStringVariable("password"));
+        final DoorsApplication app = DoorsApplicationFactory.getBatchModeDoorsApplication(getStringVariable("database"), getStringVariable("username"), getStringVariable("password"));
         app.redirectOutput(new LogOutputStream(LOGGER, Level.INFO));
         try {
             final File folder = new File(getStringVariable("exportFolder"));

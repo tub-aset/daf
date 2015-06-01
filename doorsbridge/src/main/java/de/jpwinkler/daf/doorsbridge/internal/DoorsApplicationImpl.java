@@ -31,7 +31,6 @@ public class DoorsApplicationImpl implements DoorsApplication {
 
     private boolean batchMode;
     private String doorsServer;
-    private String project;
     private String user;
     private String password;
 
@@ -39,10 +38,9 @@ public class DoorsApplicationImpl implements DoorsApplication {
         doorsApplications = new HashMap<Thread, ActiveXComponent>();
     }
 
-    public void initBatchMode(final String doorsServer, final String project, final String user, final String password) {
+    public void initBatchMode(final String doorsServer, final String user, final String password) {
         batchMode = true;
         this.doorsServer = doorsServer;
-        this.project = project;
         this.user = user;
         this.password = password;
     }

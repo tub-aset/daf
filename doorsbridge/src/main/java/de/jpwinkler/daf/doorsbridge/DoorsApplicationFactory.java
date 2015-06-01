@@ -8,9 +8,9 @@ public class DoorsApplicationFactory {
         return new DoorsApplicationImpl();
     }
 
-    public static DoorsApplication getBatchModeDoorsApplication(final String doorsServer, final String project, final String user, final String password) {
+    public static DoorsApplication getBatchModeDoorsApplication(final String doorsServer, final String user, final String password) {
         final DoorsApplicationImpl doorsApplicationImpl = new DoorsApplicationImpl();
-        doorsApplicationImpl.initBatchMode(doorsServer, project, user, password);
+        doorsApplicationImpl.initBatchMode(doorsServer, user, password);
         return doorsApplicationImpl;
     }
 
