@@ -1,0 +1,13 @@
+/**
+ * Created by: jonwink
+ * Creation date: 26.03.2015
+ *
+ * DXL Editor is provided by SODIUS (www.sodius.com)
+ */
+pragma encoding, "UTF-8"
+pragma runLim,0
+
+Module m = read("$$modulePath$$",false)
+exportModuleToCSV(m, "$$file$$")
+exportModuleMetaData(m, "$$file$$.mmd")
+close m

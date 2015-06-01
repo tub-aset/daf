@@ -1,0 +1,3 @@
+if (!null dxl_output_redirect_stream) {
+	close dxl_output_redirect_stream
+}

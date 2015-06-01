@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="issuehistory" nsURI="de.jpwinkler.daf.fap5.model.issuehistory"
+    nsPrefix="issuehistory">
+  <eClassifiers xsi:type="ecore:EClass" name="IssueHistoryModel" eSuperTypes="../../dafcore/model/common.ecore#//ModelObject">
+    <eOperations name="getDocumentNames" upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eOperations name="getIssueTypes" upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="versions" upperBound="-1"
+        eType="#//Version" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Version" eSuperTypes="../../dafcore/model/common.ecore#//ModelObject">
+    <eOperations name="getDocument" eType="ecore:EClass codebeamer.ecore#//CodeBeamerModel">
+      <eParameters name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eOperations>
+    <eOperations name="getIssues" upperBound="-1" eType="ecore:EClass codebeamer.ecore#//Issue">
+      <eParameters name="issueType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="documents" upperBound="-1"
+        eType="ecore:EClass codebeamer.ecore#//CodeBeamerModel"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="versionNumber" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+</ecore:EPackage>
