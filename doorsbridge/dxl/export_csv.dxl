@@ -21,7 +21,7 @@ void exportModuleToCSV(Module m, string fileName) {
 		}
 	}
 	
-	Stream outFile = write fileName
+	Stream outFile = write(fileName, CP_UTF8)
 	
 	outFile << "\"Object Identifier\", \"Object Level\", \"Object Number\""
 	
