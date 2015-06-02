@@ -42,16 +42,31 @@ public class UpdateExcelOp extends AbstractStepImpl implements ModelOperationImp
         }
 
         try {
-            final File excelFile = new File(getStringVariable("excelFile"));
-            final File backupExcelFile = new File(getStringVariable("backupExcelFile"));
+            final String sourceExcelFile = getStringVariable("sourceExcelFile");
+            final String targetExcelFile = getStringVariable("targetExcelFile");
+            final String backupExcelFile = getStringVariable("backupExcelFile");
 
-            if (backupExcelFile.exists()) {
+            if (backupExcelFile != null && new File(backupExcelFile).exists()) {
                 throw new RuntimeException("Backup file already exists.");
             }
 
-            FileUtils.copyFile(excelFile, backupExcelFile);
+            if (sourceExcelFile == null || !new File(sourceExcelFile).exists()) {
+                throw new RuntimeException("Source file does not exist or no source file given.");
+            }
 
-            final Workbook workbook = new XSSFWorkbook(new FileInputStream(excelFile));
+            if (targetExcelFile == null) {
+                throw new RuntimeException("No target file given.");
+            }
+
+            if (sourceExcelFile.equalsIgnoreCase(targetExcelFile) && backupExcelFile == null) {
+                throw new RuntimeException("Source file and target file are the same, but no backup file given.");
+            }
+
+            if (backupExcelFile != null) {
+                FileUtils.copyFile(new File(sourceExcelFile), new File(backupExcelFile));
+            }
+
+            final Workbook workbook = new XSSFWorkbook(new FileInputStream(sourceExcelFile));
 
             percentFormat = workbook.createDataFormat().getFormat("0 %");
 
@@ -89,7 +104,7 @@ public class UpdateExcelOp extends AbstractStepImpl implements ModelOperationImp
                 }
             }
 
-            try (OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(excelFile))) {
+            try (OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(targetExcelFile))) {
                 workbook.write(outputStream);
             }
 
