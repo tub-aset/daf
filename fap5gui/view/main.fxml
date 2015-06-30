@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.media.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="638.0" prefWidth="696.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.jpwinkler.daf.fap5gui.MainController">
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="Analysis">
+            <items>
+                  <MenuItem fx:id="runMenuItem" mnemonicParsing="false" onAction="#runMenuItemClicked" text="Run" />
+              <MenuItem fx:id="closeMenuItem" mnemonicParsing="false" onAction="#closeMenuItemClicked" text="Close" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+   <bottom>
+      <VBox fx:id="progressContainer" alignment="CENTER_RIGHT" maxHeight="-Infinity" prefHeight="40.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+         <children>
+            <ProgressBar fx:id="progressBar" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" progress="0.0" />
+            <Label fx:id="progressLabel" text="Label" />
+         </children>
+      </VBox>
+   </bottom>
+   <center>
+      <TabPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" tabClosingPolicy="UNAVAILABLE" GridPane.rowIndex="1">
+        <tabs>
+          <Tab text="Current Progress">
+               <content>
+                  <PieChart id="pieChartCurrentProgress" fx:id="currentProgressChart" stylesheets="@../../../../../Users/jonwink/Desktop/Neues%20Textdokument.css" />
+               </content>
+          </Tab>
+            <Tab text="Progress Over Time">
+               <content>
+                  <StackedAreaChart id="stackedAreaChartProgressOverTime" fx:id="progressOverTimeChart">
+                    <xAxis>
+                      <NumberAxis side="BOTTOM" />
+                    </xAxis>
+                    <yAxis>
+                      <NumberAxis side="LEFT" />
+                    </yAxis>
+                  </StackedAreaChart>
+               </content>
+            </Tab>
+            <Tab text="Open Tasks Over Time">
+               <content>
+                  <LineChart id="lineChartOpenTasksOverTime" fx:id="openTasksOverTimeChart">
+                    <xAxis>
+                      <CategoryAxis side="BOTTOM" />
+                    </xAxis>
+                    <yAxis>
+                      <NumberAxis side="LEFT" />
+                    </yAxis>
+                  </LineChart>
+               </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+   </center>
+   <left>
+      <VBox prefHeight="578.0" prefWidth="189.0" BorderPane.alignment="CENTER">
+         <children>
+            <CheckBox mnemonicParsing="false" text="All" />
+            <CheckBox mnemonicParsing="false" text="None" />
+            <ListView maxHeight="1.7976931348623157E308" minHeight="-Infinity" />
+         </children>
+      </VBox>
+   </left>
+</BorderPane>

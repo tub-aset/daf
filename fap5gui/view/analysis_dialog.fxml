@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox prefHeight="407.0" prefWidth="398.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.jpwinkler.daf.fap5gui.AnalysisDialogController">
+   <children>
+      <GridPane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="360.0">
+         <children>
+            <Label text="CSV directory" />
+            <TextField fx:id="csvDirectoryText" GridPane.columnIndex="1" />
+            <TextField id="textModuleList" fx:id="moduleListText" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label text="Module list" GridPane.rowIndex="1" />
+            <CheckBox id="checkReuseCache" fx:id="reuseCachedResultsCheckBox" mnemonicParsing="false" prefHeight="17.0" prefWidth="200.0" text="Reuse cached results if possible" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+            <CheckBox id="checkRunDoorsAnalysis" fx:id="runNewDoorsAnalysisCheckBox" mnemonicParsing="false" text="Run new analysis on DOORS (could take a while to complete!)" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+            <CheckBox id="checkUpdateProgressReport" fx:id="updateProgressReportCheckBox" mnemonicParsing="false" onAction="#updateProgressReportCheckBoxClicked" text="Update progress report excel sheet" GridPane.columnSpan="2" GridPane.rowIndex="7" />
+            <Label text="PR source" GridPane.rowIndex="8" />
+            <TextField id="textProgressReportSource" fx:id="progressReportSourceText" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+            <Label text="PR target" GridPane.rowIndex="9" />
+            <TextField id="textProgressReportTarget" fx:id="progressReportTargetText" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+            <CheckBox id="checkGenerateIssueLists" fx:id="generateIssueListsCheckBox" mnemonicParsing="false" onAction="#generateIssueListsCheckBoxClicked" text="Generate issue lists" GridPane.columnSpan="2" GridPane.rowIndex="10" />
+            <Label text="IL directory" GridPane.rowIndex="11" />
+            <TextField id="textIssueListTarget" fx:id="issueListsDirectoryText" GridPane.columnIndex="1" GridPane.rowIndex="11" />
+            <Button fx:id="csvDirectorySelectButton" mnemonicParsing="false" onAction="#csvDirectorySelectButtonClicked" text="..." GridPane.columnIndex="2" />
+            <Button fx:id="moduleListSelectButton" mnemonicParsing="false" onAction="#moduleListSelectButtonClicked" text="..." GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <Button fx:id="progressReportSourceSelectButton" mnemonicParsing="false" onAction="#progressReportSourceSelectButtonClicked" text="..." GridPane.columnIndex="2" GridPane.rowIndex="8" />
+            <Button fx:id="progressReportTargetSelectButton" mnemonicParsing="false" onAction="#progressReportTargetSelectButtonClicked" text="..." GridPane.columnIndex="2" GridPane.rowIndex="9" />
+            <Button fx:id="issueListsDirectorySelectButton" mnemonicParsing="false" onAction="#issueListsDirectorySelectButtonClicked" text="..." GridPane.columnIndex="2" GridPane.rowIndex="11" />
+            <Label text="Database" GridPane.rowIndex="4" />
+            <Label text="Username" GridPane.rowIndex="5" />
+            <Label text="Password" GridPane.rowIndex="6" />
+            <TextField fx:id="databaseText" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <TextField fx:id="usernameText" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <PasswordField fx:id="passwordText" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+         </children>
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <padding>
+            <Insets left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </GridPane>
+      <HBox alignment="TOP_CENTER" prefHeight="90.0" prefWidth="398.0" spacing="20.0" VBox.vgrow="ALWAYS">
+         <children>
+            <Button fx:id="runButton" mnemonicParsing="false" onAction="#runButtonClicked" prefWidth="100.0" text="Run" />
+            <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancelButtonClicked" prefWidth="100.0" text="Cancel" />
+         </children>
+         <VBox.margin>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </VBox.margin>
+      </HBox>
+   </children>
+</VBox>
