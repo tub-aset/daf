@@ -13,7 +13,14 @@ public class AnalysisResults {
     }
 
     public List<String> getVersionNumbers() {
-        return versions.stream().map(v -> v.getVersionString()).collect(Collectors.toList());
+        return versions.stream().map(Version::getVersionString).collect(Collectors.toList());
     }
 
+    public List<String> getAllDocumentNames() {
+        return versions.stream().map(Version::getDocumentNames).flatMap(set -> set.stream()).distinct().collect(Collectors.toList());
+    }
+
+    public Version getLatestVersion() {
+        return versions.get(versions.size() - 1);
+    }
 }

@@ -1,4 +1,4 @@
-package de.jpwinkler.daf.fap5gui;
+package de.jpwinkler.daf.fap5gui.gui;
 
 public interface ProgressMonitor {
 

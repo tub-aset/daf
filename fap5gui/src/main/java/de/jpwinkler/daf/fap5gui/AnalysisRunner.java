@@ -2,6 +2,7 @@ package de.jpwinkler.daf.fap5gui;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -16,8 +17,11 @@ import com.google.gson.JsonSyntaxException;
 import de.jpwinkler.daf.dafcore.model.common.ModelObject;
 import de.jpwinkler.daf.dafcore.workflow.WorkflowException;
 import de.jpwinkler.daf.dafcore.workflow.WorkflowProcessor;
-import de.jpwinkler.daf.fap5.codebeamerrules.CodeBeamerConstants;
 import de.jpwinkler.daf.fap5.model.codebeamer.CodeBeamerModel;
+import de.jpwinkler.daf.fap5.model.codebeamer.IntMetric;
+import de.jpwinkler.daf.fap5.model.codebeamer.Issue;
+import de.jpwinkler.daf.fap5.model.codebeamer.Metric;
+import de.jpwinkler.daf.fap5gui.gui.ProgressMonitor;
 import de.jpwinkler.daf.fap5gui.model.AnalysisResults;
 import de.jpwinkler.daf.fap5gui.model.AnalysisSettings;
 import de.jpwinkler.daf.fap5gui.model.DocumentSnapshot;
@@ -38,21 +42,22 @@ import de.jpwinkler.daf.workflowdsl.workflowDsl.WorkflowModel;
 
 public class AnalysisRunner {
 
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMdd");
+
     private final WorkflowDslFactory factory = WorkflowDslFactory.eINSTANCE;
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     private AnalysisResults results;
     private AnalysisSettings settings;
 
-    public AnalysisResults run(final AnalysisSettings settings, final ProgressMonitor progressMonitor) throws JsonSyntaxException, IOException {
+    public AnalysisResults run(final File resultCacheFile, final AnalysisSettings settings, final ProgressMonitor progressMonitor) throws JsonSyntaxException, IOException {
 
         this.settings = settings;
 
         progressMonitor.updateProgres(0, "Warming up");
 
-        final File file = new File("temp", "temp.json");
-        if (file.exists() && settings.isReuseCache()) {
-            results = gson.fromJson(FileUtils.readFileToString(file), AnalysisResults.class);
+        if (resultCacheFile.exists() && settings.isReuseCache()) {
+            results = gson.fromJson(FileUtils.readFileToString(resultCacheFile), AnalysisResults.class);
         } else {
             results = new AnalysisResults();
         }
@@ -69,7 +74,7 @@ public class AnalysisRunner {
 
             i++;
         }
-        FileUtils.write(file, gson.toJson(results));
+        FileUtils.write(resultCacheFile, gson.toJson(results));
 
         if (settings.isRunNewDoorsAnalysis() || settings.isGenerateIssueLists() || settings.isUpdateProgressReportExcelSheet()) {
             processNewVersion();
@@ -79,7 +84,7 @@ public class AnalysisRunner {
     }
 
     private void processNewVersion() {
-        final String version = new SimpleDateFormat("yyyyMMdd").format(new Date());
+        final String version = DATE_FORMAT.format(new Date());
 
         final WorkflowModel workflowModel = factory.createWorkflowModel();
 
@@ -182,6 +187,11 @@ public class AnalysisRunner {
     private Version createVersion(final String versionString, final List<ModelObject> codeBeamerModels) {
         final Version version = new Version();
         version.setVersionString(versionString);
+        try {
+            version.setDate(DATE_FORMAT.parse(versionString));
+        } catch (final ParseException e) {
+            throw new RuntimeException(e);
+        }
 
         for (final ModelObject modelObject : codeBeamerModels) {
             final CodeBeamerModel cbm = (CodeBeamerModel) modelObject;
@@ -197,19 +207,20 @@ public class AnalysisRunner {
         final DocumentSnapshot snapshot = new DocumentSnapshot();
         snapshot.setDocumentName(cbm.getName());
 
-        snapshot.setNumRequirements(cbm.getIntMetric(CodeBeamerConstants.METRIC_REQUIREMENT_COUNT));
-        snapshot.setNumTodos(cbm.getIntMetric(CodeBeamerConstants.METRIC_OPEN_TODOS));
-        if (snapshot.getNumRequirements() > 0) {
-            snapshot.setRequirementsOpen(cbm.getDoubleMetric(CodeBeamerConstants.METRIC_MATURITY_OPEN));
-            snapshot.setRequirementsSpecified(cbm.getDoubleMetric(CodeBeamerConstants.METRIC_MATURITY_SPECIFIED));
-            snapshot.setRequirementsFollowUp(cbm.getDoubleMetric(CodeBeamerConstants.METRIC_MATURITY_FOLLOW_UP));
-            snapshot.setRequirementsFollowUpHashtags(cbm.getDoubleMetric(CodeBeamerConstants.METRIC_MATURITY_FOLLOW_UP_HASHTAGS));
-            snapshot.setRequirementsAgreed(cbm.getDoubleMetric(CodeBeamerConstants.METRIC_MATURITY_AGREED));
+        for (final Metric metric : cbm.getMetrics()) {
+            if (metric instanceof IntMetric) {
+                snapshot.setMetric(metric.getName(), ((IntMetric) metric).getValue());
+            }
         }
-        snapshot.setNumErrorMissingObjectType(cbm.getIntMetric(CodeBeamerConstants.METRIC_EMPTY_OBJECT_TYPE));
-        snapshot.setNumErrorWrongHeading(cbm.getIntMetric(CodeBeamerConstants.METRIC_HEADING_AS_REQUIREMENT_COUNT));
-        snapshot.setNumErrorInformationWithLink(cbm.getIntMetric(CodeBeamerConstants.METRIC_INFORMATION_WITH_LINK));
-        snapshot.setNumErrorRequirementWithoutLink(cbm.getIntMetric(CodeBeamerConstants.METRIC_REQUIREMENT_WITHOUT_LINK));
+
+        for (final Issue issue : cbm.getIssues()) {
+            final de.jpwinkler.daf.fap5gui.model.Issue i = new de.jpwinkler.daf.fap5gui.model.Issue();
+            i.setIssueMessage(issue.getIssueType());
+            i.setObjectId(issue.getSource().getObjectIdentifier());
+            i.setObjectNumber(issue.getSource().getObjectNumber());
+            snapshot.getIssues().add(i);
+        }
+
         return snapshot;
     }
 

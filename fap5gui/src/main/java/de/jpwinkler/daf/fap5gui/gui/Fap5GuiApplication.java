@@ -1,8 +1,13 @@
-package de.jpwinkler.daf.fap5gui;
+package de.jpwinkler.daf.fap5gui.gui;
 
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.commons.io.FileUtils;
+
+import com.google.gson.Gson;
+
+import de.jpwinkler.daf.fap5gui.AnalysisRunner;
 import de.jpwinkler.daf.fap5gui.model.AnalysisResults;
 import de.jpwinkler.daf.fap5gui.model.AnalysisSettings;
 import javafx.application.Application;
@@ -14,6 +19,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class Fap5GuiApplication extends Application {
+
+    private static final File CACHE_FILE = new File("temp", "cache.json");
 
     private Stage primaryStage;
     private MainController mainController;
@@ -29,6 +36,10 @@ public class Fap5GuiApplication extends Application {
             mainController = loader.getController();
             mainController.setMainApp(this);
             mainController.setStage(primaryStage);
+
+            if (CACHE_FILE.exists()) {
+                mainController.setResults(new Gson().fromJson(FileUtils.readFileToString(CACHE_FILE), AnalysisResults.class));
+            }
 
             primaryStage.setScene(new Scene(root));
             primaryStage.setTitle("FAP5 gui");
@@ -58,6 +69,7 @@ public class Fap5GuiApplication extends Application {
             controller.setDialogStage(dialogStage);
             controller.setMainApp(this);
             controller.loadSettings();
+            controller.updateUI();
             dialogStage.showAndWait();
         } catch (final IOException e) {
             // TODO Auto-generated catch block
@@ -75,7 +87,7 @@ public class Fap5GuiApplication extends Application {
         new Thread(() -> {
             final AnalysisRunner batchRunner = new AnalysisRunner();
             try {
-                final AnalysisResults results = batchRunner.run(settings, (progress, progressText) -> {
+                final AnalysisResults results = batchRunner.run(CACHE_FILE, settings, (progress, progressText) -> {
                     Platform.runLater(() -> {
                         mainController.updateAnalysis(progress, progressText);
                     });
@@ -88,6 +100,8 @@ public class Fap5GuiApplication extends Application {
             } catch (final Exception e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
+                mainController.updateAnalysis(1, "Error: " + e.getMessage());
+                mainController.stopAnalysis();
             }
         }).start();
     }
