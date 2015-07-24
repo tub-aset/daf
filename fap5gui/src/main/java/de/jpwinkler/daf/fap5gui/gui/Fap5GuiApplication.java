@@ -100,8 +100,10 @@ public class Fap5GuiApplication extends Application {
             } catch (final Exception e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
-                mainController.updateAnalysis(1, "Error: " + e.getMessage());
-                mainController.stopAnalysis();
+                Platform.runLater(() -> {
+                    mainController.updateAnalysis(1, "Error: " + e.getMessage());
+                    mainController.stopAnalysis();
+                });
             }
         }).start();
     }
