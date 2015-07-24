@@ -133,9 +133,11 @@ public abstract class AbstractRecursiveViterbiAlgorithm<T, S> {
 
         }
 
-        processedNodes += childCount;
-        if (progressMonitor != null) {
-            progressMonitor.onProgress(processedNodes, nodeCount);
+        if (childCount > 0) {
+            processedNodes += childCount;
+            if (progressMonitor != null) {
+                progressMonitor.onProgress(processedNodes, nodeCount);
+            }
         }
 
         results.put(node, result);
