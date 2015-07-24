@@ -77,9 +77,11 @@ void exportModuleMetaData(Module m, string fileName) {
 	
 	for ad in m do {
 		if (ad.module) {
-			outFile << "\"" ad.name "\", \"" m.(ad.name) "\"\n"
+			outFile << "\"" ad.name "\", \"" escape(m.(ad.name) "",'\\',"\"") "\"\n"
 		}
 	}
+	outFile << "\"url\", \"" getURL(m) "\"\n"
+	outFile << "\"path\", \"" path(m) "\"\n" 
 
 	close outFile
 	

@@ -24,6 +24,7 @@ string exportCsv(Module m) {
 	}
 	string file = folder "\\" name(m) ".csv"
 	exportModuleToCSV(m, file)
+	exportModuleMetaData(m, file ".mmd")
 	return "ok"
 }
 
