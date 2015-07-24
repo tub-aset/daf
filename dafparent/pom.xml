@@ -12,6 +12,8 @@
 		<module>../doorsbridge</module>
 		<module>../fap5</module>
 		<module>../workflowdsl</module>
+		<module>../maxent</module>
+		<module>../fap5gui</module>
 	</modules>
-	
+
 </project>
