@@ -37,19 +37,9 @@
     	<version>2.4</version>
     </dependency>
     <dependency>
-    	<groupId>com.datumbox</groupId>
-    	<artifactId>datumbox-framework</artifactId>
-    	<version>0.6.0</version>
-    </dependency>
-    <dependency>
     	<groupId>de.danielnaber</groupId>
     	<artifactId>jwordsplitter</artifactId>
     	<version>4.1</version>
-    </dependency>
-    <dependency>
-    	<groupId>de.jpwinkler</groupId>
-    	<artifactId>viterbi-on-trees</artifactId>
-    	<version>0.0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
     	<groupId>org.apache.opennlp</groupId>
@@ -60,6 +50,11 @@
     	<groupId>commons-collections</groupId>
     	<artifactId>commons-collections</artifactId>
     	<version>3.2.1</version>
+    </dependency>
+    <dependency>
+    	<groupId>de.jpwinkler.daf</groupId>
+    	<artifactId>recursiveviterbi</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
 </project>

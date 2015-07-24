@@ -24,7 +24,7 @@ import de.jpwinkler.daf.maxent.preprocessing.NewLineRemovalPreprocessor;
 import de.jpwinkler.daf.maxent.preprocessing.StopwordRemovalPreprocessor;
 import de.jpwinkler.daf.maxent.preprocessing.WordStemmerPreprocessor;
 import de.jpwinkler.daf.maxent.util.TriMap;
-import de.jpwinkler.viterbiontrees.algorithms.viterbiabstract.AbstractRecursiveViterbiAlgorithm;
+import de.jpwinkler.daf.recursiveviterbi.AbstractRecursiveViterbiAlgorithm;
 import opennlp.maxent.GIS;
 import opennlp.maxent.GISModel;
 
@@ -108,6 +108,8 @@ public class MaxentRecursiveViterbiAlgorithm extends AbstractRecursiveViterbiAlg
 
     public static void main(final String[] args) throws IOException, CSVParseException {
         final MaxentRecursiveViterbiAlgorithm algorithm = new MaxentRecursiveViterbiAlgorithm();
+
+        algorithm.setProgressMonitor((current, max) -> System.out.println(current + "/" + max));
 
         final DoorsModule testModule = new ModuleCSVParser().parseCSV(new File("C:\\WORK\\DOORS\\export\\pod\\SDR222_system_req.csv"));
 
