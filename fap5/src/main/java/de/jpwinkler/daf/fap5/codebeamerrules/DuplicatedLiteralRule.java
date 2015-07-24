@@ -8,7 +8,7 @@ public class DuplicatedLiteralRule extends PredicateIssueRule {
 
     @Override
     public ObjectPrecondition getObjectPrecondition() {
-        return (object, context) -> object.getParent() != null && !object.getText().trim().isEmpty();
+        return (object, context) -> object.getParent() instanceof DoorsObject && !object.getText().trim().isEmpty();
     }
 
     @Override
@@ -28,7 +28,7 @@ public class DuplicatedLiteralRule extends PredicateIssueRule {
 
     @Override
     protected boolean testObject(final DoorsObject o, final RuleContext context) {
-        return o.getParent().getText().replace(" ", "").contains(o.getText().trim()) && o.getParent().getObjects().size() == 1;
+        return ((DoorsObject) o.getParent()).getText().replace(" ", "").contains(o.getText().trim()) && o.getParent().getObjects().size() == 1;
     }
 
     @Override

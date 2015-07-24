@@ -10,6 +10,7 @@ import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 import org.eclipse.emf.ecore.EObject;
 
 import de.jpwinkler.daf.dafcore.model.common.ModelObject;
+import de.jpwinkler.daf.dafcore.model.csv.*;
 import de.jpwinkler.daf.dafcore.model.csv.CSVPackage;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
@@ -55,7 +56,7 @@ public class CSVAdapterFactory extends AdapterFactoryImpl {
      * @generated
      */
     @Override
-    public boolean isFactoryForType(final Object object) {
+    public boolean isFactoryForType(Object object) {
         if (object == modelPackage) {
             return true;
         }
@@ -73,39 +74,43 @@ public class CSVAdapterFactory extends AdapterFactoryImpl {
      */
     protected CSVSwitch<Adapter> modelSwitch =
             new CSVSwitch<Adapter>() {
-        @Override
-        public Adapter caseDoorsModule(final DoorsModule object) {
-            return createDoorsModuleAdapter();
-        }
-        @Override
-        public Adapter caseDoorsObject(final DoorsObject object) {
-            return createDoorsObjectAdapter();
-        }
-        @Override
-        public Adapter caseStringToStringMap(final Map.Entry<String, String> object) {
-            return createStringToStringMapAdapter();
-        }
-        @Override
-        public Adapter caseLink(final Link object) {
-            return createLinkAdapter();
-        }
-        @Override
-        public Adapter caseResolvedLink(final ResolvedLink object) {
-            return createResolvedLinkAdapter();
-        }
-        @Override
-        public Adapter caseUnresolvedLink(final UnresolvedLink object) {
-            return createUnresolvedLinkAdapter();
-        }
-        @Override
-        public Adapter caseModelObject(final ModelObject object) {
-            return createModelObjectAdapter();
-        }
-        @Override
-        public Adapter defaultCase(final EObject object) {
-            return createEObjectAdapter();
-        }
-    };
+            @Override
+            public Adapter caseDoorsModule(DoorsModule object) {
+                return createDoorsModuleAdapter();
+            }
+            @Override
+            public Adapter caseDoorsObject(DoorsObject object) {
+                return createDoorsObjectAdapter();
+            }
+            @Override
+            public Adapter caseStringToStringMap(Map.Entry<String, String> object) {
+                return createStringToStringMapAdapter();
+            }
+            @Override
+            public Adapter caseLink(Link object) {
+                return createLinkAdapter();
+            }
+            @Override
+            public Adapter caseResolvedLink(ResolvedLink object) {
+                return createResolvedLinkAdapter();
+            }
+            @Override
+            public Adapter caseUnresolvedLink(UnresolvedLink object) {
+                return createUnresolvedLinkAdapter();
+            }
+            @Override
+            public Adapter caseDoorsTreeNode(DoorsTreeNode object) {
+                return createDoorsTreeNodeAdapter();
+            }
+            @Override
+            public Adapter caseModelObject(ModelObject object) {
+                return createModelObjectAdapter();
+            }
+            @Override
+            public Adapter defaultCase(EObject object) {
+                return createEObjectAdapter();
+            }
+        };
 
     /**
      * Creates an adapter for the <code>target</code>.
@@ -116,7 +121,7 @@ public class CSVAdapterFactory extends AdapterFactoryImpl {
      * @generated
      */
     @Override
-    public Adapter createAdapter(final Notifier target) {
+    public Adapter createAdapter(Notifier target) {
         return modelSwitch.doSwitch((EObject)target);
     }
 
@@ -206,13 +211,27 @@ public class CSVAdapterFactory extends AdapterFactoryImpl {
     }
 
     /**
-     * Creates a new adapter for an object of class '{@link com.daimler.jonwink.srstp.core.model.common.ModelObject <em>Model Object</em>}'.
+     * Creates a new adapter for an object of class '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode <em>Doors Tree Node</em>}'.
      * <!-- begin-user-doc -->
      * This default implementation returns null so that we can easily ignore cases;
      * it's useful to ignore a case when inheritance will catch all the cases anyway.
      * <!-- end-user-doc -->
      * @return the new adapter.
-     * @see com.daimler.jonwink.srstp.core.model.common.ModelObject
+     * @see de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode
+     * @generated
+     */
+    public Adapter createDoorsTreeNodeAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link de.jpwinkler.daf.dafcore.model.common.ModelObject <em>Model Object</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see de.jpwinkler.daf.dafcore.model.common.ModelObject
      * @generated
      */
     public Adapter createModelObjectAdapter() {

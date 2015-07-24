@@ -1,9 +1,13 @@
 package de.jpwinkler.daf.fap5gui;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +18,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
+import de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.dafcore.model.common.ModelObject;
+import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.workflow.WorkflowException;
 import de.jpwinkler.daf.dafcore.workflow.WorkflowProcessor;
 import de.jpwinkler.daf.fap5.model.codebeamer.CodeBeamerModel;
@@ -69,16 +75,20 @@ public class AnalysisRunner {
                 if (!results.getVersionNumbers().contains(child.getName())) {
                     progressMonitor.updateProgres((double) i / (double) listFiles.length, "Processing " + child.getName());
                     processExistingVersionFolder(child.getName());
+                    System.gc();
                 }
             }
 
             i++;
         }
-        FileUtils.write(resultCacheFile, gson.toJson(results));
 
         if (settings.isRunNewDoorsAnalysis() || settings.isGenerateIssueLists() || settings.isUpdateProgressReportExcelSheet()) {
             processNewVersion();
         }
+
+        Collections.sort(results.getVersions());
+
+        FileUtils.write(resultCacheFile, gson.toJson(results));
 
         return results;
     }
@@ -177,11 +187,40 @@ public class AnalysisRunner {
 
             final Version version = createVersion(versionFolder, workflowResult.get(target));
 
+            writeToFile(workflowResult.get(target), "C:\\WORK\\temp\\exp_" + versionFolder + ".txt");
+
             results.getVersions().add(version);
 
-        } catch (final WorkflowException e) {
+        } catch (final WorkflowException | IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void writeToFile(final List<ModelObject> codeBeamerModels, final String fileName) throws IOException {
+
+        final FileOutputStream fos = new FileOutputStream(fileName);
+
+        final BufferedOutputStream bos = new BufferedOutputStream(fos);
+        final OutputStreamWriter writer = new OutputStreamWriter(bos);
+
+        for (final ModelObject modelObject : codeBeamerModels) {
+            final CodeBeamerModel cbm = (CodeBeamerModel) modelObject;
+
+            cbm.getModule().accept(new DoorsTreeNodeVisitor() {
+                @Override
+                public boolean visitPreTraverse(final DoorsObject object) {
+                    try {
+                        writer.write(object.getText() + "\n");
+                    } catch (final Exception e) {
+                        e.printStackTrace();
+                    }
+                    return true;
+                }
+            });
+        }
+
+        writer.close();
+
     }
 
     private Version createVersion(final String versionString, final List<ModelObject> codeBeamerModels) {
@@ -218,6 +257,8 @@ public class AnalysisRunner {
             i.setIssueMessage(issue.getIssueType());
             i.setObjectId(issue.getSource().getObjectIdentifier());
             i.setObjectNumber(issue.getSource().getObjectNumber());
+            i.setObjectAbsoluteNumber(issue.getSource().getAbsoluteNumber());
+            i.setAbsoluteModuleName(cbm.getModule().getPath() + "/" + cbm.getModule().getName());
             snapshot.getIssues().add(i);
         }
 

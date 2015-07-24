@@ -1,8 +1,12 @@
 package de.jpwinkler.daf.fap5gui.gui;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.stream.Collectors;
 
+import de.jpwinkler.daf.doorsbridge.DoorsApplication;
+import de.jpwinkler.daf.doorsbridge.DoorsApplicationFactory;
+import de.jpwinkler.daf.doorsbridge.DoorsException;
 import de.jpwinkler.daf.fap5.codebeamerrules.CodeBeamerConstants;
 import de.jpwinkler.daf.fap5gui.model.AnalysisResults;
 import de.jpwinkler.daf.fap5gui.model.DocumentSnapshot;
@@ -24,6 +28,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -68,11 +73,16 @@ public class MainController {
     @FXML
     private LineChart<Date, Integer> requirementCountChart;
 
+    @FXML
+    private LineChart<Date, Double> remainingWorkChart;
+
     private Fap5GuiApplication mainApp;
     private Stage stage;
 
     private AnalysisResults analysisResults;
     private String currentFilter;
+
+    private final DoorsApplication doorsApplication = DoorsApplicationFactory.getDoorsApplication();
 
     @FXML
     public void initialize() {
@@ -83,6 +93,7 @@ public class MainController {
         issueTable.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("objectId"));
         issueTable.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("objectNumber"));
         issueTable.getColumns().get(2).setCellValueFactory(new PropertyValueFactory<>("issueMessage"));
+
     }
 
     @FXML
@@ -138,6 +149,7 @@ public class MainController {
         updateProgressOverTimeChart();
         updateOpenTasksOverTimeChart();
         updateRequirementCountChart();
+        updateRemainingWorkChart();
         updateIssueTable();
     }
 
@@ -151,6 +163,20 @@ public class MainController {
         }
         requirementCountChart.getData().clear();
         requirementCountChart.getData().add(requirementsSeries);
+    }
+
+    private void updateRemainingWorkChart() {
+        final XYChart.Series<Date, Double> remainingWorkSeries = new XYChart.Series<>("remaining work", FXCollections.observableArrayList());
+        for (final Version version : analysisResults.getVersions()) {
+            final DocumentSnapshot results = currentFilter == null ? version.accumulateAllResults() : version.getDocumentSnapshots().get(currentFilter);
+            if (results != null) {
+                final int reqCount = results.getMetric(CodeBeamerConstants.METRIC_REQUIREMENT_COUNT);
+                final double yValue = (double) results.getMetric(CodeBeamerConstants.METRIC_ESTIMATED_REMAINING_WORK) / reqCount;
+                remainingWorkSeries.getData().add(new XYChart.Data<>(version.getDate(), yValue));
+            }
+        }
+        remainingWorkChart.getData().clear();
+        remainingWorkChart.getData().add(remainingWorkSeries);
     }
 
     private void updateIssueTable() {
@@ -187,11 +213,17 @@ public class MainController {
             if (results != null) {
                 final Integer reqCount = results.getMetric(CodeBeamerConstants.METRIC_REQUIREMENT_COUNT);
                 if (reqCount > 0) {
-                    openSeries.getData().add(new XYChart.Data<>(version.getDate(), (double) results.getMetric(CodeBeamerConstants.METRIC_MATURITY_OPEN_COUNT) / reqCount));
-                    specifiedSeries.getData().add(new XYChart.Data<>(version.getDate(), (double) results.getMetric(CodeBeamerConstants.METRIC_MATURITY_SPECIFIED_COUNT) / reqCount));
-                    followUpSeries.getData().add(new XYChart.Data<>(version.getDate(), (double) results.getMetric(CodeBeamerConstants.METRIC_MATURITY_FOLLOW_UP_COUNT) / reqCount));
-                    followUpHashtagsSeries.getData().add(new XYChart.Data<>(version.getDate(), (double) results.getMetric(CodeBeamerConstants.METRIC_MATURITY_FOLLOW_UP_HASHTAGS_COUNT) / reqCount));
-                    agreedSeries.getData().add(new XYChart.Data<>(version.getDate(), (double) results.getMetric(CodeBeamerConstants.METRIC_MATURITY_AGREED_COUNT) / reqCount));
+                    final double maturityOpen = (double) results.getMetric(CodeBeamerConstants.METRIC_MATURITY_OPEN_COUNT) / reqCount;
+                    final double maturitySpecified = (double) results.getMetric(CodeBeamerConstants.METRIC_MATURITY_SPECIFIED_COUNT) / reqCount;
+                    final double maturityFollowUp = (double) results.getMetric(CodeBeamerConstants.METRIC_MATURITY_FOLLOW_UP_COUNT) / reqCount;
+                    final double maturityFollowUpHashtags = (double) results.getMetric(CodeBeamerConstants.METRIC_MATURITY_FOLLOW_UP_HASHTAGS_COUNT) / reqCount;
+                    final double maturityAgreed = (double) results.getMetric(CodeBeamerConstants.METRIC_MATURITY_AGREED_COUNT) / reqCount;
+
+                    openSeries.getData().add(new XYChart.Data<>(version.getDate(), maturityOpen));
+                    specifiedSeries.getData().add(new XYChart.Data<>(version.getDate(), maturitySpecified));
+                    followUpSeries.getData().add(new XYChart.Data<>(version.getDate(), maturityFollowUp));
+                    followUpHashtagsSeries.getData().add(new XYChart.Data<>(version.getDate(), maturityFollowUpHashtags));
+                    agreedSeries.getData().add(new XYChart.Data<>(version.getDate(), maturityAgreed));
                 }
             }
         }
@@ -227,5 +259,18 @@ public class MainController {
     public void singleDocumentRadioButtonSelected(final ActionEvent event) {
         updateFilter(documentFilterChoiceBox.getSelectionModel().getSelectedItem());
         documentFilterChoiceBox.setDisable(false);
+    }
+
+    @FXML
+    public void issueTableMousePressed(final MouseEvent mouseEvent) {
+        if (mouseEvent.isPrimaryButtonDown() && mouseEvent.getClickCount() == 2) {
+            final Issue selectedItem = issueTable.getSelectionModel().getSelectedItem();
+            try {
+                doorsApplication.gotoObject(selectedItem.getAbsoluteModuleName(), selectedItem.getObjectAbsoluteNumber());
+            } catch (DoorsException | IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
     }
 }

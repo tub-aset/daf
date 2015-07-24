@@ -28,7 +28,7 @@ public class UpdateExcelOp extends AbstractStepImpl implements ModelOperationImp
 
     private static final Logger LOGGER = Logger.getLogger(UpdateExcelOp.class.getName());
 
-    private static final int START_COLUMN = 24;
+    private static final int START_COLUMN = 27;
 
     private short percentFormat;
 
@@ -72,6 +72,15 @@ public class UpdateExcelOp extends AbstractStepImpl implements ModelOperationImp
 
             final Sheet sheet = workbook.getSheet("Mapping CB-Doors");
 
+            int startColumn = START_COLUMN;
+
+            for (final Cell cell : sheet.getRow(2)) {
+                if (cell.getStringCellValue().contains("Requirements") && cell.getStringCellValue().contains("Predefinitions")) {
+                    startColumn = cell.getColumnIndex();
+                    LOGGER.info(String.format("Using column %d as start column.", startColumn));
+                }
+            }
+
             for (final Row row : sheet) {
                 final Cell cell = row.getCell(9);
                 if (cell == null) {
@@ -80,25 +89,26 @@ public class UpdateExcelOp extends AbstractStepImpl implements ModelOperationImp
                 final String rowDocName = cell.getStringCellValue();
                 final CodeBeamerModel model = models.get(rowDocName);
                 if (model != null) {
-                    updateRowCell(row, START_COLUMN + 0, model.getIntMetric(CodeBeamerConstants.METRIC_REQUIREMENT_COUNT));
-                    updateRowCell(row, START_COLUMN + 1, model.getIntMetric(CodeBeamerConstants.METRIC_OPEN_TODOS));
+                    final Integer reqCount = model.getIntMetric(CodeBeamerConstants.METRIC_REQUIREMENT_COUNT);
+                    updateRowCell(row, startColumn + 0, reqCount);
+                    updateRowCell(row, startColumn + 1, model.getIntMetric(CodeBeamerConstants.METRIC_OPEN_TODOS));
                     if (model.getIntMetric(CodeBeamerConstants.METRIC_REQUIREMENT_COUNT) > 0) {
-                        updateRowCellPercent(row, START_COLUMN + 2, model.getDoubleMetric(CodeBeamerConstants.METRIC_MATURITY_OPEN));
-                        updateRowCellPercent(row, START_COLUMN + 3, model.getDoubleMetric(CodeBeamerConstants.METRIC_MATURITY_SPECIFIED));
-                        updateRowCellPercent(row, START_COLUMN + 4, model.getDoubleMetric(CodeBeamerConstants.METRIC_MATURITY_FOLLOW_UP));
-                        updateRowCellPercent(row, START_COLUMN + 5, model.getDoubleMetric(CodeBeamerConstants.METRIC_MATURITY_FOLLOW_UP_HASHTAGS));
-                        updateRowCellPercent(row, START_COLUMN + 6, model.getDoubleMetric(CodeBeamerConstants.METRIC_MATURITY_AGREED));
+                        updateRowCellPercent(row, startColumn + 2, (double) model.getIntMetric(CodeBeamerConstants.METRIC_MATURITY_OPEN_COUNT) / reqCount);
+                        updateRowCellPercent(row, startColumn + 3, (double) model.getIntMetric(CodeBeamerConstants.METRIC_MATURITY_SPECIFIED_COUNT) / reqCount);
+                        updateRowCellPercent(row, startColumn + 4, (double) model.getIntMetric(CodeBeamerConstants.METRIC_MATURITY_FOLLOW_UP_COUNT) / reqCount);
+                        updateRowCellPercent(row, startColumn + 5, (double) model.getIntMetric(CodeBeamerConstants.METRIC_MATURITY_FOLLOW_UP_HASHTAGS_COUNT) / reqCount);
+                        updateRowCellPercent(row, startColumn + 6, (double) model.getIntMetric(CodeBeamerConstants.METRIC_MATURITY_AGREED_COUNT) / reqCount);
                     }
                     final Integer emptyObjectType = model.getIntMetric(CodeBeamerConstants.METRIC_EMPTY_OBJECT_TYPE);
                     final Integer requirementAsHeading = model.getIntMetric(CodeBeamerConstants.METRIC_HEADING_AS_REQUIREMENT_COUNT);
                     final Integer informationWithLink = model.getIntMetric(CodeBeamerConstants.METRIC_INFORMATION_WITH_LINK);
                     final Integer requirementWithoutLink = model.getIntMetric(CodeBeamerConstants.METRIC_REQUIREMENT_WITHOUT_LINK);
-                    updateRowCell(row, START_COLUMN + 7, emptyObjectType);
-                    updateRowCell(row, START_COLUMN + 8, requirementAsHeading);
-                    updateRowCell(row, START_COLUMN + 9, informationWithLink);
-                    updateRowCell(row, START_COLUMN + 10, requirementWithoutLink);
+                    updateRowCell(row, startColumn + 7, emptyObjectType);
+                    updateRowCell(row, startColumn + 8, requirementAsHeading);
+                    updateRowCell(row, startColumn + 9, informationWithLink);
+                    updateRowCell(row, startColumn + 10, requirementWithoutLink);
 
-                    updateRowCell(row, START_COLUMN + 11, emptyObjectType + requirementAsHeading + informationWithLink + requirementWithoutLink);
+                    updateRowCell(row, startColumn + 11, emptyObjectType + requirementAsHeading + informationWithLink + requirementWithoutLink);
                 } else {
                     LOGGER.warning(String.format("No module found for module name %s.", rowDocName));
                 }

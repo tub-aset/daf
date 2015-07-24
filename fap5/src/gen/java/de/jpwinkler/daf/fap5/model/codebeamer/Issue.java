@@ -11,12 +11,12 @@ import de.jpwinkler.daf.dafcore.model.common.ModelObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link de.jpwinkler.daf.fap5.model.codebeamer.Issue#getSeverity <em>Severity</em>}</li>
  *   <li>{@link de.jpwinkler.daf.fap5.model.codebeamer.Issue#getDescription <em>Description</em>}</li>
  *   <li>{@link de.jpwinkler.daf.fap5.model.codebeamer.Issue#getIssueType <em>Issue Type</em>}</li>
  * </ul>
- * </p>
  *
  * @see de.jpwinkler.daf.fap5.model.codebeamer.CodebeamerPackage#getIssue()
  * @model

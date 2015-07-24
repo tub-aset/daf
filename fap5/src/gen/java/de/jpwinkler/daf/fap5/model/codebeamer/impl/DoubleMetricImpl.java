@@ -15,10 +15,10 @@ import de.jpwinkler.daf.fap5.model.codebeamer.DoubleMetric;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link de.jpwinkler.daf.fap5.model.codebeamer.impl.DoubleMetricImpl#getValue <em>Value</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

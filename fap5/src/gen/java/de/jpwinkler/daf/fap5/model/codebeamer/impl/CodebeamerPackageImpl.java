@@ -92,7 +92,7 @@ public class CodebeamerPackageImpl extends EPackageImpl implements CodebeamerPac
 
     /**
      * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
-     *
+     * 
      * <p>This method is used to initialize {@link CodebeamerPackage#eINSTANCE} when that field is accessed.
      * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
      * <!-- begin-user-doc -->
@@ -103,24 +103,22 @@ public class CodebeamerPackageImpl extends EPackageImpl implements CodebeamerPac
      * @generated
      */
     public static CodebeamerPackage init() {
-        if (isInited) {
-            return (CodebeamerPackage)EPackage.Registry.INSTANCE.getEPackage(CodebeamerPackage.eNS_URI);
-        }
+        if (isInited) return (CodebeamerPackage)EPackage.Registry.INSTANCE.getEPackage(CodebeamerPackage.eNS_URI);
 
         // Obtain or create and register package
-        final CodebeamerPackageImpl theCodebeamerPackage = (CodebeamerPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof CodebeamerPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new CodebeamerPackageImpl());
+        CodebeamerPackageImpl theCodebeamerPackage = (CodebeamerPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof CodebeamerPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new CodebeamerPackageImpl());
 
         isInited = true;
 
         // Initialize simple dependencies
-        CommonPackage.eINSTANCE.eClass();
         CSVPackage.eINSTANCE.eClass();
+        CommonPackage.eINSTANCE.eClass();
 
         // Obtain or create and register interdependencies
-        final CockpitPackageImpl theCockpitPackage = (CockpitPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(CockpitPackage.eNS_URI) instanceof CockpitPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(CockpitPackage.eNS_URI) : CockpitPackage.eINSTANCE);
-        final ComponentsSystemsPackageImpl theComponentsSystemsPackage = (ComponentsSystemsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ComponentsSystemsPackage.eNS_URI) instanceof ComponentsSystemsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ComponentsSystemsPackage.eNS_URI) : ComponentsSystemsPackage.eINSTANCE);
-        final IssueHistoryPackageImpl theIssueHistoryPackage = (IssueHistoryPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(IssueHistoryPackage.eNS_URI) instanceof IssueHistoryPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(IssueHistoryPackage.eNS_URI) : IssueHistoryPackage.eINSTANCE);
-        final SrsPackageImpl theSrsPackage = (SrsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SrsPackage.eNS_URI) instanceof SrsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SrsPackage.eNS_URI) : SrsPackage.eINSTANCE);
+        CockpitPackageImpl theCockpitPackage = (CockpitPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(CockpitPackage.eNS_URI) instanceof CockpitPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(CockpitPackage.eNS_URI) : CockpitPackage.eINSTANCE);
+        ComponentsSystemsPackageImpl theComponentsSystemsPackage = (ComponentsSystemsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ComponentsSystemsPackage.eNS_URI) instanceof ComponentsSystemsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ComponentsSystemsPackage.eNS_URI) : ComponentsSystemsPackage.eINSTANCE);
+        IssueHistoryPackageImpl theIssueHistoryPackage = (IssueHistoryPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(IssueHistoryPackage.eNS_URI) instanceof IssueHistoryPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(IssueHistoryPackage.eNS_URI) : IssueHistoryPackage.eINSTANCE);
+        SrsPackageImpl theSrsPackage = (SrsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SrsPackage.eNS_URI) instanceof SrsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SrsPackage.eNS_URI) : SrsPackage.eINSTANCE);
 
         // Create package meta-data objects
         theCodebeamerPackage.createPackageContents();
@@ -139,7 +137,7 @@ public class CodebeamerPackageImpl extends EPackageImpl implements CodebeamerPac
         // Mark meta-data to indicate it can't be changed
         theCodebeamerPackage.freeze();
 
-
+  
         // Update the registry and return the package
         EPackage.Registry.INSTANCE.put(CodebeamerPackage.eNS_URI, theCodebeamerPackage);
         return theCodebeamerPackage;
@@ -213,6 +211,15 @@ public class CodebeamerPackageImpl extends EPackageImpl implements CodebeamerPac
     @Override
     public EReference getCodeBeamerModel_Metrics() {
         return (EReference)codeBeamerModelEClass.getEStructuralFeatures().get(5);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getCodeBeamerModel_Module() {
+        return (EReference)codeBeamerModelEClass.getEStructuralFeatures().get(6);
     }
 
     /**
@@ -390,9 +397,7 @@ public class CodebeamerPackageImpl extends EPackageImpl implements CodebeamerPac
      * @generated
      */
     public void createPackageContents() {
-        if (isCreated) {
-            return;
-        }
+        if (isCreated) return;
         isCreated = true;
 
         // Create classes and their features
@@ -403,6 +408,7 @@ public class CodebeamerPackageImpl extends EPackageImpl implements CodebeamerPac
         createEReference(codeBeamerModelEClass, CODE_BEAMER_MODEL__ISSUES);
         createEAttribute(codeBeamerModelEClass, CODE_BEAMER_MODEL__VERSION_NUMBER);
         createEReference(codeBeamerModelEClass, CODE_BEAMER_MODEL__METRICS);
+        createEReference(codeBeamerModelEClass, CODE_BEAMER_MODEL__MODULE);
         createEOperation(codeBeamerModelEClass, CODE_BEAMER_MODEL___GET_ESTIMATED_REMAINING_WORK);
         createEOperation(codeBeamerModelEClass, CODE_BEAMER_MODEL___GET_ISSUE_TYPES);
         createEOperation(codeBeamerModelEClass, CODE_BEAMER_MODEL___GET_ISSUES__STRING);
@@ -439,9 +445,7 @@ public class CodebeamerPackageImpl extends EPackageImpl implements CodebeamerPac
      * @generated
      */
     public void initializePackageContents() {
-        if (isInitialized) {
-            return;
-        }
+        if (isInitialized) return;
         isInitialized = true;
 
         // Initialize package
@@ -450,7 +454,8 @@ public class CodebeamerPackageImpl extends EPackageImpl implements CodebeamerPac
         setNsURI(eNS_URI);
 
         // Obtain other dependent packages
-        final CommonPackage theCommonPackage = (CommonPackage)EPackage.Registry.INSTANCE.getEPackage(CommonPackage.eNS_URI);
+        CommonPackage theCommonPackage = (CommonPackage)EPackage.Registry.INSTANCE.getEPackage(CommonPackage.eNS_URI);
+        CSVPackage theCSVPackage = (CSVPackage)EPackage.Registry.INSTANCE.getEPackage(CSVPackage.eNS_URI);
 
         // Create type parameters
 
@@ -459,23 +464,24 @@ public class CodebeamerPackageImpl extends EPackageImpl implements CodebeamerPac
         // Add supertypes to classes
         codeBeamerModelEClass.getESuperTypes().add(theCommonPackage.getModelObject());
         issueEClass.getESuperTypes().add(theCommonPackage.getModelObject());
-        intMetricEClass.getESuperTypes().add(getMetric());
-        doubleMetricEClass.getESuperTypes().add(getMetric());
+        intMetricEClass.getESuperTypes().add(this.getMetric());
+        doubleMetricEClass.getESuperTypes().add(this.getMetric());
 
         // Initialize classes, features, and operations; add parameters
         initEClass(codeBeamerModelEClass, CodeBeamerModel.class, "CodeBeamerModel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getCodeBeamerModel_Name(), ecorePackage.getEString(), "name", null, 0, 1, CodeBeamerModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getCodeBeamerModel_Specified(), ecorePackage.getEBoolean(), "specified", null, 0, 1, CodeBeamerModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getCodeBeamerModel_Size(), ecorePackage.getEFloat(), "size", "0", 0, 1, CodeBeamerModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getCodeBeamerModel_Issues(), getIssue(), null, "issues", null, 0, -1, CodeBeamerModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getCodeBeamerModel_Issues(), this.getIssue(), null, "issues", null, 0, -1, CodeBeamerModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getCodeBeamerModel_VersionNumber(), ecorePackage.getEString(), "versionNumber", null, 0, 1, CodeBeamerModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getCodeBeamerModel_Metrics(), getMetric(), null, "metrics", null, 0, -1, CodeBeamerModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getCodeBeamerModel_Metrics(), this.getMetric(), null, "metrics", null, 0, -1, CodeBeamerModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getCodeBeamerModel_Module(), theCSVPackage.getDoorsModule(), null, "module", null, 0, 1, CodeBeamerModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEOperation(getCodeBeamerModel__GetEstimatedRemainingWork(), ecorePackage.getEFloat(), "getEstimatedRemainingWork", 0, 1, IS_UNIQUE, IS_ORDERED);
 
         initEOperation(getCodeBeamerModel__GetIssueTypes(), ecorePackage.getEString(), "getIssueTypes", 0, -1, IS_UNIQUE, IS_ORDERED);
 
-        EOperation op = initEOperation(getCodeBeamerModel__GetIssues__String(), getIssue(), "getIssues", 0, -1, IS_UNIQUE, IS_ORDERED);
+        EOperation op = initEOperation(getCodeBeamerModel__GetIssues__String(), this.getIssue(), "getIssues", 0, -1, IS_UNIQUE, IS_ORDERED);
         addEParameter(op, ecorePackage.getEString(), "issueType", 0, 1, IS_UNIQUE, IS_ORDERED);
 
         op = initEOperation(getCodeBeamerModel__GetDoubleMetric__String(), ecorePackage.getEDoubleObject(), "getDoubleMetric", 0, 1, IS_UNIQUE, IS_ORDERED);

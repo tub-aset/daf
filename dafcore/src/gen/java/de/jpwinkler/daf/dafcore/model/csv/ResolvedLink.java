@@ -10,10 +10,10 @@ package de.jpwinkler.daf.dafcore.model.csv;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.ResolvedLink#getTarget <em>Target</em>}</li>
  * </ul>
- * </p>
  *
  * @see de.jpwinkler.daf.dafcore.model.csv.CSVPackage#getResolvedLink()
  * @model

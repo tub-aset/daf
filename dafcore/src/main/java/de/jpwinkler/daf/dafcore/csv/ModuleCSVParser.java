@@ -21,6 +21,7 @@ import de.jpwinkler.daf.dafcore.model.csv.CSVFactory;
 import de.jpwinkler.daf.dafcore.model.csv.CSVPackage;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
+import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
 import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.util.CSVParseException;
 
 public class ModuleCSVParser {
@@ -37,9 +38,7 @@ public class ModuleCSVParser {
 
         final DoorsModule module = factory.createDoorsModule();
 
-        final DoorsObject root = factory.createDoorsObject();
-
-        DoorsObject current = root;
+        DoorsTreeNode current = module;
         int currentLevel = 0;
 
         for (final CSVRecord record : records) {
@@ -112,9 +111,6 @@ public class ModuleCSVParser {
             current.getObjects().add(newObject);
         }
 
-        module.getObjects().addAll(root.getObjects());
-
-        root.getObjects().clear();
         return module;
     }
 

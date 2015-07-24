@@ -1,11 +1,11 @@
 package de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.preconditions;
 
-import de.jpwinkler.daf.dafcore.csv.DoorsModuleVisitor;
+import de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.Rule;
 import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.RuleContext;
 
-public class DefaultPrecondition implements Precondition, DoorsModuleVisitor {
+public class DefaultPrecondition extends DoorsTreeNodeVisitor implements Precondition {
 
     private final Rule rule;
 
@@ -33,11 +33,6 @@ public class DefaultPrecondition implements Precondition, DoorsModuleVisitor {
         // Return false when a matching object was found to stop processing
         // child objects.
         return !foundObject;
-    }
-
-    @Override
-    public void visitPostTraverse(final DoorsObject object) {
-        // do nothing by default
     }
 
 }

@@ -42,7 +42,7 @@ public interface CSVPackage extends EPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    String eNS_URI = "com.daimler.jonwink.srstp.model.csv";
+    String eNS_URI = "de.jpwinkler.daf.dafcore.model.csv";
 
     /**
      * The package namespace name.
@@ -61,6 +61,79 @@ public interface CSVPackage extends EPackage {
     CSVPackage eINSTANCE = de.jpwinkler.daf.dafcore.model.csv.impl.CSVPackageImpl.init();
 
     /**
+     * The meta object id for the '{@link de.jpwinkler.daf.dafcore.model.csv.impl.DoorsTreeNodeImpl <em>Doors Tree Node</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see de.jpwinkler.daf.dafcore.model.csv.impl.DoorsTreeNodeImpl
+     * @see de.jpwinkler.daf.dafcore.model.csv.impl.CSVPackageImpl#getDoorsTreeNode()
+     * @generated
+     */
+    int DOORS_TREE_NODE = 6;
+
+    /**
+     * The feature id for the '<em><b>Source</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DOORS_TREE_NODE__SOURCE = CommonPackage.MODEL_OBJECT__SOURCE;
+
+    /**
+     * The feature id for the '<em><b>Objects</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DOORS_TREE_NODE__OBJECTS = CommonPackage.MODEL_OBJECT_FEATURE_COUNT + 0;
+
+    /**
+     * The feature id for the '<em><b>Parent</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DOORS_TREE_NODE__PARENT = CommonPackage.MODEL_OBJECT_FEATURE_COUNT + 1;
+
+    /**
+     * The feature id for the '<em><b>Attributes</b></em>' map.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DOORS_TREE_NODE__ATTRIBUTES = CommonPackage.MODEL_OBJECT_FEATURE_COUNT + 2;
+
+    /**
+     * The number of structural features of the '<em>Doors Tree Node</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DOORS_TREE_NODE_FEATURE_COUNT = CommonPackage.MODEL_OBJECT_FEATURE_COUNT + 3;
+
+    /**
+     * The operation id for the '<em>Accept</em>' operation.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DOORS_TREE_NODE___ACCEPT__DOORSTREENODEVISITOR = CommonPackage.MODEL_OBJECT_OPERATION_COUNT + 0;
+
+    /**
+     * The number of operations of the '<em>Doors Tree Node</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DOORS_TREE_NODE_OPERATION_COUNT = CommonPackage.MODEL_OBJECT_OPERATION_COUNT + 1;
+
+    /**
      * The meta object id for the '{@link de.jpwinkler.daf.dafcore.model.csv.impl.DoorsModuleImpl <em>Doors Module</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -77,7 +150,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_MODULE__SOURCE = CommonPackage.MODEL_OBJECT__SOURCE;
+    int DOORS_MODULE__SOURCE = DOORS_TREE_NODE__SOURCE;
 
     /**
      * The feature id for the '<em><b>Objects</b></em>' containment reference list.
@@ -86,7 +159,16 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_MODULE__OBJECTS = CommonPackage.MODEL_OBJECT_FEATURE_COUNT + 0;
+    int DOORS_MODULE__OBJECTS = DOORS_TREE_NODE__OBJECTS;
+
+    /**
+     * The feature id for the '<em><b>Parent</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DOORS_MODULE__PARENT = DOORS_TREE_NODE__PARENT;
 
     /**
      * The feature id for the '<em><b>Attributes</b></em>' map.
@@ -95,7 +177,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_MODULE__ATTRIBUTES = CommonPackage.MODEL_OBJECT_FEATURE_COUNT + 1;
+    int DOORS_MODULE__ATTRIBUTES = DOORS_TREE_NODE__ATTRIBUTES;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -104,7 +186,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_MODULE__NAME = CommonPackage.MODEL_OBJECT_FEATURE_COUNT + 2;
+    int DOORS_MODULE__NAME = DOORS_TREE_NODE_FEATURE_COUNT + 0;
 
     /**
      * The feature id for the '<em><b>Path</b></em>' attribute.
@@ -113,7 +195,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_MODULE__PATH = CommonPackage.MODEL_OBJECT_FEATURE_COUNT + 3;
+    int DOORS_MODULE__PATH = DOORS_TREE_NODE_FEATURE_COUNT + 1;
 
     /**
      * The feature id for the '<em><b>Url</b></em>' attribute.
@@ -122,7 +204,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_MODULE__URL = CommonPackage.MODEL_OBJECT_FEATURE_COUNT + 4;
+    int DOORS_MODULE__URL = DOORS_TREE_NODE_FEATURE_COUNT + 2;
 
     /**
      * The number of structural features of the '<em>Doors Module</em>' class.
@@ -131,7 +213,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_MODULE_FEATURE_COUNT = CommonPackage.MODEL_OBJECT_FEATURE_COUNT + 5;
+    int DOORS_MODULE_FEATURE_COUNT = DOORS_TREE_NODE_FEATURE_COUNT + 3;
 
     /**
      * The operation id for the '<em>Accept</em>' operation.
@@ -140,7 +222,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_MODULE___ACCEPT__DOORSMODULEVISITOR = CommonPackage.MODEL_OBJECT_OPERATION_COUNT + 0;
+    int DOORS_MODULE___ACCEPT__DOORSTREENODEVISITOR = DOORS_TREE_NODE___ACCEPT__DOORSTREENODEVISITOR;
 
     /**
      * The number of operations of the '<em>Doors Module</em>' class.
@@ -149,7 +231,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_MODULE_OPERATION_COUNT = CommonPackage.MODEL_OBJECT_OPERATION_COUNT + 1;
+    int DOORS_MODULE_OPERATION_COUNT = DOORS_TREE_NODE_OPERATION_COUNT + 0;
 
     /**
      * The meta object id for the '{@link de.jpwinkler.daf.dafcore.model.csv.impl.DoorsObjectImpl <em>Doors Object</em>}' class.
@@ -162,22 +244,13 @@ public interface CSVPackage extends EPackage {
     int DOORS_OBJECT = 1;
 
     /**
-     * The feature id for the '<em><b>Module</b></em>' reference.
+     * The feature id for the '<em><b>Source</b></em>' reference.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DOORS_OBJECT__MODULE = 0;
-
-    /**
-     * The feature id for the '<em><b>Attributes</b></em>' map.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int DOORS_OBJECT__ATTRIBUTES = 1;
+    int DOORS_OBJECT__SOURCE = DOORS_TREE_NODE__SOURCE;
 
     /**
      * The feature id for the '<em><b>Objects</b></em>' containment reference list.
@@ -186,7 +259,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_OBJECT__OBJECTS = 2;
+    int DOORS_OBJECT__OBJECTS = DOORS_TREE_NODE__OBJECTS;
 
     /**
      * The feature id for the '<em><b>Parent</b></em>' container reference.
@@ -195,7 +268,16 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_OBJECT__PARENT = 3;
+    int DOORS_OBJECT__PARENT = DOORS_TREE_NODE__PARENT;
+
+    /**
+     * The feature id for the '<em><b>Attributes</b></em>' map.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DOORS_OBJECT__ATTRIBUTES = DOORS_TREE_NODE__ATTRIBUTES;
 
     /**
      * The feature id for the '<em><b>Object Identifier</b></em>' attribute.
@@ -204,7 +286,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_OBJECT__OBJECT_IDENTIFIER = 4;
+    int DOORS_OBJECT__OBJECT_IDENTIFIER = DOORS_TREE_NODE_FEATURE_COUNT + 0;
 
     /**
      * The feature id for the '<em><b>Object Level</b></em>' attribute.
@@ -213,7 +295,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_OBJECT__OBJECT_LEVEL = 5;
+    int DOORS_OBJECT__OBJECT_LEVEL = DOORS_TREE_NODE_FEATURE_COUNT + 1;
 
     /**
      * The feature id for the '<em><b>Object Number</b></em>' attribute.
@@ -222,7 +304,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_OBJECT__OBJECT_NUMBER = 6;
+    int DOORS_OBJECT__OBJECT_NUMBER = DOORS_TREE_NODE_FEATURE_COUNT + 2;
 
     /**
      * The feature id for the '<em><b>Created By</b></em>' attribute.
@@ -231,7 +313,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_OBJECT__CREATED_BY = 7;
+    int DOORS_OBJECT__CREATED_BY = DOORS_TREE_NODE_FEATURE_COUNT + 3;
 
     /**
      * The feature id for the '<em><b>Created Thru</b></em>' attribute.
@@ -240,7 +322,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_OBJECT__CREATED_THRU = 8;
+    int DOORS_OBJECT__CREATED_THRU = DOORS_TREE_NODE_FEATURE_COUNT + 4;
 
     /**
      * The feature id for the '<em><b>Created On</b></em>' attribute.
@@ -249,7 +331,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_OBJECT__CREATED_ON = 9;
+    int DOORS_OBJECT__CREATED_ON = DOORS_TREE_NODE_FEATURE_COUNT + 5;
 
     /**
      * The feature id for the '<em><b>Absolute Number</b></em>' attribute.
@@ -258,7 +340,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_OBJECT__ABSOLUTE_NUMBER = 10;
+    int DOORS_OBJECT__ABSOLUTE_NUMBER = DOORS_TREE_NODE_FEATURE_COUNT + 6;
 
     /**
      * The feature id for the '<em><b>Last Modified On</b></em>' attribute.
@@ -267,7 +349,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_OBJECT__LAST_MODIFIED_ON = 11;
+    int DOORS_OBJECT__LAST_MODIFIED_ON = DOORS_TREE_NODE_FEATURE_COUNT + 7;
 
     /**
      * The feature id for the '<em><b>Last Modified By</b></em>' attribute.
@@ -276,7 +358,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_OBJECT__LAST_MODIFIED_BY = 12;
+    int DOORS_OBJECT__LAST_MODIFIED_BY = DOORS_TREE_NODE_FEATURE_COUNT + 8;
 
     /**
      * The feature id for the '<em><b>Object Text</b></em>' attribute.
@@ -285,7 +367,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_OBJECT__OBJECT_TEXT = 13;
+    int DOORS_OBJECT__OBJECT_TEXT = DOORS_TREE_NODE_FEATURE_COUNT + 9;
 
     /**
      * The feature id for the '<em><b>Object Short Text</b></em>' attribute.
@@ -294,7 +376,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_OBJECT__OBJECT_SHORT_TEXT = 14;
+    int DOORS_OBJECT__OBJECT_SHORT_TEXT = DOORS_TREE_NODE_FEATURE_COUNT + 10;
 
     /**
      * The feature id for the '<em><b>Object Heading</b></em>' attribute.
@@ -303,7 +385,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_OBJECT__OBJECT_HEADING = 15;
+    int DOORS_OBJECT__OBJECT_HEADING = DOORS_TREE_NODE_FEATURE_COUNT + 11;
 
     /**
      * The feature id for the '<em><b>Outgoing Links</b></em>' containment reference list.
@@ -312,7 +394,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_OBJECT__OUTGOING_LINKS = 16;
+    int DOORS_OBJECT__OUTGOING_LINKS = DOORS_TREE_NODE_FEATURE_COUNT + 12;
 
     /**
      * The feature id for the '<em><b>Incoming Links</b></em>' reference list.
@@ -321,7 +403,16 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_OBJECT__INCOMING_LINKS = 17;
+    int DOORS_OBJECT__INCOMING_LINKS = DOORS_TREE_NODE_FEATURE_COUNT + 13;
+
+    /**
+     * The feature id for the '<em><b>Module</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DOORS_OBJECT__MODULE = DOORS_TREE_NODE_FEATURE_COUNT + 14;
 
     /**
      * The number of structural features of the '<em>Doors Object</em>' class.
@@ -330,7 +421,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_OBJECT_FEATURE_COUNT = 18;
+    int DOORS_OBJECT_FEATURE_COUNT = DOORS_TREE_NODE_FEATURE_COUNT + 15;
 
     /**
      * The operation id for the '<em>Accept</em>' operation.
@@ -339,7 +430,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_OBJECT___ACCEPT__DOORSMODULEVISITOR = 0;
+    int DOORS_OBJECT___ACCEPT__DOORSTREENODEVISITOR = DOORS_TREE_NODE___ACCEPT__DOORSTREENODEVISITOR;
 
     /**
      * The operation id for the '<em>Is Heading</em>' operation.
@@ -348,7 +439,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_OBJECT___IS_HEADING = 1;
+    int DOORS_OBJECT___IS_HEADING = DOORS_TREE_NODE_OPERATION_COUNT + 0;
 
     /**
      * The operation id for the '<em>Get Text</em>' operation.
@@ -357,7 +448,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_OBJECT___GET_TEXT = 2;
+    int DOORS_OBJECT___GET_TEXT = DOORS_TREE_NODE_OPERATION_COUNT + 1;
 
     /**
      * The number of operations of the '<em>Doors Object</em>' class.
@@ -366,7 +457,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_OBJECT_OPERATION_COUNT = 3;
+    int DOORS_OBJECT_OPERATION_COUNT = DOORS_TREE_NODE_OPERATION_COUNT + 2;
 
     /**
      * The meta object id for the '{@link de.jpwinkler.daf.dafcore.model.csv.impl.StringToStringMapImpl <em>String To String Map</em>}' class.
@@ -553,15 +644,14 @@ public interface CSVPackage extends EPackage {
     int UNRESOLVED_LINK_OPERATION_COUNT = LINK_OPERATION_COUNT + 0;
 
     /**
-     * The meta object id for the '<em>Doors Module Visitor</em>' data type.
+     * The meta object id for the '<em>Doors Tree Node Visitor</em>' data type.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see com.daimler.jonwink.srstp.core.csv.DoorsModuleVisitor
-     * @see de.jpwinkler.daf.dafcore.model.csv.impl.CSVPackageImpl#getDoorsModuleVisitor()
+     * @see de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor
+     * @see de.jpwinkler.daf.dafcore.model.csv.impl.CSVPackageImpl#getDoorsTreeNodeVisitor()
      * @generated
      */
-    int DOORS_MODULE_VISITOR = 6;
-
+    int DOORS_TREE_NODE_VISITOR = 7;
 
     /**
      * Returns the meta object for class '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsModule <em>Doors Module</em>}'.
@@ -572,28 +662,6 @@ public interface CSVPackage extends EPackage {
      * @generated
      */
     EClass getDoorsModule();
-
-    /**
-     * Returns the meta object for the containment reference list '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsModule#getObjects <em>Objects</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for the containment reference list '<em>Objects</em>'.
-     * @see de.jpwinkler.daf.dafcore.model.csv.DoorsModule#getObjects()
-     * @see #getDoorsModule()
-     * @generated
-     */
-    EReference getDoorsModule_Objects();
-
-    /**
-     * Returns the meta object for the map '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsModule#getAttributes <em>Attributes</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for the map '<em>Attributes</em>'.
-     * @see de.jpwinkler.daf.dafcore.model.csv.DoorsModule#getAttributes()
-     * @see #getDoorsModule()
-     * @generated
-     */
-    EReference getDoorsModule_Attributes();
 
     /**
      * Returns the meta object for the attribute '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsModule#getName <em>Name</em>}'.
@@ -629,16 +697,6 @@ public interface CSVPackage extends EPackage {
     EAttribute getDoorsModule_Url();
 
     /**
-     * Returns the meta object for the '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsModule#accept(com.daimler.jonwink.srstp.core.csv.DoorsModuleVisitor) <em>Accept</em>}' operation.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for the '<em>Accept</em>' operation.
-     * @see de.jpwinkler.daf.dafcore.model.csv.DoorsModule#accept(com.daimler.jonwink.srstp.core.csv.DoorsModuleVisitor)
-     * @generated
-     */
-    EOperation getDoorsModule__Accept__DoorsModuleVisitor();
-
-    /**
      * Returns the meta object for class '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject <em>Doors Object</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -647,50 +705,6 @@ public interface CSVPackage extends EPackage {
      * @generated
      */
     EClass getDoorsObject();
-
-    /**
-     * Returns the meta object for the reference '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getModule <em>Module</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for the reference '<em>Module</em>'.
-     * @see de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getModule()
-     * @see #getDoorsObject()
-     * @generated
-     */
-    EReference getDoorsObject_Module();
-
-    /**
-     * Returns the meta object for the map '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getAttributes <em>Attributes</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for the map '<em>Attributes</em>'.
-     * @see de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getAttributes()
-     * @see #getDoorsObject()
-     * @generated
-     */
-    EReference getDoorsObject_Attributes();
-
-    /**
-     * Returns the meta object for the containment reference list '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getObjects <em>Objects</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for the containment reference list '<em>Objects</em>'.
-     * @see de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getObjects()
-     * @see #getDoorsObject()
-     * @generated
-     */
-    EReference getDoorsObject_Objects();
-
-    /**
-     * Returns the meta object for the container reference '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getParent <em>Parent</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for the container reference '<em>Parent</em>'.
-     * @see de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getParent()
-     * @see #getDoorsObject()
-     * @generated
-     */
-    EReference getDoorsObject_Parent();
 
     /**
      * Returns the meta object for the attribute '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getObjectIdentifier <em>Object Identifier</em>}'.
@@ -847,14 +861,15 @@ public interface CSVPackage extends EPackage {
     EReference getDoorsObject_IncomingLinks();
 
     /**
-     * Returns the meta object for the '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#accept(com.daimler.jonwink.srstp.core.csv.DoorsModuleVisitor) <em>Accept</em>}' operation.
+     * Returns the meta object for the reference '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getModule <em>Module</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the meta object for the '<em>Accept</em>' operation.
-     * @see de.jpwinkler.daf.dafcore.model.csv.DoorsObject#accept(com.daimler.jonwink.srstp.core.csv.DoorsModuleVisitor)
+     * @return the meta object for the reference '<em>Module</em>'.
+     * @see de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getModule()
+     * @see #getDoorsObject()
      * @generated
      */
-    EOperation getDoorsObject__Accept__DoorsModuleVisitor();
+    EReference getDoorsObject_Module();
 
     /**
      * Returns the meta object for the '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#isHeading() <em>Is Heading</em>}' operation.
@@ -985,15 +1000,68 @@ public interface CSVPackage extends EPackage {
     EAttribute getUnresolvedLink_TargetObject();
 
     /**
-     * Returns the meta object for data type '{@link com.daimler.jonwink.srstp.core.csv.DoorsModuleVisitor <em>Doors Module Visitor</em>}'.
+     * Returns the meta object for class '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode <em>Doors Tree Node</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the meta object for data type '<em>Doors Module Visitor</em>'.
-     * @see com.daimler.jonwink.srstp.core.csv.DoorsModuleVisitor
-     * @model instanceClass="com.daimler.jonwink.srstp.core.csv.DoorsModuleVisitor"
+     * @return the meta object for class '<em>Doors Tree Node</em>'.
+     * @see de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode
      * @generated
      */
-    EDataType getDoorsModuleVisitor();
+    EClass getDoorsTreeNode();
+
+    /**
+     * Returns the meta object for the containment reference list '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode#getObjects <em>Objects</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the containment reference list '<em>Objects</em>'.
+     * @see de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode#getObjects()
+     * @see #getDoorsTreeNode()
+     * @generated
+     */
+    EReference getDoorsTreeNode_Objects();
+
+    /**
+     * Returns the meta object for the container reference '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode#getParent <em>Parent</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the container reference '<em>Parent</em>'.
+     * @see de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode#getParent()
+     * @see #getDoorsTreeNode()
+     * @generated
+     */
+    EReference getDoorsTreeNode_Parent();
+
+    /**
+     * Returns the meta object for the map '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode#getAttributes <em>Attributes</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the map '<em>Attributes</em>'.
+     * @see de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode#getAttributes()
+     * @see #getDoorsTreeNode()
+     * @generated
+     */
+    EReference getDoorsTreeNode_Attributes();
+
+    /**
+     * Returns the meta object for the '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode#accept(de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor) <em>Accept</em>}' operation.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the '<em>Accept</em>' operation.
+     * @see de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode#accept(de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor)
+     * @generated
+     */
+    EOperation getDoorsTreeNode__Accept__DoorsTreeNodeVisitor();
+
+    /**
+     * Returns the meta object for data type '{@link de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor <em>Doors Tree Node Visitor</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for data type '<em>Doors Tree Node Visitor</em>'.
+     * @see de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor
+     * @model instanceClass="de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor"
+     * @generated
+     */
+    EDataType getDoorsTreeNodeVisitor();
 
     /**
      * Returns the factory that creates the instances of the model.
@@ -1029,22 +1097,6 @@ public interface CSVPackage extends EPackage {
         EClass DOORS_MODULE = eINSTANCE.getDoorsModule();
 
         /**
-         * The meta object literal for the '<em><b>Objects</b></em>' containment reference list feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @generated
-         */
-        EReference DOORS_MODULE__OBJECTS = eINSTANCE.getDoorsModule_Objects();
-
-        /**
-         * The meta object literal for the '<em><b>Attributes</b></em>' map feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @generated
-         */
-        EReference DOORS_MODULE__ATTRIBUTES = eINSTANCE.getDoorsModule_Attributes();
-
-        /**
          * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
@@ -1069,14 +1121,6 @@ public interface CSVPackage extends EPackage {
         EAttribute DOORS_MODULE__URL = eINSTANCE.getDoorsModule_Url();
 
         /**
-         * The meta object literal for the '<em><b>Accept</b></em>' operation.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @generated
-         */
-        EOperation DOORS_MODULE___ACCEPT__DOORSMODULEVISITOR = eINSTANCE.getDoorsModule__Accept__DoorsModuleVisitor();
-
-        /**
          * The meta object literal for the '{@link de.jpwinkler.daf.dafcore.model.csv.impl.DoorsObjectImpl <em>Doors Object</em>}' class.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
@@ -1085,38 +1129,6 @@ public interface CSVPackage extends EPackage {
          * @generated
          */
         EClass DOORS_OBJECT = eINSTANCE.getDoorsObject();
-
-        /**
-         * The meta object literal for the '<em><b>Module</b></em>' reference feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @generated
-         */
-        EReference DOORS_OBJECT__MODULE = eINSTANCE.getDoorsObject_Module();
-
-        /**
-         * The meta object literal for the '<em><b>Attributes</b></em>' map feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @generated
-         */
-        EReference DOORS_OBJECT__ATTRIBUTES = eINSTANCE.getDoorsObject_Attributes();
-
-        /**
-         * The meta object literal for the '<em><b>Objects</b></em>' containment reference list feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @generated
-         */
-        EReference DOORS_OBJECT__OBJECTS = eINSTANCE.getDoorsObject_Objects();
-
-        /**
-         * The meta object literal for the '<em><b>Parent</b></em>' container reference feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @generated
-         */
-        EReference DOORS_OBJECT__PARENT = eINSTANCE.getDoorsObject_Parent();
 
         /**
          * The meta object literal for the '<em><b>Object Identifier</b></em>' attribute feature.
@@ -1231,12 +1243,12 @@ public interface CSVPackage extends EPackage {
         EReference DOORS_OBJECT__INCOMING_LINKS = eINSTANCE.getDoorsObject_IncomingLinks();
 
         /**
-         * The meta object literal for the '<em><b>Accept</b></em>' operation.
+         * The meta object literal for the '<em><b>Module</b></em>' reference feature.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
          * @generated
          */
-        EOperation DOORS_OBJECT___ACCEPT__DOORSMODULEVISITOR = eINSTANCE.getDoorsObject__Accept__DoorsModuleVisitor();
+        EReference DOORS_OBJECT__MODULE = eINSTANCE.getDoorsObject_Module();
 
         /**
          * The meta object literal for the '<em><b>Is Heading</b></em>' operation.
@@ -1343,14 +1355,56 @@ public interface CSVPackage extends EPackage {
         EAttribute UNRESOLVED_LINK__TARGET_OBJECT = eINSTANCE.getUnresolvedLink_TargetObject();
 
         /**
-         * The meta object literal for the '<em>Doors Module Visitor</em>' data type.
+         * The meta object literal for the '{@link de.jpwinkler.daf.dafcore.model.csv.impl.DoorsTreeNodeImpl <em>Doors Tree Node</em>}' class.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
-         * @see com.daimler.jonwink.srstp.core.csv.DoorsModuleVisitor
-         * @see de.jpwinkler.daf.dafcore.model.csv.impl.CSVPackageImpl#getDoorsModuleVisitor()
+         * @see de.jpwinkler.daf.dafcore.model.csv.impl.DoorsTreeNodeImpl
+         * @see de.jpwinkler.daf.dafcore.model.csv.impl.CSVPackageImpl#getDoorsTreeNode()
          * @generated
          */
-        EDataType DOORS_MODULE_VISITOR = eINSTANCE.getDoorsModuleVisitor();
+        EClass DOORS_TREE_NODE = eINSTANCE.getDoorsTreeNode();
+
+        /**
+         * The meta object literal for the '<em><b>Objects</b></em>' containment reference list feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference DOORS_TREE_NODE__OBJECTS = eINSTANCE.getDoorsTreeNode_Objects();
+
+        /**
+         * The meta object literal for the '<em><b>Parent</b></em>' container reference feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference DOORS_TREE_NODE__PARENT = eINSTANCE.getDoorsTreeNode_Parent();
+
+        /**
+         * The meta object literal for the '<em><b>Attributes</b></em>' map feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference DOORS_TREE_NODE__ATTRIBUTES = eINSTANCE.getDoorsTreeNode_Attributes();
+
+        /**
+         * The meta object literal for the '<em><b>Accept</b></em>' operation.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EOperation DOORS_TREE_NODE___ACCEPT__DOORSTREENODEVISITOR = eINSTANCE.getDoorsTreeNode__Accept__DoorsTreeNodeVisitor();
+
+        /**
+         * The meta object literal for the '<em>Doors Tree Node Visitor</em>' data type.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor
+         * @see de.jpwinkler.daf.dafcore.model.csv.impl.CSVPackageImpl#getDoorsTreeNodeVisitor()
+         * @generated
+         */
+        EDataType DOORS_TREE_NODE_VISITOR = eINSTANCE.getDoorsTreeNodeVisitor();
 
     }
 

@@ -15,10 +15,10 @@ import de.jpwinkler.daf.fap5.model.codebeamer.IntMetric;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link de.jpwinkler.daf.fap5.model.codebeamer.impl.IntMetricImpl#getValue <em>Value</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

@@ -53,7 +53,7 @@ public class CodebeamerAdapterFactory extends AdapterFactoryImpl {
      * @generated
      */
     @Override
-    public boolean isFactoryForType(final Object object) {
+    public boolean isFactoryForType(Object object) {
         if (object == modelPackage) {
             return true;
         }
@@ -71,35 +71,35 @@ public class CodebeamerAdapterFactory extends AdapterFactoryImpl {
      */
     protected CodebeamerSwitch<Adapter> modelSwitch =
             new CodebeamerSwitch<Adapter>() {
-        @Override
-        public Adapter caseCodeBeamerModel(final CodeBeamerModel object) {
-            return createCodeBeamerModelAdapter();
-        }
-        @Override
-        public Adapter caseIssue(final Issue object) {
-            return createIssueAdapter();
-        }
-        @Override
-        public Adapter caseMetric(final Metric object) {
-            return createMetricAdapter();
-        }
-        @Override
-        public Adapter caseIntMetric(final IntMetric object) {
-            return createIntMetricAdapter();
-        }
-        @Override
-        public Adapter caseDoubleMetric(final DoubleMetric object) {
-            return createDoubleMetricAdapter();
-        }
-        @Override
-        public Adapter caseModelObject(final ModelObject object) {
-            return createModelObjectAdapter();
-        }
-        @Override
-        public Adapter defaultCase(final EObject object) {
-            return createEObjectAdapter();
-        }
-    };
+            @Override
+            public Adapter caseCodeBeamerModel(CodeBeamerModel object) {
+                return createCodeBeamerModelAdapter();
+            }
+            @Override
+            public Adapter caseIssue(Issue object) {
+                return createIssueAdapter();
+            }
+            @Override
+            public Adapter caseMetric(Metric object) {
+                return createMetricAdapter();
+            }
+            @Override
+            public Adapter caseIntMetric(IntMetric object) {
+                return createIntMetricAdapter();
+            }
+            @Override
+            public Adapter caseDoubleMetric(DoubleMetric object) {
+                return createDoubleMetricAdapter();
+            }
+            @Override
+            public Adapter caseModelObject(ModelObject object) {
+                return createModelObjectAdapter();
+            }
+            @Override
+            public Adapter defaultCase(EObject object) {
+                return createEObjectAdapter();
+            }
+        };
 
     /**
      * Creates an adapter for the <code>target</code>.
@@ -110,7 +110,7 @@ public class CodebeamerAdapterFactory extends AdapterFactoryImpl {
      * @generated
      */
     @Override
-    public Adapter createAdapter(final Notifier target) {
+    public Adapter createAdapter(Notifier target) {
         return modelSwitch.doSwitch((EObject)target);
     }
 
@@ -186,13 +186,13 @@ public class CodebeamerAdapterFactory extends AdapterFactoryImpl {
     }
 
     /**
-     * Creates a new adapter for an object of class '{@link com.daimler.jonwink.srstp.core.model.common.ModelObject <em>Model Object</em>}'.
+     * Creates a new adapter for an object of class '{@link de.jpwinkler.daf.dafcore.model.common.ModelObject <em>Model Object</em>}'.
      * <!-- begin-user-doc -->
      * This default implementation returns null so that we can easily ignore cases;
      * it's useful to ignore a case when inheritance will catch all the cases anyway.
      * <!-- end-user-doc -->
      * @return the new adapter.
-     * @see com.daimler.jonwink.srstp.core.model.common.ModelObject
+     * @see de.jpwinkler.daf.dafcore.model.common.ModelObject
      * @generated
      */
     public Adapter createModelObjectAdapter() {

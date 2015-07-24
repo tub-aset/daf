@@ -5,10 +5,6 @@ package de.jpwinkler.daf.dafcore.model.csv;
 import java.util.Date;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.EMap;
-import org.eclipse.emf.ecore.EObject;
-
-import de.jpwinkler.daf.dafcore.csv.DoorsModuleVisitor;
 
 /**
  * <!-- begin-user-doc -->
@@ -17,11 +13,8 @@ import de.jpwinkler.daf.dafcore.csv.DoorsModuleVisitor;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
- *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getModule <em>Module</em>}</li>
- *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getAttributes <em>Attributes</em>}</li>
- *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getObjects <em>Objects</em>}</li>
- *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getParent <em>Parent</em>}</li>
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getObjectIdentifier <em>Object Identifier</em>}</li>
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getObjectLevel <em>Object Level</em>}</li>
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getObjectNumber <em>Object Number</em>}</li>
@@ -36,103 +29,14 @@ import de.jpwinkler.daf.dafcore.csv.DoorsModuleVisitor;
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getObjectHeading <em>Object Heading</em>}</li>
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getOutgoingLinks <em>Outgoing Links</em>}</li>
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getIncomingLinks <em>Incoming Links</em>}</li>
+ *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getModule <em>Module</em>}</li>
  * </ul>
- * </p>
  *
  * @see de.jpwinkler.daf.dafcore.model.csv.CSVPackage#getDoorsObject()
  * @model
  * @generated
  */
-public interface DoorsObject extends EObject {
-    /**
-     * Returns the value of the '<em><b>Module</b></em>' reference.
-     * <!-- begin-user-doc -->
-     * <p>
-     * If the meaning of the '<em>Module</em>' reference isn't clear,
-     * there really should be more of a description here...
-     * </p>
-     * <!-- end-user-doc -->
-     * @return the value of the '<em>Module</em>' reference.
-     * @see #setModule(DoorsModule)
-     * @see de.jpwinkler.daf.dafcore.model.csv.CSVPackage#getDoorsObject_Module()
-     * @model
-     * @generated
-     */
-    DoorsModule getModule();
-
-    /**
-     * Sets the value of the '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getModule <em>Module</em>}' reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Module</em>' reference.
-     * @see #getModule()
-     * @generated
-     */
-    void setModule(DoorsModule value);
-
-    /**
-     * Returns the value of the '<em><b>Attributes</b></em>' map.
-     * The key is of type {@link java.lang.String},
-     * and the value is of type {@link java.lang.String},
-     * <!-- begin-user-doc -->
-     * <p>
-     * If the meaning of the '<em>Attributes</em>' map isn't clear,
-     * there really should be more of a description here...
-     * </p>
-     * <!-- end-user-doc -->
-     * @return the value of the '<em>Attributes</em>' map.
-     * @see de.jpwinkler.daf.dafcore.model.csv.CSVPackage#getDoorsObject_Attributes()
-     * @model mapType="com.daimler.jonwink.srstp.core.model.csv.StringToStringMap<org.eclipse.emf.ecore.EString, org.eclipse.emf.ecore.EString>" ordered="false"
-     * @generated
-     */
-    EMap<String, String> getAttributes();
-
-    /**
-     * Returns the value of the '<em><b>Objects</b></em>' containment reference list.
-     * The list contents are of type {@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject}.
-     * It is bidirectional and its opposite is '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getParent <em>Parent</em>}'.
-     * <!-- begin-user-doc -->
-     * <p>
-     * If the meaning of the '<em>Objects</em>' containment reference list isn't clear,
-     * there really should be more of a description here...
-     * </p>
-     * <!-- end-user-doc -->
-     * @return the value of the '<em>Objects</em>' containment reference list.
-     * @see de.jpwinkler.daf.dafcore.model.csv.CSVPackage#getDoorsObject_Objects()
-     * @see de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getParent
-     * @model opposite="parent" containment="true"
-     * @generated
-     */
-    EList<DoorsObject> getObjects();
-
-    /**
-     * Returns the value of the '<em><b>Parent</b></em>' container reference.
-     * It is bidirectional and its opposite is '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getObjects <em>Objects</em>}'.
-     * <!-- begin-user-doc -->
-     * <p>
-     * If the meaning of the '<em>Parent</em>' container reference isn't clear,
-     * there really should be more of a description here...
-     * </p>
-     * <!-- end-user-doc -->
-     * @return the value of the '<em>Parent</em>' container reference.
-     * @see #setParent(DoorsObject)
-     * @see de.jpwinkler.daf.dafcore.model.csv.CSVPackage#getDoorsObject_Parent()
-     * @see de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getObjects
-     * @model opposite="objects" transient="false"
-     * @generated
-     */
-    DoorsObject getParent();
-
-    /**
-     * Sets the value of the '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getParent <em>Parent</em>}' container reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Parent</em>' container reference.
-     * @see #getParent()
-     * @generated
-     */
-    void setParent(DoorsObject value);
-
+public interface DoorsObject extends DoorsTreeNode {
     /**
      * Returns the value of the '<em><b>Object Identifier</b></em>' attribute.
      * <!-- begin-user-doc -->
@@ -482,13 +386,30 @@ public interface DoorsObject extends EObject {
     EList<ResolvedLink> getIncomingLinks();
 
     /**
+     * Returns the value of the '<em><b>Module</b></em>' reference.
      * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Module</em>' reference isn't clear,
+     * there really should be more of a description here...
+     * </p>
      * <!-- end-user-doc -->
-     * @model visitorDataType="com.daimler.jonwink.srstp.core.model.csv.DoorsModuleVisitor"
-     *        annotation="http://www.eclipse.org/emf/2002/GenModel body='if (visitor.visitPreTraverse(this)) {\r\n\tfor (final DoorsObject object : getObjects()) {\r\n\t\tobject.accept(visitor);\r\n\t}\r\n}\r\nvisitor.visitPostTraverse(this);'"
+     * @return the value of the '<em>Module</em>' reference.
+     * @see #setModule(DoorsModule)
+     * @see de.jpwinkler.daf.dafcore.model.csv.CSVPackage#getDoorsObject_Module()
+     * @model
      * @generated
      */
-    void accept(DoorsModuleVisitor visitor);
+    DoorsModule getModule();
+
+    /**
+     * Sets the value of the '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getModule <em>Module</em>}' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Module</em>' reference.
+     * @see #getModule()
+     * @generated
+     */
+    void setModule(DoorsModule value);
 
     /**
      * <!-- begin-user-doc -->

@@ -11,10 +11,10 @@ public final class MarkerUtil {
     }
 
     public static DoorsObject findFirstParent(final DoorsObject object, final RuleContext context, final Predicate<DoorsObject> p) {
-        if (object.getParent() != null && p.test(object.getParent())) {
-            return object.getParent();
-        } else if (object.getParent() != null) {
-            return findFirstParent(object.getParent(), context, p);
+        if (object.getParent() instanceof DoorsObject && p.test((DoorsObject) object.getParent())) {
+            return (DoorsObject) object.getParent();
+        } else if (object.getParent() instanceof DoorsObject) {
+            return findFirstParent((DoorsObject) object.getParent(), context, p);
         } else {
             return null;
         }

@@ -52,12 +52,12 @@ public class CodebeamerSwitch<T> extends Switch<T> {
      * Checks whether this is a switch for the given package.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @parameter ePackage the package in question.
+     * @param ePackage the package in question.
      * @return whether this is a switch for the given package.
      * @generated
      */
     @Override
-    protected boolean isSwitchFor(final EPackage ePackage) {
+    protected boolean isSwitchFor(EPackage ePackage) {
         return ePackage == modelPackage;
     }
 
@@ -69,61 +69,43 @@ public class CodebeamerSwitch<T> extends Switch<T> {
      * @generated
      */
     @Override
-    protected T doSwitch(final int classifierID, final EObject theEObject) {
+    protected T doSwitch(int classifierID, EObject theEObject) {
         switch (classifierID) {
-        case CodebeamerPackage.CODE_BEAMER_MODEL: {
-            final CodeBeamerModel codeBeamerModel = (CodeBeamerModel)theEObject;
-            T result = caseCodeBeamerModel(codeBeamerModel);
-            if (result == null) {
-                result = caseModelObject(codeBeamerModel);
+            case CodebeamerPackage.CODE_BEAMER_MODEL: {
+                CodeBeamerModel codeBeamerModel = (CodeBeamerModel)theEObject;
+                T result = caseCodeBeamerModel(codeBeamerModel);
+                if (result == null) result = caseModelObject(codeBeamerModel);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
             }
-            if (result == null) {
-                result = defaultCase(theEObject);
+            case CodebeamerPackage.ISSUE: {
+                Issue issue = (Issue)theEObject;
+                T result = caseIssue(issue);
+                if (result == null) result = caseModelObject(issue);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
             }
-            return result;
-        }
-        case CodebeamerPackage.ISSUE: {
-            final Issue issue = (Issue)theEObject;
-            T result = caseIssue(issue);
-            if (result == null) {
-                result = caseModelObject(issue);
+            case CodebeamerPackage.METRIC: {
+                Metric metric = (Metric)theEObject;
+                T result = caseMetric(metric);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
             }
-            if (result == null) {
-                result = defaultCase(theEObject);
+            case CodebeamerPackage.INT_METRIC: {
+                IntMetric intMetric = (IntMetric)theEObject;
+                T result = caseIntMetric(intMetric);
+                if (result == null) result = caseMetric(intMetric);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
             }
-            return result;
-        }
-        case CodebeamerPackage.METRIC: {
-            final Metric metric = (Metric)theEObject;
-            T result = caseMetric(metric);
-            if (result == null) {
-                result = defaultCase(theEObject);
+            case CodebeamerPackage.DOUBLE_METRIC: {
+                DoubleMetric doubleMetric = (DoubleMetric)theEObject;
+                T result = caseDoubleMetric(doubleMetric);
+                if (result == null) result = caseMetric(doubleMetric);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
             }
-            return result;
-        }
-        case CodebeamerPackage.INT_METRIC: {
-            final IntMetric intMetric = (IntMetric)theEObject;
-            T result = caseIntMetric(intMetric);
-            if (result == null) {
-                result = caseMetric(intMetric);
-            }
-            if (result == null) {
-                result = defaultCase(theEObject);
-            }
-            return result;
-        }
-        case CodebeamerPackage.DOUBLE_METRIC: {
-            final DoubleMetric doubleMetric = (DoubleMetric)theEObject;
-            T result = caseDoubleMetric(doubleMetric);
-            if (result == null) {
-                result = caseMetric(doubleMetric);
-            }
-            if (result == null) {
-                result = defaultCase(theEObject);
-            }
-            return result;
-        }
-        default: return defaultCase(theEObject);
+            default: return defaultCase(theEObject);
         }
     }
 
@@ -138,7 +120,7 @@ public class CodebeamerSwitch<T> extends Switch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseCodeBeamerModel(final CodeBeamerModel object) {
+    public T caseCodeBeamerModel(CodeBeamerModel object) {
         return null;
     }
 
@@ -153,7 +135,7 @@ public class CodebeamerSwitch<T> extends Switch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseIssue(final Issue object) {
+    public T caseIssue(Issue object) {
         return null;
     }
 
@@ -168,7 +150,7 @@ public class CodebeamerSwitch<T> extends Switch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseMetric(final Metric object) {
+    public T caseMetric(Metric object) {
         return null;
     }
 
@@ -183,7 +165,7 @@ public class CodebeamerSwitch<T> extends Switch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseIntMetric(final IntMetric object) {
+    public T caseIntMetric(IntMetric object) {
         return null;
     }
 
@@ -198,7 +180,7 @@ public class CodebeamerSwitch<T> extends Switch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseDoubleMetric(final DoubleMetric object) {
+    public T caseDoubleMetric(DoubleMetric object) {
         return null;
     }
 
@@ -213,7 +195,7 @@ public class CodebeamerSwitch<T> extends Switch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseModelObject(final ModelObject object) {
+    public T caseModelObject(ModelObject object) {
         return null;
     }
 
@@ -229,7 +211,7 @@ public class CodebeamerSwitch<T> extends Switch<T> {
      * @generated
      */
     @Override
-    public T defaultCase(final EObject object) {
+    public T defaultCase(EObject object) {
         return null;
     }
 

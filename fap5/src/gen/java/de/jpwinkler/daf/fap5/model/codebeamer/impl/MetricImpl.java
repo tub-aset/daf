@@ -16,10 +16,10 @@ import de.jpwinkler.daf.fap5.model.codebeamer.Metric;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link de.jpwinkler.daf.fap5.model.codebeamer.impl.MetricImpl#getName <em>Name</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

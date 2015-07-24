@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import de.jpwinkler.daf.dafcore.model.common.impl.ModelObjectImpl;
+import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.util.ECollectors;
 import de.jpwinkler.daf.fap5.model.codebeamer.CodeBeamerModel;
 import de.jpwinkler.daf.fap5.model.codebeamer.CodebeamerPackage;
@@ -29,6 +30,7 @@ import de.jpwinkler.daf.fap5.model.codebeamer.Metric;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link de.jpwinkler.daf.fap5.model.codebeamer.impl.CodeBeamerModelImpl#getName <em>Name</em>}</li>
  *   <li>{@link de.jpwinkler.daf.fap5.model.codebeamer.impl.CodeBeamerModelImpl#isSpecified <em>Specified</em>}</li>
@@ -36,8 +38,8 @@ import de.jpwinkler.daf.fap5.model.codebeamer.Metric;
  *   <li>{@link de.jpwinkler.daf.fap5.model.codebeamer.impl.CodeBeamerModelImpl#getIssues <em>Issues</em>}</li>
  *   <li>{@link de.jpwinkler.daf.fap5.model.codebeamer.impl.CodeBeamerModelImpl#getVersionNumber <em>Version Number</em>}</li>
  *   <li>{@link de.jpwinkler.daf.fap5.model.codebeamer.impl.CodeBeamerModelImpl#getMetrics <em>Metrics</em>}</li>
+ *   <li>{@link de.jpwinkler.daf.fap5.model.codebeamer.impl.CodeBeamerModelImpl#getModule <em>Module</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -138,6 +140,16 @@ public class CodeBeamerModelImpl extends ModelObjectImpl implements CodeBeamerMo
     protected EList<Metric> metrics;
 
     /**
+     * The cached value of the '{@link #getModule() <em>Module</em>}' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getModule()
+     * @generated
+     * @ordered
+     */
+    protected DoorsModule module;
+
+    /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
@@ -210,7 +222,7 @@ public class CodeBeamerModelImpl extends ModelObjectImpl implements CodeBeamerMo
      * @generated NOT
      */
     @Override
-    public float getEstimatedRemainingWork() {
+    public long getEstimatedRemainingWork() {
         return getIssues().stream().mapToLong(Issue::getSeverity).sum();
     }
 
@@ -236,7 +248,7 @@ public class CodeBeamerModelImpl extends ModelObjectImpl implements CodeBeamerMo
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated NOT
      */
     @Override
@@ -251,7 +263,7 @@ public class CodeBeamerModelImpl extends ModelObjectImpl implements CodeBeamerMo
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated NOT
      */
     @Override
@@ -344,6 +356,48 @@ public class CodeBeamerModelImpl extends ModelObjectImpl implements CodeBeamerMo
      * @generated
      */
     @Override
+    public DoorsModule getModule() {
+        if (module != null && module.eIsProxy()) {
+            final InternalEObject oldModule = (InternalEObject)module;
+            module = (DoorsModule)eResolveProxy(oldModule);
+            if (module != oldModule) {
+                if (eNotificationRequired()) {
+                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, CodebeamerPackage.CODE_BEAMER_MODEL__MODULE, oldModule, module));
+                }
+            }
+        }
+        return module;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public DoorsModule basicGetModule() {
+        return module;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public void setModule(final DoorsModule newModule) {
+        final DoorsModule oldModule = module;
+        module = newModule;
+        if (eNotificationRequired()) {
+            eNotify(new ENotificationImpl(this, Notification.SET, CodebeamerPackage.CODE_BEAMER_MODEL__MODULE, oldModule, module));
+        }
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
     public NotificationChain eInverseRemove(final InternalEObject otherEnd, final int featureID, final NotificationChain msgs) {
         switch (featureID) {
         case CodebeamerPackage.CODE_BEAMER_MODEL__ISSUES:
@@ -374,6 +428,11 @@ public class CodeBeamerModelImpl extends ModelObjectImpl implements CodeBeamerMo
             return getVersionNumber();
         case CodebeamerPackage.CODE_BEAMER_MODEL__METRICS:
             return getMetrics();
+        case CodebeamerPackage.CODE_BEAMER_MODEL__MODULE:
+            if (resolve) {
+                return getModule();
+            }
+            return basicGetModule();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -407,6 +466,9 @@ public class CodeBeamerModelImpl extends ModelObjectImpl implements CodeBeamerMo
             getMetrics().clear();
             getMetrics().addAll((Collection<? extends Metric>)newValue);
             return;
+        case CodebeamerPackage.CODE_BEAMER_MODEL__MODULE:
+            setModule((DoorsModule)newValue);
+            return;
         }
         super.eSet(featureID, newValue);
     }
@@ -437,6 +499,9 @@ public class CodeBeamerModelImpl extends ModelObjectImpl implements CodeBeamerMo
         case CodebeamerPackage.CODE_BEAMER_MODEL__METRICS:
             getMetrics().clear();
             return;
+        case CodebeamerPackage.CODE_BEAMER_MODEL__MODULE:
+            setModule((DoorsModule)null);
+            return;
         }
         super.eUnset(featureID);
     }
@@ -461,6 +526,8 @@ public class CodeBeamerModelImpl extends ModelObjectImpl implements CodeBeamerMo
             return VERSION_NUMBER_EDEFAULT == null ? versionNumber != null : !VERSION_NUMBER_EDEFAULT.equals(versionNumber);
         case CodebeamerPackage.CODE_BEAMER_MODEL__METRICS:
             return metrics != null && !metrics.isEmpty();
+        case CodebeamerPackage.CODE_BEAMER_MODEL__MODULE:
+            return module != null;
         }
         return super.eIsSet(featureID);
     }

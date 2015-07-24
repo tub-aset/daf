@@ -8,7 +8,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane prefHeight="638.0" prefWidth="696.0" stylesheets="@main.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.jpwinkler.daf.fap5gui.gui.MainController">
+<BorderPane prefHeight="638.0" prefWidth="696.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.jpwinkler.daf.fap5gui.gui.MainController">
    <top>
       <VBox>
          <children>
@@ -95,9 +95,21 @@
                   </LineChart>
               </content>
             </Tab>
+            <Tab text="Remaining Work">
+              <content>
+                  <LineChart id="lineChartOpenTasksOverTime" fx:id="remainingWorkChart" animated="false">
+                     <xAxis>
+                        <DateAxis side="BOTTOM" />
+                     </xAxis>
+                     <yAxis>
+                        <NumberAxis side="LEFT" />
+                     </yAxis>
+                  </LineChart>
+              </content>
+            </Tab>
             <Tab text="Issues">
               <content>
-                  <TableView fx:id="issueTable" layoutX="241.0" layoutY="161.0" prefHeight="200.0" prefWidth="200.0">
+                  <TableView fx:id="issueTable" layoutX="241.0" layoutY="161.0" onMousePressed="#issueTableMousePressed" prefHeight="200.0" prefWidth="200.0">
                     <columns>
                       <TableColumn prefWidth="79.0" text="Object ID" />
                       <TableColumn prefWidth="85.0" text="Number" />

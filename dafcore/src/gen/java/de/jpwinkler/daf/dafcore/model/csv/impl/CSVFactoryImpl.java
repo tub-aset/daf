@@ -10,8 +10,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import de.jpwinkler.daf.dafcore.csv.DoorsModuleVisitor;
+import de.jpwinkler.daf.dafcore.model.csv.*;
 import de.jpwinkler.daf.dafcore.model.csv.CSVFactory;
 import de.jpwinkler.daf.dafcore.model.csv.CSVPackage;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
@@ -34,12 +33,12 @@ public class CSVFactoryImpl extends EFactoryImpl implements CSVFactory {
      */
     public static CSVFactory init() {
         try {
-            final CSVFactory theCSVFactory = (CSVFactory) EPackage.Registry.INSTANCE.getEFactory(CSVPackage.eNS_URI);
+            CSVFactory theCSVFactory = (CSVFactory)EPackage.Registry.INSTANCE.getEFactory(CSVPackage.eNS_URI);
             if (theCSVFactory != null) {
                 return theCSVFactory;
             }
         }
-        catch (final Exception exception) {
+        catch (Exception exception) {
             EcorePlugin.INSTANCE.log(exception);
         }
         return new CSVFactoryImpl();
@@ -61,15 +60,16 @@ public class CSVFactoryImpl extends EFactoryImpl implements CSVFactory {
      * @generated
      */
     @Override
-    public EObject create(final EClass eClass) {
+    public EObject create(EClass eClass) {
         switch (eClass.getClassifierID()) {
-        case CSVPackage.DOORS_MODULE: return createDoorsModule();
-        case CSVPackage.DOORS_OBJECT: return createDoorsObject();
-        case CSVPackage.STRING_TO_STRING_MAP: return (EObject)createStringToStringMap();
-        case CSVPackage.RESOLVED_LINK: return createResolvedLink();
-        case CSVPackage.UNRESOLVED_LINK: return createUnresolvedLink();
-        default:
-            throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
+            case CSVPackage.DOORS_MODULE: return createDoorsModule();
+            case CSVPackage.DOORS_OBJECT: return createDoorsObject();
+            case CSVPackage.STRING_TO_STRING_MAP: return (EObject)createStringToStringMap();
+            case CSVPackage.RESOLVED_LINK: return createResolvedLink();
+            case CSVPackage.UNRESOLVED_LINK: return createUnresolvedLink();
+            case CSVPackage.DOORS_TREE_NODE: return createDoorsTreeNode();
+            default:
+                throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
         }
     }
 
@@ -79,12 +79,12 @@ public class CSVFactoryImpl extends EFactoryImpl implements CSVFactory {
      * @generated
      */
     @Override
-    public Object createFromString(final EDataType eDataType, final String initialValue) {
+    public Object createFromString(EDataType eDataType, String initialValue) {
         switch (eDataType.getClassifierID()) {
-        case CSVPackage.DOORS_MODULE_VISITOR:
-            return createDoorsModuleVisitorFromString(eDataType, initialValue);
-        default:
-            throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
+            case CSVPackage.DOORS_TREE_NODE_VISITOR:
+                return createDoorsTreeNodeVisitorFromString(eDataType, initialValue);
+            default:
+                throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
         }
     }
 
@@ -94,12 +94,12 @@ public class CSVFactoryImpl extends EFactoryImpl implements CSVFactory {
      * @generated
      */
     @Override
-    public String convertToString(final EDataType eDataType, final Object instanceValue) {
+    public String convertToString(EDataType eDataType, Object instanceValue) {
         switch (eDataType.getClassifierID()) {
-        case CSVPackage.DOORS_MODULE_VISITOR:
-            return convertDoorsModuleVisitorToString(eDataType, instanceValue);
-        default:
-            throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
+            case CSVPackage.DOORS_TREE_NODE_VISITOR:
+                return convertDoorsTreeNodeVisitorToString(eDataType, instanceValue);
+            default:
+                throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
         }
     }
 
@@ -110,7 +110,7 @@ public class CSVFactoryImpl extends EFactoryImpl implements CSVFactory {
      */
     @Override
     public DoorsModule createDoorsModule() {
-        final DoorsModuleImpl doorsModule = new DoorsModuleImpl();
+        DoorsModuleImpl doorsModule = new DoorsModuleImpl();
         return doorsModule;
     }
 
@@ -121,7 +121,7 @@ public class CSVFactoryImpl extends EFactoryImpl implements CSVFactory {
      */
     @Override
     public DoorsObject createDoorsObject() {
-        final DoorsObjectImpl doorsObject = new DoorsObjectImpl();
+        DoorsObjectImpl doorsObject = new DoorsObjectImpl();
         return doorsObject;
     }
 
@@ -131,7 +131,7 @@ public class CSVFactoryImpl extends EFactoryImpl implements CSVFactory {
      * @generated
      */
     public Map.Entry<String, String> createStringToStringMap() {
-        final StringToStringMapImpl stringToStringMap = new StringToStringMapImpl();
+        StringToStringMapImpl stringToStringMap = new StringToStringMapImpl();
         return stringToStringMap;
     }
 
@@ -142,7 +142,7 @@ public class CSVFactoryImpl extends EFactoryImpl implements CSVFactory {
      */
     @Override
     public ResolvedLink createResolvedLink() {
-        final ResolvedLinkImpl resolvedLink = new ResolvedLinkImpl();
+        ResolvedLinkImpl resolvedLink = new ResolvedLinkImpl();
         return resolvedLink;
     }
 
@@ -153,7 +153,7 @@ public class CSVFactoryImpl extends EFactoryImpl implements CSVFactory {
      */
     @Override
     public UnresolvedLink createUnresolvedLink() {
-        final UnresolvedLinkImpl unresolvedLink = new UnresolvedLinkImpl();
+        UnresolvedLinkImpl unresolvedLink = new UnresolvedLinkImpl();
         return unresolvedLink;
     }
 
@@ -162,8 +162,9 @@ public class CSVFactoryImpl extends EFactoryImpl implements CSVFactory {
      * <!-- end-user-doc -->
      * @generated
      */
-    public DoorsModuleVisitor createDoorsModuleVisitorFromString(final EDataType eDataType, final String initialValue) {
-        return (DoorsModuleVisitor)super.createFromString(eDataType, initialValue);
+    public DoorsTreeNode createDoorsTreeNode() {
+        DoorsTreeNodeImpl doorsTreeNode = new DoorsTreeNodeImpl();
+        return doorsTreeNode;
     }
 
     /**
@@ -171,7 +172,16 @@ public class CSVFactoryImpl extends EFactoryImpl implements CSVFactory {
      * <!-- end-user-doc -->
      * @generated
      */
-    public String convertDoorsModuleVisitorToString(final EDataType eDataType, final Object instanceValue) {
+    public de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor createDoorsTreeNodeVisitorFromString(EDataType eDataType, String initialValue) {
+        return (de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor)super.createFromString(eDataType, initialValue);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public String convertDoorsTreeNodeVisitorToString(EDataType eDataType, Object instanceValue) {
         return super.convertToString(eDataType, instanceValue);
     }
 

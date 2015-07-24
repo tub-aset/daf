@@ -10,11 +10,11 @@ package de.jpwinkler.daf.dafcore.model.csv;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.UnresolvedLink#getTargetModule <em>Target Module</em>}</li>
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.UnresolvedLink#getTargetObject <em>Target Object</em>}</li>
  * </ul>
- * </p>
  *
  * @see de.jpwinkler.daf.dafcore.model.csv.CSVPackage#getUnresolvedLink()
  * @model

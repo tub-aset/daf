@@ -40,15 +40,19 @@ public final class CodeBeamerConstants {
     public static final long SEVERITY_TODO = 40;
     public static final long SEVERITY_TBV = 40;
     public static final long SEVERITY_WIKILINK = 10;
+    public static final long SEVERITY_MATURITY_OPEN = 5;
+    public static final long SEVERITY_MATURITY_SPECIFIED = 2;
+    public static final long SEVERITY_MATURITY_FOLLOW_UP_HASHTAGS = 20;
+    public static final long SEVERITY_MATURITY_FOLLOW_UP = 10;
 
     public static final String METRIC_REQUIREMENT_COUNT = "requirementCount";
     public static final String METRIC_HEADING_AS_REQUIREMENT_COUNT = "headingAsRequirementCount";
     public static final String METRIC_OPEN_TODOS = "openTodos";
-    public static final String METRIC_MATURITY_OPEN = "maturityOpen";
-    public static final String METRIC_MATURITY_SPECIFIED = "maturitySpecified";
-    public static final String METRIC_MATURITY_FOLLOW_UP = "maturityFollowUp";
-    public static final String METRIC_MATURITY_FOLLOW_UP_HASHTAGS = "maturityFollowUpHashTags";
-    public static final String METRIC_MATURITY_AGREED = "maturityAgreed";
+    public static final String METRIC_MATURITY_OPEN_COUNT = "maturityOpen";
+    public static final String METRIC_MATURITY_SPECIFIED_COUNT = "maturitySpecified";
+    public static final String METRIC_MATURITY_FOLLOW_UP_COUNT = "maturityFollowUp";
+    public static final String METRIC_MATURITY_FOLLOW_UP_HASHTAGS_COUNT = "maturityFollowUpHashTags";
+    public static final String METRIC_MATURITY_AGREED_COUNT = "maturityAgreed";
 
     public static final String MARKER_MATURITY_OPEN = "maturity_open";
     public static final String MARKER_MATURITY_AGREED = "maturity_agreed";
@@ -67,6 +71,10 @@ public final class CodeBeamerConstants {
     public static final String METRIC_INFORMATION_WITH_LINK = "informationWithLink";
     public static final String METRIC_HEADING_WITH_LINK = "headingWithLink";
     public static final String METRIC_REQUIREMENT_WITHOUT_LINK = "requirementWithoutLink";
+    public static final String METRIC_EMPTY_HEADING = "emptyHeading";
+    public static final String METRIC_ESTIMATED_REMAINING_WORK = "estimatedRemainingWork";
+
+    // TODO
 
 
     private CodeBeamerConstants() {

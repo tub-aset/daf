@@ -15,11 +15,11 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.impl.UnresolvedLinkImpl#getTargetModule <em>Target Module</em>}</li>
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.impl.UnresolvedLinkImpl#getTargetObject <em>Target Object</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

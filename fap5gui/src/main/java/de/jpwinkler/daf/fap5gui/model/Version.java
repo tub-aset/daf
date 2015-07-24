@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 import com.google.common.base.Predicate;
 
-public class Version {
+public class Version implements Comparable<Version> {
 
     private final Map<String, DocumentSnapshot> documentSnapshots = new HashMap<>();
     private String versionString;
@@ -55,5 +55,10 @@ public class Version {
 
     public Date getDate() {
         return date;
+    }
+
+    @Override
+    public int compareTo(final Version o) {
+        return date.compareTo(o.date);
     }
 }

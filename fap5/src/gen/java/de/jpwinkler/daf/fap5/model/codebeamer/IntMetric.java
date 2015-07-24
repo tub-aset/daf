@@ -10,10 +10,10 @@ package de.jpwinkler.daf.fap5.model.codebeamer;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link de.jpwinkler.daf.fap5.model.codebeamer.IntMetric#getValue <em>Value</em>}</li>
  * </ul>
- * </p>
  *
  * @see de.jpwinkler.daf.fap5.model.codebeamer.CodebeamerPackage#getIntMetric()
  * @model

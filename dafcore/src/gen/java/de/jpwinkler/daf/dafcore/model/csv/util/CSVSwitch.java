@@ -9,6 +9,7 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.util.Switch;
 
 import de.jpwinkler.daf.dafcore.model.common.ModelObject;
+import de.jpwinkler.daf.dafcore.model.csv.*;
 import de.jpwinkler.daf.dafcore.model.csv.CSVPackage;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
@@ -54,12 +55,12 @@ public class CSVSwitch<T> extends Switch<T> {
      * Checks whether this is a switch for the given package.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @parameter ePackage the package in question.
+     * @param ePackage the package in question.
      * @return whether this is a switch for the given package.
      * @generated
      */
     @Override
-    protected boolean isSwitchFor(final EPackage ePackage) {
+    protected boolean isSwitchFor(EPackage ePackage) {
         return ePackage == modelPackage;
     }
 
@@ -71,67 +72,58 @@ public class CSVSwitch<T> extends Switch<T> {
      * @generated
      */
     @Override
-    protected T doSwitch(final int classifierID, final EObject theEObject) {
+    protected T doSwitch(int classifierID, EObject theEObject) {
         switch (classifierID) {
-        case CSVPackage.DOORS_MODULE: {
-            final DoorsModule doorsModule = (DoorsModule)theEObject;
-            T result = caseDoorsModule(doorsModule);
-            if (result == null) {
-                result = caseModelObject(doorsModule);
+            case CSVPackage.DOORS_MODULE: {
+                DoorsModule doorsModule = (DoorsModule)theEObject;
+                T result = caseDoorsModule(doorsModule);
+                if (result == null) result = caseDoorsTreeNode(doorsModule);
+                if (result == null) result = caseModelObject(doorsModule);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
             }
-            if (result == null) {
-                result = defaultCase(theEObject);
+            case CSVPackage.DOORS_OBJECT: {
+                DoorsObject doorsObject = (DoorsObject)theEObject;
+                T result = caseDoorsObject(doorsObject);
+                if (result == null) result = caseDoorsTreeNode(doorsObject);
+                if (result == null) result = caseModelObject(doorsObject);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
             }
-            return result;
-        }
-        case CSVPackage.DOORS_OBJECT: {
-            final DoorsObject doorsObject = (DoorsObject)theEObject;
-            T result = caseDoorsObject(doorsObject);
-            if (result == null) {
-                result = defaultCase(theEObject);
+            case CSVPackage.STRING_TO_STRING_MAP: {
+                @SuppressWarnings("unchecked") Map.Entry<String, String> stringToStringMap = (Map.Entry<String, String>)theEObject;
+                T result = caseStringToStringMap(stringToStringMap);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
             }
-            return result;
-        }
-        case CSVPackage.STRING_TO_STRING_MAP: {
-            @SuppressWarnings("unchecked")
-            final Map.Entry<String, String> stringToStringMap = (Map.Entry<String, String>)theEObject;
-            T result = caseStringToStringMap(stringToStringMap);
-            if (result == null) {
-                result = defaultCase(theEObject);
+            case CSVPackage.LINK: {
+                Link link = (Link)theEObject;
+                T result = caseLink(link);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
             }
-            return result;
-        }
-        case CSVPackage.LINK: {
-            final Link link = (Link)theEObject;
-            T result = caseLink(link);
-            if (result == null) {
-                result = defaultCase(theEObject);
+            case CSVPackage.RESOLVED_LINK: {
+                ResolvedLink resolvedLink = (ResolvedLink)theEObject;
+                T result = caseResolvedLink(resolvedLink);
+                if (result == null) result = caseLink(resolvedLink);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
             }
-            return result;
-        }
-        case CSVPackage.RESOLVED_LINK: {
-            final ResolvedLink resolvedLink = (ResolvedLink)theEObject;
-            T result = caseResolvedLink(resolvedLink);
-            if (result == null) {
-                result = caseLink(resolvedLink);
+            case CSVPackage.UNRESOLVED_LINK: {
+                UnresolvedLink unresolvedLink = (UnresolvedLink)theEObject;
+                T result = caseUnresolvedLink(unresolvedLink);
+                if (result == null) result = caseLink(unresolvedLink);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
             }
-            if (result == null) {
-                result = defaultCase(theEObject);
+            case CSVPackage.DOORS_TREE_NODE: {
+                DoorsTreeNode doorsTreeNode = (DoorsTreeNode)theEObject;
+                T result = caseDoorsTreeNode(doorsTreeNode);
+                if (result == null) result = caseModelObject(doorsTreeNode);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
             }
-            return result;
-        }
-        case CSVPackage.UNRESOLVED_LINK: {
-            final UnresolvedLink unresolvedLink = (UnresolvedLink)theEObject;
-            T result = caseUnresolvedLink(unresolvedLink);
-            if (result == null) {
-                result = caseLink(unresolvedLink);
-            }
-            if (result == null) {
-                result = defaultCase(theEObject);
-            }
-            return result;
-        }
-        default: return defaultCase(theEObject);
+            default: return defaultCase(theEObject);
         }
     }
 
@@ -146,7 +138,7 @@ public class CSVSwitch<T> extends Switch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseDoorsModule(final DoorsModule object) {
+    public T caseDoorsModule(DoorsModule object) {
         return null;
     }
 
@@ -161,7 +153,7 @@ public class CSVSwitch<T> extends Switch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseDoorsObject(final DoorsObject object) {
+    public T caseDoorsObject(DoorsObject object) {
         return null;
     }
 
@@ -176,7 +168,7 @@ public class CSVSwitch<T> extends Switch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseStringToStringMap(final Map.Entry<String, String> object) {
+    public T caseStringToStringMap(Map.Entry<String, String> object) {
         return null;
     }
 
@@ -191,7 +183,7 @@ public class CSVSwitch<T> extends Switch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseLink(final Link object) {
+    public T caseLink(Link object) {
         return null;
     }
 
@@ -206,7 +198,7 @@ public class CSVSwitch<T> extends Switch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseResolvedLink(final ResolvedLink object) {
+    public T caseResolvedLink(ResolvedLink object) {
         return null;
     }
 
@@ -221,7 +213,22 @@ public class CSVSwitch<T> extends Switch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseUnresolvedLink(final UnresolvedLink object) {
+    public T caseUnresolvedLink(UnresolvedLink object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Doors Tree Node</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Doors Tree Node</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseDoorsTreeNode(DoorsTreeNode object) {
         return null;
     }
 
@@ -236,7 +243,7 @@ public class CSVSwitch<T> extends Switch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseModelObject(final ModelObject object) {
+    public T caseModelObject(ModelObject object) {
         return null;
     }
 
@@ -252,7 +259,7 @@ public class CSVSwitch<T> extends Switch<T> {
      * @generated
      */
     @Override
-    public T defaultCase(final EObject object) {
+    public T defaultCase(EObject object) {
         return null;
     }
 

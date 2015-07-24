@@ -3,11 +3,11 @@ package de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.jpwinkler.daf.dafcore.csv.DoorsModuleVisitor;
+import de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.RuleContext;
 
-public class MarkedObjectVisitor implements DoorsModuleVisitor {
+public class MarkedObjectVisitor extends DoorsTreeNodeVisitor {
 
     private final RuleContext context;
     private final List<DoorsObject> unmarkedObjects = new ArrayList<>();
@@ -34,10 +34,6 @@ public class MarkedObjectVisitor implements DoorsModuleVisitor {
             markedObjects.add(object);
         }
         return true;
-    }
-
-    @Override
-    public void visitPostTraverse(final DoorsObject object) {
     }
 
 }

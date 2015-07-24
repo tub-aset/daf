@@ -58,6 +58,15 @@ public interface CSVFactory extends EFactory {
     UnresolvedLink createUnresolvedLink();
 
     /**
+     * Returns a new object of class '<em>Doors Tree Node</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Doors Tree Node</em>'.
+     * @generated
+     */
+    DoorsTreeNode createDoorsTreeNode();
+
+    /**
      * Returns the package supported by this factory.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

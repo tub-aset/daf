@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.dafcore.model.csv.CSVFactory;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
@@ -23,9 +24,12 @@ public class LinkReconstructor {
         prepare();
 
         for (final DoorsModule module : modules) {
-            module.accept(object -> {
-                fixLinks(object);
-                return true;
+            module.accept(new DoorsTreeNodeVisitor() {
+                @Override
+                public boolean visitPreTraverse(final DoorsObject object) {
+                    fixLinks(object);
+                    return true;
+                }
             });
         }
     }
@@ -59,9 +63,13 @@ public class LinkReconstructor {
         for (final DoorsModule module : modules) {
             final Map<String, DoorsObject> objectMap = new HashMap<>();
 
-            module.accept(object -> {
-                objectMap.put(object.getObjectIdentifier(), object);
-                return true;
+            module.accept(new DoorsTreeNodeVisitor() {
+                @Override
+                public boolean visitPreTraverse(final DoorsObject object) {
+                    objectMap.put(object.getObjectIdentifier(), object);
+                    return true;
+
+                }
             });
 
             map.put(module.getName(), objectMap);

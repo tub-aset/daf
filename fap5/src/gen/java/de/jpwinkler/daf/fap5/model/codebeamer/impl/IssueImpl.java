@@ -16,12 +16,12 @@ import de.jpwinkler.daf.fap5.model.codebeamer.Issue;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link de.jpwinkler.daf.fap5.model.codebeamer.impl.IssueImpl#getSeverity <em>Severity</em>}</li>
  *   <li>{@link de.jpwinkler.daf.fap5.model.codebeamer.impl.IssueImpl#getDescription <em>Description</em>}</li>
  *   <li>{@link de.jpwinkler.daf.fap5.model.codebeamer.impl.IssueImpl#getIssueType <em>Issue Type</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

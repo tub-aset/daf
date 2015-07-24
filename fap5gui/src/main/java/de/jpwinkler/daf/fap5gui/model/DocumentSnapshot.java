@@ -10,6 +10,16 @@ public class DocumentSnapshot {
 
     private String documentName;
 
+    private String documentPath;
+
+    public String getDocumentPath() {
+        return documentPath;
+    }
+
+    public void setDocumentPath(final String documentPath) {
+        this.documentPath = documentPath;
+    }
+
     private final Map<String, Integer> metrics = new HashMap<>();
 
     private final List<Issue> issues = new ArrayList<>();

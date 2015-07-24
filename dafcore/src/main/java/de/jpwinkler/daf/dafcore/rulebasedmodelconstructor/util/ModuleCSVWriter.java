@@ -9,13 +9,13 @@ import java.util.List;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 
-import de.jpwinkler.daf.dafcore.csv.DoorsModuleVisitor;
+import de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.Marker;
 import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.RuleContext;
 
-public class ModuleCSVWriter implements DoorsModuleVisitor {
+public class ModuleCSVWriter extends DoorsTreeNodeVisitor {
 
     private CSVPrinter csvPrinter;
     private List<String> attributes;
@@ -57,11 +57,6 @@ public class ModuleCSVWriter implements DoorsModuleVisitor {
             throw new RuntimeException(e);
         }
         return true;
-    }
-
-    @Override
-    public void visitPostTraverse(final DoorsObject object) {
-        // do nothing
     }
 
 }

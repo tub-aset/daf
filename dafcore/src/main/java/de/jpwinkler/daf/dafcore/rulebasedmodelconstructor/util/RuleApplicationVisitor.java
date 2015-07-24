@@ -2,12 +2,12 @@ package de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.util;
 
 import java.util.List;
 
-import de.jpwinkler.daf.dafcore.csv.DoorsModuleVisitor;
+import de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.Rule;
 import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.RuleContext;
 
-public class RuleApplicationVisitor implements DoorsModuleVisitor {
+public class RuleApplicationVisitor extends DoorsTreeNodeVisitor {
 
     private final List<Rule> rules;
     private final RuleContext context;

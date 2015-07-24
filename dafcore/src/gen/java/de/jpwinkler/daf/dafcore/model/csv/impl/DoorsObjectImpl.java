@@ -9,19 +9,12 @@ import java.util.Date;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
-import org.eclipse.emf.ecore.util.EcoreEMap;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
-
-import de.jpwinkler.daf.dafcore.csv.DoorsModuleVisitor;
 import de.jpwinkler.daf.dafcore.model.csv.CSVPackage;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
@@ -34,11 +27,8 @@ import de.jpwinkler.daf.dafcore.model.csv.ResolvedLink;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
- *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.impl.DoorsObjectImpl#getModule <em>Module</em>}</li>
- *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.impl.DoorsObjectImpl#getAttributes <em>Attributes</em>}</li>
- *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.impl.DoorsObjectImpl#getObjects <em>Objects</em>}</li>
- *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.impl.DoorsObjectImpl#getParent <em>Parent</em>}</li>
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.impl.DoorsObjectImpl#getObjectIdentifier <em>Object Identifier</em>}</li>
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.impl.DoorsObjectImpl#getObjectLevel <em>Object Level</em>}</li>
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.impl.DoorsObjectImpl#getObjectNumber <em>Object Number</em>}</li>
@@ -53,42 +43,12 @@ import de.jpwinkler.daf.dafcore.model.csv.ResolvedLink;
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.impl.DoorsObjectImpl#getObjectHeading <em>Object Heading</em>}</li>
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.impl.DoorsObjectImpl#getOutgoingLinks <em>Outgoing Links</em>}</li>
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.impl.DoorsObjectImpl#getIncomingLinks <em>Incoming Links</em>}</li>
+ *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.impl.DoorsObjectImpl#getModule <em>Module</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
-public class DoorsObjectImpl extends MinimalEObjectImpl.Container implements DoorsObject {
-    /**
-     * The cached value of the '{@link #getModule() <em>Module</em>}' reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see #getModule()
-     * @generated
-     * @ordered
-     */
-    protected DoorsModule module;
-
-    /**
-     * The cached value of the '{@link #getAttributes() <em>Attributes</em>}' map.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see #getAttributes()
-     * @generated
-     * @ordered
-     */
-    protected EMap<String, String> attributes;
-
-    /**
-     * The cached value of the '{@link #getObjects() <em>Objects</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see #getObjects()
-     * @generated
-     * @ordered
-     */
-    protected EList<DoorsObject> objects;
-
+public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
     /**
      * The default value of the '{@link #getObjectIdentifier() <em>Object Identifier</em>}' attribute.
      * <!-- begin-user-doc -->
@@ -350,6 +310,16 @@ public class DoorsObjectImpl extends MinimalEObjectImpl.Container implements Doo
     protected EList<ResolvedLink> incomingLinks;
 
     /**
+     * The cached value of the '{@link #getModule() <em>Module</em>}' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getModule()
+     * @generated
+     * @ordered
+     */
+    protected DoorsModule module;
+
+    /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
@@ -374,125 +344,6 @@ public class DoorsObjectImpl extends MinimalEObjectImpl.Container implements Doo
      * @generated
      */
     @Override
-    public DoorsModule getModule() {
-        if (module != null && module.eIsProxy()) {
-            final InternalEObject oldModule = (InternalEObject)module;
-            module = (DoorsModule)eResolveProxy(oldModule);
-            if (module != oldModule) {
-                if (eNotificationRequired()) {
-                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, CSVPackage.DOORS_OBJECT__MODULE, oldModule, module));
-                }
-            }
-        }
-        return module;
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public DoorsModule basicGetModule() {
-        return module;
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    @Override
-    public void setModule(final DoorsModule newModule) {
-        final DoorsModule oldModule = module;
-        module = newModule;
-        if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET, CSVPackage.DOORS_OBJECT__MODULE, oldModule, module));
-        }
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    @Override
-    public EMap<String, String> getAttributes() {
-        if (attributes == null) {
-            attributes = new EcoreEMap<String,String>(CSVPackage.Literals.STRING_TO_STRING_MAP, StringToStringMapImpl.class, this, CSVPackage.DOORS_OBJECT__ATTRIBUTES);
-        }
-        return attributes;
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    @Override
-    public EList<DoorsObject> getObjects() {
-        if (objects == null) {
-            objects = new EObjectContainmentWithInverseEList<DoorsObject>(DoorsObject.class, this, CSVPackage.DOORS_OBJECT__OBJECTS, CSVPackage.DOORS_OBJECT__PARENT);
-        }
-        return objects;
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    @Override
-    public DoorsObject getParent() {
-        if (eContainerFeatureID() != CSVPackage.DOORS_OBJECT__PARENT) {
-            return null;
-        }
-        return (DoorsObject)eInternalContainer();
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public NotificationChain basicSetParent(final DoorsObject newParent, NotificationChain msgs) {
-        msgs = eBasicSetContainer((InternalEObject)newParent, CSVPackage.DOORS_OBJECT__PARENT, msgs);
-        return msgs;
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    @Override
-    public void setParent(final DoorsObject newParent) {
-        if (newParent != eInternalContainer() || (eContainerFeatureID() != CSVPackage.DOORS_OBJECT__PARENT && newParent != null)) {
-            if (EcoreUtil.isAncestor(this, newParent)) {
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
-            }
-            NotificationChain msgs = null;
-            if (eInternalContainer() != null) {
-                msgs = eBasicRemoveFromContainer(msgs);
-            }
-            if (newParent != null) {
-                msgs = ((InternalEObject)newParent).eInverseAdd(this, CSVPackage.DOORS_OBJECT__OBJECTS, DoorsObject.class, msgs);
-            }
-            msgs = basicSetParent(newParent, msgs);
-            if (msgs != null) {
-                msgs.dispatch();
-            }
-        }
-        else if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET, CSVPackage.DOORS_OBJECT__PARENT, newParent, newParent));
-        }
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    @Override
     public String getObjectIdentifier() {
         return objectIdentifier;
     }
@@ -503,12 +354,11 @@ public class DoorsObjectImpl extends MinimalEObjectImpl.Container implements Doo
      * @generated
      */
     @Override
-    public void setObjectIdentifier(final String newObjectIdentifier) {
-        final String oldObjectIdentifier = objectIdentifier;
+    public void setObjectIdentifier(String newObjectIdentifier) {
+        String oldObjectIdentifier = objectIdentifier;
         objectIdentifier = newObjectIdentifier;
-        if (eNotificationRequired()) {
+        if (eNotificationRequired())
             eNotify(new ENotificationImpl(this, Notification.SET, CSVPackage.DOORS_OBJECT__OBJECT_IDENTIFIER, oldObjectIdentifier, objectIdentifier));
-        }
     }
 
     /**
@@ -527,12 +377,11 @@ public class DoorsObjectImpl extends MinimalEObjectImpl.Container implements Doo
      * @generated
      */
     @Override
-    public void setObjectLevel(final int newObjectLevel) {
-        final int oldObjectLevel = objectLevel;
+    public void setObjectLevel(int newObjectLevel) {
+        int oldObjectLevel = objectLevel;
         objectLevel = newObjectLevel;
-        if (eNotificationRequired()) {
+        if (eNotificationRequired())
             eNotify(new ENotificationImpl(this, Notification.SET, CSVPackage.DOORS_OBJECT__OBJECT_LEVEL, oldObjectLevel, objectLevel));
-        }
     }
 
     /**
@@ -551,12 +400,11 @@ public class DoorsObjectImpl extends MinimalEObjectImpl.Container implements Doo
      * @generated
      */
     @Override
-    public void setObjectNumber(final String newObjectNumber) {
-        final String oldObjectNumber = objectNumber;
+    public void setObjectNumber(String newObjectNumber) {
+        String oldObjectNumber = objectNumber;
         objectNumber = newObjectNumber;
-        if (eNotificationRequired()) {
+        if (eNotificationRequired())
             eNotify(new ENotificationImpl(this, Notification.SET, CSVPackage.DOORS_OBJECT__OBJECT_NUMBER, oldObjectNumber, objectNumber));
-        }
     }
 
     /**
@@ -575,12 +423,11 @@ public class DoorsObjectImpl extends MinimalEObjectImpl.Container implements Doo
      * @generated
      */
     @Override
-    public void setCreatedBy(final String newCreatedBy) {
-        final String oldCreatedBy = createdBy;
+    public void setCreatedBy(String newCreatedBy) {
+        String oldCreatedBy = createdBy;
         createdBy = newCreatedBy;
-        if (eNotificationRequired()) {
+        if (eNotificationRequired())
             eNotify(new ENotificationImpl(this, Notification.SET, CSVPackage.DOORS_OBJECT__CREATED_BY, oldCreatedBy, createdBy));
-        }
     }
 
     /**
@@ -599,12 +446,11 @@ public class DoorsObjectImpl extends MinimalEObjectImpl.Container implements Doo
      * @generated
      */
     @Override
-    public void setCreatedThru(final String newCreatedThru) {
-        final String oldCreatedThru = createdThru;
+    public void setCreatedThru(String newCreatedThru) {
+        String oldCreatedThru = createdThru;
         createdThru = newCreatedThru;
-        if (eNotificationRequired()) {
+        if (eNotificationRequired())
             eNotify(new ENotificationImpl(this, Notification.SET, CSVPackage.DOORS_OBJECT__CREATED_THRU, oldCreatedThru, createdThru));
-        }
     }
 
     /**
@@ -623,12 +469,11 @@ public class DoorsObjectImpl extends MinimalEObjectImpl.Container implements Doo
      * @generated
      */
     @Override
-    public void setCreatedOn(final Date newCreatedOn) {
-        final Date oldCreatedOn = createdOn;
+    public void setCreatedOn(Date newCreatedOn) {
+        Date oldCreatedOn = createdOn;
         createdOn = newCreatedOn;
-        if (eNotificationRequired()) {
+        if (eNotificationRequired())
             eNotify(new ENotificationImpl(this, Notification.SET, CSVPackage.DOORS_OBJECT__CREATED_ON, oldCreatedOn, createdOn));
-        }
     }
 
     /**
@@ -647,12 +492,11 @@ public class DoorsObjectImpl extends MinimalEObjectImpl.Container implements Doo
      * @generated
      */
     @Override
-    public void setAbsoluteNumber(final int newAbsoluteNumber) {
-        final int oldAbsoluteNumber = absoluteNumber;
+    public void setAbsoluteNumber(int newAbsoluteNumber) {
+        int oldAbsoluteNumber = absoluteNumber;
         absoluteNumber = newAbsoluteNumber;
-        if (eNotificationRequired()) {
+        if (eNotificationRequired())
             eNotify(new ENotificationImpl(this, Notification.SET, CSVPackage.DOORS_OBJECT__ABSOLUTE_NUMBER, oldAbsoluteNumber, absoluteNumber));
-        }
     }
 
     /**
@@ -671,12 +515,11 @@ public class DoorsObjectImpl extends MinimalEObjectImpl.Container implements Doo
      * @generated
      */
     @Override
-    public void setLastModifiedOn(final Date newLastModifiedOn) {
-        final Date oldLastModifiedOn = lastModifiedOn;
+    public void setLastModifiedOn(Date newLastModifiedOn) {
+        Date oldLastModifiedOn = lastModifiedOn;
         lastModifiedOn = newLastModifiedOn;
-        if (eNotificationRequired()) {
+        if (eNotificationRequired())
             eNotify(new ENotificationImpl(this, Notification.SET, CSVPackage.DOORS_OBJECT__LAST_MODIFIED_ON, oldLastModifiedOn, lastModifiedOn));
-        }
     }
 
     /**
@@ -695,12 +538,11 @@ public class DoorsObjectImpl extends MinimalEObjectImpl.Container implements Doo
      * @generated
      */
     @Override
-    public void setLastModifiedBy(final String newLastModifiedBy) {
-        final String oldLastModifiedBy = lastModifiedBy;
+    public void setLastModifiedBy(String newLastModifiedBy) {
+        String oldLastModifiedBy = lastModifiedBy;
         lastModifiedBy = newLastModifiedBy;
-        if (eNotificationRequired()) {
+        if (eNotificationRequired())
             eNotify(new ENotificationImpl(this, Notification.SET, CSVPackage.DOORS_OBJECT__LAST_MODIFIED_BY, oldLastModifiedBy, lastModifiedBy));
-        }
     }
 
     /**
@@ -719,12 +561,11 @@ public class DoorsObjectImpl extends MinimalEObjectImpl.Container implements Doo
      * @generated
      */
     @Override
-    public void setObjectText(final String newObjectText) {
-        final String oldObjectText = objectText;
+    public void setObjectText(String newObjectText) {
+        String oldObjectText = objectText;
         objectText = newObjectText;
-        if (eNotificationRequired()) {
+        if (eNotificationRequired())
             eNotify(new ENotificationImpl(this, Notification.SET, CSVPackage.DOORS_OBJECT__OBJECT_TEXT, oldObjectText, objectText));
-        }
     }
 
     /**
@@ -743,12 +584,11 @@ public class DoorsObjectImpl extends MinimalEObjectImpl.Container implements Doo
      * @generated
      */
     @Override
-    public void setObjectShortText(final String newObjectShortText) {
-        final String oldObjectShortText = objectShortText;
+    public void setObjectShortText(String newObjectShortText) {
+        String oldObjectShortText = objectShortText;
         objectShortText = newObjectShortText;
-        if (eNotificationRequired()) {
+        if (eNotificationRequired())
             eNotify(new ENotificationImpl(this, Notification.SET, CSVPackage.DOORS_OBJECT__OBJECT_SHORT_TEXT, oldObjectShortText, objectShortText));
-        }
     }
 
     /**
@@ -767,12 +607,11 @@ public class DoorsObjectImpl extends MinimalEObjectImpl.Container implements Doo
      * @generated
      */
     @Override
-    public void setObjectHeading(final String newObjectHeading) {
-        final String oldObjectHeading = objectHeading;
+    public void setObjectHeading(String newObjectHeading) {
+        String oldObjectHeading = objectHeading;
         objectHeading = newObjectHeading;
-        if (eNotificationRequired()) {
+        if (eNotificationRequired())
             eNotify(new ENotificationImpl(this, Notification.SET, CSVPackage.DOORS_OBJECT__OBJECT_HEADING, oldObjectHeading, objectHeading));
-        }
     }
 
     /**
@@ -806,14 +645,37 @@ public class DoorsObjectImpl extends MinimalEObjectImpl.Container implements Doo
      * <!-- end-user-doc -->
      * @generated
      */
-    @Override
-    public void accept(final DoorsModuleVisitor visitor) {
-        if (visitor.visitPreTraverse(this)) {
-            for (final DoorsObject object : getObjects()) {
-                object.accept(visitor);
+    public DoorsModule getModule() {
+        if (module != null && module.eIsProxy()) {
+            InternalEObject oldModule = (InternalEObject)module;
+            module = (DoorsModule)eResolveProxy(oldModule);
+            if (module != oldModule) {
+                if (eNotificationRequired())
+                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, CSVPackage.DOORS_OBJECT__MODULE, oldModule, module));
             }
         }
-        visitor.visitPostTraverse(this);
+        return module;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public DoorsModule basicGetModule() {
+        return module;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setModule(DoorsModule newModule) {
+        DoorsModule oldModule = module;
+        module = newModule;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, CSVPackage.DOORS_OBJECT__MODULE, oldModule, module));
     }
 
     /**
@@ -847,19 +709,12 @@ public class DoorsObjectImpl extends MinimalEObjectImpl.Container implements Doo
      */
     @SuppressWarnings("unchecked")
     @Override
-    public NotificationChain eInverseAdd(final InternalEObject otherEnd, final int featureID, NotificationChain msgs) {
+    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
         switch (featureID) {
-        case CSVPackage.DOORS_OBJECT__OBJECTS:
-            return ((InternalEList<InternalEObject>)(InternalEList<?>)getObjects()).basicAdd(otherEnd, msgs);
-        case CSVPackage.DOORS_OBJECT__PARENT:
-            if (eInternalContainer() != null) {
-                msgs = eBasicRemoveFromContainer(msgs);
-            }
-            return basicSetParent((DoorsObject)otherEnd, msgs);
-        case CSVPackage.DOORS_OBJECT__OUTGOING_LINKS:
-            return ((InternalEList<InternalEObject>)(InternalEList<?>)getOutgoingLinks()).basicAdd(otherEnd, msgs);
-        case CSVPackage.DOORS_OBJECT__INCOMING_LINKS:
-            return ((InternalEList<InternalEObject>)(InternalEList<?>)getIncomingLinks()).basicAdd(otherEnd, msgs);
+            case CSVPackage.DOORS_OBJECT__OUTGOING_LINKS:
+                return ((InternalEList<InternalEObject>)(InternalEList<?>)getOutgoingLinks()).basicAdd(otherEnd, msgs);
+            case CSVPackage.DOORS_OBJECT__INCOMING_LINKS:
+                return ((InternalEList<InternalEObject>)(InternalEList<?>)getIncomingLinks()).basicAdd(otherEnd, msgs);
         }
         return super.eInverseAdd(otherEnd, featureID, msgs);
     }
@@ -870,18 +725,12 @@ public class DoorsObjectImpl extends MinimalEObjectImpl.Container implements Doo
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(final InternalEObject otherEnd, final int featureID, final NotificationChain msgs) {
+    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
         switch (featureID) {
-        case CSVPackage.DOORS_OBJECT__ATTRIBUTES:
-            return ((InternalEList<?>)getAttributes()).basicRemove(otherEnd, msgs);
-        case CSVPackage.DOORS_OBJECT__OBJECTS:
-            return ((InternalEList<?>)getObjects()).basicRemove(otherEnd, msgs);
-        case CSVPackage.DOORS_OBJECT__PARENT:
-            return basicSetParent(null, msgs);
-        case CSVPackage.DOORS_OBJECT__OUTGOING_LINKS:
-            return ((InternalEList<?>)getOutgoingLinks()).basicRemove(otherEnd, msgs);
-        case CSVPackage.DOORS_OBJECT__INCOMING_LINKS:
-            return ((InternalEList<?>)getIncomingLinks()).basicRemove(otherEnd, msgs);
+            case CSVPackage.DOORS_OBJECT__OUTGOING_LINKS:
+                return ((InternalEList<?>)getOutgoingLinks()).basicRemove(otherEnd, msgs);
+            case CSVPackage.DOORS_OBJECT__INCOMING_LINKS:
+                return ((InternalEList<?>)getIncomingLinks()).basicRemove(otherEnd, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
     }
@@ -892,65 +741,39 @@ public class DoorsObjectImpl extends MinimalEObjectImpl.Container implements Doo
      * @generated
      */
     @Override
-    public NotificationChain eBasicRemoveFromContainerFeature(final NotificationChain msgs) {
-        switch (eContainerFeatureID()) {
-        case CSVPackage.DOORS_OBJECT__PARENT:
-            return eInternalContainer().eInverseRemove(this, CSVPackage.DOORS_OBJECT__OBJECTS, DoorsObject.class, msgs);
-        }
-        return super.eBasicRemoveFromContainerFeature(msgs);
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    @Override
-    public Object eGet(final int featureID, final boolean resolve, final boolean coreType) {
+    public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-        case CSVPackage.DOORS_OBJECT__MODULE:
-            if (resolve) {
-                return getModule();
-            }
-            return basicGetModule();
-        case CSVPackage.DOORS_OBJECT__ATTRIBUTES:
-            if (coreType) {
-                return getAttributes();
-            } else {
-                return getAttributes().map();
-            }
-        case CSVPackage.DOORS_OBJECT__OBJECTS:
-            return getObjects();
-        case CSVPackage.DOORS_OBJECT__PARENT:
-            return getParent();
-        case CSVPackage.DOORS_OBJECT__OBJECT_IDENTIFIER:
-            return getObjectIdentifier();
-        case CSVPackage.DOORS_OBJECT__OBJECT_LEVEL:
-            return getObjectLevel();
-        case CSVPackage.DOORS_OBJECT__OBJECT_NUMBER:
-            return getObjectNumber();
-        case CSVPackage.DOORS_OBJECT__CREATED_BY:
-            return getCreatedBy();
-        case CSVPackage.DOORS_OBJECT__CREATED_THRU:
-            return getCreatedThru();
-        case CSVPackage.DOORS_OBJECT__CREATED_ON:
-            return getCreatedOn();
-        case CSVPackage.DOORS_OBJECT__ABSOLUTE_NUMBER:
-            return getAbsoluteNumber();
-        case CSVPackage.DOORS_OBJECT__LAST_MODIFIED_ON:
-            return getLastModifiedOn();
-        case CSVPackage.DOORS_OBJECT__LAST_MODIFIED_BY:
-            return getLastModifiedBy();
-        case CSVPackage.DOORS_OBJECT__OBJECT_TEXT:
-            return getObjectText();
-        case CSVPackage.DOORS_OBJECT__OBJECT_SHORT_TEXT:
-            return getObjectShortText();
-        case CSVPackage.DOORS_OBJECT__OBJECT_HEADING:
-            return getObjectHeading();
-        case CSVPackage.DOORS_OBJECT__OUTGOING_LINKS:
-            return getOutgoingLinks();
-        case CSVPackage.DOORS_OBJECT__INCOMING_LINKS:
-            return getIncomingLinks();
+            case CSVPackage.DOORS_OBJECT__OBJECT_IDENTIFIER:
+                return getObjectIdentifier();
+            case CSVPackage.DOORS_OBJECT__OBJECT_LEVEL:
+                return getObjectLevel();
+            case CSVPackage.DOORS_OBJECT__OBJECT_NUMBER:
+                return getObjectNumber();
+            case CSVPackage.DOORS_OBJECT__CREATED_BY:
+                return getCreatedBy();
+            case CSVPackage.DOORS_OBJECT__CREATED_THRU:
+                return getCreatedThru();
+            case CSVPackage.DOORS_OBJECT__CREATED_ON:
+                return getCreatedOn();
+            case CSVPackage.DOORS_OBJECT__ABSOLUTE_NUMBER:
+                return getAbsoluteNumber();
+            case CSVPackage.DOORS_OBJECT__LAST_MODIFIED_ON:
+                return getLastModifiedOn();
+            case CSVPackage.DOORS_OBJECT__LAST_MODIFIED_BY:
+                return getLastModifiedBy();
+            case CSVPackage.DOORS_OBJECT__OBJECT_TEXT:
+                return getObjectText();
+            case CSVPackage.DOORS_OBJECT__OBJECT_SHORT_TEXT:
+                return getObjectShortText();
+            case CSVPackage.DOORS_OBJECT__OBJECT_HEADING:
+                return getObjectHeading();
+            case CSVPackage.DOORS_OBJECT__OUTGOING_LINKS:
+                return getOutgoingLinks();
+            case CSVPackage.DOORS_OBJECT__INCOMING_LINKS:
+                return getIncomingLinks();
+            case CSVPackage.DOORS_OBJECT__MODULE:
+                if (resolve) return getModule();
+                return basicGetModule();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -962,65 +785,55 @@ public class DoorsObjectImpl extends MinimalEObjectImpl.Container implements Doo
      */
     @SuppressWarnings("unchecked")
     @Override
-    public void eSet(final int featureID, final Object newValue) {
+    public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-        case CSVPackage.DOORS_OBJECT__MODULE:
-            setModule((DoorsModule)newValue);
-            return;
-        case CSVPackage.DOORS_OBJECT__ATTRIBUTES:
-            ((EStructuralFeature.Setting)getAttributes()).set(newValue);
-            return;
-        case CSVPackage.DOORS_OBJECT__OBJECTS:
-            getObjects().clear();
-            getObjects().addAll((Collection<? extends DoorsObject>)newValue);
-            return;
-        case CSVPackage.DOORS_OBJECT__PARENT:
-            setParent((DoorsObject)newValue);
-            return;
-        case CSVPackage.DOORS_OBJECT__OBJECT_IDENTIFIER:
-            setObjectIdentifier((String)newValue);
-            return;
-        case CSVPackage.DOORS_OBJECT__OBJECT_LEVEL:
-            setObjectLevel((Integer)newValue);
-            return;
-        case CSVPackage.DOORS_OBJECT__OBJECT_NUMBER:
-            setObjectNumber((String)newValue);
-            return;
-        case CSVPackage.DOORS_OBJECT__CREATED_BY:
-            setCreatedBy((String)newValue);
-            return;
-        case CSVPackage.DOORS_OBJECT__CREATED_THRU:
-            setCreatedThru((String)newValue);
-            return;
-        case CSVPackage.DOORS_OBJECT__CREATED_ON:
-            setCreatedOn((Date)newValue);
-            return;
-        case CSVPackage.DOORS_OBJECT__ABSOLUTE_NUMBER:
-            setAbsoluteNumber((Integer)newValue);
-            return;
-        case CSVPackage.DOORS_OBJECT__LAST_MODIFIED_ON:
-            setLastModifiedOn((Date)newValue);
-            return;
-        case CSVPackage.DOORS_OBJECT__LAST_MODIFIED_BY:
-            setLastModifiedBy((String)newValue);
-            return;
-        case CSVPackage.DOORS_OBJECT__OBJECT_TEXT:
-            setObjectText((String)newValue);
-            return;
-        case CSVPackage.DOORS_OBJECT__OBJECT_SHORT_TEXT:
-            setObjectShortText((String)newValue);
-            return;
-        case CSVPackage.DOORS_OBJECT__OBJECT_HEADING:
-            setObjectHeading((String)newValue);
-            return;
-        case CSVPackage.DOORS_OBJECT__OUTGOING_LINKS:
-            getOutgoingLinks().clear();
-            getOutgoingLinks().addAll((Collection<? extends Link>)newValue);
-            return;
-        case CSVPackage.DOORS_OBJECT__INCOMING_LINKS:
-            getIncomingLinks().clear();
-            getIncomingLinks().addAll((Collection<? extends ResolvedLink>)newValue);
-            return;
+            case CSVPackage.DOORS_OBJECT__OBJECT_IDENTIFIER:
+                setObjectIdentifier((String)newValue);
+                return;
+            case CSVPackage.DOORS_OBJECT__OBJECT_LEVEL:
+                setObjectLevel((Integer)newValue);
+                return;
+            case CSVPackage.DOORS_OBJECT__OBJECT_NUMBER:
+                setObjectNumber((String)newValue);
+                return;
+            case CSVPackage.DOORS_OBJECT__CREATED_BY:
+                setCreatedBy((String)newValue);
+                return;
+            case CSVPackage.DOORS_OBJECT__CREATED_THRU:
+                setCreatedThru((String)newValue);
+                return;
+            case CSVPackage.DOORS_OBJECT__CREATED_ON:
+                setCreatedOn((Date)newValue);
+                return;
+            case CSVPackage.DOORS_OBJECT__ABSOLUTE_NUMBER:
+                setAbsoluteNumber((Integer)newValue);
+                return;
+            case CSVPackage.DOORS_OBJECT__LAST_MODIFIED_ON:
+                setLastModifiedOn((Date)newValue);
+                return;
+            case CSVPackage.DOORS_OBJECT__LAST_MODIFIED_BY:
+                setLastModifiedBy((String)newValue);
+                return;
+            case CSVPackage.DOORS_OBJECT__OBJECT_TEXT:
+                setObjectText((String)newValue);
+                return;
+            case CSVPackage.DOORS_OBJECT__OBJECT_SHORT_TEXT:
+                setObjectShortText((String)newValue);
+                return;
+            case CSVPackage.DOORS_OBJECT__OBJECT_HEADING:
+                setObjectHeading((String)newValue);
+                return;
+            case CSVPackage.DOORS_OBJECT__OUTGOING_LINKS:
+                getOutgoingLinks().clear();
+                getOutgoingLinks().addAll((Collection<? extends Link>)newValue);
+                return;
+            case CSVPackage.DOORS_OBJECT__INCOMING_LINKS:
+                getIncomingLinks().clear();
+                getIncomingLinks().addAll((Collection<? extends ResolvedLink>)newValue);
+                return;
+            case CSVPackage.DOORS_OBJECT__MODULE:
+                setModule((DoorsModule)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
@@ -1031,62 +844,53 @@ public class DoorsObjectImpl extends MinimalEObjectImpl.Container implements Doo
      * @generated
      */
     @Override
-    public void eUnset(final int featureID) {
+    public void eUnset(int featureID) {
         switch (featureID) {
-        case CSVPackage.DOORS_OBJECT__MODULE:
-            setModule((DoorsModule)null);
-            return;
-        case CSVPackage.DOORS_OBJECT__ATTRIBUTES:
-            getAttributes().clear();
-            return;
-        case CSVPackage.DOORS_OBJECT__OBJECTS:
-            getObjects().clear();
-            return;
-        case CSVPackage.DOORS_OBJECT__PARENT:
-            setParent((DoorsObject)null);
-            return;
-        case CSVPackage.DOORS_OBJECT__OBJECT_IDENTIFIER:
-            setObjectIdentifier(OBJECT_IDENTIFIER_EDEFAULT);
-            return;
-        case CSVPackage.DOORS_OBJECT__OBJECT_LEVEL:
-            setObjectLevel(OBJECT_LEVEL_EDEFAULT);
-            return;
-        case CSVPackage.DOORS_OBJECT__OBJECT_NUMBER:
-            setObjectNumber(OBJECT_NUMBER_EDEFAULT);
-            return;
-        case CSVPackage.DOORS_OBJECT__CREATED_BY:
-            setCreatedBy(CREATED_BY_EDEFAULT);
-            return;
-        case CSVPackage.DOORS_OBJECT__CREATED_THRU:
-            setCreatedThru(CREATED_THRU_EDEFAULT);
-            return;
-        case CSVPackage.DOORS_OBJECT__CREATED_ON:
-            setCreatedOn(CREATED_ON_EDEFAULT);
-            return;
-        case CSVPackage.DOORS_OBJECT__ABSOLUTE_NUMBER:
-            setAbsoluteNumber(ABSOLUTE_NUMBER_EDEFAULT);
-            return;
-        case CSVPackage.DOORS_OBJECT__LAST_MODIFIED_ON:
-            setLastModifiedOn(LAST_MODIFIED_ON_EDEFAULT);
-            return;
-        case CSVPackage.DOORS_OBJECT__LAST_MODIFIED_BY:
-            setLastModifiedBy(LAST_MODIFIED_BY_EDEFAULT);
-            return;
-        case CSVPackage.DOORS_OBJECT__OBJECT_TEXT:
-            setObjectText(OBJECT_TEXT_EDEFAULT);
-            return;
-        case CSVPackage.DOORS_OBJECT__OBJECT_SHORT_TEXT:
-            setObjectShortText(OBJECT_SHORT_TEXT_EDEFAULT);
-            return;
-        case CSVPackage.DOORS_OBJECT__OBJECT_HEADING:
-            setObjectHeading(OBJECT_HEADING_EDEFAULT);
-            return;
-        case CSVPackage.DOORS_OBJECT__OUTGOING_LINKS:
-            getOutgoingLinks().clear();
-            return;
-        case CSVPackage.DOORS_OBJECT__INCOMING_LINKS:
-            getIncomingLinks().clear();
-            return;
+            case CSVPackage.DOORS_OBJECT__OBJECT_IDENTIFIER:
+                setObjectIdentifier(OBJECT_IDENTIFIER_EDEFAULT);
+                return;
+            case CSVPackage.DOORS_OBJECT__OBJECT_LEVEL:
+                setObjectLevel(OBJECT_LEVEL_EDEFAULT);
+                return;
+            case CSVPackage.DOORS_OBJECT__OBJECT_NUMBER:
+                setObjectNumber(OBJECT_NUMBER_EDEFAULT);
+                return;
+            case CSVPackage.DOORS_OBJECT__CREATED_BY:
+                setCreatedBy(CREATED_BY_EDEFAULT);
+                return;
+            case CSVPackage.DOORS_OBJECT__CREATED_THRU:
+                setCreatedThru(CREATED_THRU_EDEFAULT);
+                return;
+            case CSVPackage.DOORS_OBJECT__CREATED_ON:
+                setCreatedOn(CREATED_ON_EDEFAULT);
+                return;
+            case CSVPackage.DOORS_OBJECT__ABSOLUTE_NUMBER:
+                setAbsoluteNumber(ABSOLUTE_NUMBER_EDEFAULT);
+                return;
+            case CSVPackage.DOORS_OBJECT__LAST_MODIFIED_ON:
+                setLastModifiedOn(LAST_MODIFIED_ON_EDEFAULT);
+                return;
+            case CSVPackage.DOORS_OBJECT__LAST_MODIFIED_BY:
+                setLastModifiedBy(LAST_MODIFIED_BY_EDEFAULT);
+                return;
+            case CSVPackage.DOORS_OBJECT__OBJECT_TEXT:
+                setObjectText(OBJECT_TEXT_EDEFAULT);
+                return;
+            case CSVPackage.DOORS_OBJECT__OBJECT_SHORT_TEXT:
+                setObjectShortText(OBJECT_SHORT_TEXT_EDEFAULT);
+                return;
+            case CSVPackage.DOORS_OBJECT__OBJECT_HEADING:
+                setObjectHeading(OBJECT_HEADING_EDEFAULT);
+                return;
+            case CSVPackage.DOORS_OBJECT__OUTGOING_LINKS:
+                getOutgoingLinks().clear();
+                return;
+            case CSVPackage.DOORS_OBJECT__INCOMING_LINKS:
+                getIncomingLinks().clear();
+                return;
+            case CSVPackage.DOORS_OBJECT__MODULE:
+                setModule((DoorsModule)null);
+                return;
         }
         super.eUnset(featureID);
     }
@@ -1097,44 +901,38 @@ public class DoorsObjectImpl extends MinimalEObjectImpl.Container implements Doo
      * @generated
      */
     @Override
-    public boolean eIsSet(final int featureID) {
+    public boolean eIsSet(int featureID) {
         switch (featureID) {
-        case CSVPackage.DOORS_OBJECT__MODULE:
-            return module != null;
-        case CSVPackage.DOORS_OBJECT__ATTRIBUTES:
-            return attributes != null && !attributes.isEmpty();
-        case CSVPackage.DOORS_OBJECT__OBJECTS:
-            return objects != null && !objects.isEmpty();
-        case CSVPackage.DOORS_OBJECT__PARENT:
-            return getParent() != null;
-        case CSVPackage.DOORS_OBJECT__OBJECT_IDENTIFIER:
-            return OBJECT_IDENTIFIER_EDEFAULT == null ? objectIdentifier != null : !OBJECT_IDENTIFIER_EDEFAULT.equals(objectIdentifier);
-        case CSVPackage.DOORS_OBJECT__OBJECT_LEVEL:
-            return objectLevel != OBJECT_LEVEL_EDEFAULT;
-        case CSVPackage.DOORS_OBJECT__OBJECT_NUMBER:
-            return OBJECT_NUMBER_EDEFAULT == null ? objectNumber != null : !OBJECT_NUMBER_EDEFAULT.equals(objectNumber);
-        case CSVPackage.DOORS_OBJECT__CREATED_BY:
-            return CREATED_BY_EDEFAULT == null ? createdBy != null : !CREATED_BY_EDEFAULT.equals(createdBy);
-        case CSVPackage.DOORS_OBJECT__CREATED_THRU:
-            return CREATED_THRU_EDEFAULT == null ? createdThru != null : !CREATED_THRU_EDEFAULT.equals(createdThru);
-        case CSVPackage.DOORS_OBJECT__CREATED_ON:
-            return CREATED_ON_EDEFAULT == null ? createdOn != null : !CREATED_ON_EDEFAULT.equals(createdOn);
-        case CSVPackage.DOORS_OBJECT__ABSOLUTE_NUMBER:
-            return absoluteNumber != ABSOLUTE_NUMBER_EDEFAULT;
-        case CSVPackage.DOORS_OBJECT__LAST_MODIFIED_ON:
-            return LAST_MODIFIED_ON_EDEFAULT == null ? lastModifiedOn != null : !LAST_MODIFIED_ON_EDEFAULT.equals(lastModifiedOn);
-        case CSVPackage.DOORS_OBJECT__LAST_MODIFIED_BY:
-            return LAST_MODIFIED_BY_EDEFAULT == null ? lastModifiedBy != null : !LAST_MODIFIED_BY_EDEFAULT.equals(lastModifiedBy);
-        case CSVPackage.DOORS_OBJECT__OBJECT_TEXT:
-            return OBJECT_TEXT_EDEFAULT == null ? objectText != null : !OBJECT_TEXT_EDEFAULT.equals(objectText);
-        case CSVPackage.DOORS_OBJECT__OBJECT_SHORT_TEXT:
-            return OBJECT_SHORT_TEXT_EDEFAULT == null ? objectShortText != null : !OBJECT_SHORT_TEXT_EDEFAULT.equals(objectShortText);
-        case CSVPackage.DOORS_OBJECT__OBJECT_HEADING:
-            return OBJECT_HEADING_EDEFAULT == null ? objectHeading != null : !OBJECT_HEADING_EDEFAULT.equals(objectHeading);
-        case CSVPackage.DOORS_OBJECT__OUTGOING_LINKS:
-            return outgoingLinks != null && !outgoingLinks.isEmpty();
-        case CSVPackage.DOORS_OBJECT__INCOMING_LINKS:
-            return incomingLinks != null && !incomingLinks.isEmpty();
+            case CSVPackage.DOORS_OBJECT__OBJECT_IDENTIFIER:
+                return OBJECT_IDENTIFIER_EDEFAULT == null ? objectIdentifier != null : !OBJECT_IDENTIFIER_EDEFAULT.equals(objectIdentifier);
+            case CSVPackage.DOORS_OBJECT__OBJECT_LEVEL:
+                return objectLevel != OBJECT_LEVEL_EDEFAULT;
+            case CSVPackage.DOORS_OBJECT__OBJECT_NUMBER:
+                return OBJECT_NUMBER_EDEFAULT == null ? objectNumber != null : !OBJECT_NUMBER_EDEFAULT.equals(objectNumber);
+            case CSVPackage.DOORS_OBJECT__CREATED_BY:
+                return CREATED_BY_EDEFAULT == null ? createdBy != null : !CREATED_BY_EDEFAULT.equals(createdBy);
+            case CSVPackage.DOORS_OBJECT__CREATED_THRU:
+                return CREATED_THRU_EDEFAULT == null ? createdThru != null : !CREATED_THRU_EDEFAULT.equals(createdThru);
+            case CSVPackage.DOORS_OBJECT__CREATED_ON:
+                return CREATED_ON_EDEFAULT == null ? createdOn != null : !CREATED_ON_EDEFAULT.equals(createdOn);
+            case CSVPackage.DOORS_OBJECT__ABSOLUTE_NUMBER:
+                return absoluteNumber != ABSOLUTE_NUMBER_EDEFAULT;
+            case CSVPackage.DOORS_OBJECT__LAST_MODIFIED_ON:
+                return LAST_MODIFIED_ON_EDEFAULT == null ? lastModifiedOn != null : !LAST_MODIFIED_ON_EDEFAULT.equals(lastModifiedOn);
+            case CSVPackage.DOORS_OBJECT__LAST_MODIFIED_BY:
+                return LAST_MODIFIED_BY_EDEFAULT == null ? lastModifiedBy != null : !LAST_MODIFIED_BY_EDEFAULT.equals(lastModifiedBy);
+            case CSVPackage.DOORS_OBJECT__OBJECT_TEXT:
+                return OBJECT_TEXT_EDEFAULT == null ? objectText != null : !OBJECT_TEXT_EDEFAULT.equals(objectText);
+            case CSVPackage.DOORS_OBJECT__OBJECT_SHORT_TEXT:
+                return OBJECT_SHORT_TEXT_EDEFAULT == null ? objectShortText != null : !OBJECT_SHORT_TEXT_EDEFAULT.equals(objectShortText);
+            case CSVPackage.DOORS_OBJECT__OBJECT_HEADING:
+                return OBJECT_HEADING_EDEFAULT == null ? objectHeading != null : !OBJECT_HEADING_EDEFAULT.equals(objectHeading);
+            case CSVPackage.DOORS_OBJECT__OUTGOING_LINKS:
+                return outgoingLinks != null && !outgoingLinks.isEmpty();
+            case CSVPackage.DOORS_OBJECT__INCOMING_LINKS:
+                return incomingLinks != null && !incomingLinks.isEmpty();
+            case CSVPackage.DOORS_OBJECT__MODULE:
+                return module != null;
         }
         return super.eIsSet(featureID);
     }
@@ -1145,15 +943,12 @@ public class DoorsObjectImpl extends MinimalEObjectImpl.Container implements Doo
      * @generated
      */
     @Override
-    public Object eInvoke(final int operationID, final EList<?> arguments) throws InvocationTargetException {
+    public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
         switch (operationID) {
-        case CSVPackage.DOORS_OBJECT___ACCEPT__DOORSMODULEVISITOR:
-            accept((DoorsModuleVisitor)arguments.get(0));
-            return null;
-        case CSVPackage.DOORS_OBJECT___IS_HEADING:
-            return isHeading();
-        case CSVPackage.DOORS_OBJECT___GET_TEXT:
-            return getText();
+            case CSVPackage.DOORS_OBJECT___IS_HEADING:
+                return isHeading();
+            case CSVPackage.DOORS_OBJECT___GET_TEXT:
+                return getText();
         }
         return super.eInvoke(operationID, arguments);
     }
@@ -1165,11 +960,9 @@ public class DoorsObjectImpl extends MinimalEObjectImpl.Container implements Doo
      */
     @Override
     public String toString() {
-        if (eIsProxy()) {
-            return super.toString();
-        }
+        if (eIsProxy()) return super.toString();
 
-        final StringBuffer result = new StringBuffer(super.toString());
+        StringBuffer result = new StringBuffer(super.toString());
         result.append(" (objectIdentifier: ");
         result.append(objectIdentifier);
         result.append(", objectLevel: ");

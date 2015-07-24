@@ -44,8 +44,6 @@ public class WorkflowProcessor {
 
     private static final Logger LOGGER = Logger.getLogger(WorkflowProcessor.class.getName());
 
-    private WorkflowModel workflowModel;
-
     private final ResultCache resultCache = new ResultCache();
 
     private final DoorsApplication doorsApp;
@@ -55,9 +53,9 @@ public class WorkflowProcessor {
     }
 
     public void runWorkFlow(final File workFlowFile) throws WorkflowException {
-        final long t1 = System.currentTimeMillis();
         LOGGER.info(String.format("Starting workflow execution. Workflow file: %s", workFlowFile.getAbsolutePath()));
         resultCache.clear();
+        WorkflowModel workflowModel;
         try {
             workflowModel = readWorkflowModel(workFlowFile);
         } catch (final IOException e) {
@@ -65,6 +63,11 @@ public class WorkflowProcessor {
         }
         LOGGER.info("Workflow model loaded.");
 
+        runWorkflowModel(workflowModel);
+    }
+
+    public Map<Target, List<ModelObject>> runWorkflowModel(final WorkflowModel workflowModel) throws WorkflowException {
+        final long t1 = System.currentTimeMillis();
         try {
             new WorkflowValidator().validate(workflowModel);
         } catch (final WorkflowValidationException e) {
@@ -80,11 +83,14 @@ public class WorkflowProcessor {
         variables.put("system.date", new SimpleDateFormat("yyyyMMdd").format(new Date()));
         variables.put("system.time", new SimpleDateFormat("HHmmss").format(new Date()));
 
+        final Map<Target, List<ModelObject>> results = new HashMap<Target, List<ModelObject>>();
+
         for (final Target target : WorkflowUtil.getTargets(workflowModel)) {
-            processStep(target.getStep(), variables);
+            results.put(target, processStep(target.getStep(), variables));
         }
         LOGGER.info(String.format("Workflow execution completed in %d ms.", System.currentTimeMillis() - t1));
         LOGGER.info(String.format("Total Memory: %d", Runtime.getRuntime().totalMemory()));
+        return results;
     }
 
     private WorkflowModel readWorkflowModel(final File workFlowFile) throws IOException {
@@ -208,7 +214,7 @@ public class WorkflowProcessor {
             }
             LOGGER.info(String.format("Loading csv from file %s.", file.getAbsolutePath()));
             try {
-                result.add(new ModuleCSVParser().parseCSV(file));
+                result.add(loadDoorsModuleFromCSV(file));
             } catch (IOException | CSVParseException e) {
                 throw new WorkflowException(String.format("Error while reading CSV file %s.", file.getAbsolutePath()));
             }
@@ -238,6 +244,15 @@ public class WorkflowProcessor {
         return result;
     }
 
+    private DoorsModule loadDoorsModuleFromCSV(final File file) throws IOException, CSVParseException {
+        final DoorsModule module = new ModuleCSVParser().parseCSV(file);
+        final File metaDataFile = new File(file.getAbsoluteFile() + ".mmd");
+        if (metaDataFile.exists()) {
+            new ModuleMetaDataParser().parseModuleMetaData(metaDataFile, module);
+        }
+        return module;
+    }
+
     private DoorsModule loadDoorsModuleFromUrl(final DoorsURL doorsURL) throws WorkflowException {
         try {
             final File tempFile = File.createTempFile("doors_csv", ".csv");
@@ -245,8 +260,7 @@ public class WorkflowProcessor {
             tempFile.deleteOnExit();
             tempMetaFile.deleteOnExit();
             doorsApp.exportModuleToCSV(doorsURL, tempFile);
-            final DoorsModule module = new ModuleCSVParser().parseCSV(tempFile);
-            new ModuleMetaDataParser().parseModuleMetaData(tempMetaFile, module);
+            final DoorsModule module = loadDoorsModuleFromCSV(tempFile);
             return module;
         } catch (IOException | DoorsException | CSVParseException e) {
             throw new WorkflowException(String.format("Unable to read DOORS module %s", doorsURL), e);
@@ -260,8 +274,7 @@ public class WorkflowProcessor {
             tempFile.deleteOnExit();
             tempMetaFile.deleteOnExit();
             doorsApp.exportModuleToCSV(reference, tempFile);
-            final DoorsModule module = new ModuleCSVParser().parseCSV(tempFile);
-            new ModuleMetaDataParser().parseModuleMetaData(tempMetaFile, module);
+            final DoorsModule module = loadDoorsModuleFromCSV(tempFile);
             return module;
         } catch (IOException | DoorsException | CSVParseException e) {
             throw new WorkflowException(String.format("Unable to read DOORS module %s", reference), e);
@@ -276,7 +289,7 @@ public class WorkflowProcessor {
             for (final File child : listFiles) {
                 try {
                     if (child.isFile() && "csv".equals(FilenameUtils.getExtension(child.getAbsolutePath()))) {
-                        result.add(new ModuleCSVParser().parseCSV(child));
+                        result.add(loadDoorsModuleFromCSV(child));
                     } else if (child.isDirectory()) {
                         result.addAll(parseCSVFilesInFolder(child));
                     }
