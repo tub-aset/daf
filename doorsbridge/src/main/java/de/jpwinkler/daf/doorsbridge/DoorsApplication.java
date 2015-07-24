@@ -14,6 +14,10 @@ public interface DoorsApplication {
 
     void exportModulesToCSV(File moduleListFile, File targetFolder) throws IOException, DoorsException;
 
+    void gotoObject(String modulePath, int absoluteNumber) throws DoorsException, IOException;
+
+    void gotoObject(DoorsURL url, int absoluteNumber) throws DoorsException, IOException;
+
     boolean isDoorsRunning();
 
     void redirectOutput(OutputStream stream);

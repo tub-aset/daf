@@ -149,6 +149,21 @@ public class DoorsApplicationImpl implements DoorsApplication {
         });
     }
 
+    @Override
+    public void gotoObject(final DoorsURL url, final int absoluteNumber) throws DoorsException, IOException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void gotoObject(final String modulePath, final int absoluteNumber) throws DoorsException, IOException {
+        buildAndRunCommand(builder -> {
+            builder.addScript("goto_object.dxl");
+            builder.setVariable("modulePath", modulePath);
+            builder.setVariable("absoluteNumber", String.valueOf(absoluteNumber));
+        });
+    }
+
     private void buildAndRunCommand(final Consumer<DoorsScriptBuilder> prepareScriptBuilder) throws IOException, DoorsException {
         final DoorsScriptBuilder builder = new DoorsScriptBuilder(cache);
         final boolean redirectOutput = outputStream != null;
