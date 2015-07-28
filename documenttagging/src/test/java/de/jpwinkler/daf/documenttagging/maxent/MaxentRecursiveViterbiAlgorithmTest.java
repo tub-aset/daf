@@ -1,6 +1,5 @@
 package de.jpwinkler.daf.documenttagging.maxent;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
@@ -31,8 +30,8 @@ public class MaxentRecursiveViterbiAlgorithmTest {
         final MaxentDataGenerator generator = MaxentDataGenerator.getDefaultGenerator();
         generator.setTraining(true);
 
-        final DoorsModule wwc = new ModuleCSVParser().parseCSV(new File("testdata\\SLH-wwc.CSV"));
-        final DoorsModule wl = new ModuleCSVParser().parseCSV(new File("testdata\\SLH-wl.CSV"));
+        final DoorsModule wwc = new ModuleCSVParser().parseCSV(getClass().getResourceAsStream("slh-wwc.csv"));
+        final DoorsModule wl = new ModuleCSVParser().parseCSV(getClass().getResourceAsStream("slh-wl.csv"));
         final GISModel model = GIS.trainModel(new DoorsModuleEventStream(generator, wwc), 10, 0);
 
         final MaxentRecursiveViterbiAlgorithm algorithm = new MaxentRecursiveViterbiAlgorithm(model, generator);

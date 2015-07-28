@@ -116,12 +116,17 @@ public class ModuleCSVParser {
 
     public DoorsModule parseCSV(final File file) throws IOException, CSVParseException {
         try (InputStream is = new FileInputStream(file)) {
-            final String csvString = IOUtils.toString(new BOMInputStream(is), Charset.defaultCharset());
-            final List<CSVRecord> records = CSVParser.parse(csvString, FORMAT).getRecords();
-            final DoorsModule parseCSV = buildModuleModel(records);
+            final DoorsModule parseCSV = parseCSV(is);
             parseCSV.setName(FilenameUtils.getBaseName(file.getAbsolutePath()));
             return parseCSV;
         }
+    }
+
+    public DoorsModule parseCSV(final InputStream is) throws IOException, CSVParseException {
+        final String csvString = IOUtils.toString(new BOMInputStream(is), Charset.defaultCharset());
+        final List<CSVRecord> records = CSVParser.parse(csvString, FORMAT).getRecords();
+        final DoorsModule parseCSV = buildModuleModel(records);
+        return parseCSV;
     }
 
 }

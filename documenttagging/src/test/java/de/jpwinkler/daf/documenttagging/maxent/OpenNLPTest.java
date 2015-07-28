@@ -1,6 +1,5 @@
 package de.jpwinkler.daf.documenttagging.maxent;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,8 +30,8 @@ public class OpenNLPTest {
 
     @Test
     public void test() throws IOException, CSVParseException {
-        final DoorsModule wwc = new ModuleCSVParser().parseCSV(new File("testdata/slh-wwc.csv"));
-        final DoorsModule wl = new ModuleCSVParser().parseCSV(new File("testdata/slh-wl.csv"));
+        final DoorsModule wwc = new ModuleCSVParser().parseCSV(getClass().getResourceAsStream("slh-wwc.csv"));
+        final DoorsModule wl = new ModuleCSVParser().parseCSV(getClass().getResourceAsStream("slh-wl.csv"));
 
         final MaxentDataGenerator generator = MaxentDataGenerator.getDefaultGenerator();
         generator.setTraining(true);
