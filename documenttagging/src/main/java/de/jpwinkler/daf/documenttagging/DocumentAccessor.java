@@ -2,10 +2,10 @@ package de.jpwinkler.daf.documenttagging;
 
 import java.util.List;
 
-public interface DocumentAccessor<T> {
+public interface DocumentAccessor<ELEMENT> {
 
-    public T getDocumentRoot();
+    public ELEMENT getDocumentRoot();
 
-    public List<T> getChildren(T documentElement);
+    public List<ELEMENT> getChildren(ELEMENT documentElement);
 
 }
