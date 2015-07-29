@@ -1,44 +1,58 @@
 package de.jpwinkler.daf.documenttagging;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
-import de.jpwinkler.daf.documenttagging.maxent.util.BiMap;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ConfusionMatrix<TAG> {
 
-    private final BiMap<TAG, TAG, Integer> map = new BiMap<>();
 
-    private final Set<TAG> tags = new LinkedHashSet<>();
+    private int[][] matrix;
+	private List<TAG> tags;
+	
+	private int sumRow(int row) {
+		int result = 0;
+		for (int i = 0; i < tags.size(); i++) {
+			result += matrix[i][row];
+		}
+		return result;
+	}
+	
+	private int sumColumn(int column) {
+		int result = 0;
+		for (int i = 0; i < tags.size(); i++) {
+			result += matrix[column][i];
+		}
+		return result;
+	}
 
-    // TODO: this is utterly ugly.
-    public ConfusionMatrix(final TaggedDocument taggedDocument) {
-        for (final Object e : taggedDocument.getElements()) {
-            final TAG actual = (TAG) taggedDocument.getActualTag(e);
+    public <X> ConfusionMatrix(final TaggedDocument<X, TAG> taggedDocument) {
+    	tags = new ArrayList<>(taggedDocument.getTags());
+    	matrix = new int[tags.size()][tags.size()];
+    	
+        for (final X e : taggedDocument.getElements()) {
             final TAG predicted = (TAG) taggedDocument.getPredictedTag(e);
-            if (actual != null && predicted != null) {
-                put(actual, predicted, get(actual, predicted) + 1);
+            final TAG actual = (TAG) taggedDocument.getActualTag(e);
+            if (predicted != null && actual != null) {
+                matrix[tags.indexOf(predicted)][tags.indexOf(actual)]++;
             } else {
                 System.out.println("oops...");
             }
         }
+        
     }
 
-    public ConfusionMatrix() {
+    public int get(final TAG predicted, final TAG actual) {
+    	return  matrix[tags.indexOf(predicted)][tags.indexOf(actual)];
     }
-
-    public void put(final TAG actual, final TAG predicted, final int count) {
-        map.put(actual, predicted, count);
-        tags.add(predicted);
-        tags.add(actual);
+    
+    public float getPrecision(TAG tag) {
+    	int tagIndex = tags.indexOf(tag);
+    	return (float) matrix[tagIndex][tagIndex] / (float) sumColumn(tagIndex);
     }
-
-    public int get(final TAG actual, final TAG predicted) {
-        if (map.containsKey(actual, predicted)) {
-            return map.get(actual, predicted);
-        } else {
-            return 0;
-        }
+    
+    public float getRecall(TAG tag) {
+    	int tagIndex = tags.indexOf(tag);
+    	return (float) matrix[tagIndex][tagIndex] / (float) sumRow(tagIndex);
     }
 
     @Override
@@ -54,7 +68,7 @@ public class ConfusionMatrix<TAG> {
             builder.append(actual.toString());
             builder.append("\t");
             for (final TAG predicted : tags) {
-                builder.append(get(actual, predicted));
+                builder.append(get(predicted, actual));
                 builder.append("\t");
             }
             builder.append("\n");

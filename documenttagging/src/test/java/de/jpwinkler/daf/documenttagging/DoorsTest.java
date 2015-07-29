@@ -67,8 +67,27 @@ public class DoorsTest {
         moduleWriter.setObjectAnnotationFunction(o -> "predicted: " + taggedDocument.getPredictedTag(o) + ", actual: " + taggedDocument.getActualTag(o));
         moduleWriter.writeModule(wl);
 
-        final ConfusionMatrix<String> confusionMatrix = new ConfusionMatrix<String>(taggedDocument);
+        final ConfusionMatrix<String> confusionMatrix = new ConfusionMatrix<>( taggedDocument);
         System.out.println(confusionMatrix.toString());
+        
+        System.out.println();
+
+        float totalPrecision = 0;
+        float totalRecall = 0;
+        int c = 0;
+        for (String tag : taggedDocument.getTags()) {
+        	float precision = confusionMatrix.getPrecision(tag);
+			float recall = confusionMatrix.getRecall(tag);
+			System.out.println(tag + "(precision: " + precision + ", recall: " + recall + ")");
+			if (!Float.isNaN(precision) && !Float.isNaN(recall)) {
+				totalPrecision += precision;
+				totalRecall += recall;
+				c++;
+			}
+        }
+        
+        System.out.println("average precision: " + (totalPrecision / c));
+        System.out.println("average recall: " + (totalRecall / c));
     }
 
 }
