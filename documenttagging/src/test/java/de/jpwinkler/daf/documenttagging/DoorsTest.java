@@ -79,11 +79,9 @@ public class DoorsTest {
         	float precision = confusionMatrix.getPrecision(tag);
 			float recall = confusionMatrix.getRecall(tag);
 			System.out.println(tag + "(precision: " + precision + ", recall: " + recall + ")");
-			if (!Float.isNaN(precision) && !Float.isNaN(recall)) {
 				totalPrecision += precision;
 				totalRecall += recall;
 				c++;
-			}
         }
         
         System.out.println("average precision: " + (totalPrecision / c));
