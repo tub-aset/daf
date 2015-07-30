@@ -10,4 +10,8 @@ public class StringFeature extends Feature<String> {
         super(name, value);
     }
 
+    @Override
+    public String toString() {
+        return getName() + "=" + getValue();
+    }
 }

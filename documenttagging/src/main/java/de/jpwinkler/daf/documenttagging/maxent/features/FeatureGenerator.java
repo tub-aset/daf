@@ -11,10 +11,6 @@ public abstract class FeatureGenerator {
         processObject(o);
     }
 
-    public FeatureGeneratorMode getFeatureGeneratorMode() {
-        return FeatureGeneratorMode.ALWAYS;
-    }
-
     protected abstract void processObject(DoorsObject o);
 
     protected final void emitFeature(final Feature<?> f) {

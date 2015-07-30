@@ -8,7 +8,6 @@ import de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.documenttagging.maxent.features.FeatureGenerator;
-import de.jpwinkler.daf.documenttagging.maxent.features.FeatureGeneratorMode;
 import de.jpwinkler.daf.documenttagging.maxent.features.impl.ASILFeatureGenerator;
 import de.jpwinkler.daf.documenttagging.maxent.features.impl.FOObjectTypeFeatureGenerator;
 import de.jpwinkler.daf.documenttagging.maxent.features.impl.NeighborhoodFeatureGenerator;
@@ -64,11 +63,9 @@ public class MaxentDataGenerator {
     private MaxentDataElement runGenerators(final DoorsObject object) {
         final List<String> x = new ArrayList<>();
         for (final FeatureGenerator generator : featureGenerators) {
-            if (generator.getFeatureGeneratorMode() == FeatureGeneratorMode.ALWAYS || (isTraining && generator.getFeatureGeneratorMode() == FeatureGeneratorMode.ONLY_IN_TRAINIG)) {
-                generator.run(feature -> {
-                    x.add(feature.getName() + "=" + feature.getValue());
-                } , object);
-            }
+            generator.run(feature -> {
+                x.add(feature.toString());
+            } , object);
         }
         if (isTraining) {
             if (outcomeFunction != null && outcomeFunction.getOutcome(object) != null && !outcomeFunction.getOutcome(object).isEmpty()) {

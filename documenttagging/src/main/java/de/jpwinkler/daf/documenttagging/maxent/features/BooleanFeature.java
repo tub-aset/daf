@@ -10,4 +10,9 @@ public class BooleanFeature extends Feature<Boolean> {
         super(name, value);
     }
 
+    @Override
+    public String toString() {
+        return getName() + "=" + (getValue() ? "true" : "false");
+    }
+
 }
