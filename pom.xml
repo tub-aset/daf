@@ -8,12 +8,12 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>../dafcore</module>
-		<module>../doorsbridge</module>
-		<module>../fap5</module>
-		<module>../workflowdsl</module>
-		<module>../fap5gui</module>
-		<module>../documenttagging</module>
+		<module>dafcore</module>
+		<module>doorsbridge</module>
+		<module>fap5</module>
+		<module>workflowdsl</module>
+		<module>fap5gui</module>
+		<module>documenttagging</module>
 	</modules>
 
 </project>
