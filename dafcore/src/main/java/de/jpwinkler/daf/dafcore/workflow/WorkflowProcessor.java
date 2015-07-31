@@ -12,12 +12,6 @@ import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.FilenameUtils;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xtext.resource.XtextResource;
-import org.eclipse.xtext.resource.XtextResourceSet;
-
-import com.google.inject.Injector;
 
 import de.jpwinkler.daf.dafcore.csv.ModuleCSVParser;
 import de.jpwinkler.daf.dafcore.csv.ModuleMetaDataParser;
@@ -28,17 +22,16 @@ import de.jpwinkler.daf.doorsbridge.DoorsApplication;
 import de.jpwinkler.daf.doorsbridge.DoorsApplicationFactory;
 import de.jpwinkler.daf.doorsbridge.DoorsException;
 import de.jpwinkler.daf.doorsbridge.DoorsURL;
-import de.jpwinkler.daf.workflowdsl.WorkflowDslStandaloneSetup;
-import de.jpwinkler.daf.workflowdsl.workflowDsl.DependencyFeature;
-import de.jpwinkler.daf.workflowdsl.workflowDsl.ForFeature;
-import de.jpwinkler.daf.workflowdsl.workflowDsl.ModelConstructorStep;
-import de.jpwinkler.daf.workflowdsl.workflowDsl.ModelOperationStep;
-import de.jpwinkler.daf.workflowdsl.workflowDsl.ModuleSetEntry;
-import de.jpwinkler.daf.workflowdsl.workflowDsl.OperationFeature;
-import de.jpwinkler.daf.workflowdsl.workflowDsl.Step;
-import de.jpwinkler.daf.workflowdsl.workflowDsl.Target;
-import de.jpwinkler.daf.workflowdsl.workflowDsl.Variable;
-import de.jpwinkler.daf.workflowdsl.workflowDsl.WorkflowModel;
+import de.jpwinkler.daf.workflowdsl.DependencyFeature;
+import de.jpwinkler.daf.workflowdsl.ForFeature;
+import de.jpwinkler.daf.workflowdsl.ModelConstructorStep;
+import de.jpwinkler.daf.workflowdsl.ModelOperationStep;
+import de.jpwinkler.daf.workflowdsl.ModuleSetEntry;
+import de.jpwinkler.daf.workflowdsl.OperationFeature;
+import de.jpwinkler.daf.workflowdsl.Step;
+import de.jpwinkler.daf.workflowdsl.Target;
+import de.jpwinkler.daf.workflowdsl.Variable;
+import de.jpwinkler.daf.workflowdsl.Workflow;
 
 public class WorkflowProcessor {
 
@@ -55,7 +48,7 @@ public class WorkflowProcessor {
     public void runWorkFlow(final File workFlowFile) throws WorkflowException {
         LOGGER.info(String.format("Starting workflow execution. Workflow file: %s", workFlowFile.getAbsolutePath()));
         resultCache.clear();
-        WorkflowModel workflowModel;
+        Workflow workflowModel;
         try {
             workflowModel = readWorkflowModel(workFlowFile);
         } catch (final IOException e) {
@@ -66,7 +59,7 @@ public class WorkflowProcessor {
         runWorkflowModel(workflowModel);
     }
 
-    public Map<Target, List<ModelObject>> runWorkflowModel(final WorkflowModel workflowModel) throws WorkflowException {
+    public Map<Target, List<ModelObject>> runWorkflowModel(final Workflow workflowModel) throws WorkflowException {
         final long t1 = System.currentTimeMillis();
         try {
             new WorkflowValidator().validate(workflowModel);
@@ -93,19 +86,8 @@ public class WorkflowProcessor {
         return results;
     }
 
-    private WorkflowModel readWorkflowModel(final File workFlowFile) throws IOException {
-        // http://wiki.eclipse.org/Xtext/FAQ#How_do_I_load_my_model_in_a_standalone_Java_application.C2.A0.3F
-
-        // TODO what happens, when the workflow file contains invalid syntax?
-
-        // new org.eclipse.emf.mwe.utils.StandaloneSetup().setPlatformUri(".");
-        final Injector injector = new WorkflowDslStandaloneSetup().createInjectorAndDoEMFRegistration();
-        final XtextResourceSet resourceSet = injector.getInstance(XtextResourceSet.class);
-        resourceSet.addLoadOption(XtextResource.OPTION_RESOLVE_ALL, Boolean.TRUE);
-        final Resource resource = resourceSet.getResource(
-                URI.createFileURI(workFlowFile.getAbsolutePath()), true);
-        return (WorkflowModel) resource.getContents().get(0);
-
+    private Workflow readWorkflowModel(final File workFlowFile) throws IOException {
+        throw new UnsupportedOperationException("Not yet implemented.");
     }
 
     private List<ModelObject> processStep(final Step step, final Map<String, Object> variables) throws WorkflowException {

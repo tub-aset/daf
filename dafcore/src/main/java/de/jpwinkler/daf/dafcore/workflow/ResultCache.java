@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.jpwinkler.daf.dafcore.model.common.ModelObject;
-import de.jpwinkler.daf.workflowdsl.workflowDsl.Step;
+import de.jpwinkler.daf.workflowdsl.Step;
 
 public class ResultCache {
 

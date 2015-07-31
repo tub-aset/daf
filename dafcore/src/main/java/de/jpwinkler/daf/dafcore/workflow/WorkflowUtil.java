@@ -8,18 +8,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import de.jpwinkler.daf.workflowdsl.workflowDsl.ArrayVariable;
-import de.jpwinkler.daf.workflowdsl.workflowDsl.DependencyFeature;
-import de.jpwinkler.daf.workflowdsl.workflowDsl.ImplementationFeature;
-import de.jpwinkler.daf.workflowdsl.workflowDsl.ModelConstructorStep;
-import de.jpwinkler.daf.workflowdsl.workflowDsl.ModelOperationStep;
-import de.jpwinkler.daf.workflowdsl.workflowDsl.OperationFeature;
-import de.jpwinkler.daf.workflowdsl.workflowDsl.SimpleVariable;
-import de.jpwinkler.daf.workflowdsl.workflowDsl.SourceFeature;
-import de.jpwinkler.daf.workflowdsl.workflowDsl.Step;
-import de.jpwinkler.daf.workflowdsl.workflowDsl.Target;
-import de.jpwinkler.daf.workflowdsl.workflowDsl.Variable;
-import de.jpwinkler.daf.workflowdsl.workflowDsl.WorkflowModel;
+import de.jpwinkler.daf.workflowdsl.ArrayVariable;
+import de.jpwinkler.daf.workflowdsl.DependencyFeature;
+import de.jpwinkler.daf.workflowdsl.ImplementationFeature;
+import de.jpwinkler.daf.workflowdsl.ModelConstructorStep;
+import de.jpwinkler.daf.workflowdsl.ModelOperationStep;
+import de.jpwinkler.daf.workflowdsl.OperationFeature;
+import de.jpwinkler.daf.workflowdsl.SimpleVariable;
+import de.jpwinkler.daf.workflowdsl.SourceFeature;
+import de.jpwinkler.daf.workflowdsl.Step;
+import de.jpwinkler.daf.workflowdsl.Target;
+import de.jpwinkler.daf.workflowdsl.Variable;
+import de.jpwinkler.daf.workflowdsl.Workflow;
 
 public final class WorkflowUtil {
 
@@ -32,11 +32,11 @@ public final class WorkflowUtil {
         return step.stream().filter(f -> f instanceof DependencyFeature).map(f -> (DependencyFeature) f).collect(Collectors.toList());
     }
 
-    public static List<Variable> getVariables(final WorkflowModel model) {
+    public static List<Variable> getVariables(final Workflow model) {
         return model.getElements().stream().filter(e -> e instanceof Variable).map(e -> (Variable) e).collect(Collectors.toList());
     }
 
-    public static List<Target> getTargets(final WorkflowModel model) {
+    public static List<Target> getTargets(final Workflow model) {
         return model.getElements().stream().filter(e -> e instanceof Target).map(e -> (Target) e).collect(Collectors.toList());
     }
 

@@ -2,7 +2,7 @@ package de.jpwinkler.daf.dafcore.workflow;
 
 import java.util.Map;
 
-import de.jpwinkler.daf.workflowdsl.workflowDsl.Step;
+import de.jpwinkler.daf.workflowdsl.Step;
 
 public class ResultCacheKey {
 
