@@ -5,9 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
-import com.google.common.base.Predicate;
 
 public class Version implements Comparable<Version> {
 
@@ -37,7 +36,7 @@ public class Version implements Comparable<Version> {
         final List<String> allMetrics = documentSnapshots.values().stream().map(ds -> ds.getMetricNames()).flatMap(metrics -> metrics.stream()).distinct().collect(Collectors.toList());
 
         for (final String metric : allMetrics) {
-            summary.setMetric(metric, documentSnapshots.values().stream().filter(ds -> filter.apply(ds)).mapToInt(ds -> ds.getMetric(metric) != null ? ds.getMetric(metric) : 0).sum());
+            summary.setMetric(metric, documentSnapshots.values().stream().filter(ds -> filter.test(ds)).mapToInt(ds -> ds.getMetric(metric) != null ? ds.getMetric(metric) : 0).sum());
         }
 
         documentSnapshots.values().stream().forEach(ds -> summary.getIssues().addAll(ds.getIssues()));
