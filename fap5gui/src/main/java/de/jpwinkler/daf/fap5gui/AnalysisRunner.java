@@ -32,25 +32,23 @@ import de.jpwinkler.daf.fap5gui.model.AnalysisResults;
 import de.jpwinkler.daf.fap5gui.model.AnalysisSettings;
 import de.jpwinkler.daf.fap5gui.model.DocumentSnapshot;
 import de.jpwinkler.daf.fap5gui.model.Version;
-import de.jpwinkler.daf.workflowdsl.workflowDsl.DependencyFeature;
-import de.jpwinkler.daf.workflowdsl.workflowDsl.ImplementationFeature;
-import de.jpwinkler.daf.workflowdsl.workflowDsl.ModelConstructorStep;
-import de.jpwinkler.daf.workflowdsl.workflowDsl.ModelOperationStep;
-import de.jpwinkler.daf.workflowdsl.workflowDsl.ModuleSet;
-import de.jpwinkler.daf.workflowdsl.workflowDsl.ModuleSetEntry;
-import de.jpwinkler.daf.workflowdsl.workflowDsl.SimpleVariable;
-import de.jpwinkler.daf.workflowdsl.workflowDsl.SourceFeature;
-import de.jpwinkler.daf.workflowdsl.workflowDsl.Step;
-import de.jpwinkler.daf.workflowdsl.workflowDsl.Target;
-import de.jpwinkler.daf.workflowdsl.workflowDsl.Variable;
-import de.jpwinkler.daf.workflowdsl.workflowDsl.WorkflowDslFactory;
-import de.jpwinkler.daf.workflowdsl.workflowDsl.WorkflowModel;
+import de.jpwinkler.daf.workflowdsl.DependencyFeature;
+import de.jpwinkler.daf.workflowdsl.ImplementationFeature;
+import de.jpwinkler.daf.workflowdsl.ModelConstructorStep;
+import de.jpwinkler.daf.workflowdsl.ModelOperationStep;
+import de.jpwinkler.daf.workflowdsl.ModuleSet;
+import de.jpwinkler.daf.workflowdsl.ModuleSetEntry;
+import de.jpwinkler.daf.workflowdsl.SimpleVariable;
+import de.jpwinkler.daf.workflowdsl.SourceFeature;
+import de.jpwinkler.daf.workflowdsl.Step;
+import de.jpwinkler.daf.workflowdsl.Target;
+import de.jpwinkler.daf.workflowdsl.Variable;
+import de.jpwinkler.daf.workflowdsl.Workflow;
 
 public class AnalysisRunner {
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMdd");
 
-    private final WorkflowDslFactory factory = WorkflowDslFactory.eINSTANCE;
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     private AnalysisResults results;
@@ -96,16 +94,16 @@ public class AnalysisRunner {
     private void processNewVersion() {
         final String version = DATE_FORMAT.format(new Date());
 
-        final WorkflowModel workflowModel = factory.createWorkflowModel();
+        final Workflow workflowModel = new Workflow();
 
-        final ModuleSet moduleSet = factory.createModuleSet();
-        final ModuleSetEntry moduleSetEntry = factory.createModuleSetEntry();
+        final ModuleSet moduleSet = new ModuleSet();
+        final ModuleSetEntry moduleSetEntry = new ModuleSetEntry();
         moduleSetEntry.setType("csvfolder");
         moduleSetEntry.setReference(new File(settings.getCsvDirectory(), version).getAbsolutePath());
         moduleSet.getModuleSetEntries().add(moduleSetEntry);
         workflowModel.getElements().add(moduleSet);
 
-        final ModelConstructorStep codeBeamerModelConstructorStep = factory.createModelConstructorStep();
+        final ModelConstructorStep codeBeamerModelConstructorStep = new ModelConstructorStep();
         codeBeamerModelConstructorStep.setName("CodeBeamerModelConstructor");
         codeBeamerModelConstructorStep.getFeatures().add(createSourceFeature(moduleSet));
         codeBeamerModelConstructorStep.getFeatures().add(createImplementationFeature("de.jpwinkler.daf.fap5.CodeBeamerModelConstructor"));
@@ -114,7 +112,7 @@ public class AnalysisRunner {
         workflowModel.getElements().add(codeBeamerModelConstructorTarget);
 
         if (settings.isRunNewDoorsAnalysis()) {
-            final ModelOperationStep doorsExportStep = factory.createModelOperationStep();
+            final ModelOperationStep doorsExportStep = new ModelOperationStep();
             doorsExportStep.setName("ExportModules");
             doorsExportStep.getFeatures().add(createImplementationFeature("de.jpwinkler.daf.fap5.ExportModulesOp"));
 
@@ -127,7 +125,7 @@ public class AnalysisRunner {
         }
 
         if (settings.isUpdateProgressReportExcelSheet()) {
-            final ModelOperationStep updateProgressReportStep = factory.createModelOperationStep();
+            final ModelOperationStep updateProgressReportStep = new ModelOperationStep();
             updateProgressReportStep.setName("UpdateExcelOp");
             updateProgressReportStep.getFeatures().add(createDependencyFeature("codeBeamerModels", codeBeamerModelConstructorStep));
             updateProgressReportStep.getFeatures().add(createImplementationFeature("de.jpwinkler.daf.fap5.UpdateExcelOp"));
@@ -137,7 +135,7 @@ public class AnalysisRunner {
         }
 
         if (settings.isGenerateIssueLists()) {
-            final ModelOperationStep exportIssueListsStep = factory.createModelOperationStep();
+            final ModelOperationStep exportIssueListsStep = new ModelOperationStep();
             exportIssueListsStep.setName("ExportIssueListsOp");
             exportIssueListsStep.getFeatures().add(createDependencyFeature("codeBeamerModels", codeBeamerModelConstructorStep));
             exportIssueListsStep.getFeatures().add(createImplementationFeature("de.jpwinkler.daf.fap5.ExportIssueListsOp"));
@@ -157,28 +155,28 @@ public class AnalysisRunner {
 
     private Target createTarget(final Step step) {
         final Target target;
-        target = factory.createTarget();
+        target = new Target();
         target.setStep(step);
         return target;
     }
 
     private void processExistingVersionFolder(final String versionFolder) {
-        final ModuleSet moduleSet = factory.createModuleSet();
-        final ModuleSetEntry moduleSetEntry = factory.createModuleSetEntry();
+        final ModuleSet moduleSet = new ModuleSet();
+        final ModuleSetEntry moduleSetEntry = new ModuleSetEntry();
         moduleSetEntry.setType("csvfolder");
         moduleSetEntry.setReference(new File(settings.getCsvDirectory(), versionFolder).getAbsolutePath());
         moduleSet.getModuleSetEntries().add(moduleSetEntry);
 
-        final ModelConstructorStep modelConstructorStep = factory.createModelConstructorStep();
+        final ModelConstructorStep modelConstructorStep = new ModelConstructorStep();
         modelConstructorStep.setName("CodeBeamerModelConstructor");
         modelConstructorStep.getFeatures().add(createSourceFeature(moduleSet));
         modelConstructorStep.getFeatures().add(createImplementationFeature("de.jpwinkler.daf.fap5.CodeBeamerModelConstructor"));
 
-        final WorkflowModel workflowModel = factory.createWorkflowModel();
+        final Workflow workflowModel = new Workflow();
         workflowModel.getElements().add(moduleSet);
         workflowModel.getElements().add(modelConstructorStep);
 
-        final Target target = factory.createTarget();
+        final Target target = new Target();
         target.setStep(modelConstructorStep);
         workflowModel.getElements().add(target);
 
@@ -266,19 +264,19 @@ public class AnalysisRunner {
     }
 
     private SourceFeature createSourceFeature(final ModuleSet moduleSet) {
-        final SourceFeature sourceFeature = factory.createSourceFeature();
+        final SourceFeature sourceFeature = new SourceFeature();
         sourceFeature.setModuleSet(moduleSet);
         return sourceFeature;
     }
 
     private ImplementationFeature createImplementationFeature(final String implName) {
-        final ImplementationFeature implementationFeature = factory.createImplementationFeature();
+        final ImplementationFeature implementationFeature = new ImplementationFeature();
         implementationFeature.setImplementation(implName);
         return implementationFeature;
     }
 
     private DependencyFeature createDependencyFeature(final String name, final Step step, final Variable... variables) {
-        final DependencyFeature dependencyFeature = factory.createDependencyFeature();
+        final DependencyFeature dependencyFeature = new DependencyFeature();
         dependencyFeature.setName(name);
         dependencyFeature.setStep(step);
         for (final Variable v : variables) {
@@ -288,7 +286,7 @@ public class AnalysisRunner {
     }
 
     private Variable createSimpleVariable(final String name, final String value) {
-        final SimpleVariable variable = factory.createSimpleVariable();
+        final SimpleVariable variable = new SimpleVariable();
         variable.setName(name);
         variable.setValue(value);
 
