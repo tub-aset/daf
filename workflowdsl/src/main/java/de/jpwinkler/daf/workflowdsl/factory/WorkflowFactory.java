@@ -2,6 +2,8 @@ package de.jpwinkler.daf.workflowdsl.factory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -50,7 +52,7 @@ public class WorkflowFactory extends WorkflowBaseListener {
     private final Stack<List<Variable>> variables = new Stack<>();
 
     public Workflow createWorkFlow(final InputStream is) throws IOException {
-        final WorkflowLexer lexer = new WorkflowLexer(new ANTLRInputStream(is));
+        final WorkflowLexer lexer = new WorkflowLexer(new ANTLRInputStream(new InputStreamReader(is, Charset.forName("UTF-8"))));
         final WorkflowParser parser = new WorkflowParser(new CommonTokenStream(lexer));
 
         parser.addParseListener(this);
