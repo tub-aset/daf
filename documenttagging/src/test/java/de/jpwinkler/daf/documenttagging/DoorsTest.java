@@ -72,20 +72,14 @@ public class DoorsTest {
 
         System.out.println();
 
-        float totalPrecision = 0;
-        float totalRecall = 0;
-        int c = 0;
         for (final String tag : taggedDocument.getTags()) {
             final float precision = confusionMatrix.getPrecision(tag);
             final float recall = confusionMatrix.getRecall(tag);
             System.out.println(tag + "(precision: " + precision + ", recall: " + recall + ", f1: " + confusionMatrix.getF1Score(tag) + ")");
-            totalPrecision += precision;
-            totalRecall += recall;
-            c++;
         }
 
-        System.out.println("average precision: " + (totalPrecision / c));
-        System.out.println("average recall: " + (totalRecall / c));
+        System.out.println("macro precision: " + confusionMatrix.getMacroPrecision());
+        System.out.println("macro recall: " + confusionMatrix.getMacroRecall());
     }
 
 }
