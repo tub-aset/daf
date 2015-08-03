@@ -22,7 +22,7 @@ import de.jpwinkler.daf.workflowdsl.Workflow;
 public class WorkflowFactoryTest {
 
     @Test
-    public void testStep() throws IOException {
+    public void testStep() throws IOException, CreateWorkflowException {
 
         final Workflow workFlow = loadWorkFlow("testStep");
 
@@ -40,7 +40,7 @@ public class WorkflowFactoryTest {
     }
 
     @Test
-    public void testTarget() throws IOException {
+    public void testTarget() throws IOException, CreateWorkflowException {
         final Workflow workflow = loadWorkFlow("testTarget");
 
         assertEquals(2, workflow.getElements().size());
@@ -54,7 +54,7 @@ public class WorkflowFactoryTest {
     }
 
     @Test
-    public void testModuleSet() throws IOException {
+    public void testModuleSet() throws IOException, CreateWorkflowException {
         final Workflow workflow = loadWorkFlow("testModuleSet");
         assertEquals(1, workflow.getElements().size());
         assertEquals(ModuleSet.class, workflow.getElements().get(0).getClass());
@@ -83,7 +83,7 @@ public class WorkflowFactoryTest {
     }
 
     @Test
-    public void testStrings() throws IOException {
+    public void testStrings() throws IOException, CreateWorkflowException {
         final Workflow workflow = loadWorkFlow("testStrings");
 
         final ModuleSet moduleSet = (ModuleSet) workflow.getElements().get(0);
@@ -98,7 +98,7 @@ public class WorkflowFactoryTest {
     }
 
     @Test
-    public void testSimpleVarible() throws IOException {
+    public void testSimpleVarible() throws IOException, CreateWorkflowException {
         final Workflow workflow = loadWorkFlow("testSimpleVariable");
 
         assertEquals(1, workflow.getElements().size());
@@ -111,7 +111,7 @@ public class WorkflowFactoryTest {
     }
 
     @Test
-    public void testArrayVariable() throws IOException {
+    public void testArrayVariable() throws IOException, CreateWorkflowException {
         final Workflow workflow = loadWorkFlow("testArrayVariable");
 
         assertEquals(3, workflow.getElements().size());
@@ -138,11 +138,11 @@ public class WorkflowFactoryTest {
     }
 
     @Test
-    public void testDependencyFeature() throws IOException {
+    public void testDependencyFeature() throws IOException, CreateWorkflowException {
         final Workflow workflow = loadWorkFlow("testDependencyFeature");
 
         final ModelConstructorStep c = (ModelConstructorStep) workflow.getElements().get(0);
-        final ModelOperationStep o = (ModelOperationStep) workflow.getElements().get(1);
+        final ModelConstructorStep o = (ModelConstructorStep) workflow.getElements().get(1);
 
         assertEquals(3, o.getFeatures().size());
         assertEquals(DependencyFeature.class, o.getFeatures().get(0).getClass());
@@ -179,7 +179,7 @@ public class WorkflowFactoryTest {
     }
 
     @Test
-    public void testForFeature() throws IOException {
+    public void testForFeature() throws IOException, CreateWorkflowException {
         final Workflow workflow = loadWorkFlow("testForFeature");
 
         final ModelOperationStep o = (ModelOperationStep) workflow.getElements().get(0);
@@ -210,7 +210,7 @@ public class WorkflowFactoryTest {
     }
 
     @Test
-    public void testImplementationFeature() throws IOException {
+    public void testImplementationFeature() throws IOException, CreateWorkflowException {
         final Workflow workflow = loadWorkFlow("testImplementationFeature");
 
         final ModelOperationStep o = (ModelOperationStep) workflow.getElements().get(0);
@@ -223,7 +223,7 @@ public class WorkflowFactoryTest {
     }
 
     @Test
-    public void testSourceFeature() throws IOException {
+    public void testSourceFeature() throws IOException, CreateWorkflowException {
         final Workflow workflow = loadWorkFlow("testSourceFeature");
 
         final ModuleSet moduleSet = (ModuleSet) workflow.getElements().get(0);
@@ -238,7 +238,7 @@ public class WorkflowFactoryTest {
         assertEquals(moduleSet, sourceFeature.getModuleSet());
     }
 
-    private Workflow loadWorkFlow(final String name) throws IOException {
+    private Workflow loadWorkFlow(final String name) throws IOException, CreateWorkflowException {
         final Workflow workFlow = new WorkflowFactory().createWorkFlow(getClass().getResourceAsStream(name + ".workflow"));
         return workFlow;
     }

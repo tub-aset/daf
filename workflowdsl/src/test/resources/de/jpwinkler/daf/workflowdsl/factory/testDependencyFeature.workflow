@@ -1,6 +1,6 @@
 constructor c {}
 
-op o {
+constructor o {
 	dependency c d1
 	dependency c {} d2
 	dependency c {
