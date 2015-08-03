@@ -90,7 +90,7 @@ public class WorkflowFactoryTest {
 
         assertEquals("abc", moduleSet.getModuleSetEntries().get(0).getReference());
         assertEquals("123 123", moduleSet.getModuleSetEntries().get(1).getReference());
-        assertEquals("!§$%&/()=?öäü+*#'<>|#~,;.:-_^°", moduleSet.getModuleSetEntries().get(2).getReference());
+        assertEquals("!Â§$%&/()=?Ã¶Ã¤Ã¼+*#'<>|#~,;.:-_^Â°", moduleSet.getModuleSetEntries().get(2).getReference());
         assertEquals("\\", moduleSet.getModuleSetEntries().get(3).getReference());
         assertEquals("\"Hello\"", moduleSet.getModuleSetEntries().get(4).getReference());
         assertEquals("\n", moduleSet.getModuleSetEntries().get(5).getReference());
