@@ -130,8 +130,8 @@ implementationFeature
 	'implementation' implementation = STRING
 ;
 
-fragment ESCAPED_QUOTE : '\\"';
-STRING :   '"' ( ESCAPED_QUOTE | ~('\n'|'\r') )*? '"';
+fragment ESC_SEQ : '\\'('b'|'t'|'n'|'f'|'r'|'\"'|'\''|'\\');
+STRING :   '"' ( ESC_SEQ | ~('\\'|'"') )* '"';
 
 ID
 :

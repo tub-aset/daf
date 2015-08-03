@@ -9,6 +9,7 @@ import java.util.Stack;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Token;
+import org.apache.commons.lang.StringEscapeUtils;
 
 import de.jpwinkler.daf.workflowdsl.ArrayVariable;
 import de.jpwinkler.daf.workflowdsl.DependencyFeature;
@@ -67,6 +68,10 @@ public class WorkflowFactory extends WorkflowBaseListener {
         return workflow;
     }
 
+    private String replaceEscapeSequences(final String string) {
+        return StringEscapeUtils.unescapeJavaScript(string.substring(1, string.length() - 1));
+    }
+
     @Override
     public void enterWorkflow(final WorkflowContext ctx) {
         workflow = new Workflow();
@@ -93,7 +98,7 @@ public class WorkflowFactory extends WorkflowBaseListener {
         final ModuleSetEntry moduleSetEntry = new ModuleSetEntry();
 
         moduleSetEntry.setType(ctx.type.getText());
-        moduleSetEntry.setReference(ctx.reference.getText());
+        moduleSetEntry.setReference(replaceEscapeSequences(ctx.reference.getText()));
 
         moduleSetEntries.peek().add(moduleSetEntry);
     }
@@ -147,7 +152,7 @@ public class WorkflowFactory extends WorkflowBaseListener {
         final SimpleVariable simpleVariable = new SimpleVariable();
 
         simpleVariable.setName(ctx.name.getText());
-        simpleVariable.setValue(ctx.value.getText());
+        simpleVariable.setValue(replaceEscapeSequences(ctx.value.getText()));
 
         variables.peek().add(simpleVariable);
     }
@@ -159,7 +164,7 @@ public class WorkflowFactory extends WorkflowBaseListener {
         arrayVariable.setName(ctx.name.getText());
 
         for (final Token item : ctx.items) {
-            arrayVariable.getItems().add(item.getText());
+            arrayVariable.getItems().add(replaceEscapeSequences(item.getText()));
         }
 
         variables.peek().add(arrayVariable);
@@ -184,10 +189,15 @@ public class WorkflowFactory extends WorkflowBaseListener {
         final ForFeature forFeature = new ForFeature();
 
         forFeature.setArrayVar(ctx.arrayVar.getText());
-        forFeature.setLoopVar(ctx.getText());
+        forFeature.setLoopVar(ctx.loopVar.getText());
         forFeature.getFeatures().addAll(operationFeatures.pop());
 
         operationFeatures.peek().add(forFeature);
+    }
+
+    @Override
+    public void enterDependencyFeature(final DependencyFeatureContext ctx) {
+        variables.push(new ArrayList<>());
     }
 
     @Override
@@ -195,6 +205,7 @@ public class WorkflowFactory extends WorkflowBaseListener {
         final DependencyFeature dependencyFeature = new DependencyFeature();
         dependencyFeature.setName(ctx.name.getText());
         dependencyFeature.setStep(new StepProxy(ctx.stepRef.getText()));
+        dependencyFeature.getVariables().addAll(variables.pop());
 
         operationFeatures.peek().add(dependencyFeature);
     }
@@ -203,7 +214,7 @@ public class WorkflowFactory extends WorkflowBaseListener {
     public void exitImplementationFeature(final ImplementationFeatureContext ctx) {
         final ImplementationFeature implementationFeature = new ImplementationFeature();
 
-        implementationFeature.setImplementation(ctx.implementation.getText());
+        implementationFeature.setImplementation(replaceEscapeSequences(ctx.implementation.getText()));
 
         operationFeatures.peek().add(implementationFeature);
     }
