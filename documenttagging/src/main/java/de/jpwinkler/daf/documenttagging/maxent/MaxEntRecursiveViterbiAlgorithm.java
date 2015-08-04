@@ -62,7 +62,7 @@ public class MaxEntRecursiveViterbiAlgorithm<E> implements DocumentTaggingAlgori
     public MaxEntRecursiveViterbiAlgorithm(final MaxEntPredicateGenerator<E> dataGenerator, final Iterator<E> trainingData) throws IOException {
         recursiveViterbi.setProgressMonitor((current, max) -> System.out.println(current + "/" + max));
         this.dataGenerator = dataGenerator;
-        this.model = GIS.trainModel(new MaxEntEventStream<>(trainingData, dataGenerator));
+        this.model = GIS.trainModel(new MaxEntEventStream<>(dataGenerator, trainingData));
         states = Arrays.asList((String[]) model.getDataStructures()[2]);
     }
 
@@ -81,7 +81,7 @@ public class MaxEntRecursiveViterbiAlgorithm<E> implements DocumentTaggingAlgori
     private void buildResult(final Map<E, String> tags, final E element) {
         final String actual = dataGenerator.getOutcome(element);
         final String predicted = tags.get(element);
-        if (actual != null && predicted != null) {
+        if (actual != null && predicted != null && !actual.isEmpty() && !predicted.isEmpty()) {
             result.putResult(element, actual, predicted);
         }
         for (final E child : documentAccessor.getChildren(element)) {

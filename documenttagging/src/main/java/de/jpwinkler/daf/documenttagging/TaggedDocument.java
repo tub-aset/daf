@@ -10,7 +10,7 @@ public class TaggedDocument<E, T> {
     private final Map<E, T> actualTags = new HashMap<>();
 
     private final Map<E, T> predictedTags = new HashMap<>();
-    
+
     private final Set<T> tags = new LinkedHashSet<>();
 
     public T getActualTag(final E e) {
@@ -26,19 +26,19 @@ public class TaggedDocument<E, T> {
     }
 
     public void putResult(final E e, final T actualTag, final T predictedTag) {
-    	if (actualTag != null && predictedTag != null) {
-    		actualTags.put(e, actualTag);
-    		predictedTags.put(e, predictedTag);
-    		
-    		tags.add(actualTag);
-    		tags.add(predictedTag);
-    	} else {
-    		System.out.println("something is awry.");
-    	}
+        if (actualTag != null && predictedTag != null) {
+            actualTags.put(e, actualTag);
+            predictedTags.put(e, predictedTag);
+
+            tags.add(actualTag);
+            tags.add(predictedTag);
+        } else {
+            System.out.println("something went awry.");
+        }
     }
-    
+
     public Set<T> getTags() {
-		return tags;
-	}
-    
+        return tags;
+    }
+
 }

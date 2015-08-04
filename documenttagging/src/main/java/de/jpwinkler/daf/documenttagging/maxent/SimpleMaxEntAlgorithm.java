@@ -15,7 +15,7 @@ public class SimpleMaxEntAlgorithm<E> implements DocumentTaggingAlgorithm<E, Str
     private final MaxEntPredicateGenerator<E> dataGenerator;
 
     public SimpleMaxEntAlgorithm(final MaxEntPredicateGenerator<E> dataGenerator, final Iterator<E> trainingData) throws IOException {
-        model = GIS.trainModel(new MaxEntEventStream<>(trainingData, dataGenerator));
+        model = GIS.trainModel(new MaxEntEventStream<>(dataGenerator, trainingData));
         this.dataGenerator = dataGenerator;
     }
 
@@ -34,7 +34,11 @@ public class SimpleMaxEntAlgorithm<E> implements DocumentTaggingAlgorithm<E, Str
         final String[] contextualPredicates = dataGenerator.getContextualPredicates(element);
         if (contextualPredicates != null) {
             final double[] eval = model.eval(contextualPredicates);
-            result.putResult(element, dataGenerator.getOutcome(element), model.getBestOutcome(eval));
+            final String actual = dataGenerator.getOutcome(element);
+            final String predicted = model.getBestOutcome(eval);
+            if (actual != null && predicted != null && !actual.isEmpty() && !predicted.isEmpty()) {
+                result.putResult(element, actual, predicted);
+            }
         }
         for (final E e : documentAccessor.getChildren(element)) {
             predictTags(documentAccessor, e, result);

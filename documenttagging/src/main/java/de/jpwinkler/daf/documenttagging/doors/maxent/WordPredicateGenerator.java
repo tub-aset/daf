@@ -5,9 +5,7 @@ import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 public class WordPredicateGenerator extends PredicateGenerator {
 
     private String[] tokenizer(final String s) {
-        String temp = s.toLowerCase();
-        temp = temp.replaceAll("(?![äöüßa-z0-9 ])(.)", " ");
-        return temp.split(" ");
+        return s.replaceAll("(?![äöüßa-z0-9 ])(.)", " ").split(" ");
     }
 
     @Override

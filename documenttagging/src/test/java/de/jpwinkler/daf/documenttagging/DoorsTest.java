@@ -13,8 +13,9 @@ import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.util.CSVParseException
 import de.jpwinkler.daf.documenttagging.doors.DoorsDocumentAccessor;
 import de.jpwinkler.daf.documenttagging.doors.DoorsTreeNodeIterator;
 import de.jpwinkler.daf.documenttagging.doors.maxent.DoorsMaxEntPredicateGenerator;
+import de.jpwinkler.daf.documenttagging.doors.preprocessing.DoorsModulePreprocessor;
 import de.jpwinkler.daf.documenttagging.maxent.MaxEntPredicateGenerator;
-import de.jpwinkler.daf.documenttagging.maxent.MaxEntRecursiveViterbiAlgorithm;
+import de.jpwinkler.daf.documenttagging.maxent.SimpleMaxEntAlgorithm;
 
 public class DoorsTest {
 
@@ -28,9 +29,13 @@ public class DoorsTest {
         final DoorsModule wwc = new ModuleCSVParser().parseCSV(getClass().getResourceAsStream("maxent/slh-wwc.csv"));
         final DoorsModule wl = new ModuleCSVParser().parseCSV(getClass().getResourceAsStream("maxent/slh-wl.csv"));
 
+        final DoorsModulePreprocessor preprocessor = DoorsModulePreprocessor.getDefaultPreprocessor();
+
+        preprocessor.preprocessModule(asProd);
+
         final MaxEntPredicateGenerator<DoorsTreeNode> generator = DoorsMaxEntPredicateGenerator.getDefaultGenerator();
 
-        final DocumentTaggingAlgorithm<DoorsTreeNode, String> algo = new MaxEntRecursiveViterbiAlgorithm<>(generator, new DoorsTreeNodeIterator(true, asProd));
+        final DocumentTaggingAlgorithm<DoorsTreeNode, String> algo = new SimpleMaxEntAlgorithm<>(generator, new DoorsTreeNodeIterator(true, asProd));
 
         final TaggedDocument<DoorsTreeNode, String> taggedDocument = algo.tagDocument(new DoorsDocumentAccessor(asProd));
 
@@ -52,6 +57,9 @@ public class DoorsTest {
         System.out.println("macro precision: " + confusionMatrix.getMacroPrecision());
         System.out.println("macro recall: " + confusionMatrix.getMacroRecall());
         System.out.println("macro f1: " + confusionMatrix.getMacroF1Score());
+
+        System.out.println("micro precision: " + confusionMatrix.getMicroPrecision());
+        System.out.println("micro recall: " + confusionMatrix.getMicroRecall());
         System.out.println("micro f1: " + confusionMatrix.getMicroF1Score());
     }
 

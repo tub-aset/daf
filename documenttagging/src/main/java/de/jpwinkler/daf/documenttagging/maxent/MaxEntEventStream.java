@@ -11,7 +11,7 @@ public class MaxEntEventStream<E> implements EventStream {
     private final Iterator<E> i;
     private final MaxEntPredicateGenerator<E> dataGenerator;
 
-    public MaxEntEventStream(final Iterator<E> trainingDataIterator, final MaxEntPredicateGenerator<E> dataGenerator) {
+    public MaxEntEventStream(final MaxEntPredicateGenerator<E> dataGenerator, final Iterator<E> trainingDataIterator) {
         super();
         this.i = trainingDataIterator;
         this.dataGenerator = dataGenerator;
