@@ -1,6 +1,7 @@
 package de.jpwinkler.daf.dafcore.workflow;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,6 +33,8 @@ import de.jpwinkler.daf.workflowdsl.Step;
 import de.jpwinkler.daf.workflowdsl.Target;
 import de.jpwinkler.daf.workflowdsl.Variable;
 import de.jpwinkler.daf.workflowdsl.Workflow;
+import de.jpwinkler.daf.workflowdsl.factory.CreateWorkflowException;
+import de.jpwinkler.daf.workflowdsl.factory.WorkflowFactory;
 
 public class WorkflowProcessor {
 
@@ -51,7 +54,7 @@ public class WorkflowProcessor {
         Workflow workflowModel;
         try {
             workflowModel = readWorkflowModel(workflowFile);
-        } catch (final IOException e) {
+        } catch (final IOException | CreateWorkflowException e) {
             throw new WorkflowException("Error while reading workflow file.", e);
         }
         LOGGER.info("Workflow model loaded.");
@@ -86,8 +89,8 @@ public class WorkflowProcessor {
         return results;
     }
 
-    private Workflow readWorkflowModel(final File workflowFile) throws IOException {
-        throw new UnsupportedOperationException("Not yet implemented.");
+    private Workflow readWorkflowModel(final File workflowFile) throws IOException, CreateWorkflowException {
+        return new WorkflowFactory().createWorkflow(new FileInputStream(workflowFile));
     }
 
     private List<ModelObject> processStep(final Step step, final Map<String, Object> variables) throws WorkflowException {
