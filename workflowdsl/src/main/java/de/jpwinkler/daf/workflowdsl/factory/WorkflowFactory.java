@@ -15,7 +15,7 @@ import de.jpwinkler.daf.workflowdsl.WorkflowParser;
 public class WorkflowFactory {
 
 
-    public Workflow createWorkFlow(final InputStream is) throws IOException, CreateWorkflowException {
+    public Workflow createWorkflow(final InputStream is) throws IOException, CreateWorkflowException {
         final WorkflowLexer lexer = new WorkflowLexer(new ANTLRInputStream(new InputStreamReader(is, Charset.forName("UTF-8"))));
         final WorkflowParser parser = new WorkflowParser(new CommonTokenStream(lexer));
 

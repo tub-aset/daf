@@ -45,12 +45,12 @@ public class WorkflowProcessor {
         doorsApp = DoorsApplicationFactory.getDoorsApplication();
     }
 
-    public void runWorkFlow(final File workFlowFile) throws WorkflowException {
-        LOGGER.info(String.format("Starting workflow execution. Workflow file: %s", workFlowFile.getAbsolutePath()));
+    public void runWorkflow(final File workflowFile) throws WorkflowException {
+        LOGGER.info(String.format("Starting workflow execution. Workflow file: %s", workflowFile.getAbsolutePath()));
         resultCache.clear();
         Workflow workflowModel;
         try {
-            workflowModel = readWorkflowModel(workFlowFile);
+            workflowModel = readWorkflowModel(workflowFile);
         } catch (final IOException e) {
             throw new WorkflowException("Error while reading workflow file.", e);
         }
@@ -86,7 +86,7 @@ public class WorkflowProcessor {
         return results;
     }
 
-    private Workflow readWorkflowModel(final File workFlowFile) throws IOException {
+    private Workflow readWorkflowModel(final File workflowFile) throws IOException {
         throw new UnsupportedOperationException("Not yet implemented.");
     }
 

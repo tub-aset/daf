@@ -14,7 +14,7 @@ public class App
     public static void main( final String[] args )
     {
         try {
-            new WorkflowProcessor().runWorkFlow(new File(args[0]));
+            new WorkflowProcessor().runWorkflow(new File(args[0]));
         } catch (final WorkflowException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

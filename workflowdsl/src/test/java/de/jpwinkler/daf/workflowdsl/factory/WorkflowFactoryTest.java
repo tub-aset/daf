@@ -24,14 +24,14 @@ public class WorkflowFactoryTest {
     @Test
     public void testStep() throws IOException, CreateWorkflowException {
 
-        final Workflow workFlow = loadWorkFlow("testStep");
+        final Workflow workflow = loadWorkflow("testStep");
 
-        assertEquals(2, workFlow.getElements().size());
-        assertEquals(ModelConstructorStep.class, workFlow.getElements().get(0).getClass());
-        assertEquals(ModelOperationStep.class, workFlow.getElements().get(1).getClass());
+        assertEquals(2, workflow.getElements().size());
+        assertEquals(ModelConstructorStep.class, workflow.getElements().get(0).getClass());
+        assertEquals(ModelOperationStep.class, workflow.getElements().get(1).getClass());
 
-        final ModelConstructorStep constructor = (ModelConstructorStep) workFlow.getElements().get(0);
-        final ModelOperationStep o = (ModelOperationStep) workFlow.getElements().get(1);
+        final ModelConstructorStep constructor = (ModelConstructorStep) workflow.getElements().get(0);
+        final ModelOperationStep o = (ModelOperationStep) workflow.getElements().get(1);
 
         assertEquals("con123_4", constructor.getName());
         assertEquals("op6_G4g", o.getName());
@@ -41,7 +41,7 @@ public class WorkflowFactoryTest {
 
     @Test
     public void testTarget() throws IOException, CreateWorkflowException {
-        final Workflow workflow = loadWorkFlow("testTarget");
+        final Workflow workflow = loadWorkflow("testTarget");
 
         assertEquals(2, workflow.getElements().size());
         assertEquals(Target.class, workflow.getElements().get(0).getClass());
@@ -55,7 +55,7 @@ public class WorkflowFactoryTest {
 
     @Test
     public void testModuleSet() throws IOException, CreateWorkflowException {
-        final Workflow workflow = loadWorkFlow("testModuleSet");
+        final Workflow workflow = loadWorkflow("testModuleSet");
         assertEquals(1, workflow.getElements().size());
         assertEquals(ModuleSet.class, workflow.getElements().get(0).getClass());
 
@@ -84,7 +84,7 @@ public class WorkflowFactoryTest {
 
     @Test
     public void testStrings() throws IOException, CreateWorkflowException {
-        final Workflow workflow = loadWorkFlow("testStrings");
+        final Workflow workflow = loadWorkflow("testStrings");
 
         final ModuleSet moduleSet = (ModuleSet) workflow.getElements().get(0);
 
@@ -99,7 +99,7 @@ public class WorkflowFactoryTest {
 
     @Test
     public void testSimpleVarible() throws IOException, CreateWorkflowException {
-        final Workflow workflow = loadWorkFlow("testSimpleVariable");
+        final Workflow workflow = loadWorkflow("testSimpleVariable");
 
         assertEquals(1, workflow.getElements().size());
         assertEquals(SimpleVariable.class, workflow.getElements().get(0).getClass());
@@ -112,7 +112,7 @@ public class WorkflowFactoryTest {
 
     @Test
     public void testArrayVariable() throws IOException, CreateWorkflowException {
-        final Workflow workflow = loadWorkFlow("testArrayVariable");
+        final Workflow workflow = loadWorkflow("testArrayVariable");
 
         assertEquals(3, workflow.getElements().size());
         assertEquals(ArrayVariable.class, workflow.getElements().get(0).getClass());
@@ -139,7 +139,7 @@ public class WorkflowFactoryTest {
 
     @Test
     public void testDependencyFeature() throws IOException, CreateWorkflowException {
-        final Workflow workflow = loadWorkFlow("testDependencyFeature");
+        final Workflow workflow = loadWorkflow("testDependencyFeature");
 
         final ModelConstructorStep c = (ModelConstructorStep) workflow.getElements().get(0);
         final ModelConstructorStep o = (ModelConstructorStep) workflow.getElements().get(1);
@@ -180,7 +180,7 @@ public class WorkflowFactoryTest {
 
     @Test
     public void testForFeature() throws IOException, CreateWorkflowException {
-        final Workflow workflow = loadWorkFlow("testForFeature");
+        final Workflow workflow = loadWorkflow("testForFeature");
 
         final ModelOperationStep o = (ModelOperationStep) workflow.getElements().get(0);
         assertEquals(2, o.getFeatures().size());
@@ -211,7 +211,7 @@ public class WorkflowFactoryTest {
 
     @Test
     public void testImplementationFeature() throws IOException, CreateWorkflowException {
-        final Workflow workflow = loadWorkFlow("testImplementationFeature");
+        final Workflow workflow = loadWorkflow("testImplementationFeature");
 
         final ModelOperationStep o = (ModelOperationStep) workflow.getElements().get(0);
 
@@ -224,7 +224,7 @@ public class WorkflowFactoryTest {
 
     @Test
     public void testSourceFeature() throws IOException, CreateWorkflowException {
-        final Workflow workflow = loadWorkFlow("testSourceFeature");
+        final Workflow workflow = loadWorkflow("testSourceFeature");
 
         final ModuleSet moduleSet = (ModuleSet) workflow.getElements().get(0);
 
@@ -238,9 +238,9 @@ public class WorkflowFactoryTest {
         assertEquals(moduleSet, sourceFeature.getModuleSet());
     }
 
-    private Workflow loadWorkFlow(final String name) throws IOException, CreateWorkflowException {
-        final Workflow workFlow = new WorkflowFactory().createWorkFlow(getClass().getResourceAsStream(name + ".workflow"));
-        return workFlow;
+    private Workflow loadWorkflow(final String name) throws IOException, CreateWorkflowException {
+        final Workflow workflow = new WorkflowFactory().createWorkflow(getClass().getResourceAsStream(name + ".workflow"));
+        return workflow;
     }
 
 }
