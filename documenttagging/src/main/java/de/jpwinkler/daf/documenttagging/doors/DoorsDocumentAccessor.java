@@ -15,10 +15,12 @@ public class DoorsDocumentAccessor implements DocumentAccessor<DoorsTreeNode> {
         this.doorsModule = doorsModule;
     }
 
+    @Override
     public DoorsTreeNode getDocumentRoot() {
         return doorsModule;
     }
 
+    @Override
     public List<DoorsTreeNode> getChildren(final DoorsTreeNode documentElement) {
         return documentElement.getObjects();
     }

@@ -1,4 +1,4 @@
-package de.jpwinkler.daf.documenttagging;
+package de.jpwinkler.daf.documenttagging.maxent;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -9,11 +9,11 @@ import opennlp.model.EventStream;
 public class MaxEntEventStream<E> implements EventStream {
 
     private final Iterator<E> i;
-    private final MaxentPredicateGenerator<E> dataGenerator;
+    private final MaxEntPredicateGenerator<E> dataGenerator;
 
-    public MaxEntEventStream(final Iterable<E> iterable, final MaxentPredicateGenerator<E> dataGenerator) {
+    public MaxEntEventStream(final Iterator<E> trainingDataIterator, final MaxEntPredicateGenerator<E> dataGenerator) {
         super();
-        this.i = iterable.iterator();
+        this.i = trainingDataIterator;
         this.dataGenerator = dataGenerator;
     }
 

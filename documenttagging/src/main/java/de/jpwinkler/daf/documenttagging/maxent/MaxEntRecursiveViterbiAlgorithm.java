@@ -1,11 +1,15 @@
-package de.jpwinkler.daf.documenttagging;
+package de.jpwinkler.daf.documenttagging.maxent;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import de.jpwinkler.daf.documenttagging.DocumentAccessor;
+import de.jpwinkler.daf.documenttagging.DocumentTaggingAlgorithm;
+import de.jpwinkler.daf.documenttagging.TaggedDocument;
 import de.jpwinkler.daf.documenttagging.maxent.util.TriMap;
 import de.jpwinkler.daf.documenttagging.recursiveviterbi.AbstractRecursiveViterbiAlgorithm;
 import opennlp.maxent.GIS;
@@ -50,12 +54,12 @@ public class MaxEntRecursiveViterbiAlgorithm<E> implements DocumentTaggingAlgori
     private final GISModel model;
     private final List<String> states;
     private DocumentAccessor<E> documentAccessor;
-    private final MaxentPredicateGenerator<E> dataGenerator;
+    private final MaxEntPredicateGenerator<E> dataGenerator;
     private TriMap<E, String, String, double[]> probabilitiyMap;
     private Map<E, String[]> contextualPredicateMap;
     private TaggedDocument<E, String> result;
 
-    public MaxEntRecursiveViterbiAlgorithm(final MaxentPredicateGenerator<E> dataGenerator, final Iterable<E> trainingData) throws IOException {
+    public MaxEntRecursiveViterbiAlgorithm(final MaxEntPredicateGenerator<E> dataGenerator, final Iterator<E> trainingData) throws IOException {
         recursiveViterbi.setProgressMonitor((current, max) -> System.out.println(current + "/" + max));
         this.dataGenerator = dataGenerator;
         this.model = GIS.trainModel(new MaxEntEventStream<>(trainingData, dataGenerator));
@@ -75,7 +79,11 @@ public class MaxEntRecursiveViterbiAlgorithm<E> implements DocumentTaggingAlgori
     }
 
     private void buildResult(final Map<E, String> tags, final E element) {
-        result.putResult(element, dataGenerator.getOutcome(element), tags.get(element));
+        final String actual = dataGenerator.getOutcome(element);
+        final String predicted = tags.get(element);
+        if (actual != null && predicted != null) {
+            result.putResult(element, actual, predicted);
+        }
         for (final E child : documentAccessor.getChildren(element)) {
             buildResult(tags, child);
         }

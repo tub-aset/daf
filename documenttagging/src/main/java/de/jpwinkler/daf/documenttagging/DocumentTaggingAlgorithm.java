@@ -1,7 +1,7 @@
 package de.jpwinkler.daf.documenttagging;
 
-public interface DocumentTaggingAlgorithm<ELEMENT, TAG> {
+public interface DocumentTaggingAlgorithm<E, T> {
 
-    TaggedDocument<ELEMENT, TAG> tagDocument(DocumentAccessor<ELEMENT> documentAccessor);
+    TaggedDocument<E, T> tagDocument(DocumentAccessor<E> documentAccessor);
 
 }
