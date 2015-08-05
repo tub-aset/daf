@@ -36,10 +36,6 @@ public class TreeNode {
         children.add(treeNode);
     }
 
-    public void removeChild(final TreeNode treeNode) {
-        treeNode.parent = null;
-    }
-
     public TreeNode getParent() {
         return parent;
     }
