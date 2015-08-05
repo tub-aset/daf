@@ -3,26 +3,71 @@ package de.jpwinkler.daf.documenttagging;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * <p>
+ * This is a pretty standard confusion matrix implementation. This class
+ * provides functions to calculate per-class precision, recall and f1.
+ * Macro-averaged and micro-averaged precision/recall/f1 are also available.
+ * </p>
+ *
+ * <p>
+ * This matrix is organized as following:
+ * </p>
+ *
+ * <pre>
+ *                predicted class
+ *                a  b  c
+ *              a .  .  .
+ *              b .  .  .
+ * actual class c .  .  .
+ * </pre>
+ *
+ * <p>
+ * The first dimension (x axis) is used to index predicted classes, the second
+ * dimension (y axis) is used to index actual classes.
+ * </p>
+ *
+ * @author JONWINK
+ *
+ * @param <T>
+ *            Type of the tags.
+ */
 public class ConfusionMatrix<T> {
 
+    private final int[][] matrix;
+    private final List<T> tags;
 
     /**
-     * This matrix is organized as following:
+     * Constructs a confusion matrix using a tagged document. Sets up tags and
+     * fills the matrix according to the tagged document.
      *
-     * <pre>
-     *                predicted class
-     *                a  b  c
-     *              a .  .  .
-     *              b .  .  .
-     * actual class c .  .  .
-     * </pre>
-     *
-     * The first dimension (x axis) is used to index predicted classes, the
-     * second dimension (y axis) is used to index actual classes.
+     * @param taggedDocument
+     *            A tagged document from which the matrix shall be build.
      */
-    private final int[][] matrix;
+    public <X> ConfusionMatrix(final TaggedDocument<X, T> taggedDocument) {
+        tags = new ArrayList<>(taggedDocument.getTags());
+        matrix = new int[tags.size()][tags.size()];
 
-    private final List<T> tags;
+        for (final X e : taggedDocument.getElements()) {
+            final T predicted = taggedDocument.getPredictedTag(e);
+            final T actual = taggedDocument.getActualTag(e);
+            if (predicted != null && actual != null) {
+                matrix[tags.indexOf(predicted)][tags.indexOf(actual)]++;
+            } else {
+                System.out.println("oops...");
+            }
+        }
+    }
+
+    /**
+     * Constructs an empty confusion matrix using the supplied tags.
+     *
+     * @param tags
+     */
+    public ConfusionMatrix(final List<T> tags) {
+        this.tags = tags;
+        matrix = new int[tags.size()][tags.size()];
+    }
 
     private int sumRow(final int row) {
         int result = 0;
@@ -40,34 +85,36 @@ public class ConfusionMatrix<T> {
         return result;
     }
 
-    public <X> ConfusionMatrix(final TaggedDocument<X, T> taggedDocument) {
-        tags = new ArrayList<>(taggedDocument.getTags());
-        matrix = new int[tags.size()][tags.size()];
-
-        for (final X e : taggedDocument.getElements()) {
-            final T predicted = taggedDocument.getPredictedTag(e);
-            final T actual = taggedDocument.getActualTag(e);
-            if (predicted != null && actual != null) {
-                matrix[tags.indexOf(predicted)][tags.indexOf(actual)]++;
-            } else {
-                System.out.println("oops...");
-            }
-        }
-    }
-
-    public ConfusionMatrix(final List<T> tags) {
-        this.tags = tags;
-        matrix = new int[tags.size()][tags.size()];
-    }
-
+    /**
+     * Returns the number of instances where the predicted class was
+     * <code>predicted</code> and the actual class was <code>actual</code>.
+     *
+     * @param predicted
+     * @param actual
+     * @return
+     */
     public int get(final T predicted, final T actual) {
         return matrix[tags.indexOf(predicted)][tags.indexOf(actual)];
     }
 
+    /**
+     * Sets the number of instances where the predicted class was
+     * <code>predicted</code> and the actual class was <code>actual</code>.
+     *
+     * @param predicted
+     * @param actual
+     * @param count
+     */
     public void set(final T predicted, final T actual, final int count) {
         matrix[tags.indexOf(predicted)][tags.indexOf(actual)] = count;
     }
 
+    /**
+     * Returns the precision for tag <code>tag</code>.
+     *
+     * @param tag
+     * @return
+     */
     public float getPrecision(final T tag) {
         final int tagIndex = tags.indexOf(tag);
         final int sum = sumColumn(tagIndex);
@@ -78,6 +125,12 @@ public class ConfusionMatrix<T> {
         }
     }
 
+    /**
+     * Returns the recall for tag <code>tag</code>.
+     *
+     * @param tag
+     * @return
+     */
     public float getRecall(final T tag) {
         final int tagIndex = tags.indexOf(tag);
         final int sum = sumRow(tagIndex);
@@ -88,6 +141,12 @@ public class ConfusionMatrix<T> {
         }
     }
 
+    /**
+     * Returns the f1 score for tag <code>tag</code>.
+     *
+     * @param tag
+     * @return
+     */
     public float getF1Score(final T tag) {
         final float precision = getPrecision(tag);
         final float recall = getRecall(tag);
@@ -98,6 +157,11 @@ public class ConfusionMatrix<T> {
         }
     }
 
+    /**
+     * Returns the micro-averaged precision.
+     *
+     * @return
+     */
     public float getMicroPrecision() {
         float a = 0;
         float b = 0;
@@ -110,6 +174,11 @@ public class ConfusionMatrix<T> {
         return a / b;
     }
 
+    /**
+     * Returns the macro-averaged precision.
+     *
+     * @return
+     */
     public float getMacroPrecision() {
         float sum = 0;
         for (final T tag : tags) {
@@ -118,6 +187,11 @@ public class ConfusionMatrix<T> {
         return sum / tags.size();
     }
 
+    /**
+     * Returns the micro-averaged recall.
+     *
+     * @return
+     */
     public float getMicroRecall() {
         float a = 0;
         float b = 0;
@@ -130,6 +204,11 @@ public class ConfusionMatrix<T> {
         return a / b;
     }
 
+    /**
+     * Returns the macro-averaged recall.
+     *
+     * @return
+     */
     public float getMacroRecall() {
         float sum = 0;
         for (final T tag : tags) {
@@ -138,10 +217,20 @@ public class ConfusionMatrix<T> {
         return sum / tags.size();
     }
 
+    /**
+     * returns the micro-averaged f1 score.
+     *
+     * @return
+     */
     public float getMicroF1Score() {
         return 2.0f * (getMicroPrecision() * getMicroRecall()) / (getMicroPrecision() + getMicroRecall());
     }
 
+    /**
+     * returns the macro-averaged f1 score.
+     * 
+     * @return
+     */
     public float getMacroF1Score() {
         return 2.0f * (getMacroPrecision() * getMacroRecall()) / (getMacroPrecision() + getMacroRecall());
     }

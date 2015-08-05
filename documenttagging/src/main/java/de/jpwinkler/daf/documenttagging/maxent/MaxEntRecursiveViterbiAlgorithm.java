@@ -60,7 +60,6 @@ public class MaxEntRecursiveViterbiAlgorithm<E> implements DocumentTaggingAlgori
     private TaggedDocument<E, String> result;
 
     public MaxEntRecursiveViterbiAlgorithm(final MaxEntPredicateGenerator<E> dataGenerator, final Iterator<E> trainingData) throws IOException {
-        recursiveViterbi.setProgressMonitor((current, max) -> System.out.println(current + "/" + max));
         this.dataGenerator = dataGenerator;
         this.model = GIS.trainModel(new MaxEntEventStream<>(dataGenerator, trainingData));
         states = Arrays.asList((String[]) model.getDataStructures()[2]);

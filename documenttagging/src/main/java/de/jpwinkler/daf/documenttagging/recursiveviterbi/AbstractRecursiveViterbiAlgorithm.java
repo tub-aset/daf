@@ -4,6 +4,31 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * <p>
+ * Abstract implementation of the recursive viterbi algorithm. This class
+ * contains the core logic of the algorithm only. Extending classes must provide
+ * a learning mechanism and an operation to calculate actual probabilities.
+ * </p>
+ *
+ * <p>
+ * For any given tree and any given set of tags, recursive viterbi determines
+ * the most probable mapping from tree nodes to tags.
+ * </p>
+ *
+ * <p>
+ * This class internally uses log probabilities to deal with very small
+ * probabilities that would otherwise go beyond the smallest possible double
+ * value.
+ * </p>
+ *
+ * @author JONWINK
+ *
+ * @param <T>
+ *            Type of the nodes in the tree.
+ * @param <S>
+ *            Type of the states.
+ */
 public abstract class AbstractRecursiveViterbiAlgorithm<T, S> {
 
     private Map<T, AbstractIntermediateResult<S>> results;
@@ -12,17 +37,54 @@ public abstract class AbstractRecursiveViterbiAlgorithm<T, S> {
     private int processedNodes;
     private ProgressMonitor progressMonitor;
 
+    /**
+     * Returns a list of all states.
+     *
+     * @return a list containing all states.
+     */
     protected abstract List<S> getStates();
 
+    /**
+     * Returns the child nodes of a tree node.
+     *
+     * @param node
+     *            The node whose children shall be returned.
+     * @return a list containing all children of node <code>node</code>. The
+     *         list may be empty if there are no child nodes. Must not be null.
+     */
     protected abstract List<T> getChildren(T node);
 
+    /**
+     * Returns the probability that the node <code>node</code> has the state
+     * <code>state</code>, given that the parent of <code>node</code> has state
+     * <code>parentState<code>node</code> and the predecessor of
+     * <code>node</code> has state <code>previousState</code>.
+     *
+     * @param node
+     * @param state
+     * @param parentState
+     * @param previousState
+     * @return
+     */
     protected abstract double getProbability(T node, S state, S parentState, S previousState);
 
+    /**
+     * Implementing classes must return an empty array of size <code>size</code>
+     *
+     * @param size
+     * @return an array of length <code>size</code>
+     */
     protected abstract S[] createArray(int size);
 
+    /**
+     * Runs the recursive viterbi algorithm on tree <code>tree</code>.
+     *
+     * @param tree
+     *            The tree to be tagged.
+     * @return A map containing the most probable state for each node in the
+     *         tree.
+     */
     public Map<T, S> recursiveViterbi(final T tree) {
-
-        prepare(tree);
 
         nodeCount = countNodes(tree);
         processedNodes = 0;
@@ -51,9 +113,6 @@ public abstract class AbstractRecursiveViterbiAlgorithm<T, S> {
         return getChildren(tree).stream().mapToInt(t -> countNodes(t)).sum() + 1;
     }
 
-    protected void prepare(final T tree) {
-    }
-
     private void tagTree(final T treeNode, final S state) {
         result.put(treeNode, state);
         if (!getChildren(treeNode).isEmpty()) {
@@ -69,6 +128,9 @@ public abstract class AbstractRecursiveViterbiAlgorithm<T, S> {
     private AbstractIntermediateResult<S> solve(final T node) {
 
         if (results.containsKey(node)) {
+            // This is what makes recursive viterbi feasible. We assume that for
+            // any two independent executions of solve on two nodes the result
+            // will be the same if the input nodes were the same.
             return results.get(node);
         }
 
@@ -146,6 +208,13 @@ public abstract class AbstractRecursiveViterbiAlgorithm<T, S> {
 
     }
 
+    /**
+     * Sets a progress monitor.
+     *
+     * @param progressMonitor
+     *            A progress monitor. Submit null to remove previously set
+     *            progress monitor.
+     */
     public void setProgressMonitor(final ProgressMonitor progressMonitor) {
         this.progressMonitor = progressMonitor;
     }

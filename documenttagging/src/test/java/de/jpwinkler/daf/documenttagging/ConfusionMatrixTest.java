@@ -96,4 +96,31 @@ public class ConfusionMatrixTest {
         assertEquals(0.6950726897, matrix.getMacroF1Score(), 0.000001);
     }
 
+    @Test
+    public void testTaggedDocument() {
+
+        final TaggedDocument<Object, String> taggedDocument = new TaggedDocument<>();
+
+        taggedDocument.putResult(new Object(), "a", "a");
+        taggedDocument.putResult(new Object(), "a", "a");
+        taggedDocument.putResult(new Object(), "a", "b");
+        taggedDocument.putResult(new Object(), "a", "b");
+        taggedDocument.putResult(new Object(), "b", "b");
+        taggedDocument.putResult(new Object(), "b", "a");
+        taggedDocument.putResult(new Object(), "b", "b");
+        taggedDocument.putResult(new Object(), "b", "b");
+
+        final ConfusionMatrix<String> matrix = new ConfusionMatrix<>(taggedDocument);
+
+        assertEquals(2.0 / 3.0, matrix.getPrecision("a"), 0.000001);
+        assertEquals(0.5, matrix.getRecall("a"), 0.000001);
+        assertEquals(3.0 / 5.0, matrix.getPrecision("b"), 0.000001);
+        assertEquals(0.75, matrix.getRecall("b"), 0.000001);
+    }
+
+    @Test
+    public void testToString() {
+        // just ensure that it does not throw some exception
+        matrix.toString();
+    }
 }
