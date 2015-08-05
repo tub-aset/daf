@@ -1,5 +1,6 @@
 package de.jpwinkler.daf.documenttagging.doors.preprocessing;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +19,13 @@ public class DoorsModulePreprocessor {
     public static DoorsModulePreprocessor getDefaultPreprocessor() {
         final DoorsModulePreprocessor doorsModulePreprocessor = new DoorsModulePreprocessor();
 
-        doorsModulePreprocessor.addObjectPreprocessor(new StopwordRemovalPreprocessor());
+        doorsModulePreprocessor.addObjectPreprocessor(new IgnoreCasePreprocessor());
+        try {
+            doorsModulePreprocessor.addObjectPreprocessor(new CompoundSplitterPreprocessor());
+            doorsModulePreprocessor.addObjectPreprocessor(new StopwordRemovalPreprocessor(DoorsModulePreprocessor.class.getResourceAsStream("stopwords.txt")));
+        } catch (final IOException e) {
+            e.printStackTrace();
+        }
 
         return doorsModulePreprocessor;
     }
