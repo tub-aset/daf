@@ -1,6 +1,8 @@
 package de.jpwinkler.daf.documenttagging;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -14,7 +16,6 @@ import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
 import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.util.CSVParseException;
 import de.jpwinkler.daf.documenttagging.doors.DoorsDocumentAccessor;
-import de.jpwinkler.daf.documenttagging.doors.DoorsTreeNodeIterator;
 import de.jpwinkler.daf.documenttagging.doors.maxent.DoorsMaxEntPredicateGenerator;
 import de.jpwinkler.daf.documenttagging.doors.preprocessing.DoorsModulePreprocessor;
 import de.jpwinkler.daf.documenttagging.maxent.MaxEntPredicateGenerator;
@@ -28,16 +29,15 @@ public class DoorsTest {
     private DoorsModule wwcTest;
     private DoorsModule wlTest;
     private DoorsModule asProd;
+    private DoorsModule wwcProd;
 
     @Before
     public void setupClass() throws IOException, CSVParseException {
         modulesToTest = new HashMap<>();
         wwcTest = new ModuleCSVParser().parseCSV(getClass().getResourceAsStream("maxent/slh-wwc.csv"));
         wlTest = new ModuleCSVParser().parseCSV(getClass().getResourceAsStream("maxent/slh-wl.csv"));
-        // asProd = new ModuleCSVParser().parseCSV(new
-        // File("C:\\WORK\\DOORS\\export\\pod\\AS_system_req.CSV"));
-        // DoorsModule wwcProd = new ModuleCSVParser().parseCSV(new
-        // File("C:/WORK\\DOORS\\export\\pod\\WWC222_system_req.CSV"));
+        asProd = new ModuleCSVParser().parseCSV(new File("C:\\WORK\\DOORS\\export\\pod\\AS_system_req.CSV"));
+        wwcProd = new ModuleCSVParser().parseCSV(new File("C:/WORK\\DOORS\\export\\pod\\WWC222_system_req.CSV"));
 
         modulesToTest.put("wwctest", wwcTest);
         modulesToTest.put("wltest", wlTest);
@@ -66,10 +66,10 @@ public class DoorsTest {
         for (final Entry<String, DoorsModule> e : modulesToTest.entrySet()) {
             final DoorsModule module = e.getValue();
 
-            final DocumentTaggingAlgorithm<DoorsTreeNode, String> simpleMaxEntAlgorithm = new SimpleMaxEntAlgorithm<>(generator, new DoorsTreeNodeIterator(true, module));
+            final DocumentTaggingAlgorithm<DoorsTreeNode, String> simpleMaxEntAlgorithm = new SimpleMaxEntAlgorithm<>(generator, Arrays.asList(new DoorsDocumentAccessor(module)));
             final TaggedDocument<DoorsTreeNode, String> simpleMaxEntTags = simpleMaxEntAlgorithm.tagDocument(new DoorsDocumentAccessor(module));
 
-            final DocumentTaggingAlgorithm<DoorsTreeNode, String> maxEntRecursiveViterbiAlgorithm = new MaxEntRecursiveViterbiAlgorithm<>(generator, new DoorsTreeNodeIterator(true, module));
+            final DocumentTaggingAlgorithm<DoorsTreeNode, String> maxEntRecursiveViterbiAlgorithm = new MaxEntRecursiveViterbiAlgorithm<>(generator, Arrays.asList(new DoorsDocumentAccessor(module)));
             final TaggedDocument<DoorsTreeNode, String> maxEntRecursiveViterbiTags = maxEntRecursiveViterbiAlgorithm.tagDocument(new DoorsDocumentAccessor(module));
 
             final ConfusionMatrix<String> simpleMaxEntConfusionMatrix = new ConfusionMatrix<>(simpleMaxEntTags);
@@ -88,11 +88,11 @@ public class DoorsTest {
 
         final MaxEntPredicateGenerator<DoorsTreeNode> generator = DoorsMaxEntPredicateGenerator.getDefaultGenerator();
 
-        final DocumentTaggingAlgorithm<DoorsTreeNode, String> alg1 = new SimpleMaxEntAlgorithm<>(generator, new DoorsTreeNodeIterator(true, wwcTest));
-        final DocumentTaggingAlgorithm<DoorsTreeNode, String> alg2 = new MaxEntRecursiveViterbiAlgorithm<>(generator, new DoorsTreeNodeIterator(true, wwcTest));
+        final DocumentTaggingAlgorithm<DoorsTreeNode, String> alg1 = new SimpleMaxEntAlgorithm<>(generator, Arrays.asList(new DoorsDocumentAccessor(wwcProd)));
+        final DocumentTaggingAlgorithm<DoorsTreeNode, String> alg2 = new MaxEntRecursiveViterbiAlgorithm<>(generator, Arrays.asList(new DoorsDocumentAccessor(wwcProd)));
 
-        final TaggedDocument<DoorsTreeNode, String> alg1result = alg1.tagDocument(new DoorsDocumentAccessor(wlTest));
-        final TaggedDocument<DoorsTreeNode, String> alg2result = alg2.tagDocument(new DoorsDocumentAccessor(wlTest));
+        final TaggedDocument<DoorsTreeNode, String> alg1result = alg1.tagDocument(new DoorsDocumentAccessor(asProd));
+        final TaggedDocument<DoorsTreeNode, String> alg2result = alg2.tagDocument(new DoorsDocumentAccessor(asProd));
 
         printEvaluationMetrics(new ConfusionMatrix<>(alg1result), new ConfusionMatrix<>(alg2result));
 

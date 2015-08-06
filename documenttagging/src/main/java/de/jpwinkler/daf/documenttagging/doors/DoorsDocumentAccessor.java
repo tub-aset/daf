@@ -6,7 +6,7 @@ import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
 import de.jpwinkler.daf.documenttagging.DocumentAccessor;
 
-public class DoorsDocumentAccessor implements DocumentAccessor<DoorsTreeNode> {
+public class DoorsDocumentAccessor extends DocumentAccessor<DoorsTreeNode> {
 
     private final DoorsModule doorsModule;
 

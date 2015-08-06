@@ -1,7 +1,8 @@
 package de.jpwinkler.daf.documenttagging.maxent;
 
 import java.io.IOException;
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 
 import de.jpwinkler.daf.documenttagging.DocumentAccessor;
 import de.jpwinkler.daf.documenttagging.DocumentTaggingAlgorithm;
@@ -14,8 +15,13 @@ public class SimpleMaxEntAlgorithm<E> implements DocumentTaggingAlgorithm<E, Str
     private final GISModel model;
     private final MaxEntPredicateGenerator<E> dataGenerator;
 
-    public SimpleMaxEntAlgorithm(final MaxEntPredicateGenerator<E> dataGenerator, final Iterator<E> trainingData) throws IOException {
-        model = GIS.trainModel(new MaxEntEventStream<>(dataGenerator, trainingData));
+    public SimpleMaxEntAlgorithm(final MaxEntPredicateGenerator<E> dataGenerator, final List<DocumentAccessor<E>> trainingData) throws IOException {
+        final List<E> trainingElements = new ArrayList<>();
+        for (final DocumentAccessor<E> documentAccessor : trainingData) {
+            documentAccessor.visit(documentAccessor.getDocumentRoot(), e -> trainingElements.add(e));
+        }
+        model = GIS.trainModel(new TrainingDataEventStream<>(dataGenerator, trainingElements));
+
         this.dataGenerator = dataGenerator;
     }
 

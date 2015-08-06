@@ -1,9 +1,9 @@
 package de.jpwinkler.daf.documenttagging.maxent;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -59,9 +59,13 @@ public class MaxEntRecursiveViterbiAlgorithm<E> implements DocumentTaggingAlgori
     private Map<E, String[]> contextualPredicateMap;
     private TaggedDocument<E, String> result;
 
-    public MaxEntRecursiveViterbiAlgorithm(final MaxEntPredicateGenerator<E> dataGenerator, final Iterator<E> trainingData) throws IOException {
+    public MaxEntRecursiveViterbiAlgorithm(final MaxEntPredicateGenerator<E> dataGenerator, final List<DocumentAccessor<E>> trainingData) throws IOException {
         this.dataGenerator = dataGenerator;
-        this.model = GIS.trainModel(new MaxEntEventStream<>(dataGenerator, trainingData));
+        final List<E> trainingElements = new ArrayList<>();
+        for (final DocumentAccessor<E> documentAccessor : trainingData) {
+            documentAccessor.visit(documentAccessor.getDocumentRoot(), e -> trainingElements.add(e));
+        }
+        this.model = GIS.trainModel(new TrainingDataEventStream<>(dataGenerator, trainingElements));
         states = Arrays.asList((String[]) model.getDataStructures()[2]);
     }
 
