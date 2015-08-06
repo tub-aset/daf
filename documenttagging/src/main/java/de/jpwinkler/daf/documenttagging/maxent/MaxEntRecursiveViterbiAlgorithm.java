@@ -10,7 +10,7 @@ import java.util.Map;
 import de.jpwinkler.daf.documenttagging.DocumentAccessor;
 import de.jpwinkler.daf.documenttagging.DocumentTaggingAlgorithm;
 import de.jpwinkler.daf.documenttagging.TaggedDocument;
-import de.jpwinkler.daf.documenttagging.maxent.util.TriMap;
+import de.jpwinkler.daf.documenttagging.maxent.util.CompositeKey3;
 import de.jpwinkler.daf.documenttagging.recursiveviterbi.AbstractRecursiveViterbiAlgorithm;
 import opennlp.maxent.GIS;
 import opennlp.maxent.GISModel;
@@ -34,13 +34,13 @@ public class MaxEntRecursiveViterbiAlgorithm<E> implements DocumentTaggingAlgori
             if (!contextualPredicateMap.containsKey(node)) {
                 return 1.0;
             }
-            double[] eval = probabilitiyMap.get(node, parentState, previousState);
+            double[] eval = probabilitiyMap.get(new CompositeKey3<E, String, String>(node, parentState, previousState));
             if (eval == null) {
                 final String[] contextualPredicates = contextualPredicateMap.get(node);
                 contextualPredicates[contextualPredicates.length - 2] = "parent_pod_tags=" + parentState;
                 contextualPredicates[contextualPredicates.length - 1] = "prev_pod_tags=" + previousState;
                 eval = model.eval(contextualPredicates);
-                probabilitiyMap.put(node, parentState, previousState, eval);
+                probabilitiyMap.put(new CompositeKey3<E, String, String>(node, parentState, previousState), eval);
             }
             return eval[model.getIndex(state)];
         }
@@ -55,7 +55,7 @@ public class MaxEntRecursiveViterbiAlgorithm<E> implements DocumentTaggingAlgori
     private final List<String> states;
     private DocumentAccessor<E> documentAccessor;
     private final MaxEntPredicateGenerator<E> dataGenerator;
-    private TriMap<E, String, String, double[]> probabilitiyMap;
+    private Map<CompositeKey3<E, String, String>, double[]> probabilitiyMap;
     private Map<E, String[]> contextualPredicateMap;
     private TaggedDocument<E, String> result;
 
@@ -73,7 +73,7 @@ public class MaxEntRecursiveViterbiAlgorithm<E> implements DocumentTaggingAlgori
     public TaggedDocument<E, String> tagDocument(final DocumentAccessor<E> documentAccessor) {
         this.documentAccessor = documentAccessor;
         contextualPredicateMap = new HashMap<>();
-        probabilitiyMap = new TriMap<>();
+        probabilitiyMap = new HashMap<>();
         buildContextualPredicateMap(documentAccessor.getDocumentRoot());
         final Map<E, String> tags = recursiveViterbi.recursiveViterbi(documentAccessor.getDocumentRoot());
         result = new TaggedDocument<>();

@@ -30,7 +30,7 @@ public class DoorsMaxEntPredicateGenerator implements MaxEntPredicateGenerator<D
 
     @Override
     public String getOutcome(final DoorsTreeNode element) {
-        if (element.getAttributes().containsKey("pod_tags")) {
+        if (element != null && element.getAttributes().containsKey("pod_tags")) {
             return element.getAttributes().get("pod_tags");
         } else {
             return null;
