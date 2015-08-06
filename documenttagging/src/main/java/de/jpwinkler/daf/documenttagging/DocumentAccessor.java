@@ -7,7 +7,13 @@ public abstract class DocumentAccessor<E> {
 
     public abstract E getDocumentRoot();
 
-    public abstract List<E> getChildren(E documentElement);
+    public abstract List<E> getChildren(E element);
+
+    public abstract E getParent(E element);
+
+    public abstract E getPrevious(E element);
+
+    public abstract E getNext(E element);
 
     public void visit(final E node, final Consumer<E> visitor) {
         visitor.accept(node);
