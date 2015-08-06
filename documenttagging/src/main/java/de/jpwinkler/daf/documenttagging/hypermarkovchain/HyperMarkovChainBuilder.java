@@ -29,4 +29,26 @@ public class HyperMarkovChainBuilder<T> {
         }
     }
 
+    // private void snippet() {
+    // final HyperMarkovChainBuilder<String> hyperMarkovChainBuilder = new
+    // HyperMarkovChainBuilder<>();
+    // for (final DocumentAccessor<E> documentAccessor : trainingData) {
+    // documentAccessor.visit(documentAccessor.getDocumentRoot(), e ->
+    // trainingElements.add(e));
+    //
+    // documentAccessor.visit(documentAccessor.getDocumentRoot(), e -> {
+    // final String outcomeParent = documentAccessor.getParent(e) != null ?
+    // dataGenerator.getOutcome(documentAccessor.getParent(e)) : null;
+    // final String outcomePrevious = documentAccessor.getPrevious(e) != null ?
+    // dataGenerator.getOutcome(documentAccessor.getPrevious(e)) : null;
+    // final String outcomeE = dataGenerator.getOutcome(e);
+    // if ((outcomeParent == null || !outcomeParent.isEmpty()) &&
+    // (outcomePrevious == null || !outcomePrevious.isEmpty()) && (outcomeE ==
+    // null || !outcomeE.isEmpty())) {
+    // hyperMarkovChainBuilder.add(outcomeParent, outcomePrevious, outcomeE);
+    // }
+    // });
+    // }
+    //
+    // }
 }
