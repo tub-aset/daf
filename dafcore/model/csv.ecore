@@ -5,6 +5,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="path" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="url" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attributeDefinitions" upperBound="-1"
+        eType="#//AttributeDefinition" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DoorsObject" eSuperTypes="#//DoorsTreeNode">
     <eOperations name="isHeading" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
@@ -71,11 +73,14 @@
       </eAnnotations>
       <eParameters name="visitor" eType="#//DoorsTreeNodeVisitor"/>
     </eOperations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="objects" upperBound="-1"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="children" upperBound="-1"
         eType="#//DoorsTreeNode" containment="true" resolveProxies="false" eOpposite="#//DoorsTreeNode/parent"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//DoorsTreeNode"
-        eOpposite="#//DoorsTreeNode/objects"/>
+        eOpposite="#//DoorsTreeNode/children"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" ordered="false"
         upperBound="-1" eType="#//StringToStringMap" containment="true" resolveProxies="false"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AttributeDefinition">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
 </ecore:EPackage>

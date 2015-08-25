@@ -103,6 +103,10 @@ public class CSVAdapterFactory extends AdapterFactoryImpl {
                 return createDoorsTreeNodeAdapter();
             }
             @Override
+            public Adapter caseAttributeDefinition(AttributeDefinition object) {
+                return createAttributeDefinitionAdapter();
+            }
+            @Override
             public Adapter caseModelObject(ModelObject object) {
                 return createModelObjectAdapter();
             }
@@ -221,6 +225,20 @@ public class CSVAdapterFactory extends AdapterFactoryImpl {
      * @generated
      */
     public Adapter createDoorsTreeNodeAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link de.jpwinkler.daf.dafcore.model.csv.AttributeDefinition <em>Attribute Definition</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see de.jpwinkler.daf.dafcore.model.csv.AttributeDefinition
+     * @generated
+     */
+    public Adapter createAttributeDefinitionAdapter() {
         return null;
     }
 

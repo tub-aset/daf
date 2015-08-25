@@ -28,7 +28,7 @@ public class DuplicatedLiteralRule extends PredicateIssueRule {
 
     @Override
     protected boolean testObject(final DoorsObject o, final RuleContext context) {
-        return ((DoorsObject) o.getParent()).getText().replace(" ", "").contains(o.getText().trim()) && o.getParent().getObjects().size() == 1;
+        return ((DoorsObject) o.getParent()).getText().replace(" ", "").contains(o.getText().trim()) && o.getParent().getChildren().size() == 1;
     }
 
     @Override

@@ -22,13 +22,13 @@ public class DoorsDocumentAccessor extends DocumentAccessor<DoorsTreeNode> {
 
     @Override
     public List<DoorsTreeNode> getChildren(final DoorsTreeNode element) {
-        return element.getObjects();
+        return element.getChildren();
     }
 
     @Override
     public DoorsTreeNode getPrevious(final DoorsTreeNode element) {
-        if (element.getParent() != null && !(element.getParent().getObjects().indexOf(element) == 0)) {
-            return element.getParent().getObjects().get(element.getParent().getObjects().indexOf(element) - 1);
+        if (element.getParent() != null && !(element.getParent().getChildren().indexOf(element) == 0)) {
+            return element.getParent().getChildren().get(element.getParent().getChildren().indexOf(element) - 1);
         } else {
             return null;
         }
@@ -36,8 +36,8 @@ public class DoorsDocumentAccessor extends DocumentAccessor<DoorsTreeNode> {
 
     @Override
     public DoorsTreeNode getNext(final DoorsTreeNode element) {
-        if (element.getParent() != null && !(element.getParent().getObjects().indexOf(element) == element.getParent().getObjects().size() - 1)) {
-            return element.getParent().getObjects().get(element.getParent().getObjects().indexOf(element) + 1);
+        if (element.getParent() != null && !(element.getParent().getChildren().indexOf(element) == element.getParent().getChildren().size() - 1)) {
+            return element.getParent().getChildren().get(element.getParent().getChildren().indexOf(element) + 1);
         } else {
             return null;
         }

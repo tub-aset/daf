@@ -41,13 +41,13 @@ public class DoorsDocumentAccessorTest {
         node4 = mock(DoorsObject.class);
 
         when(node1.getParent()).thenReturn(null);
-        when(node1.getObjects()).thenReturn(new BasicEList<>(Arrays.asList(node2, node3, node4)));
+        when(node1.getChildren()).thenReturn(new BasicEList<>(Arrays.asList(node2, node3, node4)));
         when(node2.getParent()).thenReturn(node1);
         when(node3.getParent()).thenReturn(node1);
         when(node4.getParent()).thenReturn(node1);
-        when(node2.getObjects()).thenReturn(new BasicEList<>());
-        when(node3.getObjects()).thenReturn(new BasicEList<>());
-        when(node4.getObjects()).thenReturn(new BasicEList<>());
+        when(node2.getChildren()).thenReturn(new BasicEList<>());
+        when(node3.getChildren()).thenReturn(new BasicEList<>());
+        when(node4.getChildren()).thenReturn(new BasicEList<>());
 
         accessor = new DoorsDocumentAccessor(node1);
     }

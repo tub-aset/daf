@@ -67,6 +67,15 @@ public interface CSVFactory extends EFactory {
     DoorsTreeNode createDoorsTreeNode();
 
     /**
+     * Returns a new object of class '<em>Attribute Definition</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Attribute Definition</em>'.
+     * @generated
+     */
+    AttributeDefinition createAttributeDefinition();
+
+    /**
      * Returns the package supported by this factory.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

@@ -27,9 +27,9 @@ public class ModuleCSVWriter extends DoorsTreeNodeVisitor {
     public void writeWithMarkers(final DoorsModule module, final RuleContext context, final String filename) throws IOException {
         this.context = context;
         csvPrinter = new CSVPrinter(new FileWriter(new File(filename)), FORMAT);
-        if (!module.getObjects().isEmpty()) {
+        if (!module.getChildren().isEmpty()) {
             attributes = new ArrayList<>();
-            for (final String attribute : module.getObjects().get(0).getAttributes().keySet()) {
+            for (final String attribute : module.getChildren().get(0).getAttributes().keySet()) {
                 attributes.add(attribute);
             }
             final List<String> header = new ArrayList<>(attributes);

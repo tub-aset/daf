@@ -2,6 +2,7 @@
  */
 package de.jpwinkler.daf.dafcore.model.csv.impl;
 
+import de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EClass;
@@ -68,6 +69,7 @@ public class CSVFactoryImpl extends EFactoryImpl implements CSVFactory {
             case CSVPackage.RESOLVED_LINK: return createResolvedLink();
             case CSVPackage.UNRESOLVED_LINK: return createUnresolvedLink();
             case CSVPackage.DOORS_TREE_NODE: return createDoorsTreeNode();
+            case CSVPackage.ATTRIBUTE_DEFINITION: return createAttributeDefinition();
             default:
                 throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
         }
@@ -172,8 +174,18 @@ public class CSVFactoryImpl extends EFactoryImpl implements CSVFactory {
      * <!-- end-user-doc -->
      * @generated
      */
-    public de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor createDoorsTreeNodeVisitorFromString(EDataType eDataType, String initialValue) {
-        return (de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor)super.createFromString(eDataType, initialValue);
+    public AttributeDefinition createAttributeDefinition() {
+        AttributeDefinitionImpl attributeDefinition = new AttributeDefinitionImpl();
+        return attributeDefinition;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public DoorsTreeNodeVisitor createDoorsTreeNodeVisitorFromString(EDataType eDataType, String initialValue) {
+        return (DoorsTreeNodeVisitor)super.createFromString(eDataType, initialValue);
     }
 
     /**

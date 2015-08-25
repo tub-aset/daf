@@ -1,50 +1,57 @@
 /**
  */
-package de.jpwinkler.daf.dafcore.model.common.impl;
+package de.jpwinkler.daf.dafcore.model.csv.impl;
 
-import de.jpwinkler.daf.dafcore.model.common.CommonPackage;
-import de.jpwinkler.daf.dafcore.model.common.ModelObject;
-
-import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
+import de.jpwinkler.daf.dafcore.model.csv.AttributeDefinition;
+import de.jpwinkler.daf.dafcore.model.csv.CSVPackage;
 
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Model Object</b></em>'.
+ * An implementation of the model object '<em><b>Attribute Definition</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link de.jpwinkler.daf.dafcore.model.common.impl.ModelObjectImpl#getSource <em>Source</em>}</li>
+ *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.impl.AttributeDefinitionImpl#getName <em>Name</em>}</li>
  * </ul>
  *
  * @generated
  */
-public abstract class ModelObjectImpl extends MinimalEObjectImpl.Container implements ModelObject {
+public class AttributeDefinitionImpl extends MinimalEObjectImpl.Container implements AttributeDefinition {
     /**
-     * The cached value of the '{@link #getSource() <em>Source</em>}' reference.
+     * The default value of the '{@link #getName() <em>Name</em>}' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getSource()
+     * @see #getName()
      * @generated
      * @ordered
      */
-    protected DoorsObject source;
+    protected static final String NAME_EDEFAULT = null;
+
+    /**
+     * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getName()
+     * @generated
+     * @ordered
+     */
+    protected String name = NAME_EDEFAULT;
 
     /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    protected ModelObjectImpl() {
+    protected AttributeDefinitionImpl() {
         super();
     }
 
@@ -55,7 +62,7 @@ public abstract class ModelObjectImpl extends MinimalEObjectImpl.Container imple
      */
     @Override
     protected EClass eStaticClass() {
-        return CommonPackage.Literals.MODEL_OBJECT;
+        return CSVPackage.Literals.ATTRIBUTE_DEFINITION;
     }
 
     /**
@@ -63,16 +70,8 @@ public abstract class ModelObjectImpl extends MinimalEObjectImpl.Container imple
      * <!-- end-user-doc -->
      * @generated
      */
-    public DoorsObject getSource() {
-        if (source != null && source.eIsProxy()) {
-            InternalEObject oldSource = (InternalEObject)source;
-            source = (DoorsObject)eResolveProxy(oldSource);
-            if (source != oldSource) {
-                if (eNotificationRequired())
-                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, CommonPackage.MODEL_OBJECT__SOURCE, oldSource, source));
-            }
-        }
-        return source;
+    public String getName() {
+        return name;
     }
 
     /**
@@ -80,20 +79,11 @@ public abstract class ModelObjectImpl extends MinimalEObjectImpl.Container imple
      * <!-- end-user-doc -->
      * @generated
      */
-    public DoorsObject basicGetSource() {
-        return source;
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public void setSource(DoorsObject newSource) {
-        DoorsObject oldSource = source;
-        source = newSource;
+    public void setName(String newName) {
+        String oldName = name;
+        name = newName;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, CommonPackage.MODEL_OBJECT__SOURCE, oldSource, source));
+            eNotify(new ENotificationImpl(this, Notification.SET, CSVPackage.ATTRIBUTE_DEFINITION__NAME, oldName, name));
     }
 
     /**
@@ -104,9 +94,8 @@ public abstract class ModelObjectImpl extends MinimalEObjectImpl.Container imple
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-            case CommonPackage.MODEL_OBJECT__SOURCE:
-                if (resolve) return getSource();
-                return basicGetSource();
+            case CSVPackage.ATTRIBUTE_DEFINITION__NAME:
+                return getName();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -119,8 +108,8 @@ public abstract class ModelObjectImpl extends MinimalEObjectImpl.Container imple
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-            case CommonPackage.MODEL_OBJECT__SOURCE:
-                setSource((DoorsObject)newValue);
+            case CSVPackage.ATTRIBUTE_DEFINITION__NAME:
+                setName((String)newValue);
                 return;
         }
         super.eSet(featureID, newValue);
@@ -134,8 +123,8 @@ public abstract class ModelObjectImpl extends MinimalEObjectImpl.Container imple
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-            case CommonPackage.MODEL_OBJECT__SOURCE:
-                setSource((DoorsObject)null);
+            case CSVPackage.ATTRIBUTE_DEFINITION__NAME:
+                setName(NAME_EDEFAULT);
                 return;
         }
         super.eUnset(featureID);
@@ -149,10 +138,26 @@ public abstract class ModelObjectImpl extends MinimalEObjectImpl.Container imple
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-            case CommonPackage.MODEL_OBJECT__SOURCE:
-                return source != null;
+            case CSVPackage.ATTRIBUTE_DEFINITION__NAME:
+                return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
         }
         return super.eIsSet(featureID);
     }
 
-} //ModelObjectImpl
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public String toString() {
+        if (eIsProxy()) return super.toString();
+
+        StringBuffer result = new StringBuffer(super.toString());
+        result.append(" (name: ");
+        result.append(name);
+        result.append(')');
+        return result.toString();
+    }
+
+} //AttributeDefinitionImpl

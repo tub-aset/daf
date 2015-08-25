@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.Map.Entry;
 
 import org.apache.commons.csv.CSVFormat;
@@ -17,6 +16,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.BOMInputStream;
 
+import de.jpwinkler.daf.dafcore.model.csv.AttributeDefinition;
 import de.jpwinkler.daf.dafcore.model.csv.CSVFactory;
 import de.jpwinkler.daf.dafcore.model.csv.CSVPackage;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
@@ -33,7 +33,7 @@ public class ModuleCSVParser {
             .withIgnoreSurroundingSpaces()
             .withRecordSeparator("\r\n");
 
-    private DoorsModule buildModuleModel(final List<CSVRecord> records) throws CSVParseException {
+    private DoorsModule buildModuleModel(final CSVParser csvParser) throws CSVParseException, NumberFormatException, IOException {
         final CSVFactory factory = CSVPackage.eINSTANCE.getCSVFactory();
 
         final DoorsModule module = factory.createDoorsModule();
@@ -41,7 +41,7 @@ public class ModuleCSVParser {
         DoorsTreeNode current = module;
         int currentLevel = 0;
 
-        for (final CSVRecord record : records) {
+        for (final CSVRecord record : csvParser.getRecords()) {
             final int objectLevel = Integer.parseInt(record.get("Object Level"));
 
             while (objectLevel <= currentLevel) {
@@ -50,7 +50,7 @@ public class ModuleCSVParser {
             }
 
             if (objectLevel > currentLevel + 1) {
-                current = current.getObjects().get(current.getObjects().size() - 1);
+                current = current.getChildren().get(current.getChildren().size() - 1);
                 currentLevel++;
             }
 
@@ -108,7 +108,13 @@ public class ModuleCSVParser {
                 newObject.getAttributes().put(e.getKey(), e.getValue());
             }
 
-            current.getObjects().add(newObject);
+            current.getChildren().add(newObject);
+        }
+
+        for (final String header : csvParser.getHeaderMap().keySet()) {
+            final AttributeDefinition attributeDefinition = CSVFactory.eINSTANCE.createAttributeDefinition();
+            attributeDefinition.setName(header);
+            module.getAttributeDefinitions().add(attributeDefinition);
         }
 
         return module;
@@ -124,8 +130,7 @@ public class ModuleCSVParser {
 
     public DoorsModule parseCSV(final InputStream is) throws IOException, CSVParseException {
         final String csvString = IOUtils.toString(new BOMInputStream(is), Charset.defaultCharset());
-        final List<CSVRecord> records = CSVParser.parse(csvString, FORMAT).getRecords();
-        final DoorsModule parseCSV = buildModuleModel(records);
+        final DoorsModule parseCSV = buildModuleModel(CSVParser.parse(csvString, FORMAT));
         return parseCSV;
     }
 

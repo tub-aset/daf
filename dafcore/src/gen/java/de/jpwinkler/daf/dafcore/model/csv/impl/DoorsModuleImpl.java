@@ -2,11 +2,18 @@
  */
 package de.jpwinkler.daf.dafcore.model.csv.impl;
 
+import de.jpwinkler.daf.dafcore.model.csv.AttributeDefinition;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.InternalEList;
 import de.jpwinkler.daf.dafcore.model.csv.CSVPackage;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
+import java.util.Collection;
 
 /**
  * <!-- begin-user-doc -->
@@ -19,6 +26,7 @@ import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.impl.DoorsModuleImpl#getName <em>Name</em>}</li>
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.impl.DoorsModuleImpl#getPath <em>Path</em>}</li>
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.impl.DoorsModuleImpl#getUrl <em>Url</em>}</li>
+ *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.impl.DoorsModuleImpl#getAttributeDefinitions <em>Attribute Definitions</em>}</li>
  * </ul>
  *
  * @generated
@@ -83,6 +91,16 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
      * @ordered
      */
     protected String url = URL_EDEFAULT;
+
+    /**
+     * The cached value of the '{@link #getAttributeDefinitions() <em>Attribute Definitions</em>}' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getAttributeDefinitions()
+     * @generated
+     * @ordered
+     */
+    protected EList<AttributeDefinition> attributeDefinitions;
 
     /**
      * <!-- begin-user-doc -->
@@ -177,6 +195,32 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
      * <!-- end-user-doc -->
      * @generated
      */
+    public EList<AttributeDefinition> getAttributeDefinitions() {
+        if (attributeDefinitions == null) {
+            attributeDefinitions = new EObjectContainmentEList<AttributeDefinition>(AttributeDefinition.class, this, CSVPackage.DOORS_MODULE__ATTRIBUTE_DEFINITIONS);
+        }
+        return attributeDefinitions;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+        switch (featureID) {
+            case CSVPackage.DOORS_MODULE__ATTRIBUTE_DEFINITIONS:
+                return ((InternalEList<?>)getAttributeDefinitions()).basicRemove(otherEnd, msgs);
+        }
+        return super.eInverseRemove(otherEnd, featureID, msgs);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
@@ -186,6 +230,8 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
                 return getPath();
             case CSVPackage.DOORS_MODULE__URL:
                 return getUrl();
+            case CSVPackage.DOORS_MODULE__ATTRIBUTE_DEFINITIONS:
+                return getAttributeDefinitions();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -208,6 +254,10 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
             case CSVPackage.DOORS_MODULE__URL:
                 setUrl((String)newValue);
                 return;
+            case CSVPackage.DOORS_MODULE__ATTRIBUTE_DEFINITIONS:
+                getAttributeDefinitions().clear();
+                getAttributeDefinitions().addAll((Collection<? extends AttributeDefinition>)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
@@ -229,6 +279,9 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
             case CSVPackage.DOORS_MODULE__URL:
                 setUrl(URL_EDEFAULT);
                 return;
+            case CSVPackage.DOORS_MODULE__ATTRIBUTE_DEFINITIONS:
+                getAttributeDefinitions().clear();
+                return;
         }
         super.eUnset(featureID);
     }
@@ -247,6 +300,8 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
                 return PATH_EDEFAULT == null ? path != null : !PATH_EDEFAULT.equals(path);
             case CSVPackage.DOORS_MODULE__URL:
                 return URL_EDEFAULT == null ? url != null : !URL_EDEFAULT.equals(url);
+            case CSVPackage.DOORS_MODULE__ATTRIBUTE_DEFINITIONS:
+                return attributeDefinitions != null && !attributeDefinitions.isEmpty();
         }
         return super.eIsSet(featureID);
     }

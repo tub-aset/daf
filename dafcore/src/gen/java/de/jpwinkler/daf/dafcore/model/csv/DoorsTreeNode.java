@@ -2,6 +2,7 @@
  */
 package de.jpwinkler.daf.dafcore.model.csv;
 
+import de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.dafcore.model.common.ModelObject;
 
 import org.eclipse.emf.common.util.EList;
@@ -16,7 +17,7 @@ import org.eclipse.emf.common.util.EMap;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode#getObjects <em>Objects</em>}</li>
+ *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode#getChildren <em>Children</em>}</li>
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode#getParent <em>Parent</em>}</li>
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode#getAttributes <em>Attributes</em>}</li>
  * </ul>
@@ -27,26 +28,26 @@ import org.eclipse.emf.common.util.EMap;
  */
 public interface DoorsTreeNode extends ModelObject {
     /**
-     * Returns the value of the '<em><b>Objects</b></em>' containment reference list.
+     * Returns the value of the '<em><b>Children</b></em>' containment reference list.
      * The list contents are of type {@link de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode}.
      * It is bidirectional and its opposite is '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode#getParent <em>Parent</em>}'.
      * <!-- begin-user-doc -->
      * <p>
-     * If the meaning of the '<em>Objects</em>' containment reference list isn't clear,
+     * If the meaning of the '<em>Children</em>' containment reference list isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Objects</em>' containment reference list.
-     * @see de.jpwinkler.daf.dafcore.model.csv.CSVPackage#getDoorsTreeNode_Objects()
+     * @return the value of the '<em>Children</em>' containment reference list.
+     * @see de.jpwinkler.daf.dafcore.model.csv.CSVPackage#getDoorsTreeNode_Children()
      * @see de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode#getParent
      * @model opposite="parent" containment="true"
      * @generated
      */
-    EList<DoorsTreeNode> getObjects();
+    EList<DoorsTreeNode> getChildren();
 
     /**
      * Returns the value of the '<em><b>Parent</b></em>' container reference.
-     * It is bidirectional and its opposite is '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode#getObjects <em>Objects</em>}'.
+     * It is bidirectional and its opposite is '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode#getChildren <em>Children</em>}'.
      * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Parent</em>' container reference isn't clear,
@@ -56,8 +57,8 @@ public interface DoorsTreeNode extends ModelObject {
      * @return the value of the '<em>Parent</em>' container reference.
      * @see #setParent(DoorsTreeNode)
      * @see de.jpwinkler.daf.dafcore.model.csv.CSVPackage#getDoorsTreeNode_Parent()
-     * @see de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode#getObjects
-     * @model opposite="objects" transient="false"
+     * @see de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode#getChildren
+     * @model opposite="children" transient="false"
      * @generated
      */
     DoorsTreeNode getParent();
@@ -96,6 +97,6 @@ public interface DoorsTreeNode extends ModelObject {
      *        annotation="http://www.eclipse.org/emf/2002/GenModel body='for (DoorsObject object : getObjects()) {\r\n\tobject.accept(visitor);\r\n}'"
      * @generated
      */
-    void accept(de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor visitor);
+    void accept(DoorsTreeNodeVisitor visitor);
 
 } // DoorsTreeNode

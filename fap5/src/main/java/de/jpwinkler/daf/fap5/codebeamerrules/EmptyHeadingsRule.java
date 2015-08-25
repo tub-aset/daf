@@ -36,7 +36,7 @@ public class EmptyHeadingsRule extends PredicateIssueRule {
 
     @Override
     protected boolean testObject(final DoorsObject o, final RuleContext context) {
-        return o.isHeading() && o.getObjects().isEmpty();
+        return o.isHeading() && o.getChildren().isEmpty();
     }
 
     @Override

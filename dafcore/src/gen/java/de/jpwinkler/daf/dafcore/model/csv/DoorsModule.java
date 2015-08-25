@@ -2,6 +2,8 @@
  */
 package de.jpwinkler.daf.dafcore.model.csv;
 
+import org.eclipse.emf.common.util.EList;
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Doors Module</b></em>'.
@@ -14,6 +16,7 @@ package de.jpwinkler.daf.dafcore.model.csv;
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsModule#getName <em>Name</em>}</li>
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsModule#getPath <em>Path</em>}</li>
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsModule#getUrl <em>Url</em>}</li>
+ *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsModule#getAttributeDefinitions <em>Attribute Definitions</em>}</li>
  * </ul>
  *
  * @see de.jpwinkler.daf.dafcore.model.csv.CSVPackage#getDoorsModule()
@@ -98,5 +101,21 @@ public interface DoorsModule extends DoorsTreeNode {
      * @generated
      */
     void setUrl(String value);
+
+    /**
+     * Returns the value of the '<em><b>Attribute Definitions</b></em>' containment reference list.
+     * The list contents are of type {@link de.jpwinkler.daf.dafcore.model.csv.AttributeDefinition}.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Attribute Definitions</em>' containment reference list isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Attribute Definitions</em>' containment reference list.
+     * @see de.jpwinkler.daf.dafcore.model.csv.CSVPackage#getDoorsModule_AttributeDefinitions()
+     * @model containment="true"
+     * @generated
+     */
+    EList<AttributeDefinition> getAttributeDefinitions();
 
 } // DoorsModule
