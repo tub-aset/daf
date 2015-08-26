@@ -17,6 +17,7 @@ public class CSVViewerApplication extends Application {
 
     private CSVViewerController csvViewerController;
     private Stage primaryStage;
+    private final FileChooser chooser = new FileChooser();
 
     @Override
     public void start(final Stage primaryStage) throws Exception {
@@ -33,6 +34,7 @@ public class CSVViewerApplication extends Application {
             primaryStage.setScene(new Scene(root));
             primaryStage.setTitle("CSV Viewer");
             primaryStage.show();
+            chooser.setInitialDirectory(new File("C:/WORK/DOORS"));
         } catch (final IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -40,11 +42,9 @@ public class CSVViewerApplication extends Application {
     }
 
     public void openModule() {
-        final FileChooser chooser = new FileChooser();
-        chooser.setInitialDirectory(new File("C:/WORK/DOORS"));
         final File selectedFile = chooser.showOpenDialog(primaryStage);
         if (selectedFile != null) {
-
+            chooser.setInitialDirectory(selectedFile.getParentFile());
             try {
                 final DoorsModule module = new ModuleCSVParser().parseCSV(selectedFile);
 

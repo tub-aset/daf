@@ -62,6 +62,7 @@ public class CSVViewerController {
             controller.setStage(primaryStage);
             final Tab tab = new Tab(module.getName(), root);
             tabPane.getTabs().add(tab);
+            tabPane.getSelectionModel().select(tab);
         } catch (final IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

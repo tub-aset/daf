@@ -20,7 +20,7 @@ import javafx.stage.Stage;
 public class CSVViewerTabController {
 
     private static final String MAIN_COLUMN = "Object Heading & Object Text";
-    private static final List<String> WANTED_ATTRIBUTES = Arrays.asList("Object Identifier", MAIN_COLUMN, "Object Type", "FO_Object_Type");
+    private static final List<String> WANTED_ATTRIBUTES = Arrays.asList("Object Identifier", MAIN_COLUMN, "Object Type", "FO_Object_Type", "pod_tags");
     private CSVViewerApplication csvViewerApplication;
     private Stage primaryStage;
 
@@ -70,15 +70,24 @@ public class CSVViewerTabController {
                 c.setCellFactory(param -> new AttributeTableCell(attributeName));
             }
             c.setCellValueFactory(param -> new ReadOnlyObjectWrapper<DoorsObject>(param.getValue()));
+            c.setSortable(false);
+            c.setEditable(false);
+            c.setMaxWidth(700);
             contentTableView.getColumns().add(c);
         }
 
+        populateContentTableView(module);
+    }
+
+    private void populateContentTableView(final DoorsModule module) {
+        contentTableView.getItems().clear();
         module.accept(new DoorsTreeNodeVisitor() {
             @Override
             public boolean visitPreTraverse(final DoorsObject object) {
                 contentTableView.getItems().add(object);
                 return true;
-            };
+            }
+
         });
     }
 
@@ -90,6 +99,5 @@ public class CSVViewerTabController {
         }
         return treeItem;
     }
-
 
 }
