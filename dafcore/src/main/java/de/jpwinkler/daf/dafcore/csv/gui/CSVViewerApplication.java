@@ -47,7 +47,6 @@ public class CSVViewerApplication extends Application {
             chooser.setInitialDirectory(selectedFile.getParentFile());
             try {
                 final DoorsModule module = new ModuleCSVParser().parseCSV(selectedFile);
-
                 csvViewerController.newTab(module);
             } catch (IOException | CSVParseException e) {
                 // TODO Auto-generated catch block

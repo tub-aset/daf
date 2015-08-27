@@ -8,13 +8,14 @@ import de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
-import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
 
 public class CSVViewerTabController {
@@ -63,15 +64,20 @@ public class CSVViewerTabController {
         attributeNames.sort(new PredefinedOrderComparator<String>(WANTED_ATTRIBUTES));
 
         for (final String attributeName : attributeNames) {
-            final TableColumn<DoorsObject, DoorsObject> c = new TableColumn<>(attributeName);
+            final TableColumn<DoorsObject, String> c = new TableColumn<>(attributeName);
             if (attributeName.equals(MAIN_COLUMN)) {
                 c.setCellFactory(param -> new ObjectHeadingAndObjectTextTableCell());
+                c.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getText()));
+                c.setEditable(false);
             } else {
-                c.setCellFactory(param -> new AttributeTableCell(attributeName));
+                c.setCellFactory(TextFieldTableCell.forTableColumn());
+                c.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getAttributes().get(attributeName)));
+                c.setOnEditCommit(event -> {
+                    event.getRowValue().getAttributes().put(attributeName, event.getNewValue());
+                });
             }
-            c.setCellValueFactory(param -> new ReadOnlyObjectWrapper<DoorsObject>(param.getValue()));
+
             c.setSortable(false);
-            c.setEditable(false);
             c.setMaxWidth(700);
             contentTableView.getColumns().add(c);
         }

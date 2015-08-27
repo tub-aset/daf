@@ -9,6 +9,6 @@
       <TreeView fx:id="outlineTreeView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
    </left>
    <center>
-      <TableView fx:id="contentTableView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+      <TableView fx:id="contentTableView" editable="true" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
    </center>
 </BorderPane>
