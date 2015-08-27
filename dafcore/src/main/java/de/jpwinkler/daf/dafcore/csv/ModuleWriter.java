@@ -1,5 +1,6 @@
 package de.jpwinkler.daf.dafcore.csv;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
@@ -26,6 +27,6 @@ public abstract class ModuleWriter extends OutputStreamWriter {
         super(out);
     }
 
-    public abstract void writeModule(DoorsModule module);
+    public abstract void writeModule(DoorsModule module) throws IOException;
 
 }
