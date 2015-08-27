@@ -20,29 +20,26 @@
       </eAnnotations>
     </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="objectIdentifier" unique="false"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" volatile="true"
+        transient="true" defaultValueLiteral="" derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="objectLevel" unique="false"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" volatile="true"
+        transient="true" derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="objectNumber" unique="false"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="createdBy" unique="false"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="createdThru" unique="false"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="createdOn" unique="false"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" volatile="true"
+        transient="true" derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="absoluteNumber" unique="false"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastModifiedOn" unique="false"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastModifiedBy" unique="false"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" volatile="true"
+        transient="true" derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="objectText" unique="false"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" volatile="true"
+        transient="true" derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="objectShortText" unique="false"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" volatile="true"
+        transient="true" derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="objectHeading" unique="false"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" volatile="true"
+        transient="true" derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="outgoingLinks" upperBound="-1"
         eType="#//Link" containment="true" eOpposite="#//Link/source"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="incomingLinks" upperBound="-1"
@@ -68,9 +65,6 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DoorsTreeNode" eSuperTypes="common.ecore#//ModelObject">
     <eOperations name="accept">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="body" value="for (DoorsObject object : getObjects()) {&#xD;&#xA;&#x9;object.accept(visitor);&#xD;&#xA;}"/>
-      </eAnnotations>
       <eParameters name="visitor" eType="#//DoorsTreeNodeVisitor"/>
     </eOperations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="children" upperBound="-1"

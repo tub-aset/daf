@@ -316,58 +316,13 @@ public interface CSVPackage extends EPackage {
     int DOORS_OBJECT__OBJECT_NUMBER = DOORS_TREE_NODE_FEATURE_COUNT + 2;
 
     /**
-     * The feature id for the '<em><b>Created By</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int DOORS_OBJECT__CREATED_BY = DOORS_TREE_NODE_FEATURE_COUNT + 3;
-
-    /**
-     * The feature id for the '<em><b>Created Thru</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int DOORS_OBJECT__CREATED_THRU = DOORS_TREE_NODE_FEATURE_COUNT + 4;
-
-    /**
-     * The feature id for the '<em><b>Created On</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int DOORS_OBJECT__CREATED_ON = DOORS_TREE_NODE_FEATURE_COUNT + 5;
-
-    /**
      * The feature id for the '<em><b>Absolute Number</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DOORS_OBJECT__ABSOLUTE_NUMBER = DOORS_TREE_NODE_FEATURE_COUNT + 6;
-
-    /**
-     * The feature id for the '<em><b>Last Modified On</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int DOORS_OBJECT__LAST_MODIFIED_ON = DOORS_TREE_NODE_FEATURE_COUNT + 7;
-
-    /**
-     * The feature id for the '<em><b>Last Modified By</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int DOORS_OBJECT__LAST_MODIFIED_BY = DOORS_TREE_NODE_FEATURE_COUNT + 8;
+    int DOORS_OBJECT__ABSOLUTE_NUMBER = DOORS_TREE_NODE_FEATURE_COUNT + 3;
 
     /**
      * The feature id for the '<em><b>Object Text</b></em>' attribute.
@@ -376,7 +331,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_OBJECT__OBJECT_TEXT = DOORS_TREE_NODE_FEATURE_COUNT + 9;
+    int DOORS_OBJECT__OBJECT_TEXT = DOORS_TREE_NODE_FEATURE_COUNT + 4;
 
     /**
      * The feature id for the '<em><b>Object Short Text</b></em>' attribute.
@@ -385,7 +340,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_OBJECT__OBJECT_SHORT_TEXT = DOORS_TREE_NODE_FEATURE_COUNT + 10;
+    int DOORS_OBJECT__OBJECT_SHORT_TEXT = DOORS_TREE_NODE_FEATURE_COUNT + 5;
 
     /**
      * The feature id for the '<em><b>Object Heading</b></em>' attribute.
@@ -394,7 +349,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_OBJECT__OBJECT_HEADING = DOORS_TREE_NODE_FEATURE_COUNT + 11;
+    int DOORS_OBJECT__OBJECT_HEADING = DOORS_TREE_NODE_FEATURE_COUNT + 6;
 
     /**
      * The feature id for the '<em><b>Outgoing Links</b></em>' containment reference list.
@@ -403,7 +358,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_OBJECT__OUTGOING_LINKS = DOORS_TREE_NODE_FEATURE_COUNT + 12;
+    int DOORS_OBJECT__OUTGOING_LINKS = DOORS_TREE_NODE_FEATURE_COUNT + 7;
 
     /**
      * The feature id for the '<em><b>Incoming Links</b></em>' reference list.
@@ -412,7 +367,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_OBJECT__INCOMING_LINKS = DOORS_TREE_NODE_FEATURE_COUNT + 13;
+    int DOORS_OBJECT__INCOMING_LINKS = DOORS_TREE_NODE_FEATURE_COUNT + 8;
 
     /**
      * The feature id for the '<em><b>Module</b></em>' reference.
@@ -421,7 +376,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_OBJECT__MODULE = DOORS_TREE_NODE_FEATURE_COUNT + 14;
+    int DOORS_OBJECT__MODULE = DOORS_TREE_NODE_FEATURE_COUNT + 9;
 
     /**
      * The number of structural features of the '<em>Doors Object</em>' class.
@@ -430,7 +385,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_OBJECT_FEATURE_COUNT = DOORS_TREE_NODE_FEATURE_COUNT + 15;
+    int DOORS_OBJECT_FEATURE_COUNT = DOORS_TREE_NODE_FEATURE_COUNT + 10;
 
     /**
      * The operation id for the '<em>Accept</em>' operation.
@@ -797,39 +752,6 @@ public interface CSVPackage extends EPackage {
     EAttribute getDoorsObject_ObjectNumber();
 
     /**
-     * Returns the meta object for the attribute '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getCreatedBy <em>Created By</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for the attribute '<em>Created By</em>'.
-     * @see de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getCreatedBy()
-     * @see #getDoorsObject()
-     * @generated
-     */
-    EAttribute getDoorsObject_CreatedBy();
-
-    /**
-     * Returns the meta object for the attribute '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getCreatedThru <em>Created Thru</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for the attribute '<em>Created Thru</em>'.
-     * @see de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getCreatedThru()
-     * @see #getDoorsObject()
-     * @generated
-     */
-    EAttribute getDoorsObject_CreatedThru();
-
-    /**
-     * Returns the meta object for the attribute '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getCreatedOn <em>Created On</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for the attribute '<em>Created On</em>'.
-     * @see de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getCreatedOn()
-     * @see #getDoorsObject()
-     * @generated
-     */
-    EAttribute getDoorsObject_CreatedOn();
-
-    /**
      * Returns the meta object for the attribute '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getAbsoluteNumber <em>Absolute Number</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -839,28 +761,6 @@ public interface CSVPackage extends EPackage {
      * @generated
      */
     EAttribute getDoorsObject_AbsoluteNumber();
-
-    /**
-     * Returns the meta object for the attribute '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getLastModifiedOn <em>Last Modified On</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for the attribute '<em>Last Modified On</em>'.
-     * @see de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getLastModifiedOn()
-     * @see #getDoorsObject()
-     * @generated
-     */
-    EAttribute getDoorsObject_LastModifiedOn();
-
-    /**
-     * Returns the meta object for the attribute '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getLastModifiedBy <em>Last Modified By</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for the attribute '<em>Last Modified By</em>'.
-     * @see de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getLastModifiedBy()
-     * @see #getDoorsObject()
-     * @generated
-     */
-    EAttribute getDoorsObject_LastModifiedBy();
 
     /**
      * Returns the meta object for the attribute '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getObjectText <em>Object Text</em>}'.
@@ -1241,52 +1141,12 @@ public interface CSVPackage extends EPackage {
         EAttribute DOORS_OBJECT__OBJECT_NUMBER = eINSTANCE.getDoorsObject_ObjectNumber();
 
         /**
-         * The meta object literal for the '<em><b>Created By</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @generated
-         */
-        EAttribute DOORS_OBJECT__CREATED_BY = eINSTANCE.getDoorsObject_CreatedBy();
-
-        /**
-         * The meta object literal for the '<em><b>Created Thru</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @generated
-         */
-        EAttribute DOORS_OBJECT__CREATED_THRU = eINSTANCE.getDoorsObject_CreatedThru();
-
-        /**
-         * The meta object literal for the '<em><b>Created On</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @generated
-         */
-        EAttribute DOORS_OBJECT__CREATED_ON = eINSTANCE.getDoorsObject_CreatedOn();
-
-        /**
          * The meta object literal for the '<em><b>Absolute Number</b></em>' attribute feature.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
          * @generated
          */
         EAttribute DOORS_OBJECT__ABSOLUTE_NUMBER = eINSTANCE.getDoorsObject_AbsoluteNumber();
-
-        /**
-         * The meta object literal for the '<em><b>Last Modified On</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @generated
-         */
-        EAttribute DOORS_OBJECT__LAST_MODIFIED_ON = eINSTANCE.getDoorsObject_LastModifiedOn();
-
-        /**
-         * The meta object literal for the '<em><b>Last Modified By</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @generated
-         */
-        EAttribute DOORS_OBJECT__LAST_MODIFIED_BY = eINSTANCE.getDoorsObject_LastModifiedBy();
 
         /**
          * The meta object literal for the '<em><b>Object Text</b></em>' attribute feature.

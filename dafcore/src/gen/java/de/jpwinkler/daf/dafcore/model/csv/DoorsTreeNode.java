@@ -94,7 +94,6 @@ public interface DoorsTreeNode extends ModelObject {
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @model visitorDataType="de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNodeVisitor"
-     *        annotation="http://www.eclipse.org/emf/2002/GenModel body='for (DoorsObject object : getObjects()) {\r\n\tobject.accept(visitor);\r\n}'"
      * @generated
      */
     void accept(DoorsTreeNodeVisitor visitor);

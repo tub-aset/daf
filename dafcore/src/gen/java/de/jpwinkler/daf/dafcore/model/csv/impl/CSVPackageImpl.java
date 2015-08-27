@@ -255,7 +255,7 @@ public class CSVPackageImpl extends EPackageImpl implements CSVPackage {
      * @generated
      */
     @Override
-    public EAttribute getDoorsObject_CreatedBy() {
+    public EAttribute getDoorsObject_AbsoluteNumber() {
         return (EAttribute)doorsObjectEClass.getEStructuralFeatures().get(3);
     }
 
@@ -265,7 +265,7 @@ public class CSVPackageImpl extends EPackageImpl implements CSVPackage {
      * @generated
      */
     @Override
-    public EAttribute getDoorsObject_CreatedThru() {
+    public EAttribute getDoorsObject_ObjectText() {
         return (EAttribute)doorsObjectEClass.getEStructuralFeatures().get(4);
     }
 
@@ -275,7 +275,7 @@ public class CSVPackageImpl extends EPackageImpl implements CSVPackage {
      * @generated
      */
     @Override
-    public EAttribute getDoorsObject_CreatedOn() {
+    public EAttribute getDoorsObject_ObjectShortText() {
         return (EAttribute)doorsObjectEClass.getEStructuralFeatures().get(5);
     }
 
@@ -285,7 +285,7 @@ public class CSVPackageImpl extends EPackageImpl implements CSVPackage {
      * @generated
      */
     @Override
-    public EAttribute getDoorsObject_AbsoluteNumber() {
+    public EAttribute getDoorsObject_ObjectHeading() {
         return (EAttribute)doorsObjectEClass.getEStructuralFeatures().get(6);
     }
 
@@ -295,58 +295,8 @@ public class CSVPackageImpl extends EPackageImpl implements CSVPackage {
      * @generated
      */
     @Override
-    public EAttribute getDoorsObject_LastModifiedOn() {
-        return (EAttribute)doorsObjectEClass.getEStructuralFeatures().get(7);
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    @Override
-    public EAttribute getDoorsObject_LastModifiedBy() {
-        return (EAttribute)doorsObjectEClass.getEStructuralFeatures().get(8);
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    @Override
-    public EAttribute getDoorsObject_ObjectText() {
-        return (EAttribute)doorsObjectEClass.getEStructuralFeatures().get(9);
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    @Override
-    public EAttribute getDoorsObject_ObjectShortText() {
-        return (EAttribute)doorsObjectEClass.getEStructuralFeatures().get(10);
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    @Override
-    public EAttribute getDoorsObject_ObjectHeading() {
-        return (EAttribute)doorsObjectEClass.getEStructuralFeatures().get(11);
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    @Override
     public EReference getDoorsObject_OutgoingLinks() {
-        return (EReference)doorsObjectEClass.getEStructuralFeatures().get(12);
+        return (EReference)doorsObjectEClass.getEStructuralFeatures().get(7);
     }
 
     /**
@@ -356,7 +306,7 @@ public class CSVPackageImpl extends EPackageImpl implements CSVPackage {
      */
     @Override
     public EReference getDoorsObject_IncomingLinks() {
-        return (EReference)doorsObjectEClass.getEStructuralFeatures().get(13);
+        return (EReference)doorsObjectEClass.getEStructuralFeatures().get(8);
     }
 
     /**
@@ -365,7 +315,7 @@ public class CSVPackageImpl extends EPackageImpl implements CSVPackage {
      * @generated
      */
     public EReference getDoorsObject_Module() {
-        return (EReference)doorsObjectEClass.getEStructuralFeatures().get(14);
+        return (EReference)doorsObjectEClass.getEStructuralFeatures().get(9);
     }
 
     /**
@@ -599,12 +549,7 @@ public class CSVPackageImpl extends EPackageImpl implements CSVPackage {
         createEAttribute(doorsObjectEClass, DOORS_OBJECT__OBJECT_IDENTIFIER);
         createEAttribute(doorsObjectEClass, DOORS_OBJECT__OBJECT_LEVEL);
         createEAttribute(doorsObjectEClass, DOORS_OBJECT__OBJECT_NUMBER);
-        createEAttribute(doorsObjectEClass, DOORS_OBJECT__CREATED_BY);
-        createEAttribute(doorsObjectEClass, DOORS_OBJECT__CREATED_THRU);
-        createEAttribute(doorsObjectEClass, DOORS_OBJECT__CREATED_ON);
         createEAttribute(doorsObjectEClass, DOORS_OBJECT__ABSOLUTE_NUMBER);
-        createEAttribute(doorsObjectEClass, DOORS_OBJECT__LAST_MODIFIED_ON);
-        createEAttribute(doorsObjectEClass, DOORS_OBJECT__LAST_MODIFIED_BY);
         createEAttribute(doorsObjectEClass, DOORS_OBJECT__OBJECT_TEXT);
         createEAttribute(doorsObjectEClass, DOORS_OBJECT__OBJECT_SHORT_TEXT);
         createEAttribute(doorsObjectEClass, DOORS_OBJECT__OBJECT_HEADING);
@@ -686,18 +631,13 @@ public class CSVPackageImpl extends EPackageImpl implements CSVPackage {
         initEReference(getDoorsModule_AttributeDefinitions(), this.getAttributeDefinition(), null, "attributeDefinitions", null, 0, -1, DoorsModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(doorsObjectEClass, DoorsObject.class, "DoorsObject", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEAttribute(getDoorsObject_ObjectIdentifier(), ecorePackage.getEString(), "objectIdentifier", null, 0, 1, DoorsObject.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getDoorsObject_ObjectLevel(), ecorePackage.getEInt(), "objectLevel", null, 0, 1, DoorsObject.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getDoorsObject_ObjectNumber(), ecorePackage.getEString(), "objectNumber", null, 0, 1, DoorsObject.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getDoorsObject_CreatedBy(), ecorePackage.getEString(), "createdBy", null, 0, 1, DoorsObject.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getDoorsObject_CreatedThru(), ecorePackage.getEString(), "createdThru", null, 0, 1, DoorsObject.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getDoorsObject_CreatedOn(), ecorePackage.getEDate(), "createdOn", null, 0, 1, DoorsObject.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getDoorsObject_AbsoluteNumber(), ecorePackage.getEInt(), "absoluteNumber", null, 0, 1, DoorsObject.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getDoorsObject_LastModifiedOn(), ecorePackage.getEDate(), "lastModifiedOn", null, 0, 1, DoorsObject.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getDoorsObject_LastModifiedBy(), ecorePackage.getEString(), "lastModifiedBy", null, 0, 1, DoorsObject.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getDoorsObject_ObjectText(), ecorePackage.getEString(), "objectText", null, 0, 1, DoorsObject.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getDoorsObject_ObjectShortText(), ecorePackage.getEString(), "objectShortText", null, 0, 1, DoorsObject.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getDoorsObject_ObjectHeading(), ecorePackage.getEString(), "objectHeading", null, 0, 1, DoorsObject.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getDoorsObject_ObjectIdentifier(), ecorePackage.getEString(), "objectIdentifier", "", 0, 1, DoorsObject.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+        initEAttribute(getDoorsObject_ObjectLevel(), ecorePackage.getEInt(), "objectLevel", null, 0, 1, DoorsObject.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+        initEAttribute(getDoorsObject_ObjectNumber(), ecorePackage.getEString(), "objectNumber", null, 0, 1, DoorsObject.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+        initEAttribute(getDoorsObject_AbsoluteNumber(), ecorePackage.getEInt(), "absoluteNumber", null, 0, 1, DoorsObject.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+        initEAttribute(getDoorsObject_ObjectText(), ecorePackage.getEString(), "objectText", null, 0, 1, DoorsObject.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+        initEAttribute(getDoorsObject_ObjectShortText(), ecorePackage.getEString(), "objectShortText", null, 0, 1, DoorsObject.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+        initEAttribute(getDoorsObject_ObjectHeading(), ecorePackage.getEString(), "objectHeading", null, 0, 1, DoorsObject.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, IS_DERIVED, IS_ORDERED);
         initEReference(getDoorsObject_OutgoingLinks(), this.getLink(), this.getLink_Source(), "outgoingLinks", null, 0, -1, DoorsObject.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getDoorsObject_IncomingLinks(), this.getResolvedLink(), this.getResolvedLink_Target(), "incomingLinks", null, 0, -1, DoorsObject.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getDoorsObject_Module(), this.getDoorsModule(), null, "module", null, 0, 1, DoorsObject.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

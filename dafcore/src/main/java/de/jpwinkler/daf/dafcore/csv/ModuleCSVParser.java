@@ -5,8 +5,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Map.Entry;
 
 import org.apache.commons.csv.CSVFormat;
@@ -59,52 +57,6 @@ public class ModuleCSVParser {
             newObject.setModule(module);
 
             for (final Entry<String, String> e : record.toMap().entrySet()) {
-                switch (e.getKey()) {
-                case "Object Identifier":
-                    newObject.setObjectIdentifier(e.getValue());
-                    break;
-                case "Object Level":
-                    newObject.setObjectLevel(Integer.parseInt(e.getValue()));
-                    break;
-                case "Object Number":
-                    newObject.setObjectNumber(e.getValue());
-                    break;
-                case "Created By":
-                    newObject.setCreatedBy(e.getValue());
-                    break;
-                case "Created Thru":
-                    newObject.setCreatedThru(e.getValue());
-                    break;
-                case "Created On":
-                    try {
-                        newObject.setCreatedOn(new SimpleDateFormat("dd MMMM yyyy", java.util.Locale.ENGLISH).parse(e.getValue()));
-                    } catch (final ParseException e1) {
-                        throw new CSVParseException("Could not parse date string \"" + e.getValue() + "\"", e1);
-                    }
-                    break;
-                case "Absolute Number":
-                    newObject.setAbsoluteNumber(Integer.parseInt(e.getValue()));
-                    break;
-                case "Last Modified On":
-                    try {
-                        newObject.setLastModifiedOn(new SimpleDateFormat("dd MMMM yyyy", java.util.Locale.ENGLISH).parse(e.getValue()));
-                    } catch (final ParseException e1) {
-                        throw new CSVParseException("Could not parse date string \"" + e.getValue() + "\"", e1);
-                    }
-                    break;
-                case "Last Modified By":
-                    newObject.setLastModifiedBy(e.getValue());
-                    break;
-                case "Object Text":
-                    newObject.setObjectText(e.getValue());
-                    break;
-                case "Object Short Text":
-                    newObject.setObjectShortText(e.getValue());
-                    break;
-                case "Object Heading":
-                    newObject.setObjectHeading(e.getValue());
-                    break;
-                }
                 newObject.getAttributes().put(e.getKey(), e.getValue());
             }
 

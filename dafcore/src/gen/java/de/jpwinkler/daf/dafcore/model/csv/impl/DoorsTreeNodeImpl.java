@@ -95,9 +95,7 @@ public class DoorsTreeNodeImpl extends ModelObjectImpl implements DoorsTreeNode 
      */
     @Override
     public DoorsTreeNode getParent() {
-        if (eContainerFeatureID() != CSVPackage.DOORS_TREE_NODE__PARENT) {
-            return null;
-        }
+        if (eContainerFeatureID() != CSVPackage.DOORS_TREE_NODE__PARENT) return null;
         return (DoorsTreeNode)eInternalContainer();
     }
 
@@ -105,7 +103,7 @@ public class DoorsTreeNodeImpl extends ModelObjectImpl implements DoorsTreeNode 
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
-    public NotificationChain basicSetParent(final DoorsTreeNode newParent, NotificationChain msgs) {
+    public NotificationChain basicSetParent(DoorsTreeNode newParent, NotificationChain msgs) {
         msgs = eBasicSetContainer((InternalEObject)newParent, CSVPackage.DOORS_TREE_NODE__PARENT, msgs);
         return msgs;
     }
@@ -115,26 +113,20 @@ public class DoorsTreeNodeImpl extends ModelObjectImpl implements DoorsTreeNode 
      * @generated
      */
     @Override
-    public void setParent(final DoorsTreeNode newParent) {
+    public void setParent(DoorsTreeNode newParent) {
         if (newParent != eInternalContainer() || (eContainerFeatureID() != CSVPackage.DOORS_TREE_NODE__PARENT && newParent != null)) {
-            if (EcoreUtil.isAncestor(this, newParent)) {
+            if (EcoreUtil.isAncestor(this, newParent))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
-            }
             NotificationChain msgs = null;
-            if (eInternalContainer() != null) {
+            if (eInternalContainer() != null)
                 msgs = eBasicRemoveFromContainer(msgs);
-            }
-            if (newParent != null) {
+            if (newParent != null)
                 msgs = ((InternalEObject)newParent).eInverseAdd(this, CSVPackage.DOORS_TREE_NODE__CHILDREN, DoorsTreeNode.class, msgs);
-            }
             msgs = basicSetParent(newParent, msgs);
-            if (msgs != null) {
-                msgs.dispatch();
-            }
+            if (msgs != null) msgs.dispatch();
         }
-        else if (eNotificationRequired()) {
+        else if (eNotificationRequired())
             eNotify(new ENotificationImpl(this, Notification.SET, CSVPackage.DOORS_TREE_NODE__PARENT, newParent, newParent));
-        }
     }
 
     /**
@@ -179,15 +171,14 @@ public class DoorsTreeNodeImpl extends ModelObjectImpl implements DoorsTreeNode 
      */
     @SuppressWarnings("unchecked")
     @Override
-    public NotificationChain eInverseAdd(final InternalEObject otherEnd, final int featureID, NotificationChain msgs) {
+    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
         switch (featureID) {
-        case CSVPackage.DOORS_TREE_NODE__CHILDREN:
-            return ((InternalEList<InternalEObject>)(InternalEList<?>)getChildren()).basicAdd(otherEnd, msgs);
-        case CSVPackage.DOORS_TREE_NODE__PARENT:
-            if (eInternalContainer() != null) {
-                msgs = eBasicRemoveFromContainer(msgs);
-            }
-            return basicSetParent((DoorsTreeNode)otherEnd, msgs);
+            case CSVPackage.DOORS_TREE_NODE__CHILDREN:
+                return ((InternalEList<InternalEObject>)(InternalEList<?>)getChildren()).basicAdd(otherEnd, msgs);
+            case CSVPackage.DOORS_TREE_NODE__PARENT:
+                if (eInternalContainer() != null)
+                    msgs = eBasicRemoveFromContainer(msgs);
+                return basicSetParent((DoorsTreeNode)otherEnd, msgs);
         }
         return super.eInverseAdd(otherEnd, featureID, msgs);
     }
@@ -197,14 +188,14 @@ public class DoorsTreeNodeImpl extends ModelObjectImpl implements DoorsTreeNode 
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(final InternalEObject otherEnd, final int featureID, final NotificationChain msgs) {
+    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
         switch (featureID) {
-        case CSVPackage.DOORS_TREE_NODE__CHILDREN:
-            return ((InternalEList<?>)getChildren()).basicRemove(otherEnd, msgs);
-        case CSVPackage.DOORS_TREE_NODE__PARENT:
-            return basicSetParent(null, msgs);
-        case CSVPackage.DOORS_TREE_NODE__ATTRIBUTES:
-            return ((InternalEList<?>)getAttributes()).basicRemove(otherEnd, msgs);
+            case CSVPackage.DOORS_TREE_NODE__CHILDREN:
+                return ((InternalEList<?>)getChildren()).basicRemove(otherEnd, msgs);
+            case CSVPackage.DOORS_TREE_NODE__PARENT:
+                return basicSetParent(null, msgs);
+            case CSVPackage.DOORS_TREE_NODE__ATTRIBUTES:
+                return ((InternalEList<?>)getAttributes()).basicRemove(otherEnd, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
     }
@@ -214,10 +205,10 @@ public class DoorsTreeNodeImpl extends ModelObjectImpl implements DoorsTreeNode 
      * @generated
      */
     @Override
-    public NotificationChain eBasicRemoveFromContainerFeature(final NotificationChain msgs) {
+    public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
         switch (eContainerFeatureID()) {
-        case CSVPackage.DOORS_TREE_NODE__PARENT:
-            return eInternalContainer().eInverseRemove(this, CSVPackage.DOORS_TREE_NODE__CHILDREN, DoorsTreeNode.class, msgs);
+            case CSVPackage.DOORS_TREE_NODE__PARENT:
+                return eInternalContainer().eInverseRemove(this, CSVPackage.DOORS_TREE_NODE__CHILDREN, DoorsTreeNode.class, msgs);
         }
         return super.eBasicRemoveFromContainerFeature(msgs);
     }
@@ -227,18 +218,15 @@ public class DoorsTreeNodeImpl extends ModelObjectImpl implements DoorsTreeNode 
      * @generated
      */
     @Override
-    public Object eGet(final int featureID, final boolean resolve, final boolean coreType) {
+    public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-        case CSVPackage.DOORS_TREE_NODE__CHILDREN:
-            return getChildren();
-        case CSVPackage.DOORS_TREE_NODE__PARENT:
-            return getParent();
-        case CSVPackage.DOORS_TREE_NODE__ATTRIBUTES:
-            if (coreType) {
-                return getAttributes();
-            } else {
-                return getAttributes().map();
-            }
+            case CSVPackage.DOORS_TREE_NODE__CHILDREN:
+                return getChildren();
+            case CSVPackage.DOORS_TREE_NODE__PARENT:
+                return getParent();
+            case CSVPackage.DOORS_TREE_NODE__ATTRIBUTES:
+                if (coreType) return getAttributes();
+                else return getAttributes().map();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -249,18 +237,18 @@ public class DoorsTreeNodeImpl extends ModelObjectImpl implements DoorsTreeNode 
      */
     @SuppressWarnings("unchecked")
     @Override
-    public void eSet(final int featureID, final Object newValue) {
+    public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-        case CSVPackage.DOORS_TREE_NODE__CHILDREN:
-            getChildren().clear();
-            getChildren().addAll((Collection<? extends DoorsTreeNode>)newValue);
-            return;
-        case CSVPackage.DOORS_TREE_NODE__PARENT:
-            setParent((DoorsTreeNode)newValue);
-            return;
-        case CSVPackage.DOORS_TREE_NODE__ATTRIBUTES:
-            ((EStructuralFeature.Setting)getAttributes()).set(newValue);
-            return;
+            case CSVPackage.DOORS_TREE_NODE__CHILDREN:
+                getChildren().clear();
+                getChildren().addAll((Collection<? extends DoorsTreeNode>)newValue);
+                return;
+            case CSVPackage.DOORS_TREE_NODE__PARENT:
+                setParent((DoorsTreeNode)newValue);
+                return;
+            case CSVPackage.DOORS_TREE_NODE__ATTRIBUTES:
+                ((EStructuralFeature.Setting)getAttributes()).set(newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
@@ -270,17 +258,17 @@ public class DoorsTreeNodeImpl extends ModelObjectImpl implements DoorsTreeNode 
      * @generated
      */
     @Override
-    public void eUnset(final int featureID) {
+    public void eUnset(int featureID) {
         switch (featureID) {
-        case CSVPackage.DOORS_TREE_NODE__CHILDREN:
-            getChildren().clear();
-            return;
-        case CSVPackage.DOORS_TREE_NODE__PARENT:
-            setParent((DoorsTreeNode)null);
-            return;
-        case CSVPackage.DOORS_TREE_NODE__ATTRIBUTES:
-            getAttributes().clear();
-            return;
+            case CSVPackage.DOORS_TREE_NODE__CHILDREN:
+                getChildren().clear();
+                return;
+            case CSVPackage.DOORS_TREE_NODE__PARENT:
+                setParent((DoorsTreeNode)null);
+                return;
+            case CSVPackage.DOORS_TREE_NODE__ATTRIBUTES:
+                getAttributes().clear();
+                return;
         }
         super.eUnset(featureID);
     }
@@ -290,14 +278,14 @@ public class DoorsTreeNodeImpl extends ModelObjectImpl implements DoorsTreeNode 
      * @generated
      */
     @Override
-    public boolean eIsSet(final int featureID) {
+    public boolean eIsSet(int featureID) {
         switch (featureID) {
-        case CSVPackage.DOORS_TREE_NODE__CHILDREN:
-            return children != null && !children.isEmpty();
-        case CSVPackage.DOORS_TREE_NODE__PARENT:
-            return getParent() != null;
-        case CSVPackage.DOORS_TREE_NODE__ATTRIBUTES:
-            return attributes != null && !attributes.isEmpty();
+            case CSVPackage.DOORS_TREE_NODE__CHILDREN:
+                return children != null && !children.isEmpty();
+            case CSVPackage.DOORS_TREE_NODE__PARENT:
+                return getParent() != null;
+            case CSVPackage.DOORS_TREE_NODE__ATTRIBUTES:
+                return attributes != null && !attributes.isEmpty();
         }
         return super.eIsSet(featureID);
     }
@@ -307,11 +295,11 @@ public class DoorsTreeNodeImpl extends ModelObjectImpl implements DoorsTreeNode 
      * @generated
      */
     @Override
-    public Object eInvoke(final int operationID, final EList<?> arguments) throws InvocationTargetException {
+    public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
         switch (operationID) {
-        case CSVPackage.DOORS_TREE_NODE___ACCEPT__DOORSTREENODEVISITOR:
-            accept((DoorsTreeNodeVisitor)arguments.get(0));
-            return null;
+            case CSVPackage.DOORS_TREE_NODE___ACCEPT__DOORSTREENODEVISITOR:
+                accept((DoorsTreeNodeVisitor)arguments.get(0));
+                return null;
         }
         return super.eInvoke(operationID, arguments);
     }

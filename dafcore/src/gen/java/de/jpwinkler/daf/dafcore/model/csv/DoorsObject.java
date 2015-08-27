@@ -2,8 +2,6 @@
  */
 package de.jpwinkler.daf.dafcore.model.csv;
 
-import java.util.Date;
-
 import org.eclipse.emf.common.util.EList;
 
 /**
@@ -18,12 +16,7 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getObjectIdentifier <em>Object Identifier</em>}</li>
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getObjectLevel <em>Object Level</em>}</li>
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getObjectNumber <em>Object Number</em>}</li>
- *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getCreatedBy <em>Created By</em>}</li>
- *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getCreatedThru <em>Created Thru</em>}</li>
- *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getCreatedOn <em>Created On</em>}</li>
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getAbsoluteNumber <em>Absolute Number</em>}</li>
- *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getLastModifiedOn <em>Last Modified On</em>}</li>
- *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getLastModifiedBy <em>Last Modified By</em>}</li>
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getObjectText <em>Object Text</em>}</li>
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getObjectShortText <em>Object Short Text</em>}</li>
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getObjectHeading <em>Object Heading</em>}</li>
@@ -39,6 +32,7 @@ import org.eclipse.emf.common.util.EList;
 public interface DoorsObject extends DoorsTreeNode {
     /**
      * Returns the value of the '<em><b>Object Identifier</b></em>' attribute.
+     * The default value is <code>""</code>.
      * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Object Identifier</em>' attribute isn't clear,
@@ -48,7 +42,7 @@ public interface DoorsObject extends DoorsTreeNode {
      * @return the value of the '<em>Object Identifier</em>' attribute.
      * @see #setObjectIdentifier(String)
      * @see de.jpwinkler.daf.dafcore.model.csv.CSVPackage#getDoorsObject_ObjectIdentifier()
-     * @model unique="false"
+     * @model default="" unique="false" transient="true" volatile="true" derived="true"
      * @generated
      */
     String getObjectIdentifier();
@@ -74,7 +68,7 @@ public interface DoorsObject extends DoorsTreeNode {
      * @return the value of the '<em>Object Level</em>' attribute.
      * @see #setObjectLevel(int)
      * @see de.jpwinkler.daf.dafcore.model.csv.CSVPackage#getDoorsObject_ObjectLevel()
-     * @model unique="false"
+     * @model unique="false" transient="true" volatile="true" derived="true"
      * @generated
      */
     int getObjectLevel();
@@ -100,7 +94,7 @@ public interface DoorsObject extends DoorsTreeNode {
      * @return the value of the '<em>Object Number</em>' attribute.
      * @see #setObjectNumber(String)
      * @see de.jpwinkler.daf.dafcore.model.csv.CSVPackage#getDoorsObject_ObjectNumber()
-     * @model unique="false"
+     * @model unique="false" transient="true" volatile="true" derived="true"
      * @generated
      */
     String getObjectNumber();
@@ -116,84 +110,6 @@ public interface DoorsObject extends DoorsTreeNode {
     void setObjectNumber(String value);
 
     /**
-     * Returns the value of the '<em><b>Created By</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <p>
-     * If the meaning of the '<em>Created By</em>' attribute isn't clear,
-     * there really should be more of a description here...
-     * </p>
-     * <!-- end-user-doc -->
-     * @return the value of the '<em>Created By</em>' attribute.
-     * @see #setCreatedBy(String)
-     * @see de.jpwinkler.daf.dafcore.model.csv.CSVPackage#getDoorsObject_CreatedBy()
-     * @model unique="false"
-     * @generated
-     */
-    String getCreatedBy();
-
-    /**
-     * Sets the value of the '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getCreatedBy <em>Created By</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Created By</em>' attribute.
-     * @see #getCreatedBy()
-     * @generated
-     */
-    void setCreatedBy(String value);
-
-    /**
-     * Returns the value of the '<em><b>Created Thru</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <p>
-     * If the meaning of the '<em>Created Thru</em>' attribute isn't clear,
-     * there really should be more of a description here...
-     * </p>
-     * <!-- end-user-doc -->
-     * @return the value of the '<em>Created Thru</em>' attribute.
-     * @see #setCreatedThru(String)
-     * @see de.jpwinkler.daf.dafcore.model.csv.CSVPackage#getDoorsObject_CreatedThru()
-     * @model unique="false"
-     * @generated
-     */
-    String getCreatedThru();
-
-    /**
-     * Sets the value of the '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getCreatedThru <em>Created Thru</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Created Thru</em>' attribute.
-     * @see #getCreatedThru()
-     * @generated
-     */
-    void setCreatedThru(String value);
-
-    /**
-     * Returns the value of the '<em><b>Created On</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <p>
-     * If the meaning of the '<em>Created On</em>' attribute isn't clear,
-     * there really should be more of a description here...
-     * </p>
-     * <!-- end-user-doc -->
-     * @return the value of the '<em>Created On</em>' attribute.
-     * @see #setCreatedOn(Date)
-     * @see de.jpwinkler.daf.dafcore.model.csv.CSVPackage#getDoorsObject_CreatedOn()
-     * @model unique="false"
-     * @generated
-     */
-    Date getCreatedOn();
-
-    /**
-     * Sets the value of the '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getCreatedOn <em>Created On</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Created On</em>' attribute.
-     * @see #getCreatedOn()
-     * @generated
-     */
-    void setCreatedOn(Date value);
-
-    /**
      * Returns the value of the '<em><b>Absolute Number</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <p>
@@ -204,7 +120,7 @@ public interface DoorsObject extends DoorsTreeNode {
      * @return the value of the '<em>Absolute Number</em>' attribute.
      * @see #setAbsoluteNumber(int)
      * @see de.jpwinkler.daf.dafcore.model.csv.CSVPackage#getDoorsObject_AbsoluteNumber()
-     * @model unique="false"
+     * @model unique="false" transient="true" volatile="true" derived="true"
      * @generated
      */
     int getAbsoluteNumber();
@@ -220,58 +136,6 @@ public interface DoorsObject extends DoorsTreeNode {
     void setAbsoluteNumber(int value);
 
     /**
-     * Returns the value of the '<em><b>Last Modified On</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <p>
-     * If the meaning of the '<em>Last Modified On</em>' attribute isn't clear,
-     * there really should be more of a description here...
-     * </p>
-     * <!-- end-user-doc -->
-     * @return the value of the '<em>Last Modified On</em>' attribute.
-     * @see #setLastModifiedOn(Date)
-     * @see de.jpwinkler.daf.dafcore.model.csv.CSVPackage#getDoorsObject_LastModifiedOn()
-     * @model unique="false"
-     * @generated
-     */
-    Date getLastModifiedOn();
-
-    /**
-     * Sets the value of the '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getLastModifiedOn <em>Last Modified On</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Last Modified On</em>' attribute.
-     * @see #getLastModifiedOn()
-     * @generated
-     */
-    void setLastModifiedOn(Date value);
-
-    /**
-     * Returns the value of the '<em><b>Last Modified By</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <p>
-     * If the meaning of the '<em>Last Modified By</em>' attribute isn't clear,
-     * there really should be more of a description here...
-     * </p>
-     * <!-- end-user-doc -->
-     * @return the value of the '<em>Last Modified By</em>' attribute.
-     * @see #setLastModifiedBy(String)
-     * @see de.jpwinkler.daf.dafcore.model.csv.CSVPackage#getDoorsObject_LastModifiedBy()
-     * @model unique="false"
-     * @generated
-     */
-    String getLastModifiedBy();
-
-    /**
-     * Sets the value of the '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getLastModifiedBy <em>Last Modified By</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Last Modified By</em>' attribute.
-     * @see #getLastModifiedBy()
-     * @generated
-     */
-    void setLastModifiedBy(String value);
-
-    /**
      * Returns the value of the '<em><b>Object Text</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <p>
@@ -282,7 +146,7 @@ public interface DoorsObject extends DoorsTreeNode {
      * @return the value of the '<em>Object Text</em>' attribute.
      * @see #setObjectText(String)
      * @see de.jpwinkler.daf.dafcore.model.csv.CSVPackage#getDoorsObject_ObjectText()
-     * @model unique="false"
+     * @model unique="false" transient="true" volatile="true" derived="true"
      * @generated
      */
     String getObjectText();
@@ -308,7 +172,7 @@ public interface DoorsObject extends DoorsTreeNode {
      * @return the value of the '<em>Object Short Text</em>' attribute.
      * @see #setObjectShortText(String)
      * @see de.jpwinkler.daf.dafcore.model.csv.CSVPackage#getDoorsObject_ObjectShortText()
-     * @model unique="false"
+     * @model unique="false" transient="true" volatile="true" derived="true"
      * @generated
      */
     String getObjectShortText();
@@ -334,7 +198,7 @@ public interface DoorsObject extends DoorsTreeNode {
      * @return the value of the '<em>Object Heading</em>' attribute.
      * @see #setObjectHeading(String)
      * @see de.jpwinkler.daf.dafcore.model.csv.CSVPackage#getDoorsObject_ObjectHeading()
-     * @model unique="false"
+     * @model unique="false" transient="true" volatile="true" derived="true"
      * @generated
      */
     String getObjectHeading();
