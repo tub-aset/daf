@@ -118,4 +118,12 @@ public interface DoorsModule extends DoorsTreeNode {
      */
     EList<AttributeDefinition> getAttributeDefinitions();
 
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @model
+     * @generated
+     */
+    AttributeDefinition findAttributeDefinition(String name);
+
 } // DoorsModule

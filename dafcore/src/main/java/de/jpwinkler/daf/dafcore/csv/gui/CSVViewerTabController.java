@@ -5,11 +5,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.dafcore.csv.ModuleCSVParser;
 import de.jpwinkler.daf.dafcore.csv.ModuleCSVWriter;
+import de.jpwinkler.daf.dafcore.model.csv.AttributeDefinition;
+import de.jpwinkler.daf.dafcore.model.csv.CSVFactory;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
@@ -17,18 +22,23 @@ import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.util.CSVParseException
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class CSVViewerTabController {
 
     private static final String MAIN_COLUMN = "Object Heading & Object Text";
-    private static final List<String> WANTED_ATTRIBUTES = Arrays.asList("Object Identifier", MAIN_COLUMN, "Object Type", "FO_Object_Type", "pod_tags");
+    private static final List<String> WANTED_ATTRIBUTES = Arrays.asList("Object Identifier", MAIN_COLUMN, "Object Type", "FO_Object_Type", "pod_tag");
     private CSVViewerApplication csvViewerApplication;
     private Stage primaryStage;
 
@@ -114,26 +124,33 @@ public class CSVViewerTabController {
         attributeNames.sort(new PredefinedOrderComparator<String>(WANTED_ATTRIBUTES));
 
         for (final String attributeName : attributeNames) {
-            final TableColumn<DoorsObject, String> c = new TableColumn<>(attributeName);
             if (attributeName.equals(MAIN_COLUMN)) {
+                final TableColumn<DoorsObject, String> c = new TableColumn<>(attributeName);
                 c.setCellFactory(param -> new ObjectHeadingAndObjectTextTableCell());
                 c.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getText()));
                 c.setEditable(false);
                 c.setPrefWidth(700);
+                c.setSortable(false);
+                contentTableView.getColumns().add(c);
             } else {
-                c.setCellFactory(TextFieldTableCell.forTableColumn());
-                c.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getAttributes().get(attributeName)));
-                c.setOnEditCommit(event -> {
-                    event.getRowValue().getAttributes().put(attributeName, event.getNewValue());
-                    setDirty();
-                });
+                addAttributeColumn(attributeName);
             }
 
-            c.setSortable(false);
-            contentTableView.getColumns().add(c);
         }
 
         populateContentTableView(module);
+    }
+
+    private void addAttributeColumn(final String attributeName) {
+        final TableColumn<DoorsObject, String> c = new TableColumn<>(attributeName);
+        c.setCellFactory(TextFieldTableCell.forTableColumn());
+        c.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getAttributes().get(attributeName)));
+        c.setOnEditCommit(event -> {
+            event.getRowValue().getAttributes().put(attributeName, event.getNewValue());
+            setDirty();
+        });
+        c.setSortable(false);
+        contentTableView.getColumns().add(c);
     }
 
     private void setDirty() {
@@ -148,6 +165,55 @@ public class CSVViewerTabController {
 
     public void setTab(final Tab tab) {
         this.tab = tab;
+    }
+
+    public void saveSubmoduleAs() {
+        final FileChooser chooser = new FileChooser();
+        chooser.setInitialDirectory(file.getParentFile());
+        final File saveAsFile = chooser.showSaveDialog(primaryStage);
+        if (saveAsFile != null) {
+
+            final DoorsModule moduleCopy = EcoreUtil.copy(module);
+
+            final DoorsObject subTree = EcoreUtil.copy(contentTableView.getSelectionModel().getSelectedItem());
+
+
+            moduleCopy.getChildren().clear();
+            moduleCopy.getChildren().add(subTree);
+
+            fixObjectLevel(subTree, 1);
+
+            try (ModuleCSVWriter writer = new ModuleCSVWriter(new FileOutputStream(saveAsFile))) {
+                writer.writeModule(moduleCopy);
+            } catch (final IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void fixObjectLevel(final DoorsObject object, final int level) {
+        object.setObjectLevel(level);
+        for (final DoorsTreeNode child : object.getChildren()) {
+            if (child instanceof DoorsObject) {
+                fixObjectLevel((DoorsObject) child, level + 1);
+            }
+        }
+    }
+
+    public void addColumn() {
+        final TextInputDialog textInputDialog = new TextInputDialog();
+        final Optional<String> result = textInputDialog.showAndWait();
+        if (result.isPresent()) {
+            if (module.findAttributeDefinition(result.get()) != null) {
+                new Alert(AlertType.ERROR, "Attribute already exists.", ButtonType.OK).show();
+            } else {
+                final AttributeDefinition ad = CSVFactory.eINSTANCE.createAttributeDefinition();
+                ad.setName(result.get());
+                module.getAttributeDefinitions().add(ad);
+                addAttributeColumn(ad.getName());
+            }
+        }
     }
 
 }

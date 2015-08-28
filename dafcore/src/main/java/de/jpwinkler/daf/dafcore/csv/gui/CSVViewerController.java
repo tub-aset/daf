@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.util.CSVParseException;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -76,6 +77,12 @@ public class CSVViewerController {
     }
 
     @FXML
+    public void saveSubmoduleAsClicked() {
+        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+        tabControllers.get(selectedTab).saveSubmoduleAs();
+    }
+
+    @FXML
     public void closeClicked() {
         final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
         tabPane.getTabs().remove(selectedTab);
@@ -84,6 +91,13 @@ public class CSVViewerController {
 
     @FXML
     public void exitClicked() {
+        Platform.exit();
+    }
+
+    @FXML
+    public void addColumnClicked() {
+        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+        tabControllers.get(selectedTab).addColumn();
     }
 
     public void setMainApp(final CSVViewerApplication csvViewerApplication) {

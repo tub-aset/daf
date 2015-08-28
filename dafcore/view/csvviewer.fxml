@@ -12,10 +12,16 @@
             <items>
               <MenuItem fx:id="openMenuItem" mnemonicParsing="false" onAction="#openClicked" text="Open..." />
                   <MenuItem mnemonicParsing="false" onAction="#saveClicked" text="Save" />
+                  <MenuItem mnemonicParsing="false" onAction="#saveSubmoduleAsClicked" text="Save Submodule As" />
                   <MenuItem fx:id="closeMenuItem" mnemonicParsing="false" onAction="#closeClicked" text="Close" />
                   <MenuItem fx:id="exitMenuItem" mnemonicParsing="false" onAction="#exitClicked" text="Exit" />
             </items>
           </Menu>
+            <Menu mnemonicParsing="false" text="Module">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#addColumnClicked" text="Add Column..." />
+              </items>
+            </Menu>
         </menus>
       </MenuBar>
    </top>
