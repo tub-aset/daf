@@ -14,10 +14,10 @@ public class NeighborhoodPredicateGenerator extends PredicateGenerator {
                 if (!parent_pod_tags.isEmpty()) {
                     emitPredicate("parent_pod_tags=" + parent_pod_tags);
                 }
-                final int i = object.getParent().getObjects().indexOf(object);
+                final int i = object.getParent().getChildren().indexOf(object);
 
                 if (i > 0) {
-                    final DoorsTreeNode prev = object.getParent().getObjects().get(i - 1);
+                    final DoorsTreeNode prev = object.getParent().getChildren().get(i - 1);
                     final String prev_pod_tag = prev.getAttributes().get("pod_tags");
                     if (prev != null && !prev_pod_tag.isEmpty()) {
                         emitPredicate("prev_pod_tags=" + prev_pod_tag);
