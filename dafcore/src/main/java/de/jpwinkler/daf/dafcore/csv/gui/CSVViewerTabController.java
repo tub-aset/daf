@@ -33,12 +33,13 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 
 public class CSVViewerTabController {
 
     private static final String MAIN_COLUMN = "Object Heading & Object Text";
-    private static final List<String> WANTED_ATTRIBUTES = Arrays.asList("Object Identifier", MAIN_COLUMN, "Object Type", "FO_Object_Type", "pod_tag");
+    private static final List<String> WANTED_ATTRIBUTES = Arrays.asList("Object Identifier", "FO_Object_Type", MAIN_COLUMN, "Object Type", "pod_tag", "ASIL", "Maturity", "Edit Type", "Relevance");
     private CSVViewerApplication csvViewerApplication;
     private Stage primaryStage;
 
@@ -117,7 +118,7 @@ public class CSVViewerTabController {
 
         contentTableView.getColumns().clear();
 
-        final List<String> attributeNames = module.getAttributeDefinitions().stream().map(ad -> ad.getName()).filter(an -> WANTED_ATTRIBUTES.contains(an)).collect(Collectors.toList());
+        final List<String> attributeNames = module.getAttributeDefinitions().stream().map(ad -> ad.getName()).filter(name -> WANTED_ATTRIBUTES.contains(name)).collect(Collectors.toList());
 
         attributeNames.add(MAIN_COLUMN);
 
@@ -169,7 +170,10 @@ public class CSVViewerTabController {
 
     public void saveSubmoduleAs() {
         final FileChooser chooser = new FileChooser();
+        chooser.getExtensionFilters().add(new ExtensionFilter("CSV", "*.csv"));
+        chooser.setTitle("Save Submodule as...");
         chooser.setInitialDirectory(file.getParentFile());
+        chooser.setInitialFileName(file.getName());
         final File saveAsFile = chooser.showSaveDialog(primaryStage);
         if (saveAsFile != null) {
 

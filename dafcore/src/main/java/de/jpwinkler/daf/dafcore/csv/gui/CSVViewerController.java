@@ -14,6 +14,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 
 public class CSVViewerController {
@@ -41,6 +42,7 @@ public class CSVViewerController {
     @FXML
     public void initialize() {
         chooser.setInitialDirectory(new File("C:/WORK/DOORS"));
+        chooser.getExtensionFilters().add(new ExtensionFilter("CSV", "*.csv"));
     }
 
     @FXML
@@ -73,20 +75,26 @@ public class CSVViewerController {
     @FXML
     public void saveClicked() {
         final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-        tabControllers.get(selectedTab).save();
+        if (selectedTab != null) {
+            tabControllers.get(selectedTab).save();
+        }
     }
 
     @FXML
     public void saveSubmoduleAsClicked() {
         final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-        tabControllers.get(selectedTab).saveSubmoduleAs();
+        if (selectedTab != null) {
+            tabControllers.get(selectedTab).saveSubmoduleAs();
+        }
     }
 
     @FXML
     public void closeClicked() {
         final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-        tabPane.getTabs().remove(selectedTab);
-        tabControllers.remove(selectedTab);
+        if (selectedTab != null) {
+            tabPane.getTabs().remove(selectedTab);
+            tabControllers.remove(selectedTab);
+        }
     }
 
     @FXML
@@ -97,7 +105,9 @@ public class CSVViewerController {
     @FXML
     public void addColumnClicked() {
         final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-        tabControllers.get(selectedTab).addColumn();
+        if (selectedTab != null) {
+            tabControllers.get(selectedTab).addColumn();
+        }
     }
 
     public void setMainApp(final CSVViewerApplication csvViewerApplication) {

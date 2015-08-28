@@ -27,6 +27,7 @@ public class CSVViewerApplication extends Application {
             csvViewerController.setStage(primaryStage);
 
             primaryStage.setScene(new Scene(root));
+            primaryStage.setMaximized(true);
             primaryStage.setTitle("CSV Viewer");
             primaryStage.show();
         } catch (final IOException e) {
