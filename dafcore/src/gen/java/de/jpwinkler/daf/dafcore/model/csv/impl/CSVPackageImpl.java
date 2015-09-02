@@ -303,9 +303,18 @@ public class CSVPackageImpl extends EPackageImpl implements CSVPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    public EAttribute getDoorsObject_Text() {
+        return (EAttribute)doorsObjectEClass.getEStructuralFeatures().get(7);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public EReference getDoorsObject_OutgoingLinks() {
-        return (EReference)doorsObjectEClass.getEStructuralFeatures().get(7);
+        return (EReference)doorsObjectEClass.getEStructuralFeatures().get(8);
     }
 
     /**
@@ -315,7 +324,7 @@ public class CSVPackageImpl extends EPackageImpl implements CSVPackage {
      */
     @Override
     public EReference getDoorsObject_IncomingLinks() {
-        return (EReference)doorsObjectEClass.getEStructuralFeatures().get(8);
+        return (EReference)doorsObjectEClass.getEStructuralFeatures().get(9);
     }
 
     /**
@@ -324,7 +333,7 @@ public class CSVPackageImpl extends EPackageImpl implements CSVPackage {
      * @generated
      */
     public EReference getDoorsObject_Module() {
-        return (EReference)doorsObjectEClass.getEStructuralFeatures().get(9);
+        return (EReference)doorsObjectEClass.getEStructuralFeatures().get(10);
     }
 
     /**
@@ -335,16 +344,6 @@ public class CSVPackageImpl extends EPackageImpl implements CSVPackage {
     @Override
     public EOperation getDoorsObject__IsHeading() {
         return doorsObjectEClass.getEOperations().get(0);
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    @Override
-    public EOperation getDoorsObject__GetText() {
-        return doorsObjectEClass.getEOperations().get(1);
     }
 
     /**
@@ -563,11 +562,11 @@ public class CSVPackageImpl extends EPackageImpl implements CSVPackage {
         createEAttribute(doorsObjectEClass, DOORS_OBJECT__OBJECT_TEXT);
         createEAttribute(doorsObjectEClass, DOORS_OBJECT__OBJECT_SHORT_TEXT);
         createEAttribute(doorsObjectEClass, DOORS_OBJECT__OBJECT_HEADING);
+        createEAttribute(doorsObjectEClass, DOORS_OBJECT__TEXT);
         createEReference(doorsObjectEClass, DOORS_OBJECT__OUTGOING_LINKS);
         createEReference(doorsObjectEClass, DOORS_OBJECT__INCOMING_LINKS);
         createEReference(doorsObjectEClass, DOORS_OBJECT__MODULE);
         createEOperation(doorsObjectEClass, DOORS_OBJECT___IS_HEADING);
-        createEOperation(doorsObjectEClass, DOORS_OBJECT___GET_TEXT);
 
         stringToStringMapEClass = createEClass(STRING_TO_STRING_MAP);
         createEAttribute(stringToStringMapEClass, STRING_TO_STRING_MAP__KEY);
@@ -644,20 +643,19 @@ public class CSVPackageImpl extends EPackageImpl implements CSVPackage {
         addEParameter(op, ecorePackage.getEString(), "name", 0, 1, IS_UNIQUE, IS_ORDERED);
 
         initEClass(doorsObjectEClass, DoorsObject.class, "DoorsObject", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEAttribute(getDoorsObject_ObjectIdentifier(), ecorePackage.getEString(), "objectIdentifier", "", 0, 1, DoorsObject.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+        initEAttribute(getDoorsObject_ObjectIdentifier(), ecorePackage.getEString(), "objectIdentifier", "", 0, 1, DoorsObject.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
         initEAttribute(getDoorsObject_ObjectLevel(), ecorePackage.getEInt(), "objectLevel", null, 0, 1, DoorsObject.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, IS_DERIVED, IS_ORDERED);
         initEAttribute(getDoorsObject_ObjectNumber(), ecorePackage.getEString(), "objectNumber", null, 0, 1, DoorsObject.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, IS_DERIVED, IS_ORDERED);
         initEAttribute(getDoorsObject_AbsoluteNumber(), ecorePackage.getEInt(), "absoluteNumber", null, 0, 1, DoorsObject.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, IS_DERIVED, IS_ORDERED);
         initEAttribute(getDoorsObject_ObjectText(), ecorePackage.getEString(), "objectText", null, 0, 1, DoorsObject.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, IS_DERIVED, IS_ORDERED);
         initEAttribute(getDoorsObject_ObjectShortText(), ecorePackage.getEString(), "objectShortText", null, 0, 1, DoorsObject.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, IS_DERIVED, IS_ORDERED);
         initEAttribute(getDoorsObject_ObjectHeading(), ecorePackage.getEString(), "objectHeading", null, 0, 1, DoorsObject.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+        initEAttribute(getDoorsObject_Text(), ecorePackage.getEString(), "text", "", 0, 1, DoorsObject.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, IS_DERIVED, IS_ORDERED);
         initEReference(getDoorsObject_OutgoingLinks(), this.getLink(), this.getLink_Source(), "outgoingLinks", null, 0, -1, DoorsObject.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getDoorsObject_IncomingLinks(), this.getResolvedLink(), this.getResolvedLink_Target(), "incomingLinks", null, 0, -1, DoorsObject.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getDoorsObject_Module(), this.getDoorsModule(), null, "module", null, 0, 1, DoorsObject.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEOperation(getDoorsObject__IsHeading(), ecorePackage.getEBoolean(), "isHeading", 0, 1, IS_UNIQUE, IS_ORDERED);
-
-        initEOperation(getDoorsObject__GetText(), ecorePackage.getEString(), "getText", 0, 1, IS_UNIQUE, IS_ORDERED);
 
         initEClass(stringToStringMapEClass, Map.Entry.class, "StringToStringMap", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getStringToStringMap_Key(), ecorePackage.getEString(), "key", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

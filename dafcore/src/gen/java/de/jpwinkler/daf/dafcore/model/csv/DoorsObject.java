@@ -20,6 +20,7 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getObjectText <em>Object Text</em>}</li>
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getObjectShortText <em>Object Short Text</em>}</li>
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getObjectHeading <em>Object Heading</em>}</li>
+ *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getText <em>Text</em>}</li>
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getOutgoingLinks <em>Outgoing Links</em>}</li>
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getIncomingLinks <em>Incoming Links</em>}</li>
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getModule <em>Module</em>}</li>
@@ -42,7 +43,7 @@ public interface DoorsObject extends DoorsTreeNode {
      * @return the value of the '<em>Object Identifier</em>' attribute.
      * @see #setObjectIdentifier(String)
      * @see de.jpwinkler.daf.dafcore.model.csv.CSVPackage#getDoorsObject_ObjectIdentifier()
-     * @model default="" unique="false" transient="true" volatile="true" derived="true"
+     * @model default="" transient="true" volatile="true" derived="true"
      * @generated
      */
     String getObjectIdentifier();
@@ -285,12 +286,26 @@ public interface DoorsObject extends DoorsTreeNode {
     boolean isHeading();
 
     /**
+     * Returns the value of the '<em><b>Text</b></em>' attribute.
+     * The default value is <code>""</code>.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @model kind="operation"
-     *        annotation="http://www.eclipse.org/emf/2002/GenModel body='if (isHeading()) {\r\n\treturn getObjectHeading();\r\n} else {\r\n\treturn getObjectText();\r\n}'"
+     * @return the value of the '<em>Text</em>' attribute.
+     * @see #setText(String)
+     * @see de.jpwinkler.daf.dafcore.model.csv.CSVPackage#getDoorsObject_Text()
+     * @model default="" unique="false" transient="true" volatile="true" derived="true"
      * @generated
      */
     String getText();
+
+    /**
+     * Sets the value of the '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getText <em>Text</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Text</em>' attribute.
+     * @see #getText()
+     * @generated
+     */
+    void setText(String value);
 
 } // DoorsObject

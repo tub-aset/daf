@@ -361,13 +361,22 @@ public interface CSVPackage extends EPackage {
     int DOORS_OBJECT__OBJECT_HEADING = DOORS_TREE_NODE_FEATURE_COUNT + 6;
 
     /**
+     * The feature id for the '<em><b>Text</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DOORS_OBJECT__TEXT = DOORS_TREE_NODE_FEATURE_COUNT + 7;
+
+    /**
      * The feature id for the '<em><b>Outgoing Links</b></em>' containment reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DOORS_OBJECT__OUTGOING_LINKS = DOORS_TREE_NODE_FEATURE_COUNT + 7;
+    int DOORS_OBJECT__OUTGOING_LINKS = DOORS_TREE_NODE_FEATURE_COUNT + 8;
 
     /**
      * The feature id for the '<em><b>Incoming Links</b></em>' reference list.
@@ -376,7 +385,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_OBJECT__INCOMING_LINKS = DOORS_TREE_NODE_FEATURE_COUNT + 8;
+    int DOORS_OBJECT__INCOMING_LINKS = DOORS_TREE_NODE_FEATURE_COUNT + 9;
 
     /**
      * The feature id for the '<em><b>Module</b></em>' reference.
@@ -385,7 +394,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_OBJECT__MODULE = DOORS_TREE_NODE_FEATURE_COUNT + 9;
+    int DOORS_OBJECT__MODULE = DOORS_TREE_NODE_FEATURE_COUNT + 10;
 
     /**
      * The number of structural features of the '<em>Doors Object</em>' class.
@@ -394,7 +403,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_OBJECT_FEATURE_COUNT = DOORS_TREE_NODE_FEATURE_COUNT + 10;
+    int DOORS_OBJECT_FEATURE_COUNT = DOORS_TREE_NODE_FEATURE_COUNT + 11;
 
     /**
      * The operation id for the '<em>Accept</em>' operation.
@@ -415,22 +424,13 @@ public interface CSVPackage extends EPackage {
     int DOORS_OBJECT___IS_HEADING = DOORS_TREE_NODE_OPERATION_COUNT + 0;
 
     /**
-     * The operation id for the '<em>Get Text</em>' operation.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int DOORS_OBJECT___GET_TEXT = DOORS_TREE_NODE_OPERATION_COUNT + 1;
-
-    /**
      * The number of operations of the '<em>Doors Object</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DOORS_OBJECT_OPERATION_COUNT = DOORS_TREE_NODE_OPERATION_COUNT + 2;
+    int DOORS_OBJECT_OPERATION_COUNT = DOORS_TREE_NODE_OPERATION_COUNT + 1;
 
     /**
      * The meta object id for the '{@link de.jpwinkler.daf.dafcore.model.csv.impl.StringToStringMapImpl <em>String To String Map</em>}' class.
@@ -815,6 +815,17 @@ public interface CSVPackage extends EPackage {
     EAttribute getDoorsObject_ObjectHeading();
 
     /**
+     * Returns the meta object for the attribute '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getText <em>Text</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Text</em>'.
+     * @see de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getText()
+     * @see #getDoorsObject()
+     * @generated
+     */
+    EAttribute getDoorsObject_Text();
+
+    /**
      * Returns the meta object for the containment reference list '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getOutgoingLinks <em>Outgoing Links</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -856,16 +867,6 @@ public interface CSVPackage extends EPackage {
      * @generated
      */
     EOperation getDoorsObject__IsHeading();
-
-    /**
-     * Returns the meta object for the '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getText() <em>Get Text</em>}' operation.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for the '<em>Get Text</em>' operation.
-     * @see de.jpwinkler.daf.dafcore.model.csv.DoorsObject#getText()
-     * @generated
-     */
-    EOperation getDoorsObject__GetText();
 
     /**
      * Returns the meta object for class '{@link java.util.Map.Entry <em>String To String Map</em>}'.
@@ -1200,6 +1201,14 @@ public interface CSVPackage extends EPackage {
         EAttribute DOORS_OBJECT__OBJECT_HEADING = eINSTANCE.getDoorsObject_ObjectHeading();
 
         /**
+         * The meta object literal for the '<em><b>Text</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute DOORS_OBJECT__TEXT = eINSTANCE.getDoorsObject_Text();
+
+        /**
          * The meta object literal for the '<em><b>Outgoing Links</b></em>' containment reference list feature.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
@@ -1230,14 +1239,6 @@ public interface CSVPackage extends EPackage {
          * @generated
          */
         EOperation DOORS_OBJECT___IS_HEADING = eINSTANCE.getDoorsObject__IsHeading();
-
-        /**
-         * The meta object literal for the '<em><b>Get Text</b></em>' operation.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @generated
-         */
-        EOperation DOORS_OBJECT___GET_TEXT = eINSTANCE.getDoorsObject__GetText();
 
         /**
          * The meta object literal for the '{@link de.jpwinkler.daf.dafcore.model.csv.impl.StringToStringMapImpl <em>String To String Map</em>}' class.

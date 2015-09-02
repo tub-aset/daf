@@ -2,10 +2,11 @@
 <genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
     xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/dafcore/src/gen/java" editDirectory="/com.daimler.jonwink.srstp.core.edit/src-gen"
     editorDirectory="/com.daimler.jonwink.srstp.core.editor/src-gen" modelPluginID="de.jpwinkler.daf.dafcore"
-    templateDirectory="" modelName="Model" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
-    testsDirectory="/com.daimler.jonwink.srstp.core.tests/src-gen" importerID="org.eclipse.emf.importer.ecore"
-    complianceLevel="8.0" copyrightFields="false" editPluginID="com.daimler.jonwink.srstp.core.edit"
-    editorPluginID="com.daimler.jonwink.srstp.core.editor" testsPluginID="com.daimler.jonwink.srstp.core.core.tests"
+    templateDirectory="" modelName="Model" editPluginClass="" editorPluginClass=""
+    rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" testsDirectory="/com.daimler.jonwink.srstp.core.tests/src-gen"
+    testSuiteClass="" importerID="org.eclipse.emf.importer.ecore" bundleManifest="false"
+    complianceLevel="8.0" copyrightFields="false" editPluginID="de.jpwinkler.daf.dafcore.edit"
+    editorPluginID="de.jpwinkler.daf.dafcore.editor" testsPluginID="com.daimler.jonwink.srstp.core.core.tests"
     operationReflection="true" importOrganizing="true">
   <foreignModel>csv.ecore</foreignModel>
   <foreignModel>common.ecore</foreignModel>
@@ -17,6 +18,9 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute csv.ecore#//DoorsModule/path"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute csv.ecore#//DoorsModule/url"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference csv.ecore#//DoorsModule/attributeDefinitions"/>
+      <genOperations ecoreOperation="csv.ecore#//DoorsModule/findAttributeDefinition">
+        <genParameters ecoreParameter="csv.ecore#//DoorsModule/findAttributeDefinition/name"/>
+      </genOperations>
     </genClasses>
     <genClasses ecoreClass="csv.ecore#//DoorsObject">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute csv.ecore#//DoorsObject/objectIdentifier"/>
