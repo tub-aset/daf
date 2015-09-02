@@ -35,6 +35,13 @@
                 <MenuItem mnemonicParsing="false" onAction="#addColumnClicked" text="Add Column..." />
               </items>
             </Menu>
+            <Menu mnemonicParsing="false" text="Object">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#swapObjectHeadingAndTextClicked" text="Swap Object Heading and Text" />
+                  <MenuItem mnemonicParsing="false" onAction="#deleteObjectClicked" text="Delete" />
+                  <MenuItem mnemonicParsing="false" onAction="#unwrapChildrenClicked" text="Unwrap Children" />
+              </items>
+            </Menu>
         </menus>
       </MenuBar>
    </top>

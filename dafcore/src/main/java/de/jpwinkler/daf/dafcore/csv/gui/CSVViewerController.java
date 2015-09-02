@@ -110,6 +110,30 @@ public class CSVViewerController {
         }
     }
 
+    @FXML
+    public void swapObjectHeadingAndTextClicked() {
+        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+        if (selectedTab != null) {
+            tabControllers.get(selectedTab).swapObjectHeadingAndText();
+        }
+    }
+
+    @FXML
+    public void deleteObjectClicked() {
+        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+        if (selectedTab != null) {
+            tabControllers.get(selectedTab).deleteObject();
+        }
+    }
+
+    @FXML
+    public void unwrapChildrenClicked() {
+        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+        if (selectedTab != null) {
+            tabControllers.get(selectedTab).unwrapChildren();
+        }
+    }
+
     public void setMainApp(final CSVViewerApplication csvViewerApplication) {
         this.csvViewerApplication = csvViewerApplication;
     }

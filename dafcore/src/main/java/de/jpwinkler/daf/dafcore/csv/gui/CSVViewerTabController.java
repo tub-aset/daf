@@ -9,6 +9,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.ScriptableObject;
 
 import de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.dafcore.csv.ModuleCSVParser;
@@ -28,6 +30,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -39,7 +42,7 @@ import javafx.stage.Stage;
 public class CSVViewerTabController {
 
     private static final String MAIN_COLUMN = "Object Heading & Object Text";
-    private static final List<String> WANTED_ATTRIBUTES = Arrays.asList("Object Identifier", "FO_Object_Type", MAIN_COLUMN, "Object Type", "pod_tag", "ASIL", "Maturity", "Edit Type", "Relevance");
+    private static final List<String> WANTED_ATTRIBUTES = Arrays.asList("Object Identifier", "FO_Object_Type", MAIN_COLUMN, "Object Type", "pod_tag", "pod_tags", "ASIL", "Maturity", "Edit Type", "Relevance");
     private CSVViewerApplication csvViewerApplication;
     private Stage primaryStage;
 
@@ -50,6 +53,9 @@ public class CSVViewerTabController {
 
     @FXML
     private TableView<DoorsObject> contentTableView;
+
+    @FXML
+    private TextArea javascriptTextArea;
 
     private Tab tab;
     private File file;
@@ -129,10 +135,17 @@ public class CSVViewerTabController {
                 final TableColumn<DoorsObject, String> c = new TableColumn<>(attributeName);
                 c.setCellFactory(param -> new ObjectHeadingAndObjectTextTableCell());
                 c.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getText()));
-                c.setEditable(false);
                 c.setPrefWidth(700);
                 c.setSortable(false);
                 contentTableView.getColumns().add(c);
+                c.setOnEditCommit(event -> {
+                    if (event.getRowValue().isHeading()) {
+                        event.getRowValue().setObjectHeading(event.getNewValue());
+                    } else {
+                        event.getRowValue().setObjectText(event.getNewValue());
+                    }
+                    setDirty();
+                });
             } else {
                 addAttributeColumn(attributeName);
             }
@@ -179,13 +192,14 @@ public class CSVViewerTabController {
 
             final DoorsModule moduleCopy = EcoreUtil.copy(module);
 
-            final DoorsObject subTree = EcoreUtil.copy(contentTableView.getSelectionModel().getSelectedItem());
+            final DoorsObject subTree = EcoreUtil.copy(getCurrentObject());
 
 
             moduleCopy.getChildren().clear();
             moduleCopy.getChildren().add(subTree);
 
             fixObjectLevel(subTree, 1);
+            fixObjectNumbers(subTree, "");
 
             try (ModuleCSVWriter writer = new ModuleCSVWriter(new FileOutputStream(saveAsFile))) {
                 writer.writeModule(moduleCopy);
@@ -203,6 +217,7 @@ public class CSVViewerTabController {
                 fixObjectLevel((DoorsObject) child, level + 1);
             }
         }
+        setDirty();
     }
 
     public void addColumn() {
@@ -217,6 +232,86 @@ public class CSVViewerTabController {
                 module.getAttributeDefinitions().add(ad);
                 addAttributeColumn(ad.getName());
             }
+        }
+    }
+
+    @FXML
+    public void runJavaScriptClicked() {
+        final Context cx = Context.enter();
+
+        final ScriptableObject scope = cx.initStandardObjects();
+
+        ScriptableObject.putProperty(scope, "module", Context.javaToJS(module, scope));
+
+        final String source = javascriptTextArea.getText();
+        cx.evaluateString(scope, source, "script", 1, null);
+
+        Context.exit();
+
+    }
+
+    public void swapObjectHeadingAndText() {
+
+        final DoorsObject current = getCurrentObject();
+        if (current.isHeading()) {
+            current.setObjectText(current.getObjectHeading());
+            current.setObjectHeading("");
+        } else {
+            current.setObjectHeading(current.getObjectText());
+            current.setObjectText("");
+        }
+        fixObjectNumbers(module, "");
+        setDirty();
+    }
+
+    private void fixObjectNumbers(final DoorsTreeNode object, final String parentObjectNumber) {
+        int headingCount = 0;
+        int objectCount = 0;
+        for (final DoorsTreeNode child : object.getChildren()) {
+            if (child instanceof DoorsObject) {
+                final DoorsObject childObject = (DoorsObject) child;
+                String objectNumber = "";
+                if (childObject.isHeading()) {
+                    headingCount++;
+                    objectCount = 0;
+                    objectNumber = (!"".equals(parentObjectNumber) ? parentObjectNumber + "." : "") + String.valueOf(headingCount);
+                    childObject.setObjectNumber(objectNumber);
+                } else {
+                    objectCount++;
+                    objectNumber = (!"".equals(parentObjectNumber) ? (parentObjectNumber + ".") : "") + String.valueOf(headingCount) + "-" + String.valueOf(objectCount);
+                    childObject.setObjectNumber("");
+                }
+                fixObjectNumbers(childObject, objectNumber);
+            }
+
+        }
+    }
+
+    private DoorsObject getCurrentObject() {
+        return contentTableView.getSelectionModel().getSelectedItem();
+    }
+
+    public void deleteObject() {
+        final DoorsObject object = getCurrentObject();
+        if (object.getParent() != null) {
+            object.getParent().getChildren().remove(object);
+        }
+        fixObjectNumbers(module, "");
+        populateContentTableView(module);
+    }
+
+    public void unwrapChildren() {
+        final DoorsObject object = getCurrentObject();
+        if (object.getParent() != null) {
+            object.getParent().getChildren().addAll(object.getParent().getChildren().indexOf(object), object.getChildren());
+            object.getParent().getChildren().remove(object);
+            for (final DoorsTreeNode tn : module.getChildren()) {
+                if (tn instanceof DoorsObject) {
+                    fixObjectLevel((DoorsObject) tn, 1);
+                }
+            }
+            fixObjectNumbers(module, "");
+            populateContentTableView(module);
         }
     }
 
