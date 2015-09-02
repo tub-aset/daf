@@ -89,7 +89,7 @@ public class HyperMarkovChainBuilder<T> {
 
                     final int count = (map != null && map.containsKey(tag)) ? map.get(tag) : 0;
                     if (smoothingTechnique == SmoothingTechnique.LAPLACE) {
-                        result.putWeight(t1, t2, tag, (count + 1) / (sum + allTags.size()));
+                        result.putWeight(t1, t2, tag, (double) (count + 1) / (sum + allTags.size()));
                     } else if (smoothingTechnique == SmoothingTechnique.NONE) {
                         if (sum > 0) {
                             result.putWeight(t1, t2, tag, (double) (count) / (sum));
