@@ -21,6 +21,7 @@ import de.jpwinkler.daf.fap5.codebeamerrules.MaturityRule;
 import de.jpwinkler.daf.fap5.codebeamerrules.ObjectTextAndHeadingRule;
 import de.jpwinkler.daf.fap5.codebeamerrules.QuestionMarkRule;
 import de.jpwinkler.daf.fap5.codebeamerrules.RequirementRule;
+import de.jpwinkler.daf.fap5.codebeamerrules.RequirementWithoutLinkRule;
 import de.jpwinkler.daf.fap5.codebeamerrules.TBDRule;
 import de.jpwinkler.daf.fap5.codebeamerrules.TBVRule;
 import de.jpwinkler.daf.fap5.codebeamerrules.TodoRule;
@@ -57,7 +58,7 @@ public class CodeBeamerModelConstructor extends RuleBasedModelConstructor {
                 ObjectTextAndHeadingRule.class, // +
                 // EmptyDocumentRule.class,
                 MaturityRule.class,
-                // RequirementWithoutLinkRule.class,
+                RequirementWithoutLinkRule.class,
                 InformationWithLinkRule.class
                 // HeadingWithLinkRule.class
                 );
