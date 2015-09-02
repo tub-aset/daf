@@ -19,6 +19,11 @@
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator></MenuItem>
+                  <MenuItem mnemonicParsing="false" onAction="#saveAsClicked" text="Save As">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+                     </accelerator>
+                  </MenuItem>
                   <MenuItem mnemonicParsing="false" onAction="#saveSubmoduleAsClicked" text="Save Submodule As">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
@@ -38,7 +43,10 @@
             <Menu mnemonicParsing="false" text="Object">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#swapObjectHeadingAndTextClicked" text="Swap Object Heading and Text" />
-                  <MenuItem mnemonicParsing="false" onAction="#deleteObjectClicked" text="Delete" />
+                  <MenuItem mnemonicParsing="false" onAction="#deleteObjectClicked" text="Delete">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="DELETE" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
                   <MenuItem mnemonicParsing="false" onAction="#unwrapChildrenClicked" text="Unwrap Children" />
               </items>
             </Menu>

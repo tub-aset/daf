@@ -81,6 +81,14 @@ public class CSVViewerController {
     }
 
     @FXML
+    public void saveAsClicked() {
+        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+        if (selectedTab != null) {
+            tabControllers.get(selectedTab).saveAs();
+        }
+    }
+
+    @FXML
     public void saveSubmoduleAsClicked() {
         final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
         if (selectedTab != null) {

@@ -104,7 +104,15 @@ public class CSVViewerTabController {
     }
 
     public void saveAs() {
-        // setClean();
+        final FileChooser chooser = new FileChooser();
+        chooser.setInitialDirectory(file.getParentFile());
+        chooser.setInitialFileName(file.getName());
+        final File newFile = chooser.showSaveDialog(primaryStage);
+        if (newFile != null) {
+            file = newFile;
+            save();
+            tab.setText(file.getName());
+        }
     }
 
     public void setFile(final File file) throws IOException, CSVParseException {
@@ -231,6 +239,7 @@ public class CSVViewerTabController {
                 ad.setName(result.get());
                 module.getAttributeDefinitions().add(ad);
                 addAttributeColumn(ad.getName());
+                setDirty();
             }
         }
     }
@@ -247,7 +256,7 @@ public class CSVViewerTabController {
         cx.evaluateString(scope, source, "script", 1, null);
 
         Context.exit();
-
+        setDirty();
     }
 
     public void swapObjectHeadingAndText() {
@@ -298,6 +307,7 @@ public class CSVViewerTabController {
         }
         fixObjectNumbers(module, "");
         populateContentTableView(module);
+        setDirty();
     }
 
     public void unwrapChildren() {
@@ -312,6 +322,7 @@ public class CSVViewerTabController {
             }
             fixObjectNumbers(module, "");
             populateContentTableView(module);
+            setDirty();
         }
     }
 
