@@ -20,6 +20,7 @@ public class HyperMarkovChainBuilder<T> {
     private final Set<T> allTags;
 
     private SmoothingTechnique smoothingTechnique = SmoothingTechnique.LAPLACE;
+    private GrowRateFunction growRateFunction = GrowRateFunction.CONSTANT_1;
 
     public HyperMarkovChainBuilder() {
         counts = new HashMap<>();
@@ -32,6 +33,14 @@ public class HyperMarkovChainBuilder<T> {
 
     public void setSmoothingTechnique(final SmoothingTechnique smoothingTechnique) {
         this.smoothingTechnique = smoothingTechnique;
+    }
+
+    public GrowRateFunction getGrowRateFunction() {
+        return growRateFunction;
+    }
+
+    public void setGrowRateFunction(final GrowRateFunction growRateFunction) {
+        this.growRateFunction = growRateFunction;
     }
 
     public void add(final T parent, final T previous, final T state, final int countToAdd) {
@@ -83,16 +92,16 @@ public class HyperMarkovChainBuilder<T> {
         for (final T t1 : allTags) {
             for (final T t2 : allTags) {
                 final Map<T, Integer> map = counts.get(new CompositeKey2<>(t1, t2));
-                final int sum = map != null ? map.values().stream().reduce(0, (i1, i2) -> i1 + i2) : 0;
+                final double sum = map != null ? map.values().stream().mapToDouble(i -> growRate(i)).sum() : 0;
 
                 for (final T tag : allTags) {
 
                     final int count = (map != null && map.containsKey(tag)) ? map.get(tag) : 0;
                     if (smoothingTechnique == SmoothingTechnique.LAPLACE) {
-                        result.putWeight(t1, t2, tag, (double) (count + 1) / (sum + allTags.size()));
+                        result.putWeight(t1, t2, tag, (growRate(count) + 1) / (sum + allTags.size()));
                     } else if (smoothingTechnique == SmoothingTechnique.NONE) {
                         if (sum > 0) {
-                            result.putWeight(t1, t2, tag, (double) (count) / (sum));
+                            result.putWeight(t1, t2, tag, growRate(count) / sum);
                         }
                     }
                 }
@@ -101,5 +110,24 @@ public class HyperMarkovChainBuilder<T> {
 
         result.validate();
         return result;
+    }
+
+    private double growRate(final Integer i) {
+        switch (growRateFunction) {
+        case CONSTANT_1:
+            return i > 0 ? 1 : 0;
+        case CONSTANT_5:
+            return i > 0 ? 5 : 0;
+        case LINEAR:
+            return i;
+        case LOG:
+            return Math.log(i + 1);
+        case ROOT_10:
+            return Math.pow(i, 1 / 10);
+        case ROOT_2:
+            return Math.pow(i, 1 / 2);
+        default:
+            return i;
+        }
     }
 }
