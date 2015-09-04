@@ -53,8 +53,6 @@ public class ConfusionMatrix<T> {
             final T actual = taggedDocument.getActualTag(e);
             if (predicted != null && actual != null) {
                 matrix[tags.indexOf(predicted)][tags.indexOf(actual)]++;
-            } else {
-                System.out.println("oops...");
             }
         }
     }
@@ -228,7 +226,7 @@ public class ConfusionMatrix<T> {
 
     /**
      * returns the macro-averaged f1 score.
-     * 
+     *
      * @return
      */
     public float getMacroF1Score() {
@@ -240,12 +238,12 @@ public class ConfusionMatrix<T> {
         final StringBuilder builder = new StringBuilder();
         builder.append("\t");
         for (final T headerTag : tags) {
-            builder.append(headerTag.toString());
+            builder.append(headerTag);
             builder.append("\t");
         }
         builder.append("\n");
         for (final T actual : tags) {
-            builder.append(actual.toString());
+            builder.append(actual);
             builder.append("\t");
             for (final T predicted : tags) {
                 builder.append(get(predicted, actual));
@@ -256,4 +254,40 @@ public class ConfusionMatrix<T> {
         return builder.toString();
     }
 
+    public String toStringEvaluationMetrics() {
+        final StringBuilder builder = new StringBuilder();
+
+        final int maxLength = tags.stream().mapToInt(t -> t.toString().length()).max().getAsInt();
+
+        for (final T t : tags) {
+            builder.append(String.format("%" + maxLength + "s", t));
+            builder.append("\t");
+            builder.append(String.format("%f", getPrecision(t)));
+            builder.append("\t");
+            builder.append(String.format("%f", getRecall(t)));
+            builder.append("\t");
+            builder.append(String.format("%f", getF1Score(t)));
+            builder.append("\n");
+        }
+
+        builder.append(String.format("%" + maxLength + "s", "micro"));
+        builder.append("\t");
+        builder.append(String.format("%f", getMicroPrecision()));
+        builder.append("\t");
+        builder.append(String.format("%f", getMicroRecall()));
+        builder.append("\t");
+        builder.append(String.format("%f", getMicroF1Score()));
+        builder.append("\n");
+
+        builder.append(String.format("%" + maxLength + "s", "macro"));
+        builder.append("\t");
+        builder.append(String.format("%f", getMacroPrecision()));
+        builder.append("\t");
+        builder.append(String.format("%f", getMacroRecall()));
+        builder.append("\t");
+        builder.append(String.format("%f", getMacroF1Score()));
+        builder.append("\n");
+
+        return builder.toString();
+    }
 }
