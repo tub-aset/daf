@@ -11,8 +11,12 @@ public class SpecialTokenPredicateGenerator extends PredicateGenerator {
 
     @Override
     protected void runGenerator(final DoorsObject object) {
-        emitPredicate("hasAbbreviation=" + PATTERN_ABBREVIATION.matcher(object.getText()).find());
-        emitPredicate("hasSignalName=" + PATTERN_NAME.matcher(object.getText()).find());
+        if (PATTERN_ABBREVIATION.matcher(object.getText()).find()) {
+            emitPredicate("hasAbbreviation=true");
+        }
+        if (PATTERN_NAME.matcher(object.getText()).find()) {
+            emitPredicate("hasSignalName=true");
+        }
     }
 
 }
