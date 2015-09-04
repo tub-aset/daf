@@ -4,11 +4,8 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
 
 public class TaggedDocument<E, T> {
-
-    private static final Logger LOGGER = Logger.getLogger(TaggedDocument.class.getName());
 
     private final Map<E, T> actualTags = new HashMap<>();
 
@@ -29,15 +26,11 @@ public class TaggedDocument<E, T> {
     }
 
     public void putResult(final E e, final T actualTag, final T predictedTag) {
-        if (actualTag != null && predictedTag != null) {
-            actualTags.put(e, actualTag);
-            predictedTags.put(e, predictedTag);
+        actualTags.put(e, actualTag);
+        predictedTags.put(e, predictedTag);
 
-            tags.add(actualTag);
-            tags.add(predictedTag);
-        } else {
-            LOGGER.warning("Tried to insert a result with null / partially null tags.");
-        }
+        tags.add(actualTag);
+        tags.add(predictedTag);
     }
 
     public Set<T> getTags() {

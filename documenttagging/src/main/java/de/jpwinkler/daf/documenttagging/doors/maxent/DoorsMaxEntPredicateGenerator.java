@@ -11,6 +11,17 @@ public class DoorsMaxEntPredicateGenerator implements MaxEntPredicateGenerator<D
 
     private final List<PredicateGenerator> predicateGenerators = new ArrayList<>();
 
+    private String labelAttribute = "pod_tags";
+
+    public DoorsMaxEntPredicateGenerator(final String labelAttribute) {
+        super();
+        this.labelAttribute = labelAttribute;
+    }
+
+    public DoorsMaxEntPredicateGenerator() {
+        super();
+    }
+
     public void addPredicateGenerator(final PredicateGenerator predicateGenerator) {
         predicateGenerators.add(predicateGenerator);
     }
@@ -30,18 +41,20 @@ public class DoorsMaxEntPredicateGenerator implements MaxEntPredicateGenerator<D
 
     @Override
     public String getOutcome(final DoorsTreeNode element) {
-        if (element != null && element.getAttributes().containsKey("pod_tags")) {
-            return element.getAttributes().get("pod_tags");
+        if (element != null && element.getAttributes().containsKey(labelAttribute)) {
+            return element.getAttributes().get(labelAttribute);
         } else {
             return null;
         }
     }
 
-    public static DoorsMaxEntPredicateGenerator getDefaultGenerator() {
-        final DoorsMaxEntPredicateGenerator generator = new DoorsMaxEntPredicateGenerator();
-        generator.addPredicateGenerator(new AsilPredicateGenerator());
-        generator.addPredicateGenerator(new FoObjectTypePredicateGenerator());
-        generator.addPredicateGenerator(new NeighborhoodPredicateGenerator());
+    public static DoorsMaxEntPredicateGenerator getDefaultGenerator(final String labelAttribute) {
+        final DoorsMaxEntPredicateGenerator generator = new DoorsMaxEntPredicateGenerator(labelAttribute);
+        // generator.addPredicateGenerator(new AsilPredicateGenerator());
+        // generator.addPredicateGenerator(new
+        // FoObjectTypePredicateGenerator());
+        // generator.addPredicateGenerator(new
+        // NeighborhoodPredicateGenerator());
         generator.addPredicateGenerator(new ObjectTypePredicateGenerator());
         generator.addPredicateGenerator(new SpecialCharacterPredicateGenerator());
         generator.addPredicateGenerator(new SpecialTokenPredicateGenerator());

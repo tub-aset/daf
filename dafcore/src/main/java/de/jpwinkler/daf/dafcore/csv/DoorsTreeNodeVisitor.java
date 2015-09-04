@@ -14,7 +14,6 @@ public abstract class DoorsTreeNodeVisitor {
 
     public boolean visitPreTraverse(final DoorsObject object) {
         return true;
-
     }
 
     public void visitPostTraverse(final DoorsObject object) {

@@ -10,6 +10,8 @@ import java.util.Map;
 import de.jpwinkler.daf.documenttagging.DocumentAccessor;
 import de.jpwinkler.daf.documenttagging.DocumentTaggingAlgorithm;
 import de.jpwinkler.daf.documenttagging.TaggedDocument;
+import de.jpwinkler.daf.documenttagging.hypermarkovchain.HyperMarkovChain;
+import de.jpwinkler.daf.documenttagging.hypermarkovchain.HyperMarkovChainBuilder;
 import de.jpwinkler.daf.documenttagging.maxent.util.CompositeKey3;
 import de.jpwinkler.daf.documenttagging.recursiveviterbi.AbstractRecursiveViterbiAlgorithm;
 import opennlp.maxent.GIS;
@@ -37,12 +39,11 @@ public class MaxEntRecursiveViterbiAlgorithm<E> implements DocumentTaggingAlgori
             double[] eval = probabilitiyMap.get(new CompositeKey3<E, String, String>(node, parentState, previousState));
             if (eval == null) {
                 final String[] contextualPredicates = contextualPredicateMap.get(node);
-                contextualPredicates[contextualPredicates.length - 2] = "parent_pod_tags=" + parentState;
-                contextualPredicates[contextualPredicates.length - 1] = "prev_pod_tags=" + previousState;
                 eval = model.eval(contextualPredicates);
                 probabilitiyMap.put(new CompositeKey3<E, String, String>(node, parentState, previousState), eval);
             }
-            return eval[model.getIndex(state)];
+            final double d = markovChain.getWeight(parentState, previousState, state);
+            return eval[model.getIndex(state)] * (1 - markovChainInfluence + markovChainInfluence * d);
         }
 
         @Override
@@ -59,12 +60,19 @@ public class MaxEntRecursiveViterbiAlgorithm<E> implements DocumentTaggingAlgori
     private Map<E, String[]> contextualPredicateMap;
     private TaggedDocument<E, String> result;
 
+    private final HyperMarkovChain<String> markovChain;
+
+    private float markovChainInfluence = 1.0f;
+
     public MaxEntRecursiveViterbiAlgorithm(final MaxEntPredicateGenerator<E> dataGenerator, final List<DocumentAccessor<E>> trainingData) throws IOException {
         this.dataGenerator = dataGenerator;
         final List<E> trainingElements = new ArrayList<>();
+        final HyperMarkovChainBuilder<String> hyperMarkovChainBuilder = new HyperMarkovChainBuilder<>();
         for (final DocumentAccessor<E> documentAccessor : trainingData) {
             documentAccessor.visit(documentAccessor.getDocumentRoot(), e -> trainingElements.add(e));
+            hyperMarkovChainBuilder.addAll(documentAccessor, e -> dataGenerator.getOutcome(e), t -> !t.isEmpty());
         }
+        markovChain = hyperMarkovChainBuilder.build();
         this.model = GIS.trainModel(new TrainingDataEventStream<>(dataGenerator, trainingElements));
         states = Arrays.asList((String[]) model.getDataStructures()[2]);
     }
@@ -84,23 +92,28 @@ public class MaxEntRecursiveViterbiAlgorithm<E> implements DocumentTaggingAlgori
     private void buildResult(final Map<E, String> tags, final E element) {
         final String actual = dataGenerator.getOutcome(element);
         final String predicted = tags.get(element);
-        if (actual != null && predicted != null && !actual.isEmpty() && !predicted.isEmpty()) {
-            result.putResult(element, actual, predicted);
-        }
+        result.putResult(element, actual, predicted);
         for (final E child : documentAccessor.getChildren(element)) {
             buildResult(tags, child);
         }
     }
 
     private void buildContextualPredicateMap(final E element) {
-        String[] contextualPredicates = dataGenerator.getContextualPredicates(element);
+        final String[] contextualPredicates = dataGenerator.getContextualPredicates(element);
         if (contextualPredicates != null) {
-            contextualPredicates = Arrays.asList(contextualPredicates).stream().filter(s -> !s.startsWith("parent_pod_tags=") && !s.startsWith("prev_pod_tags=")).toArray(i -> new String[i + 2]);
             contextualPredicateMap.put(element, contextualPredicates);
         }
         for (final E child : documentAccessor.getChildren(element)) {
             buildContextualPredicateMap(child);
         }
+    }
+
+    public float getMarkovChainInfluence() {
+        return markovChainInfluence;
+    }
+
+    public void setMarkovChainInfluence(final float markovChainInfluence) {
+        this.markovChainInfluence = markovChainInfluence;
     }
 
 }
