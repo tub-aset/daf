@@ -19,8 +19,8 @@ public class HyperMarkovChainBuilder<T> {
 
     private final Set<T> allTags;
 
-    private SmoothingTechnique smoothingTechnique = SmoothingTechnique.LAPLACE;
-    private GrowRateFunction growRateFunction = GrowRateFunction.CONSTANT_1;
+    private SmoothingTechnique smoothingTechnique = SmoothingTechnique.NONE;
+    private GrowRateFunction growRateFunction = GrowRateFunction.ROOT_10;
 
     public HyperMarkovChainBuilder() {
         counts = new HashMap<>();
@@ -123,9 +123,9 @@ public class HyperMarkovChainBuilder<T> {
         case LOG:
             return Math.log(i + 1);
         case ROOT_10:
-            return Math.pow(i, 1 / 10);
+            return Math.pow(i, 0.1);
         case ROOT_2:
-            return Math.pow(i, 1 / 2);
+            return Math.sqrt(i);
         default:
             return i;
         }
