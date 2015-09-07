@@ -21,6 +21,7 @@ import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
 import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.util.CSVParseException;
+import de.jpwinkler.daf.dafcore.util.DoorsModuleUtil;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
@@ -116,8 +117,13 @@ public class CSVViewerTabController {
     }
 
     public void setFile(final File file) throws IOException, CSVParseException {
-        module = new ModuleCSVParser().parseCSV(file);
-        this.file = file;
+        if (file != null) {
+            module = new ModuleCSVParser().parseCSV(file);
+            this.file = file;
+        } else {
+            module = CSVFactory.eINSTANCE.createDoorsModule();
+            this.file = null;
+        }
 
         final TreeItem<OutlineTreeItem> wrappedModule = wrapModule(module);
 
@@ -270,7 +276,9 @@ public class CSVViewerTabController {
             current.setObjectText("");
         }
         fixObjectNumbers(module, "");
+        populateContentTableView(module);
         setDirty();
+
     }
 
     private void fixObjectNumbers(final DoorsTreeNode object, final String parentObjectNumber) {
@@ -315,12 +323,68 @@ public class CSVViewerTabController {
         if (object.getParent() != null) {
             object.getParent().getChildren().addAll(object.getParent().getChildren().indexOf(object), object.getChildren());
             object.getParent().getChildren().remove(object);
-            for (final DoorsTreeNode tn : module.getChildren()) {
-                if (tn instanceof DoorsObject) {
-                    fixObjectLevel((DoorsObject) tn, 1);
-                }
-            }
+            fixObjectLevels();
             fixObjectNumbers(module, "");
+            populateContentTableView(module);
+            setDirty();
+        }
+    }
+
+    private void fixObjectLevels() {
+        for (final DoorsTreeNode tn : module.getChildren()) {
+            if (tn instanceof DoorsObject) {
+                fixObjectLevel((DoorsObject) tn, 1);
+            }
+        }
+    }
+
+    public void demoteObject() {
+        final DoorsObject object = getCurrentObject();
+
+        final DoorsObject prev = DoorsModuleUtil.getPreviousObject(object);
+        if (prev != null) {
+            prev.getChildren().add(object);
+            fixObjectNumbers(module, "");
+            fixObjectLevels();
+            populateContentTableView(module);
+            setDirty();
+        }
+    }
+
+    public void promoteObject() {
+        final DoorsObject object = getCurrentObject();
+
+        if (object.getParent() != null && object.getParent().getParent() != null && DoorsModuleUtil.getNextObject(object) == null) {
+            object.getParent().getParent().getChildren().add(object.getParent().getParent().getChildren().indexOf(object.getParent()) + 1, object);
+            fixObjectNumbers(module, "");
+            fixObjectLevels();
+            populateContentTableView(module);
+            setDirty();
+        }
+    }
+
+    public void newObjectBelow() {
+        final DoorsObject object = getCurrentObject();
+
+        if (object != null) {
+            final DoorsObject createDoorsObject = CSVFactory.eINSTANCE.createDoorsObject();
+            createDoorsObject.setObjectText("");
+            createDoorsObject.setObjectHeading("");
+            createDoorsObject.setObjectLevel(object.getObjectLevel() + 1);
+            object.getChildren().add(createDoorsObject);
+            populateContentTableView(module);
+            setDirty();
+        }
+    }
+
+    public void newObjectAfter() {
+        final DoorsObject object = getCurrentObject();
+        if (object != null && object.getParent() != null) {
+            final DoorsObject createDoorsObject = CSVFactory.eINSTANCE.createDoorsObject();
+            createDoorsObject.setObjectText("");
+            createDoorsObject.setObjectHeading("");
+            createDoorsObject.setObjectLevel(object.getObjectLevel());
+            object.getParent().getChildren().add(object.getParent().getChildren().indexOf(object) + 1, createDoorsObject);
             populateContentTableView(module);
             setDirty();
         }

@@ -11,6 +11,7 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
+                  <MenuItem mnemonicParsing="false" onAction="#newClicked" text="New" />
               <MenuItem fx:id="openMenuItem" mnemonicParsing="false" onAction="#openClicked" text="Open...">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
@@ -24,10 +25,7 @@
                         <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                      </accelerator>
                   </MenuItem>
-                  <MenuItem mnemonicParsing="false" onAction="#saveSubmoduleAsClicked" text="Save Submodule As">
-                     <accelerator>
-                        <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
-                     </accelerator></MenuItem>
+                  <MenuItem mnemonicParsing="false" onAction="#saveSubmoduleAsClicked" text="Save Submodule As" />
                   <MenuItem fx:id="closeMenuItem" mnemonicParsing="false" onAction="#closeClicked" text="Close">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="W" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
@@ -48,6 +46,10 @@
                         <KeyCodeCombination alt="UP" code="DELETE" control="UP" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator></MenuItem>
                   <MenuItem mnemonicParsing="false" onAction="#unwrapChildrenClicked" text="Unwrap Children" />
+                  <MenuItem mnemonicParsing="false" onAction="#newObjectAfterClicked" text="New Object after" />
+                  <MenuItem mnemonicParsing="false" onAction="#newObjectBelowClicked" text="New Object below" />
+                  <MenuItem mnemonicParsing="false" onAction="#promoteObjectClicked" text="Promote Object" />
+                  <MenuItem mnemonicParsing="false" onAction="#demoteObjectClicked" text="Demote Object" />
               </items>
             </Menu>
         </menus>

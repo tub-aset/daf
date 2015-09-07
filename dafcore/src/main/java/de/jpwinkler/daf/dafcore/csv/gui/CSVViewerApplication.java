@@ -7,6 +7,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.TransferMode;
 import javafx.stage.Stage;
 
 public class CSVViewerApplication extends Application {
@@ -26,7 +27,28 @@ public class CSVViewerApplication extends Application {
             csvViewerController.setMainApp(this);
             csvViewerController.setStage(primaryStage);
 
-            primaryStage.setScene(new Scene(root));
+            final Scene scene = new Scene(root);
+            scene.setOnDragOver(event -> {
+                if (event.getDragboard().hasFiles()) {
+                    event.acceptTransferModes(TransferMode.COPY);
+                } else {
+                    event.consume();
+                }
+            });
+            scene.setOnDragDropped(event -> {
+                if (event.getDragboard().hasFiles()) {
+                    for (final File file : event.getDragboard().getFiles()) {
+                        try {
+                            csvViewerController.newTabFromFile(file);
+                        } catch (final Exception e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                    }
+                    event.setDropCompleted(true);
+                }
+            });
+            primaryStage.setScene(scene);
             primaryStage.setMaximized(true);
             primaryStage.setTitle("CSV Viewer");
             primaryStage.show();

@@ -2,6 +2,7 @@ package de.jpwinkler.daf.dafcore.csv.gui;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,25 +52,29 @@ public class CSVViewerController {
         if (selectedFile != null) {
             chooser.setInitialDirectory(selectedFile.getParentFile());
             try {
-                final FXMLLoader loader = new FXMLLoader();
-                loader.setLocation(new File("view/csvviewertab.fxml").toURI().toURL());
-                final Parent root = loader.load();
-                final CSVViewerTabController controller = loader.getController();
-                final Tab tab = new Tab(selectedFile.getName(), root);
-
-                controller.setFile(selectedFile);
-                controller.setMainApp(csvViewerApplication);
-                controller.setStage(primaryStage);
-                controller.setTab(tab);
-                tabPane.getTabs().add(tab);
-                tabPane.getSelectionModel().select(tab);
-                tabControllers.put(tab, controller);
+                newTabFromFile(selectedFile);
             } catch (IOException | CSVParseException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
 
         }
+    }
+
+    public void newTabFromFile(final File selectedFile) throws MalformedURLException, IOException, CSVParseException {
+        final FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(new File("view/csvviewertab.fxml").toURI().toURL());
+        final Parent root = loader.load();
+        final CSVViewerTabController controller = loader.getController();
+        final Tab tab = new Tab(selectedFile != null ? selectedFile.getName() : "New Document", root);
+
+        controller.setFile(selectedFile);
+        controller.setMainApp(csvViewerApplication);
+        controller.setStage(primaryStage);
+        controller.setTab(tab);
+        tabPane.getTabs().add(tab);
+        tabPane.getSelectionModel().select(tab);
+        tabControllers.put(tab, controller);
     }
 
     @FXML
@@ -148,6 +153,49 @@ public class CSVViewerController {
 
     public void setStage(final Stage primaryStage) {
         this.primaryStage = primaryStage;
+    }
+
+    @FXML
+    public void newObjectAfterClicked() {
+        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+        if (selectedTab != null) {
+            tabControllers.get(selectedTab).newObjectAfter();
+        }
+    }
+
+    @FXML
+    public void newObjectBelowClicked() {
+        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+        if (selectedTab != null) {
+            tabControllers.get(selectedTab).newObjectBelow();
+        }
+    }
+
+    @FXML
+    public void promoteObjectClicked() {
+        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+        if (selectedTab != null) {
+            tabControllers.get(selectedTab).promoteObject();
+        }
+    }
+
+    @FXML
+    public void demoteObjectClicked() {
+        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+        if (selectedTab != null) {
+            tabControllers.get(selectedTab).demoteObject();
+        }
+    }
+
+    @FXML
+    public void newClicked() {
+        try {
+            newTabFromFile(null);
+        } catch (IOException | CSVParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+
+        }
     }
 
 }

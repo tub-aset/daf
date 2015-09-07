@@ -41,8 +41,6 @@ public class ObjectHeadingAndObjectTextTableCell extends TextFieldTableCell<Door
             }
             setPadding(new Insets(0, 0, 0, (o.getObjectLevel() - 1) * 10));
             setStyle(style);
-        } else {
-            setText("empty");
         }
     }
 
