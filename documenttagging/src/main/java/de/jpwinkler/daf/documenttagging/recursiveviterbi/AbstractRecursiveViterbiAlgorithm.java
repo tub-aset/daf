@@ -1,5 +1,6 @@
 package de.jpwinkler.daf.documenttagging.recursiveviterbi;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,19 +93,21 @@ public abstract class AbstractRecursiveViterbiAlgorithm<T, S> {
         results = new HashMap<>();
         result = new HashMap<>();
 
-        final AbstractIntermediateResult<S> solve = solve(tree);
+        // final AbstractIntermediateResult<S> solve = solve(tree, true);
+        solve(tree, true);
 
-        double max = Double.NEGATIVE_INFINITY;
-        S firstState = null;
-        for (final S state : getStates()) {
-            final double p = solve.getSequenceLogProbability(state) + Math.log(getProbability(tree, state, null, null));
-            if (p > max) {
-                max = p;
-                firstState = state;
-            }
-        }
+        // double max = Double.NEGATIVE_INFINITY;
+        // S firstState = null;
+        // for (final S state : getStates()) {
+        // final double p = solve.getSequenceLogProbability(state) +
+        // Math.log(getProbability(tree, state, null, null));
+        // if (p > max) {
+        // max = p;
+        // firstState = state;
+        // }
+        // }
 
-        tagTree(tree, firstState);
+        tagTree(tree, null);
 
         return result;
     }
@@ -114,7 +117,9 @@ public abstract class AbstractRecursiveViterbiAlgorithm<T, S> {
     }
 
     private void tagTree(final T treeNode, final S state) {
-        result.put(treeNode, state);
+        if (state != null) {
+            result.put(treeNode, state);
+        }
         if (!getChildren(treeNode).isEmpty()) {
             final AbstractIntermediateResult<S> result = results.get(treeNode);
             final S[] childSequence = result.getStateSequence(state);
@@ -125,7 +130,7 @@ public abstract class AbstractRecursiveViterbiAlgorithm<T, S> {
         }
     }
 
-    private AbstractIntermediateResult<S> solve(final T node) {
+    private AbstractIntermediateResult<S> solve(final T node, final boolean isParentState) {
 
         if (results.containsKey(node)) {
             // This is what makes recursive viterbi feasible. We assume that for
@@ -136,16 +141,15 @@ public abstract class AbstractRecursiveViterbiAlgorithm<T, S> {
 
         final AbstractIntermediateResult<S> result = new AbstractIntermediateResult<>();
 
-        final int stateCount = getStates().size();
-        final int childCount = getChildren(node).size();
+        final List<S> states = isParentState ? Arrays.asList((S) null) : getStates();
 
-        for (final S parentState : getStates()) {
+        for (final S parentState : states) {
 
             if (!getChildren(node).isEmpty()) {
-                final double[][] trellis = new double[childCount][stateCount];
-                final int[][] backPointers = new int[childCount][stateCount];
+                final double[][] trellis = new double[getChildren(node).size()][getStates().size()];
+                final int[][] backPointers = new int[getChildren(node).size()][getStates().size()];
 
-                AbstractIntermediateResult<S> r = solve(getChildren(node).get(0));
+                AbstractIntermediateResult<S> r = solve(getChildren(node).get(0), false);
                 int iState = 0;
                 for (final S state : getStates()) {
                     trellis[0][iState] = Math.log(getProbability(getChildren(node).get(0), state, parentState, null)) + r.getSequenceLogProbability(state);
@@ -155,7 +159,7 @@ public abstract class AbstractRecursiveViterbiAlgorithm<T, S> {
 
                 for (int iChild = 1; iChild < getChildren(node).size(); iChild++) {
                     final T child = getChildren(node).get(iChild);
-                    r = solve(child);
+                    r = solve(child, false);
                     iState = 0;
                     for (final S state : getStates()) {
                         trellis[iChild][iState] = Double.NEGATIVE_INFINITY;
@@ -173,21 +177,24 @@ public abstract class AbstractRecursiveViterbiAlgorithm<T, S> {
 
                 }
 
-                final S[] stateSequence = createArray(childCount);
+                final S[] stateSequence = createArray(getChildren(node).size());
                 double sequenceLogProbability = Double.NEGATIVE_INFINITY;
 
-                for (int lastState = 0; lastState < stateCount; lastState++) {
-                    if (trellis[childCount - 1][lastState] > sequenceLogProbability) {
-                        sequenceLogProbability = trellis[childCount - 1][lastState];
-                        stateSequence[childCount - 1] = getStates().get(lastState);
+                for (int lastState = 0; lastState < getStates().size(); lastState++) {
+                    if (trellis[getChildren(node).size() - 1][lastState] > sequenceLogProbability) {
+                        sequenceLogProbability = trellis[getChildren(node).size() - 1][lastState];
+                        stateSequence[getChildren(node).size() - 1] = getStates().get(lastState);
                     }
                 }
 
-                for (int iTreeNode = childCount - 1; iTreeNode > 0; iTreeNode--) {
-                    stateSequence[iTreeNode - 1] = getStates().get(backPointers[iTreeNode][getStates().indexOf(stateSequence[iTreeNode])]);
+                if (sequenceLogProbability > Double.NEGATIVE_INFINITY) {
+                    for (int iTreeNode = getChildren(node).size() - 1; iTreeNode > 0; iTreeNode--) {
+                        stateSequence[iTreeNode - 1] = getStates().get(backPointers[iTreeNode][getStates().indexOf(stateSequence[iTreeNode])]);
+                    }
+                    result.putResult(parentState, sequenceLogProbability, stateSequence);
+                } else {
+                    result.putResult(parentState, sequenceLogProbability, null);
                 }
-
-                result.putResult(parentState, sequenceLogProbability, stateSequence);
 
             } else {
                 result.putResult(parentState, 0, createArray(0));
@@ -195,8 +202,8 @@ public abstract class AbstractRecursiveViterbiAlgorithm<T, S> {
 
         }
 
-        if (childCount > 0) {
-            processedNodes += childCount;
+        if (getChildren(node).size() > 0) {
+            processedNodes += getChildren(node).size();
             if (progressMonitor != null) {
                 progressMonitor.onProgress(processedNodes, nodeCount);
             }

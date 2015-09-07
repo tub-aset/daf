@@ -70,6 +70,10 @@ public class ScenarioTest {
         final Gson gson = new Gson();
         final Scenario scenario = gson.fromJson(IOUtils.toString(this.getClass().getResourceAsStream(scenarioName)), Scenario.class);
         scenario.getTree().finalizeTree();
+        testScenario(scenario);
+    }
+
+    private void testScenario(final Scenario scenario) {
         final ScenarioResult result1 = bruteForceAlgorithm.run(scenario);
         final ScenarioResult result2 = recursiveViterbiAlgorithm.run(scenario);
 

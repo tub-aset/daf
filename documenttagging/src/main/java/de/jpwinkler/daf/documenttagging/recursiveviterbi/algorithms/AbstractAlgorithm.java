@@ -26,7 +26,7 @@ public abstract class AbstractAlgorithm {
             final TreeNode currentNode = node.getChildren().get(i);
 
             final int prevState = (i > 0) ? getCurrentStates().get(currentNode.getPrevious()) : 0;
-            final int parentState = getCurrentStates().get(currentNode.getParent());
+            final int parentState = getCurrentStates().get(currentNode.getParent()) != null ? getCurrentStates().get(currentNode.getParent()) : 0;
             final int currentState = getCurrentStates().get(currentNode);
             result = result.multiply(getScenario().getProbabilityModel().getTransitionProbability(parentState, prevState, currentState), BigDecimals.CONTEXT);
             result = result.multiply(getScenario().getProbabilityModel().getObservationProbability(currentState, currentNode.getObservation()), BigDecimals.CONTEXT);
@@ -37,7 +37,7 @@ public abstract class AbstractAlgorithm {
     }
 
     protected BigDecimal calcProbability() {
-        return getScenario().getProbabilityModel().getTransitionProbability(0, 0, getCurrentStates().get(getScenario().getTree())).multiply(getScenario().getProbabilityModel().getObservationProbability(getCurrentStates().get(getScenario().getTree()), getScenario().getTree().getObservation()), BigDecimals.CONTEXT).multiply(calcProbability(getScenario().getTree()), BigDecimals.CONTEXT);
+        return calcProbability(getScenario().getTree());
     }
 
     public final ScenarioResult run(final Scenario scenario) {
@@ -70,7 +70,9 @@ public abstract class AbstractAlgorithm {
 
     protected void saveResult() {
         for (final Entry<TreeNode, Integer> e : getCurrentStates().entrySet()) {
-            getResult().setState(e.getKey(), e.getValue());
+            if (e.getValue() != null) {
+                getResult().setState(e.getKey(), e.getValue());
+            }
         }
         getResult().setProbability(calcProbability());
     }

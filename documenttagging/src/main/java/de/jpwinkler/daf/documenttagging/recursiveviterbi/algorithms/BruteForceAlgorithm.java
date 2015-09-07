@@ -34,7 +34,11 @@ public class BruteForceAlgorithm extends AbstractAlgorithm {
 
         treeNodes = new ArrayList<>();
 
-        getScenario().getTree().accept(treeNode -> treeNodes.add(treeNode));
+        getScenario().getTree().accept(treeNode -> {
+            if (treeNode.getParent() != null) {
+                treeNodes.add(treeNode);
+            }
+        });
 
         greatest = BigDecimals.ZERO;
 
