@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import de.jpwinkler.daf.documenttagging.DocumentAccessor;
 import de.jpwinkler.daf.documenttagging.DocumentTaggingAlgorithm;
@@ -37,13 +38,27 @@ public class MaxEntRecursiveViterbiAlgorithm<E> implements DocumentTaggingAlgori
                 return 1.0;
             }
             double[] eval = probabilitiyMap.get(new CompositeKey3<E, String, String>(node, parentState, previousState));
-            if (eval == null) {
-                final String[] contextualPredicates = contextualPredicateMap.get(node);
-                eval = model.eval(contextualPredicates);
-                probabilitiyMap.put(new CompositeKey3<E, String, String>(node, parentState, previousState), eval);
+            if (mode == MaxEntRecursiveViterbiMode.MARKOV_CHAIN) {
+                if (eval == null) {
+                    final String[] contextualPredicates = contextualPredicateMap.get(node);
+                    eval = model.eval(contextualPredicates);
+                    probabilitiyMap.put(new CompositeKey3<E, String, String>(node, parentState, previousState), eval);
+                }
+                final double d = markovChain.getWeight(parentState, previousState, state);
+                return eval[model.getIndex(state)] * (1 - markovChainInfluence + markovChainInfluence * d);
+            } else if (mode == MaxEntRecursiveViterbiMode.PREDICATES) {
+                if (eval == null) {
+                    final String[] contextualPredicates = contextualPredicateMap.get(node);
+                    final String[] contextualPredicatesModified = Arrays.copyOf(contextualPredicates, contextualPredicates.length + 2);
+                    contextualPredicatesModified[contextualPredicatesModified.length - 2] = "sparent_pod_tag=" + parentState;
+                    contextualPredicatesModified[contextualPredicatesModified.length - 1] = "sprev_pod_tag=" + previousState;
+                    eval = model.eval(contextualPredicatesModified);
+                    probabilitiyMap.put(new CompositeKey3<E, String, String>(node, parentState, previousState), eval);
+                }
+                return eval[model.getIndex(state)];
+            } else {
+                throw new RuntimeException("Unknown mode " + mode);
             }
-            final double d = markovChain.getWeight(parentState, previousState, state);
-            return eval[model.getIndex(state)] * (1 - markovChainInfluence + markovChainInfluence * d);
         }
 
         @Override
@@ -62,7 +77,8 @@ public class MaxEntRecursiveViterbiAlgorithm<E> implements DocumentTaggingAlgori
 
     private final HyperMarkovChain<String> markovChain;
 
-    private float markovChainInfluence = 1.0f;
+    private MaxEntRecursiveViterbiMode mode = MaxEntRecursiveViterbiMode.PREDICATES;
+    private float markovChainInfluence = 1f;
 
     public MaxEntRecursiveViterbiAlgorithm(final MaxEntPredicateGenerator<E> dataGenerator, final List<DocumentAccessor<E>> trainingData) throws IOException {
         this.dataGenerator = dataGenerator;
@@ -85,16 +101,15 @@ public class MaxEntRecursiveViterbiAlgorithm<E> implements DocumentTaggingAlgori
         buildContextualPredicateMap(documentAccessor.getDocumentRoot());
         final Map<E, String> tags = recursiveViterbi.recursiveViterbi(documentAccessor.getDocumentRoot());
         result = new TaggedDocument<>();
-        buildResult(tags, documentAccessor.getDocumentRoot());
+        buildResult(tags);
         return result;
     }
 
-    private void buildResult(final Map<E, String> tags, final E element) {
-        final String actual = dataGenerator.getOutcome(element);
-        final String predicted = tags.get(element);
-        result.putResult(element, actual, predicted);
-        for (final E child : documentAccessor.getChildren(element)) {
-            buildResult(tags, child);
+    private void buildResult(final Map<E, String> tags) {
+        for (final Entry<E, String> e : tags.entrySet()) {
+            final String actual = dataGenerator.getOutcome(e.getKey());
+            final String predicted = e.getValue();
+            result.putResult(e.getKey(), actual, predicted);
         }
     }
 
@@ -114,6 +129,14 @@ public class MaxEntRecursiveViterbiAlgorithm<E> implements DocumentTaggingAlgori
 
     public void setMarkovChainInfluence(final float markovChainInfluence) {
         this.markovChainInfluence = markovChainInfluence;
+    }
+
+    public MaxEntRecursiveViterbiMode getMode() {
+        return mode;
+    }
+
+    public void setMode(final MaxEntRecursiveViterbiMode mode) {
+        this.mode = mode;
     }
 
 }

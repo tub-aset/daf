@@ -53,8 +53,7 @@ public class DoorsMaxEntPredicateGenerator implements MaxEntPredicateGenerator<D
         // generator.addPredicateGenerator(new AsilPredicateGenerator());
         // generator.addPredicateGenerator(new
         // FoObjectTypePredicateGenerator());
-        // generator.addPredicateGenerator(new
-        // NeighborhoodPredicateGenerator());
+        generator.addPredicateGenerator(new NeighborhoodPredicateGenerator());
         generator.addPredicateGenerator(new ObjectTypePredicateGenerator());
         generator.addPredicateGenerator(new SpecialCharacterPredicateGenerator());
         generator.addPredicateGenerator(new SpecialTokenPredicateGenerator());
