@@ -259,6 +259,8 @@ public class ConfusionMatrix<T> {
 
         final int maxLength = tags.stream().mapToInt(t -> t.toString().length()).max().getAsInt();
 
+        builder.append(String.format("%" + maxLength + "s", "label") + "\tprecision\trecall   \tf1-score\n");
+
         for (final T t : tags) {
             builder.append(String.format("%" + maxLength + "s", t));
             builder.append("\t");
