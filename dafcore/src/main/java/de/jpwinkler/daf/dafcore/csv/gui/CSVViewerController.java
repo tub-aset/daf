@@ -94,10 +94,10 @@ public class CSVViewerController {
     }
 
     @FXML
-    public void saveSubmoduleAsClicked() {
+    public void reduceToSelectionClicked() {
         final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
         if (selectedTab != null) {
-            tabControllers.get(selectedTab).saveSubmoduleAs();
+            tabControllers.get(selectedTab).reduceToSelection();
         }
     }
 
@@ -195,6 +195,22 @@ public class CSVViewerController {
             // TODO Auto-generated catch block
             e.printStackTrace();
 
+        }
+    }
+
+    @FXML
+    public void undoClicked() {
+        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+        if (selectedTab != null) {
+            tabControllers.get(selectedTab).undo();
+        }
+    }
+
+    @FXML
+    public void redoClicked() {
+        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+        if (selectedTab != null) {
+            tabControllers.get(selectedTab).redo();
         }
     }
 

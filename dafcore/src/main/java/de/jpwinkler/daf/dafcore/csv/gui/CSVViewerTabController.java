@@ -8,20 +8,30 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ScriptableObject;
 
 import de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.dafcore.csv.ModuleCSVParser;
 import de.jpwinkler.daf.dafcore.csv.ModuleCSVWriter;
+import de.jpwinkler.daf.dafcore.csv.gui.commands.AbstractCommand;
+import de.jpwinkler.daf.dafcore.csv.gui.commands.DeleteObjectCommand;
+import de.jpwinkler.daf.dafcore.csv.gui.commands.DemoteObjectCommand;
+import de.jpwinkler.daf.dafcore.csv.gui.commands.EditObjectHeadingTextCommand;
+import de.jpwinkler.daf.dafcore.csv.gui.commands.NewObjectAfterCommand;
+import de.jpwinkler.daf.dafcore.csv.gui.commands.NewObjectBelowCommand;
+import de.jpwinkler.daf.dafcore.csv.gui.commands.PromoteObjectCommand;
+import de.jpwinkler.daf.dafcore.csv.gui.commands.ReduceToSelectionCommand;
+import de.jpwinkler.daf.dafcore.csv.gui.commands.SwapObjectHeadingAndTextCommand;
+import de.jpwinkler.daf.dafcore.csv.gui.commands.UnwrapChildrenCommand;
+import de.jpwinkler.daf.dafcore.csv.gui.util.CommandStack;
 import de.jpwinkler.daf.dafcore.model.csv.AttributeDefinition;
 import de.jpwinkler.daf.dafcore.model.csv.CSVFactory;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
 import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.util.CSVParseException;
-import de.jpwinkler.daf.dafcore.util.DoorsModuleUtil;
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
@@ -37,17 +47,22 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.FileChooser;
-import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 
 public class CSVViewerTabController {
 
     private static final String MAIN_COLUMN = "Object Heading & Object Text";
     private static final List<String> WANTED_ATTRIBUTES = Arrays.asList("Object Identifier", "FO_Object_Type", MAIN_COLUMN, "Object Type", "pod_tag", "pod_tags", "ASIL", "Maturity", "Edit Type", "Relevance");
+
     private CSVViewerApplication csvViewerApplication;
     private Stage primaryStage;
 
-    private boolean dirty = false;
+    private Tab tab;
+    private File file;
+    private DoorsModule module;
+
+    private final CommandStack<AbstractCommand> commandStack = new CommandStack<>();
+    private final int lastExecutedCommandIndex = -1;
 
     @FXML
     private TreeView<OutlineTreeItem> outlineTreeView;
@@ -58,9 +73,6 @@ public class CSVViewerTabController {
     @FXML
     private TextArea javascriptTextArea;
 
-    private Tab tab;
-    private File file;
-    private DoorsModule module;
 
     public void setMainApp(final CSVViewerApplication csvViewerApplication) {
         this.csvViewerApplication = csvViewerApplication;
@@ -92,7 +104,7 @@ public class CSVViewerTabController {
     }
 
     public boolean isDirty() {
-        return dirty;
+        return commandStack.isDirty();
     }
 
     public void save() {
@@ -125,9 +137,8 @@ public class CSVViewerTabController {
             this.file = null;
         }
 
-        final TreeItem<OutlineTreeItem> wrappedModule = wrapModule(module);
+        populateOutlineTreeView();
 
-        outlineTreeView.setRoot(wrappedModule);
         outlineTreeView.getSelectionModel().selectedItemProperty().addListener((ChangeListener<TreeItem<OutlineTreeItem>>) (observable, oldValue, newValue) -> {
             final DoorsTreeNode treeNode = newValue.getValue().getTreeNode();
             if (treeNode instanceof DoorsObject) {
@@ -153,11 +164,8 @@ public class CSVViewerTabController {
                 c.setSortable(false);
                 contentTableView.getColumns().add(c);
                 c.setOnEditCommit(event -> {
-                    if (event.getRowValue().isHeading()) {
-                        event.getRowValue().setObjectHeading(event.getNewValue());
-                    } else {
-                        event.getRowValue().setObjectText(event.getNewValue());
-                    }
+                    executeCommand(new EditObjectHeadingTextCommand(module, this, event.getRowValue(), event.getNewValue()));
+                    Platform.runLater(contentTableView::requestFocus);
                     setDirty();
                 });
             } else {
@@ -169,12 +177,18 @@ public class CSVViewerTabController {
         populateContentTableView(module);
     }
 
+    private void populateOutlineTreeView() {
+        final TreeItem<OutlineTreeItem> wrappedModule = wrapModule(module);
+        outlineTreeView.setRoot(wrappedModule);
+    }
+
     private void addAttributeColumn(final String attributeName) {
         final TableColumn<DoorsObject, String> c = new TableColumn<>(attributeName);
         c.setCellFactory(TextFieldTableCell.forTableColumn());
         c.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getAttributes().get(attributeName)));
         c.setOnEditCommit(event -> {
             event.getRowValue().getAttributes().put(attributeName, event.getNewValue());
+            contentTableView.requestFocus();
             setDirty();
         });
         c.setSortable(false);
@@ -182,46 +196,23 @@ public class CSVViewerTabController {
     }
 
     private void setDirty() {
-        dirty = true;
-        tab.setText(file.getName() + " *");
+        // dirty = true;
+        // tab.setText(file.getName() + " *");
     }
 
     private void setClean() {
-        dirty = false;
-        tab.setText(file.getName());
+        // dirty = false;
+        // tab.setText(file.getName());
     }
 
     public void setTab(final Tab tab) {
         this.tab = tab;
     }
 
-    public void saveSubmoduleAs() {
-        final FileChooser chooser = new FileChooser();
-        chooser.getExtensionFilters().add(new ExtensionFilter("CSV", "*.csv"));
-        chooser.setTitle("Save Submodule as...");
-        chooser.setInitialDirectory(file.getParentFile());
-        chooser.setInitialFileName(file.getName());
-        final File saveAsFile = chooser.showSaveDialog(primaryStage);
-        if (saveAsFile != null) {
+    public void reduceToSelection() {
 
-            final DoorsModule moduleCopy = EcoreUtil.copy(module);
+        executeCommand(new ReduceToSelectionCommand(module, this, getCurrentObject()));
 
-            final DoorsObject subTree = EcoreUtil.copy(getCurrentObject());
-
-
-            moduleCopy.getChildren().clear();
-            moduleCopy.getChildren().add(subTree);
-
-            fixObjectLevel(subTree, 1);
-            fixObjectNumbers(subTree, "");
-
-            try (ModuleCSVWriter writer = new ModuleCSVWriter(new FileOutputStream(saveAsFile))) {
-                writer.writeModule(moduleCopy);
-            } catch (final IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
     }
 
     private void fixObjectLevel(final DoorsObject object, final int level) {
@@ -266,19 +257,22 @@ public class CSVViewerTabController {
     }
 
     public void swapObjectHeadingAndText() {
+        executeCommand(new SwapObjectHeadingAndTextCommand(module, this, getCurrentObject()));
+    }
 
-        final DoorsObject current = getCurrentObject();
-        if (current.isHeading()) {
-            current.setObjectText(current.getObjectHeading());
-            current.setObjectHeading("");
+    private void executeCommand(final AbstractCommand abstractCommand) {
+        if (abstractCommand.isApplicable()) {
+            abstractCommand.apply();
+            commandStack.addCommand(abstractCommand);
+            fixObjectLevels();
+            fixObjectNumbers(module, "");
+            populateContentTableView(module);
+            populateOutlineTreeView();
+            setDirty();
+
         } else {
-            current.setObjectHeading(current.getObjectText());
-            current.setObjectText("");
+            new Alert(AlertType.ERROR, "Command is not applicable for current selection", ButtonType.OK);
         }
-        fixObjectNumbers(module, "");
-        populateContentTableView(module);
-        setDirty();
-
     }
 
     private void fixObjectNumbers(final DoorsTreeNode object, final String parentObjectNumber) {
@@ -309,25 +303,11 @@ public class CSVViewerTabController {
     }
 
     public void deleteObject() {
-        final DoorsObject object = getCurrentObject();
-        if (object.getParent() != null) {
-            object.getParent().getChildren().remove(object);
-        }
-        fixObjectNumbers(module, "");
-        populateContentTableView(module);
-        setDirty();
+        executeCommand(new DeleteObjectCommand(module, this, getCurrentObject()));
     }
 
     public void unwrapChildren() {
-        final DoorsObject object = getCurrentObject();
-        if (object.getParent() != null) {
-            object.getParent().getChildren().addAll(object.getParent().getChildren().indexOf(object), object.getChildren());
-            object.getParent().getChildren().remove(object);
-            fixObjectLevels();
-            fixObjectNumbers(module, "");
-            populateContentTableView(module);
-            setDirty();
-        }
+        executeCommand(new UnwrapChildrenCommand(module, this, getCurrentObject()));
     }
 
     private void fixObjectLevels() {
@@ -339,53 +319,39 @@ public class CSVViewerTabController {
     }
 
     public void demoteObject() {
-        final DoorsObject object = getCurrentObject();
-
-        final DoorsObject prev = DoorsModuleUtil.getPreviousObject(object);
-        if (prev != null) {
-            prev.getChildren().add(object);
-            fixObjectNumbers(module, "");
-            fixObjectLevels();
-            populateContentTableView(module);
-            setDirty();
-        }
+        executeCommand(new DemoteObjectCommand(module, this, getCurrentObject()));
     }
 
     public void promoteObject() {
-        final DoorsObject object = getCurrentObject();
-
-        if (object.getParent() != null && object.getParent().getParent() != null && DoorsModuleUtil.getNextObject(object) == null) {
-            object.getParent().getParent().getChildren().add(object.getParent().getParent().getChildren().indexOf(object.getParent()) + 1, object);
-            fixObjectNumbers(module, "");
-            fixObjectLevels();
-            populateContentTableView(module);
-            setDirty();
-        }
+        executeCommand(new PromoteObjectCommand(module, this, getCurrentObject()));
     }
 
     public void newObjectBelow() {
-        final DoorsObject object = getCurrentObject();
+        executeCommand(new NewObjectBelowCommand(module, this, getCurrentObject()));
+    }
 
-        if (object != null) {
-            final DoorsObject createDoorsObject = CSVFactory.eINSTANCE.createDoorsObject();
-            createDoorsObject.setObjectText("");
-            createDoorsObject.setObjectHeading("");
-            createDoorsObject.setObjectLevel(object.getObjectLevel() + 1);
-            object.getChildren().add(createDoorsObject);
+    public void newObjectAfter() {
+        executeCommand(new NewObjectAfterCommand(module, this, getCurrentObject()));
+    }
+
+    public void redo() {
+        if (commandStack.canRedo()) {
+            commandStack.redo().apply();
+            fixObjectLevels();
+            fixObjectNumbers(module, "");
             populateContentTableView(module);
+            populateOutlineTreeView();
             setDirty();
         }
     }
 
-    public void newObjectAfter() {
-        final DoorsObject object = getCurrentObject();
-        if (object != null && object.getParent() != null) {
-            final DoorsObject createDoorsObject = CSVFactory.eINSTANCE.createDoorsObject();
-            createDoorsObject.setObjectText("");
-            createDoorsObject.setObjectHeading("");
-            createDoorsObject.setObjectLevel(object.getObjectLevel());
-            object.getParent().getChildren().add(object.getParent().getChildren().indexOf(object) + 1, createDoorsObject);
+    public void undo() {
+        if (commandStack.canUndo()) {
+            commandStack.undo().undo();
+            fixObjectLevels();
+            fixObjectNumbers(module, "");
             populateContentTableView(module);
+            populateOutlineTreeView();
             setDirty();
         }
     }
