@@ -8,10 +8,15 @@ import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 public class NewObjectAfterCommand extends AbstractCommand {
 
     private final DoorsObject object;
+    private final DoorsObject newObject;
 
     public NewObjectAfterCommand(final DoorsModule module, final CSVViewerTabController controller, final DoorsObject object) {
         super(module, controller);
         this.object = object;
+        newObject = CSVFactory.eINSTANCE.createDoorsObject();
+        newObject.setObjectText("");
+        newObject.setObjectHeading("");
+        newObject.setObjectLevel(object.getObjectLevel());
     }
 
     @Override
@@ -21,17 +26,17 @@ public class NewObjectAfterCommand extends AbstractCommand {
 
     @Override
     public void apply() {
-        final DoorsObject createDoorsObject = CSVFactory.eINSTANCE.createDoorsObject();
-        createDoorsObject.setObjectText("");
-        createDoorsObject.setObjectHeading("");
-        createDoorsObject.setObjectLevel(object.getObjectLevel());
-        object.getParent().getChildren().add(object.getParent().getChildren().indexOf(object) + 1, createDoorsObject);
+        object.getParent().getChildren().add(object.getParent().getChildren().indexOf(object) + 1, newObject);
     }
 
     @Override
     public void undo() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException();
+        object.getParent().getChildren().remove(newObject);
+    }
+
+    @Override
+    public UpdateAction[] getUpdateActions() {
+        return new UpdateAction[] { UpdateAction.UPDATE_CONTENT_VIEW, UpdateAction.UPDATE_OUTLINE_VIEW };
     }
 
 }

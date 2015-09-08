@@ -4,8 +4,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.mozilla.javascript.Context;
@@ -17,6 +20,7 @@ import de.jpwinkler.daf.dafcore.csv.ModuleCSVWriter;
 import de.jpwinkler.daf.dafcore.csv.gui.commands.AbstractCommand;
 import de.jpwinkler.daf.dafcore.csv.gui.commands.DeleteObjectCommand;
 import de.jpwinkler.daf.dafcore.csv.gui.commands.DemoteObjectCommand;
+import de.jpwinkler.daf.dafcore.csv.gui.commands.EditObjectAttributeCommand;
 import de.jpwinkler.daf.dafcore.csv.gui.commands.EditObjectHeadingTextCommand;
 import de.jpwinkler.daf.dafcore.csv.gui.commands.NewObjectAfterCommand;
 import de.jpwinkler.daf.dafcore.csv.gui.commands.NewObjectBelowCommand;
@@ -24,6 +28,7 @@ import de.jpwinkler.daf.dafcore.csv.gui.commands.PromoteObjectCommand;
 import de.jpwinkler.daf.dafcore.csv.gui.commands.ReduceToSelectionCommand;
 import de.jpwinkler.daf.dafcore.csv.gui.commands.SwapObjectHeadingAndTextCommand;
 import de.jpwinkler.daf.dafcore.csv.gui.commands.UnwrapChildrenCommand;
+import de.jpwinkler.daf.dafcore.csv.gui.commands.UpdateAction;
 import de.jpwinkler.daf.dafcore.csv.gui.util.CommandStack;
 import de.jpwinkler.daf.dafcore.model.csv.AttributeDefinition;
 import de.jpwinkler.daf.dafcore.model.csv.CSVFactory;
@@ -62,7 +67,6 @@ public class CSVViewerTabController {
     private DoorsModule module;
 
     private final CommandStack<AbstractCommand> commandStack = new CommandStack<>();
-    private final int lastExecutedCommandIndex = -1;
 
     @FXML
     private TreeView<OutlineTreeItem> outlineTreeView;
@@ -83,6 +87,7 @@ public class CSVViewerTabController {
     }
 
     private void populateContentTableView(final DoorsModule module) {
+        final DoorsObject selectedItem = contentTableView.getSelectionModel().getSelectedItem();
         contentTableView.getItems().clear();
         module.accept(new DoorsTreeNodeVisitor() {
             @Override
@@ -92,6 +97,9 @@ public class CSVViewerTabController {
             }
 
         });
+        if (selectedItem != null) {
+            contentTableView.getSelectionModel().select(selectedItem);
+        }
     }
 
     private TreeItem<OutlineTreeItem> wrapModule(final DoorsTreeNode doorsTreeNode) {
@@ -103,17 +111,18 @@ public class CSVViewerTabController {
         return treeItem;
     }
 
-    public boolean isDirty() {
-        return commandStack.isDirty();
-    }
-
     public void save() {
         try (ModuleCSVWriter writer = new ModuleCSVWriter(new FileOutputStream(file))) {
             writer.writeModule(module);
-            setClean();
+            commandStack.setSavePoint();
+            updateTabTitle();
         } catch (final IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void updateTabTitle() {
+        tab.setText((file != null ? file.getName() : "New Document") + (commandStack.isDirty() ? " *" : ""));
     }
 
     public void saveAs() {
@@ -124,7 +133,6 @@ public class CSVViewerTabController {
         if (newFile != null) {
             file = newFile;
             save();
-            tab.setText(file.getName());
         }
     }
 
@@ -166,7 +174,6 @@ public class CSVViewerTabController {
                 c.setOnEditCommit(event -> {
                     executeCommand(new EditObjectHeadingTextCommand(module, this, event.getRowValue(), event.getNewValue()));
                     Platform.runLater(contentTableView::requestFocus);
-                    setDirty();
                 });
             } else {
                 addAttributeColumn(attributeName);
@@ -178,8 +185,21 @@ public class CSVViewerTabController {
     }
 
     private void populateOutlineTreeView() {
+        final Map<DoorsTreeNode, Boolean> expanded = new HashMap<>();
+        if (outlineTreeView.getRoot() != null) {
+            traverseTreeItem(outlineTreeView.getRoot(), ti -> expanded.put(ti.getValue().getTreeNode(), ti.isExpanded()));
+        }
+
         final TreeItem<OutlineTreeItem> wrappedModule = wrapModule(module);
+        traverseTreeItem(wrappedModule, ti -> ti.setExpanded(expanded.containsKey(ti.getValue().getTreeNode()) && expanded.get(ti.getValue().getTreeNode())));
         outlineTreeView.setRoot(wrappedModule);
+    }
+
+    private <T> void traverseTreeItem(final TreeItem<T> root, final Consumer<TreeItem<T>> f) {
+        f.accept(root);
+        for (final TreeItem<T> child : root.getChildren()) {
+            traverseTreeItem(child, f);
+        }
     }
 
     private void addAttributeColumn(final String attributeName) {
@@ -187,22 +207,11 @@ public class CSVViewerTabController {
         c.setCellFactory(TextFieldTableCell.forTableColumn());
         c.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getAttributes().get(attributeName)));
         c.setOnEditCommit(event -> {
-            event.getRowValue().getAttributes().put(attributeName, event.getNewValue());
+            executeCommand(new EditObjectAttributeCommand(module, this, event.getRowValue(), attributeName, event.getNewValue()));
             contentTableView.requestFocus();
-            setDirty();
         });
         c.setSortable(false);
         contentTableView.getColumns().add(c);
-    }
-
-    private void setDirty() {
-        // dirty = true;
-        // tab.setText(file.getName() + " *");
-    }
-
-    private void setClean() {
-        // dirty = false;
-        // tab.setText(file.getName());
     }
 
     public void setTab(final Tab tab) {
@@ -210,9 +219,7 @@ public class CSVViewerTabController {
     }
 
     public void reduceToSelection() {
-
         executeCommand(new ReduceToSelectionCommand(module, this, getCurrentObject()));
-
     }
 
     private void fixObjectLevel(final DoorsObject object, final int level) {
@@ -222,7 +229,6 @@ public class CSVViewerTabController {
                 fixObjectLevel((DoorsObject) child, level + 1);
             }
         }
-        setDirty();
     }
 
     public void addColumn() {
@@ -236,7 +242,6 @@ public class CSVViewerTabController {
                 ad.setName(result.get());
                 module.getAttributeDefinitions().add(ad);
                 addAttributeColumn(ad.getName());
-                setDirty();
             }
         }
     }
@@ -253,25 +258,19 @@ public class CSVViewerTabController {
         cx.evaluateString(scope, source, "script", 1, null);
 
         Context.exit();
-        setDirty();
     }
 
     public void swapObjectHeadingAndText() {
         executeCommand(new SwapObjectHeadingAndTextCommand(module, this, getCurrentObject()));
     }
 
-    private void executeCommand(final AbstractCommand abstractCommand) {
-        if (abstractCommand.isApplicable()) {
-            abstractCommand.apply();
-            commandStack.addCommand(abstractCommand);
-            fixObjectLevels();
-            fixObjectNumbers(module, "");
-            populateContentTableView(module);
-            populateOutlineTreeView();
-            setDirty();
-
+    private void executeCommand(final AbstractCommand command) {
+        if (command.isApplicable()) {
+            command.apply();
+            commandStack.addCommand(command);
+            updateGui(command.getUpdateActions());
         } else {
-            new Alert(AlertType.ERROR, "Command is not applicable for current selection", ButtonType.OK);
+            new Alert(AlertType.ERROR, "Command is not applicable for current selection", ButtonType.OK).show();
         }
     }
 
@@ -336,23 +335,41 @@ public class CSVViewerTabController {
 
     public void redo() {
         if (commandStack.canRedo()) {
-            commandStack.redo().apply();
-            fixObjectLevels();
-            fixObjectNumbers(module, "");
-            populateContentTableView(module);
-            populateOutlineTreeView();
-            setDirty();
+            final AbstractCommand commandToRedo = commandStack.redo();
+            commandToRedo.apply();
+            updateGui(commandToRedo.getUpdateActions());
         }
+    }
+
+    private void updateGui(final UpdateAction... updateActions) {
+        for (final UpdateAction action : updateActions) {
+            switch (action) {
+            case FIX_OBJECT_LEVELS:
+                fixObjectLevels();
+                break;
+            case FIX_OBJECT_NUMBERS:
+                fixObjectNumbers(module, "");
+                break;
+            case UPDATE_CONTENT_VIEW:
+                populateContentTableView(module);
+                break;
+            case UPDATE_OUTLINE_VIEW:
+                populateOutlineTreeView();
+                break;
+            case UPDATE_COLUMNS:
+                break;
+            default:
+                break;
+            }
+        }
+        updateTabTitle();
     }
 
     public void undo() {
         if (commandStack.canUndo()) {
-            commandStack.undo().undo();
-            fixObjectLevels();
-            fixObjectNumbers(module, "");
-            populateContentTableView(module);
-            populateOutlineTreeView();
-            setDirty();
+            final AbstractCommand commandToUndo = commandStack.undo();
+            commandToUndo.undo();
+            updateGui(commandToUndo.getUpdateActions());
         }
     }
 

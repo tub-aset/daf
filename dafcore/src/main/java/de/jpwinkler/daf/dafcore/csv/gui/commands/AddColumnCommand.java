@@ -30,4 +30,10 @@ public class AddColumnCommand extends AbstractCommand {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public UpdateAction[] getUpdateActions() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException();
+    }
+
 }

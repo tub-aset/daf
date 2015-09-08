@@ -21,8 +21,7 @@ public class DemoteObjectCommand extends AbstractCommand {
 
     @Override
     public void undo() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException();
+        object.getParent().getParent().getChildren().add(object.getParent().getParent().getChildren().indexOf(object.getParent()) + 1, object);
     }
 
     @Override
@@ -30,4 +29,8 @@ public class DemoteObjectCommand extends AbstractCommand {
         return object != null && DoorsModuleUtil.getPreviousObject(object) != null;
     }
 
+    @Override
+    public UpdateAction[] getUpdateActions() {
+        return new UpdateAction[] { UpdateAction.FIX_OBJECT_LEVELS, UpdateAction.FIX_OBJECT_NUMBERS, UpdateAction.UPDATE_CONTENT_VIEW, UpdateAction.UPDATE_OUTLINE_VIEW };
+    }
 }

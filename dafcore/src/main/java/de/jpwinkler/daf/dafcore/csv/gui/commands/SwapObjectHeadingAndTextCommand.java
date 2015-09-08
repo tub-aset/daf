@@ -7,10 +7,14 @@ import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 public class SwapObjectHeadingAndTextCommand extends AbstractCommand {
 
     private final DoorsObject object;
+    private final String oldObjectHeading;
+    private final String oldObjectText;
 
     public SwapObjectHeadingAndTextCommand(final DoorsModule module, final CSVViewerTabController controller, final DoorsObject object) {
         super(module, controller);
         this.object = object;
+        oldObjectHeading = object.getObjectHeading();
+        oldObjectText = object.getObjectText();
     }
 
     @Override
@@ -26,11 +30,17 @@ public class SwapObjectHeadingAndTextCommand extends AbstractCommand {
 
     @Override
     public void undo() {
-        apply();
+        object.setObjectText(oldObjectText);
+        object.setObjectHeading(oldObjectHeading);
     }
 
     @Override
     public boolean isApplicable() {
         return object != null;
+    }
+
+    @Override
+    public UpdateAction[] getUpdateActions() {
+        return new UpdateAction[] { UpdateAction.FIX_OBJECT_LEVELS, UpdateAction.FIX_OBJECT_NUMBERS, UpdateAction.UPDATE_CONTENT_VIEW, UpdateAction.UPDATE_OUTLINE_VIEW };
     }
 }

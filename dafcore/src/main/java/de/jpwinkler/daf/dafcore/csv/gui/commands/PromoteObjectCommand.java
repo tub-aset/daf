@@ -26,8 +26,11 @@ public class PromoteObjectCommand extends AbstractCommand {
 
     @Override
     public void undo() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException();
+        DoorsModuleUtil.getPreviousObject(object).getChildren().add(object);
     }
 
+    @Override
+    public UpdateAction[] getUpdateActions() {
+        return new UpdateAction[] { UpdateAction.FIX_OBJECT_LEVELS, UpdateAction.FIX_OBJECT_NUMBERS, UpdateAction.UPDATE_CONTENT_VIEW, UpdateAction.UPDATE_OUTLINE_VIEW };
+    }
 }

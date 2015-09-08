@@ -11,21 +11,20 @@ import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
 public class UnwrapChildrenCommand extends AbstractCommand {
 
     private final DoorsObject object;
-    private int objectIndex;
+    private final int objectIndex;
     private final List<DoorsTreeNode> children = new ArrayList<>();
-    private DoorsTreeNode parent;
+    private final DoorsTreeNode parent;
 
     public UnwrapChildrenCommand(final DoorsModule module, final CSVViewerTabController controller, final DoorsObject object) {
         super(module, controller);
         this.object = object;
+        children.addAll(object.getChildren());
+        parent = object.getParent();
+        objectIndex = parent.getChildren().indexOf(object);
     }
 
     @Override
     public void apply() {
-        children.addAll(object.getChildren());
-        parent = object.getParent();
-        objectIndex = parent.getChildren().indexOf(object);
-
         parent.getChildren().addAll(objectIndex, children);
         parent.getChildren().remove(object);
     }
@@ -41,4 +40,8 @@ public class UnwrapChildrenCommand extends AbstractCommand {
         return object != null && !object.getChildren().isEmpty();
     }
 
+    @Override
+    public UpdateAction[] getUpdateActions() {
+        return new UpdateAction[] { UpdateAction.FIX_OBJECT_LEVELS, UpdateAction.FIX_OBJECT_NUMBERS, UpdateAction.UPDATE_CONTENT_VIEW, UpdateAction.UPDATE_OUTLINE_VIEW };
+    }
 }

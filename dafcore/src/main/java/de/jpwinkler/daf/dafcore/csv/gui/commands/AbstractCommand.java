@@ -28,4 +28,6 @@ public abstract class AbstractCommand {
 
     public abstract void undo();
 
+    public abstract UpdateAction[] getUpdateActions();
+
 }

@@ -2,7 +2,7 @@ package de.jpwinkler.daf.dafcore.csv.gui.util;
 
 public class CommandStack<T> {
 
-    private class CommandStackItem<T> {
+    private static class CommandStackItem<T> {
 
         public T command;
         public CommandStackItem<T> previous;
@@ -13,7 +13,7 @@ public class CommandStack<T> {
     private CommandStackItem<T> first;
 
     private CommandStackItem<T> lastExecuted;
-    // private CommandStackItem<T> lastSaved;
+    private CommandStackItem<T> lastSaved;
 
     public boolean isEmpty() {
         return first == null;
@@ -59,7 +59,10 @@ public class CommandStack<T> {
     }
 
     public boolean isDirty() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException();
+        return lastExecuted != lastSaved;
+    }
+
+    public void setSavePoint() {
+        lastSaved = lastExecuted;
     }
 }

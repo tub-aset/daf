@@ -8,18 +8,18 @@ import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
 public class DeleteObjectCommand extends AbstractCommand {
 
     private final DoorsObject object;
-    private DoorsTreeNode parent;
-    private int objectIndex;
+    private final DoorsTreeNode parent;
+    private final int objectIndex;
 
     public DeleteObjectCommand(final DoorsModule module, final CSVViewerTabController controller, final DoorsObject object) {
         super(module, controller);
         this.object = object;
+        parent = object.getParent();
+        objectIndex = parent.getChildren().indexOf(object);
     }
 
     @Override
     public void apply() {
-        parent = object.getParent();
-        objectIndex = parent.getChildren().indexOf(object);
         parent.getChildren().remove(object);
     }
 
@@ -31,5 +31,10 @@ public class DeleteObjectCommand extends AbstractCommand {
     @Override
     public boolean isApplicable() {
         return object != null;
+    }
+
+    @Override
+    public UpdateAction[] getUpdateActions() {
+        return new UpdateAction[] { UpdateAction.FIX_OBJECT_NUMBERS, UpdateAction.UPDATE_CONTENT_VIEW, UpdateAction.UPDATE_OUTLINE_VIEW };
     }
 }
