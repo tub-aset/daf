@@ -30,6 +30,7 @@ public class NewObjectAfterCommand extends AbstractCommand {
         newObject.setObjectText("");
         newObject.setObjectHeading("");
         newObject.setObjectLevel(object.getObjectLevel());
+        redo();
     }
 
     @Override

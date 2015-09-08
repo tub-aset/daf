@@ -27,14 +27,16 @@ import de.jpwinkler.daf.dafcore.csv.gui.commands.RunJavascriptCommand;
 import de.jpwinkler.daf.dafcore.csv.gui.commands.SwapObjectHeadingAndTextCommand;
 import de.jpwinkler.daf.dafcore.csv.gui.commands.UnwrapChildrenCommand;
 import de.jpwinkler.daf.dafcore.csv.gui.commands.UpdateAction;
+import de.jpwinkler.daf.dafcore.csv.gui.util.CascadingFilter;
 import de.jpwinkler.daf.dafcore.csv.gui.util.CommandStack;
+import de.jpwinkler.daf.dafcore.csv.gui.util.DoorsObjectFilter;
+import de.jpwinkler.daf.dafcore.csv.gui.util.ObjectTextAndHeadingFilter;
 import de.jpwinkler.daf.dafcore.model.csv.AttributeDefinition;
 import de.jpwinkler.daf.dafcore.model.csv.CSVFactory;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
 import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.util.CSVParseException;
-import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
@@ -43,6 +45,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
@@ -65,6 +68,7 @@ public class CSVViewerTabController {
     private DoorsModule module;
 
     private final CommandStack<AbstractCommand> commandStack = new CommandStack<>();
+    private DoorsObjectFilter filter = null;
 
     @FXML
     private TreeView<OutlineTreeItem> outlineTreeView;
@@ -84,19 +88,21 @@ public class CSVViewerTabController {
         this.primaryStage = primaryStage;
     }
 
-    private void populateContentTableView(final DoorsModule module) {
-        final DoorsObject selectedItem = contentTableView.getSelectionModel().getSelectedItem();
+    private void populateContentTableView() {
+        final TablePosition<?, ?> focusedCell = contentTableView.getFocusModel().getFocusedCell();
         contentTableView.getItems().clear();
         module.accept(new DoorsTreeNodeVisitor() {
             @Override
             public boolean visitPreTraverse(final DoorsObject object) {
-                contentTableView.getItems().add(object);
+                if (filter == null || (filter != null && filter.checkObject(object))) {
+                    contentTableView.getItems().add(object);
+                }
                 return true;
             }
 
         });
-        if (selectedItem != null) {
-            contentTableView.getSelectionModel().select(selectedItem);
+        if (focusedCell != null) {
+            contentTableView.getFocusModel().focus(focusedCell);
         }
     }
 
@@ -173,7 +179,8 @@ public class CSVViewerTabController {
                 contentTableView.getColumns().add(c);
                 c.setOnEditCommit(event -> {
                     executeCommand(new EditObjectHeadingTextCommand(module, event.getRowValue(), event.getNewValue()));
-                    Platform.runLater(contentTableView::requestFocus);
+                    contentTableView.requestFocus();
+                    contentTableView.getFocusModel().focusNext();
                 });
             } else {
                 addAttributeColumn(attributeName);
@@ -181,7 +188,7 @@ public class CSVViewerTabController {
 
         }
 
-        populateContentTableView(module);
+        populateContentTableView();
     }
 
     private void populateOutlineTreeView() {
@@ -209,6 +216,7 @@ public class CSVViewerTabController {
         c.setOnEditCommit(event -> {
             executeCommand(new EditObjectAttributeCommand(module, event.getRowValue(), attributeName, event.getNewValue()));
             contentTableView.requestFocus();
+            contentTableView.getFocusModel().focusNext();
         });
         c.setSortable(false);
         contentTableView.getColumns().add(c);
@@ -342,7 +350,7 @@ public class CSVViewerTabController {
                 fixObjectNumbers(module, "");
                 break;
             case UPDATE_CONTENT_VIEW:
-                populateContentTableView(module);
+                populateContentTableView();
                 break;
             case UPDATE_OUTLINE_VIEW:
                 populateOutlineTreeView();
@@ -370,6 +378,11 @@ public class CSVViewerTabController {
 
     public boolean isDirty() {
         return commandStack.isDirty();
+    }
+
+    public void updateFilter(final String text) {
+        filter = new CascadingFilter(new ObjectTextAndHeadingFilter(text, false, true));
+        populateContentTableView();
     }
 
 }

@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.util.CSVParseException;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,6 +19,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
@@ -45,9 +47,19 @@ public class CSVViewerController {
     private TabPane tabPane;
 
     @FXML
+    private TextField filterTextField;
+
+    @FXML
     public void initialize() {
         chooser.setInitialDirectory(new File("C:/WORK/DOORS"));
         chooser.getExtensionFilters().add(new ExtensionFilter("CSV", "*.csv"));
+        filterTextField.textProperty().addListener((ChangeListener<String>) (observable, oldValue, newValue) -> {
+            final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+            if (selectedTab != null) {
+                tabControllers.get(selectedTab).updateFilter(newValue);
+
+            }
+        });
     }
 
     @FXML

@@ -33,7 +33,7 @@ public class CommandStack<T> {
     }
 
     public T getUndoCommand() {
-        return lastExecuted.command;
+        return lastExecuted != null ? lastExecuted.command : null;
     }
 
     public T getRedoCommand() {
