@@ -30,6 +30,7 @@ public class EditObjectHeadingTextCommand extends AbstractCommand {
     public void apply() {
         oldObjectHeading = object.getObjectHeading();
         oldObjectText = object.getObjectText();
+        redo();
     }
 
     @Override
