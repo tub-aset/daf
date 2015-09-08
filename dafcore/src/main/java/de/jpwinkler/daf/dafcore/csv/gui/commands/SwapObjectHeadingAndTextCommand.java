@@ -1,37 +1,45 @@
 package de.jpwinkler.daf.dafcore.csv.gui.commands;
 
-import de.jpwinkler.daf.dafcore.csv.gui.CSVViewerTabController;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 
 public class SwapObjectHeadingAndTextCommand extends AbstractCommand {
 
     private final DoorsObject object;
-    private final String oldObjectHeading;
-    private final String oldObjectText;
+    private String oldObjectHeading;
+    private String oldObjectText;
+    private String newObjectHeading;
+    private String newObjectText;
 
-    public SwapObjectHeadingAndTextCommand(final DoorsModule module, final CSVViewerTabController controller, final DoorsObject object) {
-        super(module, controller);
+    public SwapObjectHeadingAndTextCommand(final DoorsModule module, final DoorsObject object) {
+        super(module);
         this.object = object;
-        oldObjectHeading = object.getObjectHeading();
-        oldObjectText = object.getObjectText();
+    }
+
+    @Override
+    public String getName() {
+        return "Swap Object Heading/Text";
     }
 
     @Override
     public void apply() {
-        if (object.isHeading()) {
-            object.setObjectText(object.getObjectHeading());
-            object.setObjectHeading("");
-        } else {
-            object.setObjectHeading(object.getObjectText());
-            object.setObjectText("");
-        }
+        oldObjectHeading = object.getObjectHeading();
+        oldObjectText = object.getObjectText();
+        newObjectHeading = object.getObjectText();
+        newObjectText = object.getObjectHeading();
+        redo();
     }
 
     @Override
     public void undo() {
         object.setObjectText(oldObjectText);
         object.setObjectHeading(oldObjectHeading);
+    }
+
+    @Override
+    public void redo() {
+        object.setObjectText(newObjectText);
+        object.setObjectHeading(newObjectHeading);
     }
 
     @Override

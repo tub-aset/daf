@@ -11,9 +11,6 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.ScriptableObject;
-
 import de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.dafcore.csv.ModuleCSVParser;
 import de.jpwinkler.daf.dafcore.csv.ModuleCSVWriter;
@@ -26,6 +23,7 @@ import de.jpwinkler.daf.dafcore.csv.gui.commands.NewObjectAfterCommand;
 import de.jpwinkler.daf.dafcore.csv.gui.commands.NewObjectBelowCommand;
 import de.jpwinkler.daf.dafcore.csv.gui.commands.PromoteObjectCommand;
 import de.jpwinkler.daf.dafcore.csv.gui.commands.ReduceToSelectionCommand;
+import de.jpwinkler.daf.dafcore.csv.gui.commands.RunJavascriptCommand;
 import de.jpwinkler.daf.dafcore.csv.gui.commands.SwapObjectHeadingAndTextCommand;
 import de.jpwinkler.daf.dafcore.csv.gui.commands.UnwrapChildrenCommand;
 import de.jpwinkler.daf.dafcore.csv.gui.commands.UpdateAction;
@@ -174,7 +172,7 @@ public class CSVViewerTabController {
                 c.setSortable(false);
                 contentTableView.getColumns().add(c);
                 c.setOnEditCommit(event -> {
-                    executeCommand(new EditObjectHeadingTextCommand(module, this, event.getRowValue(), event.getNewValue()));
+                    executeCommand(new EditObjectHeadingTextCommand(module, event.getRowValue(), event.getNewValue()));
                     Platform.runLater(contentTableView::requestFocus);
                 });
             } else {
@@ -209,7 +207,7 @@ public class CSVViewerTabController {
         c.setCellFactory(TextFieldTableCell.forTableColumn());
         c.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getAttributes().get(attributeName)));
         c.setOnEditCommit(event -> {
-            executeCommand(new EditObjectAttributeCommand(module, this, event.getRowValue(), attributeName, event.getNewValue()));
+            executeCommand(new EditObjectAttributeCommand(module, event.getRowValue(), attributeName, event.getNewValue()));
             contentTableView.requestFocus();
         });
         c.setSortable(false);
@@ -221,7 +219,7 @@ public class CSVViewerTabController {
     }
 
     public void reduceToSelection() {
-        executeCommand(new ReduceToSelectionCommand(module, this, getCurrentObject()));
+        executeCommand(new ReduceToSelectionCommand(module, getCurrentObject()));
     }
 
     private void fixObjectLevel(final DoorsObject object, final int level) {
@@ -250,20 +248,11 @@ public class CSVViewerTabController {
 
     @FXML
     public void runJavaScriptClicked() {
-        final Context cx = Context.enter();
-
-        final ScriptableObject scope = cx.initStandardObjects();
-
-        ScriptableObject.putProperty(scope, "module", Context.javaToJS(module, scope));
-
-        final String source = javascriptTextArea.getText();
-        cx.evaluateString(scope, source, "script", 1, null);
-
-        Context.exit();
+        executeCommand(new RunJavascriptCommand(module, javascriptTextArea.getText()));
     }
 
     public void swapObjectHeadingAndText() {
-        executeCommand(new SwapObjectHeadingAndTextCommand(module, this, getCurrentObject()));
+        executeCommand(new SwapObjectHeadingAndTextCommand(module, getCurrentObject()));
     }
 
     private void executeCommand(final AbstractCommand command) {
@@ -304,11 +293,11 @@ public class CSVViewerTabController {
     }
 
     public void deleteObject() {
-        executeCommand(new DeleteObjectCommand(module, this, getCurrentObject()));
+        executeCommand(new DeleteObjectCommand(module, getCurrentObject()));
     }
 
     public void unwrapChildren() {
-        executeCommand(new UnwrapChildrenCommand(module, this, getCurrentObject()));
+        executeCommand(new UnwrapChildrenCommand(module, getCurrentObject()));
     }
 
     private void fixObjectLevels() {
@@ -320,25 +309,25 @@ public class CSVViewerTabController {
     }
 
     public void demoteObject() {
-        executeCommand(new DemoteObjectCommand(module, this, getCurrentObject()));
+        executeCommand(new DemoteObjectCommand(module, getCurrentObject()));
     }
 
     public void promoteObject() {
-        executeCommand(new PromoteObjectCommand(module, this, getCurrentObject()));
+        executeCommand(new PromoteObjectCommand(module, getCurrentObject()));
     }
 
     public void newObjectBelow() {
-        executeCommand(new NewObjectBelowCommand(module, this, getCurrentObject()));
+        executeCommand(new NewObjectBelowCommand(module, getCurrentObject()));
     }
 
     public void newObjectAfter() {
-        executeCommand(new NewObjectAfterCommand(module, this, getCurrentObject()));
+        executeCommand(new NewObjectAfterCommand(module, getCurrentObject()));
     }
 
     public void redo() {
-        if (commandStack.canRedo()) {
+        if (commandStack.getRedoCommand() != null) {
             final AbstractCommand commandToRedo = commandStack.redo();
-            commandToRedo.apply();
+            commandToRedo.redo();
             updateGui(commandToRedo.getUpdateActions());
         }
     }
@@ -368,10 +357,14 @@ public class CSVViewerTabController {
     }
 
     public void undo() {
-        if (commandStack.canUndo()) {
+        if (commandStack.getUndoCommand() != null) {
             final AbstractCommand commandToUndo = commandStack.undo();
-            commandToUndo.undo();
-            updateGui(commandToUndo.getUpdateActions());
+            if (!commandToUndo.canUndo()) {
+                new Alert(AlertType.ERROR, "Last command cannot be undone, sorry :/").show();
+            } else {
+                commandToUndo.undo();
+                updateGui(commandToUndo.getUpdateActions());
+            }
         }
     }
 

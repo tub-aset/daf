@@ -4,15 +4,15 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.jpwinkler.daf.dafcore.csv.gui.CSVViewerTabController">
-   <left>
-      <TreeView fx:id="outlineTreeView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
-   </left>
-   <center>
-      <TableView fx:id="contentTableView" editable="true" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
-   </center>
-   <bottom>
-      <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+<SplitPane dividerPositions="0.8" orientation="VERTICAL" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.jpwinkler.daf.dafcore.csv.gui.CSVViewerTabController">
+   <items>
+      <SplitPane dividerPositions="0.2">
+         <items>
+            <TreeView fx:id="outlineTreeView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+            <TableView fx:id="contentTableView" editable="true" prefHeight="200.0" prefWidth="200.0" />
+         </items>
+      </SplitPane>
+      <BorderPane prefHeight="200.0" prefWidth="200.0">
          <center>
             <TextArea fx:id="javascriptTextArea" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
          </center>
@@ -20,5 +20,5 @@
             <Button mnemonicParsing="false" onAction="#runJavaScriptClicked" text="Button" BorderPane.alignment="CENTER" />
          </right>
       </BorderPane>
-   </bottom>
-</BorderPane>
+   </items>
+</SplitPane>

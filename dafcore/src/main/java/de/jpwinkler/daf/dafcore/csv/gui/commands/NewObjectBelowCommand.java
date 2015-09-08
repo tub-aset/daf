@@ -1,6 +1,5 @@
 package de.jpwinkler.daf.dafcore.csv.gui.commands;
 
-import de.jpwinkler.daf.dafcore.csv.gui.CSVViewerTabController;
 import de.jpwinkler.daf.dafcore.model.csv.CSVFactory;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
@@ -8,15 +7,16 @@ import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 public class NewObjectBelowCommand extends AbstractCommand {
 
     private final DoorsObject object;
-    private final DoorsObject newObject;
+    private DoorsObject newObject;
 
-    public NewObjectBelowCommand(final DoorsModule module, final CSVViewerTabController controller, final DoorsObject object) {
-        super(module, controller);
+    public NewObjectBelowCommand(final DoorsModule module, final DoorsObject object) {
+        super(module);
         this.object = object;
-        newObject = CSVFactory.eINSTANCE.createDoorsObject();
-        newObject.setObjectText("");
-        newObject.setObjectHeading("");
-        newObject.setObjectLevel(object.getObjectLevel() + 1);
+    }
+
+    @Override
+    public String getName() {
+        return "New Object Below";
     }
 
     @Override
@@ -26,12 +26,21 @@ public class NewObjectBelowCommand extends AbstractCommand {
 
     @Override
     public void apply() {
-        object.getChildren().add(newObject);
+        newObject = CSVFactory.eINSTANCE.createDoorsObject();
+        newObject.setObjectText("");
+        newObject.setObjectHeading("");
+        newObject.setObjectLevel(object.getObjectLevel() + 1);
+        redo();
     }
 
     @Override
     public void undo() {
         object.getChildren().remove(newObject);
+    }
+
+    @Override
+    public void redo() {
+        object.getChildren().add(newObject);
     }
 
     @Override

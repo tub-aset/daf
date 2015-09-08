@@ -3,7 +3,6 @@ package de.jpwinkler.daf.dafcore.csv.gui.commands;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.jpwinkler.daf.dafcore.csv.gui.CSVViewerTabController;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
@@ -11,16 +10,18 @@ import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
 public class ReduceToSelectionCommand extends AbstractCommand {
 
     private final DoorsObject object;
-    private final int oldObjectIndex;
+    private int oldObjectIndex;
     private final List<DoorsTreeNode> moduleChildren = new ArrayList<>();
-    private final DoorsTreeNode oldParent;
+    private DoorsTreeNode oldParent;
 
-    public ReduceToSelectionCommand(final DoorsModule module, final CSVViewerTabController controller, final DoorsObject object) {
-        super(module, controller);
+    public ReduceToSelectionCommand(final DoorsModule module, final DoorsObject object) {
+        super(module);
         this.object = object;
-        moduleChildren.addAll(getModule().getChildren());
-        oldParent = object.getParent();
-        oldObjectIndex = oldParent.getChildren().indexOf(object);
+    }
+
+    @Override
+    public String getName() {
+        return "Reduce to Selection";
     }
 
     @Override
@@ -30,8 +31,10 @@ public class ReduceToSelectionCommand extends AbstractCommand {
 
     @Override
     public void apply() {
-        getModule().getChildren().clear();
-        getModule().getChildren().add(object);
+        moduleChildren.addAll(getModule().getChildren());
+        oldParent = object.getParent();
+        oldObjectIndex = oldParent.getChildren().indexOf(object);
+        redo();
     }
 
     @Override
@@ -40,6 +43,12 @@ public class ReduceToSelectionCommand extends AbstractCommand {
         getModule().getChildren().addAll(moduleChildren);
         oldParent.getChildren().add(oldObjectIndex, object);
 
+    }
+
+    @Override
+    public void redo() {
+        getModule().getChildren().clear();
+        getModule().getChildren().add(object);
     }
 
     @Override

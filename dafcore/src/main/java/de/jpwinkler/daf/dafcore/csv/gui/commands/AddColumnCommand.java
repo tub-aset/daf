@@ -1,15 +1,19 @@
 package de.jpwinkler.daf.dafcore.csv.gui.commands;
 
-import de.jpwinkler.daf.dafcore.csv.gui.CSVViewerTabController;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 
 public class AddColumnCommand extends AbstractCommand {
 
     private final String newColumnName;
 
-    public AddColumnCommand(final DoorsModule module, final CSVViewerTabController controller, final String newColumnName) {
-        super(module, controller);
+    public AddColumnCommand(final DoorsModule module, final String newColumnName) {
+        super(module);
         this.newColumnName = newColumnName;
+    }
+
+    @Override
+    public String getName() {
+        return "";
     }
 
     @Override
@@ -20,6 +24,12 @@ public class AddColumnCommand extends AbstractCommand {
 
     @Override
     public void undo() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void redo() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException();
     }

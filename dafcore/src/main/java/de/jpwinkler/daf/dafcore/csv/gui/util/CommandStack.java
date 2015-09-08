@@ -32,12 +32,16 @@ public class CommandStack<T> {
 
     }
 
-    public boolean canUndo() {
-        return lastExecuted != null;
+    public T getUndoCommand() {
+        return lastExecuted.command;
     }
 
-    public boolean canRedo() {
-        return (lastExecuted == null && first != null) || (lastExecuted != null && lastExecuted.next != null);
+    public T getRedoCommand() {
+        if (lastExecuted == null) {
+            return first != null ? first.command : null;
+        } else {
+            return lastExecuted.next != null ? lastExecuted.next.command : null;
+        }
     }
 
     public T undo() {
