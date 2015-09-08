@@ -30,4 +30,8 @@ public abstract class AbstractCommand {
 
     public abstract UpdateAction[] getUpdateActions();
 
+    public boolean canUndo() {
+        return true;
+    }
+
 }

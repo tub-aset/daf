@@ -5,12 +5,16 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.util.CSVParseException;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -105,13 +109,36 @@ public class CSVViewerController {
     public void closeClicked() {
         final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
         if (selectedTab != null) {
-            tabPane.getTabs().remove(selectedTab);
-            tabControllers.remove(selectedTab);
+            closeTab(selectedTab);
         }
+    }
+
+    private boolean closeTab(final Tab selectedTab) {
+        final CSVViewerTabController controller = tabControllers.get(selectedTab);
+        if (controller.isDirty()) {
+            final Optional<ButtonType> saveConfirm = new Alert(AlertType.CONFIRMATION, "There are unsaved changes, what shall we save those?", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL).showAndWait();
+            if (saveConfirm.isPresent() && saveConfirm.get() == ButtonType.YES) {
+                if (!controller.save()) {
+                    return false;
+                }
+            } else if (saveConfirm.isPresent() && saveConfirm.get() == ButtonType.CANCEL) {
+                return false;
+            } else if (!saveConfirm.isPresent()) {
+                return false;
+            }
+        }
+        tabPane.getTabs().remove(selectedTab);
+        tabControllers.remove(selectedTab);
+        return true;
     }
 
     @FXML
     public void exitClicked() {
+        for (final Tab tab : tabControllers.keySet()) {
+            if (!closeTab(tab)) {
+                return;
+            }
+        }
         Platform.exit();
     }
 

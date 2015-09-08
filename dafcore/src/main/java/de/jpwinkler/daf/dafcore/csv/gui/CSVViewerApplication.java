@@ -48,6 +48,10 @@ public class CSVViewerApplication extends Application {
                     event.setDropCompleted(true);
                 }
             });
+            primaryStage.setOnCloseRequest(event -> {
+                csvViewerController.exitClicked();
+                event.consume();
+            });
             primaryStage.setScene(scene);
             primaryStage.setMaximized(true);
             primaryStage.setTitle("CSV Viewer");

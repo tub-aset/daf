@@ -111,13 +111,15 @@ public class CSVViewerTabController {
         return treeItem;
     }
 
-    public void save() {
+    public boolean save() {
         try (ModuleCSVWriter writer = new ModuleCSVWriter(new FileOutputStream(file))) {
             writer.writeModule(module);
             commandStack.setSavePoint();
             updateTabTitle();
+            return true;
         } catch (final IOException e) {
             e.printStackTrace();
+            return false;
         }
     }
 
@@ -371,6 +373,10 @@ public class CSVViewerTabController {
             commandToUndo.undo();
             updateGui(commandToUndo.getUpdateActions());
         }
+    }
+
+    public boolean isDirty() {
+        return commandStack.isDirty();
     }
 
 }
