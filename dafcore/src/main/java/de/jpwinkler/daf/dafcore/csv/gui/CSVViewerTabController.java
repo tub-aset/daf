@@ -181,6 +181,7 @@ public class CSVViewerTabController {
                     executeCommand(new EditObjectHeadingTextCommand(module, event.getRowValue(), event.getNewValue()));
                     contentTableView.requestFocus();
                     contentTableView.getFocusModel().focusNext();
+                    contentTableView.edit(contentTableView.getFocusModel().getFocusedIndex(), contentTableView.getFocusModel().getFocusedCell().getTableColumn());
                 });
             } else {
                 addAttributeColumn(attributeName);
@@ -383,6 +384,12 @@ public class CSVViewerTabController {
     public void updateFilter(final String text) {
         filter = new CascadingFilter(new ObjectTextAndHeadingFilter(text, false, true));
         populateContentTableView();
+    }
+
+    public void setupColumns() {
+    }
+
+    public void setupFilter() {
     }
 
 }

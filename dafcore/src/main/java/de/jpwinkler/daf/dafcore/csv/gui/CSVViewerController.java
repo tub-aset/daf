@@ -253,4 +253,20 @@ public class CSVViewerController {
         }
     }
 
+    @FXML
+    public void columnsClicked() {
+        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+        if (selectedTab != null) {
+            tabControllers.get(selectedTab).setupColumns();
+        }
+    }
+
+    @FXML
+    public void filterClicked() {
+        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+        if (selectedTab != null) {
+            tabControllers.get(selectedTab).setupFilter();
+        }
+
+    }
 }

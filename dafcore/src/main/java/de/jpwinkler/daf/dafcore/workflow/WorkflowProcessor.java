@@ -274,6 +274,7 @@ public class WorkflowProcessor {
             for (final File child : listFiles) {
                 try {
                     if (child.isFile() && "csv".equals(FilenameUtils.getExtension(child.getAbsolutePath()))) {
+                        LOGGER.info(String.format("Parsing module %s", child.getName()));
                         result.add(loadDoorsModuleFromCSV(child));
                     } else if (child.isDirectory()) {
                         result.addAll(parseCSVFilesInFolder(child));

@@ -57,6 +57,12 @@
                         </MenuItem>
                     </items>
                   </Menu>
+                  <Menu mnemonicParsing="false" text="View">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#columnsClicked" text="Columns..." />
+                        <MenuItem mnemonicParsing="false" onAction="#filterClicked" text="Filter..." />
+                    </items>
+                  </Menu>
                   <Menu mnemonicParsing="false" text="Module">
                     <items>
                       <MenuItem mnemonicParsing="false" onAction="#addColumnClicked" text="Add Column..." />
