@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -84,8 +83,6 @@ public class AnalysisRunner {
             processNewVersion();
         }
 
-        Collections.sort(results.getVersions());
-
         FileUtils.write(resultCacheFile, gson.toJson(results));
 
         return results;
@@ -147,7 +144,7 @@ public class AnalysisRunner {
             final Map<Target, List<ModelObject>> workflowResults = new WorkflowProcessor().runWorkflowModel(workflowModel);
 
             final Version v = createVersion(version, workflowResults.get(codeBeamerModelConstructorTarget));
-            results.getVersions().add(v);
+            results.addVersion(v);
         } catch (final WorkflowException e) {
             e.printStackTrace();
         }
@@ -187,7 +184,7 @@ public class AnalysisRunner {
 
             writeToFile(workflowResult.get(target), "C:\\WORK\\temp\\exp_" + versionFolder + ".txt");
 
-            results.getVersions().add(version);
+            results.addVersion(version);
 
         } catch (final WorkflowException | IOException e) {
             e.printStackTrace();
