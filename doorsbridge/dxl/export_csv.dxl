@@ -8,6 +8,8 @@ pragma encoding, "UTF-8"
 pragma runLim,0
 
 void exportModuleToCSV(Module m, string fileName) {
+	current = m
+	filtering off
 	
 	Skip attrs = create
 
