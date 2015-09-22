@@ -1,155 +1,223 @@
 package de.jpwinkler.daf.documenttagging;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import de.jpwinkler.daf.dafcore.csv.ModuleCSVParser;
-import de.jpwinkler.daf.dafcore.csv.SimpleModuleWriter;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
 import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.util.CSVParseException;
 import de.jpwinkler.daf.documenttagging.doors.DoorsDocumentAccessor;
 import de.jpwinkler.daf.documenttagging.doors.maxent.DoorsMaxEntPredicateGenerator;
 import de.jpwinkler.daf.documenttagging.doors.preprocessing.DoorsModulePreprocessor;
+import de.jpwinkler.daf.documenttagging.hypermarkovchain.GrowRateFunction;
+import de.jpwinkler.daf.documenttagging.hypermarkovchain.HyperMarkovChain;
 import de.jpwinkler.daf.documenttagging.hypermarkovchain.HyperMarkovChainBuilder;
+import de.jpwinkler.daf.documenttagging.hypermarkovchain.smoothing.AbstractSmoothingTechnique;
+import de.jpwinkler.daf.documenttagging.hypermarkovchain.smoothing.NoSmoothing;
+import de.jpwinkler.daf.documenttagging.hypermarkovchain.smoothing.SmoothingTechnique;
+import de.jpwinkler.daf.documenttagging.hypermarkovchain.smoothing.SmoothingTechniqueFactory;
 import de.jpwinkler.daf.documenttagging.maxent.MaxEntPredicateGenerator;
 import de.jpwinkler.daf.documenttagging.maxent.MaxEntRecursiveViterbiAlgorithm;
 import de.jpwinkler.daf.documenttagging.maxent.SimpleMaxEntAlgorithm;
+import de.jpwinkler.daf.documenttagging.maxent.TrainingDataEventStream;
+import de.jpwinkler.daf.documenttagging.maxent.util.CompositeKey2;
+import de.jpwinkler.daf.documenttagging.maxent.util.CompositeKey4;
 import opennlp.maxent.GIS;
+import opennlp.maxent.GISModel;
 
 public class DoorsTest {
 
-    private Map<String, DoorsModule> modulesToTest;
-    private DoorsModule wwcTest;
-    private DoorsModule wlTest;
-    private DoorsModule asProd;
-    private DoorsModule wwcProd;
-    private DoorsModule slhDemonstrator;
-    private DoorsModule ihtmStar3Prod;
-    private DoorsModule schliessungSystemContentProd;
-    private DoorsModule BCSF_System_Content;
+    private static final String[] TEST_MODULE_NAMES = new String[] { "maxent/slh-wwc.csv", "maxent/slh-wl.csv", "maxent/slh-wl2.csv" };
+
+    private static final String PROD_BASE_PATH = "C:/WORK/DOORS/export/pod/FO_functions_only_tagged";
+
+    private static final File RESULT_CACHE_FILE = new File("resultCache");
+
+    private static final String[] PROD_MODULE_NAMES = new String[] {
+            "ACAP_217_Content.csv",
+            "BCSF_System_Content.csv",
+            "HFA_system req.csv",
+            "IHTM_Star3_System_Content.csv",
+            "Schließung_System_Content.csv",
+            "Anforderungen von AbC und AbP an Telematik.csv",
+            "Anforderungen von AbC und AbP an Telematik2.csv",
+            "Anforderungen von AbC und AbP an Telematik3.csv",
+            "Funktionsbeschreibung AbC.csv",
+            "Funktionsbeschreibung AbP.csv",
+    };
+
+    private Map<String, DoorsModule> testModules;
+    private Map<String, DoorsModule> prodModules;
 
     @Before
     public void setupClass() throws IOException, CSVParseException {
-        modulesToTest = new HashMap<>();
-        wwcTest = new ModuleCSVParser().parseCSV(getClass().getResourceAsStream("maxent/slh-wwc.csv"));
-        wlTest = new ModuleCSVParser().parseCSV(getClass().getResourceAsStream("maxent/slh-wl.csv"));
-        asProd = new ModuleCSVParser().parseCSV(new File("C:/WORK/DOORS/export/pod/old/AS_system_req.CSV"));
-        wwcProd = new ModuleCSVParser().parseCSV(new File("C:/WORK/DOORS/export/pod/old/WWC222_system_req.CSV"));
-        slhDemonstrator = new ModuleCSVParser().parseCSV(new File("C:/WORK/DOORS/export/pod/old/_SLH-Demonstrator_Schließung_System_Content.CSV"));
+        testModules = new LinkedHashMap<>();
+        prodModules = new LinkedHashMap<>();
 
-        ihtmStar3Prod = new ModuleCSVParser().parseCSV(new File("C:/WORK/DOORS/export/pod/FO_functions_only/with_fo_object_type/IHTM_Star3_System_Content.csv"));
-        schliessungSystemContentProd = new ModuleCSVParser().parseCSV(new File("C:/WORK/DOORS/export/pod/FO_functions_only/with_fo_object_type/Schließung_System_Content_min.csv"));
-        BCSF_System_Content = new ModuleCSVParser().parseCSV(new File("C:/WORK/DOORS/export/pod/FO_functions_only/BCSF_System_Content.csv"));
-
-        modulesToTest.put("wwctest", wwcTest);
-        modulesToTest.put("wltest", wlTest);
-        // modulesToTest.put("as222prod", asProd);
-
-        // modulesToTest.put("wwc222", wwcProd);
-
+        final ModuleCSVParser moduleCSVParser = new ModuleCSVParser();
         final DoorsModulePreprocessor preprocessor = DoorsModulePreprocessor.getDefaultPreprocessor();
 
-        for (final Entry<String, DoorsModule> e : modulesToTest.entrySet()) {
-            final DoorsModule module = e.getValue();
+        for (final String testModuleName : TEST_MODULE_NAMES) {
+            final DoorsModule module = moduleCSVParser.parseCSV(getClass().getResourceAsStream(testModuleName));
             preprocessor.preprocessModule(module);
+            testModules.put(new File(testModuleName).getName(), module);
         }
 
-        preprocessor.preprocessModule(ihtmStar3Prod);
-        preprocessor.preprocessModule(schliessungSystemContentProd);
-        preprocessor.preprocessModule(BCSF_System_Content);
+        for (final String prodModuleName : PROD_MODULE_NAMES) {
+            final DoorsModule module = moduleCSVParser.parseCSV(new File(PROD_BASE_PATH, prodModuleName));
+            preprocessor.preprocessModule(module);
+            prodModules.put(prodModuleName, module);
+        }
 
         GIS.PRINT_MESSAGES = false;
     }
 
-    @Test
-    public void test3() throws Exception {
+    // @Test
+    public void test4() throws Exception {
         final MaxEntPredicateGenerator<DoorsTreeNode> generator = DoorsMaxEntPredicateGenerator.getDefaultGenerator("pod_tag");
+        final List<DocumentAccessor<DoorsTreeNode>> documentAccessors = prodModules.values().stream().map(m -> new DoorsDocumentAccessor(m)).collect(Collectors.toList());
+        final DocumentAccessor<DoorsTreeNode> documentToTag = documentAccessors.get(7);
 
-        final MaxEntRecursiveViterbiAlgorithm<DoorsTreeNode> alg = new MaxEntRecursiveViterbiAlgorithm<>(generator, Arrays.asList(new DoorsDocumentAccessor(ihtmStar3Prod)));
-        final TaggedDocument<DoorsTreeNode, String> algresult = alg.tagDocument(new DoorsDocumentAccessor(schliessungSystemContentProd));
+        final DocumentTaggingAlgorithm<DoorsTreeNode, String> alg1 = new MaxEntRecursiveViterbiAlgorithm<DoorsTreeNode>(generator, documentAccessors, new NoSmoothing<>(), GrowRateFunction.LINEAR, 1000, 0);
+        final TaggedDocument<DoorsTreeNode, String> algResult1 = alg1.tagDocument(documentToTag);
+        final ConfusionMatrix<String> confusionMatrix1 = new ConfusionMatrix<>(algResult1);
 
-        final ConfusionMatrix<String> confusionMatrix = new ConfusionMatrix<>(algresult);
-        System.out.println(confusionMatrix.toStringEvaluationMetrics());
+        final DocumentTaggingAlgorithm<DoorsTreeNode, String> alg2 = new SimpleMaxEntAlgorithm<DoorsTreeNode>(generator, documentAccessors, 1000, 0);
+        final TaggedDocument<DoorsTreeNode, String> algResult2 = alg2.tagDocument(documentToTag);
+        final ConfusionMatrix<String> confusionMatrix2 = new ConfusionMatrix<>(algResult2);
 
+        System.out.println(confusionMatrix1.toStringEvaluationMetrics());
+        System.out.println(confusionMatrix2.toStringEvaluationMetrics());
     }
 
     // @Test
-    public void testMarkovChainBuilder() {
-        final HyperMarkovChainBuilder<String> hyperMarkovChainBuilder = new HyperMarkovChainBuilder<>();
+    public void test3() throws Exception {
+        // Prepare documents
+        final MaxEntPredicateGenerator<DoorsTreeNode> generator = DoorsMaxEntPredicateGenerator.getDefaultGenerator("pod_tag");
+        final List<DocumentAccessor<DoorsTreeNode>> documentAccessors = prodModules.values().stream().map(m -> new DoorsDocumentAccessor(m)).collect(Collectors.toList());
+        final DocumentAccessor<DoorsTreeNode> documentToTag = documentAccessors.remove(0);
 
-        hyperMarkovChainBuilder.addAll(new DoorsDocumentAccessor(slhDemonstrator), o -> {
-            String string = o.getAttributes().get("FO_Object_Type");
-            if (string != null) {
-                string = string.replace('-', ' ');
-                string = string.trim();
-                string = string.replace(' ', '_');
-                if (string.isEmpty()) {
-                    return "";
-                } else {
-                    return string;
+        // Prepare algorithm configurations
+        final int[] cutoffSettings = new int[] { 0, 1, 10, 50 };
+        final int[] iterationsSettings = new int[] { 10, 100, 1000 };
+        final GrowRateFunction[] growRateSettings = new GrowRateFunction[] { GrowRateFunction.LINEAR, GrowRateFunction.CONSTANT_1, GrowRateFunction.CONSTANT_5, GrowRateFunction.LOG, GrowRateFunction.ROOT_10, GrowRateFunction.ROOT_2 };
+
+        final List<AlgorithmConfiguration> algorithmConfigurations = new ArrayList<>();
+
+        for (final int cutoff : cutoffSettings) {
+            for (final int iterations : iterationsSettings) {
+                for (final GrowRateFunction growRateFunction : growRateSettings) {
+                    for (double d = 0.9; d > 0.05; d -= 0.1) {
+                        algorithmConfigurations.add(new AlgorithmConfiguration(SmoothingTechnique.KATZ_BACKOFF, 0, d, cutoff, iterations, growRateFunction));
+                        algorithmConfigurations.add(new AlgorithmConfiguration(SmoothingTechnique.KATZ_BACKOFF, 10, d, cutoff, iterations, growRateFunction));
+                        algorithmConfigurations.add(new AlgorithmConfiguration(SmoothingTechnique.KNESER_NEY_SMOOTHING, 0, d, cutoff, iterations, growRateFunction));
+                        algorithmConfigurations.add(new AlgorithmConfiguration(SmoothingTechnique.VERY_STUPID_BACKOFF, 0, d, cutoff, iterations, growRateFunction));
+                        algorithmConfigurations.add(new AlgorithmConfiguration(SmoothingTechnique.VERY_STUPID_BACKOFF, 10, d, cutoff, iterations, growRateFunction));
+                    }
+                    algorithmConfigurations.add(new AlgorithmConfiguration(SmoothingTechnique.NO_SMOOTHING, 0, 0, cutoff, iterations, growRateFunction));
+                    algorithmConfigurations.add(new AlgorithmConfiguration(SmoothingTechnique.ABSOLUTE_DISCOUNTING, 0, 0.75, cutoff, iterations, growRateFunction));
+                    algorithmConfigurations.add(new AlgorithmConfiguration(SmoothingTechnique.ABSOLUTE_DISCOUNTING, 0, 0.5, cutoff, iterations, growRateFunction));
+                    algorithmConfigurations.add(new AlgorithmConfiguration(SmoothingTechnique.ABSOLUTE_DISCOUNTING, 0, 0.25, cutoff, iterations, growRateFunction));
+                    algorithmConfigurations.add(new AlgorithmConfiguration(SmoothingTechnique.ADD_K_SMOOTHING, 1, 0, cutoff, iterations, growRateFunction));
+                    algorithmConfigurations.add(new AlgorithmConfiguration(SmoothingTechnique.ADD_K_SMOOTHING, 2, 0, cutoff, iterations, growRateFunction));
+                    algorithmConfigurations.add(new AlgorithmConfiguration(SmoothingTechnique.ADD_K_SMOOTHING, 10, 0, cutoff, iterations, growRateFunction));
                 }
-            } else {
-                return "";
             }
-        } , t -> !t.isEmpty());
+        }
 
-        System.out.println(hyperMarkovChainBuilder.build().getDOT());
-    }
+        // prepare caches
+        final Map<CompositeKey2<Integer, Integer>, GISModel> models = Collections.synchronizedMap(new HashMap<>());
+        final Map<CompositeKey4<SmoothingTechnique, Double, Double, GrowRateFunction>, HyperMarkovChain<String>> chains = Collections.synchronizedMap(new HashMap<>());
 
-    // @Test
-    public void test1() throws IOException, CSVParseException {
+        // load previous results
+        final Map<AlgorithmConfiguration, ConfusionMatrix<String>> resultCache;
+        if (RESULT_CACHE_FILE.exists()) {
+            resultCache = (Map<AlgorithmConfiguration, ConfusionMatrix<String>>) new ObjectInputStream(new FileInputStream(RESULT_CACHE_FILE)).readObject();
+        } else {
+            resultCache = new HashMap<>();
+        }
 
-        // final DoorsModule sdrProd = new ModuleCSVParser().parseCSV(new
-        // File("C:\\WORK\\DOORS\\export\\pod\\SDR222_system_req.CSV"));
+        // run algorithms
+        final List<String> results = Collections.synchronizedList(new ArrayList<>());
+        algorithmConfigurations.stream().forEach(ac -> {
+            try {
+                final ConfusionMatrix<String> confusionMatrix;
+                if (resultCache.containsKey(ac)) {
+                    confusionMatrix = resultCache.get(ac);
+                } else {
 
-        final MaxEntPredicateGenerator<DoorsTreeNode> generator = DoorsMaxEntPredicateGenerator.getDefaultGenerator("pod_tags");
+                    System.out.println(ac);
+                    final AbstractSmoothingTechnique<String> smoothingTechnique = new SmoothingTechniqueFactory<String>(ac.getSmoothingTechnique(), ac.getSmoothingD(), ac.getSmoothingK()).getInstance();
 
-        for (final Entry<String, DoorsModule> e : modulesToTest.entrySet()) {
-            final DoorsModule module = e.getValue();
+                    GISModel model = models.get(new CompositeKey2<>(ac.getGisIterations(), ac.getGisCutoff()));
+                    if (model == null) {
+                        final List<DoorsTreeNode> trainingElements = new ArrayList<>();
+                        for (final DocumentAccessor<DoorsTreeNode> documentAccessor : documentAccessors) {
+                            documentAccessor.visit(documentAccessor.getDocumentRoot(), e -> trainingElements.add(e));
+                        }
+                        model = GIS.trainModel(new TrainingDataEventStream<>(generator, trainingElements), ac.getGisIterations(), ac.getGisCutoff());
+                        models.put(new CompositeKey2<>(ac.getGisIterations(), ac.getGisCutoff()), model);
+                    }
+                    HyperMarkovChain<String> hmc = chains.get(new CompositeKey4<>(ac.getSmoothingTechnique(), ac.getSmoothingD(), ac.getSmoothingK(), ac.getGrowRateFunction()));
+                    if (hmc == null) {
+                        final HyperMarkovChainBuilder<String> hyperMarkovChainBuilder = new HyperMarkovChainBuilder<>(smoothingTechnique, ac.getGrowRateFunction());
+                        for (final DocumentAccessor<DoorsTreeNode> documentAccessor : documentAccessors) {
+                            hyperMarkovChainBuilder.addAll(documentAccessor, e -> generator.getOutcome(e), t -> !t.isEmpty());
+                        }
+                        hmc = hyperMarkovChainBuilder.build();
+                        chains.put(new CompositeKey4<>(ac.getSmoothingTechnique(), ac.getSmoothingD(), ac.getSmoothingK(), ac.getGrowRateFunction()), hmc);
+                    }
 
-            final DocumentTaggingAlgorithm<DoorsTreeNode, String> simpleMaxEntAlgorithm = new SimpleMaxEntAlgorithm<>(generator, Arrays.asList(new DoorsDocumentAccessor(module)));
-            final TaggedDocument<DoorsTreeNode, String> simpleMaxEntTags = simpleMaxEntAlgorithm.tagDocument(new DoorsDocumentAccessor(module));
+                    final DocumentTaggingAlgorithm<DoorsTreeNode, String> alg = new MaxEntRecursiveViterbiAlgorithm<DoorsTreeNode>(generator, model, hmc);
+                    final TaggedDocument<DoorsTreeNode, String> algresult = alg.tagDocument(documentToTag);
+                    confusionMatrix = new ConfusionMatrix<>(algresult);
+                    resultCache.put(ac, confusionMatrix);
 
-            final DocumentTaggingAlgorithm<DoorsTreeNode, String> maxEntRecursiveViterbiAlgorithm = new MaxEntRecursiveViterbiAlgorithm<>(generator, Arrays.asList(new DoorsDocumentAccessor(module)));
-            final TaggedDocument<DoorsTreeNode, String> maxEntRecursiveViterbiTags = maxEntRecursiveViterbiAlgorithm.tagDocument(new DoorsDocumentAccessor(module));
+                }
 
-            final ConfusionMatrix<String> simpleMaxEntConfusionMatrix = new ConfusionMatrix<>(simpleMaxEntTags);
-            final ConfusionMatrix<String> maxEntRecursiveViterbiConfusionMatrix = new ConfusionMatrix<>(maxEntRecursiveViterbiTags);
+                results.add("rv maxent;" + ac.getGisIterations() + ";" + ac.getGisCutoff() + ";" + ac.getSmoothingTechnique() + ";" + ac.getSmoothingD() + ";" + ac.getSmoothingK() + ";" + ac.getGrowRateFunction() + ";" + confusionMatrix.getMacroF1Score() + ";" + confusionMatrix.getMicroF1Score());
+            } catch (final Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        });
 
-            System.out.println(String.format("Document name: %s", e.getKey()));
+        final ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(RESULT_CACHE_FILE));
+        objectOutputStream.writeObject(resultCache);
+        objectOutputStream.close();
 
-            printEvaluationMetrics(simpleMaxEntConfusionMatrix, maxEntRecursiveViterbiConfusionMatrix);
-
+        for (final String s : results) {
+            System.out.println(s);
         }
 
     }
 
-    // @Test
-    public void test2() throws IOException {
+    @Test
+    public void testMarkovChainBuilder() {
+        final MaxEntPredicateGenerator<DoorsTreeNode> generator = DoorsMaxEntPredicateGenerator.getDefaultGenerator("pod_tag");
+        final HyperMarkovChainBuilder<String> hyperMarkovChainBuilder = new HyperMarkovChainBuilder<>(new NoSmoothing<>(), GrowRateFunction.LINEAR);
 
-        final MaxEntPredicateGenerator<DoorsTreeNode> generator = DoorsMaxEntPredicateGenerator.getDefaultGenerator("pod_tags");
+        for (final DoorsModule module : prodModules.values()) {
 
-        final DocumentTaggingAlgorithm<DoorsTreeNode, String> alg1 = new SimpleMaxEntAlgorithm<>(generator, Arrays.asList(new DoorsDocumentAccessor(wwcProd), new DoorsDocumentAccessor(asProd)));
-        final DocumentTaggingAlgorithm<DoorsTreeNode, String> alg2 = new MaxEntRecursiveViterbiAlgorithm<>(generator, Arrays.asList(new DoorsDocumentAccessor(wwcProd), new DoorsDocumentAccessor(asProd)));
+            hyperMarkovChainBuilder.addAll(new DoorsDocumentAccessor(module), o -> generator.getOutcome(o), t -> !t.isEmpty());
+        }
 
-        final TaggedDocument<DoorsTreeNode, String> alg1result = alg1.tagDocument(new DoorsDocumentAccessor(asProd));
-        final TaggedDocument<DoorsTreeNode, String> alg2result = alg2.tagDocument(new DoorsDocumentAccessor(asProd));
-
-        printEvaluationMetrics(new ConfusionMatrix<>(alg1result), new ConfusionMatrix<>(alg2result));
-
-        final SimpleModuleWriter simpleModuleWriter = new SimpleModuleWriter(System.out);
-        simpleModuleWriter.setObjectAnnotationFunction(o -> "predicted: " + alg2result.getPredictedTag(o) + ", actual: " + alg2result.getActualTag(o));
-        simpleModuleWriter.writeModule(asProd);
-        simpleModuleWriter.close();
-
+        System.out.println(hyperMarkovChainBuilder.build().getDOT(0.0));
     }
 
     private void printEvaluationMetrics(final ConfusionMatrix<String> simpleMaxEntConfusionMatrix, final ConfusionMatrix<String> maxEntRecursiveViterbiConfusionMatrix) {
