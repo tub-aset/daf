@@ -1,5 +1,6 @@
 package de.jpwinkler.daf.documenttagging;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +33,12 @@ import java.util.List;
  * @param <T>
  *            Type of the tags.
  */
-public class ConfusionMatrix<T> {
+public class ConfusionMatrix<T> implements Serializable {
+
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
     private final int[][] matrix;
     private final List<T> tags;
@@ -257,7 +263,7 @@ public class ConfusionMatrix<T> {
     public String toStringEvaluationMetrics() {
         final StringBuilder builder = new StringBuilder();
 
-        final int maxLength = tags.stream().mapToInt(t -> t.toString().length()).max().getAsInt();
+        final int maxLength = tags.stream().filter(t -> t != null).mapToInt(t -> t.toString().length()).max().getAsInt();
 
         builder.append(String.format("%" + maxLength + "s", "label") + "\tprecision\trecall   \tf1-score\n");
 
