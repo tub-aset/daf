@@ -27,10 +27,12 @@ import de.jpwinkler.daf.dafcore.csv.gui.commands.RunJavascriptCommand;
 import de.jpwinkler.daf.dafcore.csv.gui.commands.SwapObjectHeadingAndTextCommand;
 import de.jpwinkler.daf.dafcore.csv.gui.commands.UnwrapChildrenCommand;
 import de.jpwinkler.daf.dafcore.csv.gui.commands.UpdateAction;
+import de.jpwinkler.daf.dafcore.csv.gui.util.AttributeMissingFilter;
 import de.jpwinkler.daf.dafcore.csv.gui.util.CascadingFilter;
 import de.jpwinkler.daf.dafcore.csv.gui.util.CommandStack;
 import de.jpwinkler.daf.dafcore.csv.gui.util.DoorsObjectFilter;
 import de.jpwinkler.daf.dafcore.csv.gui.util.ObjectTextAndHeadingFilter;
+import de.jpwinkler.daf.dafcore.csv.gui.util.ReverseCascadingFilter;
 import de.jpwinkler.daf.dafcore.model.csv.AttributeDefinition;
 import de.jpwinkler.daf.dafcore.model.csv.CSVFactory;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
@@ -381,8 +383,12 @@ public class CSVViewerTabController {
         return commandStack.isDirty();
     }
 
-    public void updateFilter(final String text) {
-        filter = new CascadingFilter(new ObjectTextAndHeadingFilter(text, false, true));
+    public void updateFilter(final String text, final boolean includeChildren) {
+        if (includeChildren) {
+            filter = new CascadingFilter(new ObjectTextAndHeadingFilter(text, false, true));
+        } else {
+            filter = new ObjectTextAndHeadingFilter(text, false, true);
+        }
         populateContentTableView();
     }
 
@@ -390,6 +396,11 @@ public class CSVViewerTabController {
     }
 
     public void setupFilter() {
+    }
+
+    public void showUntagged() {
+        filter = new ReverseCascadingFilter(new AttributeMissingFilter("pod_tag"));
+        populateContentTableView();
     }
 
 }

@@ -16,6 +16,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -50,14 +51,22 @@ public class CSVViewerController {
     private TextField filterTextField;
 
     @FXML
+    private CheckBox includeChildrenCheckbox;
+
+    @FXML
     public void initialize() {
         chooser.setInitialDirectory(new File("C:/WORK/DOORS"));
         chooser.getExtensionFilters().add(new ExtensionFilter("CSV", "*.csv"));
         filterTextField.textProperty().addListener((ChangeListener<String>) (observable, oldValue, newValue) -> {
             final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
             if (selectedTab != null) {
-                tabControllers.get(selectedTab).updateFilter(newValue);
-
+                tabControllers.get(selectedTab).updateFilter(newValue, includeChildrenCheckbox.isSelected());
+            }
+        });
+        includeChildrenCheckbox.selectedProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
+            final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+            if (selectedTab != null) {
+                tabControllers.get(selectedTab).updateFilter(filterTextField.getText(), newValue);
             }
         });
     }
@@ -268,5 +277,13 @@ public class CSVViewerController {
             tabControllers.get(selectedTab).setupFilter();
         }
 
+    }
+
+    @FXML
+    public void showUntaggedClicked() {
+        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+        if (selectedTab != null) {
+            tabControllers.get(selectedTab).showUntagged();
+        }
     }
 }

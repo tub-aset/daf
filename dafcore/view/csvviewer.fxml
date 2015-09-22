@@ -93,13 +93,14 @@
                <center>
                   <ToolBar maxHeight="1.7976931348623157E308" BorderPane.alignment="CENTER">
                     <items>
-                      <Button mnemonicParsing="false" text="Button" />
+                      <Button mnemonicParsing="false" onAction="#showUntaggedClicked" text="Show untagged" />
                     </items>
                   </ToolBar>
                </center>
                <right>
                   <ToolBar maxHeight="1.7976931348623157E308" nodeOrientation="RIGHT_TO_LEFT" BorderPane.alignment="CENTER">
                      <items>
+                        <CheckBox fx:id="includeChildrenCheckbox" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" text="Include children" />
                         <TextField fx:id="filterTextField" nodeOrientation="LEFT_TO_RIGHT" prefWidth="250.0" promptText="Quick Filter" />
                      </items>
                   </ToolBar>
