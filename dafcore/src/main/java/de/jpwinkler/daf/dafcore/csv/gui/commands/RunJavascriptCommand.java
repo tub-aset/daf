@@ -3,7 +3,9 @@ package de.jpwinkler.daf.dafcore.csv.gui.commands;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ScriptableObject;
 
+import de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
+import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 
 public class RunJavascriptCommand extends AbstractCommand {
 
@@ -35,9 +37,14 @@ public class RunJavascriptCommand extends AbstractCommand {
 
         final ScriptableObject scope = cx.initStandardObjects();
 
-        ScriptableObject.putProperty(scope, "module", Context.javaToJS(getModule(), scope));
-
-        cx.evaluateString(scope, javascript, "script", 1, null);
+        getModule().accept(new DoorsTreeNodeVisitor() {
+            @Override
+            public boolean visitPreTraverse(final DoorsObject object) {
+                ScriptableObject.putProperty(scope, "object", Context.javaToJS(object, scope));
+                cx.evaluateString(scope, javascript, "script", 1, null);
+                return true;
+            }
+        });
 
         Context.exit();
 
