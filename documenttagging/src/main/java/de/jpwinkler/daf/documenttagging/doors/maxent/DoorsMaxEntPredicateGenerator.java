@@ -11,11 +11,11 @@ public class DoorsMaxEntPredicateGenerator implements MaxEntPredicateGenerator<D
 
     private final List<PredicateGenerator> predicateGenerators = new ArrayList<>();
 
-    private String labelAttribute = "pod_tags";
+    private String labelAttributeName = "pod_tags";
 
-    public DoorsMaxEntPredicateGenerator(final String labelAttribute) {
+    public DoorsMaxEntPredicateGenerator(final String labelAttributeName) {
         super();
-        this.labelAttribute = labelAttribute;
+        this.labelAttributeName = labelAttributeName;
     }
 
     public DoorsMaxEntPredicateGenerator() {
@@ -27,11 +27,13 @@ public class DoorsMaxEntPredicateGenerator implements MaxEntPredicateGenerator<D
     }
 
     @Override
-    public String[] getContextualPredicates(final DoorsTreeNode element) {
+    public String[] getContextualPredicates(final DoorsTreeNode element, final boolean isTraining) {
         if (element instanceof DoorsObject) {
             final List<String> predicates = new ArrayList<>();
             for (final PredicateGenerator predicateGenerator : predicateGenerators) {
-                predicates.addAll(predicateGenerator.getPredicates((DoorsObject) element));
+                if (isTraining || !predicateGenerator.useOnlyInTraining()) {
+                    predicates.addAll(predicateGenerator.getPredicates((DoorsObject) element));
+                }
             }
             return predicates.toArray(new String[predicates.size()]);
         } else {
@@ -41,19 +43,19 @@ public class DoorsMaxEntPredicateGenerator implements MaxEntPredicateGenerator<D
 
     @Override
     public String getOutcome(final DoorsTreeNode element) {
-        if (element != null && element.getAttributes().containsKey(labelAttribute)) {
-            return element.getAttributes().get(labelAttribute);
+        if (element != null && element.getAttributes().containsKey(labelAttributeName)) {
+            return element.getAttributes().get(labelAttributeName);
         } else {
             return null;
         }
     }
 
-    public static DoorsMaxEntPredicateGenerator getDefaultGenerator(final String labelAttribute) {
-        final DoorsMaxEntPredicateGenerator generator = new DoorsMaxEntPredicateGenerator(labelAttribute);
+    public static DoorsMaxEntPredicateGenerator getDefaultGenerator(final String labelAttributeName) {
+        final DoorsMaxEntPredicateGenerator generator = new DoorsMaxEntPredicateGenerator(labelAttributeName);
         // generator.addPredicateGenerator(new AsilPredicateGenerator());
         // generator.addPredicateGenerator(new
         // FoObjectTypePredicateGenerator());
-        generator.addPredicateGenerator(new NeighborhoodPredicateGenerator());
+        generator.addPredicateGenerator(new NeighborhoodPredicateGenerator(labelAttributeName, "parent_" + labelAttributeName, "previous_" + labelAttributeName));
         generator.addPredicateGenerator(new ObjectTypePredicateGenerator());
         generator.addPredicateGenerator(new SpecialCharacterPredicateGenerator());
         generator.addPredicateGenerator(new SpecialTokenPredicateGenerator());

@@ -47,4 +47,8 @@ public class DoorsDocumentAccessor extends DocumentAccessor<DoorsTreeNode> {
     public DoorsTreeNode getParent(final DoorsTreeNode element) {
         return element.getParent();
     }
+
+    public DoorsModule getDoorsModule() {
+        return doorsModule;
+    }
 }

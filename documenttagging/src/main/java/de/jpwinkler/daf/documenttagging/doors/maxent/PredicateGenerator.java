@@ -22,4 +22,8 @@ public abstract class PredicateGenerator {
 
     protected abstract void runGenerator(DoorsObject object);
 
+    public boolean useOnlyInTraining() {
+        return false;
+    }
+
 }

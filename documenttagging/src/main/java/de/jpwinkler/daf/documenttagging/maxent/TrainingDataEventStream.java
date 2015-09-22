@@ -27,14 +27,14 @@ public class TrainingDataEventStream<E> implements EventStream {
         }
         final E e = next;
         setNext();
-        return new Event(dataGenerator.getOutcome(e), dataGenerator.getContextualPredicates(e));
+        return new Event(dataGenerator.getOutcome(e), dataGenerator.getContextualPredicates(e, true));
     }
 
     private void setNext() {
         next = null;
         while (i.hasNext()) {
             final E candidate = i.next();
-            if (dataGenerator.getContextualPredicates(candidate) != null && dataGenerator.getOutcome(candidate) != null && !dataGenerator.getOutcome(candidate).isEmpty()) {
+            if (dataGenerator.getContextualPredicates(candidate, true) != null && dataGenerator.getOutcome(candidate) != null && !dataGenerator.getOutcome(candidate).isEmpty()) {
                 next = candidate;
                 return;
             }
