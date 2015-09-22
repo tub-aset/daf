@@ -7,7 +7,7 @@ public class Edge<T> {
 
     private T source1, source2;
 
-    private final Map<T, Double> weightedTargetNodes = new HashMap<>();
+    private final Map<T, Weight> weightedTargetNodes = new HashMap<>();
 
     public Edge() {
         // TODO Auto-generated constructor stub
@@ -35,21 +35,23 @@ public class Edge<T> {
         this.source2 = source2;
     }
 
-    public Map<T, Double> getWeightedTargetNodes() {
+    public Map<T, Weight> getWeightedTargetNodes() {
         return weightedTargetNodes;
     }
 
-    public double getWeight(final T target) {
+    public Weight getWeight(final T target) {
         if (weightedTargetNodes.containsKey(target)) {
             return weightedTargetNodes.get(target);
         } else {
-            return 0.0;
+            return Weight.ZERO;
         }
     }
 
     public void validate() {
-        if (Math.abs(weightedTargetNodes.values().stream().reduce(0.0, (d1, d2) -> d1 + d2) - 1.0) > 0.0000001) {
-            throw new RuntimeException("");
+        final double totalSumOfWeights = weightedTargetNodes.values().stream().mapToDouble(w -> w.doubleValue()).reduce(0.0, (d1, d2) -> d1 + d2);
+        if (Math.abs(totalSumOfWeights - 1.0) > 0.0000001) {
+            throw new RuntimeException("Total sum of weights is " +
+                    totalSumOfWeights);
         }
     }
 

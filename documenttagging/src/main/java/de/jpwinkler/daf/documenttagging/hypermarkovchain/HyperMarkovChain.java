@@ -21,16 +21,16 @@ public class HyperMarkovChain<T> {
         return edges.get(new CompositeKey2<>(node1, node2));
     }
 
-    public double getWeight(final T node1, final T node2, final T target) {
+    public Weight getWeight(final T node1, final T node2, final T target) {
         final Edge<T> edge = edges.get(new CompositeKey2<>(node1, node2));
         if (edge != null) {
             return edge.getWeight(target);
         } else {
-            return 0;
+            return Weight.ZERO;
         }
     }
 
-    public void putWeight(final T node1, final T node2, final T target, final double weight) {
+    public void putWeight(final T node1, final T node2, final T target, final Weight weight) {
         nodes.add(node1);
         nodes.add(node2);
         nodes.add(target);
@@ -42,7 +42,7 @@ public class HyperMarkovChain<T> {
         edge.getWeightedTargetNodes().put(target, weight);
     }
 
-    public String getDOT() {
+    public String getDOT(final double probabilityThreshold) {
         final StringBuilder builder = new StringBuilder();
         builder.append("digraph {\n");
         for (final T n1 : nodes) {
@@ -56,9 +56,9 @@ public class HyperMarkovChain<T> {
                 if (edge != null) {
                     for (final T n3 : nodes) {
                         final String n3s = String.valueOf(n3).replace(' ', '_');
-                        final double weight = edge.getWeight(n3);
-                        if (weight > 0) {
-                            builder.append(n1s + "__" + n2s + " -> " + n1s + "__" + n3s + "[label=\"" + String.format("%.3f", weight) + "\"];\n");
+                        final Weight weight = edge.getWeight(n3);
+                        if (weight != null && weight.doubleValue() > probabilityThreshold) {
+                            builder.append(n1s + "__" + n2s + " -> " + n1s + "__" + n3s + "[label=\"" + String.format("%.1f", weight.doubleValue() * 100) + "%\"];\n");
                             nodesToDescribe.add(n2);
                             nodesToDescribe.add(n3);
                         }

@@ -5,47 +5,34 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.logging.Logger;
 
 import de.jpwinkler.daf.documenttagging.DocumentAccessor;
+import de.jpwinkler.daf.documenttagging.hypermarkovchain.smoothing.AbstractSmoothingTechnique;
 import de.jpwinkler.daf.documenttagging.maxent.util.CompositeKey2;
 
 public class HyperMarkovChainBuilder<T> {
 
-    private static final Logger LOGGER = Logger.getLogger(HyperMarkovChainBuilder.class.getName());
-
     // (parent, pre) -> (state -> count)
     private final Map<CompositeKey2<T, T>, Map<T, Integer>> counts;
 
+    private final Map<T, Integer> unigramCounts;
+
     private final Set<T> allTags;
 
-    private SmoothingTechnique smoothingTechnique = SmoothingTechnique.NONE;
-    private GrowRateFunction growRateFunction = GrowRateFunction.ROOT_10;
+    private final AbstractSmoothingTechnique<T> smoothingTechnique;
+    private final GrowRateFunction growRateFunction;
 
-    public HyperMarkovChainBuilder() {
-        counts = new HashMap<>();
-        allTags = new HashSet<>();
-    }
-
-    public SmoothingTechnique getSmoothingTechnique() {
-        return smoothingTechnique;
-    }
-
-    public void setSmoothingTechnique(final SmoothingTechnique smoothingTechnique) {
+    public HyperMarkovChainBuilder(final AbstractSmoothingTechnique<T> smoothingTechnique, final GrowRateFunction growRateFunction) {
+        super();
         this.smoothingTechnique = smoothingTechnique;
-    }
-
-    public GrowRateFunction getGrowRateFunction() {
-        return growRateFunction;
-    }
-
-    public void setGrowRateFunction(final GrowRateFunction growRateFunction) {
         this.growRateFunction = growRateFunction;
+        counts = new HashMap<>();
+        unigramCounts = new HashMap<>();
+        allTags = new HashSet<>();
     }
 
     public void add(final T parent, final T previous, final T state, final int countToAdd) {
         if (state == null) {
-            LOGGER.warning("cannot add an edge with null target to hmc");
             return;
         }
         Map<T, Integer> cPaPre = counts.get(new CompositeKey2<T, T>(parent, previous));
@@ -59,6 +46,12 @@ public class HyperMarkovChainBuilder<T> {
             cPaPre.put(state, countToAdd);
         } else {
             cPaPre.put(state, count + countToAdd);
+        }
+
+        if (unigramCounts.containsKey(state)) {
+            unigramCounts.put(state, unigramCounts.get(state) + countToAdd);
+        } else {
+            unigramCounts.put(state, countToAdd);
         }
 
         allTags.add(parent);
@@ -93,23 +86,30 @@ public class HyperMarkovChainBuilder<T> {
             for (final T t2 : allTags) {
                 final Map<T, Integer> map = counts.get(new CompositeKey2<>(t1, t2));
                 final double sum = map != null ? map.values().stream().mapToDouble(i -> growRate(i)).sum() : 0;
-
                 for (final T tag : allTags) {
-
-                    final int count = (map != null && map.containsKey(tag)) ? map.get(tag) : 0;
-                    if (smoothingTechnique == SmoothingTechnique.LAPLACE) {
-                        result.putWeight(t1, t2, tag, (growRate(count) + 1) / (sum + allTags.size()));
-                    } else if (smoothingTechnique == SmoothingTechnique.NONE) {
-                        if (sum > 0) {
-                            result.putWeight(t1, t2, tag, growRate(count) / sum);
-                        }
+                    if (tag != null) {
+                        final int count = (map != null && map.containsKey(tag)) ? map.get(tag) : 0;
+                        result.putWeight(t1, t2, tag, new Weight(growRate(count), sum));
                     }
                 }
             }
         }
 
+        smooth(result);
         result.validate();
         return result;
+    }
+
+    private void smooth(final HyperMarkovChain<T> hyperMarkovChain) {
+        smoothingTechnique.init(counts, unigramCounts);
+        for (final T node1 : hyperMarkovChain.getNodes()) {
+            for (final T node2 : hyperMarkovChain.getNodes()) {
+                final Edge<T> edge = hyperMarkovChain.getEdge(node1, node2);
+                if (edge != null) {
+                    smoothingTechnique.smoothEdge(hyperMarkovChain.getNodes(), edge);
+                }
+            }
+        }
     }
 
     private double growRate(final Integer i) {
@@ -130,4 +130,5 @@ public class HyperMarkovChainBuilder<T> {
             return i;
         }
     }
+
 }
