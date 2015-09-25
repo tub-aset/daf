@@ -3,6 +3,7 @@ package de.jpwinkler.daf.dafcore.csv.gui;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,9 @@ import de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.dafcore.csv.ModuleCSVParser;
 import de.jpwinkler.daf.dafcore.csv.ModuleCSVWriter;
 import de.jpwinkler.daf.dafcore.csv.gui.commands.AbstractCommand;
+import de.jpwinkler.daf.dafcore.csv.gui.commands.CompositeCommand;
+import de.jpwinkler.daf.dafcore.csv.gui.commands.CopyObjectsAfterCommand;
+import de.jpwinkler.daf.dafcore.csv.gui.commands.CopyObjectsBelowCommand;
 import de.jpwinkler.daf.dafcore.csv.gui.commands.DeleteObjectCommand;
 import de.jpwinkler.daf.dafcore.csv.gui.commands.DemoteObjectCommand;
 import de.jpwinkler.daf.dafcore.csv.gui.commands.EditObjectAttributeCommand;
@@ -23,7 +27,9 @@ import de.jpwinkler.daf.dafcore.csv.gui.commands.NewObjectAfterCommand;
 import de.jpwinkler.daf.dafcore.csv.gui.commands.NewObjectBelowCommand;
 import de.jpwinkler.daf.dafcore.csv.gui.commands.PromoteObjectCommand;
 import de.jpwinkler.daf.dafcore.csv.gui.commands.ReduceToSelectionCommand;
-import de.jpwinkler.daf.dafcore.csv.gui.commands.RunJavascriptCommand;
+import de.jpwinkler.daf.dafcore.csv.gui.commands.RunJavascriptOnModuleCommand;
+import de.jpwinkler.daf.dafcore.csv.gui.commands.RunJavascriptOnObjectsCommand;
+import de.jpwinkler.daf.dafcore.csv.gui.commands.RunJavascriptOnSelectionCommand;
 import de.jpwinkler.daf.dafcore.csv.gui.commands.SwapObjectHeadingAndTextCommand;
 import de.jpwinkler.daf.dafcore.csv.gui.commands.UnwrapChildrenCommand;
 import de.jpwinkler.daf.dafcore.csv.gui.commands.UpdateAction;
@@ -32,6 +38,7 @@ import de.jpwinkler.daf.dafcore.csv.gui.util.CascadingFilter;
 import de.jpwinkler.daf.dafcore.csv.gui.util.CommandStack;
 import de.jpwinkler.daf.dafcore.csv.gui.util.DoorsObjectFilter;
 import de.jpwinkler.daf.dafcore.csv.gui.util.ObjectTextAndHeadingFilter;
+import de.jpwinkler.daf.dafcore.csv.gui.util.PredicateFilter;
 import de.jpwinkler.daf.dafcore.csv.gui.util.ReverseCascadingFilter;
 import de.jpwinkler.daf.dafcore.model.csv.AttributeDefinition;
 import de.jpwinkler.daf.dafcore.model.csv.CSVFactory;
@@ -45,6 +52,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
@@ -71,6 +79,7 @@ public class CSVViewerTabController {
 
     private final CommandStack<AbstractCommand> commandStack = new CommandStack<>();
     private DoorsObjectFilter filter = null;
+    private final List<DoorsObject> clipboard = new ArrayList<>();
 
     @FXML
     private TreeView<OutlineTreeItem> outlineTreeView;
@@ -81,6 +90,10 @@ public class CSVViewerTabController {
     @FXML
     private TextArea javascriptTextArea;
 
+    @FXML
+    public void initialize() {
+        contentTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+    }
 
     public void setMainApp(final CSVViewerApplication csvViewerApplication) {
         this.csvViewerApplication = csvViewerApplication;
@@ -257,11 +270,6 @@ public class CSVViewerTabController {
         }
     }
 
-    @FXML
-    public void runJavaScriptClicked() {
-        executeCommand(new RunJavascriptCommand(module, javascriptTextArea.getText()));
-    }
-
     public void swapObjectHeadingAndText() {
         executeCommand(new SwapObjectHeadingAndTextCommand(module, getCurrentObject()));
     }
@@ -400,6 +408,45 @@ public class CSVViewerTabController {
 
     public void showUntagged() {
         filter = new ReverseCascadingFilter(new AttributeMissingFilter("pod_tag"));
+        populateContentTableView();
+    }
+
+    @FXML
+    public void runJavaScriptModuleClicked() {
+        executeCommand(new RunJavascriptOnModuleCommand(module, javascriptTextArea.getText()));
+    }
+
+    @FXML
+    public void runJavaScriptObjectsClicked() {
+        executeCommand(new RunJavascriptOnObjectsCommand(module, javascriptTextArea.getText()));
+    }
+
+    @FXML
+    public void runJavaScriptSelectionClicked() {
+        executeCommand(new RunJavascriptOnSelectionCommand(module, javascriptTextArea.getText(), contentTableView.getSelectionModel().getSelectedItems()));
+    }
+
+    public void pasteBelow() {
+        executeCommand(new CopyObjectsBelowCommand(module, contentTableView.getSelectionModel().getSelectedItem(), clipboard));
+    }
+
+    public void pasteAfter() {
+        executeCommand(new CopyObjectsAfterCommand(module, contentTableView.getSelectionModel().getSelectedItem(), clipboard));
+    }
+
+    public void copy() {
+        clipboard.clear();
+        clipboard.addAll(contentTableView.getSelectionModel().getSelectedItems());
+    }
+
+    public void cut() {
+        copy();
+        final List<DeleteObjectCommand> commands = contentTableView.getSelectionModel().getSelectedItems().stream().map(o -> new DeleteObjectCommand(module, o)).collect(Collectors.toList());
+        executeCommand(new CompositeCommand(module, commands));
+    }
+
+    public void showOutline() {
+        filter = new PredicateFilter(p -> p.isHeading());
         populateContentTableView();
     }
 

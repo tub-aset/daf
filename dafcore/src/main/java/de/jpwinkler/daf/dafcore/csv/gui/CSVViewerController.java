@@ -286,4 +286,44 @@ public class CSVViewerController {
             tabControllers.get(selectedTab).showUntagged();
         }
     }
+
+    @FXML
+    public void showOutlineClicked() {
+        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+        if (selectedTab != null) {
+            tabControllers.get(selectedTab).showOutline();
+        }
+    }
+
+    @FXML
+    public void cutClicked() {
+        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+        if (selectedTab != null) {
+            tabControllers.get(selectedTab).cut();
+        }
+    }
+
+    @FXML
+    public void copyClicked() {
+        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+        if (selectedTab != null) {
+            tabControllers.get(selectedTab).copy();
+        }
+    }
+
+    @FXML
+    public void pasteAfterClicked() {
+        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+        if (selectedTab != null) {
+            tabControllers.get(selectedTab).pasteAfter();
+        }
+    }
+
+    @FXML
+    public void pasteBelowClicked() {
+        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+        if (selectedTab != null) {
+            tabControllers.get(selectedTab).pasteBelow();
+        }
+    }
 }

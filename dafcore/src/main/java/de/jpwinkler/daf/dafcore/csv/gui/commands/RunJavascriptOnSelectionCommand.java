@@ -1,19 +1,23 @@
 package de.jpwinkler.daf.dafcore.csv.gui.commands;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ScriptableObject;
 
-import de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 
-public class RunJavascriptCommand extends AbstractCommand {
+public class RunJavascriptOnSelectionCommand extends AbstractCommand {
 
     private final String javascript;
+    private final List<DoorsObject> selectedObjects;
 
-    public RunJavascriptCommand(final DoorsModule module, final String javascript) {
+    public RunJavascriptOnSelectionCommand(final DoorsModule module, final String javascript, final List<DoorsObject> selection) {
         super(module);
         this.javascript = javascript;
+        selectedObjects = new ArrayList<>(selection);
     }
 
     @Override
@@ -37,14 +41,10 @@ public class RunJavascriptCommand extends AbstractCommand {
 
         final ScriptableObject scope = cx.initStandardObjects();
 
-        getModule().accept(new DoorsTreeNodeVisitor() {
-            @Override
-            public boolean visitPreTraverse(final DoorsObject object) {
-                ScriptableObject.putProperty(scope, "object", Context.javaToJS(object, scope));
-                cx.evaluateString(scope, javascript, "script", 1, null);
-                return true;
-            }
-        });
+        for (final DoorsObject object : selectedObjects) {
+            ScriptableObject.putProperty(scope, "object", Context.javaToJS(object, scope));
+            cx.evaluateString(scope, javascript, "script", 1, null);
+        }
 
         Context.exit();
 
