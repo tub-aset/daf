@@ -130,7 +130,7 @@ public abstract class AbstractRecursiveViterbiAlgorithm<T, S> {
         }
     }
 
-    private AbstractIntermediateResult<S> solve(final T node, final boolean isParentState) {
+    private AbstractIntermediateResult<S> solve(final T node, final boolean isRootNode) {
 
         if (results.containsKey(node)) {
             // This is what makes recursive viterbi feasible. We assume that for
@@ -141,14 +141,28 @@ public abstract class AbstractRecursiveViterbiAlgorithm<T, S> {
 
         final AbstractIntermediateResult<S> result = new AbstractIntermediateResult<>();
 
-        final List<S> states = isParentState ? Arrays.asList((S) null) : getStates();
+        // recursive viterbi does not tag the root node of the tree, because the
+        // root node represents the document itself, and not an element that is
+        // part of the document. The document itself is not tagged, only its
+        // contents.
+
+        // To prevent the algorithm from tagging the root node, we allow null as
+        // the only possible state for the root node. We do that by letting
+        // parentState iterate over a list containing only null, not the list of
+        // states.
+        final List<S> states = isRootNode ? Arrays.asList((S) null) : getStates();
 
         for (final S parentState : states) {
-
+            // We are now going to calculate the most probable child state
+            // sequence, given a specific parentState for node.
             if (!getChildren(node).isEmpty()) {
+                // If it is not empty, run a pretty standard viterbi algorithm.
                 final double[][] trellis = new double[getChildren(node).size()][getStates().size()];
                 final int[][] backPointers = new int[getChildren(node).size()][getStates().size()];
 
+                // This is where recursion occurs. For each children of node, we
+                // add the probability for the state in question to ensure that
+                // the most probable state tree is picked in the end.
                 AbstractIntermediateResult<S> r = solve(getChildren(node).get(0), false);
                 int iState = 0;
                 for (final S state : getStates()) {
@@ -159,6 +173,7 @@ public abstract class AbstractRecursiveViterbiAlgorithm<T, S> {
 
                 for (int iChild = 1; iChild < getChildren(node).size(); iChild++) {
                     final T child = getChildren(node).get(iChild);
+                    // Recursion, see above.
                     r = solve(child, false);
                     iState = 0;
                     for (final S state : getStates()) {
@@ -180,6 +195,7 @@ public abstract class AbstractRecursiveViterbiAlgorithm<T, S> {
                 final S[] stateSequence = createArray(getChildren(node).size());
                 double sequenceLogProbability = Double.NEGATIVE_INFINITY;
 
+                // Select the last state with the highest probability.
                 for (int lastState = 0; lastState < getStates().size(); lastState++) {
                     if (trellis[getChildren(node).size() - 1][lastState] > sequenceLogProbability) {
                         sequenceLogProbability = trellis[getChildren(node).size() - 1][lastState];
@@ -188,21 +204,34 @@ public abstract class AbstractRecursiveViterbiAlgorithm<T, S> {
                 }
 
                 if (sequenceLogProbability > Double.NEGATIVE_INFINITY) {
+                    // If we have found a sequence with an actual probability,
+                    // follow back pointers, build the state sequence and store
+                    // the result.
                     for (int iTreeNode = getChildren(node).size() - 1; iTreeNode > 0; iTreeNode--) {
                         stateSequence[iTreeNode - 1] = getStates().get(backPointers[iTreeNode][getStates().indexOf(stateSequence[iTreeNode])]);
                     }
                     result.putResult(parentState, sequenceLogProbability, stateSequence);
                 } else {
+                    // If there is no sequence, store that information as well.
                     result.putResult(parentState, sequenceLogProbability, null);
+                    // This may occur, if getProbability() returns -inf for too
+                    // many combination of states. Reasons for that may be very
+                    // sparse and non-smoothed training data.
                 }
 
             } else {
+                // If the node has no children, assume that parentState has
+                // maximum probability for the empty child state sequence.
                 result.putResult(parentState, 0, createArray(0));
             }
 
         }
 
         if (getChildren(node).size() > 0) {
+            // Count progress here, because solve is called for each node only
+            // once. We do not post updates in regular intervals this time
+            // (nodes with more child nodes need more time), but it's good
+            // enough this way.
             processedNodes += getChildren(node).size();
             if (progressMonitor != null) {
                 progressMonitor.onProgress(processedNodes, nodeCount);
