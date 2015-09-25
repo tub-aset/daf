@@ -30,6 +30,8 @@ public class KatzBackoff<T> extends AbstractSmoothingTechnique<T> {
                 double p;
 
                 if (weight.getCount() > k) {
+                    // TODO: for some reason, k does not have any influence at
+                    // all.
                     p = d * weight.doubleValue();
                 } else {
                     final double sumOfProbabilitiesOfAllThingsWithBigramCountLessThanK = nodes.stream().filter(n -> edge.getWeight(n).getCount() <= k).mapToDouble(n -> d * getUnigramProbability(n)).sum();
