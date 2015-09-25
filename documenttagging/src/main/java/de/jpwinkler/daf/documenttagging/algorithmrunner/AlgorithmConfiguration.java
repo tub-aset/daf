@@ -1,16 +1,13 @@
-package de.jpwinkler.daf.documenttagging;
-
-import java.io.Serializable;
+package de.jpwinkler.daf.documenttagging.algorithmrunner;
 
 import de.jpwinkler.daf.documenttagging.hypermarkovchain.GrowRateFunction;
 import de.jpwinkler.daf.documenttagging.hypermarkovchain.smoothing.SmoothingTechnique;
 
-public class AlgorithmConfiguration implements Serializable {
+public class AlgorithmConfiguration {
 
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
+    private String testDocument;
+
+    private String algorithmName;
 
     private SmoothingTechnique smoothingTechnique;
 
@@ -24,8 +21,10 @@ public class AlgorithmConfiguration implements Serializable {
 
     private GrowRateFunction growRateFunction;
 
-    public AlgorithmConfiguration(final SmoothingTechnique smoothingTechnique, final double smoothingK, final double smoothingD, final int gisCutoff, final int gisIterations, final GrowRateFunction growRateFunction) {
+    public AlgorithmConfiguration(final String testDocument, final String algorithmName, final SmoothingTechnique smoothingTechnique, final double smoothingK, final double smoothingD, final int gisCutoff, final int gisIterations, final GrowRateFunction growRateFunction) {
         super();
+        this.testDocument = testDocument;
+        this.algorithmName = algorithmName;
         this.smoothingTechnique = smoothingTechnique;
         this.smoothingK = smoothingK;
         this.smoothingD = smoothingD;
@@ -35,6 +34,22 @@ public class AlgorithmConfiguration implements Serializable {
     }
 
     public AlgorithmConfiguration() {
+    }
+
+    public String getTestDocument() {
+        return testDocument;
+    }
+
+    public void setTestDocument(final String testDocument) {
+        this.testDocument = testDocument;
+    }
+
+    public String getAlgorithmName() {
+        return algorithmName;
+    }
+
+    public void setAlgorithmName(final String algorithmName) {
+        this.algorithmName = algorithmName;
     }
 
     public SmoothingTechnique getSmoothingTechnique() {
@@ -87,13 +102,14 @@ public class AlgorithmConfiguration implements Serializable {
 
     @Override
     public String toString() {
-        return "cutoff: " + gisCutoff + ", iterations: " + gisIterations + ", grow rate: " + growRateFunction + ", smoothing: " + smoothingTechnique + ", d: " + smoothingD + ", k: " + smoothingK;
+        return "test document: " + testDocument + ", alg: " + algorithmName + ", cutoff: " + gisCutoff + ", iterations: " + gisIterations + ", grow rate: " + growRateFunction + ", smoothing: " + smoothingTechnique + ", d: " + smoothingD + ", k: " + smoothingK;
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
+        result = prime * result + ((algorithmName == null) ? 0 : algorithmName.hashCode());
         result = prime * result + gisCutoff;
         result = prime * result + gisIterations;
         result = prime * result + ((growRateFunction == null) ? 0 : growRateFunction.hashCode());
@@ -103,6 +119,7 @@ public class AlgorithmConfiguration implements Serializable {
         temp = Double.doubleToLongBits(smoothingK);
         result = prime * result + (int) (temp ^ (temp >>> 32));
         result = prime * result + ((smoothingTechnique == null) ? 0 : smoothingTechnique.hashCode());
+        result = prime * result + ((testDocument == null) ? 0 : testDocument.hashCode());
         return result;
     }
 
@@ -118,6 +135,13 @@ public class AlgorithmConfiguration implements Serializable {
             return false;
         }
         final AlgorithmConfiguration other = (AlgorithmConfiguration) obj;
+        if (algorithmName == null) {
+            if (other.algorithmName != null) {
+                return false;
+            }
+        } else if (!algorithmName.equals(other.algorithmName)) {
+            return false;
+        }
         if (gisCutoff != other.gisCutoff) {
             return false;
         }
@@ -134,6 +158,13 @@ public class AlgorithmConfiguration implements Serializable {
             return false;
         }
         if (smoothingTechnique != other.smoothingTechnique) {
+            return false;
+        }
+        if (testDocument == null) {
+            if (other.testDocument != null) {
+                return false;
+            }
+        } else if (!testDocument.equals(other.testDocument)) {
             return false;
         }
         return true;
