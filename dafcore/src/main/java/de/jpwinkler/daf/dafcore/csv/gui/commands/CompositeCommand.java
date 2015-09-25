@@ -52,4 +52,9 @@ public class CompositeCommand extends AbstractCommand {
         return collect.toArray(new UpdateAction[collect.size()]);
     }
 
+    @Override
+    public boolean canUndo() {
+        return commands.stream().allMatch(c -> c.canUndo());
+    }
+
 }
