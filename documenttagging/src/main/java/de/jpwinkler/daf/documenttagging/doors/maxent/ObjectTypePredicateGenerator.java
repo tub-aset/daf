@@ -2,6 +2,13 @@ package de.jpwinkler.daf.documenttagging.doors.maxent;
 
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 
+/**
+ * A predicate generator that generates predicates based on the Object Type
+ * attribute of DOORS objects.
+ *
+ * @author jonwink
+ *
+ */
 public class ObjectTypePredicateGenerator extends PredicateGenerator {
 
     @Override

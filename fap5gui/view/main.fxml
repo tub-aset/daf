@@ -56,7 +56,7 @@
         <tabs>
           <Tab text="Current Progress">
                <content>
-                  <PieChart id="pieChartCurrentProgress" fx:id="currentProgressChart" animated="false" stylesheets="@../../../../../Users/jonwink/Desktop/Neues%20Textdokument.css" />
+                  <PieChart id="pieChartCurrentProgress" fx:id="currentProgressChart" animated="false" />
                </content>
           </Tab>
             <Tab text="Progress Over Time">

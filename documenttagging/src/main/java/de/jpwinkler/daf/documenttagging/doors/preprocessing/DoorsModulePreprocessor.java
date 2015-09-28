@@ -27,6 +27,10 @@ public class DoorsModulePreprocessor {
         doorsModulePreprocessor.addObjectPreprocessor(new SpecialCharacterRemovalPreprocessor());
         try {
             doorsModulePreprocessor.addObjectPreprocessor(new CompoundSplitterPreprocessor());
+        } catch (final IOException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+        }
+        try {
             doorsModulePreprocessor.addObjectPreprocessor(new StopwordRemovalPreprocessor(DoorsModulePreprocessor.class.getResourceAsStream("stopwords.txt")));
         } catch (final IOException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);

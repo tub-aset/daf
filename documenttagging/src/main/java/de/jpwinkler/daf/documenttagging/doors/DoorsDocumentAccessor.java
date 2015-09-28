@@ -6,10 +6,23 @@ import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
 import de.jpwinkler.daf.documenttagging.DocumentAccessor;
 
+/**
+ * An implementation of {@link DocumentAccessor} that allows DOORS modules to be
+ * tagged by a document tagging algorithm.
+ *
+ * @author jonwink
+ *
+ */
 public class DoorsDocumentAccessor extends DocumentAccessor<DoorsTreeNode> {
 
     private final DoorsModule doorsModule;
 
+    /**
+     * Creates a new instance of this class.
+     *
+     * @param doorsModule
+     *            The DOORS module that this new instance should wrap.
+     */
     public DoorsDocumentAccessor(final DoorsModule doorsModule) {
         super();
         this.doorsModule = doorsModule;
@@ -48,6 +61,11 @@ public class DoorsDocumentAccessor extends DocumentAccessor<DoorsTreeNode> {
         return element.getParent();
     }
 
+    /**
+     * Returns the DOORS module wrapped by this document accessor.
+     *
+     * @return
+     */
     public DoorsModule getDoorsModule() {
         return doorsModule;
     }

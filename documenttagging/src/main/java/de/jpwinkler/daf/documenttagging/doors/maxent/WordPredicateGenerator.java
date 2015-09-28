@@ -2,6 +2,13 @@ package de.jpwinkler.daf.documenttagging.doors.maxent;
 
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 
+/**
+ * A predicate generator that generates a predicate for each word in the object
+ * text.
+ * 
+ * @author jonwink
+ *
+ */
 public class WordPredicateGenerator extends PredicateGenerator {
 
     private String[] tokenizer(final String s) {
