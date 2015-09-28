@@ -5,6 +5,8 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
@@ -14,6 +16,8 @@ import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 
 public class ModuleCSVWriter extends ModuleWriter {
+
+    private static final Logger LOGGER = Logger.getLogger(ModuleCSVWriter.class.getName());
 
     private static final CSVFormat FORMAT = CSVFormat.newFormat(',')
             .withQuote('"')
@@ -54,8 +58,7 @@ public class ModuleCSVWriter extends ModuleWriter {
                 try {
                     printer.printRecord(values);
                 } catch (final IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    LOGGER.log(Level.SEVERE, e.getMessage(), e);
                 }
                 return true;
             }

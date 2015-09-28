@@ -2,6 +2,8 @@ package de.jpwinkler.daf.fap5gui.gui;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import de.jpwinkler.daf.doorsbridge.DoorsApplication;
@@ -33,6 +35,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class MainController {
+
+    private static final Logger LOGGER = Logger.getLogger(MainController.class.getName());
 
     @FXML
     private PieChart currentProgressChart;
@@ -268,8 +272,7 @@ public class MainController {
             try {
                 doorsApplication.gotoObject(selectedItem.getAbsoluteModuleName(), selectedItem.getObjectAbsoluteNumber());
             } catch (DoorsException | IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                LOGGER.log(Level.SEVERE, e.getMessage(), e);
             }
         }
     }

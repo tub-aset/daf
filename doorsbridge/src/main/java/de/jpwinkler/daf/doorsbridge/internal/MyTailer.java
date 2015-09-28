@@ -1,12 +1,15 @@
 package de.jpwinkler.daf.doorsbridge.internal;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MyTailer implements Runnable {
+
+    private static final Logger LOGGER = Logger.getLogger(MyTailer.class.getName());
 
     private final OutputStream out;
 
@@ -50,12 +53,8 @@ public class MyTailer implements Runnable {
             }
 
             raf.close();
-        } catch (final FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         } catch (final IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 

@@ -254,6 +254,12 @@ public class ConfusionMatrix<T> {
         return builder.toString();
     }
 
+    /**
+     * Creates and resturns a string representation of all tags and their
+     * precision, recall and f1-scores.
+     * 
+     * @return
+     */
     public String toStringEvaluationMetrics() {
         final StringBuilder builder = new StringBuilder();
 

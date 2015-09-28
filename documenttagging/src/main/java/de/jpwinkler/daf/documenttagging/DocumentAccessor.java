@@ -3,6 +3,13 @@ package de.jpwinkler.daf.documenttagging;
 import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * Type of the tree node elements
+ *
+ * @author jonwink
+ *
+ * @param <E>
+ */
 public abstract class DocumentAccessor<E> {
 
     public abstract E getDocumentRoot();

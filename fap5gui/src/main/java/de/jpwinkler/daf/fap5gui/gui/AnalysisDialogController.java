@@ -2,6 +2,8 @@ package de.jpwinkler.daf.fap5gui.gui;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
 
@@ -10,7 +12,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
 import de.jpwinkler.daf.fap5gui.model.AnalysisSettings;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -21,6 +22,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class AnalysisDialogController {
+
+    private static final Logger LOGGER = Logger.getLogger(AnalysisDialogController.class.getName());
 
     private static final File SETTINGS_FILE = new File("temp/settings.json");
 
@@ -43,8 +46,6 @@ public class AnalysisDialogController {
     @FXML
     private TextField issueListsDirectoryText;
     @FXML
-    private Button csvDirectorySelectButton;
-    @FXML
     private Button moduleListSelectButton;
     @FXML
     private Button progressReportSourceSelectButton;
@@ -52,10 +53,6 @@ public class AnalysisDialogController {
     private Button progressReportTargetSelectButton;
     @FXML
     private Button issueListsDirectorySelectButton;
-    @FXML
-    private Button runButton;
-    @FXML
-    private Button cancelButton;
 
     @FXML
     private PasswordField passwordText;
@@ -71,7 +68,7 @@ public class AnalysisDialogController {
     private Fap5GuiApplication mainApp;
 
     @FXML
-    public void runNewDoorsAnalysisCheckBoxClicked(final ActionEvent event) {
+    public void runNewDoorsAnalysisCheckBoxClicked() {
         updateUI();
     }
 
@@ -91,19 +88,19 @@ public class AnalysisDialogController {
 
     // Event Listener on CheckBox[#updateProgressReportCheckBox].onAction
     @FXML
-    public void updateProgressReportCheckBoxClicked(final ActionEvent event) {
+    public void updateProgressReportCheckBoxClicked() {
         updateUI();
     }
 
     // Event Listener on CheckBox[#generateIssueListsCheckBox].onAction
     @FXML
-    public void generateIssueListsCheckBoxClicked(final ActionEvent event) {
+    public void generateIssueListsCheckBoxClicked() {
         updateUI();
     }
 
     // Event Listener on Button[#csvDirectorySelectButton].onAction
     @FXML
-    public void csvDirectorySelectButtonClicked(final ActionEvent event) {
+    public void csvDirectorySelectButtonClicked() {
         final DirectoryChooser chooser = new DirectoryChooser();
         if (csvDirectoryText.getText() != null && new File(csvDirectoryText.getText()).exists()) {
             chooser.setInitialDirectory(new File(csvDirectoryText.getText()));
@@ -116,7 +113,7 @@ public class AnalysisDialogController {
 
     // Event Listener on Button[#moduleListSelectButton].onAction
     @FXML
-    public void moduleListSelectButtonClicked(final ActionEvent event) {
+    public void moduleListSelectButtonClicked() {
         final FileChooser chooser = new FileChooser();
         if (moduleListText.getText() != null && new File(moduleListText.getText()).exists()) {
             chooser.setInitialDirectory(new File(moduleListText.getText()).getParentFile());
@@ -129,7 +126,7 @@ public class AnalysisDialogController {
 
     // Event Listener on Button[#progressReportSourceSelectButton].onAction
     @FXML
-    public void progressReportSourceSelectButtonClicked(final ActionEvent event) {
+    public void progressReportSourceSelectButtonClicked() {
         final FileChooser chooser = new FileChooser();
         if (progressReportSourceText.getText() != null && new File(progressReportSourceText.getText()).exists()) {
             chooser.setInitialDirectory(new File(progressReportSourceText.getText()).getParentFile());
@@ -142,7 +139,7 @@ public class AnalysisDialogController {
 
     // Event Listener on Button[#progressReportTargetSelectButton].onAction
     @FXML
-    public void progressReportTargetSelectButtonClicked(final ActionEvent event) {
+    public void progressReportTargetSelectButtonClicked() {
         final FileChooser chooser = new FileChooser();
         if (progressReportTargetText.getText() != null && new File(progressReportTargetText.getText()).exists()) {
             chooser.setInitialDirectory(new File(progressReportTargetText.getText()).getParentFile());
@@ -155,7 +152,7 @@ public class AnalysisDialogController {
 
     // Event Listener on Button[#issueListsDirectorySelectButton].onAction
     @FXML
-    public void issueListsDirectorySelectButtonClicked(final ActionEvent event) {
+    public void issueListsDirectorySelectButtonClicked() {
         final DirectoryChooser chooser = new DirectoryChooser();
         if (issueListsDirectoryText.getText() != null && new File(issueListsDirectoryText.getText()).exists()) {
             chooser.setInitialDirectory(new File(issueListsDirectoryText.getText()));
@@ -168,7 +165,7 @@ public class AnalysisDialogController {
 
     // Event Listener on Button[#runButton].onAction
     @FXML
-    public void runButtonClicked(final ActionEvent event) {
+    public void runButtonClicked() {
         saveSettings();
 
         mainApp.runAnalysis(settings);
@@ -195,14 +192,13 @@ public class AnalysisDialogController {
         try {
             FileUtils.write(SETTINGS_FILE, settingsJson);
         } catch (final IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 
     // Event Listener on Button[#cancelButton].onAction
     @FXML
-    public void cancelButtonClicked(final ActionEvent event) {
+    public void cancelButtonClicked() {
         saveSettings();
         dialogStage.close();
     }
@@ -231,7 +227,7 @@ public class AnalysisDialogController {
                 databaseText.setText(settings.getDoorsDatabase());
                 usernameText.setText(settings.getDoorsUsername());
             } catch (JsonSyntaxException | IOException e) {
-                e.printStackTrace();
+                LOGGER.log(Level.SEVERE, e.getMessage(), e);
                 settings = new AnalysisSettings();
             }
         }

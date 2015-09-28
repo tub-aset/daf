@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor;
@@ -67,6 +69,8 @@ import javafx.stage.Stage;
 
 public class CSVViewerTabController {
 
+    private static final Logger LOGGER = Logger.getLogger(CSVViewerTabController.class.getName());
+
     private static final String MAIN_COLUMN = "Object Heading & Object Text";
     private static final List<String> WANTED_ATTRIBUTES = Arrays.asList("Object Identifier", "FO_Object_Type", MAIN_COLUMN, "Object Type", "pod_tag", "pod_tags", "ASIL", "Maturity", "Edit Type", "Relevance");
 
@@ -109,7 +113,7 @@ public class CSVViewerTabController {
         module.accept(new DoorsTreeNodeVisitor() {
             @Override
             public boolean visitPreTraverse(final DoorsObject object) {
-                if (filter == null || (filter != null && filter.checkObject(object))) {
+                if (filter == null || filter.checkObject(object)) {
                     contentTableView.getItems().add(object);
                 }
                 return true;
@@ -137,7 +141,7 @@ public class CSVViewerTabController {
             updateTabTitle();
             return true;
         } catch (final IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
             return false;
         }
     }
@@ -401,9 +405,13 @@ public class CSVViewerTabController {
     }
 
     public void setupColumns() {
+        // TODO Implement this method.
+        throw new UnsupportedOperationException("Not yet implemented.");
     }
 
     public void setupFilter() {
+        // TODO Implement this method.
+        throw new UnsupportedOperationException("Not yet implemented.");
     }
 
     public void showUntagged() {

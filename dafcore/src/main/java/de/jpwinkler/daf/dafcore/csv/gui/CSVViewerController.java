@@ -2,10 +2,11 @@ package de.jpwinkler.daf.dafcore.csv.gui;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.util.CSVParseException;
 import javafx.application.Platform;
@@ -17,7 +18,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
@@ -27,14 +27,7 @@ import javafx.stage.Stage;
 
 public class CSVViewerController {
 
-    @FXML
-    private MenuItem openMenuItem;
-
-    @FXML
-    private MenuItem closeMenuItem;
-
-    @FXML
-    private MenuItem exitMenuItem;
+    private static final Logger LOGGER = Logger.getLogger(CSVViewerController.class.getName());
 
     private Stage primaryStage;
 
@@ -79,14 +72,13 @@ public class CSVViewerController {
             try {
                 newTabFromFile(selectedFile);
             } catch (IOException | CSVParseException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                LOGGER.log(Level.SEVERE, e.getMessage(), e);
             }
 
         }
     }
 
-    public void newTabFromFile(final File selectedFile) throws MalformedURLException, IOException, CSVParseException {
+    public void newTabFromFile(final File selectedFile) throws IOException, CSVParseException {
         final FXMLLoader loader = new FXMLLoader();
         loader.setLocation(new File("view/csvviewertab.fxml").toURI().toURL());
         final Parent root = loader.load();
@@ -240,9 +232,7 @@ public class CSVViewerController {
         try {
             newTabFromFile(null);
         } catch (IOException | CSVParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 

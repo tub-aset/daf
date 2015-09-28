@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
@@ -71,7 +72,7 @@ public class DoorsApplicationImpl implements DoorsApplication {
             Dispatch.call(doorsApplication, "runStr", " ");
             return true;
         } catch (final Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
             return false;
         }
     }
@@ -212,8 +213,7 @@ public class DoorsApplicationImpl implements DoorsApplication {
         try {
             exec.waitFor();
         } catch (final InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 }

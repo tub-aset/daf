@@ -14,7 +14,7 @@
                 <Menu mnemonicParsing="false" text="File">
                   <items>
                         <MenuItem mnemonicParsing="false" onAction="#newClicked" text="New" />
-                    <MenuItem fx:id="openMenuItem" mnemonicParsing="false" onAction="#openClicked" text="Open...">
+                    <MenuItem mnemonicParsing="false" onAction="#openClicked" text="Open...">
                            <accelerator>
                               <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator>
@@ -29,12 +29,12 @@
                               <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                            </accelerator>
                         </MenuItem>
-                        <MenuItem fx:id="closeMenuItem" mnemonicParsing="false" onAction="#closeClicked" text="Close">
+                        <MenuItem mnemonicParsing="false" onAction="#closeClicked" text="Close">
                            <accelerator>
                               <KeyCodeCombination alt="UP" code="W" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator>
                         </MenuItem>
-                        <MenuItem fx:id="exitMenuItem" mnemonicParsing="false" onAction="#exitClicked" text="Exit" />
+                        <MenuItem mnemonicParsing="false" onAction="#exitClicked" text="Exit" />
                   </items>
                 </Menu>
                   <Menu mnemonicParsing="false" text="Edit">

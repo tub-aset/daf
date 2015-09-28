@@ -10,6 +10,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
 
@@ -46,6 +48,8 @@ import de.jpwinkler.daf.workflowdsl.Workflow;
 
 public class AnalysisRunner {
 
+    private static final Logger LOGGER = Logger.getLogger(AnalysisRunner.class.getName());
+
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMdd");
 
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -72,7 +76,6 @@ public class AnalysisRunner {
                 if (!results.getVersionNumbers().contains(child.getName())) {
                     progressMonitor.updateProgres((double) i / (double) listFiles.length, "Processing " + child.getName());
                     processExistingVersionFolder(child.getName());
-                    System.gc();
                 }
             }
 
@@ -146,7 +149,7 @@ public class AnalysisRunner {
             final Version v = createVersion(version, workflowResults.get(codeBeamerModelConstructorTarget));
             results.addVersion(v);
         } catch (final WorkflowException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 
@@ -187,7 +190,7 @@ public class AnalysisRunner {
             results.addVersion(version);
 
         } catch (final WorkflowException | IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 
@@ -207,7 +210,7 @@ public class AnalysisRunner {
                     try {
                         writer.write(object.getText() + "\n");
                     } catch (final Exception e) {
-                        e.printStackTrace();
+                        LOGGER.log(Level.SEVERE, e.getMessage(), e);
                     }
                     return true;
                 }

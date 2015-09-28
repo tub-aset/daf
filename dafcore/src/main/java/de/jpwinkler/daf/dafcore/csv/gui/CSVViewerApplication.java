@@ -2,6 +2,8 @@ package de.jpwinkler.daf.dafcore.csv.gui;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -11,6 +13,8 @@ import javafx.scene.input.TransferMode;
 import javafx.stage.Stage;
 
 public class CSVViewerApplication extends Application {
+
+    private static final Logger LOGGER = Logger.getLogger(CSVViewerApplication.class.getName());
 
     private CSVViewerController csvViewerController;
     private Stage primaryStage;
@@ -41,8 +45,7 @@ public class CSVViewerApplication extends Application {
                         try {
                             csvViewerController.newTabFromFile(file);
                         } catch (final Exception e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
+                            LOGGER.log(Level.SEVERE, e.getMessage(), e);
                         }
                     }
                     event.setDropCompleted(true);
@@ -53,8 +56,7 @@ public class CSVViewerApplication extends Application {
             primaryStage.setTitle("CSV Viewer");
             primaryStage.show();
         } catch (final IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 

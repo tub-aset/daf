@@ -2,6 +2,8 @@ package de.jpwinkler.daf.fap5gui.gui;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
 
@@ -19,6 +21,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class Fap5GuiApplication extends Application {
+
+    private static final Logger LOGGER = Logger.getLogger(Fap5GuiApplication.class.getName());
 
     private static final File CACHE_FILE = new File("temp", "cache.json");
 
@@ -45,8 +49,7 @@ public class Fap5GuiApplication extends Application {
             primaryStage.setTitle("FAP5 gui");
             primaryStage.show();
         } catch (final IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
 
     }
@@ -72,8 +75,7 @@ public class Fap5GuiApplication extends Application {
             controller.updateUI();
             dialogStage.showAndWait();
         } catch (final IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
 
     }
@@ -98,8 +100,7 @@ public class Fap5GuiApplication extends Application {
                     mainController.stopAnalysis();
                 });
             } catch (final Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                LOGGER.log(Level.SEVERE, e.getMessage(), e);
                 Platform.runLater(() -> {
                     mainController.updateAnalysis(1, "Error: " + e.getMessage());
                     mainController.stopAnalysis();

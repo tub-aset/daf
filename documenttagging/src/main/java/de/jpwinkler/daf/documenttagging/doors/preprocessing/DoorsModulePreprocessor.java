@@ -3,12 +3,16 @@ package de.jpwinkler.daf.documenttagging.doors.preprocessing;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 
 public class DoorsModulePreprocessor {
+
+    private static final Logger LOGGER = Logger.getLogger(DoorsModulePreprocessor.class.getName());
 
     private final List<DoorsObjectPreprocessor> objectPreprocessors = new ArrayList<>();
 
@@ -19,15 +23,15 @@ public class DoorsModulePreprocessor {
     public static DoorsModulePreprocessor getDefaultPreprocessor() {
         final DoorsModulePreprocessor doorsModulePreprocessor = new DoorsModulePreprocessor();
 
+        doorsModulePreprocessor.addObjectPreprocessor(new IgnoreCasePreprocessor());
+        doorsModulePreprocessor.addObjectPreprocessor(new SpecialCharacterRemovalPreprocessor());
         try {
-            doorsModulePreprocessor.addObjectPreprocessor(new IgnoreCasePreprocessor());
-            doorsModulePreprocessor.addObjectPreprocessor(new SpecialCharacterRemovalPreprocessor());
             doorsModulePreprocessor.addObjectPreprocessor(new CompoundSplitterPreprocessor());
             doorsModulePreprocessor.addObjectPreprocessor(new StopwordRemovalPreprocessor(DoorsModulePreprocessor.class.getResourceAsStream("stopwords.txt")));
-            doorsModulePreprocessor.addObjectPreprocessor(new WordStemmerPreprocessor());
         } catch (final IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
+        doorsModulePreprocessor.addObjectPreprocessor(new WordStemmerPreprocessor());
 
         return doorsModulePreprocessor;
     }

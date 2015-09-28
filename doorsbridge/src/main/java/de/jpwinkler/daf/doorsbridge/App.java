@@ -1,6 +1,8 @@
 package de.jpwinkler.daf.doorsbridge;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Hello world!
@@ -8,13 +10,14 @@ import java.io.IOException;
  */
 public class App
 {
+    private static final Logger LOGGER = Logger.getLogger(App.class.getName());
+
     public static void main( final String[] args )
     {
         try {
             DoorsApplicationFactory.getDoorsApplication().ack("Hello World!");
         } catch (DoorsException | IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 }

@@ -6,11 +6,15 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 import java.util.function.Function;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 
 public class SimpleModuleWriter extends ModuleWriter {
+
+    private static final Logger LOGGER = Logger.getLogger(SimpleModuleWriter.class.getName());
 
     public SimpleModuleWriter(final OutputStream out, final Charset cs) {
         super(out, cs);
@@ -39,7 +43,7 @@ public class SimpleModuleWriter extends ModuleWriter {
                 try {
                     writeObject(object);
                 } catch (final IOException e) {
-                    e.printStackTrace();
+                    LOGGER.log(Level.SEVERE, e.getMessage(), e);
                     return false;
                 }
                 return true;
