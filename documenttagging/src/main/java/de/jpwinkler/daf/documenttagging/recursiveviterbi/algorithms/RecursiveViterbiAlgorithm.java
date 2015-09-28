@@ -8,6 +8,13 @@ import java.util.Map.Entry;
 import de.jpwinkler.daf.documenttagging.recursiveviterbi.AbstractRecursiveViterbiAlgorithm;
 import de.jpwinkler.daf.documenttagging.recursiveviterbi.scenario.TreeNode;
 
+/**
+ * An algorithm using recursive viterbi to determine the most probable states
+ * for a scenario.
+ * 
+ * @author jonwink
+ *
+ */
 public class RecursiveViterbiAlgorithm extends AbstractAlgorithm {
 
     final List<Integer> states = new ArrayList<>();

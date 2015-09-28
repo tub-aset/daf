@@ -32,7 +32,7 @@ import java.util.Map;
  */
 public abstract class AbstractRecursiveViterbiAlgorithm<T, S> {
 
-    private Map<T, AbstractIntermediateResult<S>> results;
+    private Map<T, IntermediateResult<S>> resultCache;
     private Map<T, S> result;
     private int nodeCount;
     private int processedNodes;
@@ -90,7 +90,7 @@ public abstract class AbstractRecursiveViterbiAlgorithm<T, S> {
         nodeCount = countNodes(tree);
         processedNodes = 0;
 
-        results = new HashMap<>();
+        resultCache = new HashMap<>();
         result = new HashMap<>();
 
         // final AbstractIntermediateResult<S> solve = solve(tree, true);
@@ -116,30 +116,46 @@ public abstract class AbstractRecursiveViterbiAlgorithm<T, S> {
         return getChildren(tree).stream().mapToInt(t -> countNodes(t)).sum() + 1;
     }
 
+    /**
+     * Tags the node <code>treeNode</code> with <code>state</code>. Also tags
+     * child nodes recursively using the previously computed most probable state
+     * sequences.
+     *
+     * @param treeNode
+     * @param state
+     * @return
+     */
     private void tagTree(final T treeNode, final S state) {
         if (state != null) {
             result.put(treeNode, state);
         }
         if (!getChildren(treeNode).isEmpty()) {
-            final AbstractIntermediateResult<S> result = results.get(treeNode);
-            final S[] childSequence = result.getStateSequence(state);
+            final S[] childSequence = resultCache.get(treeNode).getStateSequence(state);
             for (int i = 0; i < getChildren(treeNode).size(); i++) {
                 final T child = getChildren(treeNode).get(i);
                 tagTree(child, childSequence[i]);
             }
         }
+
     }
 
-    private AbstractIntermediateResult<S> solve(final T node, final boolean isRootNode) {
+    /**
+     *
+     * @param node
+     * @param isRootNode
+     * @return
+     */
+    private IntermediateResult<S> solve(final T node, final boolean isRootNode) {
 
-        if (results.containsKey(node)) {
+        IntermediateResult<S> result = resultCache.get(node);
+        if (result != null) {
             // This is what makes recursive viterbi feasible. We assume that for
             // any two independent executions of solve on two nodes the result
             // will be the same if the input nodes were the same.
-            return results.get(node);
+            return result;
+        } else {
+            result = new IntermediateResult<>();
         }
-
-        final AbstractIntermediateResult<S> result = new AbstractIntermediateResult<>();
 
         // recursive viterbi does not tag the root node of the tree, because the
         // root node represents the document itself, and not an element that is
@@ -163,7 +179,7 @@ public abstract class AbstractRecursiveViterbiAlgorithm<T, S> {
                 // This is where recursion occurs. For each children of node, we
                 // add the probability for the state in question to ensure that
                 // the most probable state tree is picked in the end.
-                AbstractIntermediateResult<S> r = solve(getChildren(node).get(0), false);
+                IntermediateResult<S> r = solve(getChildren(node).get(0), false);
                 int iState = 0;
                 for (final S state : getStates()) {
                     trellis[0][iState] = Math.log(getProbability(getChildren(node).get(0), state, parentState, null)) + r.getSequenceLogProbability(state);
@@ -238,7 +254,7 @@ public abstract class AbstractRecursiveViterbiAlgorithm<T, S> {
             }
         }
 
-        results.put(node, result);
+        resultCache.put(node, result);
 
         return result;
 

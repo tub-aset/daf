@@ -7,6 +7,13 @@ import java.util.List;
 import de.jpwinkler.daf.documenttagging.recursiveviterbi.scenario.TreeNode;
 import de.jpwinkler.daf.documenttagging.recursiveviterbi.scenario.util.BigDecimals;
 
+/**
+ * An algorithm using brute force methods to determine the most probable states
+ * for a scenario.
+ *
+ * @author jonwink
+ *
+ */
 public class BruteForceAlgorithm extends AbstractAlgorithm {
 
     private List<TreeNode> treeNodes;

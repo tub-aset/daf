@@ -4,6 +4,12 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Instances of this class contain the results of an algorithm execution.
+ *
+ * @author jonwink
+ *
+ */
 public class ScenarioResult {
 
     private final Map<TreeNode, Integer> states = new HashMap<>();
@@ -12,22 +18,48 @@ public class ScenarioResult {
 
     private double executionTime;
 
+    /**
+     * Returns the time needed to execute the algorithm, in milliseconds.
+     *
+     * @return
+     */
     public double getExecutionTime() {
         return executionTime;
     }
 
+    /**
+     * Sets the time needed to execute the algorithm, in milliseconds.
+     *
+     * @param executionTime
+     */
     public void setExecutionTime(final double executionTime) {
         this.executionTime = executionTime;
     }
 
+    /**
+     * Returns the probability of the tag sequence.
+     *
+     * @return
+     */
     public BigDecimal getProbability() {
         return probability;
     }
 
+    /**
+     * Sets the probability of the tag sequence.
+     *
+     * @param probability
+     */
     public void setProbability(final BigDecimal probability) {
         this.probability = probability;
     }
 
+    /**
+     * Returns the state for the node <code>node</code>
+     *
+     * @param node
+     * @return
+     */
     public int getState(final TreeNode node) {
         if (states.containsKey(node)) {
             return states.get(node);
@@ -36,6 +68,12 @@ public class ScenarioResult {
         }
     }
 
+    /**
+     * Sets the state for the node <code>node</code>.
+     * 
+     * @param node
+     * @param state
+     */
     public void setState(final TreeNode node, final int state) {
         states.put(node, state);
     }

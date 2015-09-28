@@ -24,7 +24,10 @@ public class TrainingDataEventStreamTest {
         when(dataGenerator.getOutcome(trainingData.get(3))).thenReturn("");
         when(dataGenerator.getOutcome(trainingData.get(4))).thenReturn(null);
         when(dataGenerator.getOutcome(trainingData.get(5))).thenReturn("c");
-        when(dataGenerator.getOutcome(trainingData.get(6))).thenReturn("");
+        when(dataGenerator.getOutcome(trainingData.get(6))).thenReturn("d");
+        when(dataGenerator.getContextualPredicates(trainingData.get(1), true)).thenReturn(new String[] { "p1", "p2" });
+        when(dataGenerator.getContextualPredicates(trainingData.get(2), true)).thenReturn(new String[] { "p1", "p3" });
+        when(dataGenerator.getContextualPredicates(trainingData.get(5), true)).thenReturn(new String[] { "p1", "p4" });
 
         final TrainingDataEventStream<Object> stream = new TrainingDataEventStream<>(dataGenerator, trainingData);
 
