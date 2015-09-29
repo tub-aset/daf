@@ -33,6 +33,7 @@ public class SimpleModuleWriter extends ModuleWriter {
     }
 
     private Function<DoorsObject, String> objectAnnotationFunction = null;
+    private Function<DoorsObject, String> objectStringFunction = (o -> o.isHeading() ? o.getObjectNumber() + " " + o.getObjectHeading() : o.getObjectText());
 
     @Override
     public void writeModule(final DoorsModule module) {
@@ -52,6 +53,10 @@ public class SimpleModuleWriter extends ModuleWriter {
 
     }
 
+    public void setObjectStringFunction(final Function<DoorsObject, String> objectStringFunction) {
+        this.objectStringFunction = objectStringFunction;
+    }
+
     public void setObjectAnnotationFunction(final Function<DoorsObject, String> objectAnnotationFunction) {
         this.objectAnnotationFunction = objectAnnotationFunction;
     }
@@ -61,13 +66,7 @@ public class SimpleModuleWriter extends ModuleWriter {
         for (int level = 1; level < object.getObjectLevel(); level++) {
             builder.append("  ");
         }
-        if (object.isHeading()) {
-            builder.append(object.getObjectNumber());
-            builder.append(" ");
-            builder.append(object.getObjectHeading());
-        } else {
-            builder.append(object.getObjectText());
-        }
+        builder.append(objectStringFunction.apply(object));
 
         if (objectAnnotationFunction != null) {
             builder.append(" ");
