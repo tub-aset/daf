@@ -1,8 +1,8 @@
 
 package de.jpwinkler.daf.documenttagging.doors.maxent;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 
@@ -15,7 +15,7 @@ import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
  */
 public abstract class PredicateGenerator {
 
-    private final List<String> predicates = new ArrayList<>();
+    private final Set<String> predicates = new HashSet<>();
 
     /**
      * Determines and returns the predicates of the given DOORS object.
@@ -23,7 +23,7 @@ public abstract class PredicateGenerator {
      * @param object
      * @return
      */
-    public final List<String> getPredicates(final DoorsObject object) {
+    public final Set<String> getPredicates(final DoorsObject object) {
         predicates.clear();
         runGenerator(object);
         return predicates;
