@@ -2,7 +2,15 @@ package de.jpwinkler.daf.documenttagging.maxent.util;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang.ArrayUtils;
+
+import opennlp.maxent.GISModel;
+import opennlp.model.Context;
+import opennlp.model.IndexHashTable;
 
 public class MaxentUtils {
 
@@ -38,13 +46,47 @@ public class MaxentUtils {
 
         Collections.sort(list);
 
-        String result = "";
+        final StringBuilder result = new StringBuilder();
 
         for (int i = 0; i < Math.min(list.size(), numOutcomes); i++) {
-            result += String.format("%s %f, ", list.get(i).getRight(), list.get(i).getLeft() * 100);
+            result.append(String.format("%s %f\n", list.get(i).getRight(), list.get(i).getLeft() * 100));
         }
 
-        return result;
+        return result.toString();
+    }
+
+    public static String printMostInfluencingPredicates(final GISModel model, final String outcome) {
+
+        final Context[] contexts = (Context[]) model.getDataStructures()[0];
+        final IndexHashTable<String> predicateIndices = (IndexHashTable<String>) model.getDataStructures()[1];
+
+        final Map<Integer, String> predicateNames = new HashMap<>();
+        for (final String e : predicateIndices.toArray(new String[predicateIndices.size()])) {
+            predicateNames.put(predicateIndices.get(e), e);
+        }
+
+        final int outcomeIndex = model.getIndex(outcome);
+
+        final List<ComparableTuple<Double, String>> list = new ArrayList<>();
+
+        for (int i = 0; i < contexts.length; i++) {
+            final Context c = contexts[i];
+            final int oi = ArrayUtils.indexOf(c.getOutcomes(), outcomeIndex);
+            if (oi != -1) {
+                final double parameter = c.getParameters()[oi];
+                list.add(new ComparableTuple<Double, String>(parameter, predicateNames.get(i)));
+            }
+        }
+        Collections.sort(list);
+
+        final StringBuilder builder = new StringBuilder();
+
+        for (final ComparableTuple<Double, String> t : list) {
+            builder.append(t.getRight() + ": " + t.getLeft() + "\n");
+        }
+
+        return builder.toString();
+
     }
 
 }
