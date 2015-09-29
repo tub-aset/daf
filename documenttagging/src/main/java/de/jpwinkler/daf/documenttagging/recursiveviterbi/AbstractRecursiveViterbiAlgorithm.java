@@ -58,8 +58,8 @@ public abstract class AbstractRecursiveViterbiAlgorithm<T, S> {
     /**
      * Returns the probability that the node <code>node</code> has the state
      * <code>state</code>, given that the parent of <code>node</code> has state
-     * <code>parentState<code>node</code> and the predecessor of
-     * <code>node</code> has state <code>previousState</code>.
+     * <code>parentState</code> and the predecessor of <code>node</code> has
+     * state <code>previousState</code>.
      *
      * @param node
      * @param state

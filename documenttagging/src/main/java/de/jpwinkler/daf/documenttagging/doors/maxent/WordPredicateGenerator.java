@@ -5,7 +5,7 @@ import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 /**
  * A predicate generator that generates a predicate for each word in the object
  * text.
- * 
+ *
  * @author jonwink
  *
  */
