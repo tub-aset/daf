@@ -1,5 +1,6 @@
 package de.jpwinkler.daf.documenttagging.recursiveviterbi;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,4 +59,16 @@ public class IntermediateResult<S> {
         return stateSequences.get(parentState);
     }
 
+    /**
+     * For debugging purposes only.
+     */
+    @Override
+    public String toString() {
+        final StringBuilder builder = new StringBuilder();
+        for (final S state : sequenceLogProbabilities.keySet()) {
+            builder.append(state + ", log P: " + sequenceLogProbabilities.get(state) + ", sequence: " + Arrays.toString(stateSequences.get(state)) + "\n");
+        }
+
+        return builder.toString();
+    }
 }
