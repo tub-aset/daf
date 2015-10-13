@@ -4,7 +4,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<SplitPane dividerPositions="0.8" orientation="VERTICAL" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.jpwinkler.daf.dafcore.csv.gui.CSVViewerTabController">
+<SplitPane dividerPositions="0.8" orientation="VERTICAL" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.jpwinkler.daf.csveditor.CSVEditorTabController">
    <items>
       <SplitPane dividerPositions="0.2">
          <items>

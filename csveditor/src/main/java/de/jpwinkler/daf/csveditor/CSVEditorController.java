@@ -25,15 +25,15 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 
-public class CSVViewerController {
+public class CSVEditorController {
 
-    private static final Logger LOGGER = Logger.getLogger(CSVViewerController.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(CSVEditorController.class.getName());
 
     private Stage primaryStage;
 
-    private CSVViewerApplication csvViewerApplication;
+    private CSVEditorApplication csvEditorApplication;
 
-    private final Map<Tab, CSVViewerTabController> tabControllers = new HashMap<>();
+    private final Map<Tab, CSVEditorTabController> tabControllers = new HashMap<>();
 
     final FileChooser chooser = new FileChooser();
 
@@ -80,13 +80,13 @@ public class CSVViewerController {
 
     public void newTabFromFile(final File selectedFile) throws IOException, CSVParseException {
         final FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(new File("view/csvviewertab.fxml").toURI().toURL());
+        loader.setLocation(new File("view/csveditortab.fxml").toURI().toURL());
         final Parent root = loader.load();
-        final CSVViewerTabController controller = loader.getController();
+        final CSVEditorTabController controller = loader.getController();
         final Tab tab = new Tab(selectedFile != null ? selectedFile.getName() : "New Document", root);
 
         controller.setFile(selectedFile);
-        controller.setMainApp(csvViewerApplication);
+        controller.setMainApp(csvEditorApplication);
         controller.setStage(primaryStage);
         controller.setTab(tab);
         tabPane.getTabs().add(tab);
@@ -127,7 +127,7 @@ public class CSVViewerController {
     }
 
     private boolean closeTab(final Tab selectedTab) {
-        final CSVViewerTabController controller = tabControllers.get(selectedTab);
+        final CSVEditorTabController controller = tabControllers.get(selectedTab);
         if (controller.isDirty()) {
             final Optional<ButtonType> saveConfirm = new Alert(AlertType.CONFIRMATION, "There are unsaved changes, what shall we save those?", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL).showAndWait();
             if (saveConfirm.isPresent() && saveConfirm.get() == ButtonType.YES) {
@@ -187,8 +187,8 @@ public class CSVViewerController {
         }
     }
 
-    public void setMainApp(final CSVViewerApplication csvViewerApplication) {
-        this.csvViewerApplication = csvViewerApplication;
+    public void setMainApp(final CSVEditorApplication csvEditorApplication) {
+        this.csvEditorApplication = csvEditorApplication;
     }
 
     public void setStage(final Stage primaryStage) {

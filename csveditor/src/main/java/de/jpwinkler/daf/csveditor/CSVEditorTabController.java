@@ -69,14 +69,14 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-public class CSVViewerTabController {
+public class CSVEditorTabController {
 
-    private static final Logger LOGGER = Logger.getLogger(CSVViewerTabController.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(CSVEditorTabController.class.getName());
 
     private static final String MAIN_COLUMN = "Object Heading & Object Text";
-    private static final List<String> WANTED_ATTRIBUTES = Arrays.asList("Object Identifier", "FO_Object_Type", MAIN_COLUMN, "Object Type", "pod_tag", "pod_tags", "ASIL", "Maturity", "Edit Type", "Relevance", "Potential Verification Method");
+    private static final List<String> WANTED_ATTRIBUTES = Arrays.asList("Object Identifier", "SourceID", "FO_Object_Type", MAIN_COLUMN, "Object Type", "pod_tag", "pod_tags", "ASIL", "Maturity", "Edit Type", "Relevance", "Potential Verification Method");
 
-    private CSVViewerApplication csvViewerApplication;
+    private CSVEditorApplication csvEditorApplication;
     private Stage primaryStage;
 
     private Tab tab;
@@ -101,8 +101,8 @@ public class CSVViewerTabController {
         contentTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
-    public void setMainApp(final CSVViewerApplication csvViewerApplication) {
-        this.csvViewerApplication = csvViewerApplication;
+    public void setMainApp(final CSVEditorApplication csvEditorApplication) {
+        this.csvEditorApplication = csvEditorApplication;
     }
 
     public void setStage(final Stage primaryStage) {
