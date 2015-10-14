@@ -1,5 +1,6 @@
 package de.jpwinkler.daf.documenttagging.hypermarkovchain;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -15,6 +16,10 @@ public class HyperMarkovChain<T> {
 
     public Set<T> getNodes() {
         return nodes;
+    }
+
+    public Collection<Edge<T>> getEdges() {
+        return edges.values();
     }
 
     public Edge<T> getEdge(final T node1, final T node2) {

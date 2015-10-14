@@ -53,7 +53,7 @@ public class AlgorithmRunner {
         LOGGER.info("preparing documents");
         final MaxEntPredicateGenerator<DoorsTreeNode> generator = DoorsMaxEntPredicateGenerator.getDefaultGenerator("pod_tag");
         final ModuleCSVParser csvParser = new ModuleCSVParser();
-        final List<DoorsDocumentAccessor> trainingModuleAccessors = new ArrayList<>();
+        final List<DocumentAccessor<DoorsTreeNode>> trainingModuleAccessors = new ArrayList<>();
         for (final String trainingModuleFileName : trainingModuleFileNames) {
             LOGGER.info("preparing document " + trainingModuleFileName);
             trainingModuleAccessors.add(new DoorsDocumentAccessor(csvParser.parseCSV(new File(trainingModuleFileName))));
@@ -120,7 +120,7 @@ public class AlgorithmRunner {
                         chains.put(new CompositeKey4<>(ac.getSmoothingTechnique(), ac.getSmoothingD(), ac.getSmoothingK(), ac.getGrowRateFunction()), hmc);
                     }
 
-                    final DocumentTaggingAlgorithm<DoorsTreeNode, String> alg = new MaxEntRecursiveViterbiAlgorithm<DoorsTreeNode>(generator, model, hmc);
+                    final DocumentTaggingAlgorithm<DoorsTreeNode, String> alg = new MaxEntRecursiveViterbiAlgorithm<DoorsTreeNode>(generator, model, hmc, trainingModuleAccessors);
                     final TaggedDocument<DoorsTreeNode, String> algresult = alg.tagDocument(testModuleAccessor);
                     algorithmResult.setConfusionMatrix(new ConfusionMatrix<>(algresult));
                     resultStorageCache.add(algorithmResult);
@@ -162,51 +162,49 @@ public class AlgorithmRunner {
                 "Funktionsbeschreibung AbP.csv",
                 "Funktionsbeschreibung AbC.csv",
                 "TLK_Star3_System_Content.csv").stream().map(s -> basePath + "/" + s).collect(Collectors.toList());
-        final String testModuleFileName = trainingModuleFileNames.remove(1);
+        final String testModuleFileName = trainingModuleFileNames.remove(2);
 
         final AlgorithmRunner runner = new AlgorithmRunner();
         LOGGER.info("Setting up algorithm runner configuration");
         runner.setResultStorageFile(new File("resultStorage.gz"));
 
         runner.getGisCutOffValues().add(0);
-        // runner.getGisCutOffValues().add(1);
-        // runner.getGisCutOffValues().add(10);
-        // runner.getGisCutOffValues().add(50);
-        // runner.getGisIterationValues().add(10);
-        // runner.getGisIterationValues().add(50);
-        // runner.getGisIterationValues().add(100);
-        // runner.getGisIterationValues().add(500);
-        // runner.getGisIterationValues().add(1000);
+        runner.getGisCutOffValues().add(1);
+        runner.getGisCutOffValues().add(10);
+        runner.getGisCutOffValues().add(50);
+        runner.getGisIterationValues().add(10);
+        runner.getGisIterationValues().add(50);
+        runner.getGisIterationValues().add(100);
+        runner.getGisIterationValues().add(500);
+        runner.getGisIterationValues().add(1000);
         runner.getGisIterationValues().add(3000);
         runner.getGrowRateFunctionValues().add(GrowRateFunction.LINEAR);
-        // runner.getGrowRateFunctionValues().add(GrowRateFunction.CONSTANT_1);
-        // runner.getGrowRateFunctionValues().add(GrowRateFunction.CONSTANT_5);
-        // runner.getGrowRateFunctionValues().add(GrowRateFunction.LOG);
-        // runner.getGrowRateFunctionValues().add(GrowRateFunction.ROOT_10);
-        // runner.getGrowRateFunctionValues().add(GrowRateFunction.ROOT_2);
-        // runner.getSmoothingConfigurations().add(new
-        // SmoothingConfiguration(SmoothingTechnique.NO_SMOOTHING, 0, 0));
-        // runner.getSmoothingConfigurations().add(new
-        // SmoothingConfiguration(SmoothingTechnique.ADD_K_SMOOTHING, 0, 1));
-        // runner.getSmoothingConfigurations().add(new
-        // SmoothingConfiguration(SmoothingTechnique.ADD_K_SMOOTHING, 0, 10));
-        // runner.getSmoothingConfigurations().add(new
-        // SmoothingConfiguration(SmoothingTechnique.ADD_K_SMOOTHING, 0, 50));
+        runner.getGrowRateFunctionValues().add(GrowRateFunction.CONSTANT_1);
+        runner.getGrowRateFunctionValues().add(GrowRateFunction.CONSTANT_5);
+        runner.getGrowRateFunctionValues().add(GrowRateFunction.LOG);
+        runner.getGrowRateFunctionValues().add(GrowRateFunction.ROOT_10);
+        runner.getGrowRateFunctionValues().add(GrowRateFunction.ROOT_2);
+        runner.getSmoothingConfigurations().add(new SmoothingConfiguration(SmoothingTechnique.NO_SMOOTHING, 0, 0));
+        runner.getSmoothingConfigurations().add(new SmoothingConfiguration(SmoothingTechnique.ADD_K_SMOOTHING, 0, 1));
+        runner.getSmoothingConfigurations().add(new SmoothingConfiguration(SmoothingTechnique.ADD_K_SMOOTHING, 0, 10));
+        runner.getSmoothingConfigurations().add(new SmoothingConfiguration(SmoothingTechnique.ADD_K_SMOOTHING, 0, 50));
         for (final double d : new double[] { 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9 }) {
-            // runner.getSmoothingConfigurations().add(new
-            // SmoothingConfiguration(SmoothingTechnique.ABSOLUTE_DISCOUNTING,
-            // d, 0));
+            runner.getSmoothingConfigurations().add(new SmoothingConfiguration(SmoothingTechnique.ABSOLUTE_DISCOUNTING, d, 0));
             runner.getSmoothingConfigurations().add(new SmoothingConfiguration(SmoothingTechnique.KATZ_BACKOFF, d, 0));
-            runner.getSmoothingConfigurations().add(new SmoothingConfiguration(SmoothingTechnique.KATZ_BACKOFF, d, 1));
-            runner.getSmoothingConfigurations().add(new SmoothingConfiguration(SmoothingTechnique.KATZ_BACKOFF, d, 10));
-            runner.getSmoothingConfigurations().add(new SmoothingConfiguration(SmoothingTechnique.KATZ_BACKOFF, d, 30));
-            runner.getSmoothingConfigurations().add(new SmoothingConfiguration(SmoothingTechnique.KATZ_BACKOFF, d, 100));
-            runner.getSmoothingConfigurations().add(new SmoothingConfiguration(SmoothingTechnique.KATZ_BACKOFF, d, 300));
-            runner.getSmoothingConfigurations().add(new SmoothingConfiguration(SmoothingTechnique.KATZ_BACKOFF, d,
-                    1000));
             // runner.getSmoothingConfigurations().add(new
-            // SmoothingConfiguration(SmoothingTechnique.KNESER_NEY_SMOOTHING,
-            // d, 0));
+            // SmoothingConfiguration(SmoothingTechnique.KATZ_BACKOFF, d, 1));
+            // runner.getSmoothingConfigurations().add(new
+            // SmoothingConfiguration(SmoothingTechnique.KATZ_BACKOFF, d, 10));
+            // runner.getSmoothingConfigurations().add(new
+            // SmoothingConfiguration(SmoothingTechnique.KATZ_BACKOFF, d, 30));
+            // runner.getSmoothingConfigurations().add(new
+            // SmoothingConfiguration(SmoothingTechnique.KATZ_BACKOFF, d, 100));
+            // runner.getSmoothingConfigurations().add(new
+            // SmoothingConfiguration(SmoothingTechnique.KATZ_BACKOFF, d, 300));
+            // runner.getSmoothingConfigurations().add(new
+            // SmoothingConfiguration(SmoothingTechnique.KATZ_BACKOFF, d,
+            // 1000));
+            runner.getSmoothingConfigurations().add(new SmoothingConfiguration(SmoothingTechnique.KNESER_NEY_SMOOTHING, d, 0));
         }
 
         runner.getTrainingModuleFileNames().addAll(trainingModuleFileNames);

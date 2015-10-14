@@ -47,8 +47,10 @@ public class MaxEntRecursiveViterbiAlgorithm<E> implements DocumentTaggingAlgori
                 probabilitiyMap.put(node, eval);
             }
             final double d = markovChain.getWeight(parentState, previousState, state).doubleValue();
-            // These are true probabilities!
-            return eval[model.getIndex(state)] * d;
+            // The divisor P(t_n) was introduced 5.10.15 after recalculating the
+            // formulas for tagging probabilities. Impact on the results has not
+            // been analyzed yet.
+            return eval[model.getIndex(state)] * d / tagProbabilities.get(state);
         }
 
         @Override
@@ -66,11 +68,15 @@ public class MaxEntRecursiveViterbiAlgorithm<E> implements DocumentTaggingAlgori
 
     private final HyperMarkovChain<String> markovChain;
 
-    public MaxEntRecursiveViterbiAlgorithm(final MaxEntPredicateGenerator<E> dataGenerator, final GISModel gisModel, final HyperMarkovChain<String> hyperMarkovChain) {
+    private Map<String, Double> tagProbabilities;
+
+    public MaxEntRecursiveViterbiAlgorithm(final MaxEntPredicateGenerator<E> dataGenerator, final GISModel gisModel, final HyperMarkovChain<String> hyperMarkovChain, final List<DocumentAccessor<E>> trainingData) {
         this.dataGenerator = dataGenerator;
         this.model = gisModel;
         this.markovChain = hyperMarkovChain;
         states = Arrays.asList((String[]) model.getDataStructures()[2]);
+
+        buildTagProbabilities(trainingData);
     }
 
     public MaxEntRecursiveViterbiAlgorithm(final MaxEntPredicateGenerator<E> dataGenerator, final List<DocumentAccessor<E>> trainingData, final AbstractSmoothingTechnique<String> smoothingTechnique, final GrowRateFunction growRateFunction, final int gisIterations, final int gisCutoff) throws IOException {
@@ -82,8 +88,34 @@ public class MaxEntRecursiveViterbiAlgorithm<E> implements DocumentTaggingAlgori
             hyperMarkovChainBuilder.addAll(documentAccessor, e -> dataGenerator.getOutcome(e), t -> !t.isEmpty());
         }
         markovChain = hyperMarkovChainBuilder.build();
+
         this.model = GIS.trainModel(new TrainingDataEventStream<>(dataGenerator, trainingElements), gisIterations, gisCutoff);
         states = Arrays.asList((String[]) model.getDataStructures()[2]);
+
+        buildTagProbabilities(trainingData);
+
+    }
+
+    private void buildTagProbabilities(final List<DocumentAccessor<E>> trainingData) {
+        tagProbabilities = new HashMap<>();
+
+        final List<Object> hackMe = new ArrayList<>();
+
+        for (final DocumentAccessor<E> documentAccessor1 : trainingData) {
+            documentAccessor1.visit(documentAccessor1.getDocumentRoot(), e -> {
+                final String outcome = dataGenerator.getOutcome(e);
+                if (tagProbabilities.containsKey(outcome)) {
+                    tagProbabilities.put(outcome, tagProbabilities.get(outcome) + 1.0);
+                } else {
+                    tagProbabilities.put(outcome, 1.0);
+                }
+                hackMe.add(new Object());
+            });
+        }
+
+        for (final Entry<String, Double> e : tagProbabilities.entrySet()) {
+            tagProbabilities.put(e.getKey(), e.getValue() / hackMe.size());
+        }
     }
 
     @Override

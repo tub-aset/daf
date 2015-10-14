@@ -25,7 +25,6 @@ import de.jpwinkler.daf.documenttagging.doors.maxent.DoorsMaxEntPredicateGenerat
 import de.jpwinkler.daf.documenttagging.doors.preprocessing.DoorsModulePreprocessor;
 import de.jpwinkler.daf.documenttagging.hypermarkovchain.GrowRateFunction;
 import de.jpwinkler.daf.documenttagging.hypermarkovchain.HyperMarkovChainBuilder;
-import de.jpwinkler.daf.documenttagging.hypermarkovchain.smoothing.AbsoluteDiscountingSmoothing;
 import de.jpwinkler.daf.documenttagging.hypermarkovchain.smoothing.NoSmoothing;
 import de.jpwinkler.daf.documenttagging.maxent.MaxEntPredicateGenerator;
 import de.jpwinkler.daf.documenttagging.maxent.MaxEntRecursiveViterbiAlgorithm;
@@ -44,7 +43,6 @@ public class DoorsTest {
     private static final File RESULT_CACHE_FILE = new File("resultCache");
 
     private static final String[] PROD_MODULE_NAMES = new String[] {
-            "ACAP_217_Content.csv",
             "BCSF_System_Content.csv",
             "HFA_system req.csv",
             "IHTM_Star3_System_Content.csv",
@@ -82,13 +80,13 @@ public class DoorsTest {
         GIS.PRINT_MESSAGES = false;
     }
 
-    // @Test
+    @Test
     public void test4() throws Exception {
         final MaxEntPredicateGenerator<DoorsTreeNode> generator = DoorsMaxEntPredicateGenerator.getDefaultGenerator("pod_tag");
         final List<DocumentAccessor<DoorsTreeNode>> documentAccessors = prodModules.values().stream().map(m -> new DoorsDocumentAccessor(m)).collect(Collectors.toList());
-        final DoorsDocumentAccessor documentToTag = (DoorsDocumentAccessor) documentAccessors.remove(8);
+        final DoorsDocumentAccessor documentToTag = (DoorsDocumentAccessor) documentAccessors.remove(0);
 
-        final DocumentTaggingAlgorithm<DoorsTreeNode, String> alg1 = new MaxEntRecursiveViterbiAlgorithm<DoorsTreeNode>(generator, documentAccessors, new AbsoluteDiscountingSmoothing<>(0.75), GrowRateFunction.CONSTANT_5, 1000, 0);
+        final DocumentTaggingAlgorithm<DoorsTreeNode, String> alg1 = new MaxEntRecursiveViterbiAlgorithm<DoorsTreeNode>(generator, documentAccessors, new NoSmoothing<>(), GrowRateFunction.LINEAR, 200, 0);
         final TaggedDocument<DoorsTreeNode, String> algResult1 = alg1.tagDocument(documentToTag);
         final ConfusionMatrix<String> confusionMatrix1 = new ConfusionMatrix<>(algResult1);
 
@@ -98,7 +96,7 @@ public class DoorsTest {
 
         final SimpleModuleWriter writer = new SimpleModuleWriter(System.out);
 
-        writer.setObjectStringFunction(o -> Arrays.toString(generator.getContextualPredicates(o, false)));
+        writer.setObjectStringFunction(o -> o.getObjectIdentifier());
         writer.setObjectAnnotationFunction(new Function<DoorsObject, String>() {
             @Override
             public String apply(final DoorsObject o) {
@@ -120,7 +118,7 @@ public class DoorsTest {
     public void test3() throws Exception {
         final MaxEntPredicateGenerator<DoorsTreeNode> generator = DoorsMaxEntPredicateGenerator.getDefaultGenerator("pod_tag");
         final List<DocumentAccessor<DoorsTreeNode>> documentAccessors = prodModules.values().stream().map(m -> new DoorsDocumentAccessor(m)).collect(Collectors.toList());
-        final DoorsDocumentAccessor documentToTag = (DoorsDocumentAccessor) documentAccessors.remove(2);
+        final DoorsDocumentAccessor documentToTag = (DoorsDocumentAccessor) documentAccessors.remove(1);
 
         final List<DoorsTreeNode> trainingElements = new ArrayList<>();
         for (final DocumentAccessor<DoorsTreeNode> documentAccessor : documentAccessors) {
@@ -166,13 +164,17 @@ public class DoorsTest {
         System.out.println("trigger: " + p2);
     }
 
-    @Test
+    // @Test
     public void testMarkovChainBuilder() {
         final MaxEntPredicateGenerator<DoorsTreeNode> generator = DoorsMaxEntPredicateGenerator.getDefaultGenerator("pod_tag");
         final HyperMarkovChainBuilder<String> hyperMarkovChainBuilder = new HyperMarkovChainBuilder<>(new NoSmoothing<>(), GrowRateFunction.LINEAR);
 
         for (final Entry<String, DoorsModule> e : prodModules.entrySet()) {
-            hyperMarkovChainBuilder.addAll(new DoorsDocumentAccessor(e.getValue()), o -> generator.getOutcome(o), t -> !t.isEmpty());
+            if (!e.getKey().equals("Schließung_System_Content.csv")) {
+                hyperMarkovChainBuilder.addAll(new DoorsDocumentAccessor(e.getValue()), o -> generator.getOutcome(o), t -> !t.isEmpty());
+            } else {
+                System.out.println("skipping " + e.getKey());
+            }
         }
 
         System.out.println(hyperMarkovChainBuilder.build().getDOT(0.0));
