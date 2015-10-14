@@ -1,6 +1,7 @@
 package de.jpwinkler.daf.documenttagging;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -55,6 +56,15 @@ public class ConfusionMatrix<T> {
                 matrix[tags.indexOf(predicted)][tags.indexOf(actual)]++;
             }
         }
+    }
+
+    /**
+     * Returns a list containing all tags constituting this confusion matrix.
+     * 
+     * @return
+     */
+    public List<T> getTags() {
+        return Collections.unmodifiableList(tags);
     }
 
     /**
@@ -257,7 +267,7 @@ public class ConfusionMatrix<T> {
     /**
      * Creates and resturns a string representation of all tags and their
      * precision, recall and f1-scores.
-     * 
+     *
      * @return
      */
     public String toStringEvaluationMetrics() {
