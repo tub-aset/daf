@@ -11,7 +11,7 @@ import de.jpwinkler.daf.documenttagging.recursiveviterbi.scenario.TreeNode;
 /**
  * An algorithm using recursive viterbi to determine the most probable states
  * for a scenario.
- * 
+ *
  * @author jonwink
  *
  */
@@ -28,7 +28,9 @@ public class RecursiveViterbiAlgorithm extends AbstractAlgorithm {
 
         @Override
         protected double getProbability(final TreeNode node, final Integer state, final Integer parentState, final Integer previousState) {
-            return getScenario().getProbabilityModel().getObservationProbability(state, node.getObservation()).doubleValue() * getScenario().getProbabilityModel().getTransitionProbability(parentState != null ? parentState : 0, previousState != null ? previousState : 0, state).doubleValue();
+            return getScenario().getProbabilityModel().getStateObservationProbability(node.getObservation(), state).doubleValue() *
+                    getScenario().getProbabilityModel().getTransitionProbability(parentState != null ? parentState : 0, previousState != null ? previousState : 0, state).doubleValue() /
+                    getScenario().getProbabilityModel().getStateProbability(state).doubleValue();
         }
 
         @Override

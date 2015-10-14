@@ -93,9 +93,11 @@ public class ScenarioGenerator {
             }
         }
 
-        for (int iState = 1; iState <= totalStates; iState++) {
-            model.setObservationProbabilities(iState, ProbabilityUtils.getProbabilities(totalObservations));
+        for (int iObservation = 0; iObservation < totalObservations; iObservation++) {
+            model.setStateObservationProbabilities(iObservation, ProbabilityUtils.getProbabilities(totalStates));
         }
+
+        model.setStateProbabilities(ProbabilityUtils.getProbabilities(totalStates));
 
         return model;
     }

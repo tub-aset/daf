@@ -14,6 +14,7 @@ import de.jpwinkler.daf.documenttagging.recursiveviterbi.algorithms.AbstractAlgo
 import de.jpwinkler.daf.documenttagging.recursiveviterbi.algorithms.BruteForceAlgorithm;
 import de.jpwinkler.daf.documenttagging.recursiveviterbi.algorithms.RecursiveViterbiAlgorithm;
 import de.jpwinkler.daf.documenttagging.recursiveviterbi.scenario.Scenario;
+import de.jpwinkler.daf.documenttagging.recursiveviterbi.scenario.ScenarioGenerator;
 import de.jpwinkler.daf.documenttagging.recursiveviterbi.scenario.ScenarioResult;
 
 public class ScenarioTest {
@@ -27,43 +28,13 @@ public class ScenarioTest {
     }
 
     @Test
-    public void testScenario1() throws JsonSyntaxException, IOException {
-        testScenario("scenario1.json");
-    }
+    public void testRandomScenarios() {
+        final ScenarioGenerator generator = new ScenarioGenerator(8, 2, 4, 3, 20);
 
-    @Test
-    public void testScenario2() throws JsonSyntaxException, IOException {
-        testScenario("scenario2.json");
-    }
-
-    @Test
-    public void testScenario3() throws JsonSyntaxException, IOException {
-        testScenario("scenario3.json");
-    }
-
-    @Test
-    public void testScenario4() throws JsonSyntaxException, IOException {
-        testScenario("scenario4.json");
-    }
-
-    @Test
-    public void testScenario5() throws JsonSyntaxException, IOException {
-        testScenario("scenario5.json");
-    }
-
-    @Test
-    public void testScenario6() throws JsonSyntaxException, IOException {
-        testScenario("scenario6.json");
-    }
-
-    @Test
-    public void testScenario7() throws JsonSyntaxException, IOException {
-        testScenario("scenario7.json");
-    }
-
-    @Test
-    public void testScenario8() throws JsonSyntaxException, IOException {
-        testScenario("scenario8.json");
+        for (int i = 1; i <= 100; i++) {
+            System.out.println("testing scenario " + i);
+            testScenario(generator.generateScenario());
+        }
     }
 
     private void testScenario(final String scenarioName) throws JsonSyntaxException, IOException {

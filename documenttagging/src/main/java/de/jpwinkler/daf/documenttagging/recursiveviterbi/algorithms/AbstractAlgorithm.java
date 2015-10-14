@@ -43,8 +43,9 @@ public abstract class AbstractAlgorithm {
             final int prevState = (i > 0) ? getCurrentStates().get(currentNode.getPrevious()) : 0;
             final int parentState = getCurrentStates().get(currentNode.getParent()) != null ? getCurrentStates().get(currentNode.getParent()) : 0;
             final int currentState = getCurrentStates().get(currentNode);
+            result = result.multiply(getScenario().getProbabilityModel().getStateObservationProbability(currentNode.getObservation(), currentState), BigDecimals.CONTEXT);
+            result = result.divide(getScenario().getProbabilityModel().getStateProbability(currentState), BigDecimals.CONTEXT);
             result = result.multiply(getScenario().getProbabilityModel().getTransitionProbability(parentState, prevState, currentState), BigDecimals.CONTEXT);
-            result = result.multiply(getScenario().getProbabilityModel().getObservationProbability(currentState, currentNode.getObservation()), BigDecimals.CONTEXT);
             result = result.multiply(calcProbability(currentNode), BigDecimals.CONTEXT);
         }
 
