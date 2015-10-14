@@ -4,6 +4,8 @@ public enum ColumnType {
 
     ATTRIBUTE_COLUMN,
 
-    OBJECT_TEXT_HEADING_COLUMN
+    OBJECT_TEXT_HEADING_COLUMN,
+
+    TAG_COLUMN,
 
 }

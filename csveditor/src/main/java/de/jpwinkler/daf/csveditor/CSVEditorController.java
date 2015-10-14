@@ -2,15 +2,29 @@ package de.jpwinkler.daf.csveditor;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
+import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
+import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
 import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.util.CSVParseException;
+import de.jpwinkler.daf.documenttagging.ConfusionMatrix;
+import de.jpwinkler.daf.documenttagging.DocumentAccessor;
+import de.jpwinkler.daf.documenttagging.DocumentTaggingAlgorithm;
+import de.jpwinkler.daf.documenttagging.TaggedDocument;
+import de.jpwinkler.daf.documenttagging.doors.DoorsDocumentAccessor;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,9 +32,15 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
@@ -29,13 +49,16 @@ public class CSVEditorController {
 
     private static final Logger LOGGER = Logger.getLogger(CSVEditorController.class.getName());
 
+    private static final List<SupportedAlgorithm> SUPPORTED_ALGORITHMS = Arrays.asList(new SupportedAlgorithm("Simple Maximum Entropy", "view/maxent_configuration.fxml"), new SupportedAlgorithm("Recursive Viterbi", "view/rv_configuration.fxml"));
+
     private Stage primaryStage;
 
-    private CSVEditorApplication csvEditorApplication;
-
     private final Map<Tab, CSVEditorTabController> tabControllers = new HashMap<>();
+    private AbstractAlgorithmConfigurationController algorithmConfigurationController;
 
     final FileChooser chooser = new FileChooser();
+
+    final ToggleGroup algorithmToggleGroup = new ToggleGroup();
 
     @FXML
     private TabPane tabPane;
@@ -45,6 +68,22 @@ public class CSVEditorController {
 
     @FXML
     private CheckBox includeChildrenCheckbox;
+
+    @FXML
+    private TreeView<OutlineTreeItem> outlineTreeView;
+
+    @FXML
+    private VBox algorithmSelectionContainer;
+
+    @FXML
+    private TitledPane algorithmConfigurationContainer;
+
+    @FXML
+    private TitledPane trainingDataContainer;
+
+    private DocumentTaggingAlgorithm<DoorsTreeNode, String> algorithm;
+
+    private TaggedDocument<DoorsTreeNode, String> lastResult;
 
     @FXML
     public void initialize() {
@@ -62,6 +101,77 @@ public class CSVEditorController {
                 tabControllers.get(selectedTab).updateFilter(filterTextField.getText(), newValue);
             }
         });
+
+        tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
+
+            @Override
+            public void changed(final ObservableValue<? extends Tab> observable, final Tab oldValue, final Tab newValue) {
+                if (newValue != null && tabControllers.get(newValue) != null) {
+                    populateOutlineTreeView(tabControllers.get(newValue).getModule());
+                }
+            }
+        });
+
+        outlineTreeView.getSelectionModel().selectedItemProperty().addListener((ChangeListener<TreeItem<OutlineTreeItem>>) (observable, oldValue, newValue) -> {
+            final DoorsTreeNode treeNode = newValue.getValue().getTreeNode();
+            if (treeNode instanceof DoorsObject) {
+
+                // TODO
+                // contentTableView.getSelectionModel().select((DoorsObject)
+                // treeNode);
+                // contentTableView.scrollTo((DoorsObject) treeNode);
+            }
+        });
+
+        for (final SupportedAlgorithm algorithm : SUPPORTED_ALGORITHMS) {
+            final RadioButton radioButton = new RadioButton(algorithm.getName());
+            radioButton.setToggleGroup(algorithmToggleGroup);
+            radioButton.getProperties().put("algorithm", algorithm);
+            radioButton.setOnAction(this::algorithmChanged);
+            algorithmSelectionContainer.getChildren().add(radioButton);
+        }
+
+    }
+
+    private void algorithmChanged(final ActionEvent event) {
+        try {
+            final FXMLLoader loader = new FXMLLoader();
+            final String viewName = ((SupportedAlgorithm) algorithmToggleGroup.getSelectedToggle().getProperties().get("algorithm")).getConfigurationViewFile();
+            loader.setLocation(new File(viewName).toURI().toURL());
+            final Parent root = loader.load();
+            algorithmConfigurationContainer.setContent(root);
+            algorithmConfigurationController = loader.getController();
+        } catch (final IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public void populateOutlineTreeView(final DoorsModule module) {
+        final Map<DoorsTreeNode, Boolean> expanded = new HashMap<>();
+        if (outlineTreeView.getRoot() != null) {
+            traverseTreeItem(outlineTreeView.getRoot(), ti -> expanded.put(ti.getValue().getTreeNode(), ti.isExpanded()));
+        }
+
+        final TreeItem<OutlineTreeItem> wrappedModule = wrapModule(module);
+        traverseTreeItem(wrappedModule, ti -> ti.setExpanded(expanded.containsKey(ti.getValue().getTreeNode()) && expanded.get(ti.getValue().getTreeNode())));
+        outlineTreeView.setRoot(wrappedModule);
+    }
+
+    private TreeItem<OutlineTreeItem> wrapModule(final DoorsTreeNode doorsTreeNode) {
+        final TreeItem<OutlineTreeItem> treeItem = new TreeItem<OutlineTreeItem>(new OutlineTreeItem(doorsTreeNode));
+
+        for (final DoorsTreeNode childNode : doorsTreeNode.getChildren()) {
+            treeItem.getChildren().add(wrapModule(childNode));
+        }
+        return treeItem;
+    }
+
+    private <T> void traverseTreeItem(final TreeItem<T> root, final Consumer<TreeItem<T>> f) {
+        f.accept(root);
+        for (final TreeItem<T> child : root.getChildren()) {
+            traverseTreeItem(child, f);
+        }
     }
 
     @FXML
@@ -85,13 +195,14 @@ public class CSVEditorController {
         final CSVEditorTabController controller = loader.getController();
         final Tab tab = new Tab(selectedFile != null ? selectedFile.getName() : "New Document", root);
 
+        controller.setMainController(this);
         controller.setFile(selectedFile);
-        controller.setMainApp(csvEditorApplication);
         controller.setStage(primaryStage);
         controller.setTab(tab);
+        tabControllers.put(tab, controller);
+
         tabPane.getTabs().add(tab);
         tabPane.getSelectionModel().select(tab);
-        tabControllers.put(tab, controller);
     }
 
     @FXML
@@ -185,10 +296,6 @@ public class CSVEditorController {
         if (selectedTab != null) {
             tabControllers.get(selectedTab).unwrapChildren();
         }
-    }
-
-    public void setMainApp(final CSVEditorApplication csvEditorApplication) {
-        this.csvEditorApplication = csvEditorApplication;
     }
 
     public void setStage(final Stage primaryStage) {
@@ -315,5 +422,37 @@ public class CSVEditorController {
         if (selectedTab != null) {
             tabControllers.get(selectedTab).pasteBelow();
         }
+    }
+
+    @FXML
+    public void trainButtonClicked() {
+        if (algorithmConfigurationController != null) {
+            final List<DocumentAccessor<DoorsTreeNode>> trainingDocuments = new ArrayList<>();
+
+            for (final Tab tab : tabPane.getTabs()) {
+                if (!tab.isSelected()) {
+                    trainingDocuments.add(new DoorsDocumentAccessor(tabControllers.get(tab).getModule()));
+                    System.out.println(tabControllers.get(tab).getModule());
+                }
+            }
+
+            algorithm = algorithmConfigurationController.getTrainedAlgorithm(trainingDocuments);
+        }
+    }
+
+    @FXML
+    public void tagButtonClicked() {
+        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+        if (algorithm != null && selectedTab != null) {
+            final CSVEditorTabController curentTabController = tabControllers.get(selectedTab);
+            final TaggedDocument<DoorsTreeNode, String> result = algorithm.tagDocument(new DoorsDocumentAccessor(curentTabController.getModule()));
+            curentTabController.setTaggingResult(result);
+            lastResult = result;
+        }
+    }
+
+    @FXML
+    public void showConfusionMatrixDialog() {
+        new ConfusionMatrixDialog(new ConfusionMatrix<>(lastResult), primaryStage).show();
     }
 }

@@ -5,11 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -26,9 +23,6 @@ import de.jpwinkler.daf.csveditor.commands.NewObjectAfterCommand;
 import de.jpwinkler.daf.csveditor.commands.NewObjectBelowCommand;
 import de.jpwinkler.daf.csveditor.commands.PromoteObjectCommand;
 import de.jpwinkler.daf.csveditor.commands.ReduceToSelectionCommand;
-import de.jpwinkler.daf.csveditor.commands.RunJavascriptOnModuleCommand;
-import de.jpwinkler.daf.csveditor.commands.RunJavascriptOnObjectsCommand;
-import de.jpwinkler.daf.csveditor.commands.RunJavascriptOnSelectionCommand;
 import de.jpwinkler.daf.csveditor.commands.SwapObjectHeadingAndTextCommand;
 import de.jpwinkler.daf.csveditor.commands.UnwrapChildrenCommand;
 import de.jpwinkler.daf.csveditor.commands.UpdateAction;
@@ -50,8 +44,9 @@ import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
 import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.util.CSVParseException;
+import de.jpwinkler.daf.documenttagging.TaggedDocument;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -59,15 +54,14 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 public class CSVEditorTabController {
 
@@ -76,8 +70,8 @@ public class CSVEditorTabController {
     private static final String MAIN_COLUMN = "Object Heading & Object Text";
     private static final List<String> WANTED_ATTRIBUTES = Arrays.asList("Object Identifier", "SourceID", "FO_Object_Type", MAIN_COLUMN, "Object Type", "pod_tag", "pod_tags", "ASIL", "Maturity", "Edit Type", "Relevance", "Potential Verification Method");
 
-    private CSVEditorApplication csvEditorApplication;
     private Stage primaryStage;
+    private CSVEditorController csvEditorController;
 
     private Tab tab;
     private File file;
@@ -88,21 +82,17 @@ public class CSVEditorTabController {
     private final ViewModel viewModel = new ViewModel();
 
     @FXML
-    private TreeView<OutlineTreeItem> outlineTreeView;
-
-    @FXML
     private TableView<DoorsObject> contentTableView;
 
-    @FXML
-    private TextArea javascriptTextArea;
+    private TaggedDocument<DoorsTreeNode, String> algorithmResult;
 
     @FXML
     public void initialize() {
         contentTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
-    public void setMainApp(final CSVEditorApplication csvEditorApplication) {
-        this.csvEditorApplication = csvEditorApplication;
+    public DoorsModule getModule() {
+        return module;
     }
 
     public void setStage(final Stage primaryStage) {
@@ -125,15 +115,6 @@ public class CSVEditorTabController {
         if (focusedCell != null) {
             contentTableView.getFocusModel().focus(focusedCell);
         }
-    }
-
-    private TreeItem<OutlineTreeItem> wrapModule(final DoorsTreeNode doorsTreeNode) {
-        final TreeItem<OutlineTreeItem> treeItem = new TreeItem<OutlineTreeItem>(new OutlineTreeItem(doorsTreeNode));
-
-        for (final DoorsTreeNode childNode : doorsTreeNode.getChildren()) {
-            treeItem.getChildren().add(wrapModule(childNode));
-        }
-        return treeItem;
     }
 
     public boolean save() {
@@ -172,17 +153,13 @@ public class CSVEditorTabController {
             this.file = null;
         }
 
-        populateOutlineTreeView();
-
-        outlineTreeView.getSelectionModel().selectedItemProperty().addListener((ChangeListener<TreeItem<OutlineTreeItem>>) (observable, oldValue, newValue) -> {
-            final DoorsTreeNode treeNode = newValue.getValue().getTreeNode();
-            if (treeNode instanceof DoorsObject) {
-                contentTableView.getSelectionModel().select((DoorsObject) treeNode);
-                contentTableView.scrollTo((DoorsObject) treeNode);
-            }
-        });
-
         contentTableView.getColumns().clear();
+
+        final ColumnDefinition tagColumn = new ColumnDefinition();
+        tagColumn.setColumnTitle("TAG");
+        tagColumn.setColumnType(ColumnType.TAG_COLUMN);
+        tagColumn.setWidth(100);
+        viewModel.getDisplayedColumns().add(tagColumn);
 
         for (final String attribute : WANTED_ATTRIBUTES) {
             if (attribute.equals(MAIN_COLUMN)) {
@@ -213,7 +190,17 @@ public class CSVEditorTabController {
             c.setSortable(false);
             c.setPrefWidth(columnDefinition.getWidth());
 
-            if (columnDefinition.getColumnType() == ColumnType.OBJECT_TEXT_HEADING_COLUMN) {
+            switch (columnDefinition.getColumnType()) {
+            case ATTRIBUTE_COLUMN:
+                c.setCellFactory(TextFieldTableCell.forTableColumn());
+                c.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getAttributes().get(columnDefinition.getAttributeName())));
+                c.setOnEditCommit(event -> {
+                    executeCommand(new EditObjectAttributeCommand(module, event.getRowValue(), columnDefinition.getAttributeName(), event.getNewValue()));
+                    contentTableView.requestFocus();
+                    contentTableView.getFocusModel().focusNext();
+                });
+                break;
+            case OBJECT_TEXT_HEADING_COLUMN:
                 c.setCellFactory(param -> new ObjectHeadingAndObjectTextTableCell());
                 c.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getText()));
                 c.setOnEditCommit(event -> {
@@ -222,36 +209,24 @@ public class CSVEditorTabController {
                     contentTableView.getFocusModel().focusNext();
                     contentTableView.edit(contentTableView.getFocusModel().getFocusedIndex(), contentTableView.getFocusModel().getFocusedCell().getTableColumn());
                 });
-            } else {
+                break;
+            case TAG_COLUMN:
                 c.setCellFactory(TextFieldTableCell.forTableColumn());
-                c.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getAttributes().get(columnDefinition.getAttributeName())));
-                c.setOnEditCommit(event -> {
-                    executeCommand(new EditObjectAttributeCommand(module, event.getRowValue(), columnDefinition.getAttributeName(), event.getNewValue()));
-                    contentTableView.requestFocus();
-                    contentTableView.getFocusModel().focusNext();
-                });
+                c.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<DoorsObject, String>, ObservableValue<String>>() {
 
+                    @Override
+                    public ObservableValue<String> call(final CellDataFeatures<DoorsObject, String> param) {
+                        if (algorithmResult != null) {
+                            return new ReadOnlyStringWrapper(algorithmResult.getPredictedTag(param.getValue()));
+                        } else {
+                            return new ReadOnlyStringWrapper("-");
+                        }
+                    }
+                });
+                break;
             }
 
             contentTableView.getColumns().add(c);
-        }
-    }
-
-    private void populateOutlineTreeView() {
-        final Map<DoorsTreeNode, Boolean> expanded = new HashMap<>();
-        if (outlineTreeView.getRoot() != null) {
-            traverseTreeItem(outlineTreeView.getRoot(), ti -> expanded.put(ti.getValue().getTreeNode(), ti.isExpanded()));
-        }
-
-        final TreeItem<OutlineTreeItem> wrappedModule = wrapModule(module);
-        traverseTreeItem(wrappedModule, ti -> ti.setExpanded(expanded.containsKey(ti.getValue().getTreeNode()) && expanded.get(ti.getValue().getTreeNode())));
-        outlineTreeView.setRoot(wrappedModule);
-    }
-
-    private <T> void traverseTreeItem(final TreeItem<T> root, final Consumer<TreeItem<T>> f) {
-        f.accept(root);
-        for (final TreeItem<T> child : root.getChildren()) {
-            traverseTreeItem(child, f);
         }
     }
 
@@ -381,7 +356,7 @@ public class CSVEditorTabController {
                 populateContentTableView();
                 break;
             case UPDATE_OUTLINE_VIEW:
-                populateOutlineTreeView();
+                csvEditorController.populateOutlineTreeView(module);
                 break;
             case UPDATE_COLUMNS:
                 break;
@@ -396,7 +371,7 @@ public class CSVEditorTabController {
         if (commandStack.getUndoCommand() != null) {
             final AbstractCommand commandToUndo = commandStack.undo();
             if (!commandToUndo.canUndo()) {
-                new Alert(AlertType.ERROR, "Last command cannot be undone, sorry :/").show();
+                new Alert(AlertType.ERROR, "Last command cannot be undone, sorry.").show();
             } else {
                 commandToUndo.undo();
                 updateGui(commandToUndo.getUpdateActions());
@@ -432,21 +407,6 @@ public class CSVEditorTabController {
         populateContentTableView();
     }
 
-    @FXML
-    public void runJavaScriptModuleClicked() {
-        executeCommand(new RunJavascriptOnModuleCommand(module, javascriptTextArea.getText()));
-    }
-
-    @FXML
-    public void runJavaScriptObjectsClicked() {
-        executeCommand(new RunJavascriptOnObjectsCommand(module, javascriptTextArea.getText()));
-    }
-
-    @FXML
-    public void runJavaScriptSelectionClicked() {
-        executeCommand(new RunJavascriptOnSelectionCommand(module, javascriptTextArea.getText(), contentTableView.getSelectionModel().getSelectedItems()));
-    }
-
     public void pasteBelow() {
         executeCommand(new CopyObjectsBelowCommand(module, contentTableView.getSelectionModel().getSelectedItem(), clipboard));
     }
@@ -468,6 +428,15 @@ public class CSVEditorTabController {
 
     public void showOutline() {
         viewModel.setFilter(new PredicateFilter(p -> p.isHeading()));
+        populateContentTableView();
+    }
+
+    public void setMainController(final CSVEditorController csvEditorController) {
+        this.csvEditorController = csvEditorController;
+    }
+
+    public void setTaggingResult(final TaggedDocument<DoorsTreeNode, String> result) {
+        algorithmResult = result;
         populateContentTableView();
     }
 

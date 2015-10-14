@@ -4,27 +4,5 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<SplitPane dividerPositions="0.8" orientation="VERTICAL" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.jpwinkler.daf.csveditor.CSVEditorTabController">
-   <items>
-      <SplitPane dividerPositions="0.2">
-         <items>
-            <TreeView fx:id="outlineTreeView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
-            <TableView fx:id="contentTableView" editable="true" prefHeight="200.0" prefWidth="200.0" />
-         </items>
-      </SplitPane>
-      <BorderPane prefHeight="200.0" prefWidth="200.0">
-         <center>
-            <TextArea fx:id="javascriptTextArea" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
-         </center>
-         <right>
-            <VBox>
-               <children>
-                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#runJavaScriptModuleClicked" text="Run on module" />
-                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#runJavaScriptObjectsClicked" text="Run on objects" />
-                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#runJavaScriptSelectionClicked" text="Run on selection" BorderPane.alignment="CENTER" />
-               </children>
-            </VBox>
-         </right>
-      </BorderPane>
-   </items>
-</SplitPane>
+
+<TableView fx:id="contentTableView" editable="true" prefHeight="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.jpwinkler.daf.csveditor.CSVEditorTabController" />

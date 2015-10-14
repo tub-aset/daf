@@ -17,18 +17,15 @@ public class CSVEditorApplication extends Application {
     private static final Logger LOGGER = Logger.getLogger(CSVEditorApplication.class.getName());
 
     private CSVEditorController csvEditorController;
-    private Stage primaryStage;
 
     @Override
     public void start(final Stage primaryStage) throws Exception {
-        this.primaryStage = primaryStage;
         try {
             final FXMLLoader loader = new FXMLLoader();
             loader.setLocation(new File("view/csveditor.fxml").toURI().toURL());
             final Parent root = loader.load();
 
             csvEditorController = loader.getController();
-            csvEditorController.setMainApp(this);
             csvEditorController.setStage(primaryStage);
 
             final Scene scene = new Scene(root);
