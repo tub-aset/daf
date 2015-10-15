@@ -60,8 +60,16 @@ public class ConfusionMatrixDialog {
 
         for (int i = 0; i < numTags; i++) {
             final String tag = confusionMatrix.getTags().get(i);
-            gridPane.add(new Label(tag), 1, i + 2);
-            gridPane.add(getLabel(tag, -90), i + 2, 1);
+
+            n = getLabel(tag, 0);
+            gridPane.add(n, 1, i + 2);
+            GridPane.setHalignment(n, HPos.RIGHT);
+            GridPane.setValignment(n, VPos.CENTER);
+
+            n = getLabel(tag, -90);
+            gridPane.add(n, i + 2, 1);
+            GridPane.setHalignment(n, HPos.CENTER);
+            GridPane.setValignment(n, VPos.BOTTOM);
         }
 
         for (int column = 0; column < numTags; column++) {
@@ -70,7 +78,10 @@ public class ConfusionMatrixDialog {
                 final String actualTag = confusionMatrix.getTags().get(row);
                 final int count = confusionMatrix.get(predictedTag, actualTag);
                 if (count > 0) {
-                    gridPane.add(new Label(String.valueOf(count)), column + 2, row + 2);
+                    n = new Label(String.valueOf(count));
+                    gridPane.add(n, column + 2, row + 2);
+                    GridPane.setHalignment(n, HPos.CENTER);
+                    GridPane.setValignment(n, VPos.CENTER);
                 }
             }
         }

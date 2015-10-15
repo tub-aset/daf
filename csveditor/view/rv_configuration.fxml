@@ -28,9 +28,9 @@
       <Label text="Smoothing Method" GridPane.rowIndex="2" />
       <ChoiceBox fx:id="smoothingMethodChoiceBox" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="2" />
       <Label text="Smoothing D" GridPane.rowIndex="3" />
-      <TextField fx:id="smoothingDTextField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+      <TextField fx:id="smoothingDTextField" text="1.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
       <Label text="Smoothing K" GridPane.rowIndex="4" />
-      <TextField fx:id="smoothingKTextField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+      <TextField fx:id="smoothingKTextField" text="1.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
       <Label text="Grow Rate" GridPane.rowIndex="5" />
       <ChoiceBox fx:id="growRateChoiceBox" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="5" />
    </children>

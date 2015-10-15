@@ -32,6 +32,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -40,6 +41,7 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -80,6 +82,9 @@ public class CSVEditorController {
 
     @FXML
     private TitledPane trainingDataContainer;
+
+    @FXML
+    private GridPane resultGridPane;
 
     private DocumentTaggingAlgorithm<DoorsTreeNode, String> algorithm;
 
@@ -448,7 +453,36 @@ public class CSVEditorController {
             final TaggedDocument<DoorsTreeNode, String> result = algorithm.tagDocument(new DoorsDocumentAccessor(curentTabController.getModule()));
             curentTabController.setTaggingResult(result);
             lastResult = result;
+            buildResultGridPane();
         }
+    }
+
+    private void buildResultGridPane() {
+        resultGridPane.getChildren().clear();
+        final ConfusionMatrix<String> confusionMatrix = new ConfusionMatrix<>(lastResult);
+        resultGridPane.add(new Label("Tag"), 0, 0);
+        resultGridPane.add(new Label("Precision"), 1, 0);
+        resultGridPane.add(new Label("Recall"), 2, 0);
+        resultGridPane.add(new Label("F1"), 3, 0);
+
+        for (int i = 0; i < confusionMatrix.getTags().size(); i++) {
+            final String tag = confusionMatrix.getTags().get(i);
+
+            resultGridPane.add(new Label(tag), 0, i + 1);
+            resultGridPane.add(new Label(String.valueOf(confusionMatrix.getPrecision(tag))), 1, i + 1);
+            resultGridPane.add(new Label(String.valueOf(confusionMatrix.getRecall(tag))), 2, i + 1);
+            resultGridPane.add(new Label(String.valueOf(confusionMatrix.getF1Score(tag))), 3, i + 1);
+        }
+
+        resultGridPane.add(new Label("micro"), 0, confusionMatrix.getTags().size() + 1);
+        resultGridPane.add(new Label(String.valueOf(confusionMatrix.getMicroPrecision())), 1, confusionMatrix.getTags().size() + 1);
+        resultGridPane.add(new Label(String.valueOf(confusionMatrix.getMicroRecall())), 2, confusionMatrix.getTags().size() + 1);
+        resultGridPane.add(new Label(String.valueOf(confusionMatrix.getMicroF1Score())), 3, confusionMatrix.getTags().size() + 1);
+
+        resultGridPane.add(new Label("macro"), 0, confusionMatrix.getTags().size() + 2);
+        resultGridPane.add(new Label(String.valueOf(confusionMatrix.getMacroPrecision())), 1, confusionMatrix.getTags().size() + 2);
+        resultGridPane.add(new Label(String.valueOf(confusionMatrix.getMacroRecall())), 2, confusionMatrix.getTags().size() + 2);
+        resultGridPane.add(new Label(String.valueOf(confusionMatrix.getMacroF1Score())), 3, confusionMatrix.getTags().size() + 2);
     }
 
     @FXML

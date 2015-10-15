@@ -83,6 +83,9 @@ public class RecursiveViterbiConfigurationController extends AbstractAlgorithmCo
         smoothingMethodChoiceBox.getItems().addAll(SmoothingTechnique.values());
         growRateChoiceBox.getItems().addAll(GrowRateFunction.values());
 
+        smoothingMethodChoiceBox.getSelectionModel().select(SmoothingTechnique.NO_SMOOTHING);
+        growRateChoiceBox.getSelectionModel().select(GrowRateFunction.LINEAR);
+
     }
 
 }

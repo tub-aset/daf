@@ -157,7 +157,18 @@
                                     <TitledPane fx:id="trainingDataContainer" text="Training Data" />
                                     <TitledPane text="Result">
                                        <content>
-                                          <Button mnemonicParsing="false" onAction="#showConfusionMatrixDialog" text="Show Confusion Matrix" />
+                                          <VBox>
+                                             <children>
+                                                <GridPane fx:id="resultGridPane" hgap="3.0" vgap="3.0">
+                                                  <rowConstraints>
+                                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                  </rowConstraints>
+                                                </GridPane>
+                                                <Button mnemonicParsing="false" onAction="#showConfusionMatrixDialog" text="Show Confusion Matrix" />
+                                             </children>
+                                          </VBox>
                                        </content>
                                     </TitledPane>
                                  </children>
