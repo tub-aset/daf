@@ -45,6 +45,7 @@ import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
 import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.util.CSVParseException;
 import de.jpwinkler.daf.documenttagging.TaggedDocument;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -62,6 +63,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import javafx.util.Pair;
 
 public class CSVEditorTabController {
 
@@ -199,6 +201,7 @@ public class CSVEditorTabController {
                     contentTableView.requestFocus();
                     contentTableView.getFocusModel().focusNext();
                 });
+                contentTableView.getColumns().add(c);
                 break;
             case OBJECT_TEXT_HEADING_COLUMN:
                 c.setCellFactory(param -> new ObjectHeadingAndObjectTextTableCell());
@@ -209,24 +212,28 @@ public class CSVEditorTabController {
                     contentTableView.getFocusModel().focusNext();
                     contentTableView.edit(contentTableView.getFocusModel().getFocusedIndex(), contentTableView.getFocusModel().getFocusedCell().getTableColumn());
                 });
+                contentTableView.getColumns().add(c);
                 break;
             case TAG_COLUMN:
-                c.setCellFactory(TextFieldTableCell.forTableColumn());
-                c.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<DoorsObject, String>, ObservableValue<String>>() {
+                final TableColumn<DoorsObject, Pair<String, String>> c2 = new TableColumn<>(columnDefinition.getColumnTitle());
+                c2.setSortable(false);
+                c2.setPrefWidth(columnDefinition.getWidth());
+                c2.setCellFactory(param -> new TagTableCell());
+                c2.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<DoorsObject, Pair<String, String>>, ObservableValue<Pair<String, String>>>() {
 
                     @Override
-                    public ObservableValue<String> call(final CellDataFeatures<DoorsObject, String> param) {
+                    public ObservableValue<Pair<String, String>> call(final CellDataFeatures<DoorsObject, Pair<String, String>> param) {
                         if (algorithmResult != null) {
-                            return new ReadOnlyStringWrapper(algorithmResult.getPredictedTag(param.getValue()));
+                            return new ReadOnlyObjectWrapper<Pair<String, String>>(new Pair<>(algorithmResult.getPredictedTag(param.getValue()), algorithmResult.getActualTag(param.getValue())));
                         } else {
-                            return new ReadOnlyStringWrapper("-");
+                            return new ReadOnlyObjectWrapper<>(new Pair<String, String>("", ""));
                         }
                     }
                 });
+                contentTableView.getColumns().add(c2);
                 break;
             }
 
-            contentTableView.getColumns().add(c);
         }
     }
 
