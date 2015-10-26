@@ -2,9 +2,11 @@ package de.jpwinkler.daf.fap5;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 
 import de.jpwinkler.daf.dafcore.model.common.ModelObject;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
+import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.Marker;
 import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.Rule;
 import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.RuleBasedModelConstructor;
@@ -30,6 +32,8 @@ import de.jpwinkler.daf.fap5.model.codebeamer.CodebeamerFactory;
 import de.jpwinkler.daf.fap5.model.codebeamer.IntMetric;
 
 public class CodeBeamerModelConstructor extends RuleBasedModelConstructor {
+
+    private static final Logger LOGGER = Logger.getLogger(CodeBeamerModelConstructor.class.getName());
 
     @Override
     protected ModelObject createRootModelObject() {
@@ -62,6 +66,29 @@ public class CodeBeamerModelConstructor extends RuleBasedModelConstructor {
                 InformationWithLinkRule.class
                 // HeadingWithLinkRule.class
                 );
+    }
+
+    @Override
+    protected void preProcess(final ModelObject modelObject, final RuleContext context) {
+
+        // TODO remove this hack
+        if (context.getModule().getAttributes().get("module_list_key").endsWith("Telematik")) {
+            final DoorsObject object = context.getModule().findObject("KB_TLM-7441");
+            if (object == null)  {
+                LOGGER.severe("No object for MAP (KB_TLM-7441) found in telematik module!!!");
+            } else {
+                object.getParent().getChildren().remove(object);
+            }
+        } else if (context.getModule().getAttributes().get("module_list_key").endsWith("Telematik_Karte")) {
+            final DoorsObject object = context.getModule().findObject("KB_TLM-7441");
+            if (object == null) {
+                LOGGER.severe("No object for MAP (KB_TLM-7441) found in telematik module!!!");
+            } else {
+                context.getModule().getChildren().clear();
+                context.getModule().getChildren().add(object);
+                context.getModule().setName("Anforderungen von AbC und AbP an Karte");
+            }
+        }
     }
 
     @Override
