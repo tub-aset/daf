@@ -14,9 +14,11 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import de.jpwinkler.daf.dafcore.csv.FindObjectVisitor;
 import de.jpwinkler.daf.dafcore.model.csv.AttributeDefinition;
 import de.jpwinkler.daf.dafcore.model.csv.CSVPackage;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
+import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 
 /**
  * <!-- begin-user-doc -->
@@ -225,6 +227,18 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
     }
 
     /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated NOT
+     */
+    @Override
+    public DoorsObject findObject(final String objectIdentifier) {
+        final FindObjectVisitor visitor = new FindObjectVisitor(objectIdentifier);
+        accept(visitor);
+        return visitor.getObject();
+    }
+
+    /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
@@ -338,13 +352,15 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
         switch (operationID) {
         case CSVPackage.DOORS_MODULE___FIND_ATTRIBUTE_DEFINITION__STRING:
             return findAttributeDefinition((String)arguments.get(0));
+        case CSVPackage.DOORS_MODULE___FIND_OBJECT__STRING:
+            return findObject((String)arguments.get(0));
         }
         return super.eInvoke(operationID, arguments);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated NOT
      */
     @Override

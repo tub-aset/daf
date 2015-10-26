@@ -126,4 +126,12 @@ public interface DoorsModule extends DoorsTreeNode {
      */
     AttributeDefinition findAttributeDefinition(String name);
 
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @model
+     * @generated
+     */
+    DoorsObject findObject(String objectIdentifier);
+
 } // DoorsModule

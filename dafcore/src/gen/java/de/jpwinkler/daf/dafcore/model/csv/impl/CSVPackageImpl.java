@@ -223,6 +223,15 @@ public class CSVPackageImpl extends EPackageImpl implements CSVPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    public EOperation getDoorsModule__FindObject__String() {
+        return doorsModuleEClass.getEOperations().get(1);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public EClass getDoorsObject() {
         return doorsObjectEClass;
@@ -553,6 +562,7 @@ public class CSVPackageImpl extends EPackageImpl implements CSVPackage {
         createEAttribute(doorsModuleEClass, DOORS_MODULE__URL);
         createEReference(doorsModuleEClass, DOORS_MODULE__ATTRIBUTE_DEFINITIONS);
         createEOperation(doorsModuleEClass, DOORS_MODULE___FIND_ATTRIBUTE_DEFINITION__STRING);
+        createEOperation(doorsModuleEClass, DOORS_MODULE___FIND_OBJECT__STRING);
 
         doorsObjectEClass = createEClass(DOORS_OBJECT);
         createEAttribute(doorsObjectEClass, DOORS_OBJECT__OBJECT_IDENTIFIER);
@@ -641,6 +651,9 @@ public class CSVPackageImpl extends EPackageImpl implements CSVPackage {
 
         EOperation op = initEOperation(getDoorsModule__FindAttributeDefinition__String(), this.getAttributeDefinition(), "findAttributeDefinition", 0, 1, IS_UNIQUE, IS_ORDERED);
         addEParameter(op, ecorePackage.getEString(), "name", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+        op = initEOperation(getDoorsModule__FindObject__String(), this.getDoorsObject(), "findObject", 0, 1, IS_UNIQUE, IS_ORDERED);
+        addEParameter(op, ecorePackage.getEString(), "objectIdentifier", 0, 1, IS_UNIQUE, IS_ORDERED);
 
         initEClass(doorsObjectEClass, DoorsObject.class, "DoorsObject", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getDoorsObject_ObjectIdentifier(), ecorePackage.getEString(), "objectIdentifier", "", 0, 1, DoorsObject.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);

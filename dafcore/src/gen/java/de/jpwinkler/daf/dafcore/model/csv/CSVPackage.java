@@ -243,13 +243,22 @@ public interface CSVPackage extends EPackage {
     int DOORS_MODULE___FIND_ATTRIBUTE_DEFINITION__STRING = DOORS_TREE_NODE_OPERATION_COUNT + 0;
 
     /**
+     * The operation id for the '<em>Find Object</em>' operation.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DOORS_MODULE___FIND_OBJECT__STRING = DOORS_TREE_NODE_OPERATION_COUNT + 1;
+
+    /**
      * The number of operations of the '<em>Doors Module</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DOORS_MODULE_OPERATION_COUNT = DOORS_TREE_NODE_OPERATION_COUNT + 1;
+    int DOORS_MODULE_OPERATION_COUNT = DOORS_TREE_NODE_OPERATION_COUNT + 2;
 
     /**
      * The meta object id for the '{@link de.jpwinkler.daf.dafcore.model.csv.impl.DoorsObjectImpl <em>Doors Object</em>}' class.
@@ -728,6 +737,16 @@ public interface CSVPackage extends EPackage {
     EOperation getDoorsModule__FindAttributeDefinition__String();
 
     /**
+     * Returns the meta object for the '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsModule#findObject(java.lang.String) <em>Find Object</em>}' operation.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the '<em>Find Object</em>' operation.
+     * @see de.jpwinkler.daf.dafcore.model.csv.DoorsModule#findObject(java.lang.String)
+     * @generated
+     */
+    EOperation getDoorsModule__FindObject__String();
+
+    /**
      * Returns the meta object for class '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsObject <em>Doors Object</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1133,6 +1152,14 @@ public interface CSVPackage extends EPackage {
          * @generated
          */
         EOperation DOORS_MODULE___FIND_ATTRIBUTE_DEFINITION__STRING = eINSTANCE.getDoorsModule__FindAttributeDefinition__String();
+
+        /**
+         * The meta object literal for the '<em><b>Find Object</b></em>' operation.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EOperation DOORS_MODULE___FIND_OBJECT__STRING = eINSTANCE.getDoorsModule__FindObject__String();
 
         /**
          * The meta object literal for the '{@link de.jpwinkler.daf.dafcore.model.csv.impl.DoorsObjectImpl <em>Doors Object</em>}' class.
