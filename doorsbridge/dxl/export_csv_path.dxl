@@ -9,5 +9,5 @@ pragma runLim,0
 
 Module m = read("$$modulePath$$",false)
 exportModuleToCSV(m, "$$file$$")
-exportModuleMetaData(m, "$$file$$.mmd")
+exportModuleMetaData(m, "$$file$$.mmd", null)
 close m

@@ -17,14 +17,14 @@ Skip createModuleSkip() {
 	return result
 }
 
-string exportCsv(Module m) {
+string exportCsv(Module m, string moduleListKey) {
 	string folder = "$$targetFolder$$"
 	if (null create folder) {
 		mkdir folder
 	}
-	string file = folder "\\" name(m) ".csv"
+	string file = folder "\\" moduleListKey "_" name(m) ".csv"
 	exportModuleToCSV(m, file)
-	exportModuleMetaData(m, file ".mmd")
+	exportModuleMetaData(m, file ".mmd", moduleListKey)
 	return "ok"
 }
 
@@ -33,9 +33,9 @@ Skip modules = createModuleSkip()
 string moduleUrl
 
 for moduleUrl in modules do {
-	string moduleName = (string key modules)
+	string moduleListKey = (string key modules)
 	
-	print "Checking " moduleName ": "
+	print "Exporting " moduleListKey "... "
 	
 	string modname = getModuleNameFromUrl(moduleUrl)
 	if (!null modname) {
@@ -45,7 +45,7 @@ for moduleUrl in modules do {
 		
 			load view "Standard View"
 			
-			print exportCsv(m) "\n"
+			print exportCsv(m, moduleListKey) "\n"
 			close m
 		} else {
 			print "module not found\n"

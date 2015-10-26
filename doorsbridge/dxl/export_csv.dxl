@@ -71,7 +71,7 @@ void exportModuleToCSV(Module m, string fileName) {
 	close outFile
 }
 
-void exportModuleMetaData(Module m, string fileName) {
+void exportModuleMetaData(Module m, string fileName, string moduleListKey) {
 	
 	Stream outFile = write(fileName)
 		
@@ -84,6 +84,9 @@ void exportModuleMetaData(Module m, string fileName) {
 	}
 	outFile << "\"url\", \"" getURL(m) "\"\n"
 	outFile << "\"path\", \"" path(m) "\"\n" 
+	if (!null moduleListKey) {
+		outFile << "\"module_list_key\", \"" moduleListKey "\"\n"
+	}
 
 	close outFile
 	
