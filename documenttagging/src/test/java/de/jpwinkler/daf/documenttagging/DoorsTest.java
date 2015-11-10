@@ -122,7 +122,7 @@ public class DoorsTest {
 
         final List<DoorsTreeNode> trainingElements = new ArrayList<>();
         for (final DocumentAccessor<DoorsTreeNode> documentAccessor : documentAccessors) {
-            documentAccessor.visit(documentAccessor.getDocumentRoot(), e -> trainingElements.add(e));
+            documentAccessor.visit(e -> trainingElements.add(e));
         }
 
         System.out.println("PERSISTENT_CONDITION training objects:");

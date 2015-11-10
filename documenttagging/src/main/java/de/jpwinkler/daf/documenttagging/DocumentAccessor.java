@@ -56,18 +56,21 @@ public abstract class DocumentAccessor<E> {
      */
     public abstract E getNext(E element);
 
-    /**
-     * Traverses the document using pre-order traversal and executes the given
-     * visitor for each node in the document, including the root node.
-     * 
-     * @param node
-     * @param visitor
-     */
-    public void visit(final E node, final Consumer<E> visitor) {
+    private void visit(final E node, final Consumer<E> visitor) {
         visitor.accept(node);
         for (final E child : getChildren(node)) {
             visit(child, visitor);
         }
+    }
+
+    /**
+     * Traverses the document using pre-order traversal and executes the given
+     * visitor for each node in the document, including the root node.
+     *
+     * @param visitor
+     */
+    public void visit(final Consumer<E> visitor) {
+        visit(getDocumentRoot(), visitor);
     }
 
 }

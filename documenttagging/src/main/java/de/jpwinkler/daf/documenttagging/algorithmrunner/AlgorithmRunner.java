@@ -105,7 +105,7 @@ public class AlgorithmRunner {
                     if (model == null) {
                         final List<DoorsTreeNode> trainingElements = new ArrayList<>();
                         for (final DocumentAccessor<DoorsTreeNode> documentAccessor : trainingModuleAccessors) {
-                            documentAccessor.visit(documentAccessor.getDocumentRoot(), e -> trainingElements.add(e));
+                            documentAccessor.visit(e -> trainingElements.add(e));
                         }
                         model = GIS.trainModel(new TrainingDataEventStream<>(generator, trainingElements), ac.getGisIterations(), ac.getGisCutoff());
                         models.put(new CompositeKey2<>(ac.getGisIterations(), ac.getGisCutoff()), model);

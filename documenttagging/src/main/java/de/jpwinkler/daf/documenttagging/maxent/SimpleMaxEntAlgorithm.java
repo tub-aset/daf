@@ -18,7 +18,7 @@ public class SimpleMaxEntAlgorithm<E> implements DocumentTaggingAlgorithm<E, Str
     public SimpleMaxEntAlgorithm(final MaxEntPredicateGenerator<E> dataGenerator, final List<DocumentAccessor<E>> trainingData, final int gisIterations, final int gisCutoff) throws IOException {
         final List<E> trainingElements = new ArrayList<>();
         for (final DocumentAccessor<E> documentAccessor : trainingData) {
-            documentAccessor.visit(documentAccessor.getDocumentRoot(), e -> trainingElements.add(e));
+            documentAccessor.visit(e -> trainingElements.add(e));
         }
         model = GIS.trainModel(new TrainingDataEventStream<>(dataGenerator, trainingElements), gisIterations, gisCutoff);
 

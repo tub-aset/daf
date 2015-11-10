@@ -84,7 +84,7 @@ public class MaxEntRecursiveViterbiAlgorithm<E> implements DocumentTaggingAlgori
         final List<E> trainingElements = new ArrayList<>();
         final HyperMarkovChainBuilder<String> hyperMarkovChainBuilder = new HyperMarkovChainBuilder<>(smoothingTechnique, growRateFunction);
         for (final DocumentAccessor<E> documentAccessor : trainingData) {
-            documentAccessor.visit(documentAccessor.getDocumentRoot(), e -> trainingElements.add(e));
+            documentAccessor.visit(e -> trainingElements.add(e));
             hyperMarkovChainBuilder.addAll(documentAccessor, e -> dataGenerator.getOutcome(e), t -> !t.isEmpty());
         }
         markovChain = hyperMarkovChainBuilder.build();
@@ -102,7 +102,7 @@ public class MaxEntRecursiveViterbiAlgorithm<E> implements DocumentTaggingAlgori
         final List<Object> hackMe = new ArrayList<>();
 
         for (final DocumentAccessor<E> documentAccessor1 : trainingData) {
-            documentAccessor1.visit(documentAccessor1.getDocumentRoot(), e -> {
+            documentAccessor1.visit(e -> {
                 final String outcome = dataGenerator.getOutcome(e);
                 if (tagProbabilities.containsKey(outcome)) {
                     tagProbabilities.put(outcome, tagProbabilities.get(outcome) + 1.0);

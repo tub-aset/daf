@@ -69,7 +69,7 @@ public class HyperMarkovChainBuilder<T> {
 
     public <E> void addAll(final DocumentAccessor<E> documentAccessor, final Function<E, T> outcomeFunction, final Function<T, Boolean> isTagValidFunction) {
 
-        documentAccessor.visit(documentAccessor.getDocumentRoot(), e -> {
+        documentAccessor.visit(e -> {
             final T outcomeParent = documentAccessor.getParent(e) != null ? outcomeFunction.apply(documentAccessor.getParent(e)) : null;
             final T outcomePrevious = documentAccessor.getPrevious(e) != null ? outcomeFunction.apply(documentAccessor.getPrevious(e)) : null;
             final T outcomeE = outcomeFunction.apply(e);
