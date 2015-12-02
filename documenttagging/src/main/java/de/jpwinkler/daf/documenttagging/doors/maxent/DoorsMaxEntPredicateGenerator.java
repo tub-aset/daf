@@ -7,6 +7,7 @@ import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
 import de.jpwinkler.daf.documenttagging.maxent.MaxEntPredicateGenerator;
 
+@Deprecated
 public class DoorsMaxEntPredicateGenerator implements MaxEntPredicateGenerator<DoorsTreeNode> {
 
     private final List<PredicateGenerator> predicateGenerators = new ArrayList<>();
@@ -51,15 +52,6 @@ public class DoorsMaxEntPredicateGenerator implements MaxEntPredicateGenerator<D
     }
 
     public static DoorsMaxEntPredicateGenerator getDefaultGenerator(final String labelAttributeName) {
-        final DoorsMaxEntPredicateGenerator generator = new DoorsMaxEntPredicateGenerator(labelAttributeName);
-        // generator.addPredicateGenerator(new AsilPredicateGenerator());
-        // generator.addPredicateGenerator(new
-        // FoObjectTypePredicateGenerator());
-        generator.addPredicateGenerator(new ObjectTypePredicateGenerator());
-        generator.addPredicateGenerator(new SpecialCharacterPredicateGenerator());
-        generator.addPredicateGenerator(new SpecialTokenPredicateGenerator());
-        generator.addPredicateGenerator(new WordPredicateGenerator());
-
-        return generator;
+        throw new UnsupportedOperationException("Operation not supported anymore. use FeatureGenerator instead.");
     }
 }
