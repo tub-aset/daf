@@ -5,14 +5,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
-import java.util.zip.GZIPOutputStream;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
+import de.jpwinkler.daf.dataprocessing.datasetgenerators.ARFFDatasetGenerator;
 import de.jpwinkler.daf.dataprocessing.datasetgenerators.DatasetGenerator;
-import de.jpwinkler.daf.dataprocessing.datasetgenerators.SimpleTensorFlowDatasetGenerator;
 import de.jpwinkler.daf.dataprocessing.featuregeneration.FeatureVectorGenerator;
 import de.jpwinkler.daf.dataprocessing.featuregeneration.WordFeatureGenerator;
 
@@ -37,13 +36,19 @@ public class TestMe {
 
         final int[] cutoffValues = new int[] { 10000, 8000, 5000, 2000, 1000, 800, 500, 200, 100, 80, 50, 20, 10, 8, 5, 2, 1 };
 
-        final DatasetGenerator tfDatasetGenerator = new SimpleTensorFlowDatasetGenerator("Object Type", Arrays.asList("requirement", "information"), true);
+        System.out.println("Initializing dataset generator...");
+        final DatasetGenerator tfDatasetGenerator = new ARFFDatasetGenerator("Object Type", Arrays.asList("requirement", "information"), true);
         tfDatasetGenerator.init(source, featureVectorGenerator);
 
+        System.out.println("Dataset initialization done.");
+        System.out.println("Total amount of features: " + featureVectorGenerator.getFeatureCount());
+
         for (final int c : cutoffValues) {
+            System.out.println("generating dataset with cutoff: " + c);
             featureVectorGenerator.setCutoff(c);
             featureVectorGenerator.buildFeatureIndexMap();
-            try (OutputStream stream = new BufferedOutputStream(new GZIPOutputStream(new FileOutputStream(String.format("tf-c%d-de-reqinf-unique.gz", c))))) {
+            System.out.println("amount of features after cutoff: " + featureVectorGenerator.getFeatureCount());
+            try (OutputStream stream = new BufferedOutputStream(new FileOutputStream(String.format("weka-c%d-de-reqinf-unique.arff", c)))) {
                 tfDatasetGenerator.generateDataset(stream);
             }
         }

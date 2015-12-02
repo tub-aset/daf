@@ -5,15 +5,12 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.logging.Logger;
 
 import de.jpwinkler.daf.dafcore.csv.ModuleCSVParser;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.util.CSVParseException;
 
 public class CSVFolderSource implements DoorsModuleSource {
-
-    private static final Logger LOGGER = Logger.getLogger(CSVFolderSource.class.getName());
 
     private final List<String> moduleFileNames;
 
@@ -52,8 +49,6 @@ public class CSVFolderSource implements DoorsModuleSource {
         }
 
         final String moduleName = moduleFileNames.get(position);
-
-        LOGGER.info(String.format("Parsing CSV file %s...", moduleName));
 
         try {
             final DoorsModule module = parser.parseCSV(new File(moduleName));
