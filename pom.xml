@@ -15,6 +15,7 @@
 		<module>fap5gui</module>
 		<module>documenttagging</module>
 		<module>csveditor</module>
+		<module>dataprocessing</module>
 	</modules>
 
 </project>

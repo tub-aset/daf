@@ -46,6 +46,10 @@
 
 	<repositories>
 		<repository>
+			<id>neuroph</id>
+			<url>http://neuroph.sourceforge.net/maven2</url>
+		</repository>
+		<repository>
 			<id>sternenlicht</id>
 			<url>https://sternenlicht.no-ip.org/maven2</url>
 		</repository>
