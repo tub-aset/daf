@@ -27,7 +27,7 @@ public class ARFFDatasetGenerator extends DatasetGenerator {
             attributes.add(new Attribute(feature));
         }
 
-        final ArrayList<String> classValues = new ArrayList<>(getOutcomes().keySet());
+        final ArrayList<String> classValues = new ArrayList<>(getLabels().keySet());
         classValues.add(0, "");
         classAttribute = new Attribute("$class$", classValues);
         attributes.add(classAttribute);

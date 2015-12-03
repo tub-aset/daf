@@ -5,13 +5,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
+import java.util.List;
+import java.util.zip.GZIPOutputStream;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
-import de.jpwinkler.daf.dataprocessing.datasetgenerators.ARFFDatasetGenerator;
 import de.jpwinkler.daf.dataprocessing.datasetgenerators.DatasetGenerator;
+import de.jpwinkler.daf.dataprocessing.datasetgenerators.MultiClassLabelGenerator;
+import de.jpwinkler.daf.dataprocessing.datasetgenerators.SimpleTensorFlowDatasetGenerator;
 import de.jpwinkler.daf.dataprocessing.featuregeneration.FeatureVectorGenerator;
 import de.jpwinkler.daf.dataprocessing.featuregeneration.WordFeatureGenerator;
 
@@ -34,21 +37,24 @@ public class TestMe {
     public void test1() throws IOException {
 
 
-        final int[] cutoffValues = new int[] { 10000, 8000, 5000, 2000, 1000, 800, 500, 200, 100, 80, 50, 20, 10, 8, 5, 2, 1 };
+        final int[] cutoffValues = new int[] { 5000, 2000, 1000, 800, 500, 200, 100, 80, 50 };
 
         System.out.println("Initializing dataset generator...");
-        final DatasetGenerator tfDatasetGenerator = new ARFFDatasetGenerator("Object Type", Arrays.asList("requirement", "information"), true);
+        final List<String> allowedLabels = Arrays.asList("Process audit", "Eng. develop. test", "Production control", "Review", "Simulation/Analysis", "Formal verification", "(n.a.)");
+        final DatasetGenerator tfDatasetGenerator = new SimpleTensorFlowDatasetGenerator(new MultiClassLabelGenerator("Potential Verification Method", allowedLabels, "\n"), true);
         tfDatasetGenerator.init(source, featureVectorGenerator);
 
         System.out.println("Dataset initialization done.");
         System.out.println("Total amount of features: " + featureVectorGenerator.getFeatureCount());
+        System.out.println("List of outcomes: " + tfDatasetGenerator.getLabels().keySet());
 
         for (final int c : cutoffValues) {
             System.out.println("generating dataset with cutoff: " + c);
             featureVectorGenerator.setCutoff(c);
             featureVectorGenerator.buildFeatureIndexMap();
-            System.out.println("amount of features after cutoff: " + featureVectorGenerator.getFeatureCount());
-            try (OutputStream stream = new BufferedOutputStream(new FileOutputStream(String.format("weka-c%d-de-reqinf-unique.arff", c)))) {
+            System.out.println("amount of features after cutoff: " +
+                    featureVectorGenerator.getFeatureCount());
+            try (OutputStream stream = new BufferedOutputStream(new GZIPOutputStream(new FileOutputStream(String.format("tf-c%d-de-pvm-unique.gz", c))))) {
                 tfDatasetGenerator.generateDataset(stream);
             }
         }
