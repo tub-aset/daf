@@ -7,6 +7,7 @@ import java.util.List;
 import de.jpwinkler.daf.dataprocessing.preprocessing.CompoundSplitterPreprocessor;
 import de.jpwinkler.daf.dataprocessing.preprocessing.IgnoreCasePreprocessor;
 import de.jpwinkler.daf.dataprocessing.preprocessing.SpecialCharacterRemovalPreprocessor;
+import de.jpwinkler.daf.dataprocessing.preprocessing.SpecialTokenPreprocessor;
 import de.jpwinkler.daf.dataprocessing.preprocessing.StopwordRemovalPreprocessor;
 import de.jpwinkler.daf.dataprocessing.preprocessing.WordStemmerPreprocessor;
 
@@ -26,6 +27,7 @@ public class DoorsModulePipelineBuilder {
     }
 
     public DoorsModulePipelineBuilder addDefaultPreprocessors() throws IOException {
+        operations.add(new SpecialTokenPreprocessor());
         operations.add(new IgnoreCasePreprocessor());
         operations.add(new SpecialCharacterRemovalPreprocessor());
         operations.add(new CompoundSplitterPreprocessor());

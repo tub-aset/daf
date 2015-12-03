@@ -21,7 +21,9 @@ public class CompoundSplitterPreprocessor extends ObjectTextPreprocessor {
         final List<String> result = new ArrayList<>();
 
         for (final String word : string.split(" ")) {
-            result.addAll(wordSplitter.splitWord(word));
+            if (!(word.startsWith("$$") && word.endsWith("$$"))) {
+                result.addAll(wordSplitter.splitWord(word));
+            }
         }
 
         final String r = StringUtils.join(result, " ");

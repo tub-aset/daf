@@ -10,9 +10,11 @@ public class WordStemmerPreprocessor extends ObjectTextPreprocessor {
     protected String preprocessString(final String string) {
         final String[] split = string.split(" ");
         for (int i = 0; i < split.length; i++) {
-            germanStemmer.setCurrent(split[i]);
-            germanStemmer.stem();
-            split[i] = germanStemmer.getCurrent();
+            if (!(split[i].startsWith("$$") && split[i].endsWith("$$"))) {
+                germanStemmer.setCurrent(split[i]);
+                germanStemmer.stem();
+                split[i] = germanStemmer.getCurrent();
+            }
         }
         return StringUtils.join(split, " ");
     }
