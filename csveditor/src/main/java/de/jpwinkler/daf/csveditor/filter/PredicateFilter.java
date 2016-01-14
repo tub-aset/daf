@@ -4,7 +4,7 @@ import java.util.function.Predicate;
 
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 
-public class PredicateFilter implements DoorsObjectFilter {
+public class PredicateFilter extends DoorsObjectFilter {
 
     private final Predicate<DoorsObject> p;
 

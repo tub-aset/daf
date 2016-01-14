@@ -1,18 +1,23 @@
 package de.jpwinkler.daf.csveditor.commands;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
 
 public class DeleteObjectCommand extends AbstractCommand {
 
-    private final DoorsObject object;
-    private DoorsTreeNode parent;
-    private int objectIndex;
+    private final List<DoorsObject> objects;
+    private final Map<DoorsObject, DoorsTreeNode> parents = new HashMap<>();
+    private final Map<DoorsObject, Integer> objectIndices = new HashMap<>();
 
-    public DeleteObjectCommand(final DoorsModule module, final DoorsObject object) {
+    public DeleteObjectCommand(final DoorsModule module, final List<DoorsObject> objects) {
         super(module);
-        this.object = object;
+        this.objects = new ArrayList<>(objects);
     }
 
     @Override
@@ -22,24 +27,30 @@ public class DeleteObjectCommand extends AbstractCommand {
 
     @Override
     public void apply() {
-        parent = object.getParent();
-        objectIndex = parent.getChildren().indexOf(object);
+        for (final DoorsObject object : objects) {
+            parents.put(object, object.getParent());
+            objectIndices.put(object, object.getParent().getChildren().indexOf(object));
+        }
         redo();
     }
 
     @Override
     public void undo() {
-        parent.getChildren().add(objectIndex, object);
+        for (final DoorsObject object : objects) {
+            parents.get(object).getChildren().add(objectIndices.get(object), object);
+        }
     }
 
     @Override
     public void redo() {
-        parent.getChildren().remove(object);
+        for (final DoorsObject object : objects) {
+            parents.get(object).getChildren().remove(object);
+        }
     }
 
     @Override
     public boolean isApplicable() {
-        return object != null && object.getParent() != null;
+        return objects.stream().allMatch(o -> o != null && o.getParent() != null);
     }
 
     @Override

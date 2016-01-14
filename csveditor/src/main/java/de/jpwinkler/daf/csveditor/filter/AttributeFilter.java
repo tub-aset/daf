@@ -6,7 +6,7 @@ import java.util.regex.PatternSyntaxException;
 
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 
-public class AttributeFilter implements DoorsObjectFilter {
+public class AttributeFilter extends DoorsObjectFilter {
 
     private final String attribute;
 

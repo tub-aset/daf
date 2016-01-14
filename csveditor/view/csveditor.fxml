@@ -88,6 +88,7 @@
                     <items>
                       <MenuItem mnemonicParsing="false" onAction="#addColumnClicked" text="Add Column..." />
                         <MenuItem mnemonicParsing="false" onAction="#reduceToSelectionClicked" text="Reduce to Selection" />
+                        <MenuItem mnemonicParsing="false" onAction="#flattenClicked" text="Flatten" />
                     </items>
                   </Menu>
                   <Menu mnemonicParsing="false" text="Object">
@@ -112,12 +113,7 @@
             </MenuBar>
             <BorderPane prefHeight="40.0">
                <center>
-                  <ToolBar maxHeight="1.7976931348623157E308" BorderPane.alignment="CENTER">
-                    <items>
-                      <Button mnemonicParsing="false" onAction="#showUntaggedClicked" text="Show untagged" />
-                        <Button mnemonicParsing="false" onAction="#showOutlineClicked" text="Show outline" />
-                    </items>
-                  </ToolBar>
+                  <ToolBar maxHeight="1.7976931348623157E308" BorderPane.alignment="CENTER" />
                </center>
                <right>
                   <ToolBar maxHeight="1.7976931348623157E308" nodeOrientation="RIGHT_TO_LEFT" BorderPane.alignment="CENTER">

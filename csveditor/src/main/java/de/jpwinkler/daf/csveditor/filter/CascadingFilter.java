@@ -2,7 +2,7 @@ package de.jpwinkler.daf.csveditor.filter;
 
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 
-public class CascadingFilter implements DoorsObjectFilter {
+public class CascadingFilter extends DoorsObjectFilter {
 
     private final DoorsObjectFilter filter;
 

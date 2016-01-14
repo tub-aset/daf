@@ -9,16 +9,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 import de.jpwinkler.daf.csveditor.commands.AbstractCommand;
-import de.jpwinkler.daf.csveditor.commands.CompositeCommand;
 import de.jpwinkler.daf.csveditor.commands.CopyObjectsAfterCommand;
 import de.jpwinkler.daf.csveditor.commands.CopyObjectsBelowCommand;
 import de.jpwinkler.daf.csveditor.commands.DeleteObjectCommand;
 import de.jpwinkler.daf.csveditor.commands.DemoteObjectCommand;
 import de.jpwinkler.daf.csveditor.commands.EditObjectAttributeCommand;
 import de.jpwinkler.daf.csveditor.commands.EditObjectHeadingTextCommand;
+import de.jpwinkler.daf.csveditor.commands.FlattenCommand;
 import de.jpwinkler.daf.csveditor.commands.NewObjectAfterCommand;
 import de.jpwinkler.daf.csveditor.commands.NewObjectBelowCommand;
 import de.jpwinkler.daf.csveditor.commands.PromoteObjectCommand;
@@ -26,11 +25,8 @@ import de.jpwinkler.daf.csveditor.commands.ReduceToSelectionCommand;
 import de.jpwinkler.daf.csveditor.commands.SwapObjectHeadingAndTextCommand;
 import de.jpwinkler.daf.csveditor.commands.UnwrapChildrenCommand;
 import de.jpwinkler.daf.csveditor.commands.UpdateAction;
-import de.jpwinkler.daf.csveditor.filter.AttributeMissingFilter;
 import de.jpwinkler.daf.csveditor.filter.CascadingFilter;
-import de.jpwinkler.daf.csveditor.filter.ObjectTextAndHeadingFilter;
-import de.jpwinkler.daf.csveditor.filter.PredicateFilter;
-import de.jpwinkler.daf.csveditor.filter.ReverseCascadingFilter;
+import de.jpwinkler.daf.csveditor.filter.DoorsObjectFilter;
 import de.jpwinkler.daf.csveditor.util.ColumnDefinition;
 import de.jpwinkler.daf.csveditor.util.ColumnType;
 import de.jpwinkler.daf.csveditor.util.CommandStack;
@@ -310,8 +306,12 @@ public class CSVEditorTabController {
         return contentTableView.getSelectionModel().getSelectedItem();
     }
 
+    private List<DoorsObject> getCurrentObjects() {
+        return contentTableView.getSelectionModel().getSelectedItems();
+    }
+
     public void deleteObject() {
-        executeCommand(new DeleteObjectCommand(module, getCurrentObject()));
+        executeCommand(new DeleteObjectCommand(module, getCurrentObjects()));
     }
 
     public void unwrapChildren() {
@@ -391,10 +391,11 @@ public class CSVEditorTabController {
     }
 
     public void updateFilter(final String text, final boolean includeChildren) {
+        final DoorsObjectFilter filter = DoorsObjectFilter.compile(text);
         if (includeChildren) {
-            viewModel.setFilter(new CascadingFilter(new ObjectTextAndHeadingFilter(text, false, true)));
+            viewModel.setFilter(new CascadingFilter(filter));
         } else {
-            viewModel.setFilter(new ObjectTextAndHeadingFilter(text, false, true));
+            viewModel.setFilter(filter);
         }
         populateContentTableView();
     }
@@ -407,11 +408,6 @@ public class CSVEditorTabController {
     public void setupFilter() {
         // TODO Implement this method.
         throw new UnsupportedOperationException("Not yet implemented.");
-    }
-
-    public void showUntagged() {
-        viewModel.setFilter(new ReverseCascadingFilter(new AttributeMissingFilter("pod_tag")));
-        populateContentTableView();
     }
 
     public void pasteBelow() {
@@ -429,13 +425,7 @@ public class CSVEditorTabController {
 
     public void cut() {
         copy();
-        final List<DeleteObjectCommand> commands = contentTableView.getSelectionModel().getSelectedItems().stream().map(o -> new DeleteObjectCommand(module, o)).collect(Collectors.toList());
-        executeCommand(new CompositeCommand(module, commands));
-    }
-
-    public void showOutline() {
-        viewModel.setFilter(new PredicateFilter(p -> p.isHeading()));
-        populateContentTableView();
+        executeCommand(new DeleteObjectCommand(module, getCurrentObjects()));
     }
 
     public void setMainController(final CSVEditorController csvEditorController) {
@@ -445,6 +435,10 @@ public class CSVEditorTabController {
     public void setTaggingResult(final TaggedDocument<DoorsTreeNode, String> result) {
         algorithmResult = result;
         populateContentTableView();
+    }
+
+    public void flatten() {
+        executeCommand(new FlattenCommand(module));
     }
 
 }

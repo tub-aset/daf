@@ -51,7 +51,7 @@ public class CSVEditorController {
 
     private static final Logger LOGGER = Logger.getLogger(CSVEditorController.class.getName());
 
-    private static final List<SupportedAlgorithm> SUPPORTED_ALGORITHMS = Arrays.asList(new SupportedAlgorithm("Simple Maximum Entropy", "view/maxent_configuration.fxml"), new SupportedAlgorithm("Recursive Viterbi", "view/rv_configuration.fxml"));
+    private static final List<SupportedAlgorithm> SUPPORTED_ALGORITHMS = Arrays.asList();
 
     private Stage primaryStage;
 
@@ -382,22 +382,6 @@ public class CSVEditorController {
     }
 
     @FXML
-    public void showUntaggedClicked() {
-        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-        if (selectedTab != null) {
-            tabControllers.get(selectedTab).showUntagged();
-        }
-    }
-
-    @FXML
-    public void showOutlineClicked() {
-        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-        if (selectedTab != null) {
-            tabControllers.get(selectedTab).showOutline();
-        }
-    }
-
-    @FXML
     public void cutClicked() {
         final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
         if (selectedTab != null) {
@@ -446,6 +430,14 @@ public class CSVEditorController {
     }
 
     @FXML
+    public void flattenClicked() {
+        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+        if (selectedTab != null) {
+            tabControllers.get(selectedTab).flatten();
+        }
+    }
+
+    @FXML
     public void tagButtonClicked() {
         final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
         if (algorithm != null && selectedTab != null) {
@@ -487,6 +479,8 @@ public class CSVEditorController {
 
     @FXML
     public void showConfusionMatrixDialog() {
-        new ConfusionMatrixDialog(new ConfusionMatrix<>(lastResult), primaryStage).show();
+        if (lastResult != null) {
+            new ConfusionMatrixDialog(new ConfusionMatrix<>(lastResult), primaryStage).show();
+        }
     }
 }
