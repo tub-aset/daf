@@ -34,7 +34,7 @@ public class ModuleMetaDataParser {
                 module.setPath(record.get(1));
             }
         }
-
+        parser.close();
     }
 
 }
