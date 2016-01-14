@@ -1,6 +1,7 @@
 package de.jpwinkler.daf.dataprocessing.featuregeneration;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +44,7 @@ public class FeatureVectorGenerator<E, F> {
 
         for (final F feature : getFeatures(element)) {
             if (featureIndices.containsKey(feature)) {
-                vector[featureIndices.get(feature)] = 1;
+                vector[featureIndices.get(feature)] += 1;
             }
         }
 
@@ -106,4 +107,21 @@ public class FeatureVectorGenerator<E, F> {
         this.cutoff = cutoff;
     }
 
+    public void printFeatureStatistics() {
+        final List<Entry<F, Integer>> featureList = new ArrayList<>(featureCounts.entrySet());
+
+        featureList.sort(new Comparator<Entry<F, Integer>>() {
+            @Override
+            public int compare(final Entry<F, Integer> o1, final Entry<F, Integer> o2) {
+                return o1.getValue().compareTo(o2.getValue());
+            }
+        });
+
+        for (final Entry<F, Integer> e : featureList) {
+            if (e.getValue() >= cutoff) {
+                System.out.println(e.getValue() + " " + e.getKey());
+            }
+        }
+
+    }
 }

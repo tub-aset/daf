@@ -1,15 +1,30 @@
 package de.jpwinkler.daf.dataprocessing.preprocessing;
 
-import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
+import java.util.List;
 
-public abstract class ObjectTextPreprocessor extends DoorsObjectPreprocessor {
+import org.apache.commons.lang.StringUtils;
 
-    @Override
-    public final void preprocessObject(final DoorsObject object) {
-        object.setObjectText(preprocessString(object.getObjectText()));
-        object.setObjectHeading(preprocessString(object.getObjectHeading()));
+import de.jpwinkler.libs.stringprocessing.patternprogram.PatternProgram;
+import de.jpwinkler.libs.stringprocessing.tokens.Token;
+import de.jpwinkler.libs.stringprocessing.tokens.Tokenizer;
+
+public class ObjectTextPreprocessor {
+
+    private final PatternProgram program;
+
+    public ObjectTextPreprocessor(final PatternProgram program) {
+        super();
+        this.program = program;
     }
 
-    protected abstract String preprocessString(final String string);
+    public List<Token> preprocessText(final String text) {
+        final List<Token> tokens = Tokenizer.tokenizeString(text);
+        return program.execute(tokens);
+    }
+
+    public String preprocessTextToString(final String text) {
+        final List<Token> tokens = Tokenizer.tokenizeString(text);
+        return StringUtils.join(program.execute(tokens), " ");
+    }
 
 }

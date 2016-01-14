@@ -5,7 +5,7 @@ import java.util.List;
 
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 
-public class SimpleLabelGenerator extends LabelGenerator {
+public class SimpleLabelGenerator extends LabelGenerator<DoorsObject> {
 
     private final String labelAttribute;
 

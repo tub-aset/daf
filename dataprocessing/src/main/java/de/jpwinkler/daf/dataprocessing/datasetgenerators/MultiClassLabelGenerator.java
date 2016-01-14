@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 
-public class MultiClassLabelGenerator extends LabelGenerator {
+public class MultiClassLabelGenerator extends LabelGenerator<DoorsObject> {
 
     private final String labelAttribute;
     private final String separator;

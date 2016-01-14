@@ -2,21 +2,33 @@ package de.jpwinkler.daf.dataprocessing.datasetgenerators;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import de.jpwinkler.daf.dataprocessing.streaming.SimpleDoorsObject;
 import de.jpwinkler.daf.dataprocessing.utils.VectorUtils;
 
-public class SimpleTensorFlowDatasetGenerator extends DatasetGenerator {
+public class SimpleTensorFlowDatasetGenerator extends DatasetGenerator<SimpleDoorsObject, String> {
 
-    public SimpleTensorFlowDatasetGenerator(final LabelGenerator labelGenerator, final boolean unique) {
+    public SimpleTensorFlowDatasetGenerator(final LabelGenerator<SimpleDoorsObject> labelGenerator, final boolean unique) {
         super(labelGenerator, unique);
     }
 
+    private List<String> records;
+
     @Override
-    protected void addDatasetRecord(final OutputStream stream, final double[] featureVector, final String outcome) throws IOException {
+    protected void beforeDatasetGeneration(final OutputStream stream) throws IOException {
+        records = new ArrayList<>();
+    }
+
+    @Override
+    protected void addDatasetRecord(final OutputStream stream, final SimpleDoorsObject object, final double[] featureVector, final String outcome) throws IOException {
         final double[] result = VectorUtils.oneHotVector(getLabels().get(outcome), getLabels().size());
 
         final StringBuilder b = new StringBuilder();
+
+        b.append(object.getObjectIdentifier() + ":");
 
         for (final double d : featureVector) {
             b.append(d > 0.5 ? "1" : "0");
@@ -27,11 +39,11 @@ public class SimpleTensorFlowDatasetGenerator extends DatasetGenerator {
         }
         b.append("\n");
 
-        stream.write(b.toString().getBytes());
+        records.add(b.toString());
     }
 
     @Override
-    protected void addMultiClassDatasetRecord(final OutputStream stream, final double[] featureVector, final List<String> outcome) throws IOException {
+    protected void addMultiClassDatasetRecord(final OutputStream stream, final SimpleDoorsObject object, final double[] featureVector, final List<String> outcome) throws IOException {
         final double[] result = new double[getLabels().size()];
 
         for (final String label : outcome) {
@@ -50,5 +62,13 @@ public class SimpleTensorFlowDatasetGenerator extends DatasetGenerator {
         b.append("\n");
 
         stream.write(b.toString().getBytes());
+    }
+
+    @Override
+    protected void afterDatasetGeneration(final OutputStream stream) throws IOException {
+        Collections.shuffle(records);
+        for (final String record : records) {
+            stream.write(record.getBytes());
+        }
     }
 }
