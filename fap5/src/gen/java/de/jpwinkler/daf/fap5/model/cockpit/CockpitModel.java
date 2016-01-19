@@ -16,12 +16,12 @@ import de.jpwinkler.daf.fap5.model.componentssystems.FunctionContributionTarget;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link de.jpwinkler.daf.fap5.model.cockpit.CockpitModel#getMappings <em>Mappings</em>}</li>
  *   <li>{@link de.jpwinkler.daf.fap5.model.cockpit.CockpitModel#getVehicleFunctionProgress <em>Vehicle Function Progress</em>}</li>
  *   <li>{@link de.jpwinkler.daf.fap5.model.cockpit.CockpitModel#getDocuments <em>Documents</em>}</li>
  * </ul>
- * </p>
  *
  * @see de.jpwinkler.daf.fap5.model.cockpit.CockpitPackage#getCockpitModel()
  * @model

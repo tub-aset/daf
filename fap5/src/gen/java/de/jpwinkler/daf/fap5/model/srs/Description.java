@@ -10,10 +10,10 @@ package de.jpwinkler.daf.fap5.model.srs;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link de.jpwinkler.daf.fap5.model.srs.Description#getText <em>Text</em>}</li>
  * </ul>
- * </p>
  *
  * @see de.jpwinkler.daf.fap5.model.srs.SrsPackage#getDescription()
  * @model

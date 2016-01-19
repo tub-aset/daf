@@ -10,10 +10,10 @@ package de.jpwinkler.daf.fap5.model.srs;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link de.jpwinkler.daf.fap5.model.srs.EndCondition#getName <em>Name</em>}</li>
  * </ul>
- * </p>
  *
  * @see de.jpwinkler.daf.fap5.model.srs.SrsPackage#getEndCondition()
  * @model

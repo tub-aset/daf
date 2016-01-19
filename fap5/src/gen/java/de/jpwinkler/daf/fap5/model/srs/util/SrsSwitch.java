@@ -57,12 +57,12 @@ public class SrsSwitch<T> extends Switch<T> {
      * Checks whether this is a switch for the given package.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @parameter ePackage the package in question.
+     * @param ePackage the package in question.
      * @return whether this is a switch for the given package.
      * @generated
      */
     @Override
-    protected boolean isSwitchFor(final EPackage ePackage) {
+    protected boolean isSwitchFor(EPackage ePackage) {
         return ePackage == modelPackage;
     }
 
@@ -74,158 +74,92 @@ public class SrsSwitch<T> extends Switch<T> {
      * @generated
      */
     @Override
-    protected T doSwitch(final int classifierID, final EObject theEObject) {
+    protected T doSwitch(int classifierID, EObject theEObject) {
         switch (classifierID) {
-        case SrsPackage.SRS_MODEL: {
-            final SRSModel srsModel = (SRSModel)theEObject;
-            T result = caseSRSModel(srsModel);
-            if (result == null) {
-                result = caseModelObject(srsModel);
+            case SrsPackage.SRS_MODEL: {
+                SRSModel srsModel = (SRSModel)theEObject;
+                T result = caseSRSModel(srsModel);
+                if (result == null) result = caseModelObject(srsModel);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
             }
-            if (result == null) {
-                result = defaultCase(theEObject);
+            case SrsPackage.VEHICLE_FUNCTION: {
+                VehicleFunction vehicleFunction = (VehicleFunction)theEObject;
+                T result = caseVehicleFunction(vehicleFunction);
+                if (result == null) result = caseFunctionalSpecificationContainer(vehicleFunction);
+                if (result == null) result = caseFunctionalSpecificationElement(vehicleFunction);
+                if (result == null) result = caseModelObject(vehicleFunction);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
             }
-            return result;
-        }
-        case SrsPackage.VEHICLE_FUNCTION: {
-            final VehicleFunction vehicleFunction = (VehicleFunction)theEObject;
-            T result = caseVehicleFunction(vehicleFunction);
-            if (result == null) {
-                result = caseFunctionalSpecificationContainer(vehicleFunction);
+            case SrsPackage.FUNCTION_CONTRIBUTION: {
+                FunctionContribution functionContribution = (FunctionContribution)theEObject;
+                T result = caseFunctionContribution(functionContribution);
+                if (result == null) result = caseFunctionalSpecificationElement(functionContribution);
+                if (result == null) result = caseModelObject(functionContribution);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
             }
-            if (result == null) {
-                result = caseFunctionalSpecificationElement(vehicleFunction);
+            case SrsPackage.FUNCTIONAL_SPECIFICATION_CONTAINER: {
+                FunctionalSpecificationContainer functionalSpecificationContainer = (FunctionalSpecificationContainer)theEObject;
+                T result = caseFunctionalSpecificationContainer(functionalSpecificationContainer);
+                if (result == null) result = caseFunctionalSpecificationElement(functionalSpecificationContainer);
+                if (result == null) result = caseModelObject(functionalSpecificationContainer);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
             }
-            if (result == null) {
-                result = caseModelObject(vehicleFunction);
+            case SrsPackage.FUNCTIONAL_SPECIFICATION_ELEMENT: {
+                FunctionalSpecificationElement functionalSpecificationElement = (FunctionalSpecificationElement)theEObject;
+                T result = caseFunctionalSpecificationElement(functionalSpecificationElement);
+                if (result == null) result = caseModelObject(functionalSpecificationElement);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
             }
-            if (result == null) {
-                result = defaultCase(theEObject);
+            case SrsPackage.PRECONDITION: {
+                Precondition precondition = (Precondition)theEObject;
+                T result = casePrecondition(precondition);
+                if (result == null) result = caseFunctionalSpecificationContainer(precondition);
+                if (result == null) result = caseFunctionalSpecificationElement(precondition);
+                if (result == null) result = caseModelObject(precondition);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
             }
-            return result;
-        }
-        case SrsPackage.FUNCTION_CONTRIBUTION: {
-            final FunctionContribution functionContribution = (FunctionContribution)theEObject;
-            T result = caseFunctionContribution(functionContribution);
-            if (result == null) {
-                result = caseFunctionalSpecificationElement(functionContribution);
+            case SrsPackage.END_CONDITION: {
+                EndCondition endCondition = (EndCondition)theEObject;
+                T result = caseEndCondition(endCondition);
+                if (result == null) result = caseFunctionalSpecificationContainer(endCondition);
+                if (result == null) result = caseFunctionalSpecificationElement(endCondition);
+                if (result == null) result = caseModelObject(endCondition);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
             }
-            if (result == null) {
-                result = caseModelObject(functionContribution);
+            case SrsPackage.TRIGGER: {
+                Trigger trigger = (Trigger)theEObject;
+                T result = caseTrigger(trigger);
+                if (result == null) result = caseFunctionalSpecificationContainer(trigger);
+                if (result == null) result = caseFunctionalSpecificationElement(trigger);
+                if (result == null) result = caseModelObject(trigger);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
             }
-            if (result == null) {
-                result = defaultCase(theEObject);
+            case SrsPackage.HEADING: {
+                Heading heading = (Heading)theEObject;
+                T result = caseHeading(heading);
+                if (result == null) result = caseFunctionalSpecificationContainer(heading);
+                if (result == null) result = caseFunctionalSpecificationElement(heading);
+                if (result == null) result = caseModelObject(heading);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
             }
-            return result;
-        }
-        case SrsPackage.FUNCTIONAL_SPECIFICATION_CONTAINER: {
-            final FunctionalSpecificationContainer functionalSpecificationContainer = (FunctionalSpecificationContainer)theEObject;
-            T result = caseFunctionalSpecificationContainer(functionalSpecificationContainer);
-            if (result == null) {
-                result = caseFunctionalSpecificationElement(functionalSpecificationContainer);
+            case SrsPackage.DESCRIPTION: {
+                Description description = (Description)theEObject;
+                T result = caseDescription(description);
+                if (result == null) result = caseFunctionalSpecificationElement(description);
+                if (result == null) result = caseModelObject(description);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
             }
-            if (result == null) {
-                result = caseModelObject(functionalSpecificationContainer);
-            }
-            if (result == null) {
-                result = defaultCase(theEObject);
-            }
-            return result;
-        }
-        case SrsPackage.FUNCTIONAL_SPECIFICATION_ELEMENT: {
-            final FunctionalSpecificationElement functionalSpecificationElement = (FunctionalSpecificationElement)theEObject;
-            T result = caseFunctionalSpecificationElement(functionalSpecificationElement);
-            if (result == null) {
-                result = caseModelObject(functionalSpecificationElement);
-            }
-            if (result == null) {
-                result = defaultCase(theEObject);
-            }
-            return result;
-        }
-        case SrsPackage.PRECONDITION: {
-            final Precondition precondition = (Precondition)theEObject;
-            T result = casePrecondition(precondition);
-            if (result == null) {
-                result = caseFunctionalSpecificationContainer(precondition);
-            }
-            if (result == null) {
-                result = caseFunctionalSpecificationElement(precondition);
-            }
-            if (result == null) {
-                result = caseModelObject(precondition);
-            }
-            if (result == null) {
-                result = defaultCase(theEObject);
-            }
-            return result;
-        }
-        case SrsPackage.END_CONDITION: {
-            final EndCondition endCondition = (EndCondition)theEObject;
-            T result = caseEndCondition(endCondition);
-            if (result == null) {
-                result = caseFunctionalSpecificationContainer(endCondition);
-            }
-            if (result == null) {
-                result = caseFunctionalSpecificationElement(endCondition);
-            }
-            if (result == null) {
-                result = caseModelObject(endCondition);
-            }
-            if (result == null) {
-                result = defaultCase(theEObject);
-            }
-            return result;
-        }
-        case SrsPackage.TRIGGER: {
-            final Trigger trigger = (Trigger)theEObject;
-            T result = caseTrigger(trigger);
-            if (result == null) {
-                result = caseFunctionalSpecificationContainer(trigger);
-            }
-            if (result == null) {
-                result = caseFunctionalSpecificationElement(trigger);
-            }
-            if (result == null) {
-                result = caseModelObject(trigger);
-            }
-            if (result == null) {
-                result = defaultCase(theEObject);
-            }
-            return result;
-        }
-        case SrsPackage.HEADING: {
-            final Heading heading = (Heading)theEObject;
-            T result = caseHeading(heading);
-            if (result == null) {
-                result = caseFunctionalSpecificationContainer(heading);
-            }
-            if (result == null) {
-                result = caseFunctionalSpecificationElement(heading);
-            }
-            if (result == null) {
-                result = caseModelObject(heading);
-            }
-            if (result == null) {
-                result = defaultCase(theEObject);
-            }
-            return result;
-        }
-        case SrsPackage.DESCRIPTION: {
-            final Description description = (Description)theEObject;
-            T result = caseDescription(description);
-            if (result == null) {
-                result = caseFunctionalSpecificationElement(description);
-            }
-            if (result == null) {
-                result = caseModelObject(description);
-            }
-            if (result == null) {
-                result = defaultCase(theEObject);
-            }
-            return result;
-        }
-        default: return defaultCase(theEObject);
+            default: return defaultCase(theEObject);
         }
     }
 
@@ -240,7 +174,7 @@ public class SrsSwitch<T> extends Switch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseSRSModel(final SRSModel object) {
+    public T caseSRSModel(SRSModel object) {
         return null;
     }
 
@@ -255,7 +189,7 @@ public class SrsSwitch<T> extends Switch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseVehicleFunction(final VehicleFunction object) {
+    public T caseVehicleFunction(VehicleFunction object) {
         return null;
     }
 
@@ -270,7 +204,7 @@ public class SrsSwitch<T> extends Switch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseFunctionContribution(final FunctionContribution object) {
+    public T caseFunctionContribution(FunctionContribution object) {
         return null;
     }
 
@@ -285,7 +219,7 @@ public class SrsSwitch<T> extends Switch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseFunctionalSpecificationContainer(final FunctionalSpecificationContainer object) {
+    public T caseFunctionalSpecificationContainer(FunctionalSpecificationContainer object) {
         return null;
     }
 
@@ -300,7 +234,7 @@ public class SrsSwitch<T> extends Switch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseFunctionalSpecificationElement(final FunctionalSpecificationElement object) {
+    public T caseFunctionalSpecificationElement(FunctionalSpecificationElement object) {
         return null;
     }
 
@@ -315,7 +249,7 @@ public class SrsSwitch<T> extends Switch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T casePrecondition(final Precondition object) {
+    public T casePrecondition(Precondition object) {
         return null;
     }
 
@@ -330,7 +264,7 @@ public class SrsSwitch<T> extends Switch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseEndCondition(final EndCondition object) {
+    public T caseEndCondition(EndCondition object) {
         return null;
     }
 
@@ -345,7 +279,7 @@ public class SrsSwitch<T> extends Switch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseTrigger(final Trigger object) {
+    public T caseTrigger(Trigger object) {
         return null;
     }
 
@@ -360,7 +294,7 @@ public class SrsSwitch<T> extends Switch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseHeading(final Heading object) {
+    public T caseHeading(Heading object) {
         return null;
     }
 
@@ -375,7 +309,7 @@ public class SrsSwitch<T> extends Switch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseDescription(final Description object) {
+    public T caseDescription(Description object) {
         return null;
     }
 
@@ -390,7 +324,7 @@ public class SrsSwitch<T> extends Switch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseModelObject(final ModelObject object) {
+    public T caseModelObject(ModelObject object) {
         return null;
     }
 
@@ -406,7 +340,7 @@ public class SrsSwitch<T> extends Switch<T> {
      * @generated
      */
     @Override
-    public T defaultCase(final EObject object) {
+    public T defaultCase(EObject object) {
         return null;
     }
 

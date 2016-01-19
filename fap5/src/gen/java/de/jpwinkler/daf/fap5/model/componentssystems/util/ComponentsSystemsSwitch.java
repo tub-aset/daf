@@ -52,12 +52,12 @@ public class ComponentsSystemsSwitch<T> extends Switch<T> {
      * Checks whether this is a switch for the given package.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @parameter ePackage the package in question.
+     * @param ePackage the package in question.
      * @return whether this is a switch for the given package.
      * @generated
      */
     @Override
-    protected boolean isSwitchFor(final EPackage ePackage) {
+    protected boolean isSwitchFor(EPackage ePackage) {
         return ePackage == modelPackage;
     }
 
@@ -69,87 +69,55 @@ public class ComponentsSystemsSwitch<T> extends Switch<T> {
      * @generated
      */
     @Override
-    protected T doSwitch(final int classifierID, final EObject theEObject) {
+    protected T doSwitch(int classifierID, EObject theEObject) {
         switch (classifierID) {
-        case ComponentsSystemsPackage.COMPONENTS_SYSTEMS_MODEL: {
-            final ComponentsSystemsModel componentsSystemsModel = (ComponentsSystemsModel)theEObject;
-            T result = caseComponentsSystemsModel(componentsSystemsModel);
-            if (result == null) {
-                result = caseModelObject(componentsSystemsModel);
+            case ComponentsSystemsPackage.COMPONENTS_SYSTEMS_MODEL: {
+                ComponentsSystemsModel componentsSystemsModel = (ComponentsSystemsModel)theEObject;
+                T result = caseComponentsSystemsModel(componentsSystemsModel);
+                if (result == null) result = caseModelObject(componentsSystemsModel);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
             }
-            if (result == null) {
-                result = defaultCase(theEObject);
+            case ComponentsSystemsPackage.FUNCTION_CONTRIBUTION_TARGET: {
+                FunctionContributionTarget functionContributionTarget = (FunctionContributionTarget)theEObject;
+                T result = caseFunctionContributionTarget(functionContributionTarget);
+                if (result == null) result = caseModelObject(functionContributionTarget);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
             }
-            return result;
-        }
-        case ComponentsSystemsPackage.FUNCTION_CONTRIBUTION_TARGET: {
-            final FunctionContributionTarget functionContributionTarget = (FunctionContributionTarget)theEObject;
-            T result = caseFunctionContributionTarget(functionContributionTarget);
-            if (result == null) {
-                result = caseModelObject(functionContributionTarget);
+            case ComponentsSystemsPackage.SYSTEM: {
+                de.jpwinkler.daf.fap5.model.componentssystems.System system = (de.jpwinkler.daf.fap5.model.componentssystems.System)theEObject;
+                T result = caseSystem(system);
+                if (result == null) result = caseFunctionContributionTarget(system);
+                if (result == null) result = caseModelObject(system);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
             }
-            if (result == null) {
-                result = defaultCase(theEObject);
+            case ComponentsSystemsPackage.COMPONENT: {
+                Component component = (Component)theEObject;
+                T result = caseComponent(component);
+                if (result == null) result = caseFunctionContributionTarget(component);
+                if (result == null) result = caseModelObject(component);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
             }
-            return result;
-        }
-        case ComponentsSystemsPackage.SYSTEM: {
-            final de.jpwinkler.daf.fap5.model.componentssystems.System system = (de.jpwinkler.daf.fap5.model.componentssystems.System)theEObject;
-            T result = caseSystem(system);
-            if (result == null) {
-                result = caseFunctionContributionTarget(system);
+            case ComponentsSystemsPackage.LOGICAL_COMPONENT: {
+                LogicalComponent logicalComponent = (LogicalComponent)theEObject;
+                T result = caseLogicalComponent(logicalComponent);
+                if (result == null) result = caseFunctionContributionTarget(logicalComponent);
+                if (result == null) result = caseModelObject(logicalComponent);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
             }
-            if (result == null) {
-                result = caseModelObject(system);
+            case ComponentsSystemsPackage.FUNCTIONALITY: {
+                Functionality functionality = (Functionality)theEObject;
+                T result = caseFunctionality(functionality);
+                if (result == null) result = caseFunctionContributionTarget(functionality);
+                if (result == null) result = caseModelObject(functionality);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
             }
-            if (result == null) {
-                result = defaultCase(theEObject);
-            }
-            return result;
-        }
-        case ComponentsSystemsPackage.COMPONENT: {
-            final Component component = (Component)theEObject;
-            T result = caseComponent(component);
-            if (result == null) {
-                result = caseFunctionContributionTarget(component);
-            }
-            if (result == null) {
-                result = caseModelObject(component);
-            }
-            if (result == null) {
-                result = defaultCase(theEObject);
-            }
-            return result;
-        }
-        case ComponentsSystemsPackage.LOGICAL_COMPONENT: {
-            final LogicalComponent logicalComponent = (LogicalComponent)theEObject;
-            T result = caseLogicalComponent(logicalComponent);
-            if (result == null) {
-                result = caseFunctionContributionTarget(logicalComponent);
-            }
-            if (result == null) {
-                result = caseModelObject(logicalComponent);
-            }
-            if (result == null) {
-                result = defaultCase(theEObject);
-            }
-            return result;
-        }
-        case ComponentsSystemsPackage.FUNCTIONALITY: {
-            final Functionality functionality = (Functionality)theEObject;
-            T result = caseFunctionality(functionality);
-            if (result == null) {
-                result = caseFunctionContributionTarget(functionality);
-            }
-            if (result == null) {
-                result = caseModelObject(functionality);
-            }
-            if (result == null) {
-                result = defaultCase(theEObject);
-            }
-            return result;
-        }
-        default: return defaultCase(theEObject);
+            default: return defaultCase(theEObject);
         }
     }
 
@@ -164,7 +132,7 @@ public class ComponentsSystemsSwitch<T> extends Switch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseComponentsSystemsModel(final ComponentsSystemsModel object) {
+    public T caseComponentsSystemsModel(ComponentsSystemsModel object) {
         return null;
     }
 
@@ -179,7 +147,7 @@ public class ComponentsSystemsSwitch<T> extends Switch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseFunctionContributionTarget(final FunctionContributionTarget object) {
+    public T caseFunctionContributionTarget(FunctionContributionTarget object) {
         return null;
     }
 
@@ -194,7 +162,7 @@ public class ComponentsSystemsSwitch<T> extends Switch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseSystem(final de.jpwinkler.daf.fap5.model.componentssystems.System object) {
+    public T caseSystem(de.jpwinkler.daf.fap5.model.componentssystems.System object) {
         return null;
     }
 
@@ -209,7 +177,7 @@ public class ComponentsSystemsSwitch<T> extends Switch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseComponent(final Component object) {
+    public T caseComponent(Component object) {
         return null;
     }
 
@@ -224,7 +192,7 @@ public class ComponentsSystemsSwitch<T> extends Switch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseLogicalComponent(final LogicalComponent object) {
+    public T caseLogicalComponent(LogicalComponent object) {
         return null;
     }
 
@@ -239,7 +207,7 @@ public class ComponentsSystemsSwitch<T> extends Switch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseFunctionality(final Functionality object) {
+    public T caseFunctionality(Functionality object) {
         return null;
     }
 
@@ -254,7 +222,7 @@ public class ComponentsSystemsSwitch<T> extends Switch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseModelObject(final ModelObject object) {
+    public T caseModelObject(ModelObject object) {
         return null;
     }
 
@@ -270,7 +238,7 @@ public class ComponentsSystemsSwitch<T> extends Switch<T> {
      * @generated
      */
     @Override
-    public T defaultCase(final EObject object) {
+    public T defaultCase(EObject object) {
         return null;
     }
 

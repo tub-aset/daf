@@ -11,6 +11,7 @@ import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.Marker;
 import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.Rule;
 import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.RuleBasedModelConstructor;
 import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.RuleContext;
+import de.jpwinkler.daf.fap5.codebeamerrules.AcceptanceRule;
 import de.jpwinkler.daf.fap5.codebeamerrules.CodeBeamerConstants;
 import de.jpwinkler.daf.fap5.codebeamerrules.DuplicatedLiteralRule;
 import de.jpwinkler.daf.fap5.codebeamerrules.EllipsisRule;
@@ -62,6 +63,7 @@ public class CodeBeamerModelConstructor extends RuleBasedModelConstructor {
                 ObjectTextAndHeadingRule.class, // +
                 // EmptyDocumentRule.class,
                 MaturityRule.class,
+                AcceptanceRule.class,
                 RequirementWithoutLinkRule.class,
                 InformationWithLinkRule.class
                 // HeadingWithLinkRule.class
@@ -72,14 +74,14 @@ public class CodeBeamerModelConstructor extends RuleBasedModelConstructor {
     protected void preProcess(final ModelObject modelObject, final RuleContext context) {
 
         // TODO remove this hack
-        if (context.getModule().getAttributes().get("module_list_key").endsWith("Telematik")) {
+        if (context.getModule().getAttributes().containsKey("module_list_key") && context.getModule().getAttributes().get("module_list_key").endsWith("Telematik")) {
             final DoorsObject object = context.getModule().findObject("KB_TLM-7441");
             if (object == null)  {
                 LOGGER.severe("No object for MAP (KB_TLM-7441) found in telematik module!!!");
             } else {
                 object.getParent().getChildren().remove(object);
             }
-        } else if (context.getModule().getAttributes().get("module_list_key").endsWith("Telematik_Karte")) {
+        } else if (context.getModule().getAttributes().containsKey("module_list_key") && context.getModule().getAttributes().get("module_list_key").endsWith("Telematik_Karte")) {
             final DoorsObject object = context.getModule().findObject("KB_TLM-7441");
             if (object == null) {
                 LOGGER.severe("No object for MAP (KB_TLM-7441) found in telematik module!!!");
@@ -96,6 +98,7 @@ public class CodeBeamerModelConstructor extends RuleBasedModelConstructor {
         final CodeBeamerModel model = (CodeBeamerModel) modelObject;
 
         model.setName(context.getModule().getName());
+        model.setPath(context.getModule().getPath());
 
         model.setSize(calcSize(context));
 
@@ -114,12 +117,21 @@ public class CodeBeamerModelConstructor extends RuleBasedModelConstructor {
         addMetric(model, CodeBeamerConstants.METRIC_INFORMATION_WITH_LINK, context.getMarkerCount(CodeBeamerConstants.MARKER_INFORMATION_WITH_LINK));
         addMetric(model, CodeBeamerConstants.METRIC_HEADING_WITH_LINK, context.getMarkerCount(CodeBeamerConstants.MARKER_HEADING_WITH_LINK));
         addMetric(model, CodeBeamerConstants.METRIC_REQUIREMENT_WITHOUT_LINK, context.getMarkerCount(CodeBeamerConstants.MARKER_REQUIREMENT_WITHOUT_LINK));
+
         addMetric(model, CodeBeamerConstants.METRIC_MATURITY_OPEN_COUNT, context.getMarkerCount(CodeBeamerConstants.MARKER_MATURITY_OPEN));
         addMetric(model, CodeBeamerConstants.METRIC_MATURITY_SPECIFIED_COUNT, context.getMarkerCount(CodeBeamerConstants.MARKER_MATURITY_SPECIFIED));
         addMetric(model, CodeBeamerConstants.METRIC_MATURITY_FOLLOW_UP_COUNT, context.getMarkerCount(CodeBeamerConstants.MARKER_MATURITY_FOLLOW_UP));
         addMetric(model, CodeBeamerConstants.METRIC_MATURITY_FOLLOW_UP_HASHTAGS_COUNT, context.getMarkerCount(CodeBeamerConstants.MARKER_MATURITY_FOLLOW_UP_HASHTAGS));
         addMetric(model, CodeBeamerConstants.METRIC_MATURITY_AGREED_COUNT, context.getMarkerCount(CodeBeamerConstants.MARKER_MATURITY_AGREED));
+
         addMetric(model, CodeBeamerConstants.METRIC_ESTIMATED_REMAINING_WORK, (int) model.getEstimatedRemainingWork());
+
+        addMetric(model, CodeBeamerConstants.METRIC_ACCEPTANCE_NONE_COUNT, context.getMarkerCount(CodeBeamerConstants.MARKER_ACCEPTANCE_NONE));
+        addMetric(model, CodeBeamerConstants.METRIC_ACCEPTANCE_DELETED_REQ_COUNT, context.getMarkerCount(CodeBeamerConstants.MARKER_ACCEPTANCE_DELETED_REQ));
+        addMetric(model, CodeBeamerConstants.METRIC_ACCEPTANCE_CHANGED_REQ_COUNT, context.getMarkerCount(CodeBeamerConstants.MARKER_ACCEPTANCE_CHANGED_REQ));
+        addMetric(model, CodeBeamerConstants.METRIC_ACCEPTANCE_TO_CLARIFY_COUNT, context.getMarkerCount(CodeBeamerConstants.MARKER_ACCEPTANCE_TO_CLARIFY));
+        addMetric(model, CodeBeamerConstants.METRIC_ACCEPTANCE_PARTLY_AGREED_COUNT, context.getMarkerCount(CodeBeamerConstants.MARKER_ACCEPTANCE_PARTLY_AGREED));
+        addMetric(model, CodeBeamerConstants.METRIC_ACCEPTANCE_AGREED_COUNT, context.getMarkerCount(CodeBeamerConstants.MARKER_ACCEPTANCE_AGREED));
     }
 
     private void addMetric(final CodeBeamerModel model, final String metricName, final int metricValue) {

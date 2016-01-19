@@ -54,6 +54,20 @@ public final class CodeBeamerConstants {
     public static final String METRIC_MATURITY_FOLLOW_UP_HASHTAGS_COUNT = "maturityFollowUpHashTags";
     public static final String METRIC_MATURITY_AGREED_COUNT = "maturityAgreed";
 
+    public static final String METRIC_ACCEPTANCE_NONE_COUNT = "acceptanceNone";
+    public static final String METRIC_ACCEPTANCE_DELETED_REQ_COUNT = "acceptanceDeletedReq";
+    public static final String METRIC_ACCEPTANCE_CHANGED_REQ_COUNT = "acceptanceChangedReq";
+    public static final String METRIC_ACCEPTANCE_TO_CLARIFY_COUNT = "acceptanceToClarify";
+    public static final String METRIC_ACCEPTANCE_PARTLY_AGREED_COUNT = "acceptancePartlyAgreed";
+    public static final String METRIC_ACCEPTANCE_AGREED_COUNT = "acceptanceAgreed";
+
+    public static final String MARKER_ACCEPTANCE_NONE = "acceptance_none";
+    public static final String MARKER_ACCEPTANCE_DELETED_REQ = "acceptance_deleted_req";
+    public static final String MARKER_ACCEPTANCE_CHANGED_REQ = "acceptance_changed_req";
+    public static final String MARKER_ACCEPTANCE_TO_CLARIFY = "acceptance_to_clarify";
+    public static final String MARKER_ACCEPTANCE_PARTLY_AGREED = "acceptance_partly_agreed";
+    public static final String MARKER_ACCEPTANCE_AGREED = "acceptance_agreed";
+
     public static final String MARKER_MATURITY_OPEN = "maturity_open";
     public static final String MARKER_MATURITY_AGREED = "maturity_agreed";
     public static final String MARKER_MATURITY_FOLLOW_UP = "maturity_follow_up";
@@ -68,6 +82,7 @@ public final class CodeBeamerConstants {
     public static final long SEVERITY_INFORMATION_WITH_LINK = 10;
     public static final String MARKER_REQUIREMENT_WITHOUT_LINK = "requirement_without_link";
     public static final long SEVERITY_REQUIREMENT_WITHOUT_LINK = 10;
+
     public static final String METRIC_INFORMATION_WITH_LINK = "informationWithLink";
     public static final String METRIC_HEADING_WITH_LINK = "headingWithLink";
     public static final String METRIC_REQUIREMENT_WITHOUT_LINK = "requirementWithoutLink";

@@ -227,6 +227,15 @@ public class CodebeamerPackageImpl extends EPackageImpl implements CodebeamerPac
      * <!-- end-user-doc -->
      * @generated
      */
+    public EAttribute getCodeBeamerModel_Path() {
+        return (EAttribute)codeBeamerModelEClass.getEStructuralFeatures().get(7);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public EOperation getCodeBeamerModel__GetEstimatedRemainingWork() {
         return codeBeamerModelEClass.getEOperations().get(0);
@@ -270,6 +279,15 @@ public class CodebeamerPackageImpl extends EPackageImpl implements CodebeamerPac
     @Override
     public EOperation getCodeBeamerModel__GetIntMetric__String() {
         return codeBeamerModelEClass.getEOperations().get(4);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EOperation getCodeBeamerModel__GetFullName() {
+        return codeBeamerModelEClass.getEOperations().get(5);
     }
 
     /**
@@ -409,11 +427,13 @@ public class CodebeamerPackageImpl extends EPackageImpl implements CodebeamerPac
         createEAttribute(codeBeamerModelEClass, CODE_BEAMER_MODEL__VERSION_NUMBER);
         createEReference(codeBeamerModelEClass, CODE_BEAMER_MODEL__METRICS);
         createEReference(codeBeamerModelEClass, CODE_BEAMER_MODEL__MODULE);
+        createEAttribute(codeBeamerModelEClass, CODE_BEAMER_MODEL__PATH);
         createEOperation(codeBeamerModelEClass, CODE_BEAMER_MODEL___GET_ESTIMATED_REMAINING_WORK);
         createEOperation(codeBeamerModelEClass, CODE_BEAMER_MODEL___GET_ISSUE_TYPES);
         createEOperation(codeBeamerModelEClass, CODE_BEAMER_MODEL___GET_ISSUES__STRING);
         createEOperation(codeBeamerModelEClass, CODE_BEAMER_MODEL___GET_DOUBLE_METRIC__STRING);
         createEOperation(codeBeamerModelEClass, CODE_BEAMER_MODEL___GET_INT_METRIC__STRING);
+        createEOperation(codeBeamerModelEClass, CODE_BEAMER_MODEL___GET_FULL_NAME);
 
         issueEClass = createEClass(ISSUE);
         createEAttribute(issueEClass, ISSUE__SEVERITY);
@@ -476,8 +496,9 @@ public class CodebeamerPackageImpl extends EPackageImpl implements CodebeamerPac
         initEAttribute(getCodeBeamerModel_VersionNumber(), ecorePackage.getEString(), "versionNumber", null, 0, 1, CodeBeamerModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getCodeBeamerModel_Metrics(), this.getMetric(), null, "metrics", null, 0, -1, CodeBeamerModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getCodeBeamerModel_Module(), theCSVPackage.getDoorsModule(), null, "module", null, 0, 1, CodeBeamerModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getCodeBeamerModel_Path(), ecorePackage.getEString(), "path", null, 0, 1, CodeBeamerModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-        initEOperation(getCodeBeamerModel__GetEstimatedRemainingWork(), ecorePackage.getEFloat(), "getEstimatedRemainingWork", 0, 1, IS_UNIQUE, IS_ORDERED);
+        initEOperation(getCodeBeamerModel__GetEstimatedRemainingWork(), ecorePackage.getELong(), "getEstimatedRemainingWork", 0, 1, IS_UNIQUE, IS_ORDERED);
 
         initEOperation(getCodeBeamerModel__GetIssueTypes(), ecorePackage.getEString(), "getIssueTypes", 0, -1, IS_UNIQUE, IS_ORDERED);
 
@@ -489,6 +510,8 @@ public class CodebeamerPackageImpl extends EPackageImpl implements CodebeamerPac
 
         op = initEOperation(getCodeBeamerModel__GetIntMetric__String(), ecorePackage.getEIntegerObject(), "getIntMetric", 0, 1, IS_UNIQUE, IS_ORDERED);
         addEParameter(op, ecorePackage.getEString(), "name", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+        initEOperation(getCodeBeamerModel__GetFullName(), ecorePackage.getEString(), "getFullName", 0, 1, IS_UNIQUE, IS_ORDERED);
 
         initEClass(issueEClass, Issue.class, "Issue", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getIssue_Severity(), ecorePackage.getELong(), "severity", null, 0, 1, Issue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

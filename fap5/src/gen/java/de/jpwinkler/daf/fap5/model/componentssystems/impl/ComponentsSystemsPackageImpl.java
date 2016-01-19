@@ -103,7 +103,7 @@ public class ComponentsSystemsPackageImpl extends EPackageImpl implements Compon
 
     /**
      * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
-     *
+     * 
      * <p>This method is used to initialize {@link ComponentsSystemsPackage#eINSTANCE} when that field is accessed.
      * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
      * <!-- begin-user-doc -->
@@ -114,24 +114,22 @@ public class ComponentsSystemsPackageImpl extends EPackageImpl implements Compon
      * @generated
      */
     public static ComponentsSystemsPackage init() {
-        if (isInited) {
-            return (ComponentsSystemsPackage)EPackage.Registry.INSTANCE.getEPackage(ComponentsSystemsPackage.eNS_URI);
-        }
+        if (isInited) return (ComponentsSystemsPackage)EPackage.Registry.INSTANCE.getEPackage(ComponentsSystemsPackage.eNS_URI);
 
         // Obtain or create and register package
-        final ComponentsSystemsPackageImpl theComponentsSystemsPackage = (ComponentsSystemsPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof ComponentsSystemsPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new ComponentsSystemsPackageImpl());
+        ComponentsSystemsPackageImpl theComponentsSystemsPackage = (ComponentsSystemsPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof ComponentsSystemsPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new ComponentsSystemsPackageImpl());
 
         isInited = true;
 
         // Initialize simple dependencies
-        CommonPackage.eINSTANCE.eClass();
         CSVPackage.eINSTANCE.eClass();
+        CommonPackage.eINSTANCE.eClass();
 
         // Obtain or create and register interdependencies
-        final CockpitPackageImpl theCockpitPackage = (CockpitPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(CockpitPackage.eNS_URI) instanceof CockpitPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(CockpitPackage.eNS_URI) : CockpitPackage.eINSTANCE);
-        final CodebeamerPackageImpl theCodebeamerPackage = (CodebeamerPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(CodebeamerPackage.eNS_URI) instanceof CodebeamerPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(CodebeamerPackage.eNS_URI) : CodebeamerPackage.eINSTANCE);
-        final IssueHistoryPackageImpl theIssueHistoryPackage = (IssueHistoryPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(IssueHistoryPackage.eNS_URI) instanceof IssueHistoryPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(IssueHistoryPackage.eNS_URI) : IssueHistoryPackage.eINSTANCE);
-        final SrsPackageImpl theSrsPackage = (SrsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SrsPackage.eNS_URI) instanceof SrsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SrsPackage.eNS_URI) : SrsPackage.eINSTANCE);
+        CockpitPackageImpl theCockpitPackage = (CockpitPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(CockpitPackage.eNS_URI) instanceof CockpitPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(CockpitPackage.eNS_URI) : CockpitPackage.eINSTANCE);
+        CodebeamerPackageImpl theCodebeamerPackage = (CodebeamerPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(CodebeamerPackage.eNS_URI) instanceof CodebeamerPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(CodebeamerPackage.eNS_URI) : CodebeamerPackage.eINSTANCE);
+        IssueHistoryPackageImpl theIssueHistoryPackage = (IssueHistoryPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(IssueHistoryPackage.eNS_URI) instanceof IssueHistoryPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(IssueHistoryPackage.eNS_URI) : IssueHistoryPackage.eINSTANCE);
+        SrsPackageImpl theSrsPackage = (SrsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SrsPackage.eNS_URI) instanceof SrsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SrsPackage.eNS_URI) : SrsPackage.eINSTANCE);
 
         // Create package meta-data objects
         theComponentsSystemsPackage.createPackageContents();
@@ -150,7 +148,7 @@ public class ComponentsSystemsPackageImpl extends EPackageImpl implements Compon
         // Mark meta-data to indicate it can't be changed
         theComponentsSystemsPackage.freeze();
 
-
+  
         // Update the registry and return the package
         EPackage.Registry.INSTANCE.put(ComponentsSystemsPackage.eNS_URI, theComponentsSystemsPackage);
         return theComponentsSystemsPackage;
@@ -321,9 +319,7 @@ public class ComponentsSystemsPackageImpl extends EPackageImpl implements Compon
      * @generated
      */
     public void createPackageContents() {
-        if (isCreated) {
-            return;
-        }
+        if (isCreated) return;
         isCreated = true;
 
         // Create classes and their features
@@ -363,9 +359,7 @@ public class ComponentsSystemsPackageImpl extends EPackageImpl implements Compon
      * @generated
      */
     public void initializePackageContents() {
-        if (isInitialized) {
-            return;
-        }
+        if (isInitialized) return;
         isInitialized = true;
 
         // Initialize package
@@ -374,8 +368,8 @@ public class ComponentsSystemsPackageImpl extends EPackageImpl implements Compon
         setNsURI(eNS_URI);
 
         // Obtain other dependent packages
-        final CommonPackage theCommonPackage = (CommonPackage)EPackage.Registry.INSTANCE.getEPackage(CommonPackage.eNS_URI);
-        final SrsPackage theSrsPackage = (SrsPackage)EPackage.Registry.INSTANCE.getEPackage(SrsPackage.eNS_URI);
+        CommonPackage theCommonPackage = (CommonPackage)EPackage.Registry.INSTANCE.getEPackage(CommonPackage.eNS_URI);
+        SrsPackage theSrsPackage = (SrsPackage)EPackage.Registry.INSTANCE.getEPackage(SrsPackage.eNS_URI);
 
         // Create type parameters
 
@@ -384,14 +378,14 @@ public class ComponentsSystemsPackageImpl extends EPackageImpl implements Compon
         // Add supertypes to classes
         componentsSystemsModelEClass.getESuperTypes().add(theCommonPackage.getModelObject());
         functionContributionTargetEClass.getESuperTypes().add(theCommonPackage.getModelObject());
-        systemEClass.getESuperTypes().add(getFunctionContributionTarget());
-        componentEClass.getESuperTypes().add(getFunctionContributionTarget());
-        logicalComponentEClass.getESuperTypes().add(getFunctionContributionTarget());
-        functionalityEClass.getESuperTypes().add(getFunctionContributionTarget());
+        systemEClass.getESuperTypes().add(this.getFunctionContributionTarget());
+        componentEClass.getESuperTypes().add(this.getFunctionContributionTarget());
+        logicalComponentEClass.getESuperTypes().add(this.getFunctionContributionTarget());
+        functionalityEClass.getESuperTypes().add(this.getFunctionContributionTarget());
 
         // Initialize classes, features, and operations; add parameters
         initEClass(componentsSystemsModelEClass, ComponentsSystemsModel.class, "ComponentsSystemsModel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEReference(getComponentsSystemsModel_FunctionContributionTargets(), getFunctionContributionTarget(), null, "functionContributionTargets", null, 0, -1, ComponentsSystemsModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getComponentsSystemsModel_FunctionContributionTargets(), this.getFunctionContributionTarget(), null, "functionContributionTargets", null, 0, -1, ComponentsSystemsModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(functionContributionTargetEClass, FunctionContributionTarget.class, "FunctionContributionTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getFunctionContributionTarget_Name(), ecorePackage.getEString(), "name", null, 0, 1, FunctionContributionTarget.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -401,14 +395,14 @@ public class ComponentsSystemsPackageImpl extends EPackageImpl implements Compon
         initEReference(getFunctionContributionTarget_Contributions(), theSrsPackage.getFunctionContribution(), theSrsPackage.getFunctionContribution_Target(), "contributions", null, 0, -1, FunctionContributionTarget.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(systemEClass, de.jpwinkler.daf.fap5.model.componentssystems.System.class, "System", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEReference(getSystem_Functionalities(), getFunctionality(), getFunctionality_System(), "functionalities", null, 0, -1, de.jpwinkler.daf.fap5.model.componentssystems.System.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getSystem_Functionalities(), this.getFunctionality(), this.getFunctionality_System(), "functionalities", null, 0, -1, de.jpwinkler.daf.fap5.model.componentssystems.System.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(componentEClass, Component.class, "Component", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
         initEClass(logicalComponentEClass, LogicalComponent.class, "LogicalComponent", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
         initEClass(functionalityEClass, Functionality.class, "Functionality", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEReference(getFunctionality_System(), getSystem(), getSystem_Functionalities(), "system", null, 0, 1, Functionality.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getFunctionality_System(), this.getSystem(), this.getSystem_Functionalities(), "system", null, 0, 1, Functionality.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         // Create resource
         createResource(eNS_URI);

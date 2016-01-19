@@ -19,11 +19,11 @@ import de.jpwinkler.daf.fap5.model.srs.SrsPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link de.jpwinkler.daf.fap5.model.srs.impl.FunctionContributionImpl#getTarget <em>Target</em>}</li>
  *   <li>{@link de.jpwinkler.daf.fap5.model.srs.impl.FunctionContributionImpl#getText <em>Text</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

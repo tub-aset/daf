@@ -15,10 +15,10 @@ import de.jpwinkler.daf.fap5.model.srs.SrsPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link de.jpwinkler.daf.fap5.model.srs.impl.EndConditionImpl#getName <em>Name</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

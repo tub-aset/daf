@@ -10,10 +10,10 @@ package de.jpwinkler.daf.fap5.model.componentssystems;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link de.jpwinkler.daf.fap5.model.componentssystems.Functionality#getSystem <em>System</em>}</li>
  * </ul>
- * </p>
  *
  * @see de.jpwinkler.daf.fap5.model.componentssystems.ComponentsSystemsPackage#getFunctionality()
  * @model

@@ -17,10 +17,10 @@ import de.jpwinkler.daf.fap5.model.componentssystems.Functionality;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link de.jpwinkler.daf.fap5.model.componentssystems.impl.FunctionalityImpl#getSystem <em>System</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

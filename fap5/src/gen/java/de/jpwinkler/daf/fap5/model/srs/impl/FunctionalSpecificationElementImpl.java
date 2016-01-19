@@ -12,8 +12,6 @@ import de.jpwinkler.daf.fap5.model.srs.SrsPackage;
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Functional Specification Element</b></em>'.
  * <!-- end-user-doc -->
- * <p>
- * </p>
  *
  * @generated
  */

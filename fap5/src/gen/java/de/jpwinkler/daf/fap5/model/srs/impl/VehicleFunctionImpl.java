@@ -24,13 +24,13 @@ import de.jpwinkler.daf.fap5.model.srs.VehicleFunctionType;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link de.jpwinkler.daf.fap5.model.srs.impl.VehicleFunctionImpl#getName <em>Name</em>}</li>
  *   <li>{@link de.jpwinkler.daf.fap5.model.srs.impl.VehicleFunctionImpl#getType <em>Type</em>}</li>
  *   <li>{@link de.jpwinkler.daf.fap5.model.srs.impl.VehicleFunctionImpl#getSubFunctions <em>Sub Functions</em>}</li>
  *   <li>{@link de.jpwinkler.daf.fap5.model.srs.impl.VehicleFunctionImpl#getParent <em>Parent</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

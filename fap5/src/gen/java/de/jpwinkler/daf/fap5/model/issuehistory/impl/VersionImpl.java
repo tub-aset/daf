@@ -24,11 +24,11 @@ import de.jpwinkler.daf.fap5.model.issuehistory.Version;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link de.jpwinkler.daf.fap5.model.issuehistory.impl.VersionImpl#getDocuments <em>Documents</em>}</li>
  *   <li>{@link de.jpwinkler.daf.fap5.model.issuehistory.impl.VersionImpl#getVersionNumber <em>Version Number</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

@@ -13,10 +13,10 @@ import de.jpwinkler.daf.dafcore.model.common.ModelObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link de.jpwinkler.daf.fap5.model.srs.SRSModel#getVehicleFunctions <em>Vehicle Functions</em>}</li>
  * </ul>
- * </p>
  *
  * @see de.jpwinkler.daf.fap5.model.srs.SrsPackage#getSRSModel()
  * @model

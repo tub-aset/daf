@@ -15,11 +15,11 @@ import de.jpwinkler.daf.fap5.model.componentssystems.FunctionContributionTarget;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link de.jpwinkler.daf.fap5.model.cockpit.FunctionContributionTargetMapping#getFunctionContributionTarget <em>Function Contribution Target</em>}</li>
  *   <li>{@link de.jpwinkler.daf.fap5.model.cockpit.FunctionContributionTargetMapping#getDocuments <em>Documents</em>}</li>
  * </ul>
- * </p>
  *
  * @see de.jpwinkler.daf.fap5.model.cockpit.CockpitPackage#getFunctionContributionTargetMapping()
  * @model

@@ -40,7 +40,7 @@ public interface CockpitPackage extends EPackage {
 	 * <!-- end-user-doc -->
      * @generated
      */
-	String eNS_URI = "com.daimler.jonwink.srstp.fap5.model.cockpit";
+	String eNS_URI = "de.jpwinkler.daf.fap5.model.cockpit";
 
 	/**
      * The package namespace name.
@@ -464,21 +464,21 @@ public interface CockpitPackage extends EPackage {
 	EReference getCockpitModel_Documents();
 
 	/**
-     * Returns the meta object for the '{@link de.jpwinkler.daf.fap5.model.cockpit.CockpitModel#findMapping(com.daimler.jonwink.srstp.fap5.model.componentssystems.FunctionContributionTarget) <em>Find Mapping</em>}' operation.
+     * Returns the meta object for the '{@link de.jpwinkler.daf.fap5.model.cockpit.CockpitModel#findMapping(de.jpwinkler.daf.fap5.model.componentssystems.FunctionContributionTarget) <em>Find Mapping</em>}' operation.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
      * @return the meta object for the '<em>Find Mapping</em>' operation.
-     * @see de.jpwinkler.daf.fap5.model.cockpit.CockpitModel#findMapping(com.daimler.jonwink.srstp.fap5.model.componentssystems.FunctionContributionTarget)
+     * @see de.jpwinkler.daf.fap5.model.cockpit.CockpitModel#findMapping(de.jpwinkler.daf.fap5.model.componentssystems.FunctionContributionTarget)
      * @generated
      */
 	EOperation getCockpitModel__FindMapping__FunctionContributionTarget();
 
 	/**
-     * Returns the meta object for the '{@link de.jpwinkler.daf.fap5.model.cockpit.CockpitModel#findFunctionContributionTargets(com.daimler.jonwink.srstp.fap5.model.codebeamer.CodeBeamerModel) <em>Find Function Contribution Targets</em>}' operation.
+     * Returns the meta object for the '{@link de.jpwinkler.daf.fap5.model.cockpit.CockpitModel#findFunctionContributionTargets(de.jpwinkler.daf.fap5.model.codebeamer.CodeBeamerModel) <em>Find Function Contribution Targets</em>}' operation.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
      * @return the meta object for the '<em>Find Function Contribution Targets</em>' operation.
-     * @see de.jpwinkler.daf.fap5.model.cockpit.CockpitModel#findFunctionContributionTargets(com.daimler.jonwink.srstp.fap5.model.codebeamer.CodeBeamerModel)
+     * @see de.jpwinkler.daf.fap5.model.cockpit.CockpitModel#findFunctionContributionTargets(de.jpwinkler.daf.fap5.model.codebeamer.CodeBeamerModel)
      * @generated
      */
 	EOperation getCockpitModel__FindFunctionContributionTargets__CodeBeamerModel();

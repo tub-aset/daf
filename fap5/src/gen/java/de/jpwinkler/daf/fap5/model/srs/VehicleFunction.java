@@ -11,13 +11,13 @@ import org.eclipse.emf.common.util.EList;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link de.jpwinkler.daf.fap5.model.srs.VehicleFunction#getName <em>Name</em>}</li>
  *   <li>{@link de.jpwinkler.daf.fap5.model.srs.VehicleFunction#getType <em>Type</em>}</li>
  *   <li>{@link de.jpwinkler.daf.fap5.model.srs.VehicleFunction#getSubFunctions <em>Sub Functions</em>}</li>
  *   <li>{@link de.jpwinkler.daf.fap5.model.srs.VehicleFunction#getParent <em>Parent</em>}</li>
  * </ul>
- * </p>
  *
  * @see de.jpwinkler.daf.fap5.model.srs.SrsPackage#getVehicleFunction()
  * @model

@@ -28,6 +28,7 @@ import de.jpwinkler.daf.fap5.model.srs.VehicleFunction;
  * <em><b>Vehicle Function Progress</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link de.jpwinkler.daf.fap5.model.cockpit.impl.VehicleFunctionProgressImpl#getVehicleFunction <em>Vehicle Function</em>}</li>
  *   <li>{@link de.jpwinkler.daf.fap5.model.cockpit.impl.VehicleFunctionProgressImpl#getCockpitModel <em>Cockpit Model</em>}</li>
@@ -35,7 +36,6 @@ import de.jpwinkler.daf.fap5.model.srs.VehicleFunction;
  *   <li>{@link de.jpwinkler.daf.fap5.model.cockpit.impl.VehicleFunctionProgressImpl#getParentProgress <em>Parent Progress</em>}</li>
  *   <li>{@link de.jpwinkler.daf.fap5.model.cockpit.impl.VehicleFunctionProgressImpl#getFunctionContributionProgress <em>Function Contribution Progress</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

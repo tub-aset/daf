@@ -23,11 +23,11 @@ import de.jpwinkler.daf.fap5.model.componentssystems.FunctionContributionTarget;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link de.jpwinkler.daf.fap5.model.cockpit.impl.FunctionContributionTargetMappingImpl#getFunctionContributionTarget <em>Function Contribution Target</em>}</li>
  *   <li>{@link de.jpwinkler.daf.fap5.model.cockpit.impl.FunctionContributionTargetMappingImpl#getDocuments <em>Documents</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

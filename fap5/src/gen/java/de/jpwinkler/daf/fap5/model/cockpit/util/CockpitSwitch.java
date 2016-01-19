@@ -51,12 +51,12 @@ public class CockpitSwitch<T> extends Switch<T> {
      * Checks whether this is a switch for the given package.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @parameter ePackage the package in question.
+     * @param ePackage the package in question.
      * @return whether this is a switch for the given package.
      * @generated
      */
     @Override
-    protected boolean isSwitchFor(final EPackage ePackage) {
+    protected boolean isSwitchFor(EPackage ePackage) {
         return ePackage == modelPackage;
     }
 
@@ -68,53 +68,37 @@ public class CockpitSwitch<T> extends Switch<T> {
      * @generated
      */
     @Override
-    protected T doSwitch(final int classifierID, final EObject theEObject) {
+    protected T doSwitch(int classifierID, EObject theEObject) {
         switch (classifierID) {
-        case CockpitPackage.COCKPIT_MODEL: {
-            final CockpitModel cockpitModel = (CockpitModel)theEObject;
-            T result = caseCockpitModel(cockpitModel);
-            if (result == null) {
-                result = caseModelObject(cockpitModel);
+            case CockpitPackage.COCKPIT_MODEL: {
+                CockpitModel cockpitModel = (CockpitModel)theEObject;
+                T result = caseCockpitModel(cockpitModel);
+                if (result == null) result = caseModelObject(cockpitModel);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
             }
-            if (result == null) {
-                result = defaultCase(theEObject);
+            case CockpitPackage.VEHICLE_FUNCTION_PROGRESS: {
+                VehicleFunctionProgress vehicleFunctionProgress = (VehicleFunctionProgress)theEObject;
+                T result = caseVehicleFunctionProgress(vehicleFunctionProgress);
+                if (result == null) result = caseModelObject(vehicleFunctionProgress);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
             }
-            return result;
-        }
-        case CockpitPackage.VEHICLE_FUNCTION_PROGRESS: {
-            final VehicleFunctionProgress vehicleFunctionProgress = (VehicleFunctionProgress)theEObject;
-            T result = caseVehicleFunctionProgress(vehicleFunctionProgress);
-            if (result == null) {
-                result = caseModelObject(vehicleFunctionProgress);
+            case CockpitPackage.FUNCTION_CONTRIBUTION_TARGET_MAPPING: {
+                FunctionContributionTargetMapping functionContributionTargetMapping = (FunctionContributionTargetMapping)theEObject;
+                T result = caseFunctionContributionTargetMapping(functionContributionTargetMapping);
+                if (result == null) result = caseModelObject(functionContributionTargetMapping);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
             }
-            if (result == null) {
-                result = defaultCase(theEObject);
+            case CockpitPackage.FUNCTION_CONTRIBUTION_PROGRESS: {
+                FunctionContributionProgress functionContributionProgress = (FunctionContributionProgress)theEObject;
+                T result = caseFunctionContributionProgress(functionContributionProgress);
+                if (result == null) result = caseModelObject(functionContributionProgress);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
             }
-            return result;
-        }
-        case CockpitPackage.FUNCTION_CONTRIBUTION_TARGET_MAPPING: {
-            final FunctionContributionTargetMapping functionContributionTargetMapping = (FunctionContributionTargetMapping)theEObject;
-            T result = caseFunctionContributionTargetMapping(functionContributionTargetMapping);
-            if (result == null) {
-                result = caseModelObject(functionContributionTargetMapping);
-            }
-            if (result == null) {
-                result = defaultCase(theEObject);
-            }
-            return result;
-        }
-        case CockpitPackage.FUNCTION_CONTRIBUTION_PROGRESS: {
-            final FunctionContributionProgress functionContributionProgress = (FunctionContributionProgress)theEObject;
-            T result = caseFunctionContributionProgress(functionContributionProgress);
-            if (result == null) {
-                result = caseModelObject(functionContributionProgress);
-            }
-            if (result == null) {
-                result = defaultCase(theEObject);
-            }
-            return result;
-        }
-        default: return defaultCase(theEObject);
+            default: return defaultCase(theEObject);
         }
     }
 
@@ -129,7 +113,7 @@ public class CockpitSwitch<T> extends Switch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseCockpitModel(final CockpitModel object) {
+    public T caseCockpitModel(CockpitModel object) {
         return null;
     }
 
@@ -144,7 +128,7 @@ public class CockpitSwitch<T> extends Switch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseVehicleFunctionProgress(final VehicleFunctionProgress object) {
+    public T caseVehicleFunctionProgress(VehicleFunctionProgress object) {
         return null;
     }
 
@@ -159,7 +143,7 @@ public class CockpitSwitch<T> extends Switch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseFunctionContributionTargetMapping(final FunctionContributionTargetMapping object) {
+    public T caseFunctionContributionTargetMapping(FunctionContributionTargetMapping object) {
         return null;
     }
 
@@ -174,7 +158,7 @@ public class CockpitSwitch<T> extends Switch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseFunctionContributionProgress(final FunctionContributionProgress object) {
+    public T caseFunctionContributionProgress(FunctionContributionProgress object) {
         return null;
     }
 
@@ -189,7 +173,7 @@ public class CockpitSwitch<T> extends Switch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseModelObject(final ModelObject object) {
+    public T caseModelObject(ModelObject object) {
         return null;
     }
 
@@ -205,7 +189,7 @@ public class CockpitSwitch<T> extends Switch<T> {
      * @generated
      */
     @Override
-    public T defaultCase(final EObject object) {
+    public T defaultCase(EObject object) {
         return null;
     }
 

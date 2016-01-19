@@ -73,7 +73,7 @@ public class IssueHistoryPackageImpl extends EPackageImpl implements IssueHistor
 
     /**
      * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
-     *
+     * 
      * <p>This method is used to initialize {@link IssueHistoryPackage#eINSTANCE} when that field is accessed.
      * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
      * <!-- begin-user-doc -->
@@ -84,24 +84,22 @@ public class IssueHistoryPackageImpl extends EPackageImpl implements IssueHistor
      * @generated
      */
     public static IssueHistoryPackage init() {
-        if (isInited) {
-            return (IssueHistoryPackage)EPackage.Registry.INSTANCE.getEPackage(IssueHistoryPackage.eNS_URI);
-        }
+        if (isInited) return (IssueHistoryPackage)EPackage.Registry.INSTANCE.getEPackage(IssueHistoryPackage.eNS_URI);
 
         // Obtain or create and register package
-        final IssueHistoryPackageImpl theIssueHistoryPackage = (IssueHistoryPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof IssueHistoryPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new IssueHistoryPackageImpl());
+        IssueHistoryPackageImpl theIssueHistoryPackage = (IssueHistoryPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof IssueHistoryPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new IssueHistoryPackageImpl());
 
         isInited = true;
 
         // Initialize simple dependencies
-        CommonPackage.eINSTANCE.eClass();
         CSVPackage.eINSTANCE.eClass();
+        CommonPackage.eINSTANCE.eClass();
 
         // Obtain or create and register interdependencies
-        final CockpitPackageImpl theCockpitPackage = (CockpitPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(CockpitPackage.eNS_URI) instanceof CockpitPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(CockpitPackage.eNS_URI) : CockpitPackage.eINSTANCE);
-        final CodebeamerPackageImpl theCodebeamerPackage = (CodebeamerPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(CodebeamerPackage.eNS_URI) instanceof CodebeamerPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(CodebeamerPackage.eNS_URI) : CodebeamerPackage.eINSTANCE);
-        final ComponentsSystemsPackageImpl theComponentsSystemsPackage = (ComponentsSystemsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ComponentsSystemsPackage.eNS_URI) instanceof ComponentsSystemsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ComponentsSystemsPackage.eNS_URI) : ComponentsSystemsPackage.eINSTANCE);
-        final SrsPackageImpl theSrsPackage = (SrsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SrsPackage.eNS_URI) instanceof SrsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SrsPackage.eNS_URI) : SrsPackage.eINSTANCE);
+        CockpitPackageImpl theCockpitPackage = (CockpitPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(CockpitPackage.eNS_URI) instanceof CockpitPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(CockpitPackage.eNS_URI) : CockpitPackage.eINSTANCE);
+        CodebeamerPackageImpl theCodebeamerPackage = (CodebeamerPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(CodebeamerPackage.eNS_URI) instanceof CodebeamerPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(CodebeamerPackage.eNS_URI) : CodebeamerPackage.eINSTANCE);
+        ComponentsSystemsPackageImpl theComponentsSystemsPackage = (ComponentsSystemsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ComponentsSystemsPackage.eNS_URI) instanceof ComponentsSystemsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ComponentsSystemsPackage.eNS_URI) : ComponentsSystemsPackage.eINSTANCE);
+        SrsPackageImpl theSrsPackage = (SrsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SrsPackage.eNS_URI) instanceof SrsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SrsPackage.eNS_URI) : SrsPackage.eINSTANCE);
 
         // Create package meta-data objects
         theIssueHistoryPackage.createPackageContents();
@@ -120,7 +118,7 @@ public class IssueHistoryPackageImpl extends EPackageImpl implements IssueHistor
         // Mark meta-data to indicate it can't be changed
         theIssueHistoryPackage.freeze();
 
-
+  
         // Update the registry and return the package
         EPackage.Registry.INSTANCE.put(IssueHistoryPackage.eNS_URI, theIssueHistoryPackage);
         return theIssueHistoryPackage;
@@ -241,9 +239,7 @@ public class IssueHistoryPackageImpl extends EPackageImpl implements IssueHistor
      * @generated
      */
     public void createPackageContents() {
-        if (isCreated) {
-            return;
-        }
+        if (isCreated) return;
         isCreated = true;
 
         // Create classes and their features
@@ -274,9 +270,7 @@ public class IssueHistoryPackageImpl extends EPackageImpl implements IssueHistor
      * @generated
      */
     public void initializePackageContents() {
-        if (isInitialized) {
-            return;
-        }
+        if (isInitialized) return;
         isInitialized = true;
 
         // Initialize package
@@ -285,8 +279,8 @@ public class IssueHistoryPackageImpl extends EPackageImpl implements IssueHistor
         setNsURI(eNS_URI);
 
         // Obtain other dependent packages
-        final CommonPackage theCommonPackage = (CommonPackage)EPackage.Registry.INSTANCE.getEPackage(CommonPackage.eNS_URI);
-        final CodebeamerPackage theCodebeamerPackage = (CodebeamerPackage)EPackage.Registry.INSTANCE.getEPackage(CodebeamerPackage.eNS_URI);
+        CommonPackage theCommonPackage = (CommonPackage)EPackage.Registry.INSTANCE.getEPackage(CommonPackage.eNS_URI);
+        CodebeamerPackage theCodebeamerPackage = (CodebeamerPackage)EPackage.Registry.INSTANCE.getEPackage(CodebeamerPackage.eNS_URI);
 
         // Create type parameters
 
@@ -298,7 +292,7 @@ public class IssueHistoryPackageImpl extends EPackageImpl implements IssueHistor
 
         // Initialize classes, features, and operations; add parameters
         initEClass(issueHistoryModelEClass, IssueHistoryModel.class, "IssueHistoryModel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEReference(getIssueHistoryModel_Versions(), getVersion(), null, "versions", null, 0, -1, IssueHistoryModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getIssueHistoryModel_Versions(), this.getVersion(), null, "versions", null, 0, -1, IssueHistoryModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEOperation(getIssueHistoryModel__GetDocumentNames(), ecorePackage.getEString(), "getDocumentNames", 0, -1, IS_UNIQUE, IS_ORDERED);
 

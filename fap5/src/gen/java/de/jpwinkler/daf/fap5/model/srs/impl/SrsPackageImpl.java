@@ -146,7 +146,7 @@ public class SrsPackageImpl extends EPackageImpl implements SrsPackage {
 
     /**
      * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
-     *
+     * 
      * <p>This method is used to initialize {@link SrsPackage#eINSTANCE} when that field is accessed.
      * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
      * <!-- begin-user-doc -->
@@ -157,24 +157,22 @@ public class SrsPackageImpl extends EPackageImpl implements SrsPackage {
      * @generated
      */
     public static SrsPackage init() {
-        if (isInited) {
-            return (SrsPackage)EPackage.Registry.INSTANCE.getEPackage(SrsPackage.eNS_URI);
-        }
+        if (isInited) return (SrsPackage)EPackage.Registry.INSTANCE.getEPackage(SrsPackage.eNS_URI);
 
         // Obtain or create and register package
-        final SrsPackageImpl theSrsPackage = (SrsPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof SrsPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new SrsPackageImpl());
+        SrsPackageImpl theSrsPackage = (SrsPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof SrsPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new SrsPackageImpl());
 
         isInited = true;
 
         // Initialize simple dependencies
-        CommonPackage.eINSTANCE.eClass();
         CSVPackage.eINSTANCE.eClass();
+        CommonPackage.eINSTANCE.eClass();
 
         // Obtain or create and register interdependencies
-        final CockpitPackageImpl theCockpitPackage = (CockpitPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(CockpitPackage.eNS_URI) instanceof CockpitPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(CockpitPackage.eNS_URI) : CockpitPackage.eINSTANCE);
-        final CodebeamerPackageImpl theCodebeamerPackage = (CodebeamerPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(CodebeamerPackage.eNS_URI) instanceof CodebeamerPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(CodebeamerPackage.eNS_URI) : CodebeamerPackage.eINSTANCE);
-        final ComponentsSystemsPackageImpl theComponentsSystemsPackage = (ComponentsSystemsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ComponentsSystemsPackage.eNS_URI) instanceof ComponentsSystemsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ComponentsSystemsPackage.eNS_URI) : ComponentsSystemsPackage.eINSTANCE);
-        final IssueHistoryPackageImpl theIssueHistoryPackage = (IssueHistoryPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(IssueHistoryPackage.eNS_URI) instanceof IssueHistoryPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(IssueHistoryPackage.eNS_URI) : IssueHistoryPackage.eINSTANCE);
+        CockpitPackageImpl theCockpitPackage = (CockpitPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(CockpitPackage.eNS_URI) instanceof CockpitPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(CockpitPackage.eNS_URI) : CockpitPackage.eINSTANCE);
+        CodebeamerPackageImpl theCodebeamerPackage = (CodebeamerPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(CodebeamerPackage.eNS_URI) instanceof CodebeamerPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(CodebeamerPackage.eNS_URI) : CodebeamerPackage.eINSTANCE);
+        ComponentsSystemsPackageImpl theComponentsSystemsPackage = (ComponentsSystemsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ComponentsSystemsPackage.eNS_URI) instanceof ComponentsSystemsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ComponentsSystemsPackage.eNS_URI) : ComponentsSystemsPackage.eINSTANCE);
+        IssueHistoryPackageImpl theIssueHistoryPackage = (IssueHistoryPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(IssueHistoryPackage.eNS_URI) instanceof IssueHistoryPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(IssueHistoryPackage.eNS_URI) : IssueHistoryPackage.eINSTANCE);
 
         // Create package meta-data objects
         theSrsPackage.createPackageContents();
@@ -193,7 +191,7 @@ public class SrsPackageImpl extends EPackageImpl implements SrsPackage {
         // Mark meta-data to indicate it can't be changed
         theSrsPackage.freeze();
 
-
+  
         // Update the registry and return the package
         EPackage.Registry.INSTANCE.put(SrsPackage.eNS_URI, theSrsPackage);
         return theSrsPackage;
@@ -474,9 +472,7 @@ public class SrsPackageImpl extends EPackageImpl implements SrsPackage {
      * @generated
      */
     public void createPackageContents() {
-        if (isCreated) {
-            return;
-        }
+        if (isCreated) return;
         isCreated = true;
 
         // Create classes and their features
@@ -533,9 +529,7 @@ public class SrsPackageImpl extends EPackageImpl implements SrsPackage {
      * @generated
      */
     public void initializePackageContents() {
-        if (isInitialized) {
-            return;
-        }
+        if (isInitialized) return;
         isInitialized = true;
 
         // Initialize package
@@ -544,8 +538,8 @@ public class SrsPackageImpl extends EPackageImpl implements SrsPackage {
         setNsURI(eNS_URI);
 
         // Obtain other dependent packages
-        final CommonPackage theCommonPackage = (CommonPackage)EPackage.Registry.INSTANCE.getEPackage(CommonPackage.eNS_URI);
-        final ComponentsSystemsPackage theComponentsSystemsPackage = (ComponentsSystemsPackage)EPackage.Registry.INSTANCE.getEPackage(ComponentsSystemsPackage.eNS_URI);
+        CommonPackage theCommonPackage = (CommonPackage)EPackage.Registry.INSTANCE.getEPackage(CommonPackage.eNS_URI);
+        ComponentsSystemsPackage theComponentsSystemsPackage = (ComponentsSystemsPackage)EPackage.Registry.INSTANCE.getEPackage(ComponentsSystemsPackage.eNS_URI);
 
         // Create type parameters
 
@@ -553,34 +547,34 @@ public class SrsPackageImpl extends EPackageImpl implements SrsPackage {
 
         // Add supertypes to classes
         srsModelEClass.getESuperTypes().add(theCommonPackage.getModelObject());
-        vehicleFunctionEClass.getESuperTypes().add(getFunctionalSpecificationContainer());
-        functionContributionEClass.getESuperTypes().add(getFunctionalSpecificationElement());
-        functionalSpecificationContainerEClass.getESuperTypes().add(getFunctionalSpecificationElement());
+        vehicleFunctionEClass.getESuperTypes().add(this.getFunctionalSpecificationContainer());
+        functionContributionEClass.getESuperTypes().add(this.getFunctionalSpecificationElement());
+        functionalSpecificationContainerEClass.getESuperTypes().add(this.getFunctionalSpecificationElement());
         functionalSpecificationElementEClass.getESuperTypes().add(theCommonPackage.getModelObject());
-        preconditionEClass.getESuperTypes().add(getFunctionalSpecificationContainer());
-        endConditionEClass.getESuperTypes().add(getFunctionalSpecificationContainer());
-        triggerEClass.getESuperTypes().add(getFunctionalSpecificationContainer());
-        headingEClass.getESuperTypes().add(getFunctionalSpecificationContainer());
-        descriptionEClass.getESuperTypes().add(getFunctionalSpecificationElement());
+        preconditionEClass.getESuperTypes().add(this.getFunctionalSpecificationContainer());
+        endConditionEClass.getESuperTypes().add(this.getFunctionalSpecificationContainer());
+        triggerEClass.getESuperTypes().add(this.getFunctionalSpecificationContainer());
+        headingEClass.getESuperTypes().add(this.getFunctionalSpecificationContainer());
+        descriptionEClass.getESuperTypes().add(this.getFunctionalSpecificationElement());
 
         // Initialize classes, features, and operations; add parameters
         initEClass(srsModelEClass, SRSModel.class, "SRSModel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEReference(getSRSModel_VehicleFunctions(), getVehicleFunction(), null, "vehicleFunctions", null, 0, -1, SRSModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getSRSModel_VehicleFunctions(), this.getVehicleFunction(), null, "vehicleFunctions", null, 0, -1, SRSModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(vehicleFunctionEClass, VehicleFunction.class, "VehicleFunction", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getVehicleFunction_Name(), ecorePackage.getEString(), "name", null, 0, 1, VehicleFunction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getVehicleFunction_Type(), getVehicleFunctionType(), "type", null, 0, 1, VehicleFunction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getVehicleFunction_SubFunctions(), getVehicleFunction(), getVehicleFunction_Parent(), "subFunctions", null, 0, -1, VehicleFunction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getVehicleFunction_Parent(), getVehicleFunction(), getVehicleFunction_SubFunctions(), "parent", null, 0, 1, VehicleFunction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getVehicleFunction_Type(), this.getVehicleFunctionType(), "type", null, 0, 1, VehicleFunction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getVehicleFunction_SubFunctions(), this.getVehicleFunction(), this.getVehicleFunction_Parent(), "subFunctions", null, 0, -1, VehicleFunction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getVehicleFunction_Parent(), this.getVehicleFunction(), this.getVehicleFunction_SubFunctions(), "parent", null, 0, 1, VehicleFunction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(functionContributionEClass, FunctionContribution.class, "FunctionContribution", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEReference(getFunctionContribution_Target(), theComponentsSystemsPackage.getFunctionContributionTarget(), theComponentsSystemsPackage.getFunctionContributionTarget_Contributions(), "target", null, 0, 1, FunctionContribution.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getFunctionContribution_Text(), ecorePackage.getEString(), "text", null, 0, 1, FunctionContribution.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(functionalSpecificationContainerEClass, FunctionalSpecificationContainer.class, "FunctionalSpecificationContainer", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEReference(getFunctionalSpecificationContainer_Elements(), getFunctionalSpecificationElement(), null, "elements", null, 0, -1, FunctionalSpecificationContainer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getFunctionalSpecificationContainer_Elements(), this.getFunctionalSpecificationElement(), null, "elements", null, 0, -1, FunctionalSpecificationContainer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-        initEOperation(getFunctionalSpecificationContainer__GetFunctionContributions(), getFunctionContribution(), "getFunctionContributions", 0, -1, IS_UNIQUE, IS_ORDERED);
+        initEOperation(getFunctionalSpecificationContainer__GetFunctionContributions(), this.getFunctionContribution(), "getFunctionContributions", 0, -1, IS_UNIQUE, IS_ORDERED);
 
         initEClass(functionalSpecificationElementEClass, FunctionalSpecificationElement.class, "FunctionalSpecificationElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

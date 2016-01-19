@@ -41,7 +41,7 @@ public interface IssueHistoryPackage extends EPackage {
 	 * <!-- end-user-doc -->
      * @generated
      */
-	String eNS_URI = "com.daimler.jonwink.srstp.fap5.model.issuehistory";
+	String eNS_URI = "de.jpwinkler.daf.fap5.model.issuehistory";
 
 	/**
      * The package namespace name.

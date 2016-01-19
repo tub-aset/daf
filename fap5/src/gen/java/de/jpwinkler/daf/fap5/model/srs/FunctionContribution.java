@@ -11,11 +11,11 @@ import de.jpwinkler.daf.fap5.model.componentssystems.FunctionContributionTarget;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link de.jpwinkler.daf.fap5.model.srs.FunctionContribution#getTarget <em>Target</em>}</li>
  *   <li>{@link de.jpwinkler.daf.fap5.model.srs.FunctionContribution#getText <em>Text</em>}</li>
  * </ul>
- * </p>
  *
  * @see de.jpwinkler.daf.fap5.model.srs.SrsPackage#getFunctionContribution()
  * @model

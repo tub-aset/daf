@@ -53,7 +53,7 @@ public class ComponentsSystemsAdapterFactory extends AdapterFactoryImpl {
      * @generated
      */
     @Override
-    public boolean isFactoryForType(final Object object) {
+    public boolean isFactoryForType(Object object) {
         if (object == modelPackage) {
             return true;
         }
@@ -71,39 +71,39 @@ public class ComponentsSystemsAdapterFactory extends AdapterFactoryImpl {
      */
     protected ComponentsSystemsSwitch<Adapter> modelSwitch =
             new ComponentsSystemsSwitch<Adapter>() {
-        @Override
-        public Adapter caseComponentsSystemsModel(final ComponentsSystemsModel object) {
-            return createComponentsSystemsModelAdapter();
-        }
-        @Override
-        public Adapter caseFunctionContributionTarget(final FunctionContributionTarget object) {
-            return createFunctionContributionTargetAdapter();
-        }
-        @Override
-        public Adapter caseSystem(final de.jpwinkler.daf.fap5.model.componentssystems.System object) {
-            return createSystemAdapter();
-        }
-        @Override
-        public Adapter caseComponent(final Component object) {
-            return createComponentAdapter();
-        }
-        @Override
-        public Adapter caseLogicalComponent(final LogicalComponent object) {
-            return createLogicalComponentAdapter();
-        }
-        @Override
-        public Adapter caseFunctionality(final Functionality object) {
-            return createFunctionalityAdapter();
-        }
-        @Override
-        public Adapter caseModelObject(final ModelObject object) {
-            return createModelObjectAdapter();
-        }
-        @Override
-        public Adapter defaultCase(final EObject object) {
-            return createEObjectAdapter();
-        }
-    };
+            @Override
+            public Adapter caseComponentsSystemsModel(ComponentsSystemsModel object) {
+                return createComponentsSystemsModelAdapter();
+            }
+            @Override
+            public Adapter caseFunctionContributionTarget(FunctionContributionTarget object) {
+                return createFunctionContributionTargetAdapter();
+            }
+            @Override
+            public Adapter caseSystem(de.jpwinkler.daf.fap5.model.componentssystems.System object) {
+                return createSystemAdapter();
+            }
+            @Override
+            public Adapter caseComponent(Component object) {
+                return createComponentAdapter();
+            }
+            @Override
+            public Adapter caseLogicalComponent(LogicalComponent object) {
+                return createLogicalComponentAdapter();
+            }
+            @Override
+            public Adapter caseFunctionality(Functionality object) {
+                return createFunctionalityAdapter();
+            }
+            @Override
+            public Adapter caseModelObject(ModelObject object) {
+                return createModelObjectAdapter();
+            }
+            @Override
+            public Adapter defaultCase(EObject object) {
+                return createEObjectAdapter();
+            }
+        };
 
     /**
      * Creates an adapter for the <code>target</code>.
@@ -114,7 +114,7 @@ public class ComponentsSystemsAdapterFactory extends AdapterFactoryImpl {
      * @generated
      */
     @Override
-    public Adapter createAdapter(final Notifier target) {
+    public Adapter createAdapter(Notifier target) {
         return modelSwitch.doSwitch((EObject)target);
     }
 
@@ -204,13 +204,13 @@ public class ComponentsSystemsAdapterFactory extends AdapterFactoryImpl {
     }
 
     /**
-     * Creates a new adapter for an object of class '{@link com.daimler.jonwink.srstp.core.model.common.ModelObject <em>Model Object</em>}'.
+     * Creates a new adapter for an object of class '{@link de.jpwinkler.daf.dafcore.model.common.ModelObject <em>Model Object</em>}'.
      * <!-- begin-user-doc -->
      * This default implementation returns null so that we can easily ignore cases;
      * it's useful to ignore a case when inheritance will catch all the cases anyway.
      * <!-- end-user-doc -->
      * @return the new adapter.
-     * @see com.daimler.jonwink.srstp.core.model.common.ModelObject
+     * @see de.jpwinkler.daf.dafcore.model.common.ModelObject
      * @generated
      */
     public Adapter createModelObjectAdapter() {

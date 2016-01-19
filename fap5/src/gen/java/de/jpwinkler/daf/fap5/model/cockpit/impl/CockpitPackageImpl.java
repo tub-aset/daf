@@ -88,7 +88,7 @@ public class CockpitPackageImpl extends EPackageImpl implements CockpitPackage {
 
     /**
      * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
-     *
+     * 
      * <p>This method is used to initialize {@link CockpitPackage#eINSTANCE} when that field is accessed.
      * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
      * <!-- begin-user-doc -->
@@ -99,24 +99,22 @@ public class CockpitPackageImpl extends EPackageImpl implements CockpitPackage {
      * @generated
      */
     public static CockpitPackage init() {
-        if (isInited) {
-            return (CockpitPackage)EPackage.Registry.INSTANCE.getEPackage(CockpitPackage.eNS_URI);
-        }
+        if (isInited) return (CockpitPackage)EPackage.Registry.INSTANCE.getEPackage(CockpitPackage.eNS_URI);
 
         // Obtain or create and register package
-        final CockpitPackageImpl theCockpitPackage = (CockpitPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof CockpitPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new CockpitPackageImpl());
+        CockpitPackageImpl theCockpitPackage = (CockpitPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof CockpitPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new CockpitPackageImpl());
 
         isInited = true;
 
         // Initialize simple dependencies
-        CommonPackage.eINSTANCE.eClass();
         CSVPackage.eINSTANCE.eClass();
+        CommonPackage.eINSTANCE.eClass();
 
         // Obtain or create and register interdependencies
-        final CodebeamerPackageImpl theCodebeamerPackage = (CodebeamerPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(CodebeamerPackage.eNS_URI) instanceof CodebeamerPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(CodebeamerPackage.eNS_URI) : CodebeamerPackage.eINSTANCE);
-        final ComponentsSystemsPackageImpl theComponentsSystemsPackage = (ComponentsSystemsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ComponentsSystemsPackage.eNS_URI) instanceof ComponentsSystemsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ComponentsSystemsPackage.eNS_URI) : ComponentsSystemsPackage.eINSTANCE);
-        final IssueHistoryPackageImpl theIssueHistoryPackage = (IssueHistoryPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(IssueHistoryPackage.eNS_URI) instanceof IssueHistoryPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(IssueHistoryPackage.eNS_URI) : IssueHistoryPackage.eINSTANCE);
-        final SrsPackageImpl theSrsPackage = (SrsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SrsPackage.eNS_URI) instanceof SrsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SrsPackage.eNS_URI) : SrsPackage.eINSTANCE);
+        CodebeamerPackageImpl theCodebeamerPackage = (CodebeamerPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(CodebeamerPackage.eNS_URI) instanceof CodebeamerPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(CodebeamerPackage.eNS_URI) : CodebeamerPackage.eINSTANCE);
+        ComponentsSystemsPackageImpl theComponentsSystemsPackage = (ComponentsSystemsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ComponentsSystemsPackage.eNS_URI) instanceof ComponentsSystemsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ComponentsSystemsPackage.eNS_URI) : ComponentsSystemsPackage.eINSTANCE);
+        IssueHistoryPackageImpl theIssueHistoryPackage = (IssueHistoryPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(IssueHistoryPackage.eNS_URI) instanceof IssueHistoryPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(IssueHistoryPackage.eNS_URI) : IssueHistoryPackage.eINSTANCE);
+        SrsPackageImpl theSrsPackage = (SrsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SrsPackage.eNS_URI) instanceof SrsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SrsPackage.eNS_URI) : SrsPackage.eINSTANCE);
 
         // Create package meta-data objects
         theCockpitPackage.createPackageContents();
@@ -135,7 +133,7 @@ public class CockpitPackageImpl extends EPackageImpl implements CockpitPackage {
         // Mark meta-data to indicate it can't be changed
         theCockpitPackage.freeze();
 
-
+  
         // Update the registry and return the package
         EPackage.Registry.INSTANCE.put(CockpitPackage.eNS_URI, theCockpitPackage);
         return theCockpitPackage;
@@ -456,9 +454,7 @@ public class CockpitPackageImpl extends EPackageImpl implements CockpitPackage {
      * @generated
      */
     public void createPackageContents() {
-        if (isCreated) {
-            return;
-        }
+        if (isCreated) return;
         isCreated = true;
 
         // Create classes and their features
@@ -511,9 +507,7 @@ public class CockpitPackageImpl extends EPackageImpl implements CockpitPackage {
      * @generated
      */
     public void initializePackageContents() {
-        if (isInitialized) {
-            return;
-        }
+        if (isInitialized) return;
         isInitialized = true;
 
         // Initialize package
@@ -522,10 +516,10 @@ public class CockpitPackageImpl extends EPackageImpl implements CockpitPackage {
         setNsURI(eNS_URI);
 
         // Obtain other dependent packages
-        final CommonPackage theCommonPackage = (CommonPackage)EPackage.Registry.INSTANCE.getEPackage(CommonPackage.eNS_URI);
-        final CodebeamerPackage theCodebeamerPackage = (CodebeamerPackage)EPackage.Registry.INSTANCE.getEPackage(CodebeamerPackage.eNS_URI);
-        final ComponentsSystemsPackage theComponentsSystemsPackage = (ComponentsSystemsPackage)EPackage.Registry.INSTANCE.getEPackage(ComponentsSystemsPackage.eNS_URI);
-        final SrsPackage theSrsPackage = (SrsPackage)EPackage.Registry.INSTANCE.getEPackage(SrsPackage.eNS_URI);
+        CommonPackage theCommonPackage = (CommonPackage)EPackage.Registry.INSTANCE.getEPackage(CommonPackage.eNS_URI);
+        CodebeamerPackage theCodebeamerPackage = (CodebeamerPackage)EPackage.Registry.INSTANCE.getEPackage(CodebeamerPackage.eNS_URI);
+        ComponentsSystemsPackage theComponentsSystemsPackage = (ComponentsSystemsPackage)EPackage.Registry.INSTANCE.getEPackage(ComponentsSystemsPackage.eNS_URI);
+        SrsPackage theSrsPackage = (SrsPackage)EPackage.Registry.INSTANCE.getEPackage(SrsPackage.eNS_URI);
 
         // Create type parameters
 
@@ -539,11 +533,11 @@ public class CockpitPackageImpl extends EPackageImpl implements CockpitPackage {
 
         // Initialize classes, features, and operations; add parameters
         initEClass(cockpitModelEClass, CockpitModel.class, "CockpitModel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEReference(getCockpitModel_Mappings(), getFunctionContributionTargetMapping(), null, "mappings", null, 0, -1, CockpitModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getCockpitModel_VehicleFunctionProgress(), getVehicleFunctionProgress(), null, "vehicleFunctionProgress", null, 0, -1, CockpitModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getCockpitModel_Mappings(), this.getFunctionContributionTargetMapping(), null, "mappings", null, 0, -1, CockpitModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getCockpitModel_VehicleFunctionProgress(), this.getVehicleFunctionProgress(), null, "vehicleFunctionProgress", null, 0, -1, CockpitModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getCockpitModel_Documents(), theCodebeamerPackage.getCodeBeamerModel(), null, "documents", null, 0, -1, CockpitModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-        EOperation op = initEOperation(getCockpitModel__FindMapping__FunctionContributionTarget(), getFunctionContributionTargetMapping(), "findMapping", 0, 1, IS_UNIQUE, IS_ORDERED);
+        EOperation op = initEOperation(getCockpitModel__FindMapping__FunctionContributionTarget(), this.getFunctionContributionTargetMapping(), "findMapping", 0, 1, IS_UNIQUE, IS_ORDERED);
         addEParameter(op, theComponentsSystemsPackage.getFunctionContributionTarget(), "fct", 0, 1, IS_UNIQUE, IS_ORDERED);
 
         op = initEOperation(getCockpitModel__FindFunctionContributionTargets__CodeBeamerModel(), theComponentsSystemsPackage.getFunctionContributionTarget(), "findFunctionContributionTargets", 0, -1, IS_UNIQUE, IS_ORDERED);
@@ -556,10 +550,10 @@ public class CockpitPackageImpl extends EPackageImpl implements CockpitPackage {
 
         initEClass(vehicleFunctionProgressEClass, VehicleFunctionProgress.class, "VehicleFunctionProgress", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEReference(getVehicleFunctionProgress_VehicleFunction(), theSrsPackage.getVehicleFunction(), null, "vehicleFunction", null, 0, 1, VehicleFunctionProgress.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getVehicleFunctionProgress_CockpitModel(), getCockpitModel(), null, "cockpitModel", null, 0, 1, VehicleFunctionProgress.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getVehicleFunctionProgress_SubFunctionProgress(), getVehicleFunctionProgress(), getVehicleFunctionProgress_ParentProgress(), "subFunctionProgress", null, 0, -1, VehicleFunctionProgress.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getVehicleFunctionProgress_ParentProgress(), getVehicleFunctionProgress(), getVehicleFunctionProgress_SubFunctionProgress(), "parentProgress", null, 0, 1, VehicleFunctionProgress.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getVehicleFunctionProgress_FunctionContributionProgress(), getFunctionContributionProgress(), null, "functionContributionProgress", null, 0, -1, VehicleFunctionProgress.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getVehicleFunctionProgress_CockpitModel(), this.getCockpitModel(), null, "cockpitModel", null, 0, 1, VehicleFunctionProgress.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getVehicleFunctionProgress_SubFunctionProgress(), this.getVehicleFunctionProgress(), this.getVehicleFunctionProgress_ParentProgress(), "subFunctionProgress", null, 0, -1, VehicleFunctionProgress.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getVehicleFunctionProgress_ParentProgress(), this.getVehicleFunctionProgress(), this.getVehicleFunctionProgress_SubFunctionProgress(), "parentProgress", null, 0, 1, VehicleFunctionProgress.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getVehicleFunctionProgress_FunctionContributionProgress(), this.getFunctionContributionProgress(), null, "functionContributionProgress", null, 0, -1, VehicleFunctionProgress.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEOperation(getVehicleFunctionProgress__IsSpecified(), ecorePackage.getEBoolean(), "isSpecified", 0, 1, IS_UNIQUE, IS_ORDERED);
 
@@ -579,7 +573,7 @@ public class CockpitPackageImpl extends EPackageImpl implements CockpitPackage {
 
         initEClass(functionContributionProgressEClass, FunctionContributionProgress.class, "FunctionContributionProgress", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEReference(getFunctionContributionProgress_FunctionContribution(), theSrsPackage.getFunctionContribution(), null, "functionContribution", null, 0, 1, FunctionContributionProgress.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getFunctionContributionProgress_CockpitModel(), getCockpitModel(), null, "cockpitModel", null, 0, 1, FunctionContributionProgress.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getFunctionContributionProgress_CockpitModel(), this.getCockpitModel(), null, "cockpitModel", null, 0, 1, FunctionContributionProgress.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEOperation(getFunctionContributionProgress__IsMapped(), ecorePackage.getEBoolean(), "isMapped", 0, 1, IS_UNIQUE, IS_ORDERED);
 

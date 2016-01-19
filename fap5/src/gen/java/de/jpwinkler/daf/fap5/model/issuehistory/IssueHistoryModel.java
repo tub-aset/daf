@@ -13,10 +13,10 @@ import de.jpwinkler.daf.dafcore.model.common.ModelObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link de.jpwinkler.daf.fap5.model.issuehistory.IssueHistoryModel#getVersions <em>Versions</em>}</li>
  * </ul>
- * </p>
  *
  * @see de.jpwinkler.daf.fap5.model.issuehistory.IssueHistoryPackage#getIssueHistoryModel()
  * @model

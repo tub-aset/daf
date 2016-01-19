@@ -142,13 +142,22 @@ public interface CodebeamerPackage extends EPackage {
     int CODE_BEAMER_MODEL__MODULE = CommonPackage.MODEL_OBJECT_FEATURE_COUNT + 6;
 
     /**
+     * The feature id for the '<em><b>Path</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CODE_BEAMER_MODEL__PATH = CommonPackage.MODEL_OBJECT_FEATURE_COUNT + 7;
+
+    /**
      * The number of structural features of the '<em>Code Beamer Model</em>' class.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-	int CODE_BEAMER_MODEL_FEATURE_COUNT = CommonPackage.MODEL_OBJECT_FEATURE_COUNT + 7;
+	int CODE_BEAMER_MODEL_FEATURE_COUNT = CommonPackage.MODEL_OBJECT_FEATURE_COUNT + 8;
 
 	/**
      * The operation id for the '<em>Get Estimated Remaining Work</em>' operation.
@@ -196,13 +205,22 @@ public interface CodebeamerPackage extends EPackage {
     int CODE_BEAMER_MODEL___GET_INT_METRIC__STRING = CommonPackage.MODEL_OBJECT_OPERATION_COUNT + 4;
 
     /**
+     * The operation id for the '<em>Get Full Name</em>' operation.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CODE_BEAMER_MODEL___GET_FULL_NAME = CommonPackage.MODEL_OBJECT_OPERATION_COUNT + 5;
+
+    /**
      * The number of operations of the '<em>Code Beamer Model</em>' class.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-	int CODE_BEAMER_MODEL_OPERATION_COUNT = CommonPackage.MODEL_OBJECT_OPERATION_COUNT + 5;
+	int CODE_BEAMER_MODEL_OPERATION_COUNT = CommonPackage.MODEL_OBJECT_OPERATION_COUNT + 6;
 
 
 	/**
@@ -489,6 +507,17 @@ public interface CodebeamerPackage extends EPackage {
     EReference getCodeBeamerModel_Module();
 
     /**
+     * Returns the meta object for the attribute '{@link de.jpwinkler.daf.fap5.model.codebeamer.CodeBeamerModel#getPath <em>Path</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Path</em>'.
+     * @see de.jpwinkler.daf.fap5.model.codebeamer.CodeBeamerModel#getPath()
+     * @see #getCodeBeamerModel()
+     * @generated
+     */
+    EAttribute getCodeBeamerModel_Path();
+
+    /**
      * Returns the meta object for the '{@link de.jpwinkler.daf.fap5.model.codebeamer.CodeBeamerModel#getEstimatedRemainingWork() <em>Get Estimated Remaining Work</em>}' operation.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -537,6 +566,16 @@ public interface CodebeamerPackage extends EPackage {
      * @generated
      */
     EOperation getCodeBeamerModel__GetIntMetric__String();
+
+    /**
+     * Returns the meta object for the '{@link de.jpwinkler.daf.fap5.model.codebeamer.CodeBeamerModel#getFullName() <em>Get Full Name</em>}' operation.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the '<em>Get Full Name</em>' operation.
+     * @see de.jpwinkler.daf.fap5.model.codebeamer.CodeBeamerModel#getFullName()
+     * @generated
+     */
+    EOperation getCodeBeamerModel__GetFullName();
 
     /**
      * Returns the meta object for class '{@link de.jpwinkler.daf.fap5.model.codebeamer.Issue <em>Issue</em>}'.
@@ -726,6 +765,13 @@ public interface CodebeamerPackage extends EPackage {
          */
         EReference CODE_BEAMER_MODEL__MODULE = eINSTANCE.getCodeBeamerModel_Module();
         /**
+         * The meta object literal for the '<em><b>Path</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute CODE_BEAMER_MODEL__PATH = eINSTANCE.getCodeBeamerModel_Path();
+        /**
          * The meta object literal for the '<em><b>Get Estimated Remaining Work</b></em>' operation.
          * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -760,6 +806,13 @@ public interface CodebeamerPackage extends EPackage {
          * @generated
          */
         EOperation CODE_BEAMER_MODEL___GET_INT_METRIC__STRING = eINSTANCE.getCodeBeamerModel__GetIntMetric__String();
+        /**
+         * The meta object literal for the '<em><b>Get Full Name</b></em>' operation.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EOperation CODE_BEAMER_MODEL___GET_FULL_NAME = eINSTANCE.getCodeBeamerModel__GetFullName();
         /**
          * The meta object literal for the '{@link de.jpwinkler.daf.fap5.model.codebeamer.impl.IssueImpl <em>Issue</em>}' class.
          * <!-- begin-user-doc -->

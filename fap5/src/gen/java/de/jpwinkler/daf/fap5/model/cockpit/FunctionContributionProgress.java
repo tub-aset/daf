@@ -12,11 +12,11 @@ import de.jpwinkler.daf.fap5.model.srs.FunctionContribution;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link de.jpwinkler.daf.fap5.model.cockpit.FunctionContributionProgress#getFunctionContribution <em>Function Contribution</em>}</li>
  *   <li>{@link de.jpwinkler.daf.fap5.model.cockpit.FunctionContributionProgress#getCockpitModel <em>Cockpit Model</em>}</li>
  * </ul>
- * </p>
  *
  * @see de.jpwinkler.daf.fap5.model.cockpit.CockpitPackage#getFunctionContributionProgress()
  * @model

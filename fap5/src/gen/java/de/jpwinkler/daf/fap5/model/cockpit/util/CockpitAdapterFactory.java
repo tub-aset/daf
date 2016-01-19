@@ -52,7 +52,7 @@ public class CockpitAdapterFactory extends AdapterFactoryImpl {
      * @generated
      */
     @Override
-    public boolean isFactoryForType(final Object object) {
+    public boolean isFactoryForType(Object object) {
         if (object == modelPackage) {
             return true;
         }
@@ -70,31 +70,31 @@ public class CockpitAdapterFactory extends AdapterFactoryImpl {
      */
     protected CockpitSwitch<Adapter> modelSwitch =
             new CockpitSwitch<Adapter>() {
-        @Override
-        public Adapter caseCockpitModel(final CockpitModel object) {
-            return createCockpitModelAdapter();
-        }
-        @Override
-        public Adapter caseVehicleFunctionProgress(final VehicleFunctionProgress object) {
-            return createVehicleFunctionProgressAdapter();
-        }
-        @Override
-        public Adapter caseFunctionContributionTargetMapping(final FunctionContributionTargetMapping object) {
-            return createFunctionContributionTargetMappingAdapter();
-        }
-        @Override
-        public Adapter caseFunctionContributionProgress(final FunctionContributionProgress object) {
-            return createFunctionContributionProgressAdapter();
-        }
-        @Override
-        public Adapter caseModelObject(final ModelObject object) {
-            return createModelObjectAdapter();
-        }
-        @Override
-        public Adapter defaultCase(final EObject object) {
-            return createEObjectAdapter();
-        }
-    };
+            @Override
+            public Adapter caseCockpitModel(CockpitModel object) {
+                return createCockpitModelAdapter();
+            }
+            @Override
+            public Adapter caseVehicleFunctionProgress(VehicleFunctionProgress object) {
+                return createVehicleFunctionProgressAdapter();
+            }
+            @Override
+            public Adapter caseFunctionContributionTargetMapping(FunctionContributionTargetMapping object) {
+                return createFunctionContributionTargetMappingAdapter();
+            }
+            @Override
+            public Adapter caseFunctionContributionProgress(FunctionContributionProgress object) {
+                return createFunctionContributionProgressAdapter();
+            }
+            @Override
+            public Adapter caseModelObject(ModelObject object) {
+                return createModelObjectAdapter();
+            }
+            @Override
+            public Adapter defaultCase(EObject object) {
+                return createEObjectAdapter();
+            }
+        };
 
     /**
      * Creates an adapter for the <code>target</code>.
@@ -105,7 +105,7 @@ public class CockpitAdapterFactory extends AdapterFactoryImpl {
      * @generated
      */
     @Override
-    public Adapter createAdapter(final Notifier target) {
+    public Adapter createAdapter(Notifier target) {
         return modelSwitch.doSwitch((EObject)target);
     }
 
@@ -167,13 +167,13 @@ public class CockpitAdapterFactory extends AdapterFactoryImpl {
     }
 
     /**
-     * Creates a new adapter for an object of class '{@link com.daimler.jonwink.srstp.core.model.common.ModelObject <em>Model Object</em>}'.
+     * Creates a new adapter for an object of class '{@link de.jpwinkler.daf.dafcore.model.common.ModelObject <em>Model Object</em>}'.
      * <!-- begin-user-doc -->
      * This default implementation returns null so that we can easily ignore cases;
      * it's useful to ignore a case when inheritance will catch all the cases anyway.
      * <!-- end-user-doc -->
      * @return the new adapter.
-     * @see com.daimler.jonwink.srstp.core.model.common.ModelObject
+     * @see de.jpwinkler.daf.dafcore.model.common.ModelObject
      * @generated
      */
     public Adapter createModelObjectAdapter() {

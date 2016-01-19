@@ -11,8 +11,6 @@ import de.jpwinkler.daf.fap5.model.componentssystems.LogicalComponent;
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Logical Component</b></em>'.
  * <!-- end-user-doc -->
- * <p>
- * </p>
  *
  * @generated
  */

@@ -6,9 +6,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.function.BiPredicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,22 +23,22 @@ import de.jpwinkler.daf.dafcore.workflow.AbstractStepImpl;
 import de.jpwinkler.daf.dafcore.workflow.ModelOperationImpl;
 import de.jpwinkler.daf.fap5.codebeamerrules.CodeBeamerConstants;
 import de.jpwinkler.daf.fap5.model.codebeamer.CodeBeamerModel;
+import de.jpwinkler.daf.fap5.util.DoorsModuleMap;
 
 public class UpdateExcelOp extends AbstractStepImpl implements ModelOperationImpl {
 
     private static final Logger LOGGER = Logger.getLogger(UpdateExcelOp.class.getName());
-
-    private static final int START_COLUMN = 27;
 
     private short percentFormat;
 
     @Override
     public ModelObject execute() {
 
-        final Map<String, CodeBeamerModel> models = new HashMap<>();
+        // final Map<String, CodeBeamerModel> models = new HashMap<>();
+        final DoorsModuleMap models = new DoorsModuleMap();
 
         for (final CodeBeamerModel model : getModels()) {
-            models.put(model.getName(), model);
+            models.put(model);
         }
 
         try {
@@ -71,47 +70,77 @@ public class UpdateExcelOp extends AbstractStepImpl implements ModelOperationImp
 
             percentFormat = workbook.createDataFormat().getFormat("0 %");
 
-            final Sheet sheet = workbook.getSheet("Mapping CB-Doors");
+            final Sheet sheet = workbook.getSheet("FAP5");
 
-            int startColumn = START_COLUMN;
+            final int sourcePathColumn = findRow(sheet, "Doors-Zielstruktur", "Allgemein", "Quell-Pfad");
+            final int sourceModuleColumn = findRow(sheet, "Doors-Zielstruktur", "Allgemein", "Modul");
+            final int reqCountColumn = findRow(sheet, "Doors-Zielstruktur", "Inhalt", "Requirements");
+            final int todoCountColumn = findRow(sheet, "Doors-Zielstruktur", "Inhalt", "todo");
+            final int maturityOpenColumn = findRow(sheet, "Doors-Zielstruktur", "Reifegrad", "open");
+            final int maturitySpecifiedColumn = findRow(sheet, "Doors-Zielstruktur", "Reifegrad", "specified");
+            final int maturityFollowUpColumn = findRow(sheet, "Doors-Zielstruktur", "Reifegrad", "follow_up");
+            final int maturityFollopwUpHashTagsColumn = findRow(sheet, "Doors-Zielstruktur", "Reifegrad", "follow_up_###");
+            final int maturityAgreedColumn = findRow(sheet, "Doors-Zielstruktur", "Reifegrad", "agreed");
+            final int emptyObjectTypeCountColumn = findRow(sheet, "Doors-Zielstruktur", "Deklarations-Fehler", "Fehlende Attributierung");
+            final int requirementAsHeadingCountColumn = findRow(sheet, "Doors-Zielstruktur", "Deklarations-Fehler", "Heading");
+            final int InformationWithLinkCountColumn = findRow(sheet, "Doors-Zielstruktur", "Deklarations-Fehler", "mit Link");
+            final int requirementWithoutLinkCountColumn = findRow(sheet, "Doors-Zielstruktur", "Deklarations-Fehler", "ohne Link");
+            final int sumColumn = findRow(sheet, "Doors-Zielstruktur", "Deklarations-Fehler", "Summe");
 
-            for (final Cell cell : sheet.getRow(2)) {
-                if (cell.getStringCellValue().contains("Requirements") && cell.getStringCellValue().contains("Predefinitions")) {
-                    startColumn = cell.getColumnIndex();
-                    LOGGER.info(String.format("Using column %d as start column.", startColumn));
-                }
-            }
+            final int targetPathColumn = findRow(sheet, "Inbox", "Allgemein", "Ziel-Pfad");
+            final int targetModuleColumn = findRow(sheet, "Inbox", "Allgemein", "Ziel-Modulname");
+            final int acceptanceEmptyColumn = findRow(sheet, "Verified", "Acceptance Status", "\"\"");
+            final int acceptanceDeletedReqColumn = findRow(sheet, "Verified", "Acceptance Status", "deleted");
+            final int acceptanceChangedReqColumn = findRow(sheet, "Verified", "Acceptance Status", "changed");
+            final int acceptanceToClarifyColumn = findRow(sheet, "Verified", "Acceptance Status", "clarify");
+            // final int acceptancePartlyAgreedColumn = findRow(sheet,
+            // "Verified", "Acceptance Status", "\"\"");
+            final int acceptanceAgreedColumn = findRow(sheet, "Verified", "Acceptance Status", "agreed");
 
             for (final Row row : sheet) {
-                final Cell cell = row.getCell(9);
-                if (cell == null) {
-                    continue;
-                }
-                final String rowDocName = cell.getStringCellValue();
-                final CodeBeamerModel model = models.get(rowDocName);
-                if (model != null) {
-                    final Integer reqCount = model.getIntMetric(CodeBeamerConstants.METRIC_REQUIREMENT_COUNT);
-                    updateRowCell(row, startColumn + 0, reqCount);
-                    updateRowCell(row, startColumn + 1, model.getIntMetric(CodeBeamerConstants.METRIC_OPEN_TODOS));
-                    if (model.getIntMetric(CodeBeamerConstants.METRIC_REQUIREMENT_COUNT) > 0) {
-                        updateRowCellPercent(row, startColumn + 2, (double) model.getIntMetric(CodeBeamerConstants.METRIC_MATURITY_OPEN_COUNT) / reqCount);
-                        updateRowCellPercent(row, startColumn + 3, (double) model.getIntMetric(CodeBeamerConstants.METRIC_MATURITY_SPECIFIED_COUNT) / reqCount);
-                        updateRowCellPercent(row, startColumn + 4, (double) model.getIntMetric(CodeBeamerConstants.METRIC_MATURITY_FOLLOW_UP_COUNT) / reqCount);
-                        updateRowCellPercent(row, startColumn + 5, (double) model.getIntMetric(CodeBeamerConstants.METRIC_MATURITY_FOLLOW_UP_HASHTAGS_COUNT) / reqCount);
-                        updateRowCellPercent(row, startColumn + 6, (double) model.getIntMetric(CodeBeamerConstants.METRIC_MATURITY_AGREED_COUNT) / reqCount);
-                    }
-                    final Integer emptyObjectType = model.getIntMetric(CodeBeamerConstants.METRIC_EMPTY_OBJECT_TYPE);
-                    final Integer requirementAsHeading = model.getIntMetric(CodeBeamerConstants.METRIC_HEADING_AS_REQUIREMENT_COUNT);
-                    final Integer informationWithLink = model.getIntMetric(CodeBeamerConstants.METRIC_INFORMATION_WITH_LINK);
-                    final Integer requirementWithoutLink = model.getIntMetric(CodeBeamerConstants.METRIC_REQUIREMENT_WITHOUT_LINK);
-                    updateRowCell(row, startColumn + 7, emptyObjectType);
-                    updateRowCell(row, startColumn + 8, requirementAsHeading);
-                    updateRowCell(row, startColumn + 9, informationWithLink);
-                    updateRowCell(row, startColumn + 10, requirementWithoutLink);
+                if (row.getCell(sourcePathColumn) != null && row.getCell(sourceModuleColumn) != null) {
+                    final String fullSourceDocumentName = row.getCell(sourcePathColumn).getStringCellValue() + "/" + row.getCell(sourceModuleColumn).getStringCellValue();
+                    final CodeBeamerModel sourceModel = models.get(fullSourceDocumentName);
+                    if (sourceModel != null) {
+                        final Integer reqCount = sourceModel.getIntMetric(CodeBeamerConstants.METRIC_REQUIREMENT_COUNT);
+                        updateRowCell(row, reqCountColumn, reqCount);
+                        updateRowCell(row, todoCountColumn, sourceModel.getIntMetric(CodeBeamerConstants.METRIC_OPEN_TODOS));
+                        if (sourceModel.getIntMetric(CodeBeamerConstants.METRIC_REQUIREMENT_COUNT) > 0) {
+                            updateRowCellPercent(row, maturityOpenColumn, (double) sourceModel.getIntMetric(CodeBeamerConstants.METRIC_MATURITY_OPEN_COUNT) / reqCount);
+                            updateRowCellPercent(row, maturitySpecifiedColumn, (double) sourceModel.getIntMetric(CodeBeamerConstants.METRIC_MATURITY_SPECIFIED_COUNT) / reqCount);
+                            updateRowCellPercent(row, maturityFollowUpColumn, (double) sourceModel.getIntMetric(CodeBeamerConstants.METRIC_MATURITY_FOLLOW_UP_COUNT) / reqCount);
+                            updateRowCellPercent(row, maturityFollopwUpHashTagsColumn, (double) sourceModel.getIntMetric(CodeBeamerConstants.METRIC_MATURITY_FOLLOW_UP_HASHTAGS_COUNT) / reqCount);
+                            updateRowCellPercent(row, maturityAgreedColumn, (double) sourceModel.getIntMetric(CodeBeamerConstants.METRIC_MATURITY_AGREED_COUNT) / reqCount);
+                        }
+                        final Integer emptyObjectType = sourceModel.getIntMetric(CodeBeamerConstants.METRIC_EMPTY_OBJECT_TYPE);
+                        final Integer requirementAsHeading = sourceModel.getIntMetric(CodeBeamerConstants.METRIC_HEADING_AS_REQUIREMENT_COUNT);
+                        final Integer informationWithLink = sourceModel.getIntMetric(CodeBeamerConstants.METRIC_INFORMATION_WITH_LINK);
+                        final Integer requirementWithoutLink = sourceModel.getIntMetric(CodeBeamerConstants.METRIC_REQUIREMENT_WITHOUT_LINK);
+                        updateRowCell(row, emptyObjectTypeCountColumn, emptyObjectType);
+                        updateRowCell(row, requirementAsHeadingCountColumn, requirementAsHeading);
+                        updateRowCell(row, InformationWithLinkCountColumn, informationWithLink);
+                        updateRowCell(row, requirementWithoutLinkCountColumn, requirementWithoutLink);
 
-                    updateRowCell(row, startColumn + 11, emptyObjectType + requirementAsHeading + informationWithLink + requirementWithoutLink);
-                } else {
-                    LOGGER.warning(String.format("No module found for module name %s.", rowDocName));
+                        updateRowCell(row, sumColumn, emptyObjectType + requirementAsHeading + informationWithLink + requirementWithoutLink);
+                    } else {
+                        LOGGER.warning(String.format("No module found for source module name %s.", fullSourceDocumentName));
+                    }
+                }
+
+                if (row.getCell(targetPathColumn) != null && row.getCell(targetModuleColumn) != null) {
+                    final String fullTargetDocumentName = row.getCell(targetPathColumn).getStringCellValue() + "/" + row.getCell(targetModuleColumn).getStringCellValue();
+                    final CodeBeamerModel targetModel = models.get(fullTargetDocumentName);
+                    if (targetModel != null) {
+                        final Integer reqCount = targetModel.getIntMetric(CodeBeamerConstants.METRIC_REQUIREMENT_COUNT);
+
+                        updateRowCellPercent(row, acceptanceEmptyColumn, (double) targetModel.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_NONE_COUNT) / reqCount);
+                        updateRowCellPercent(row, acceptanceDeletedReqColumn, (double) targetModel.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_DELETED_REQ_COUNT) / reqCount);
+                        updateRowCellPercent(row, acceptanceChangedReqColumn, (double) targetModel.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_CHANGED_REQ_COUNT) / reqCount);
+                        updateRowCellPercent(row, acceptanceToClarifyColumn, (double) targetModel.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_TO_CLARIFY_COUNT) / reqCount);
+                        updateRowCellPercent(row, acceptanceAgreedColumn, (double) targetModel.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_AGREED_COUNT) / reqCount);
+                    } else {
+                        LOGGER.warning(String.format("No module found for target module name %s.", fullTargetDocumentName));
+                    }
                 }
             }
 
@@ -126,6 +155,31 @@ public class UpdateExcelOp extends AbstractStepImpl implements ModelOperationImp
         }
 
         return null;
+    }
+
+    private int findRow(final Sheet sheet, final String row1text, final String row2text, final String row3text) {
+        return findRow(sheet, row1text, row2text, row3text, (s1, s2) -> s1.contains(s2));
+    }
+
+    private int findRow(final Sheet sheet, final String row1text, final String row2text, final String row3text, final BiPredicate<String, String> predicate) {
+        String currentRow1Text = "";
+        String currentRow2Text = "";
+        String currentRow3Text = "";
+
+        int columnIndex = 0;
+        while (sheet.getRow(2).getCell(columnIndex) != null) {
+            currentRow1Text = sheet.getRow(0).getCell(columnIndex) != null && !sheet.getRow(0).getCell(columnIndex).getStringCellValue().isEmpty() ? sheet.getRow(0).getCell(columnIndex).getStringCellValue() : currentRow1Text;
+            currentRow2Text = sheet.getRow(1).getCell(columnIndex) != null && !sheet.getRow(1).getCell(columnIndex).getStringCellValue().isEmpty() ? sheet.getRow(1).getCell(columnIndex).getStringCellValue() : currentRow2Text;
+            currentRow3Text = sheet.getRow(2).getCell(columnIndex) != null && !sheet.getRow(2).getCell(columnIndex).getStringCellValue().isEmpty() ? sheet.getRow(2).getCell(columnIndex).getStringCellValue() : currentRow3Text;
+
+            if ((row1text.isEmpty() || predicate.test(currentRow1Text, row1text)) &&
+                    (row2text.isEmpty() || predicate.test(currentRow2Text, row2text)) &&
+                    (row3text.isEmpty() || predicate.test(currentRow3Text, row3text))) {
+                return columnIndex;
+            }
+            columnIndex++;
+        }
+        return -1;
     }
 
     private void updateRowCell(final Row row, final int i, final int newValue) {

@@ -25,6 +25,7 @@ import de.jpwinkler.daf.fap5.model.srs.SrsPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link de.jpwinkler.daf.fap5.model.componentssystems.impl.FunctionContributionTargetImpl#getName <em>Name</em>}</li>
  *   <li>{@link de.jpwinkler.daf.fap5.model.componentssystems.impl.FunctionContributionTargetImpl#getAcronym <em>Acronym</em>}</li>
@@ -32,7 +33,6 @@ import de.jpwinkler.daf.fap5.model.srs.SrsPackage;
  *   <li>{@link de.jpwinkler.daf.fap5.model.componentssystems.impl.FunctionContributionTargetImpl#getDepartment <em>Department</em>}</li>
  *   <li>{@link de.jpwinkler.daf.fap5.model.componentssystems.impl.FunctionContributionTargetImpl#getContributions <em>Contributions</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

@@ -40,7 +40,7 @@ public interface ComponentsSystemsPackage extends EPackage {
 	 * <!-- end-user-doc -->
      * @generated
      */
-	String eNS_URI = "com.daimler.jonwink.srstp.fap5.model.componentssystems";
+	String eNS_URI = "de.jpwinkler.daf.fap5.model.componentssystems";
 
 	/**
      * The package namespace name.

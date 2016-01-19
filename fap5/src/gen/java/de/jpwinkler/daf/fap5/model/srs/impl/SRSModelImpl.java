@@ -22,10 +22,10 @@ import de.jpwinkler.daf.fap5.model.srs.VehicleFunction;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link de.jpwinkler.daf.fap5.model.srs.impl.SRSModelImpl#getVehicleFunctions <em>Vehicle Functions</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

@@ -13,10 +13,10 @@ import de.jpwinkler.daf.dafcore.model.common.ModelObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link de.jpwinkler.daf.fap5.model.componentssystems.ComponentsSystemsModel#getFunctionContributionTargets <em>Function Contribution Targets</em>}</li>
  * </ul>
- * </p>
  *
  * @see de.jpwinkler.daf.fap5.model.componentssystems.ComponentsSystemsPackage#getComponentsSystemsModel()
  * @model

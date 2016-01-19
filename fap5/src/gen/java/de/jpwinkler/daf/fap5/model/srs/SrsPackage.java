@@ -42,7 +42,7 @@ public interface SrsPackage extends EPackage {
 	 * <!-- end-user-doc -->
      * @generated
      */
-	String eNS_URI = "com.daimler.jonwink.srstp.fap5.model.srs";
+	String eNS_URI = "de.jpwinkler.daf.fap5.model.srs";
 
 	/**
      * The package namespace name.

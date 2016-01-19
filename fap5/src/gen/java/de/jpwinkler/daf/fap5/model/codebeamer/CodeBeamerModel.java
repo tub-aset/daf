@@ -23,6 +23,7 @@ import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
  *   <li>{@link de.jpwinkler.daf.fap5.model.codebeamer.CodeBeamerModel#getVersionNumber <em>Version Number</em>}</li>
  *   <li>{@link de.jpwinkler.daf.fap5.model.codebeamer.CodeBeamerModel#getMetrics <em>Metrics</em>}</li>
  *   <li>{@link de.jpwinkler.daf.fap5.model.codebeamer.CodeBeamerModel#getModule <em>Module</em>}</li>
+ *   <li>{@link de.jpwinkler.daf.fap5.model.codebeamer.CodeBeamerModel#getPath <em>Path</em>}</li>
  * </ul>
  *
  * @see de.jpwinkler.daf.fap5.model.codebeamer.CodebeamerPackage#getCodeBeamerModel()
@@ -126,6 +127,14 @@ public interface CodeBeamerModel extends ModelObject {
      * @generated
      */
     Integer getIntMetric(String name);
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @model kind="operation"
+     * @generated
+     */
+    String getFullName();
 
     /**
      * Returns the value of the '<em><b>Size</b></em>' attribute.
@@ -237,4 +246,30 @@ public interface CodeBeamerModel extends ModelObject {
      * @generated
      */
     void setModule(DoorsModule value);
+
+    /**
+     * Returns the value of the '<em><b>Path</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Path</em>' attribute isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Path</em>' attribute.
+     * @see #setPath(String)
+     * @see de.jpwinkler.daf.fap5.model.codebeamer.CodebeamerPackage#getCodeBeamerModel_Path()
+     * @model
+     * @generated
+     */
+    String getPath();
+
+    /**
+     * Sets the value of the '{@link de.jpwinkler.daf.fap5.model.codebeamer.CodeBeamerModel#getPath <em>Path</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Path</em>' attribute.
+     * @see #getPath()
+     * @generated
+     */
+    void setPath(String value);
 } // CodeBeamerModel

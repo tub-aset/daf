@@ -49,12 +49,12 @@ public class IssueHistorySwitch<T> extends Switch<T> {
      * Checks whether this is a switch for the given package.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @parameter ePackage the package in question.
+     * @param ePackage the package in question.
      * @return whether this is a switch for the given package.
      * @generated
      */
     @Override
-    protected boolean isSwitchFor(final EPackage ePackage) {
+    protected boolean isSwitchFor(EPackage ePackage) {
         return ePackage == modelPackage;
     }
 
@@ -66,31 +66,23 @@ public class IssueHistorySwitch<T> extends Switch<T> {
      * @generated
      */
     @Override
-    protected T doSwitch(final int classifierID, final EObject theEObject) {
+    protected T doSwitch(int classifierID, EObject theEObject) {
         switch (classifierID) {
-        case IssueHistoryPackage.ISSUE_HISTORY_MODEL: {
-            final IssueHistoryModel issueHistoryModel = (IssueHistoryModel)theEObject;
-            T result = caseIssueHistoryModel(issueHistoryModel);
-            if (result == null) {
-                result = caseModelObject(issueHistoryModel);
+            case IssueHistoryPackage.ISSUE_HISTORY_MODEL: {
+                IssueHistoryModel issueHistoryModel = (IssueHistoryModel)theEObject;
+                T result = caseIssueHistoryModel(issueHistoryModel);
+                if (result == null) result = caseModelObject(issueHistoryModel);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
             }
-            if (result == null) {
-                result = defaultCase(theEObject);
+            case IssueHistoryPackage.VERSION: {
+                Version version = (Version)theEObject;
+                T result = caseVersion(version);
+                if (result == null) result = caseModelObject(version);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
             }
-            return result;
-        }
-        case IssueHistoryPackage.VERSION: {
-            final Version version = (Version)theEObject;
-            T result = caseVersion(version);
-            if (result == null) {
-                result = caseModelObject(version);
-            }
-            if (result == null) {
-                result = defaultCase(theEObject);
-            }
-            return result;
-        }
-        default: return defaultCase(theEObject);
+            default: return defaultCase(theEObject);
         }
     }
 
@@ -105,7 +97,7 @@ public class IssueHistorySwitch<T> extends Switch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseIssueHistoryModel(final IssueHistoryModel object) {
+    public T caseIssueHistoryModel(IssueHistoryModel object) {
         return null;
     }
 
@@ -120,7 +112,7 @@ public class IssueHistorySwitch<T> extends Switch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseVersion(final Version object) {
+    public T caseVersion(Version object) {
         return null;
     }
 
@@ -135,7 +127,7 @@ public class IssueHistorySwitch<T> extends Switch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseModelObject(final ModelObject object) {
+    public T caseModelObject(ModelObject object) {
         return null;
     }
 
@@ -151,7 +143,7 @@ public class IssueHistorySwitch<T> extends Switch<T> {
      * @generated
      */
     @Override
-    public T defaultCase(final EObject object) {
+    public T defaultCase(EObject object) {
         return null;
     }
 

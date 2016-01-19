@@ -39,6 +39,7 @@ import de.jpwinkler.daf.fap5.model.codebeamer.Metric;
  *   <li>{@link de.jpwinkler.daf.fap5.model.codebeamer.impl.CodeBeamerModelImpl#getVersionNumber <em>Version Number</em>}</li>
  *   <li>{@link de.jpwinkler.daf.fap5.model.codebeamer.impl.CodeBeamerModelImpl#getMetrics <em>Metrics</em>}</li>
  *   <li>{@link de.jpwinkler.daf.fap5.model.codebeamer.impl.CodeBeamerModelImpl#getModule <em>Module</em>}</li>
+ *   <li>{@link de.jpwinkler.daf.fap5.model.codebeamer.impl.CodeBeamerModelImpl#getPath <em>Path</em>}</li>
  * </ul>
  *
  * @generated
@@ -148,6 +149,25 @@ public class CodeBeamerModelImpl extends ModelObjectImpl implements CodeBeamerMo
      * @ordered
      */
     protected DoorsModule module;
+
+    /**
+     * The default value of the '{@link #getPath() <em>Path</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getPath()
+     * @generated
+     * @ordered
+     */
+    protected static final String PATH_EDEFAULT = null;
+    /**
+     * The cached value of the '{@link #getPath() <em>Path</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getPath()
+     * @generated
+     * @ordered
+     */
+    protected String path = PATH_EDEFAULT;
 
     /**
      * <!-- begin-user-doc -->
@@ -277,6 +297,24 @@ public class CodeBeamerModelImpl extends ModelObjectImpl implements CodeBeamerMo
     }
 
     /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated NOT
+     */
+    @Override
+    public String getFullName() {
+        if (getName() == null) {
+            return null;
+        } else if (getPath() == null) {
+            return getName();
+        } else if (!getPath().endsWith("/")) {
+            return getPath() + "/" + getName();
+        } else {
+            return getPath() + getName();
+        }
+    }
+
+    /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
@@ -398,6 +436,30 @@ public class CodeBeamerModelImpl extends ModelObjectImpl implements CodeBeamerMo
      * @generated
      */
     @Override
+    public String getPath() {
+        return path;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public void setPath(final String newPath) {
+        final String oldPath = path;
+        path = newPath;
+        if (eNotificationRequired()) {
+            eNotify(new ENotificationImpl(this, Notification.SET, CodebeamerPackage.CODE_BEAMER_MODEL__PATH, oldPath, path));
+        }
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
     public NotificationChain eInverseRemove(final InternalEObject otherEnd, final int featureID, final NotificationChain msgs) {
         switch (featureID) {
         case CodebeamerPackage.CODE_BEAMER_MODEL__ISSUES:
@@ -433,6 +495,8 @@ public class CodeBeamerModelImpl extends ModelObjectImpl implements CodeBeamerMo
                 return getModule();
             }
             return basicGetModule();
+        case CodebeamerPackage.CODE_BEAMER_MODEL__PATH:
+            return getPath();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -469,6 +533,9 @@ public class CodeBeamerModelImpl extends ModelObjectImpl implements CodeBeamerMo
         case CodebeamerPackage.CODE_BEAMER_MODEL__MODULE:
             setModule((DoorsModule)newValue);
             return;
+        case CodebeamerPackage.CODE_BEAMER_MODEL__PATH:
+            setPath((String)newValue);
+            return;
         }
         super.eSet(featureID, newValue);
     }
@@ -502,6 +569,9 @@ public class CodeBeamerModelImpl extends ModelObjectImpl implements CodeBeamerMo
         case CodebeamerPackage.CODE_BEAMER_MODEL__MODULE:
             setModule((DoorsModule)null);
             return;
+        case CodebeamerPackage.CODE_BEAMER_MODEL__PATH:
+            setPath(PATH_EDEFAULT);
+            return;
         }
         super.eUnset(featureID);
     }
@@ -528,6 +598,8 @@ public class CodeBeamerModelImpl extends ModelObjectImpl implements CodeBeamerMo
             return metrics != null && !metrics.isEmpty();
         case CodebeamerPackage.CODE_BEAMER_MODEL__MODULE:
             return module != null;
+        case CodebeamerPackage.CODE_BEAMER_MODEL__PATH:
+            return PATH_EDEFAULT == null ? path != null : !PATH_EDEFAULT.equals(path);
         }
         return super.eIsSet(featureID);
     }
@@ -550,6 +622,8 @@ public class CodeBeamerModelImpl extends ModelObjectImpl implements CodeBeamerMo
             return getDoubleMetric((String)arguments.get(0));
         case CodebeamerPackage.CODE_BEAMER_MODEL___GET_INT_METRIC__STRING:
             return getIntMetric((String)arguments.get(0));
+        case CodebeamerPackage.CODE_BEAMER_MODEL___GET_FULL_NAME:
+            return getFullName();
         }
         return super.eInvoke(operationID, arguments);
     }
@@ -574,6 +648,8 @@ public class CodeBeamerModelImpl extends ModelObjectImpl implements CodeBeamerMo
         result.append(size);
         result.append(", versionNumber: ");
         result.append(versionNumber);
+        result.append(", path: ");
+        result.append(path);
         result.append(')');
         return result.toString();
     }

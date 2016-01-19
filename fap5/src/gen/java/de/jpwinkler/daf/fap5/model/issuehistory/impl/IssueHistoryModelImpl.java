@@ -25,10 +25,10 @@ import de.jpwinkler.daf.fap5.model.issuehistory.Version;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link de.jpwinkler.daf.fap5.model.issuehistory.impl.IssueHistoryModelImpl#getVersions <em>Versions</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

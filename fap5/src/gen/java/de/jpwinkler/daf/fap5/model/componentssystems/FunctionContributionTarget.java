@@ -14,6 +14,7 @@ import de.jpwinkler.daf.fap5.model.srs.FunctionContribution;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link de.jpwinkler.daf.fap5.model.componentssystems.FunctionContributionTarget#getName <em>Name</em>}</li>
  *   <li>{@link de.jpwinkler.daf.fap5.model.componentssystems.FunctionContributionTarget#getAcronym <em>Acronym</em>}</li>
@@ -21,7 +22,6 @@ import de.jpwinkler.daf.fap5.model.srs.FunctionContribution;
  *   <li>{@link de.jpwinkler.daf.fap5.model.componentssystems.FunctionContributionTarget#getDepartment <em>Department</em>}</li>
  *   <li>{@link de.jpwinkler.daf.fap5.model.componentssystems.FunctionContributionTarget#getContributions <em>Contributions</em>}</li>
  * </ul>
- * </p>
  *
  * @see de.jpwinkler.daf.fap5.model.componentssystems.ComponentsSystemsPackage#getFunctionContributionTarget()
  * @model

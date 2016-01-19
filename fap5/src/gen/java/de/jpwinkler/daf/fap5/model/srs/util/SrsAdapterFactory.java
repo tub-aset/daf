@@ -58,7 +58,7 @@ public class SrsAdapterFactory extends AdapterFactoryImpl {
      * @generated
      */
     @Override
-    public boolean isFactoryForType(final Object object) {
+    public boolean isFactoryForType(Object object) {
         if (object == modelPackage) {
             return true;
         }
@@ -76,55 +76,55 @@ public class SrsAdapterFactory extends AdapterFactoryImpl {
      */
     protected SrsSwitch<Adapter> modelSwitch =
             new SrsSwitch<Adapter>() {
-        @Override
-        public Adapter caseSRSModel(final SRSModel object) {
-            return createSRSModelAdapter();
-        }
-        @Override
-        public Adapter caseVehicleFunction(final VehicleFunction object) {
-            return createVehicleFunctionAdapter();
-        }
-        @Override
-        public Adapter caseFunctionContribution(final FunctionContribution object) {
-            return createFunctionContributionAdapter();
-        }
-        @Override
-        public Adapter caseFunctionalSpecificationContainer(final FunctionalSpecificationContainer object) {
-            return createFunctionalSpecificationContainerAdapter();
-        }
-        @Override
-        public Adapter caseFunctionalSpecificationElement(final FunctionalSpecificationElement object) {
-            return createFunctionalSpecificationElementAdapter();
-        }
-        @Override
-        public Adapter casePrecondition(final Precondition object) {
-            return createPreconditionAdapter();
-        }
-        @Override
-        public Adapter caseEndCondition(final EndCondition object) {
-            return createEndConditionAdapter();
-        }
-        @Override
-        public Adapter caseTrigger(final Trigger object) {
-            return createTriggerAdapter();
-        }
-        @Override
-        public Adapter caseHeading(final Heading object) {
-            return createHeadingAdapter();
-        }
-        @Override
-        public Adapter caseDescription(final Description object) {
-            return createDescriptionAdapter();
-        }
-        @Override
-        public Adapter caseModelObject(final ModelObject object) {
-            return createModelObjectAdapter();
-        }
-        @Override
-        public Adapter defaultCase(final EObject object) {
-            return createEObjectAdapter();
-        }
-    };
+            @Override
+            public Adapter caseSRSModel(SRSModel object) {
+                return createSRSModelAdapter();
+            }
+            @Override
+            public Adapter caseVehicleFunction(VehicleFunction object) {
+                return createVehicleFunctionAdapter();
+            }
+            @Override
+            public Adapter caseFunctionContribution(FunctionContribution object) {
+                return createFunctionContributionAdapter();
+            }
+            @Override
+            public Adapter caseFunctionalSpecificationContainer(FunctionalSpecificationContainer object) {
+                return createFunctionalSpecificationContainerAdapter();
+            }
+            @Override
+            public Adapter caseFunctionalSpecificationElement(FunctionalSpecificationElement object) {
+                return createFunctionalSpecificationElementAdapter();
+            }
+            @Override
+            public Adapter casePrecondition(Precondition object) {
+                return createPreconditionAdapter();
+            }
+            @Override
+            public Adapter caseEndCondition(EndCondition object) {
+                return createEndConditionAdapter();
+            }
+            @Override
+            public Adapter caseTrigger(Trigger object) {
+                return createTriggerAdapter();
+            }
+            @Override
+            public Adapter caseHeading(Heading object) {
+                return createHeadingAdapter();
+            }
+            @Override
+            public Adapter caseDescription(Description object) {
+                return createDescriptionAdapter();
+            }
+            @Override
+            public Adapter caseModelObject(ModelObject object) {
+                return createModelObjectAdapter();
+            }
+            @Override
+            public Adapter defaultCase(EObject object) {
+                return createEObjectAdapter();
+            }
+        };
 
     /**
      * Creates an adapter for the <code>target</code>.
@@ -135,7 +135,7 @@ public class SrsAdapterFactory extends AdapterFactoryImpl {
      * @generated
      */
     @Override
-    public Adapter createAdapter(final Notifier target) {
+    public Adapter createAdapter(Notifier target) {
         return modelSwitch.doSwitch((EObject)target);
     }
 
@@ -281,13 +281,13 @@ public class SrsAdapterFactory extends AdapterFactoryImpl {
     }
 
     /**
-     * Creates a new adapter for an object of class '{@link com.daimler.jonwink.srstp.core.model.common.ModelObject <em>Model Object</em>}'.
+     * Creates a new adapter for an object of class '{@link de.jpwinkler.daf.dafcore.model.common.ModelObject <em>Model Object</em>}'.
      * <!-- begin-user-doc -->
      * This default implementation returns null so that we can easily ignore cases;
      * it's useful to ignore a case when inheritance will catch all the cases anyway.
      * <!-- end-user-doc -->
      * @return the new adapter.
-     * @see com.daimler.jonwink.srstp.core.model.common.ModelObject
+     * @see de.jpwinkler.daf.dafcore.model.common.ModelObject
      * @generated
      */
     public Adapter createModelObjectAdapter() {

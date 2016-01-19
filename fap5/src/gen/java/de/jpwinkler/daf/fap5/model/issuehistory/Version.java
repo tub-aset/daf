@@ -15,11 +15,11 @@ import de.jpwinkler.daf.fap5.model.codebeamer.Issue;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link de.jpwinkler.daf.fap5.model.issuehistory.Version#getDocuments <em>Documents</em>}</li>
  *   <li>{@link de.jpwinkler.daf.fap5.model.issuehistory.Version#getVersionNumber <em>Version Number</em>}</li>
  * </ul>
- * </p>
  *
  * @see de.jpwinkler.daf.fap5.model.issuehistory.IssueHistoryPackage#getVersion()
  * @model
