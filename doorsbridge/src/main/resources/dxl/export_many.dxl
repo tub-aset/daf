@@ -37,7 +37,12 @@ for moduleUrl in modules do {
 	
 	print "Exporting " moduleListKey "... "
 	
-	string modname = getModuleNameFromUrl(moduleUrl)
+	string modname
+	if (startsWith(moduleUrl, "doors://")) {
+		modname = getModuleNameFromUrl(moduleUrl)
+	} else {
+		modname = moduleUrl
+	}
 	if (!null modname) {
 		Module m = read(modname, false)
 		if (!null m) {

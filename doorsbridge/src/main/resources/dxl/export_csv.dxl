@@ -18,7 +18,7 @@ void exportModuleToCSV(Module m, string fileName) {
 	AttrBaseType abt
 	
 	for ad in m do {
-		if (isVisibleAttribute(ad)) {
+		if (isVisibleAttribute(ad) && !ad.dxl) {
 			put(attrs, ad, ad)
 		}
 	}

@@ -6,6 +6,16 @@
  */
 pragma encoding, "UTF-8"
 
+// http://www.capri-soft.de/blog/?p=832
+bool startsWith(string theString, string startsWithWhat)
+{
+	if(length(theString)<length(startsWithWhat))
+	{
+		return false;
+	}
+	return theString[0:length(startsWithWhat)-1]==startsWithWhat
+}
+
 string getModuleNameFromUrl(string url) {
 	string dbHost
 	int dbPort
