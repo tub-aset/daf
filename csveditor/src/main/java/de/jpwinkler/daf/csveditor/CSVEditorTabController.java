@@ -40,6 +40,7 @@ import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
 import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.util.CSVParseException;
+import de.jpwinkler.daf.dataprocessing.preprocessing.ObjectTextPreprocessor;
 import de.jpwinkler.daf.documenttagging.TaggedDocument;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -83,6 +84,8 @@ public class CSVEditorTabController {
     private TableView<DoorsObject> contentTableView;
 
     private TaggedDocument<DoorsTreeNode, String> algorithmResult;
+
+    private ObjectTextPreprocessor preprocessor;
 
     @FXML
     public void initialize() {
@@ -200,13 +203,14 @@ public class CSVEditorTabController {
                 contentTableView.getColumns().add(c);
                 break;
             case OBJECT_TEXT_HEADING_COLUMN:
-                c.setCellFactory(param -> new ObjectHeadingAndObjectTextTableCell());
+                c.setCellFactory(param -> new ObjectHeadingAndObjectTextTableCell(preprocessor));
                 c.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getText()));
                 c.setOnEditCommit(event -> {
                     executeCommand(new EditObjectHeadingTextCommand(module, event.getRowValue(), event.getNewValue()));
                     contentTableView.requestFocus();
                     contentTableView.getFocusModel().focusNext();
-                    contentTableView.edit(contentTableView.getFocusModel().getFocusedIndex(), contentTableView.getFocusModel().getFocusedCell().getTableColumn());
+                    // contentTableView.edit(contentTableView.getFocusModel().getFocusedIndex(),
+                    // contentTableView.getFocusModel().getFocusedCell().getTableColumn());
                 });
                 contentTableView.getColumns().add(c);
                 break;
@@ -350,7 +354,7 @@ public class CSVEditorTabController {
         }
     }
 
-    private void updateGui(final UpdateAction... updateActions) {
+    public void updateGui(final UpdateAction... updateActions) {
         for (final UpdateAction action : updateActions) {
             switch (action) {
             case FIX_OBJECT_LEVELS:
@@ -439,6 +443,10 @@ public class CSVEditorTabController {
 
     public void flatten() {
         executeCommand(new FlattenCommand(module));
+    }
+
+    public void setPreprocessor(final ObjectTextPreprocessor preprocessor) {
+        this.preprocessor = preprocessor;
     }
 
 }

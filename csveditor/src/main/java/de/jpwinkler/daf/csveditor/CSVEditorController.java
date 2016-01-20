@@ -12,15 +12,18 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import de.jpwinkler.daf.csveditor.commands.UpdateAction;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
 import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.util.CSVParseException;
+import de.jpwinkler.daf.dataprocessing.preprocessing.ObjectTextPreprocessor;
 import de.jpwinkler.daf.documenttagging.ConfusionMatrix;
 import de.jpwinkler.daf.documenttagging.DocumentAccessor;
 import de.jpwinkler.daf.documenttagging.DocumentTaggingAlgorithm;
 import de.jpwinkler.daf.documenttagging.TaggedDocument;
 import de.jpwinkler.daf.documenttagging.doors.DoorsDocumentAccessor;
+import de.jpwinkler.libs.stringprocessing.patternprogram.PatternProgram;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -36,6 +39,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.ToggleGroup;
@@ -89,6 +93,14 @@ public class CSVEditorController {
     private DocumentTaggingAlgorithm<DoorsTreeNode, String> algorithm;
 
     private TaggedDocument<DoorsTreeNode, String> lastResult;
+
+    private final ObjectTextPreprocessor preprocessor = ObjectTextPreprocessor.getDefaultPreprocessor();
+
+    @FXML
+    TextArea preprocessorTextArea;
+
+    @FXML
+    CheckBox preprocessorEnableCheckBox;
 
     @FXML
     public void initialize() {
@@ -200,7 +212,10 @@ public class CSVEditorController {
         final CSVEditorTabController controller = loader.getController();
         final Tab tab = new Tab(selectedFile != null ? selectedFile.getName() : "New Document", root);
 
+        tab.setClosable(true);
+
         controller.setMainController(this);
+        controller.setPreprocessor(preprocessor);
         controller.setFile(selectedFile);
         controller.setStage(primaryStage);
         controller.setTab(tab);
@@ -481,6 +496,22 @@ public class CSVEditorController {
     public void showConfusionMatrixDialog() {
         if (lastResult != null) {
             new ConfusionMatrixDialog(new ConfusionMatrix<>(lastResult), primaryStage).show();
+        }
+    }
+
+    @FXML
+    public void preprocessorApplyClicked(final ActionEvent event) {
+        preprocessor.setProgram(PatternProgram.compile(preprocessorTextArea.getText()));
+        for (final CSVEditorTabController tabController : tabControllers.values()) {
+            tabController.updateGui(UpdateAction.UPDATE_CONTENT_VIEW);
+        }
+    }
+
+    @FXML
+    public void preprocessorEnableClicked(final ActionEvent event) {
+        preprocessor.setEnabled(preprocessorEnableCheckBox.isSelected());
+        for (final CSVEditorTabController tabController : tabControllers.values()) {
+            tabController.updateGui(UpdateAction.UPDATE_CONTENT_VIEW);
         }
     }
 }

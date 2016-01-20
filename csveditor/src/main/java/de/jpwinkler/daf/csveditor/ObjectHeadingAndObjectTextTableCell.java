@@ -1,14 +1,22 @@
 package de.jpwinkler.daf.csveditor;
 
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
+import de.jpwinkler.daf.dataprocessing.preprocessing.ObjectTextPreprocessor;
 import javafx.geometry.Insets;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.DefaultStringConverter;
 
 public class ObjectHeadingAndObjectTextTableCell extends TextFieldTableCell<DoorsObject, String> {
 
+    private ObjectTextPreprocessor preprocessor;
+
     public ObjectHeadingAndObjectTextTableCell() {
         super(new DefaultStringConverter());
+    }
+
+    public ObjectHeadingAndObjectTextTableCell(final ObjectTextPreprocessor preprocessor) {
+        this();
+        this.preprocessor = preprocessor;
     }
 
     @Override
@@ -18,7 +26,7 @@ public class ObjectHeadingAndObjectTextTableCell extends TextFieldTableCell<Door
             final DoorsObject o = getTableView().getItems().get(getTableRow().getIndex());
             String style = "";
             if (o.isHeading()) {
-                setText(o.getObjectNumber() + " " + o.getObjectHeading());
+                setText(o.getObjectNumber() + " " + preprocessor.preprocessTextToString(o.getObjectHeading()));
                 style += "-fx-font-weight: bold;";
                 if (o.getObjectLevel() <= 2) {
                     style += "-fx-font-size: 140%;";
@@ -30,7 +38,7 @@ public class ObjectHeadingAndObjectTextTableCell extends TextFieldTableCell<Door
                     style += "-fx-font-size: 110%;";
                 }
             } else {
-                setText(o.getObjectText());
+                setText(preprocessor.preprocessTextToString(o.getObjectText()));
             }
             if ("requirement".equals(o.getAttributes().get("Object Type"))) {
                 style += "-fx-text-fill: #2E8B57;";

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.input.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="807.0" prefWidth="1154.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.jpwinkler.daf.csveditor.CSVEditorController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="777.0" prefWidth="1067.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.jpwinkler.daf.csveditor.CSVEditorController">
    <top>
       <VBox>
          <children>
@@ -128,15 +129,15 @@
       </VBox>
    </top>
    <center>
-      <SplitPane dividerPositions="0.2" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <SplitPane dividerPositions="0.28075117370892017" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <items>
-            <TreeView fx:id="outlineTreeView" prefHeight="200.0" prefWidth="200.0" />
-            <SplitPane dividerPositions="0.8" orientation="VERTICAL" prefHeight="200.0" prefWidth="700.0">
+            <TreeView fx:id="outlineTreeView" prefHeight="710.0" prefWidth="339.0" SplitPane.resizableWithParent="false" />
+            <SplitPane dividerPositions="0.6901408450704225" orientation="VERTICAL" prefHeight="200.0" prefWidth="700.0">
               <items>
-                  <SplitPane dividerPositions="0.7" prefHeight="160.0" prefWidth="200.0">
+                  <SplitPane dividerPositions="0.7313237221494102" prefHeight="565.0" prefWidth="764.0">
                     <items>
                         <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" />
-                        <BorderPane prefHeight="200.0" prefWidth="200.0">
+                        <BorderPane prefHeight="200.0" prefWidth="200.0" SplitPane.resizableWithParent="false">
                            <center>
                               <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" BorderPane.alignment="CENTER">
                                  <children>
@@ -194,7 +195,36 @@
                         </BorderPane>
                     </items>
                   </SplitPane>
-                  <BorderPane prefHeight="200.0" prefWidth="200.0" />
+                  <TabPane SplitPane.resizableWithParent="false">
+                     <tabs>
+                        <Tab closable="false" text="Javascript Console">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                          </content>
+                        </Tab>
+                        <Tab closable="false" text="Preprocessor">
+                           <content>
+                              <BorderPane prefHeight="200.0" prefWidth="200.0">
+                                 <top>
+                                    <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                                      <items>
+                                          <CheckBox fx:id="preprocessorEnableCheckBox" mnemonicParsing="false" onAction="#preprocessorEnableClicked" text="Enable Preprocessor" />
+                                        <Button mnemonicParsing="false" onAction="#preprocessorApplyClicked" text="Apply Changes" />
+                                      </items>
+                                    </ToolBar>
+                                 </top>
+                                 <center>
+                                    <TextArea fx:id="preprocessorTextArea" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                                       <font>
+                                          <Font name="Courier New" size="12.0" />
+                                       </font>
+                                    </TextArea>
+                                 </center>
+                              </BorderPane>
+                           </content>
+                        </Tab>
+                     </tabs>
+                  </TabPane>
               </items>
             </SplitPane>
         </items>
