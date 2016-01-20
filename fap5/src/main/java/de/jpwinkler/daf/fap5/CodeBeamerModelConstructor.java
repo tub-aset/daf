@@ -106,8 +106,6 @@ public class CodeBeamerModelConstructor extends RuleBasedModelConstructor {
 
         model.setVersionNumber(getStringVariable("version"));
 
-        model.setModule(context.getModule());
-
         final int reqCount = context.getMarkerCount(CodeBeamerConstants.MARKER_REQUIREMENT);
         addMetric(model, CodeBeamerConstants.METRIC_REQUIREMENT_COUNT, reqCount);
         addMetric(model, CodeBeamerConstants.METRIC_HEADING_AS_REQUIREMENT_COUNT, context.getMarkerCount(CodeBeamerConstants.MARKER_HEADING_AS_REQUIREMENT));

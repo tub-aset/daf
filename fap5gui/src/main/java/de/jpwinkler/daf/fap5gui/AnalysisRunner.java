@@ -1,10 +1,7 @@
 package de.jpwinkler.daf.fap5gui;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -19,9 +16,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
-import de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.dafcore.model.common.ModelObject;
-import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.workflow.WorkflowException;
 import de.jpwinkler.daf.dafcore.workflow.WorkflowProcessor;
 import de.jpwinkler.daf.fap5.model.codebeamer.CodeBeamerModel;
@@ -61,9 +56,11 @@ public class AnalysisRunner {
 
         this.settings = settings;
 
-        progressMonitor.updateProgres(0, "Warming up");
+        if (progressMonitor != null) {
+            progressMonitor.updateProgres(0, "Warming up");
+        }
 
-        if (resultCacheFile.exists() && settings.isReuseCache()) {
+        if (resultCacheFile != null && resultCacheFile.exists() && settings.isReuseCache()) {
             results = gson.fromJson(FileUtils.readFileToString(resultCacheFile), AnalysisResults.class);
         } else {
             results = new AnalysisResults();
@@ -74,7 +71,9 @@ public class AnalysisRunner {
         for (final File child : listFiles) {
             if (child.isDirectory()) {
                 if (!results.getVersionNumbers().contains(child.getName())) {
-                    progressMonitor.updateProgres((double) i / (double) listFiles.length, "Processing " + child.getName());
+                    if (progressMonitor != null) {
+                        progressMonitor.updateProgres((double) i / (double) listFiles.length, "Processing " + child.getName());
+                    }
                     processExistingVersionFolder(child.getName());
                 }
             }
@@ -86,7 +85,9 @@ public class AnalysisRunner {
             processNewVersion();
         }
 
-        FileUtils.write(resultCacheFile, gson.toJson(results));
+        if (resultCacheFile != null) {
+            FileUtils.write(resultCacheFile, gson.toJson(results));
+        }
 
         return results;
     }
@@ -185,40 +186,11 @@ public class AnalysisRunner {
 
             final Version version = createVersion(versionFolder, workflowResult.get(target));
 
-            writeToFile(workflowResult.get(target), "C:\\WORK\\temp\\exp_" + versionFolder + ".txt");
-
             results.addVersion(version);
 
-        } catch (final WorkflowException | IOException e) {
+        } catch (final WorkflowException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
-    }
-
-    private void writeToFile(final List<ModelObject> codeBeamerModels, final String fileName) throws IOException {
-
-        final FileOutputStream fos = new FileOutputStream(fileName);
-
-        final BufferedOutputStream bos = new BufferedOutputStream(fos);
-        final OutputStreamWriter writer = new OutputStreamWriter(bos);
-
-        for (final ModelObject modelObject : codeBeamerModels) {
-            final CodeBeamerModel cbm = (CodeBeamerModel) modelObject;
-
-            cbm.getModule().accept(new DoorsTreeNodeVisitor() {
-                @Override
-                public boolean visitPreTraverse(final DoorsObject object) {
-                    try {
-                        writer.write(object.getText() + "\n");
-                    } catch (final Exception e) {
-                        LOGGER.log(Level.SEVERE, e.getMessage(), e);
-                    }
-                    return true;
-                }
-            });
-        }
-
-        writer.close();
-
     }
 
     private Version createVersion(final String versionString, final List<ModelObject> codeBeamerModels) {
@@ -256,7 +228,7 @@ public class AnalysisRunner {
             i.setObjectId(issue.getSource().getObjectIdentifier());
             i.setObjectNumber(issue.getSource().getObjectNumber());
             i.setObjectAbsoluteNumber(issue.getSource().getAbsoluteNumber());
-            i.setAbsoluteModuleName(cbm.getModule().getPath() + "/" + cbm.getModule().getName());
+            i.setAbsoluteModuleName(cbm.getFullName());
             snapshot.getIssues().add(i);
         }
 

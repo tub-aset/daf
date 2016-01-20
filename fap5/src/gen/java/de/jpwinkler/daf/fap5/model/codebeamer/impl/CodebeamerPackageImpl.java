@@ -218,17 +218,8 @@ public class CodebeamerPackageImpl extends EPackageImpl implements CodebeamerPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getCodeBeamerModel_Module() {
-        return (EReference)codeBeamerModelEClass.getEStructuralFeatures().get(6);
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
     public EAttribute getCodeBeamerModel_Path() {
-        return (EAttribute)codeBeamerModelEClass.getEStructuralFeatures().get(7);
+        return (EAttribute)codeBeamerModelEClass.getEStructuralFeatures().get(6);
     }
 
     /**
@@ -426,7 +417,6 @@ public class CodebeamerPackageImpl extends EPackageImpl implements CodebeamerPac
         createEReference(codeBeamerModelEClass, CODE_BEAMER_MODEL__ISSUES);
         createEAttribute(codeBeamerModelEClass, CODE_BEAMER_MODEL__VERSION_NUMBER);
         createEReference(codeBeamerModelEClass, CODE_BEAMER_MODEL__METRICS);
-        createEReference(codeBeamerModelEClass, CODE_BEAMER_MODEL__MODULE);
         createEAttribute(codeBeamerModelEClass, CODE_BEAMER_MODEL__PATH);
         createEOperation(codeBeamerModelEClass, CODE_BEAMER_MODEL___GET_ESTIMATED_REMAINING_WORK);
         createEOperation(codeBeamerModelEClass, CODE_BEAMER_MODEL___GET_ISSUE_TYPES);
@@ -475,7 +465,6 @@ public class CodebeamerPackageImpl extends EPackageImpl implements CodebeamerPac
 
         // Obtain other dependent packages
         CommonPackage theCommonPackage = (CommonPackage)EPackage.Registry.INSTANCE.getEPackage(CommonPackage.eNS_URI);
-        CSVPackage theCSVPackage = (CSVPackage)EPackage.Registry.INSTANCE.getEPackage(CSVPackage.eNS_URI);
 
         // Create type parameters
 
@@ -495,7 +484,6 @@ public class CodebeamerPackageImpl extends EPackageImpl implements CodebeamerPac
         initEReference(getCodeBeamerModel_Issues(), this.getIssue(), null, "issues", null, 0, -1, CodeBeamerModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getCodeBeamerModel_VersionNumber(), ecorePackage.getEString(), "versionNumber", null, 0, 1, CodeBeamerModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getCodeBeamerModel_Metrics(), this.getMetric(), null, "metrics", null, 0, -1, CodeBeamerModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getCodeBeamerModel_Module(), theCSVPackage.getDoorsModule(), null, "module", null, 0, 1, CodeBeamerModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getCodeBeamerModel_Path(), ecorePackage.getEString(), "path", null, 0, 1, CodeBeamerModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEOperation(getCodeBeamerModel__GetEstimatedRemainingWork(), ecorePackage.getELong(), "getEstimatedRemainingWork", 0, 1, IS_UNIQUE, IS_ORDERED);

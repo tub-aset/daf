@@ -5,7 +5,6 @@ package de.jpwinkler.daf.fap5.model.codebeamer;
 import org.eclipse.emf.common.util.EList;
 
 import de.jpwinkler.daf.dafcore.model.common.ModelObject;
-import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 
 /**
  * <!-- begin-user-doc -->
@@ -22,7 +21,6 @@ import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
  *   <li>{@link de.jpwinkler.daf.fap5.model.codebeamer.CodeBeamerModel#getIssues <em>Issues</em>}</li>
  *   <li>{@link de.jpwinkler.daf.fap5.model.codebeamer.CodeBeamerModel#getVersionNumber <em>Version Number</em>}</li>
  *   <li>{@link de.jpwinkler.daf.fap5.model.codebeamer.CodeBeamerModel#getMetrics <em>Metrics</em>}</li>
- *   <li>{@link de.jpwinkler.daf.fap5.model.codebeamer.CodeBeamerModel#getModule <em>Module</em>}</li>
  *   <li>{@link de.jpwinkler.daf.fap5.model.codebeamer.CodeBeamerModel#getPath <em>Path</em>}</li>
  * </ul>
  *
@@ -220,32 +218,6 @@ public interface CodeBeamerModel extends ModelObject {
      * @generated
      */
     EList<Metric> getMetrics();
-
-    /**
-     * Returns the value of the '<em><b>Module</b></em>' reference.
-     * <!-- begin-user-doc -->
-     * <p>
-     * If the meaning of the '<em>Module</em>' reference isn't clear,
-     * there really should be more of a description here...
-     * </p>
-     * <!-- end-user-doc -->
-     * @return the value of the '<em>Module</em>' reference.
-     * @see #setModule(DoorsModule)
-     * @see de.jpwinkler.daf.fap5.model.codebeamer.CodebeamerPackage#getCodeBeamerModel_Module()
-     * @model
-     * @generated
-     */
-    DoorsModule getModule();
-
-    /**
-     * Sets the value of the '{@link de.jpwinkler.daf.fap5.model.codebeamer.CodeBeamerModel#getModule <em>Module</em>}' reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Module</em>' reference.
-     * @see #getModule()
-     * @generated
-     */
-    void setModule(DoorsModule value);
 
     /**
      * Returns the value of the '<em><b>Path</b></em>' attribute.

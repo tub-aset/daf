@@ -133,22 +133,13 @@ public interface CodebeamerPackage extends EPackage {
     int CODE_BEAMER_MODEL__METRICS = CommonPackage.MODEL_OBJECT_FEATURE_COUNT + 5;
 
     /**
-     * The feature id for the '<em><b>Module</b></em>' reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int CODE_BEAMER_MODEL__MODULE = CommonPackage.MODEL_OBJECT_FEATURE_COUNT + 6;
-
-    /**
      * The feature id for the '<em><b>Path</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int CODE_BEAMER_MODEL__PATH = CommonPackage.MODEL_OBJECT_FEATURE_COUNT + 7;
+    int CODE_BEAMER_MODEL__PATH = CommonPackage.MODEL_OBJECT_FEATURE_COUNT + 6;
 
     /**
      * The number of structural features of the '<em>Code Beamer Model</em>' class.
@@ -157,7 +148,7 @@ public interface CodebeamerPackage extends EPackage {
      * @generated
      * @ordered
      */
-	int CODE_BEAMER_MODEL_FEATURE_COUNT = CommonPackage.MODEL_OBJECT_FEATURE_COUNT + 8;
+	int CODE_BEAMER_MODEL_FEATURE_COUNT = CommonPackage.MODEL_OBJECT_FEATURE_COUNT + 7;
 
 	/**
      * The operation id for the '<em>Get Estimated Remaining Work</em>' operation.
@@ -496,17 +487,6 @@ public interface CodebeamerPackage extends EPackage {
     EReference getCodeBeamerModel_Metrics();
 
     /**
-     * Returns the meta object for the reference '{@link de.jpwinkler.daf.fap5.model.codebeamer.CodeBeamerModel#getModule <em>Module</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for the reference '<em>Module</em>'.
-     * @see de.jpwinkler.daf.fap5.model.codebeamer.CodeBeamerModel#getModule()
-     * @see #getCodeBeamerModel()
-     * @generated
-     */
-    EReference getCodeBeamerModel_Module();
-
-    /**
      * Returns the meta object for the attribute '{@link de.jpwinkler.daf.fap5.model.codebeamer.CodeBeamerModel#getPath <em>Path</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -757,13 +737,6 @@ public interface CodebeamerPackage extends EPackage {
          * @generated
          */
         EReference CODE_BEAMER_MODEL__METRICS = eINSTANCE.getCodeBeamerModel_Metrics();
-        /**
-         * The meta object literal for the '<em><b>Module</b></em>' reference feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @generated
-         */
-        EReference CODE_BEAMER_MODEL__MODULE = eINSTANCE.getCodeBeamerModel_Module();
         /**
          * The meta object literal for the '<em><b>Path</b></em>' attribute feature.
          * <!-- begin-user-doc -->
