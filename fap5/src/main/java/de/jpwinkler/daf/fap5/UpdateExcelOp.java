@@ -89,13 +89,21 @@ public class UpdateExcelOp extends AbstractStepImpl implements ModelOperationImp
 
             final int targetPathColumn = findRow(sheet, "Inbox", "Allgemein", "Ziel-Pfad");
             final int targetModuleColumn = findRow(sheet, "Inbox", "Allgemein", "Ziel-Modulname");
-            final int acceptanceEmptyColumn = findRow(sheet, "Verified", "Acceptance Status", "\"\"");
-            final int acceptanceDeletedReqColumn = findRow(sheet, "Verified", "Acceptance Status", "deleted");
-            final int acceptanceChangedReqColumn = findRow(sheet, "Verified", "Acceptance Status", "changed");
-            final int acceptanceToClarifyColumn = findRow(sheet, "Verified", "Acceptance Status", "clarify");
-            // final int acceptancePartlyAgreedColumn = findRow(sheet,
-            // "Verified", "Acceptance Status", "\"\"");
-            final int acceptanceAgreedColumn = findRow(sheet, "Verified", "Acceptance Status", "agreed");
+
+            final int inboxAcceptanceEmptyColumn = findRow(sheet, "Inbox", "Acceptance Status", "\"\"");
+            final int inboxAcceptanceDeletedReqColumn = findRow(sheet, "Inbox", "Acceptance Status", "deleted");
+            final int inboxAcceptanceChangedReqColumn = findRow(sheet, "Inbox", "Acceptance Status", "changed");
+            final int inboxAcceptanceToClarifyColumn = findRow(sheet, "Inbox", "Acceptance Status", "clarify");
+            final int inboxAcceptanceAgreedColumn = findRow(sheet, "Inbox", "Acceptance Status", "agreed");
+
+            final int verifiedAcceptanceEmptyColumn = findRow(sheet, "Verified", "Acceptance Status", "\"\"");
+            final int verifiedAcceptanceDeletedReqColumn = findRow(sheet, "Verified", "Acceptance Status", "deleted");
+            final int verifiedAcceptanceChangedReqColumn = findRow(sheet, "Verified", "Acceptance Status", "changed");
+            final int verifiedAcceptanceToClarifyColumn = findRow(sheet, "Verified", "Acceptance Status", "clarify");
+            final int verifiedAcceptancePartlyAgreedColumn = findRow(sheet, "Verified", "Acceptance Status", "partly agreed");
+
+            // works, but is pretty ugly.
+            final int verifiedAcceptanceAgreedColumn = verifiedAcceptancePartlyAgreedColumn + 1;
 
             for (final Row row : sheet) {
                 if (row.getCell(sourcePathColumn) != null && row.getCell(sourceModuleColumn) != null) {
@@ -122,25 +130,34 @@ public class UpdateExcelOp extends AbstractStepImpl implements ModelOperationImp
                         updateRowCell(row, requirementWithoutLinkCountColumn, requirementWithoutLink);
 
                         updateRowCell(row, sumColumn, emptyObjectType + requirementAsHeading + informationWithLink + requirementWithoutLink);
-                    } else {
-                        LOGGER.warning(String.format("No module found for source module name %s.", fullSourceDocumentName));
                     }
                 }
 
                 if (row.getCell(targetPathColumn) != null && row.getCell(targetModuleColumn) != null) {
                     final String fullTargetDocumentName = row.getCell(targetPathColumn).getStringCellValue() + "/" + row.getCell(targetModuleColumn).getStringCellValue();
-                    final CodeBeamerModel targetModel = models.get(fullTargetDocumentName);
-                    if (targetModel != null) {
-                        final Integer reqCount = targetModel.getIntMetric(CodeBeamerConstants.METRIC_REQUIREMENT_COUNT);
+                    final CodeBeamerModel inboxTargetModel = models.get(fullTargetDocumentName);
+                    if (inboxTargetModel != null) {
+                        final Integer reqCount = inboxTargetModel.getIntMetric(CodeBeamerConstants.METRIC_REQUIREMENT_COUNT);
 
-                        updateRowCellPercent(row, acceptanceEmptyColumn, (double) targetModel.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_NONE_COUNT) / reqCount);
-                        updateRowCellPercent(row, acceptanceDeletedReqColumn, (double) targetModel.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_DELETED_REQ_COUNT) / reqCount);
-                        updateRowCellPercent(row, acceptanceChangedReqColumn, (double) targetModel.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_CHANGED_REQ_COUNT) / reqCount);
-                        updateRowCellPercent(row, acceptanceToClarifyColumn, (double) targetModel.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_TO_CLARIFY_COUNT) / reqCount);
-                        updateRowCellPercent(row, acceptanceAgreedColumn, (double) targetModel.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_AGREED_COUNT) / reqCount);
-                    } else {
-                        LOGGER.warning(String.format("No module found for target module name %s.", fullTargetDocumentName));
+                        updateRowCellPercent(row, inboxAcceptanceEmptyColumn, (double) inboxTargetModel.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_NONE_COUNT) / reqCount);
+                        updateRowCellPercent(row, inboxAcceptanceDeletedReqColumn, (double) inboxTargetModel.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_DELETED_REQ_COUNT) / reqCount);
+                        updateRowCellPercent(row, inboxAcceptanceChangedReqColumn, (double) inboxTargetModel.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_CHANGED_REQ_COUNT) / reqCount);
+                        updateRowCellPercent(row, inboxAcceptanceToClarifyColumn, (double) inboxTargetModel.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_TO_CLARIFY_COUNT) / reqCount);
+                        updateRowCellPercent(row, inboxAcceptanceAgreedColumn, (double) inboxTargetModel.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_AGREED_COUNT) / reqCount);
                     }
+
+                    final CodeBeamerModel verifiedTargetModel = models.get(fullTargetDocumentName.replace("/Inbox/", "/Verified/"));
+                    if (verifiedTargetModel != null) {
+                        final Integer reqCount = verifiedTargetModel.getIntMetric(CodeBeamerConstants.METRIC_REQUIREMENT_COUNT);
+
+                        updateRowCellPercent(row, verifiedAcceptanceEmptyColumn, (double) verifiedTargetModel.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_NONE_COUNT) / reqCount);
+                        updateRowCellPercent(row, verifiedAcceptanceDeletedReqColumn, (double) verifiedTargetModel.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_DELETED_REQ_COUNT) / reqCount);
+                        updateRowCellPercent(row, verifiedAcceptanceChangedReqColumn, (double) verifiedTargetModel.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_CHANGED_REQ_COUNT) / reqCount);
+                        updateRowCellPercent(row, verifiedAcceptanceToClarifyColumn, (double) verifiedTargetModel.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_TO_CLARIFY_COUNT) / reqCount);
+                        updateRowCellPercent(row, verifiedAcceptancePartlyAgreedColumn, (double) verifiedTargetModel.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_PARTLY_AGREED_COUNT) / reqCount);
+                        updateRowCellPercent(row, verifiedAcceptanceAgreedColumn, (double) verifiedTargetModel.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_AGREED_COUNT) / reqCount);
+                    }
+
                 }
             }
 
