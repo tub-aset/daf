@@ -10,10 +10,10 @@ import org.apache.commons.io.FileUtils;
 import de.jpwinkler.daf.dafcore.model.common.ModelObject;
 import de.jpwinkler.daf.dafcore.workflow.AbstractStepImpl;
 import de.jpwinkler.daf.dafcore.workflow.ModelOperationImpl;
-import de.jpwinkler.daf.doorsbridge.DoorsApplication;
-import de.jpwinkler.daf.doorsbridge.DoorsApplicationFactory;
-import de.jpwinkler.daf.doorsbridge.DoorsException;
 import de.jpwinkler.daf.fap5.util.LogOutputStream;
+import de.jpwinkler.libs.doorsbridge.DoorsApplication;
+import de.jpwinkler.libs.doorsbridge.DoorsApplicationFactory;
+import de.jpwinkler.libs.doorsbridge.DoorsException;
 
 public class ExportModulesOp extends AbstractStepImpl implements ModelOperationImpl {
 

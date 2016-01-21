@@ -9,7 +9,6 @@
 
 	<modules>
 		<module>dafcore</module>
-		<module>doorsbridge</module>
 		<module>fap5</module>
 		<module>workflowdsl</module>
 		<module>fap5gui</module>

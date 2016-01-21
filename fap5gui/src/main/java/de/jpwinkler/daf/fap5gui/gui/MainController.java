@@ -6,14 +6,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import de.jpwinkler.daf.doorsbridge.DoorsApplication;
-import de.jpwinkler.daf.doorsbridge.DoorsApplicationFactory;
-import de.jpwinkler.daf.doorsbridge.DoorsException;
 import de.jpwinkler.daf.fap5.codebeamerrules.CodeBeamerConstants;
 import de.jpwinkler.daf.fap5gui.model.AnalysisResults;
 import de.jpwinkler.daf.fap5gui.model.DocumentSnapshot;
 import de.jpwinkler.daf.fap5gui.model.Issue;
 import de.jpwinkler.daf.fap5gui.model.Version;
+import de.jpwinkler.libs.doorsbridge.DoorsApplication;
+import de.jpwinkler.libs.doorsbridge.DoorsApplicationFactory;
+import de.jpwinkler.libs.doorsbridge.DoorsException;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

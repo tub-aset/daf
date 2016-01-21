@@ -3,10 +3,12 @@ package de.jpwinkler.daf.dafcore.workflow;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -19,10 +21,7 @@ import de.jpwinkler.daf.dafcore.csv.ModuleMetaDataParser;
 import de.jpwinkler.daf.dafcore.model.common.ModelObject;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.util.CSVParseException;
-import de.jpwinkler.daf.doorsbridge.DoorsApplication;
-import de.jpwinkler.daf.doorsbridge.DoorsApplicationFactory;
-import de.jpwinkler.daf.doorsbridge.DoorsException;
-import de.jpwinkler.daf.doorsbridge.DoorsURL;
+import de.jpwinkler.daf.dafcore.util.CsvFolderIterator;
 import de.jpwinkler.daf.workflowdsl.DependencyFeature;
 import de.jpwinkler.daf.workflowdsl.ForFeature;
 import de.jpwinkler.daf.workflowdsl.ModelConstructorStep;
@@ -35,6 +34,10 @@ import de.jpwinkler.daf.workflowdsl.Variable;
 import de.jpwinkler.daf.workflowdsl.Workflow;
 import de.jpwinkler.daf.workflowdsl.factory.CreateWorkflowException;
 import de.jpwinkler.daf.workflowdsl.factory.WorkflowFactory;
+import de.jpwinkler.libs.doorsbridge.DoorsApplication;
+import de.jpwinkler.libs.doorsbridge.DoorsApplicationFactory;
+import de.jpwinkler.libs.doorsbridge.DoorsException;
+import de.jpwinkler.libs.doorsbridge.DoorsURL;
 
 public class WorkflowProcessor {
 
@@ -48,12 +51,23 @@ public class WorkflowProcessor {
         doorsApp = DoorsApplicationFactory.getDoorsApplication();
     }
 
+    public void runWorkflow(final InputStream workflowFileStream) throws WorkflowException {
+        Workflow workflowModel;
+
+        try {
+            workflowModel = new WorkflowFactory().createWorkflow(workflowFileStream);
+        } catch (IOException | CreateWorkflowException e) {
+            throw new WorkflowException(e);
+        }
+
+        runWorkflowModel(workflowModel);
+    }
+
     public void runWorkflow(final File workflowFile) throws WorkflowException {
         LOGGER.info(String.format("Starting workflow execution. Workflow file: %s", workflowFile.getAbsolutePath()));
-        resultCache.clear();
         Workflow workflowModel;
         try {
-            workflowModel = readWorkflowModel(workflowFile);
+            workflowModel = new WorkflowFactory().createWorkflow(new FileInputStream(workflowFile));
         } catch (final IOException | CreateWorkflowException e) {
             throw new WorkflowException("Error while reading workflow file.", e);
         }
@@ -63,6 +77,7 @@ public class WorkflowProcessor {
     }
 
     public Map<Target, List<ModelObject>> runWorkflowModel(final Workflow workflowModel) throws WorkflowException {
+        resultCache.clear();
         final long t1 = System.currentTimeMillis();
         try {
             new WorkflowValidator().validate(workflowModel);
@@ -87,10 +102,6 @@ public class WorkflowProcessor {
         LOGGER.info(String.format("Workflow execution completed in %d ms.", System.currentTimeMillis() - t1));
         LOGGER.info(String.format("Total Memory: %d", Runtime.getRuntime().totalMemory()));
         return results;
-    }
-
-    private Workflow readWorkflowModel(final File workflowFile) throws IOException, CreateWorkflowException {
-        return new WorkflowFactory().createWorkflow(new FileInputStream(workflowFile));
     }
 
     private List<ModelObject> processStep(final Step step, final Map<String, Object> variables) throws WorkflowException {
@@ -125,8 +136,9 @@ public class WorkflowProcessor {
             final ModelConstructorStep modelConstructor = (ModelConstructorStep) step;
 
             for (final ModuleSetEntry moduleSetEntry : WorkflowUtil.getSource(modelConstructor).getModuleSet().getModuleSetEntries()) {
-                for (final DoorsModule module : loadModules(moduleSetEntry, variables)) {
-                    modelConstructorImpl.setSource(module);
+                final Iterator<DoorsModule> i = loadModulesLazy(moduleSetEntry, variables);
+                while (i.hasNext()) {
+                    modelConstructorImpl.setSource(i.next());
                     final ModelObject model = modelConstructorImpl.execute();
                     if (model != null) {
                         result.add(model);
@@ -229,6 +241,54 @@ public class WorkflowProcessor {
         return result;
     }
 
+    private Iterator<DoorsModule> loadModulesLazy(final ModuleSetEntry moduleSetEntry, final Map<String, Object> variables) throws WorkflowException {
+        Iterator<DoorsModule> result;
+        final List<DoorsModule> modules = new ArrayList<>();
+
+        final String reference = WorkflowUtil.replaceVariables(moduleSetEntry.getReference(), variables);
+
+        switch (moduleSetEntry.getType()) {
+        case "csv":
+            final File file = new File(reference);
+            if (!file.isFile()) {
+                throw new WorkflowException(String.format("%s is not a file.", reference));
+            }
+            LOGGER.info(String.format("Loading csv from file %s.", file.getAbsolutePath()));
+            try {
+                modules.add(loadDoorsModuleFromCSV(file));
+                new LinkReconstructor().reconstructLinks(modules);
+                result = modules.iterator();
+            } catch (IOException | CSVParseException e) {
+                throw new WorkflowException(String.format("Error while reading CSV file %s.", file.getAbsolutePath()));
+            }
+            break;
+        case "csvfolder":
+            final File csvFolder = new File(reference);
+            if (!csvFolder.isDirectory()) {
+                throw new WorkflowException(String.format("%s is not a folder.", reference));
+            }
+            LOGGER.info(String.format("Loading csv files from folder %s", csvFolder.getAbsolutePath()));
+            result = new CsvFolderIterator(csvFolder);
+            break;
+        case "doors":
+            LOGGER.info(String.format("Retrieving module %s from DOORS.", reference));
+            modules.add(loadDoorsModule(reference));
+            new LinkReconstructor().reconstructLinks(modules);
+            result = modules.iterator();
+            break;
+        case "doorsurl":
+            LOGGER.info(String.format("Retrieving module %s from DOORS.", reference));
+            modules.add(loadDoorsModuleFromUrl(new DoorsURL(reference)));
+            new LinkReconstructor().reconstructLinks(modules);
+            result = modules.iterator();
+            break;
+        default:
+            throw new WorkflowException("Cannot handle module set entry of type " + moduleSetEntry.getType());
+        }
+
+        return result;
+    }
+
     private DoorsModule loadDoorsModuleFromCSV(final File file) throws IOException, CSVParseException {
         final DoorsModule module = new ModuleCSVParser().parseCSV(file);
         final File metaDataFile = new File(file.getAbsoluteFile() + ".mmd");
@@ -300,5 +360,13 @@ public class WorkflowProcessor {
             throw new WorkflowException(e);
         }
 
+    }
+
+    public static void main(final String[] args) throws WorkflowException {
+        if (args.length != 1) {
+            System.out.println("No filename given");
+        } else {
+            new WorkflowProcessor().runWorkflow(new File(args[0]));
+        }
     }
 }
