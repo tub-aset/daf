@@ -70,4 +70,9 @@ public class ColumnDefinition {
         this.visible = visible;
     }
 
+    @Override
+    public String toString() {
+        return columnTitle;
+    }
+
 }

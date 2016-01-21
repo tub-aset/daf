@@ -47,6 +47,9 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
@@ -59,6 +62,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Pair;
@@ -377,6 +381,7 @@ public class CSVEditorTabController {
                 csvEditorController.populateOutlineTreeView(module);
                 break;
             case UPDATE_COLUMNS:
+                updateView();
                 break;
             default:
                 break;
@@ -412,8 +417,27 @@ public class CSVEditorTabController {
     }
 
     public void setupColumns() {
-        // TODO Implement this method.
-        throw new UnsupportedOperationException("Not yet implemented.");
+        try {
+            final Stage dialogStage = new Stage();
+            final FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(new File("view/selectcolumns.fxml").toURI().toURL());
+            final Parent root = loader.load();
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            dialogStage.initOwner(primaryStage);
+
+            dialogStage.setScene(new Scene(root));
+
+            final SelectColumnsController selectColumnsController = loader.getController();
+            selectColumnsController.setTabController(this);
+            selectColumnsController.setDialogStage(dialogStage);
+
+            dialogStage.showAndWait();
+
+        } catch (final Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
     }
 
     public void setupFilter() {
@@ -454,6 +478,10 @@ public class CSVEditorTabController {
 
     public void setPreprocessor(final ObjectTextPreprocessor preprocessor) {
         this.preprocessor = preprocessor;
+    }
+
+    public ViewModel getViewModel() {
+        return viewModel;
     }
 
 }
