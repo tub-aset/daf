@@ -94,7 +94,7 @@ public class CSVEditorController {
 
     private TaggedDocument<DoorsTreeNode, String> lastResult;
 
-    private final ObjectTextPreprocessor preprocessor = ObjectTextPreprocessor.getDefaultPreprocessor();
+    private final ObjectTextPreprocessor preprocessor = ObjectTextPreprocessor.getEmptyDisabledPreprocessor();
 
     @FXML
     TextArea preprocessorTextArea;
