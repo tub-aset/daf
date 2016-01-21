@@ -90,12 +90,14 @@ public class UpdateExcelOp extends AbstractStepImpl implements ModelOperationImp
             final int targetPathColumn = findRow(sheet, "Inbox", "Allgemein", "Ziel-Pfad");
             final int targetModuleColumn = findRow(sheet, "Inbox", "Allgemein", "Ziel-Modulname");
 
+            final int inboxReqCountColumn = findRow(sheet, "Inbox", "Allgemein", "Anzahl");
             final int inboxAcceptanceEmptyColumn = findRow(sheet, "Inbox", "Acceptance Status", "\"\"");
             final int inboxAcceptanceDeletedReqColumn = findRow(sheet, "Inbox", "Acceptance Status", "deleted");
             final int inboxAcceptanceChangedReqColumn = findRow(sheet, "Inbox", "Acceptance Status", "changed");
             final int inboxAcceptanceToClarifyColumn = findRow(sheet, "Inbox", "Acceptance Status", "clarify");
             final int inboxAcceptanceAgreedColumn = findRow(sheet, "Inbox", "Acceptance Status", "agreed");
 
+            final int verifiedReqCountColumn = findRow(sheet, "Verified", "Allgemein", "Anzahl");
             final int verifiedAcceptanceEmptyColumn = findRow(sheet, "Verified", "Acceptance Status", "\"\"");
             final int verifiedAcceptanceDeletedReqColumn = findRow(sheet, "Verified", "Acceptance Status", "deleted");
             final int verifiedAcceptanceChangedReqColumn = findRow(sheet, "Verified", "Acceptance Status", "changed");
@@ -139,6 +141,7 @@ public class UpdateExcelOp extends AbstractStepImpl implements ModelOperationImp
                     if (inboxTargetModel != null) {
                         final Integer reqCount = inboxTargetModel.getIntMetric(CodeBeamerConstants.METRIC_REQUIREMENT_COUNT);
 
+                        updateRowCell(row, inboxReqCountColumn, inboxTargetModel.getIntMetric(CodeBeamerConstants.METRIC_REQUIREMENT_COUNT));
                         updateRowCellPercent(row, inboxAcceptanceEmptyColumn, (double) inboxTargetModel.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_NONE_COUNT) / reqCount);
                         updateRowCellPercent(row, inboxAcceptanceDeletedReqColumn, (double) inboxTargetModel.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_DELETED_REQ_COUNT) / reqCount);
                         updateRowCellPercent(row, inboxAcceptanceChangedReqColumn, (double) inboxTargetModel.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_CHANGED_REQ_COUNT) / reqCount);
@@ -150,6 +153,7 @@ public class UpdateExcelOp extends AbstractStepImpl implements ModelOperationImp
                     if (verifiedTargetModel != null) {
                         final Integer reqCount = verifiedTargetModel.getIntMetric(CodeBeamerConstants.METRIC_REQUIREMENT_COUNT);
 
+                        updateRowCell(row, verifiedReqCountColumn, verifiedTargetModel.getIntMetric(CodeBeamerConstants.METRIC_REQUIREMENT_COUNT));
                         updateRowCellPercent(row, verifiedAcceptanceEmptyColumn, (double) verifiedTargetModel.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_NONE_COUNT) / reqCount);
                         updateRowCellPercent(row, verifiedAcceptanceDeletedReqColumn, (double) verifiedTargetModel.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_DELETED_REQ_COUNT) / reqCount);
                         updateRowCellPercent(row, verifiedAcceptanceChangedReqColumn, (double) verifiedTargetModel.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_CHANGED_REQ_COUNT) / reqCount);
