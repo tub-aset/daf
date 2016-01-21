@@ -12,15 +12,18 @@ public class ColumnDefinition {
 
     private double width;
 
+    private boolean visible;
+
     public ColumnDefinition() {
     }
 
-    public ColumnDefinition(final ColumnType columnType, final String attributeName, final String columnTitle, final double width) {
+    public ColumnDefinition(final ColumnType columnType, final String attributeName, final String columnTitle, final double width, final boolean visible) {
         super();
         this.columnType = columnType;
         this.attributeName = attributeName;
         this.columnTitle = columnTitle;
         this.width = width;
+        this.visible = visible;
     }
 
     public String getAttributeName() {
@@ -57,6 +60,14 @@ public class ColumnDefinition {
 
     public void setColumnType(final ColumnType columnType) {
         this.columnType = columnType;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(final boolean visible) {
+        this.visible = visible;
     }
 
 }

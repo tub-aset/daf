@@ -3,22 +3,24 @@ package de.jpwinkler.daf.csveditor;
 import java.util.Comparator;
 import java.util.List;
 
-public class PredefinedOrderComparator<T> implements Comparator<T> {
+import de.jpwinkler.daf.csveditor.util.ColumnDefinition;
 
-    private final List<T> predefinedOrder;
+public class PredefinedOrderComparator implements Comparator<ColumnDefinition> {
 
-    public PredefinedOrderComparator(final List<T> predefinedOrder) {
+    private final List<String> predefinedOrder;
+
+    public PredefinedOrderComparator(final List<String> predefinedOrder) {
         super();
         this.predefinedOrder = predefinedOrder;
     }
 
     @Override
-    public int compare(final T o1, final T o2) {
-        if (predefinedOrder.contains(o1) && predefinedOrder.contains(o2)) {
-            return predefinedOrder.indexOf(o1) - predefinedOrder.indexOf(o2);
-        } else if (predefinedOrder.contains(o1) && !predefinedOrder.contains(o2)) {
+    public int compare(final ColumnDefinition o1, final ColumnDefinition o2) {
+        if (predefinedOrder.contains(o1.getColumnTitle()) && predefinedOrder.contains(o2.getColumnTitle())) {
+            return predefinedOrder.indexOf(o1.getColumnTitle()) - predefinedOrder.indexOf(o2.getColumnTitle());
+        } else if (predefinedOrder.contains(o1.getColumnTitle()) && !predefinedOrder.contains(o2.getColumnTitle())) {
             return -1;
-        } else if (!predefinedOrder.contains(o1) && predefinedOrder.contains(o2)) {
+        } else if (!predefinedOrder.contains(o1.getColumnTitle()) && predefinedOrder.contains(o2.getColumnTitle())) {
             return 1;
         } else {
             return 0;

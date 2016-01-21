@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -162,22 +163,24 @@ public class CSVEditorTabController {
         tagColumn.setWidth(100);
         viewModel.getDisplayedColumns().add(tagColumn);
 
-        for (final String attribute : WANTED_ATTRIBUTES) {
-            if (attribute.equals(MAIN_COLUMN)) {
-                final ColumnDefinition columnDefinition = new ColumnDefinition();
-                columnDefinition.setColumnType(ColumnType.OBJECT_TEXT_HEADING_COLUMN);
-                columnDefinition.setColumnTitle(module.getName());
-                columnDefinition.setWidth(700);
-                viewModel.getDisplayedColumns().add(columnDefinition);
-            } else if (module.findAttributeDefinition(attribute) != null) {
-                final ColumnDefinition columnDefinition = new ColumnDefinition();
-                columnDefinition.setColumnType(ColumnType.ATTRIBUTE_COLUMN);
-                columnDefinition.setAttributeName(attribute);
-                columnDefinition.setColumnTitle(attribute);
-                columnDefinition.setWidth(100);
-                viewModel.getDisplayedColumns().add(columnDefinition);
-            }
+        ColumnDefinition columnDefinition = new ColumnDefinition();
+        columnDefinition.setColumnType(ColumnType.OBJECT_TEXT_HEADING_COLUMN);
+        columnDefinition.setColumnTitle(MAIN_COLUMN);
+        columnDefinition.setWidth(700);
+        columnDefinition.setVisible(true);
+        viewModel.getDisplayedColumns().add(columnDefinition);
+
+        for (final AttributeDefinition attributeDefinition : module.getAttributeDefinitions()) {
+            columnDefinition = new ColumnDefinition();
+            columnDefinition.setColumnType(ColumnType.ATTRIBUTE_COLUMN);
+            columnDefinition.setAttributeName(attributeDefinition.getName());
+            columnDefinition.setColumnTitle(attributeDefinition.getName());
+            columnDefinition.setWidth(100);
+            columnDefinition.setVisible(WANTED_ATTRIBUTES.contains(attributeDefinition.getName()));
+            viewModel.getDisplayedColumns().add(columnDefinition);
         }
+
+        Collections.sort(viewModel.getDisplayedColumns(), new PredefinedOrderComparator(WANTED_ATTRIBUTES));
 
         updateView();
 
@@ -187,6 +190,10 @@ public class CSVEditorTabController {
     private void updateView() {
         contentTableView.getColumns().clear();
         for (final ColumnDefinition columnDefinition : viewModel.getDisplayedColumns()) {
+            if (!columnDefinition.isVisible()) {
+                continue;
+            }
+
             final TableColumn<DoorsObject, String> c = new TableColumn<>(columnDefinition.getColumnTitle());
             c.setSortable(false);
             c.setPrefWidth(columnDefinition.getWidth());
