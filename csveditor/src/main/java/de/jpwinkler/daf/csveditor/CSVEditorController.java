@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.WeakHashMap;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -94,6 +95,8 @@ public class CSVEditorController {
 
     private TaggedDocument<DoorsTreeNode, String> lastResult;
 
+    final Map<DoorsTreeNode, Boolean> expanded = new WeakHashMap<>();
+
     private final ObjectTextPreprocessor preprocessor = ObjectTextPreprocessor.getEmptyDisabledPreprocessor();
 
     @FXML
@@ -125,6 +128,8 @@ public class CSVEditorController {
             public void changed(final ObservableValue<? extends Tab> observable, final Tab oldValue, final Tab newValue) {
                 if (newValue != null && tabControllers.get(newValue) != null) {
                     populateOutlineTreeView(tabControllers.get(newValue).getModule());
+                } else {
+                    populateOutlineTreeView(null);
                 }
             }
         });
@@ -132,11 +137,10 @@ public class CSVEditorController {
         outlineTreeView.getSelectionModel().selectedItemProperty().addListener((ChangeListener<TreeItem<OutlineTreeItem>>) (observable, oldValue, newValue) -> {
             final DoorsTreeNode treeNode = newValue.getValue().getTreeNode();
             if (treeNode instanceof DoorsObject) {
-
-                // TODO
-                // contentTableView.getSelectionModel().select((DoorsObject)
-                // treeNode);
-                // contentTableView.scrollTo((DoorsObject) treeNode);
+                final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+                if (selectedTab != null) {
+                    tabControllers.get(selectedTab).selectObject((DoorsObject) treeNode);
+                }
             }
         });
 
@@ -165,14 +169,18 @@ public class CSVEditorController {
     }
 
     public void populateOutlineTreeView(final DoorsModule module) {
-        final Map<DoorsTreeNode, Boolean> expanded = new HashMap<>();
         if (outlineTreeView.getRoot() != null) {
             traverseTreeItem(outlineTreeView.getRoot(), ti -> expanded.put(ti.getValue().getTreeNode(), ti.isExpanded()));
         }
 
-        final TreeItem<OutlineTreeItem> wrappedModule = wrapModule(module);
-        traverseTreeItem(wrappedModule, ti -> ti.setExpanded(expanded.containsKey(ti.getValue().getTreeNode()) && expanded.get(ti.getValue().getTreeNode())));
-        outlineTreeView.setRoot(wrappedModule);
+        if (module != null) {
+
+            final TreeItem<OutlineTreeItem> wrappedModule = wrapModule(module);
+            traverseTreeItem(wrappedModule, ti -> ti.setExpanded(expanded.containsKey(ti.getValue().getTreeNode()) && expanded.get(ti.getValue().getTreeNode())));
+            outlineTreeView.setRoot(wrappedModule);
+        } else {
+            outlineTreeView.setRoot(null);
+        }
     }
 
     private TreeItem<OutlineTreeItem> wrapModule(final DoorsTreeNode doorsTreeNode) {

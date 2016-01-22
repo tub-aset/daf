@@ -484,4 +484,9 @@ public class CSVEditorTabController {
         return viewModel;
     }
 
+    public void selectObject(final DoorsObject object) {
+        contentTableView.getSelectionModel().select(object);
+        contentTableView.scrollTo(object);
+    }
+
 }
