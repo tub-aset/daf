@@ -1,7 +1,7 @@
 package de.jpwinkler.daf.csveditor.commands;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +18,7 @@ public class FlattenCommand extends AbstractCommand {
 
     private final List<DoorsObject> objectList = new ArrayList<>();
 
-    private final Map<DoorsObject, DoorsTreeNode> oldParents = new HashMap<>();
+    private final Map<DoorsObject, DoorsTreeNode> oldParents = new LinkedHashMap<>();
 
 
     @Override
@@ -47,7 +47,8 @@ public class FlattenCommand extends AbstractCommand {
     @Override
     public void redo() {
         for (final DoorsObject object : objectList) {
-            object.setParent(getModule());
+            object.getModule().getChildren().remove(object);
+            object.getModule().getChildren().add(object);
         }
     }
 
