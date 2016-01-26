@@ -48,7 +48,7 @@ for moduleUrl in modules do {
 		if (!null m) {
 			current = m
 		
-			load view "Standard View"
+			load view "Standard view"
 			
 			print exportCsv(m, moduleListKey) "\n"
 			close m

@@ -1,6 +1,7 @@
 package de.jpwinkler.libs.doorsbridge.internal;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,7 +17,11 @@ public class DoorsScriptCache {
         } else {
             String fileContents;
             try {
-                fileContents = IOUtils.toString(getClass().getClassLoader().getResourceAsStream("dxl/" + name));
+                final InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("dxl/" + name);
+                if (resourceAsStream == null) {
+                    throw new ScriptNotFoundException("Could not read script " + name + " (stream was null)");
+                }
+                fileContents = IOUtils.toString(resourceAsStream);
             } catch (final IOException e) {
                 throw new ScriptNotFoundException(e);
             }

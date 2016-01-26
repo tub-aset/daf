@@ -8,6 +8,14 @@ pragma encoding, "UTF-8"
 pragma runLim,0
 
 Module m = read(getModuleNameFromUrl("$$moduleUrl$$"),false)
-exportModuleToCSV(m, "$$file$$")
-exportModuleMetaData(m, "$$file$$.mmd", null)
-close m
+if (!null m) {
+	if (load(m, view "$$view$$")) {
+		exportModuleToCSV(m, "$$file$$")
+		exportModuleMetaData(m, "$$file$$.mmd", null)
+	} else {
+		throw("Cannot find view $$view$$ in module " name(m) ".")
+	}
+	close m
+} else {
+	throw("Cannot load module $$moduleUrl$$.")
+}

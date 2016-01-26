@@ -12,6 +12,10 @@ public interface DoorsApplication {
 
     void exportModuleToCSV(DoorsURL url, File file) throws DoorsException, IOException;
 
+    void exportModuleToCSV(String modulePath, File file, String view) throws DoorsException, IOException;
+
+    void exportModuleToCSV(DoorsURL url, File file, String view) throws DoorsException, IOException;
+
     void exportModulesToCSV(File moduleListFile, File targetFolder) throws IOException, DoorsException;
 
     void gotoObject(String modulePath, int absoluteNumber) throws DoorsException, IOException;

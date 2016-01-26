@@ -1,6 +1,7 @@
 package de.jpwinkler.libs.doorsbridge.internal;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
@@ -10,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.Dispatch;
@@ -22,6 +24,8 @@ import de.jpwinkler.libs.doorsbridge.user32.Window;
 import de.jpwinkler.libs.doorsbridge.user32.WindowManager;
 
 public class DoorsApplicationImpl implements DoorsApplication {
+
+    private static final String STANDARD_VIEW = "Standard view";
 
     private static final Logger LOGGER = Logger.getLogger(DoorsApplicationImpl.class.getName());
 
@@ -119,22 +123,34 @@ public class DoorsApplicationImpl implements DoorsApplication {
 
     @Override
     public void exportModuleToCSV(final String modulePath, final File file) throws DoorsException, IOException {
-        buildAndRunCommand(builder -> {
-            builder.addScript("utils.dxl");
-            builder.addScript("export_csv.dxl");
-            builder.addScript("export_csv_path.dxl");
-            builder.setVariable("modulePath", modulePath);
-            builder.setVariable("file", file.getAbsolutePath());
-        });
+        exportModuleToCSV(modulePath, file, STANDARD_VIEW);
     }
 
     @Override
     public void exportModuleToCSV(final DoorsURL url, final File file) throws DoorsException, IOException {
+        exportModuleToCSV(url, file, STANDARD_VIEW);
+    }
+
+    @Override
+    public void exportModuleToCSV(final DoorsURL url, final File file, final String view) throws DoorsException, IOException {
         buildAndRunCommand(builder -> {
             builder.addScript("utils.dxl");
             builder.addScript("export_csv.dxl");
             builder.addScript("export_csv_url.dxl");
             builder.setVariable("moduleUrl", url.getUrl());
+            builder.setVariable("view", view);
+            builder.setVariable("file", file.getAbsolutePath());
+        });
+    }
+
+    @Override
+    public void exportModuleToCSV(final String modulePath, final File file, final String view) throws DoorsException, IOException {
+        buildAndRunCommand(builder -> {
+            builder.addScript("utils.dxl");
+            builder.addScript("export_csv.dxl");
+            builder.addScript("export_csv_path.dxl");
+            builder.setVariable("modulePath", modulePath);
+            builder.setVariable("view", view);
             builder.setVariable("file", file.getAbsolutePath());
         });
     }
@@ -169,23 +185,28 @@ public class DoorsApplicationImpl implements DoorsApplication {
         final DoorsScriptBuilder builder = new DoorsScriptBuilder(cache);
         final boolean redirectOutput = outputStream != null;
 
+        final File exceptionFile = getTempFile();
+
+        builder.addScript("exception_handling_pre.dxl");
+        builder.setVariable("exceptionFilename", exceptionFile.getAbsolutePath());
+
         if (redirectOutput) {
-            builder.addScript("redirect_output.dxl");
+            builder.addScript("redirect_output_pre.dxl");
         }
 
         prepareScriptBuilder.accept(builder);
 
         MyTailer t = null;
         if (redirectOutput) {
-            builder.addScript("post.dxl");
+            builder.addScript("redirect_output_post.dxl");
 
-            final File file = File.createTempFile("doorsOutput", "");
+            final File outputFile = File.createTempFile("doorsOutput", "");
             // file.deleteOnExit();
-            builder.setVariable("outputRedirectFilename", file.getAbsolutePath());
-            if (!file.exists()) {
-                file.createNewFile();
+            builder.setVariable("outputRedirectFilename", outputFile.getAbsolutePath());
+            if (!outputFile.exists()) {
+                outputFile.createNewFile();
             }
-            t = MyTailer.create(file, outputStream);
+            t = MyTailer.create(outputFile, outputStream);
         }
 
         if (batchMode) {
@@ -196,6 +217,13 @@ public class DoorsApplicationImpl implements DoorsApplication {
 
         if (redirectOutput) {
             t.stop();
+        }
+
+        if (exceptionFile.exists()) {
+            final String message = IOUtils.toString(new FileInputStream(exceptionFile));
+            if (!message.isEmpty()) {
+                throw new DoorsException(message);
+            }
         }
     }
 
