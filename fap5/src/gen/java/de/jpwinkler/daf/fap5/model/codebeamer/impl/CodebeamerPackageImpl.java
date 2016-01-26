@@ -227,6 +227,15 @@ public class CodebeamerPackageImpl extends EPackageImpl implements CodebeamerPac
      * <!-- end-user-doc -->
      * @generated
      */
+    public EAttribute getCodeBeamerModel_View() {
+        return (EAttribute)codeBeamerModelEClass.getEStructuralFeatures().get(7);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public EOperation getCodeBeamerModel__GetEstimatedRemainingWork() {
         return codeBeamerModelEClass.getEOperations().get(0);
@@ -418,6 +427,7 @@ public class CodebeamerPackageImpl extends EPackageImpl implements CodebeamerPac
         createEAttribute(codeBeamerModelEClass, CODE_BEAMER_MODEL__VERSION_NUMBER);
         createEReference(codeBeamerModelEClass, CODE_BEAMER_MODEL__METRICS);
         createEAttribute(codeBeamerModelEClass, CODE_BEAMER_MODEL__PATH);
+        createEAttribute(codeBeamerModelEClass, CODE_BEAMER_MODEL__VIEW);
         createEOperation(codeBeamerModelEClass, CODE_BEAMER_MODEL___GET_ESTIMATED_REMAINING_WORK);
         createEOperation(codeBeamerModelEClass, CODE_BEAMER_MODEL___GET_ISSUE_TYPES);
         createEOperation(codeBeamerModelEClass, CODE_BEAMER_MODEL___GET_ISSUES__STRING);
@@ -485,6 +495,7 @@ public class CodebeamerPackageImpl extends EPackageImpl implements CodebeamerPac
         initEAttribute(getCodeBeamerModel_VersionNumber(), ecorePackage.getEString(), "versionNumber", null, 0, 1, CodeBeamerModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getCodeBeamerModel_Metrics(), this.getMetric(), null, "metrics", null, 0, -1, CodeBeamerModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getCodeBeamerModel_Path(), ecorePackage.getEString(), "path", null, 0, 1, CodeBeamerModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getCodeBeamerModel_View(), ecorePackage.getEString(), "view", null, 0, 1, CodeBeamerModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEOperation(getCodeBeamerModel__GetEstimatedRemainingWork(), ecorePackage.getELong(), "getEstimatedRemainingWork", 0, 1, IS_UNIQUE, IS_ORDERED);
 

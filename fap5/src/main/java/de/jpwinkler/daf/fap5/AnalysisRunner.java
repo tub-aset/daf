@@ -11,7 +11,6 @@ public class AnalysisRunner {
 
         workflowProcessor.runWorkflow(AnalysisRunner.class.getClassLoader().getResourceAsStream("default.workflow"));
 
-
     }
 
 }

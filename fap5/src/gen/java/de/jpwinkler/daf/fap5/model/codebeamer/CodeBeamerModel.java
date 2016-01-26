@@ -22,6 +22,7 @@ import de.jpwinkler.daf.dafcore.model.common.ModelObject;
  *   <li>{@link de.jpwinkler.daf.fap5.model.codebeamer.CodeBeamerModel#getVersionNumber <em>Version Number</em>}</li>
  *   <li>{@link de.jpwinkler.daf.fap5.model.codebeamer.CodeBeamerModel#getMetrics <em>Metrics</em>}</li>
  *   <li>{@link de.jpwinkler.daf.fap5.model.codebeamer.CodeBeamerModel#getPath <em>Path</em>}</li>
+ *   <li>{@link de.jpwinkler.daf.fap5.model.codebeamer.CodeBeamerModel#getView <em>View</em>}</li>
  * </ul>
  *
  * @see de.jpwinkler.daf.fap5.model.codebeamer.CodebeamerPackage#getCodeBeamerModel()
@@ -244,4 +245,30 @@ public interface CodeBeamerModel extends ModelObject {
      * @generated
      */
     void setPath(String value);
+
+    /**
+     * Returns the value of the '<em><b>View</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>View</em>' attribute isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>View</em>' attribute.
+     * @see #setView(String)
+     * @see de.jpwinkler.daf.fap5.model.codebeamer.CodebeamerPackage#getCodeBeamerModel_View()
+     * @model
+     * @generated
+     */
+    String getView();
+
+    /**
+     * Sets the value of the '{@link de.jpwinkler.daf.fap5.model.codebeamer.CodeBeamerModel#getView <em>View</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>View</em>' attribute.
+     * @see #getView()
+     * @generated
+     */
+    void setView(String value);
 } // CodeBeamerModel

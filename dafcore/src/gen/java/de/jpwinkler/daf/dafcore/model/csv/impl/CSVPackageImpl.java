@@ -214,6 +214,15 @@ public class CSVPackageImpl extends EPackageImpl implements CSVPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    public EAttribute getDoorsModule_View() {
+        return (EAttribute)doorsModuleEClass.getEStructuralFeatures().get(4);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public EOperation getDoorsModule__FindAttributeDefinition__String() {
         return doorsModuleEClass.getEOperations().get(0);
     }
@@ -561,6 +570,7 @@ public class CSVPackageImpl extends EPackageImpl implements CSVPackage {
         createEAttribute(doorsModuleEClass, DOORS_MODULE__PATH);
         createEAttribute(doorsModuleEClass, DOORS_MODULE__URL);
         createEReference(doorsModuleEClass, DOORS_MODULE__ATTRIBUTE_DEFINITIONS);
+        createEAttribute(doorsModuleEClass, DOORS_MODULE__VIEW);
         createEOperation(doorsModuleEClass, DOORS_MODULE___FIND_ATTRIBUTE_DEFINITION__STRING);
         createEOperation(doorsModuleEClass, DOORS_MODULE___FIND_OBJECT__STRING);
 
@@ -648,6 +658,7 @@ public class CSVPackageImpl extends EPackageImpl implements CSVPackage {
         initEAttribute(getDoorsModule_Path(), ecorePackage.getEString(), "path", null, 0, 1, DoorsModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getDoorsModule_Url(), ecorePackage.getEString(), "url", null, 0, 1, DoorsModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getDoorsModule_AttributeDefinitions(), this.getAttributeDefinition(), null, "attributeDefinitions", null, 0, -1, DoorsModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getDoorsModule_View(), ecorePackage.getEString(), "view", null, 0, 1, DoorsModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         EOperation op = initEOperation(getDoorsModule__FindAttributeDefinition__String(), this.getAttributeDefinition(), "findAttributeDefinition", 0, 1, IS_UNIQUE, IS_ORDERED);
         addEParameter(op, ecorePackage.getEString(), "name", 0, 1, IS_UNIQUE, IS_ORDERED);

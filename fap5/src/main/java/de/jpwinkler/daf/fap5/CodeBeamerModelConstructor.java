@@ -99,6 +99,7 @@ public class CodeBeamerModelConstructor extends RuleBasedModelConstructor {
 
         model.setName(context.getModule().getName());
         model.setPath(context.getModule().getPath());
+        model.setView(context.getModule().getView());
 
         model.setSize(calcSize(context));
 
@@ -128,6 +129,7 @@ public class CodeBeamerModelConstructor extends RuleBasedModelConstructor {
         addMetric(model, CodeBeamerConstants.METRIC_ACCEPTANCE_DELETED_REQ_COUNT, context.getMarkerCount(CodeBeamerConstants.MARKER_ACCEPTANCE_DELETED_REQ));
         addMetric(model, CodeBeamerConstants.METRIC_ACCEPTANCE_CHANGED_REQ_COUNT, context.getMarkerCount(CodeBeamerConstants.MARKER_ACCEPTANCE_CHANGED_REQ));
         addMetric(model, CodeBeamerConstants.METRIC_ACCEPTANCE_TO_CLARIFY_COUNT, context.getMarkerCount(CodeBeamerConstants.MARKER_ACCEPTANCE_TO_CLARIFY));
+        addMetric(model, CodeBeamerConstants.METRIC_ACCEPTANCE_CONFLICT_COUNT, context.getMarkerCount(CodeBeamerConstants.MARKER_ACCEPTANCE_CONFLICT));
         addMetric(model, CodeBeamerConstants.METRIC_ACCEPTANCE_PARTLY_AGREED_COUNT, context.getMarkerCount(CodeBeamerConstants.MARKER_ACCEPTANCE_PARTLY_AGREED));
         addMetric(model, CodeBeamerConstants.METRIC_ACCEPTANCE_AGREED_COUNT, context.getMarkerCount(CodeBeamerConstants.MARKER_ACCEPTANCE_AGREED));
     }

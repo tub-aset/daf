@@ -142,13 +142,22 @@ public interface CodebeamerPackage extends EPackage {
     int CODE_BEAMER_MODEL__PATH = CommonPackage.MODEL_OBJECT_FEATURE_COUNT + 6;
 
     /**
+     * The feature id for the '<em><b>View</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CODE_BEAMER_MODEL__VIEW = CommonPackage.MODEL_OBJECT_FEATURE_COUNT + 7;
+
+    /**
      * The number of structural features of the '<em>Code Beamer Model</em>' class.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-	int CODE_BEAMER_MODEL_FEATURE_COUNT = CommonPackage.MODEL_OBJECT_FEATURE_COUNT + 7;
+	int CODE_BEAMER_MODEL_FEATURE_COUNT = CommonPackage.MODEL_OBJECT_FEATURE_COUNT + 8;
 
 	/**
      * The operation id for the '<em>Get Estimated Remaining Work</em>' operation.
@@ -498,6 +507,17 @@ public interface CodebeamerPackage extends EPackage {
     EAttribute getCodeBeamerModel_Path();
 
     /**
+     * Returns the meta object for the attribute '{@link de.jpwinkler.daf.fap5.model.codebeamer.CodeBeamerModel#getView <em>View</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>View</em>'.
+     * @see de.jpwinkler.daf.fap5.model.codebeamer.CodeBeamerModel#getView()
+     * @see #getCodeBeamerModel()
+     * @generated
+     */
+    EAttribute getCodeBeamerModel_View();
+
+    /**
      * Returns the meta object for the '{@link de.jpwinkler.daf.fap5.model.codebeamer.CodeBeamerModel#getEstimatedRemainingWork() <em>Get Estimated Remaining Work</em>}' operation.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -744,6 +764,13 @@ public interface CodebeamerPackage extends EPackage {
          * @generated
          */
         EAttribute CODE_BEAMER_MODEL__PATH = eINSTANCE.getCodeBeamerModel_Path();
+        /**
+         * The meta object literal for the '<em><b>View</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute CODE_BEAMER_MODEL__VIEW = eINSTANCE.getCodeBeamerModel_View();
         /**
          * The meta object literal for the '<em><b>Get Estimated Remaining Work</b></em>' operation.
          * <!-- begin-user-doc -->

@@ -38,6 +38,7 @@ import de.jpwinkler.daf.fap5.model.codebeamer.Metric;
  *   <li>{@link de.jpwinkler.daf.fap5.model.codebeamer.impl.CodeBeamerModelImpl#getVersionNumber <em>Version Number</em>}</li>
  *   <li>{@link de.jpwinkler.daf.fap5.model.codebeamer.impl.CodeBeamerModelImpl#getMetrics <em>Metrics</em>}</li>
  *   <li>{@link de.jpwinkler.daf.fap5.model.codebeamer.impl.CodeBeamerModelImpl#getPath <em>Path</em>}</li>
+ *   <li>{@link de.jpwinkler.daf.fap5.model.codebeamer.impl.CodeBeamerModelImpl#getView <em>View</em>}</li>
  * </ul>
  *
  * @generated
@@ -156,6 +157,25 @@ public class CodeBeamerModelImpl extends ModelObjectImpl implements CodeBeamerMo
      * @ordered
      */
     protected String path = PATH_EDEFAULT;
+
+    /**
+     * The default value of the '{@link #getView() <em>View</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getView()
+     * @generated
+     * @ordered
+     */
+    protected static final String VIEW_EDEFAULT = null;
+    /**
+     * The cached value of the '{@link #getView() <em>View</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getView()
+     * @generated
+     * @ordered
+     */
+    protected String view = VIEW_EDEFAULT;
 
     /**
      * <!-- begin-user-doc -->
@@ -400,6 +420,27 @@ public class CodeBeamerModelImpl extends ModelObjectImpl implements CodeBeamerMo
      * <!-- end-user-doc -->
      * @generated
      */
+    public String getView() {
+        return view;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setView(String newView) {
+        String oldView = view;
+        view = newView;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, CodebeamerPackage.CODE_BEAMER_MODEL__VIEW, oldView, view));
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
         switch (featureID) {
@@ -433,6 +474,8 @@ public class CodeBeamerModelImpl extends ModelObjectImpl implements CodeBeamerMo
                 return getMetrics();
             case CodebeamerPackage.CODE_BEAMER_MODEL__PATH:
                 return getPath();
+            case CodebeamerPackage.CODE_BEAMER_MODEL__VIEW:
+                return getView();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -469,6 +512,9 @@ public class CodeBeamerModelImpl extends ModelObjectImpl implements CodeBeamerMo
             case CodebeamerPackage.CODE_BEAMER_MODEL__PATH:
                 setPath((String)newValue);
                 return;
+            case CodebeamerPackage.CODE_BEAMER_MODEL__VIEW:
+                setView((String)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
@@ -502,6 +548,9 @@ public class CodeBeamerModelImpl extends ModelObjectImpl implements CodeBeamerMo
             case CodebeamerPackage.CODE_BEAMER_MODEL__PATH:
                 setPath(PATH_EDEFAULT);
                 return;
+            case CodebeamerPackage.CODE_BEAMER_MODEL__VIEW:
+                setView(VIEW_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
@@ -528,6 +577,8 @@ public class CodeBeamerModelImpl extends ModelObjectImpl implements CodeBeamerMo
                 return metrics != null && !metrics.isEmpty();
             case CodebeamerPackage.CODE_BEAMER_MODEL__PATH:
                 return PATH_EDEFAULT == null ? path != null : !PATH_EDEFAULT.equals(path);
+            case CodebeamerPackage.CODE_BEAMER_MODEL__VIEW:
+                return VIEW_EDEFAULT == null ? view != null : !VIEW_EDEFAULT.equals(view);
         }
         return super.eIsSet(featureID);
     }
@@ -576,6 +627,8 @@ public class CodeBeamerModelImpl extends ModelObjectImpl implements CodeBeamerMo
         result.append(versionNumber);
         result.append(", path: ");
         result.append(path);
+        result.append(", view: ");
+        result.append(view);
         result.append(')');
         return result.toString();
     }

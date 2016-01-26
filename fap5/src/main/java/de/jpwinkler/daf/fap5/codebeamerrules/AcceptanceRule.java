@@ -28,8 +28,11 @@ public class AcceptanceRule extends AbstractRule {
         case "to clarify":
             context.addMarker(object, new Marker(CodeBeamerConstants.MARKER_ACCEPTANCE_TO_CLARIFY));
             break;
-        case "partly agreed":
+        case "partially agreed":
             context.addMarker(object, new Marker(CodeBeamerConstants.MARKER_ACCEPTANCE_PARTLY_AGREED));
+            break;
+        case "conflict":
+            context.addMarker(object, new Marker(CodeBeamerConstants.MARKER_ACCEPTANCE_CONFLICT));
             break;
         case "agreed":
             context.addMarker(object, new Marker(CodeBeamerConstants.MARKER_ACCEPTANCE_AGREED));

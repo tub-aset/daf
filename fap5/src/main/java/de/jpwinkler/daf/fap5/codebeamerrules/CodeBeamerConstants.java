@@ -58,6 +58,7 @@ public final class CodeBeamerConstants {
     public static final String METRIC_ACCEPTANCE_DELETED_REQ_COUNT = "acceptanceDeletedReq";
     public static final String METRIC_ACCEPTANCE_CHANGED_REQ_COUNT = "acceptanceChangedReq";
     public static final String METRIC_ACCEPTANCE_TO_CLARIFY_COUNT = "acceptanceToClarify";
+    public static final String METRIC_ACCEPTANCE_CONFLICT_COUNT = "acceptanceConflict";
     public static final String METRIC_ACCEPTANCE_PARTLY_AGREED_COUNT = "acceptancePartlyAgreed";
     public static final String METRIC_ACCEPTANCE_AGREED_COUNT = "acceptanceAgreed";
 
@@ -67,6 +68,7 @@ public final class CodeBeamerConstants {
     public static final String MARKER_ACCEPTANCE_TO_CLARIFY = "acceptance_to_clarify";
     public static final String MARKER_ACCEPTANCE_PARTLY_AGREED = "acceptance_partly_agreed";
     public static final String MARKER_ACCEPTANCE_AGREED = "acceptance_agreed";
+    public static final String MARKER_ACCEPTANCE_CONFLICT = "acceptance_conflict";
 
     public static final String MARKER_MATURITY_OPEN = "maturity_open";
     public static final String MARKER_MATURITY_AGREED = "maturity_agreed";

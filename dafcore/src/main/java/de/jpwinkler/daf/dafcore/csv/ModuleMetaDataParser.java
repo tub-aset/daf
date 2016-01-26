@@ -27,11 +27,14 @@ public class ModuleMetaDataParser {
             if (record.get(0).equals("Name")) {
                 module.setName(record.get(1));
             }
-            if (record.get(0).equals("url")) {
+            if (record.get(0).equals("__url__")) {
                 module.setUrl(record.get(1));
             }
-            if (record.get(0).equals("path")) {
+            if (record.get(0).equals("__path__")) {
                 module.setPath(record.get(1));
+            }
+            if (record.get(0).equals("__view__")) {
+                module.setView(record.get(1));
             }
         }
         parser.close();

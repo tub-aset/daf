@@ -17,6 +17,7 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsModule#getPath <em>Path</em>}</li>
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsModule#getUrl <em>Url</em>}</li>
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsModule#getAttributeDefinitions <em>Attribute Definitions</em>}</li>
+ *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.DoorsModule#getView <em>View</em>}</li>
  * </ul>
  *
  * @see de.jpwinkler.daf.dafcore.model.csv.CSVPackage#getDoorsModule()
@@ -117,6 +118,32 @@ public interface DoorsModule extends DoorsTreeNode {
      * @generated
      */
     EList<AttributeDefinition> getAttributeDefinitions();
+
+    /**
+     * Returns the value of the '<em><b>View</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>View</em>' attribute isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>View</em>' attribute.
+     * @see #setView(String)
+     * @see de.jpwinkler.daf.dafcore.model.csv.CSVPackage#getDoorsModule_View()
+     * @model
+     * @generated
+     */
+    String getView();
+
+    /**
+     * Sets the value of the '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsModule#getView <em>View</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>View</em>' attribute.
+     * @see #getView()
+     * @generated
+     */
+    void setView(String value);
 
     /**
      * <!-- begin-user-doc -->

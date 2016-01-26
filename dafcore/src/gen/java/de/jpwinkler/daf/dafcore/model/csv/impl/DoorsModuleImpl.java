@@ -32,6 +32,7 @@ import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.impl.DoorsModuleImpl#getPath <em>Path</em>}</li>
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.impl.DoorsModuleImpl#getUrl <em>Url</em>}</li>
  *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.impl.DoorsModuleImpl#getAttributeDefinitions <em>Attribute Definitions</em>}</li>
+ *   <li>{@link de.jpwinkler.daf.dafcore.model.csv.impl.DoorsModuleImpl#getView <em>View</em>}</li>
  * </ul>
  *
  * @generated
@@ -108,6 +109,26 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
     protected EList<AttributeDefinition> attributeDefinitions;
 
     /**
+     * The default value of the '{@link #getView() <em>View</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getView()
+     * @generated
+     * @ordered
+     */
+    protected static final String VIEW_EDEFAULT = null;
+
+    /**
+     * The cached value of the '{@link #getView() <em>View</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getView()
+     * @generated
+     * @ordered
+     */
+    protected String view = VIEW_EDEFAULT;
+
+    /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
@@ -142,12 +163,11 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
      * @generated
      */
     @Override
-    public void setName(final String newName) {
-        final String oldName = name;
+    public void setName(String newName) {
+        String oldName = name;
         name = newName;
-        if (eNotificationRequired()) {
+        if (eNotificationRequired())
             eNotify(new ENotificationImpl(this, Notification.SET, CSVPackage.DOORS_MODULE__NAME, oldName, name));
-        }
     }
 
     /**
@@ -166,12 +186,11 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
      * @generated
      */
     @Override
-    public void setPath(final String newPath) {
-        final String oldPath = path;
+    public void setPath(String newPath) {
+        String oldPath = path;
         path = newPath;
-        if (eNotificationRequired()) {
+        if (eNotificationRequired())
             eNotify(new ENotificationImpl(this, Notification.SET, CSVPackage.DOORS_MODULE__PATH, oldPath, path));
-        }
     }
 
     /**
@@ -190,12 +209,11 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
      * @generated
      */
     @Override
-    public void setUrl(final String newUrl) {
-        final String oldUrl = url;
+    public void setUrl(String newUrl) {
+        String oldUrl = url;
         url = newUrl;
-        if (eNotificationRequired()) {
+        if (eNotificationRequired())
             eNotify(new ENotificationImpl(this, Notification.SET, CSVPackage.DOORS_MODULE__URL, oldUrl, url));
-        }
     }
 
     /**
@@ -209,6 +227,27 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
             attributeDefinitions = new EObjectContainmentEList<AttributeDefinition>(AttributeDefinition.class, this, CSVPackage.DOORS_MODULE__ATTRIBUTE_DEFINITIONS);
         }
         return attributeDefinitions;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public String getView() {
+        return view;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setView(String newView) {
+        String oldView = view;
+        view = newView;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, CSVPackage.DOORS_MODULE__VIEW, oldView, view));
     }
 
     /**
@@ -244,10 +283,10 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(final InternalEObject otherEnd, final int featureID, final NotificationChain msgs) {
+    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
         switch (featureID) {
-        case CSVPackage.DOORS_MODULE__ATTRIBUTE_DEFINITIONS:
-            return ((InternalEList<?>)getAttributeDefinitions()).basicRemove(otherEnd, msgs);
+            case CSVPackage.DOORS_MODULE__ATTRIBUTE_DEFINITIONS:
+                return ((InternalEList<?>)getAttributeDefinitions()).basicRemove(otherEnd, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
     }
@@ -258,16 +297,18 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
      * @generated
      */
     @Override
-    public Object eGet(final int featureID, final boolean resolve, final boolean coreType) {
+    public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-        case CSVPackage.DOORS_MODULE__NAME:
-            return getName();
-        case CSVPackage.DOORS_MODULE__PATH:
-            return getPath();
-        case CSVPackage.DOORS_MODULE__URL:
-            return getUrl();
-        case CSVPackage.DOORS_MODULE__ATTRIBUTE_DEFINITIONS:
-            return getAttributeDefinitions();
+            case CSVPackage.DOORS_MODULE__NAME:
+                return getName();
+            case CSVPackage.DOORS_MODULE__PATH:
+                return getPath();
+            case CSVPackage.DOORS_MODULE__URL:
+                return getUrl();
+            case CSVPackage.DOORS_MODULE__ATTRIBUTE_DEFINITIONS:
+                return getAttributeDefinitions();
+            case CSVPackage.DOORS_MODULE__VIEW:
+                return getView();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -279,21 +320,24 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public void eSet(final int featureID, final Object newValue) {
+    public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-        case CSVPackage.DOORS_MODULE__NAME:
-            setName((String)newValue);
-            return;
-        case CSVPackage.DOORS_MODULE__PATH:
-            setPath((String)newValue);
-            return;
-        case CSVPackage.DOORS_MODULE__URL:
-            setUrl((String)newValue);
-            return;
-        case CSVPackage.DOORS_MODULE__ATTRIBUTE_DEFINITIONS:
-            getAttributeDefinitions().clear();
-            getAttributeDefinitions().addAll((Collection<? extends AttributeDefinition>)newValue);
-            return;
+            case CSVPackage.DOORS_MODULE__NAME:
+                setName((String)newValue);
+                return;
+            case CSVPackage.DOORS_MODULE__PATH:
+                setPath((String)newValue);
+                return;
+            case CSVPackage.DOORS_MODULE__URL:
+                setUrl((String)newValue);
+                return;
+            case CSVPackage.DOORS_MODULE__ATTRIBUTE_DEFINITIONS:
+                getAttributeDefinitions().clear();
+                getAttributeDefinitions().addAll((Collection<? extends AttributeDefinition>)newValue);
+                return;
+            case CSVPackage.DOORS_MODULE__VIEW:
+                setView((String)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
@@ -304,20 +348,23 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
      * @generated
      */
     @Override
-    public void eUnset(final int featureID) {
+    public void eUnset(int featureID) {
         switch (featureID) {
-        case CSVPackage.DOORS_MODULE__NAME:
-            setName(NAME_EDEFAULT);
-            return;
-        case CSVPackage.DOORS_MODULE__PATH:
-            setPath(PATH_EDEFAULT);
-            return;
-        case CSVPackage.DOORS_MODULE__URL:
-            setUrl(URL_EDEFAULT);
-            return;
-        case CSVPackage.DOORS_MODULE__ATTRIBUTE_DEFINITIONS:
-            getAttributeDefinitions().clear();
-            return;
+            case CSVPackage.DOORS_MODULE__NAME:
+                setName(NAME_EDEFAULT);
+                return;
+            case CSVPackage.DOORS_MODULE__PATH:
+                setPath(PATH_EDEFAULT);
+                return;
+            case CSVPackage.DOORS_MODULE__URL:
+                setUrl(URL_EDEFAULT);
+                return;
+            case CSVPackage.DOORS_MODULE__ATTRIBUTE_DEFINITIONS:
+                getAttributeDefinitions().clear();
+                return;
+            case CSVPackage.DOORS_MODULE__VIEW:
+                setView(VIEW_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
@@ -328,16 +375,18 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
      * @generated
      */
     @Override
-    public boolean eIsSet(final int featureID) {
+    public boolean eIsSet(int featureID) {
         switch (featureID) {
-        case CSVPackage.DOORS_MODULE__NAME:
-            return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-        case CSVPackage.DOORS_MODULE__PATH:
-            return PATH_EDEFAULT == null ? path != null : !PATH_EDEFAULT.equals(path);
-        case CSVPackage.DOORS_MODULE__URL:
-            return URL_EDEFAULT == null ? url != null : !URL_EDEFAULT.equals(url);
-        case CSVPackage.DOORS_MODULE__ATTRIBUTE_DEFINITIONS:
-            return attributeDefinitions != null && !attributeDefinitions.isEmpty();
+            case CSVPackage.DOORS_MODULE__NAME:
+                return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+            case CSVPackage.DOORS_MODULE__PATH:
+                return PATH_EDEFAULT == null ? path != null : !PATH_EDEFAULT.equals(path);
+            case CSVPackage.DOORS_MODULE__URL:
+                return URL_EDEFAULT == null ? url != null : !URL_EDEFAULT.equals(url);
+            case CSVPackage.DOORS_MODULE__ATTRIBUTE_DEFINITIONS:
+                return attributeDefinitions != null && !attributeDefinitions.isEmpty();
+            case CSVPackage.DOORS_MODULE__VIEW:
+                return VIEW_EDEFAULT == null ? view != null : !VIEW_EDEFAULT.equals(view);
         }
         return super.eIsSet(featureID);
     }
@@ -348,12 +397,12 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
      * @generated
      */
     @Override
-    public Object eInvoke(final int operationID, final EList<?> arguments) throws InvocationTargetException {
+    public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
         switch (operationID) {
-        case CSVPackage.DOORS_MODULE___FIND_ATTRIBUTE_DEFINITION__STRING:
-            return findAttributeDefinition((String)arguments.get(0));
-        case CSVPackage.DOORS_MODULE___FIND_OBJECT__STRING:
-            return findObject((String)arguments.get(0));
+            case CSVPackage.DOORS_MODULE___FIND_ATTRIBUTE_DEFINITION__STRING:
+                return findAttributeDefinition((String)arguments.get(0));
+            case CSVPackage.DOORS_MODULE___FIND_OBJECT__STRING:
+                return findObject((String)arguments.get(0));
         }
         return super.eInvoke(operationID, arguments);
     }

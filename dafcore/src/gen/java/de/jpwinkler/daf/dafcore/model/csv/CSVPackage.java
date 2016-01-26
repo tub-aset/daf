@@ -216,13 +216,22 @@ public interface CSVPackage extends EPackage {
     int DOORS_MODULE__ATTRIBUTE_DEFINITIONS = DOORS_TREE_NODE_FEATURE_COUNT + 3;
 
     /**
+     * The feature id for the '<em><b>View</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DOORS_MODULE__VIEW = DOORS_TREE_NODE_FEATURE_COUNT + 4;
+
+    /**
      * The number of structural features of the '<em>Doors Module</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DOORS_MODULE_FEATURE_COUNT = DOORS_TREE_NODE_FEATURE_COUNT + 4;
+    int DOORS_MODULE_FEATURE_COUNT = DOORS_TREE_NODE_FEATURE_COUNT + 5;
 
     /**
      * The operation id for the '<em>Accept</em>' operation.
@@ -727,6 +736,17 @@ public interface CSVPackage extends EPackage {
     EReference getDoorsModule_AttributeDefinitions();
 
     /**
+     * Returns the meta object for the attribute '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsModule#getView <em>View</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>View</em>'.
+     * @see de.jpwinkler.daf.dafcore.model.csv.DoorsModule#getView()
+     * @see #getDoorsModule()
+     * @generated
+     */
+    EAttribute getDoorsModule_View();
+
+    /**
      * Returns the meta object for the '{@link de.jpwinkler.daf.dafcore.model.csv.DoorsModule#findAttributeDefinition(java.lang.String) <em>Find Attribute Definition</em>}' operation.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1144,6 +1164,14 @@ public interface CSVPackage extends EPackage {
          * @generated
          */
         EReference DOORS_MODULE__ATTRIBUTE_DEFINITIONS = eINSTANCE.getDoorsModule_AttributeDefinitions();
+
+        /**
+         * The meta object literal for the '<em><b>View</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute DOORS_MODULE__VIEW = eINSTANCE.getDoorsModule_View();
 
         /**
          * The meta object literal for the '<em><b>Find Attribute Definition</b></em>' operation.
