@@ -43,6 +43,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -106,19 +107,24 @@ public class CSVEditorController {
     CheckBox preprocessorEnableCheckBox;
 
     @FXML
+    ToggleButton filterExpressionToggleButton;
+
+    private ChangeListener<TreeItem<OutlineTreeItem>> outlineListener;
+
+    @FXML
     public void initialize() {
         chooser.setInitialDirectory(new File("C:/WORK/DOORS"));
         chooser.getExtensionFilters().add(new ExtensionFilter("CSV", "*.csv"));
         filterTextField.textProperty().addListener((ChangeListener<String>) (observable, oldValue, newValue) -> {
             final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
             if (selectedTab != null) {
-                tabControllers.get(selectedTab).updateFilter(newValue, includeChildrenCheckbox.isSelected());
+                tabControllers.get(selectedTab).updateFilter(newValue, includeChildrenCheckbox.isSelected(), filterExpressionToggleButton.isSelected());
             }
         });
         includeChildrenCheckbox.selectedProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
             final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
             if (selectedTab != null) {
-                tabControllers.get(selectedTab).updateFilter(filterTextField.getText(), newValue);
+                tabControllers.get(selectedTab).updateFilter(filterTextField.getText(), newValue, filterExpressionToggleButton.isSelected());
             }
         });
 
@@ -134,7 +140,7 @@ public class CSVEditorController {
             }
         });
 
-        outlineTreeView.getSelectionModel().selectedItemProperty().addListener((ChangeListener<TreeItem<OutlineTreeItem>>) (observable, oldValue, newValue) -> {
+        outlineListener = (ChangeListener<TreeItem<OutlineTreeItem>>) (observable, oldValue, newValue) -> {
             final DoorsTreeNode treeNode = newValue.getValue().getTreeNode();
             if (treeNode instanceof DoorsObject) {
                 final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
@@ -142,7 +148,9 @@ public class CSVEditorController {
                     tabControllers.get(selectedTab).selectObject((DoorsObject) treeNode);
                 }
             }
-        });
+        };
+
+        outlineTreeView.getSelectionModel().selectedItemProperty().addListener(outlineListener);
 
         for (final SupportedAlgorithm algorithm : SUPPORTED_ALGORITHMS) {
             final RadioButton radioButton = new RadioButton(algorithm.getName());
@@ -508,10 +516,23 @@ public class CSVEditorController {
     }
 
     @FXML
-    public void preprocessorApplyClicked(final ActionEvent event) {
+    public void preprocessorUpdateClicked(final ActionEvent event) {
         preprocessor.setProgram(PatternProgram.compile(preprocessorTextArea.getText()));
         for (final CSVEditorTabController tabController : tabControllers.values()) {
             tabController.updateGui(UpdateAction.UPDATE_CONTENT_VIEW);
+        }
+    }
+
+    @FXML
+    public void applyPreprocessingClicked(final ActionEvent event) {
+        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+        if (selectedTab != null) {
+            tabControllers.get(selectedTab).applyPreprocessing();
+            preprocessorEnableCheckBox.setSelected(false);
+            preprocessor.setEnabled(false);
+            for (final CSVEditorTabController tabController : tabControllers.values()) {
+                tabController.updateGui(UpdateAction.UPDATE_CONTENT_VIEW);
+            }
         }
     }
 
@@ -520,6 +541,24 @@ public class CSVEditorController {
         preprocessor.setEnabled(preprocessorEnableCheckBox.isSelected());
         for (final CSVEditorTabController tabController : tabControllers.values()) {
             tabController.updateGui(UpdateAction.UPDATE_CONTENT_VIEW);
+        }
+    }
+
+    public void objectSelected(final DoorsObject newValue) {
+        traverseTreeItem(outlineTreeView.getRoot(), item -> {
+            if (item.getValue().getTreeNode().equals(newValue)) {
+                outlineTreeView.getSelectionModel().selectedItemProperty().removeListener(outlineListener);
+                outlineTreeView.getSelectionModel().select(item);
+                outlineTreeView.getSelectionModel().selectedItemProperty().addListener(outlineListener);
+            }
+        });
+    }
+
+    @FXML
+    public void filterExpressionToggleButtonClicked() {
+        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+        if (selectedTab != null) {
+            tabControllers.get(selectedTab).updateFilter(filterTextField.getText(), includeChildrenCheckbox.isSelected(), filterExpressionToggleButton.isSelected());
         }
     }
 }

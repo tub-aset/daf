@@ -121,6 +121,7 @@
                      <items>
                         <CheckBox fx:id="includeChildrenCheckbox" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" text="Include children" />
                         <TextField fx:id="filterTextField" nodeOrientation="LEFT_TO_RIGHT" prefWidth="250.0" promptText="Quick Filter" />
+                        <ToggleButton fx:id="filterExpressionToggleButton" mnemonicParsing="false" onAction="#filterExpressionToggleButtonClicked" text="e^x" />
                      </items>
                   </ToolBar>
                </right>
@@ -209,7 +210,8 @@
                                     <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                                       <items>
                                           <CheckBox fx:id="preprocessorEnableCheckBox" mnemonicParsing="false" onAction="#preprocessorEnableClicked" text="Enable Preprocessor" />
-                                        <Button mnemonicParsing="false" onAction="#preprocessorApplyClicked" text="Apply Changes" />
+                                        <Button mnemonicParsing="false" onAction="#preprocessorUpdateClicked" text="Update" />
+                                          <Button mnemonicParsing="false" onAction="#applyPreprocessingClicked" text="Apply Preprocessing" />
                                       </items>
                                     </ToolBar>
                                  </top>

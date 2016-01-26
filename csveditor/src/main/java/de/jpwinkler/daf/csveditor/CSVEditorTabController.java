@@ -12,6 +12,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import de.jpwinkler.daf.csveditor.commands.AbstractCommand;
+import de.jpwinkler.daf.csveditor.commands.AddColumnCommand;
+import de.jpwinkler.daf.csveditor.commands.ApplyPreprocessingCommand;
 import de.jpwinkler.daf.csveditor.commands.CopyObjectsAfterCommand;
 import de.jpwinkler.daf.csveditor.commands.CopyObjectsBelowCommand;
 import de.jpwinkler.daf.csveditor.commands.DeleteObjectCommand;
@@ -28,6 +30,7 @@ import de.jpwinkler.daf.csveditor.commands.UnwrapChildrenCommand;
 import de.jpwinkler.daf.csveditor.commands.UpdateAction;
 import de.jpwinkler.daf.csveditor.filter.CascadingFilter;
 import de.jpwinkler.daf.csveditor.filter.DoorsObjectFilter;
+import de.jpwinkler.daf.csveditor.filter.ObjectTextAndHeadingFilter;
 import de.jpwinkler.daf.csveditor.util.ColumnDefinition;
 import de.jpwinkler.daf.csveditor.util.ColumnType;
 import de.jpwinkler.daf.csveditor.util.CommandStack;
@@ -45,6 +48,7 @@ import de.jpwinkler.daf.dataprocessing.preprocessing.ObjectTextPreprocessor;
 import de.jpwinkler.daf.documenttagging.TaggedDocument;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -72,7 +76,7 @@ public class CSVEditorTabController {
     private static final Logger LOGGER = Logger.getLogger(CSVEditorTabController.class.getName());
 
     private static final String MAIN_COLUMN = "Object Heading & Object Text";
-    private static final List<String> WANTED_ATTRIBUTES = Arrays.asList("Object Identifier", "SourceID", "FO_Object_Type", MAIN_COLUMN, "Object Type", "pod_tag", "pod_tags", "ASIL", "Maturity", "Edit Type", "Relevance", "Potential Verification Method");
+    private static final List<String> WANTED_ATTRIBUTES = Arrays.asList("SourceID", "FO_Object_Type", MAIN_COLUMN, "Object Type");
 
     private Stage primaryStage;
     private CSVEditorController csvEditorController;
@@ -95,6 +99,8 @@ public class CSVEditorTabController {
     @FXML
     public void initialize() {
         contentTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+        contentTableView.getSelectionModel().selectedItemProperty().addListener((ChangeListener<DoorsObject>) (observable, oldValue, newValue) -> csvEditorController.objectSelected(newValue));
     }
 
     public DoorsModule getModule() {
@@ -272,10 +278,7 @@ public class CSVEditorTabController {
             if (module.findAttributeDefinition(result.get()) != null) {
                 new Alert(AlertType.ERROR, "Attribute already exists.", ButtonType.OK).show();
             } else {
-                final AttributeDefinition ad = CSVFactory.eINSTANCE.createAttributeDefinition();
-                ad.setName(result.get());
-                module.getAttributeDefinitions().add(ad);
-                updateView();
+                executeCommand(new AddColumnCommand(module, viewModel, result.get()));
             }
         }
     }
@@ -406,8 +409,9 @@ public class CSVEditorTabController {
         return commandStack.isDirty();
     }
 
-    public void updateFilter(final String text, final boolean includeChildren) {
-        final DoorsObjectFilter filter = DoorsObjectFilter.compile(text);
+    public void updateFilter(final String text, final boolean includeChildren, final boolean isExpression) {
+
+        final DoorsObjectFilter filter = isExpression ? DoorsObjectFilter.compile(text) : new ObjectTextAndHeadingFilter(text, false, false);
         if (includeChildren) {
             viewModel.setFilter(new CascadingFilter(filter));
         } else {
@@ -487,6 +491,10 @@ public class CSVEditorTabController {
     public void selectObject(final DoorsObject object) {
         contentTableView.getSelectionModel().select(object);
         contentTableView.scrollTo(object);
+    }
+
+    public void applyPreprocessing() {
+        executeCommand(new ApplyPreprocessingCommand(module, preprocessor));
     }
 
 }

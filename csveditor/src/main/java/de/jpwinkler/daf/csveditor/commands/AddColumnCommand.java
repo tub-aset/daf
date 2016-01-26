@@ -1,49 +1,59 @@
 package de.jpwinkler.daf.csveditor.commands;
 
+import de.jpwinkler.daf.csveditor.util.ColumnDefinition;
+import de.jpwinkler.daf.csveditor.util.ColumnType;
+import de.jpwinkler.daf.csveditor.util.ViewModel;
+import de.jpwinkler.daf.dafcore.model.csv.AttributeDefinition;
+import de.jpwinkler.daf.dafcore.model.csv.CSVFactory;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 
 public class AddColumnCommand extends AbstractCommand {
 
     private final String newColumnName;
+    private final ViewModel viewModel;
 
-    public AddColumnCommand(final DoorsModule module, final String newColumnName) {
+    private AttributeDefinition attributeDefinition;
+    private ColumnDefinition columnDefinition;
+
+    public AddColumnCommand(final DoorsModule module, final ViewModel viewModel, final String newColumnName) {
         super(module);
+        this.viewModel = viewModel;
         this.newColumnName = newColumnName;
     }
 
     @Override
     public String getName() {
-        return "";
+        return "Add Column";
     }
 
     @Override
     public void apply() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException();
+        attributeDefinition = CSVFactory.eINSTANCE.createAttributeDefinition();
+        attributeDefinition.setName(newColumnName);
+        columnDefinition = new ColumnDefinition(ColumnType.ATTRIBUTE_COLUMN, newColumnName, newColumnName, 50, true);
+        redo();
     }
 
     @Override
     public void undo() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException();
+        viewModel.getDisplayedColumns().remove(columnDefinition);
+        getModule().getAttributeDefinitions().remove(attributeDefinition);
     }
 
     @Override
     public void redo() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException();
+        getModule().getAttributeDefinitions().add(attributeDefinition);
+        viewModel.getDisplayedColumns().add(columnDefinition);
     }
 
     @Override
     public boolean isApplicable() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException();
+        return true;
     }
 
     @Override
     public UpdateAction[] getUpdateActions() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException();
+        return new UpdateAction[] { UpdateAction.UPDATE_COLUMNS };
     }
 
 }

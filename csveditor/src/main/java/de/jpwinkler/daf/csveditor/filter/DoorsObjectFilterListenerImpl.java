@@ -32,9 +32,9 @@ public class DoorsObjectFilterListenerImpl extends DoorsObjectFilterBaseListener
     @Override
     public void exitAttributeExpression(final AttributeExpressionContext ctx) {
         if (ctx.attributeName != null) {
-            filterStack.push(new AttributeFilter(unescapeString(ctx.attributeName.getText()), unescapeString(ctx.attributeValue.getText()), false, true));
+            filterStack.push(new AttributeFilter(unescapeString(ctx.attributeName.getText()), unescapeString(ctx.attributeValue.getText()), false, false));
         } else {
-            filterStack.push(new ObjectTextAndHeadingFilter(unescapeString(ctx.attributeValue.getText()), false, true));
+            filterStack.push(new ObjectTextAndHeadingFilter(unescapeString(ctx.attributeValue.getText()), false, false));
         }
     }
 
