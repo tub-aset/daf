@@ -107,21 +107,23 @@ public class UpdateExcelOp extends AbstractStepImpl implements ModelOperationImp
                         row.updatePercent(COLUMN_INBOX_ACCEPTANCE_AGREED, (double) inboxTargetModel.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_AGREED_COUNT) / reqCount);
                     }
 
-                    final Map<String, CodeBeamerModel> verifiedTargetModels = models.get(row.get(COLUMN_TARGET_PATH).replace("/Inbox/", "/Verified/"), row.get(COLUMN_TARGET_MODULE));
-                    row.update(COLUMN_VERIFIED_MODULE_EXISTS, verifiedTargetModels != null ? "Ja" : "Nein");
-                    if (verifiedTargetModels != null && row.hasColumn(COLUMN_VERIFIED_VIEW)) {
-                        final String[] views = row.get(COLUMN_VERIFIED_VIEW).split("\n");
+                    if (row.get(COLUMN_TARGET_PATH).contains("/Inbox/")) {
 
-                        row.update(COLUMN_VERIFIED_REQ_COUNT, manyInts(views, verifiedTargetModels, m -> m.getIntMetric(CodeBeamerConstants.METRIC_REQUIREMENT_COUNT)));
+                        final Map<String, CodeBeamerModel> verifiedTargetModels = models.get(row.get(COLUMN_TARGET_PATH).replace("/Inbox/", "/Verified/"), row.get(COLUMN_TARGET_MODULE));
+                        row.update(COLUMN_VERIFIED_MODULE_EXISTS, verifiedTargetModels != null ? "Ja" : "Nein");
+                        if (verifiedTargetModels != null && row.hasColumn(COLUMN_VERIFIED_VIEW)) {
+                            final String[] views = row.get(COLUMN_VERIFIED_VIEW).split("\n");
 
-                        row.update(COLUMN_VERIFIED_ACCEPTANCE_EMPTY, manyPercent(views, verifiedTargetModels, m -> (double) m.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_NONE_COUNT)));
-                        row.update(COLUMN_VERIFIED_ACCEPTANCE_DELETED, manyPercent(views, verifiedTargetModels, m -> (double) m.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_DELETED_REQ_COUNT)));
-                        row.update(COLUMN_VERIFIED_ACCEPTANCE_CHANGED, manyPercent(views, verifiedTargetModels, m -> (double) m.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_CHANGED_REQ_COUNT)));
-                        row.update(COLUMN_VERIFIED_ACCEPTANCE_TO_CLARIFY, manyPercent(views, verifiedTargetModels, m -> (double) m.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_TO_CLARIFY_COUNT)));
-                        row.update(COLUMN_VERIFIED_ACCEPTANCE_CONFLICT, manyPercent(views, verifiedTargetModels, m -> (double) m.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_CONFLICT_COUNT)));
-                        row.update(COLUMN_VERIFIED_ACCEPTANCE_PARTLY_AGREED, manyPercent(views, verifiedTargetModels, m -> (double) m.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_PARTLY_AGREED_COUNT)));
-                        row.update(COLUMN_VERIFIED_ACCEPTANCE_AGREED, manyPercent(views, verifiedTargetModels, m -> (double) m.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_AGREED_COUNT)));
+                            row.update(COLUMN_VERIFIED_REQ_COUNT, manyInts(views, verifiedTargetModels, m -> m.getIntMetric(CodeBeamerConstants.METRIC_REQUIREMENT_COUNT)));
 
+                            row.update(COLUMN_VERIFIED_ACCEPTANCE_EMPTY, manyPercent(views, verifiedTargetModels, m -> (double) m.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_NONE_COUNT)));
+                            row.update(COLUMN_VERIFIED_ACCEPTANCE_DELETED, manyPercent(views, verifiedTargetModels, m -> (double) m.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_DELETED_REQ_COUNT)));
+                            row.update(COLUMN_VERIFIED_ACCEPTANCE_CHANGED, manyPercent(views, verifiedTargetModels, m -> (double) m.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_CHANGED_REQ_COUNT)));
+                            row.update(COLUMN_VERIFIED_ACCEPTANCE_TO_CLARIFY, manyPercent(views, verifiedTargetModels, m -> (double) m.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_TO_CLARIFY_COUNT)));
+                            row.update(COLUMN_VERIFIED_ACCEPTANCE_CONFLICT, manyPercent(views, verifiedTargetModels, m -> (double) m.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_CONFLICT_COUNT)));
+                            row.update(COLUMN_VERIFIED_ACCEPTANCE_PARTLY_AGREED, manyPercent(views, verifiedTargetModels, m -> (double) m.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_PARTLY_AGREED_COUNT)));
+                            row.update(COLUMN_VERIFIED_ACCEPTANCE_AGREED, manyPercent(views, verifiedTargetModels, m -> (double) m.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_AGREED_COUNT)));
+                        }
                     }
 
                 }

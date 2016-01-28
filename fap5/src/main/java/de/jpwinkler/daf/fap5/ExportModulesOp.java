@@ -32,11 +32,7 @@ public class ExportModulesOp extends AbstractStepImpl implements ModelOperationI
         }
 
         try {
-            Fap5ProgressTrackingDocument progressTrackingDocument;
-            progressTrackingDocument = new Fap5ProgressTrackingDocument(sourceExcelFile);
-            // app =
-            // DoorsApplicationFactory.getBatchModeDoorsApplication(getStringVariable("database"),
-            // getStringVariable("username"), getStringVariable("password"));
+            final Fap5ProgressTrackingDocument progressTrackingDocument = new Fap5ProgressTrackingDocument(sourceExcelFile);
             app = DoorsApplicationFactory.getDoorsApplication();
 
             app.redirectOutput(new LogOutputStream(LOGGER, Level.INFO));
@@ -48,7 +44,6 @@ public class ExportModulesOp extends AbstractStepImpl implements ModelOperationI
                     final String targetPath = row.get(Fap5ProgressTrackingDocument.COLUMN_TARGET_PATH);
                     final String targetModule = row.get(Fap5ProgressTrackingDocument.COLUMN_TARGET_MODULE);
                     final String inboxView = row.get(Fap5ProgressTrackingDocument.COLUMN_INBOX_VIEW);
-                    final String[] verifiedViews = row.hasColumn(Fap5ProgressTrackingDocument.COLUMN_VERIFIED_VIEW) ? row.get(Fap5ProgressTrackingDocument.COLUMN_VERIFIED_VIEW).split("\n") : null;
 
                     try {
                         export(targetPath, targetModule, inboxView);
@@ -56,18 +51,22 @@ public class ExportModulesOp extends AbstractStepImpl implements ModelOperationI
                         LOGGER.warning(e.getMessage());
                     }
 
-                    final String targetVerifiedPath = targetPath.replace("/Inbox/", "/Verified/");
+                    if (targetPath.contains("/Inbox/")) {
 
-                    try {
-                        if (verifiedViews != null) {
-                            for (final String verifiedView : verifiedViews) {
-                                export(targetVerifiedPath, targetModule, verifiedView);
+                        final String[] verifiedViews = row.hasColumn(Fap5ProgressTrackingDocument.COLUMN_VERIFIED_VIEW) ? row.get(Fap5ProgressTrackingDocument.COLUMN_VERIFIED_VIEW).split("\n") : null;
+                        final String targetVerifiedPath = targetPath.replace("/Inbox/", "/Verified/");
+
+                        try {
+                            if (verifiedViews != null) {
+                                for (final String verifiedView : verifiedViews) {
+                                    export(targetVerifiedPath, targetModule, verifiedView);
+                                }
+                            } else {
+                                export(targetVerifiedPath, targetModule, null);
                             }
-                        } else {
-                            export(targetVerifiedPath, targetModule, null);
+                        } catch (final DoorsException e) {
+                            LOGGER.warning(e.getMessage());
                         }
-                    } catch (final DoorsException e) {
-                        LOGGER.warning(e.getMessage());
                     }
                 }
             }

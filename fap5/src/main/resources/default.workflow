@@ -1,13 +1,9 @@
 target UpdateExcelOp
 
-var database = "44055@doors10.rd.corpintra.net"
-var username = "jonwink"
-var password = ""
-var exportFolder = "temp"
-var moduleList = "modulelists/fap5-2.txt"
+var exportFolder = "temp/${system.date}"
 
-var sourceExcelFile = "C:\\Users\\jonwink\\Desktop\\FAP5_mpanagi_SLH_KLH_progress_tracking.xlsx"
-var targetExcelFile = "C:\\Users\\jonwink\\Desktop\\FAP5_mpanagi_SLH_KLH_progress_tracking_modified.xlsx"
+var sourceExcelFile = "I:\\E-I\\FAP5\\4_Lastenhefte\\4-3_Lastenhefte\\Allgemein\\FAP5_mpanagi_SLH_KLH_progress_tracking.xlsx"
+var targetExcelFile = "I:\\E-I\\FAP5\\4_Lastenhefte\\4-3_Lastenhefte\\Allgemein\\FAP5_mpanagi_SLH_KLH_progress_tracking_modified.xlsx"
 
 moduleset CodeBeamer {
 	csvfolder "${exportFolder}"
@@ -18,6 +14,7 @@ op ExportModulesOp {
 }
 
 constructor CodeBeamerModelConstructor {
+	//dependency ExportModulesOp export
 	source CodeBeamer
 	implementation "de.jpwinkler.daf.fap5.CodeBeamerModelConstructor"
 }

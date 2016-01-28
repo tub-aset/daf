@@ -62,10 +62,11 @@ public class Fap5ProgressTrackingDocument {
     public static final int COLUMN_VERIFIED_ACCEPTANCE_CONFLICT = 34;
 
     public static final int COLUMN_INBOX_ACCEPTANCE_PARTLY_AGREED = 35;
+    public static final int COLUMN_INBOX_LINK = 36;
+
+    public static final int COLUMN_VERIFIED_LINK = 37;
 
     private final Map<Integer, Integer> columnIndexMap = new HashMap<>();
-
-    private final short percentFormat;
 
     private final Workbook workbook;
 
@@ -74,7 +75,6 @@ public class Fap5ProgressTrackingDocument {
     public Fap5ProgressTrackingDocument(final String file) throws FileNotFoundException, IOException {
 
         workbook = new XSSFWorkbook(new FileInputStream(file));
-        percentFormat = workbook.createDataFormat().getFormat("0 %");
         sheet = workbook.getSheet("FAP5");
 
         columnIndexMap.put(COLUMN_SOURCE_PATH, findRow("Doors-Zielstruktur", "Allgemein", "Quell-Pfad"));
@@ -95,6 +95,7 @@ public class Fap5ProgressTrackingDocument {
         columnIndexMap.put(COLUMN_TARGET_PATH, findRow("Inbox", "Allgemein", "Ziel-Pfad"));
         columnIndexMap.put(COLUMN_TARGET_MODULE, findRow("Inbox", "Allgemein", "Ziel-Modulname"));
 
+        columnIndexMap.put(COLUMN_INBOX_LINK, findRow("Inbox", "Allgemein", "Link"));
         columnIndexMap.put(COLUMN_INBOX_MODULE_EXISTS, findRow("Inbox", "Allgemein", "Modul existiert"));
         columnIndexMap.put(COLUMN_INBOX_VIEW, findRow("Inbox", "Allgemein", "View"));
         columnIndexMap.put(COLUMN_INBOX_REQ_COUNT, findRow("Inbox", "Allgemein", "Anzahl"));
@@ -106,6 +107,7 @@ public class Fap5ProgressTrackingDocument {
         columnIndexMap.put(COLUMN_INBOX_ACCEPTANCE_PARTLY_AGREED, findRow("Inbox", "Acceptance Status", "partly agreed"));
         columnIndexMap.put(COLUMN_INBOX_ACCEPTANCE_AGREED, findRow("Inbox", "Acceptance Status", "partly agreed") + 1);
 
+        columnIndexMap.put(COLUMN_VERIFIED_LINK, findRow("Verified", "Allgemein", "Link"));
         columnIndexMap.put(COLUMN_VERIFIED_MODULE_EXISTS, findRow("Verified", "Allgemein", "Modul existiert"));
         columnIndexMap.put(COLUMN_VERIFIED_VIEW, findRow("Verified", "Allgemein", "View"));
         columnIndexMap.put(COLUMN_VERIFIED_REQ_COUNT, findRow("Verified", "Allgemein", "Anzahl"));
@@ -151,7 +153,7 @@ public class Fap5ProgressTrackingDocument {
         final List<Fap5ProgressTrackingRow> result = new ArrayList<>();
         for (final Row row : sheet) {
             if (row.getRowNum() >= FIRST_ROW) {
-                result.add(new Fap5ProgressTrackingRow(row, columnIndexMap, percentFormat));
+                result.add(new Fap5ProgressTrackingRow(row, columnIndexMap));
             }
         }
         return result;
