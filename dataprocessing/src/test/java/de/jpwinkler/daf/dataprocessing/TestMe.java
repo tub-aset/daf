@@ -5,29 +5,25 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.StreamSupport;
 import java.util.zip.GZIPOutputStream;
 
-import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.jpwinkler.daf.dataprocessing.datasetgenerators.ARFFDatasetGenerator;
 import de.jpwinkler.daf.dataprocessing.datasetgenerators.DatasetGenerator;
 import de.jpwinkler.daf.dataprocessing.datasetgenerators.FilteringLabelGenerator;
 import de.jpwinkler.daf.dataprocessing.datasetgenerators.LabelGenerator;
+import de.jpwinkler.daf.dataprocessing.datasetgenerators.SimpleLabelGenerator;
 import de.jpwinkler.daf.dataprocessing.datasetgenerators.SimpleTensorFlowDatasetGenerator;
 import de.jpwinkler.daf.dataprocessing.featuregeneration.FeatureVectorGenerator;
 import de.jpwinkler.daf.dataprocessing.featuregeneration.ParseTreeFeatureGenerator;
-import de.jpwinkler.daf.dataprocessing.preprocessing.ObjectTextPreprocessor;
 import de.jpwinkler.daf.dataprocessing.streaming.SimpleDoorsObject;
 import de.jpwinkler.daf.dataprocessing.streaming.SimpleFolderCSVSpliterator;
-import de.jpwinkler.libs.stringprocessing.patternprogram.PatternProgram;
 
 public class TestMe {
 
@@ -42,7 +38,7 @@ public class TestMe {
         // .build();
         featureVectorGenerator = new FeatureVectorGenerator<>(0);
         // featureVectorGenerator.addFeatureGenerator(new
-        // WordFeatureGenerator(4, 2));
+        // WordFeatureGenerator(1, 2));
         featureVectorGenerator.addFeatureGenerator(new ParseTreeFeatureGenerator());
     }
 
@@ -78,53 +74,34 @@ public class TestMe {
     }
 
     private Iterator<SimpleDoorsObject> getIterator() throws IOException {
-        return StreamSupport.stream(new SimpleFolderCSVSpliterator(new File("C:\\WORK\\DOORS\\export\\body\\comp\\de-sort\\6.2.3"), true), false).filter(o -> !o.getAttribute("SourceID").startsWith("STLH")).iterator();
+        return StreamSupport.stream(new SimpleFolderCSVSpliterator(new File("C:\\WORK\\DOORS\\export\\body\\comp\\de-test\\reqinf"), true), false).iterator();
     }
 
-    @Test
+    // @Test
     public void test4() throws IOException {
-        final List<String> allowedLabels = Arrays.asList("information", "requirement");
-        final LabelGenerator<SimpleDoorsObject> labelGenerator = new FilteringLabelGenerator("Object Type", allowedLabels);
-        final SimpleTensorFlowDatasetGenerator datasetGenerator = new SimpleTensorFlowDatasetGenerator(labelGenerator, true);
+        final LabelGenerator<SimpleDoorsObject> labelGenerator = new SimpleLabelGenerator("Object Type");
+        final DatasetGenerator<SimpleDoorsObject, String> datasetGenerator = new ARFFDatasetGenerator(labelGenerator, true);
 
         datasetGenerator.init(getIterator(), featureVectorGenerator);
 
-        featureVectorGenerator.setCutoff(50);
+        featureVectorGenerator.setCutoff(10);
         featureVectorGenerator.buildFeatureIndexMap();
         featureVectorGenerator.printFeatureStatistics();
-        try (OutputStream stream = new BufferedOutputStream(new FileOutputStream("dong.tf"))) {
+        try (OutputStream stream = new BufferedOutputStream(new FileOutputStream("reqinf.arff"))) {
             datasetGenerator.generateDataset(getIterator(), stream);
         }
     }
 
-    // @Test
-    public void test3() throws IOException {
+    @Test
+    public void test5() throws IOException {
 
-        final ObjectTextPreprocessor objectTextPreprocessor = new ObjectTextPreprocessor(PatternProgram.compile(FileUtils.readFileToString(new File("preprocess.pp"))));
+        final ParseTreeFeatureGenerator featureGenerator = new ParseTreeFeatureGenerator();
+        final SimpleDoorsObject object = new SimpleDoorsObject();
+        object.setObjectText("Lieferungen oder Leistungen des Auftragnehmers dürfen FOSS nur nach Zustimmung durch den Auftraggeber und unter Einhaltung des in X beschriebenen Verfahrens enthalten.");
 
-        // objectTextPreprocessor.getPreprocessingActions().add(new
-        // PreprocessingAction(, new ConcatReplaceAction(, "")));
-
-        final PrintWriter pr = new PrintWriter(new FileOutputStream("r.txt"));
-
-        final Iterator<SimpleDoorsObject> stream = getIterator();
-
-        final Set<Integer> objectHashCodes = new HashSet<>();
-
-        while (stream.hasNext()) {
-            final SimpleDoorsObject o = stream.next();
-
-            final String preprocessedText = objectTextPreprocessor.preprocessTextToString(o.getObjectText());
-            if (!preprocessedText.trim().isEmpty() && !objectHashCodes.contains(preprocessedText.hashCode())) {
-                // pr.write("----- " + o.getObjectIdentifier() + " -----\n");
-                // pr.write(o.getObjectText() + "\n>>>>>\n");
-                pr.write(preprocessedText + "\n");
-                objectHashCodes.add(preprocessedText.hashCode());
-            }
+        for (final String feature : featureGenerator.getFeatures(object)) {
+            System.out.println(feature);
         }
-
-        pr.close();
-
     }
 
 }
