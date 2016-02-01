@@ -14,6 +14,8 @@ import java.util.zip.GZIPOutputStream;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.jpwinkler.daf.dafcore.model.csv.CSVFactory;
+import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dataprocessing.datasetgenerators.ARFFDatasetGenerator;
 import de.jpwinkler.daf.dataprocessing.datasetgenerators.DatasetGenerator;
 import de.jpwinkler.daf.dataprocessing.datasetgenerators.FilteringLabelGenerator;
@@ -22,12 +24,11 @@ import de.jpwinkler.daf.dataprocessing.datasetgenerators.SimpleLabelGenerator;
 import de.jpwinkler.daf.dataprocessing.datasetgenerators.SimpleTensorFlowDatasetGenerator;
 import de.jpwinkler.daf.dataprocessing.featuregeneration.FeatureVectorGenerator;
 import de.jpwinkler.daf.dataprocessing.featuregeneration.ParseTreeFeatureGenerator;
-import de.jpwinkler.daf.dataprocessing.streaming.SimpleDoorsObject;
 import de.jpwinkler.daf.dataprocessing.streaming.SimpleFolderCSVSpliterator;
 
 public class TestMe {
 
-    private FeatureVectorGenerator<SimpleDoorsObject, String> featureVectorGenerator;
+    private FeatureVectorGenerator<DoorsObject, String> featureVectorGenerator;
 
     @Before
     public void init() throws IOException {
@@ -53,7 +54,7 @@ public class TestMe {
         // "Eng. develop. test", "Production control", "Review",
         // "Simulation/Analysis", "Formal verification", "(n.a.)");
         final List<String> allowedLabels = Arrays.asList("information", "requirement");
-        final DatasetGenerator<SimpleDoorsObject, String> tfDatasetGenerator = new SimpleTensorFlowDatasetGenerator(new FilteringLabelGenerator("Object Type", allowedLabels), true);
+        final DatasetGenerator<DoorsObject, String> tfDatasetGenerator = new SimpleTensorFlowDatasetGenerator(new FilteringLabelGenerator("Object Type", allowedLabels), true);
         tfDatasetGenerator.init(getIterator(), featureVectorGenerator);
 
         System.out.println("Dataset initialization done.");
@@ -73,14 +74,14 @@ public class TestMe {
         // }
     }
 
-    private Iterator<SimpleDoorsObject> getIterator() throws IOException {
+    private Iterator<DoorsObject> getIterator() throws IOException {
         return StreamSupport.stream(new SimpleFolderCSVSpliterator(new File("C:\\WORK\\DOORS\\export\\body\\comp\\de-test\\reqinf"), true), false).iterator();
     }
 
     // @Test
     public void test4() throws IOException {
-        final LabelGenerator<SimpleDoorsObject> labelGenerator = new SimpleLabelGenerator("Object Type");
-        final DatasetGenerator<SimpleDoorsObject, String> datasetGenerator = new ARFFDatasetGenerator(labelGenerator, true);
+        final LabelGenerator<DoorsObject> labelGenerator = new SimpleLabelGenerator("Object Type");
+        final DatasetGenerator<DoorsObject, String> datasetGenerator = new ARFFDatasetGenerator(labelGenerator, true);
 
         datasetGenerator.init(getIterator(), featureVectorGenerator);
 
@@ -96,7 +97,7 @@ public class TestMe {
     public void test5() throws IOException {
 
         final ParseTreeFeatureGenerator featureGenerator = new ParseTreeFeatureGenerator();
-        final SimpleDoorsObject object = new SimpleDoorsObject();
+        final DoorsObject object = CSVFactory.eINSTANCE.createDoorsObject();
         object.setObjectText("Lieferungen oder Leistungen des Auftragnehmers dürfen FOSS nur nach Zustimmung durch den Auftraggeber und unter Einhaltung des in X beschriebenen Verfahrens enthalten.");
 
         for (final String feature : featureGenerator.getFeatures(object)) {

@@ -6,12 +6,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import de.jpwinkler.daf.dataprocessing.streaming.SimpleDoorsObject;
+import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dataprocessing.utils.VectorUtils;
 
-public class SimpleTensorFlowDatasetGenerator extends DatasetGenerator<SimpleDoorsObject, String> {
+public class SimpleTensorFlowDatasetGenerator extends DatasetGenerator<DoorsObject, String> {
 
-    public SimpleTensorFlowDatasetGenerator(final LabelGenerator<SimpleDoorsObject> labelGenerator, final boolean unique) {
+    public SimpleTensorFlowDatasetGenerator(final LabelGenerator<DoorsObject> labelGenerator, final boolean unique) {
         super(labelGenerator, unique);
     }
 
@@ -23,7 +23,7 @@ public class SimpleTensorFlowDatasetGenerator extends DatasetGenerator<SimpleDoo
     }
 
     @Override
-    protected void addDatasetRecord(final OutputStream stream, final SimpleDoorsObject object, final double[] featureVector, final String outcome) throws IOException {
+    protected void addDatasetRecord(final OutputStream stream, final DoorsObject object, final double[] featureVector, final String outcome) throws IOException {
         final double[] result = VectorUtils.oneHotVector(getLabels().get(outcome), getLabels().size());
 
         final StringBuilder b = new StringBuilder();
@@ -43,7 +43,7 @@ public class SimpleTensorFlowDatasetGenerator extends DatasetGenerator<SimpleDoo
     }
 
     @Override
-    protected void addMultiClassDatasetRecord(final OutputStream stream, final SimpleDoorsObject object, final double[] featureVector, final List<String> outcome) throws IOException {
+    protected void addMultiClassDatasetRecord(final OutputStream stream, final DoorsObject object, final double[] featureVector, final List<String> outcome) throws IOException {
         final double[] result = new double[getLabels().size()];
 
         for (final String label : outcome) {

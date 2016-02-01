@@ -8,10 +8,12 @@ import java.util.Queue;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 
-public class SimpleFolderCSVSpliterator implements Spliterator<SimpleDoorsObject> {
+import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
+
+public class SimpleFolderCSVSpliterator implements Spliterator<DoorsObject> {
 
     private final Queue<String> csvFileNames = new LinkedList<>();
-    private Iterator<SimpleDoorsObject> currentModuleIterator;
+    private Iterator<DoorsObject> currentModuleIterator;
 
     public SimpleFolderCSVSpliterator(final File folder, final boolean recursive) {
         findCSVFiles(folder, recursive);
@@ -28,10 +30,10 @@ public class SimpleFolderCSVSpliterator implements Spliterator<SimpleDoorsObject
     }
 
     @Override
-    public boolean tryAdvance(final Consumer<? super SimpleDoorsObject> action) {
+    public boolean tryAdvance(final Consumer<? super DoorsObject> action) {
         if (csvFileNames.size() > 0 && (currentModuleIterator == null || !currentModuleIterator.hasNext())) {
             try {
-                currentModuleIterator = new SimpleModuleCSVParser(csvFileNames.poll()).iterator();
+                currentModuleIterator = new ModuleIterator(csvFileNames.poll());
             } catch (final IOException e) {
                 // TODO: Not very nice
                 throw new RuntimeException(e);
@@ -47,7 +49,7 @@ public class SimpleFolderCSVSpliterator implements Spliterator<SimpleDoorsObject
     }
 
     @Override
-    public Spliterator<SimpleDoorsObject> trySplit() {
+    public Spliterator<DoorsObject> trySplit() {
         return null;
     }
 

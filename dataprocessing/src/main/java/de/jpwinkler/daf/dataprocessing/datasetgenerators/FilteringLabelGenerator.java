@@ -4,9 +4,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import de.jpwinkler.daf.dataprocessing.streaming.SimpleDoorsObject;
+import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 
-public class FilteringLabelGenerator extends LabelGenerator<SimpleDoorsObject> {
+public class FilteringLabelGenerator extends LabelGenerator<DoorsObject> {
 
     private final String labelAttribute;
 
@@ -19,13 +19,13 @@ public class FilteringLabelGenerator extends LabelGenerator<SimpleDoorsObject> {
     }
 
     @Override
-    public boolean hasLabel(final SimpleDoorsObject object) {
-        return object.hasAttribute(labelAttribute) && allowedLabels.contains(object.getAttribute(labelAttribute));
+    public boolean hasLabel(final DoorsObject object) {
+        return object.getAttributes().containsKey(labelAttribute) && allowedLabels.contains(object.getAttributes().get(labelAttribute));
     }
 
     @Override
-    public List<String> getLabels(final SimpleDoorsObject object) {
-        final String label = object.getAttribute(labelAttribute);
+    public List<String> getLabels(final DoorsObject object) {
+        final String label = object.getAttributes().get(labelAttribute);
         if (allowedLabels.contains(label)) {
             return Arrays.asList(label);
         } else {

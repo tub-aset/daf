@@ -3,11 +3,11 @@ package de.jpwinkler.daf.dataprocessing.featuregeneration;
 import java.io.IOException;
 import java.util.List;
 
+import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dataprocessing.preprocessing.ObjectTextPreprocessor;
-import de.jpwinkler.daf.dataprocessing.streaming.SimpleDoorsObject;
 import de.jpwinkler.libs.stringprocessing.tokens.Token;
 
-public class WordFeatureGenerator extends FeatureGenerator<SimpleDoorsObject, String> {
+public class WordFeatureGenerator extends FeatureGenerator<DoorsObject, String> {
 
     private final int maxNGramLength;
     private final int minWordLength;
@@ -21,7 +21,7 @@ public class WordFeatureGenerator extends FeatureGenerator<SimpleDoorsObject, St
     }
 
     @Override
-    protected void runGenerator(final SimpleDoorsObject element) {
+    protected void runGenerator(final DoorsObject element) {
 
         final List<Token> preprocessedText = objectTextPreprocessor.preprocessText(element.getObjectText());
 

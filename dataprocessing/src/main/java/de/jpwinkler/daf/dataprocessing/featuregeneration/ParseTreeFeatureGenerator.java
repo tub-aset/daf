@@ -10,14 +10,14 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
 
+import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dataprocessing.preprocessing.ObjectTextPreprocessor;
-import de.jpwinkler.daf.dataprocessing.streaming.SimpleDoorsObject;
 import edu.stanford.nlp.ling.HasWord;
 import edu.stanford.nlp.parser.lexparser.LexicalizedParser;
 import edu.stanford.nlp.process.DocumentPreprocessor;
 import edu.stanford.nlp.trees.Tree;
 
-public class ParseTreeFeatureGenerator extends FeatureGenerator<SimpleDoorsObject, String> {
+public class ParseTreeFeatureGenerator extends FeatureGenerator<DoorsObject, String> {
 
     private static final List<String> VERB_TAGS = Arrays.asList("ADV", "VVFIN", "VVIMP", "VVINF", "VVIZU", "VVPP", "VAFIN", "VAIMP", "VAINF", "VAPP", "VMFIN", "VMINF", "VMPP");
 
@@ -34,7 +34,7 @@ public class ParseTreeFeatureGenerator extends FeatureGenerator<SimpleDoorsObjec
     }
 
     @Override
-    protected void runGenerator(final SimpleDoorsObject element) {
+    protected void runGenerator(final DoorsObject element) {
 
         final String objectText = objectTextPreprocessor.preprocessTextToString(element.getObjectText());
 

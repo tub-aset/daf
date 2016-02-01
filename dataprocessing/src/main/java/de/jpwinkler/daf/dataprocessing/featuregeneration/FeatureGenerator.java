@@ -14,7 +14,7 @@ public abstract class FeatureGenerator<E, F> {
     public final Set<F> getFeatures(final E element) {
         features.clear();
         runGenerator(element);
-        return features;
+        return new HashSet<>(features);
     }
 
     protected abstract void runGenerator(E element);
