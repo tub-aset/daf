@@ -74,8 +74,13 @@ public class Fap5ProgressTrackingRow {
         if (cell == null) {
             cell = row.createCell(columnIndexMap.get(column));
         }
-        cell.setCellValue(newValue);
-        cell.setCellStyle(csPercent);
+        if (Double.isInfinite(newValue) || Double.isNaN(newValue)) {
+            cell.setCellValue("-");
+            cell.setCellStyle(csMultiLine);
+        } else {
+            cell.setCellValue(newValue);
+            cell.setCellStyle(csPercent);
+        }
     }
 
     public void update(final int column, final List<String> newValues) {

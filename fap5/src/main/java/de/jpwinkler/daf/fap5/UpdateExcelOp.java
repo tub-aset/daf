@@ -94,12 +94,14 @@ public class UpdateExcelOp extends AbstractStepImpl implements ModelOperationImp
 
                 if (row.hasColumn(COLUMN_INBOX_MODULE_EXISTS) && row.get(COLUMN_INBOX_MODULE_EXISTS).toLowerCase().equals("ja") && row.hasColumn(COLUMN_TARGET_PATH) && row.hasColumn(COLUMN_TARGET_MODULE)) {
                     final CodeBeamerModel inboxTargetModel = models.get(row.get(COLUMN_TARGET_PATH), row.get(COLUMN_TARGET_MODULE), row.get(COLUMN_INBOX_VIEW));
+                    row.update(COLUMN_INBOX_MODULE_EXISTS, inboxTargetModel != null ? "Ja" : "Nein");
                     if (inboxTargetModel != null) {
                         final Integer reqCount = inboxTargetModel.getIntMetric(CodeBeamerConstants.METRIC_REQUIREMENT_COUNT);
 
                         row.update(COLUMN_INBOX_REQ_COUNT, inboxTargetModel.getIntMetric(CodeBeamerConstants.METRIC_REQUIREMENT_COUNT));
+                        row.updatePercent(COLUMN_INBOX_ACCEPTANCE_NOT_AGREED, (double) inboxTargetModel.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_NOT_AGREED_COUNT) / reqCount);
                         row.updatePercent(COLUMN_INBOX_ACCEPTANCE_EMPTY, (double) inboxTargetModel.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_NONE_COUNT) / reqCount);
-                        row.updatePercent(COLUMN_INBOX_ACCEPTANCE_DELETED, (double) inboxTargetModel.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_DELETED_REQ_COUNT) / reqCount);
+                        row.update(COLUMN_INBOX_ACCEPTANCE_DELETED, inboxTargetModel.getIntMetric(CodeBeamerConstants.METRIC_DELETED_REQ_COUNT));
                         row.updatePercent(COLUMN_INBOX_ACCEPTANCE_CHANGED, (double) inboxTargetModel.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_CHANGED_REQ_COUNT) / reqCount);
                         row.updatePercent(COLUMN_INBOX_ACCEPTANCE_TO_CLARIFY, (double) inboxTargetModel.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_TO_CLARIFY_COUNT) / reqCount);
                         row.updatePercent(COLUMN_INBOX_ACCEPTANCE_CONFLICT, (double) inboxTargetModel.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_CONFLICT_COUNT) / reqCount);
@@ -116,8 +118,9 @@ public class UpdateExcelOp extends AbstractStepImpl implements ModelOperationImp
 
                             row.update(COLUMN_VERIFIED_REQ_COUNT, manyInts(views, verifiedTargetModels, m -> m.getIntMetric(CodeBeamerConstants.METRIC_REQUIREMENT_COUNT)));
 
+                            row.update(COLUMN_VERIFIED_ACCEPTANCE_NOT_AGREED, manyPercent(views, verifiedTargetModels, m -> (double) m.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_NOT_AGREED_COUNT)));
                             row.update(COLUMN_VERIFIED_ACCEPTANCE_EMPTY, manyPercent(views, verifiedTargetModels, m -> (double) m.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_NONE_COUNT)));
-                            row.update(COLUMN_VERIFIED_ACCEPTANCE_DELETED, manyPercent(views, verifiedTargetModels, m -> (double) m.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_DELETED_REQ_COUNT)));
+                            row.update(COLUMN_VERIFIED_ACCEPTANCE_DELETED, manyInts(views, verifiedTargetModels, m -> m.getIntMetric(CodeBeamerConstants.METRIC_DELETED_REQ_COUNT)));
                             row.update(COLUMN_VERIFIED_ACCEPTANCE_CHANGED, manyPercent(views, verifiedTargetModels, m -> (double) m.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_CHANGED_REQ_COUNT)));
                             row.update(COLUMN_VERIFIED_ACCEPTANCE_TO_CLARIFY, manyPercent(views, verifiedTargetModels, m -> (double) m.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_TO_CLARIFY_COUNT)));
                             row.update(COLUMN_VERIFIED_ACCEPTANCE_CONFLICT, manyPercent(views, verifiedTargetModels, m -> (double) m.getIntMetric(CodeBeamerConstants.METRIC_ACCEPTANCE_CONFLICT_COUNT)));

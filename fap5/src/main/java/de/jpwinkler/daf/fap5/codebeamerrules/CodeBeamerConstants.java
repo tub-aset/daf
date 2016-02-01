@@ -19,6 +19,7 @@ public final class CodeBeamerConstants {
     public static final String MARKER_INLINED_CHAPTERS = "inlined_chapters";
     public static final String MARKER_QUESTION_MARK = "question_mark";
     public static final String MARKER_REQUIREMENT = "requirement";
+    public static final String MARKER_DELETED_REQ = "deleted_req";
     public static final String MARKER_REQUIREMENT_LENGTH = "length";
     public static final String MARKER_TBD = "tbd";
     public static final String MARKER_TBV = "tbv";
@@ -55,7 +56,7 @@ public final class CodeBeamerConstants {
     public static final String METRIC_MATURITY_AGREED_COUNT = "maturityAgreed";
 
     public static final String METRIC_ACCEPTANCE_NONE_COUNT = "acceptanceNone";
-    public static final String METRIC_ACCEPTANCE_DELETED_REQ_COUNT = "acceptanceDeletedReq";
+    public static final String METRIC_DELETED_REQ_COUNT = "acceptanceDeletedReq";
     public static final String METRIC_ACCEPTANCE_CHANGED_REQ_COUNT = "acceptanceChangedReq";
     public static final String METRIC_ACCEPTANCE_TO_CLARIFY_COUNT = "acceptanceToClarify";
     public static final String METRIC_ACCEPTANCE_CONFLICT_COUNT = "acceptanceConflict";
@@ -63,7 +64,6 @@ public final class CodeBeamerConstants {
     public static final String METRIC_ACCEPTANCE_AGREED_COUNT = "acceptanceAgreed";
 
     public static final String MARKER_ACCEPTANCE_NONE = "acceptance_none";
-    public static final String MARKER_ACCEPTANCE_DELETED_REQ = "acceptance_deleted_req";
     public static final String MARKER_ACCEPTANCE_CHANGED_REQ = "acceptance_changed_req";
     public static final String MARKER_ACCEPTANCE_TO_CLARIFY = "acceptance_to_clarify";
     public static final String MARKER_ACCEPTANCE_PARTLY_AGREED = "acceptance_partly_agreed";
@@ -90,6 +90,8 @@ public final class CodeBeamerConstants {
     public static final String METRIC_REQUIREMENT_WITHOUT_LINK = "requirementWithoutLink";
     public static final String METRIC_EMPTY_HEADING = "emptyHeading";
     public static final String METRIC_ESTIMATED_REMAINING_WORK = "estimatedRemainingWork";
+    public static final String MARKER_ACCEPTANCE_NOT_AGREED = "acceptance_not_agreed";
+    public static final String METRIC_ACCEPTANCE_NOT_AGREED_COUNT = "acceptanceNotAgreed";
 
     // TODO
 

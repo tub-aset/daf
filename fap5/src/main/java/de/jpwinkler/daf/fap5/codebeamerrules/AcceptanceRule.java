@@ -19,11 +19,11 @@ public class AcceptanceRule extends AbstractRule {
         case "":
             context.addMarker(object, new Marker(CodeBeamerConstants.MARKER_ACCEPTANCE_NONE));
             break;
+        case "not agreed":
+            context.addMarker(object, new Marker(CodeBeamerConstants.MARKER_ACCEPTANCE_NOT_AGREED));
+            break;
         case "changed requirement":
             context.addMarker(object, new Marker(CodeBeamerConstants.MARKER_ACCEPTANCE_CHANGED_REQ));
-            break;
-        case "deleted requirement":
-            context.addMarker(object, new Marker(CodeBeamerConstants.MARKER_ACCEPTANCE_DELETED_REQ));
             break;
         case "to clarify":
             context.addMarker(object, new Marker(CodeBeamerConstants.MARKER_ACCEPTANCE_TO_CLARIFY));

@@ -2,8 +2,15 @@ package de.jpwinkler.daf.fap5.codebeamerrules;
 
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.RuleContext;
+import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.objectpreconditions.AttributeExistsObjectPrecondition;
+import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.objectpreconditions.ObjectPrecondition;
 
 public class EmptyObjectTypeRule extends PredicateIssueRule {
+
+    @Override
+    public ObjectPrecondition getObjectPrecondition() {
+        return new AttributeExistsObjectPrecondition(CodeBeamerConstants.ATTRIBUTE_OBJECT_TYPE);
+    }
 
     @Override
     protected long getSeverity(final DoorsObject object) {

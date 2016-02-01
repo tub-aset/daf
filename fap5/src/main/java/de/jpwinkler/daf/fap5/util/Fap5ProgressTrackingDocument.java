@@ -66,6 +66,9 @@ public class Fap5ProgressTrackingDocument {
 
     public static final int COLUMN_VERIFIED_LINK = 37;
 
+    public static final Integer COLUMN_INBOX_ACCEPTANCE_NOT_AGREED = 38;
+    public static final Integer COLUMN_VERIFIED_ACCEPTANCE_NOT_AGREED = 39;
+
     private final Map<Integer, Integer> columnIndexMap = new HashMap<>();
 
     private final Workbook workbook;
@@ -99,6 +102,7 @@ public class Fap5ProgressTrackingDocument {
         columnIndexMap.put(COLUMN_INBOX_MODULE_EXISTS, findRow("Inbox", "Allgemein", "Modul existiert"));
         columnIndexMap.put(COLUMN_INBOX_VIEW, findRow("Inbox", "Allgemein", "View"));
         columnIndexMap.put(COLUMN_INBOX_REQ_COUNT, findRow("Inbox", "Allgemein", "Anzahl"));
+        columnIndexMap.put(COLUMN_INBOX_ACCEPTANCE_NOT_AGREED, findRow("Inbox", "Acceptance Status", "not agreed"));
         columnIndexMap.put(COLUMN_INBOX_ACCEPTANCE_EMPTY, findRow("Inbox", "Acceptance Status", "\"\""));
         columnIndexMap.put(COLUMN_INBOX_ACCEPTANCE_DELETED, findRow("Inbox", "Acceptance Status", "deleted"));
         columnIndexMap.put(COLUMN_INBOX_ACCEPTANCE_CHANGED, findRow("Inbox", "Acceptance Status", "changed"));
@@ -111,14 +115,13 @@ public class Fap5ProgressTrackingDocument {
         columnIndexMap.put(COLUMN_VERIFIED_MODULE_EXISTS, findRow("Verified", "Allgemein", "Modul existiert"));
         columnIndexMap.put(COLUMN_VERIFIED_VIEW, findRow("Verified", "Allgemein", "View"));
         columnIndexMap.put(COLUMN_VERIFIED_REQ_COUNT, findRow("Verified", "Allgemein", "Anzahl"));
+        columnIndexMap.put(COLUMN_VERIFIED_ACCEPTANCE_NOT_AGREED, findRow("Verified", "Acceptance Status", "not agreed"));
         columnIndexMap.put(COLUMN_VERIFIED_ACCEPTANCE_EMPTY, findRow("Verified", "Acceptance Status", "\"\""));
         columnIndexMap.put(COLUMN_VERIFIED_ACCEPTANCE_DELETED, findRow("Verified", "Acceptance Status", "deleted"));
         columnIndexMap.put(COLUMN_VERIFIED_ACCEPTANCE_CHANGED, findRow("Verified", "Acceptance Status", "changed"));
         columnIndexMap.put(COLUMN_VERIFIED_ACCEPTANCE_CONFLICT, findRow("Verified", "Acceptance Status", "conflict"));
         columnIndexMap.put(COLUMN_VERIFIED_ACCEPTANCE_TO_CLARIFY, findRow("Verified", "Acceptance Status", "clarify"));
         columnIndexMap.put(COLUMN_VERIFIED_ACCEPTANCE_PARTLY_AGREED, findRow("Verified", "Acceptance Status", "partly agreed"));
-
-        // TODO: ugly, but works
         columnIndexMap.put(COLUMN_VERIFIED_ACCEPTANCE_AGREED, findRow("Verified", "Acceptance Status", "partly agreed") + 1);
 
     }

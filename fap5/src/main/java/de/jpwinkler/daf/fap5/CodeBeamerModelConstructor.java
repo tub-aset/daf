@@ -13,6 +13,7 @@ import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.RuleBasedModelConstruc
 import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.RuleContext;
 import de.jpwinkler.daf.fap5.codebeamerrules.AcceptanceRule;
 import de.jpwinkler.daf.fap5.codebeamerrules.CodeBeamerConstants;
+import de.jpwinkler.daf.fap5.codebeamerrules.DeletedReqRule;
 import de.jpwinkler.daf.fap5.codebeamerrules.DuplicatedLiteralRule;
 import de.jpwinkler.daf.fap5.codebeamerrules.EllipsisRule;
 import de.jpwinkler.daf.fap5.codebeamerrules.EmptyObjectTypeRule;
@@ -65,7 +66,8 @@ public class CodeBeamerModelConstructor extends RuleBasedModelConstructor {
                 MaturityRule.class,
                 AcceptanceRule.class,
                 RequirementWithoutLinkRule.class,
-                InformationWithLinkRule.class
+                InformationWithLinkRule.class,
+                DeletedReqRule.class
                 // HeadingWithLinkRule.class
                 );
     }
@@ -125,8 +127,10 @@ public class CodeBeamerModelConstructor extends RuleBasedModelConstructor {
 
         addMetric(model, CodeBeamerConstants.METRIC_ESTIMATED_REMAINING_WORK, (int) model.getEstimatedRemainingWork());
 
+        addMetric(model, CodeBeamerConstants.METRIC_DELETED_REQ_COUNT, context.getMarkerCount(CodeBeamerConstants.MARKER_DELETED_REQ));
+
+        addMetric(model, CodeBeamerConstants.METRIC_ACCEPTANCE_NOT_AGREED_COUNT, context.getMarkerCount(CodeBeamerConstants.MARKER_ACCEPTANCE_NOT_AGREED));
         addMetric(model, CodeBeamerConstants.METRIC_ACCEPTANCE_NONE_COUNT, context.getMarkerCount(CodeBeamerConstants.MARKER_ACCEPTANCE_NONE));
-        addMetric(model, CodeBeamerConstants.METRIC_ACCEPTANCE_DELETED_REQ_COUNT, context.getMarkerCount(CodeBeamerConstants.MARKER_ACCEPTANCE_DELETED_REQ));
         addMetric(model, CodeBeamerConstants.METRIC_ACCEPTANCE_CHANGED_REQ_COUNT, context.getMarkerCount(CodeBeamerConstants.MARKER_ACCEPTANCE_CHANGED_REQ));
         addMetric(model, CodeBeamerConstants.METRIC_ACCEPTANCE_TO_CLARIFY_COUNT, context.getMarkerCount(CodeBeamerConstants.MARKER_ACCEPTANCE_TO_CLARIFY));
         addMetric(model, CodeBeamerConstants.METRIC_ACCEPTANCE_CONFLICT_COUNT, context.getMarkerCount(CodeBeamerConstants.MARKER_ACCEPTANCE_CONFLICT));

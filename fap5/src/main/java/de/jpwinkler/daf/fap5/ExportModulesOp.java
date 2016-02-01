@@ -38,35 +38,31 @@ public class ExportModulesOp extends AbstractStepImpl implements ModelOperationI
             app.redirectOutput(new LogOutputStream(LOGGER, Level.INFO));
 
             for (final Fap5ProgressTrackingRow row : progressTrackingDocument.getRows()) {
-                final boolean indoxModuleExists = row.get(Fap5ProgressTrackingDocument.COLUMN_INBOX_MODULE_EXISTS) != null && row.get(Fap5ProgressTrackingDocument.COLUMN_INBOX_MODULE_EXISTS).toLowerCase().equals("ja");
+                final String targetPath = row.get(Fap5ProgressTrackingDocument.COLUMN_TARGET_PATH);
+                final String targetModule = row.get(Fap5ProgressTrackingDocument.COLUMN_TARGET_MODULE);
+                final String inboxView = row.get(Fap5ProgressTrackingDocument.COLUMN_INBOX_VIEW);
 
-                if (indoxModuleExists) {
-                    final String targetPath = row.get(Fap5ProgressTrackingDocument.COLUMN_TARGET_PATH);
-                    final String targetModule = row.get(Fap5ProgressTrackingDocument.COLUMN_TARGET_MODULE);
-                    final String inboxView = row.get(Fap5ProgressTrackingDocument.COLUMN_INBOX_VIEW);
+                try {
+                    export(targetPath, targetModule, inboxView);
+                } catch (final DoorsException e) {
+                    LOGGER.warning(e.getMessage());
+                }
+
+                if (targetPath != null && targetPath.contains("/Inbox/")) {
+
+                    final String[] verifiedViews = row.hasColumn(Fap5ProgressTrackingDocument.COLUMN_VERIFIED_VIEW) ? row.get(Fap5ProgressTrackingDocument.COLUMN_VERIFIED_VIEW).split("\n") : null;
+                    final String targetVerifiedPath = targetPath.replace("/Inbox/", "/Verified/");
 
                     try {
-                        export(targetPath, targetModule, inboxView);
+                        if (verifiedViews != null) {
+                            for (final String verifiedView : verifiedViews) {
+                                export(targetVerifiedPath, targetModule, verifiedView);
+                            }
+                        } else {
+                            export(targetVerifiedPath, targetModule, null);
+                        }
                     } catch (final DoorsException e) {
                         LOGGER.warning(e.getMessage());
-                    }
-
-                    if (targetPath.contains("/Inbox/")) {
-
-                        final String[] verifiedViews = row.hasColumn(Fap5ProgressTrackingDocument.COLUMN_VERIFIED_VIEW) ? row.get(Fap5ProgressTrackingDocument.COLUMN_VERIFIED_VIEW).split("\n") : null;
-                        final String targetVerifiedPath = targetPath.replace("/Inbox/", "/Verified/");
-
-                        try {
-                            if (verifiedViews != null) {
-                                for (final String verifiedView : verifiedViews) {
-                                    export(targetVerifiedPath, targetModule, verifiedView);
-                                }
-                            } else {
-                                export(targetVerifiedPath, targetModule, null);
-                            }
-                        } catch (final DoorsException e) {
-                            LOGGER.warning(e.getMessage());
-                        }
                     }
                 }
             }
