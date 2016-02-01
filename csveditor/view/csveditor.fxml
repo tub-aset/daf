@@ -7,7 +7,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="777.0" prefWidth="1067.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.jpwinkler.daf.csveditor.CSVEditorController">
+<BorderPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.jpwinkler.daf.csveditor.CSVEditorController">
    <top>
       <VBox>
          <children>
@@ -120,6 +120,7 @@
                   <ToolBar maxHeight="1.7976931348623157E308" nodeOrientation="RIGHT_TO_LEFT" BorderPane.alignment="CENTER">
                      <items>
                         <CheckBox fx:id="includeChildrenCheckbox" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" text="Include children" />
+                        <CheckBox fx:id="includeParentsCheckbox" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" text="Include parents" />
                         <TextField fx:id="filterTextField" nodeOrientation="LEFT_TO_RIGHT" prefWidth="250.0" promptText="Quick Filter" />
                         <ToggleButton fx:id="filterExpressionToggleButton" mnemonicParsing="false" onAction="#filterExpressionToggleButtonClicked" text="e^x" />
                      </items>
@@ -138,71 +139,107 @@
                   <SplitPane dividerPositions="0.7313237221494102" prefHeight="565.0" prefWidth="764.0">
                     <items>
                         <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" />
-                        <BorderPane prefHeight="200.0" prefWidth="200.0" SplitPane.resizableWithParent="false">
-                           <center>
-                              <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" BorderPane.alignment="CENTER">
-                                 <children>
-                                    <TitledPane text="Algorithm Selection">
-                                       <content>
-                                          <VBox fx:id="algorithmSelectionContainer" />
-                                       </content>
-                                    </TitledPane>
-                                    <TitledPane fx:id="algorithmConfigurationContainer" text="Algorithm Configuration">
-                                       <VBox.margin>
-                                          <Insets />
-                                       </VBox.margin>
-                                    </TitledPane>
-                                    <TitledPane fx:id="trainingDataContainer" text="Training Data" />
-                                    <TitledPane text="Result">
-                                       <content>
-                                          <VBox>
+                        <TabPane SplitPane.resizableWithParent="false">
+                           <tabs>
+                              <Tab closable="false" text="ML">
+                                 <content>
+                                    <BorderPane prefHeight="200.0" prefWidth="200.0" SplitPane.resizableWithParent="false">
+                                       <center>
+                                          <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" BorderPane.alignment="CENTER">
                                              <children>
-                                                <GridPane fx:id="resultGridPane" hgap="3.0" vgap="3.0">
-                                                  <rowConstraints>
-                                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                  </rowConstraints>
-                                                </GridPane>
-                                                <Button mnemonicParsing="false" onAction="#showConfusionMatrixDialog" text="Show Confusion Matrix" />
+                                                <TitledPane text="Algorithm Selection">
+                                                   <content>
+                                                      <VBox fx:id="algorithmSelectionContainer" />
+                                                   </content>
+                                                </TitledPane>
+                                                <TitledPane fx:id="algorithmConfigurationContainer" text="Algorithm Configuration">
+                                                   <VBox.margin>
+                                                      <Insets />
+                                                   </VBox.margin>
+                                                </TitledPane>
+                                                <TitledPane fx:id="trainingDataContainer" text="Training Data" />
+                                                <TitledPane text="Result">
+                                                   <content>
+                                                      <VBox>
+                                                         <children>
+                                                            <GridPane fx:id="resultGridPane" hgap="3.0" vgap="3.0">
+                                                              <rowConstraints>
+                                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                              </rowConstraints>
+                                                            </GridPane>
+                                                            <Button mnemonicParsing="false" onAction="#showConfusionMatrixDialog" text="Show Confusion Matrix" />
+                                                         </children>
+                                                      </VBox>
+                                                   </content>
+                                                </TitledPane>
                                              </children>
+                                             <padding>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                             </padding>
                                           </VBox>
-                                       </content>
-                                    </TitledPane>
-                                 </children>
-                                 <padding>
-                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                 </padding>
-                              </VBox>
-                           </center>
-                           <bottom>
-                              <GridPane hgap="10.0" BorderPane.alignment="CENTER">
-                                <columnConstraints>
-                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                </columnConstraints>
-                                <rowConstraints>
-                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                </rowConstraints>
-                                 <children>
-                                    <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#trainButtonClicked" text="Train" />
-                                    <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#tagButtonClicked" text="Tag" GridPane.columnIndex="1" />
-                                 </children>
-                                 <BorderPane.margin>
-                                    <Insets bottom="10.0" left="10.0" right="10.0" />
-                                 </BorderPane.margin>
-                              </GridPane>
-                           </bottom>
-                        </BorderPane>
+                                       </center>
+                                       <bottom>
+                                          <GridPane hgap="10.0" BorderPane.alignment="CENTER">
+                                            <columnConstraints>
+                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                            </rowConstraints>
+                                             <children>
+                                                <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#trainButtonClicked" text="Train" />
+                                                <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#tagButtonClicked" text="Tag" GridPane.columnIndex="1" />
+                                             </children>
+                                             <BorderPane.margin>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" />
+                                             </BorderPane.margin>
+                                          </GridPane>
+                                       </bottom>
+                                    </BorderPane>
+                                 </content>
+                              </Tab>
+                              <Tab closable="false" text="Mass Edit">
+                                 <content>
+                                    <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0">
+                                       <children>
+                                          <RadioButton fx:id="massEditAllObjectsCheckBox" mnemonicParsing="false" selected="true" text="All Objects">
+                                             <toggleGroup>
+                                                <ToggleGroup fx:id="massEditTarget" />
+                                             </toggleGroup>
+                                          </RadioButton>
+                                          <RadioButton fx:id="massEditSelectedObjectsCheckBox" mnemonicParsing="false" text="All Selected Objects" toggleGroup="$massEditTarget" />
+                                          <RadioButton fx:id="massEditFilteredObjectsCheckBox" mnemonicParsing="false" text="All Visible Objects" toggleGroup="$massEditTarget" />
+                                          <Separator prefWidth="200.0" />
+                                          <RadioButton fx:id="massEditSetAttributeCheckBox" mnemonicParsing="false" text="Set Attribute">
+                                             <toggleGroup>
+                                                <ToggleGroup fx:id="massEditAction" />
+                                             </toggleGroup>
+                                          </RadioButton>
+                                          <TextField fx:id="massEditSetAttributeNameTextField" />
+                                          <TextField fx:id="massEditSetAttributeValueTextField" />
+                                          <Separator prefWidth="200.0" />
+                                          <Button mnemonicParsing="false" onAction="#massEditRunClicked" text="Run" />
+                                       </children>
+                                       <padding>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                       </padding>
+                                    </VBox>
+                                 </content>
+                              </Tab>
+                              <Tab closable="false" text="Feature Spy">
+                                 <content>
+                                    <ListView fx:id="featureListView" prefHeight="200.0" prefWidth="200.0" />
+                                 </content>
+                              </Tab>
+                           </tabs>
+                        </TabPane>
                     </items>
                   </SplitPane>
                   <TabPane SplitPane.resizableWithParent="false">
                      <tabs>
-                        <Tab closable="false" text="Javascript Console">
-                          <content>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                          </content>
-                        </Tab>
                         <Tab closable="false" text="Preprocessor">
                            <content>
                               <BorderPane prefHeight="200.0" prefWidth="200.0">
@@ -232,4 +269,23 @@
         </items>
       </SplitPane>
    </center>
+   <bottom>
+      <BorderPane BorderPane.alignment="CENTER">
+         <center>
+            <ToolBar prefWidth="200.0" BorderPane.alignment="CENTER">
+               <items>
+                  <Label text="You feel somewhat out of place..." />
+               </items>
+            </ToolBar>
+         </center>
+         <right>
+            <ToolBar fx:id="backgroundTaskStatusToolBar" BorderPane.alignment="CENTER">
+               <items>
+                  <Label fx:id="backgroundTaskStatusLabel" text="2 Background Tasks running." />
+                  <ProgressBar fx:id="backgroundTaskStatusProgressBar" prefWidth="200.0" progress="1.0" />
+               </items>
+            </ToolBar>
+         </right>
+      </BorderPane>
+   </bottom>
 </BorderPane>

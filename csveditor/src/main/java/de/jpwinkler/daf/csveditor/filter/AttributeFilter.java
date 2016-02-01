@@ -12,20 +12,20 @@ public class AttributeFilter extends DoorsObjectFilter {
 
     private final String filter;
 
-    private final boolean matchCase;
+    private final boolean exactMatch;
 
     private final boolean regexp;
 
     private Pattern pattern;
 
-    public AttributeFilter(final String attribute, final String filter, final boolean matchCase, final boolean regexp) {
+    public AttributeFilter(final String attribute, final String filter, final boolean exactMatch, final boolean regexp) {
         super();
         this.attribute = attribute;
         this.filter = filter;
-        this.matchCase = matchCase;
+        this.exactMatch = exactMatch;
         this.regexp = regexp;
         try {
-            pattern = Pattern.compile(filter, matchCase ? 0 : Pattern.CASE_INSENSITIVE);
+            pattern = Pattern.compile(filter, Pattern.CASE_INSENSITIVE);
         } catch (final PatternSyntaxException e) {
             pattern = null;
         }
@@ -37,11 +37,9 @@ public class AttributeFilter extends DoorsObjectFilter {
         if (s != null) {
             if (regexp && pattern != null) {
                 final Matcher matcher = pattern.matcher(s);
-                return matcher.find();
-            } else if (!regexp && matchCase) {
-                return s.contains(filter);
-            } else if (!regexp && !matchCase) {
-                return s.toLowerCase().contains(filter.toLowerCase());
+                return exactMatch ? matcher.matches() : matcher.find();
+            } else if (!regexp) {
+                return exactMatch ? s.equalsIgnoreCase(filter) : s.toLowerCase().contains(filter.toLowerCase());
             }
         }
         return false;

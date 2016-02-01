@@ -6,7 +6,8 @@ import java.util.LinkedList;
 import org.apache.commons.lang.StringEscapeUtils;
 
 import de.jpwinkler.daf.csveditor.filter.DoorsObjectFilterParser.AndFilterExpressionContext;
-import de.jpwinkler.daf.csveditor.filter.DoorsObjectFilterParser.AttributeExpressionContext;
+import de.jpwinkler.daf.csveditor.filter.DoorsObjectFilterParser.AttributeIsExpressionContext;
+import de.jpwinkler.daf.csveditor.filter.DoorsObjectFilterParser.AttributeLikeExpressionContext;
 import de.jpwinkler.daf.csveditor.filter.DoorsObjectFilterParser.AttributeMissingExpressionContext;
 import de.jpwinkler.daf.csveditor.filter.DoorsObjectFilterParser.AttributeRegexpExpressionContext;
 import de.jpwinkler.daf.csveditor.filter.DoorsObjectFilterParser.BracketFilterExpressionContext;
@@ -30,11 +31,20 @@ public class DoorsObjectFilterListenerImpl extends DoorsObjectFilterBaseListener
     }
 
     @Override
-    public void exitAttributeExpression(final AttributeExpressionContext ctx) {
+    public void exitAttributeLikeExpression(final AttributeLikeExpressionContext ctx) {
         if (ctx.attributeName != null) {
             filterStack.push(new AttributeFilter(unescapeString(ctx.attributeName.getText()), unescapeString(ctx.attributeValue.getText()), false, false));
         } else {
             filterStack.push(new ObjectTextAndHeadingFilter(unescapeString(ctx.attributeValue.getText()), false, false));
+        }
+    }
+
+    @Override
+    public void exitAttributeIsExpression(final AttributeIsExpressionContext ctx) {
+        if (ctx.attributeName != null) {
+            filterStack.push(new AttributeFilter(unescapeString(ctx.attributeName.getText()), unescapeString(ctx.attributeValue.getText()), true, false));
+        } else {
+            filterStack.push(new ObjectTextAndHeadingFilter(unescapeString(ctx.attributeValue.getText()), true, false));
         }
     }
 

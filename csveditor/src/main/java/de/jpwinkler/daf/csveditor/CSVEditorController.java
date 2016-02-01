@@ -13,7 +13,13 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import de.jpwinkler.daf.csveditor.background.BackgroundTask;
+import de.jpwinkler.daf.csveditor.background.BackgroundTaskStatusListener;
+import de.jpwinkler.daf.csveditor.background.BackgroundTaskStatusMonitor;
 import de.jpwinkler.daf.csveditor.commands.UpdateAction;
+import de.jpwinkler.daf.csveditor.massedit.MassEditOperation;
+import de.jpwinkler.daf.csveditor.massedit.MassEditTarget;
+import de.jpwinkler.daf.csveditor.massedit.SetAttributeOperation;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
@@ -37,6 +43,8 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -45,6 +53,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.ToolBar;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.GridPane;
@@ -78,6 +87,9 @@ public class CSVEditorController {
     private CheckBox includeChildrenCheckbox;
 
     @FXML
+    private CheckBox includeParentsCheckbox;
+
+    @FXML
     private TreeView<OutlineTreeItem> outlineTreeView;
 
     @FXML
@@ -92,6 +104,9 @@ public class CSVEditorController {
     @FXML
     private GridPane resultGridPane;
 
+    @FXML
+    private Label statusBarLabel;
+
     private DocumentTaggingAlgorithm<DoorsTreeNode, String> algorithm;
 
     private TaggedDocument<DoorsTreeNode, String> lastResult;
@@ -99,6 +114,8 @@ public class CSVEditorController {
     final Map<DoorsTreeNode, Boolean> expanded = new WeakHashMap<>();
 
     private final ObjectTextPreprocessor preprocessor = ObjectTextPreprocessor.getEmptyDisabledPreprocessor();
+
+    private final BackgroundTaskStatusMonitor backgroundTaskStatusMonitor = new BackgroundTaskStatusMonitor();
 
     @FXML
     TextArea preprocessorTextArea;
@@ -109,6 +126,34 @@ public class CSVEditorController {
     @FXML
     ToggleButton filterExpressionToggleButton;
 
+    @FXML
+    private RadioButton massEditAllObjectsCheckBox;
+    @FXML
+    private RadioButton massEditSelectedObjectsCheckBox;
+    @FXML
+    private RadioButton massEditFilteredObjectsCheckBox;
+
+    @FXML
+    private RadioButton massEditSetAttributeCheckBox;
+
+    @FXML
+    private TextField massEditSetAttributeNameTextField;
+    @FXML
+    private TextField massEditSetAttributeValueTextField;
+
+    @FXML
+    private Label backgroundTaskStatusLabel;
+
+    @FXML
+    private ProgressBar backgroundTaskStatusProgressBar;
+
+    @FXML
+    private ToolBar backgroundTaskStatusToolBar;
+
+    @FXML
+    private ListView<String> featureListView;
+
+
     private ChangeListener<TreeItem<OutlineTreeItem>> outlineListener;
 
     @FXML
@@ -118,13 +163,19 @@ public class CSVEditorController {
         filterTextField.textProperty().addListener((ChangeListener<String>) (observable, oldValue, newValue) -> {
             final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
             if (selectedTab != null) {
-                tabControllers.get(selectedTab).updateFilter(newValue, includeChildrenCheckbox.isSelected(), filterExpressionToggleButton.isSelected());
+                tabControllers.get(selectedTab).updateFilter(newValue, includeParentsCheckbox.isSelected(), includeChildrenCheckbox.isSelected(), filterExpressionToggleButton.isSelected());
             }
         });
         includeChildrenCheckbox.selectedProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
             final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
             if (selectedTab != null) {
-                tabControllers.get(selectedTab).updateFilter(filterTextField.getText(), newValue, filterExpressionToggleButton.isSelected());
+                tabControllers.get(selectedTab).updateFilter(filterTextField.getText(), includeParentsCheckbox.isSelected(), newValue, filterExpressionToggleButton.isSelected());
+            }
+        });
+        includeParentsCheckbox.selectedProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
+            final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+            if (selectedTab != null) {
+                tabControllers.get(selectedTab).updateFilter(filterTextField.getText(), newValue, includeChildrenCheckbox.isSelected(), filterExpressionToggleButton.isSelected());
             }
         });
 
@@ -141,11 +192,14 @@ public class CSVEditorController {
         });
 
         outlineListener = (ChangeListener<TreeItem<OutlineTreeItem>>) (observable, oldValue, newValue) -> {
-            final DoorsTreeNode treeNode = newValue.getValue().getTreeNode();
-            if (treeNode instanceof DoorsObject) {
-                final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-                if (selectedTab != null) {
-                    tabControllers.get(selectedTab).selectObject((DoorsObject) treeNode);
+            if (newValue != null) {
+
+                final DoorsTreeNode treeNode = newValue.getValue().getTreeNode();
+                if (treeNode instanceof DoorsObject) {
+                    final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+                    if (selectedTab != null) {
+                        tabControllers.get(selectedTab).selectObject((DoorsObject) treeNode);
+                    }
                 }
             }
         };
@@ -160,6 +214,29 @@ public class CSVEditorController {
             algorithmSelectionContainer.getChildren().add(radioButton);
         }
 
+        backgroundTaskStatusToolBar.setManaged(false);
+        backgroundTaskStatusToolBar.setVisible(false);
+        backgroundTaskStatusMonitor.addListener(new BackgroundTaskStatusListener() {
+
+            @Override
+            public void onUpdateStatus(final String taskName, final int current, final int max) {
+                Platform.runLater(() -> {
+                    backgroundTaskStatusToolBar.setManaged(true);
+                    backgroundTaskStatusToolBar.setVisible(true);
+                    backgroundTaskStatusLabel.setText(taskName);
+                    backgroundTaskStatusProgressBar.setProgress((double) current / (double) max);
+                });
+            }
+
+            @Override
+            public void onDone() {
+                Platform.runLater(() -> {
+                    backgroundTaskStatusToolBar.setManaged(false);
+                    backgroundTaskStatusToolBar.setVisible(false);
+                });
+            }
+
+        });
     }
 
     private void algorithmChanged(final ActionEvent event) {
@@ -558,7 +635,49 @@ public class CSVEditorController {
     public void filterExpressionToggleButtonClicked() {
         final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
         if (selectedTab != null) {
-            tabControllers.get(selectedTab).updateFilter(filterTextField.getText(), includeChildrenCheckbox.isSelected(), filterExpressionToggleButton.isSelected());
+            tabControllers.get(selectedTab).updateFilter(filterTextField.getText(), includeParentsCheckbox.isSelected(), includeChildrenCheckbox.isSelected(), filterExpressionToggleButton.isSelected());
         }
+    }
+
+    public void setStatus(final String status) {
+        statusBarLabel.setText(status);
+    }
+
+    @FXML
+    public void massEditRunClicked() {
+        MassEditTarget target;
+
+        if (massEditAllObjectsCheckBox.isSelected()) {
+            target = MassEditTarget.ALL_OBJECTS;
+        } else if (massEditFilteredObjectsCheckBox.isSelected()) {
+            target = MassEditTarget.FILTERED_OBJECTS;
+        } else if (massEditSelectedObjectsCheckBox.isSelected()) {
+            target = MassEditTarget.SELECTED_OBJECTS;
+        } else {
+            throw new RuntimeException("No viable value for mass edit target available.");
+        }
+
+        MassEditOperation operation;
+
+        if (massEditSetAttributeCheckBox.isSelected()) {
+            operation = new SetAttributeOperation(massEditSetAttributeNameTextField.getText(), massEditSetAttributeValueTextField.getText());
+        } else {
+            throw new RuntimeException("No viable operation for mass edit found.");
+        }
+
+        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+        if (selectedTab != null) {
+            tabControllers.get(selectedTab).massEdit(target, operation);
+        }
+    }
+
+    public void runBackgroundTask(final BackgroundTask backgroundTask) {
+        backgroundTask.setMonitor(backgroundTaskStatusMonitor);
+        new Thread(backgroundTask).start();
+    }
+
+    public void setFeatureList(final List<String> features) {
+        featureListView.getItems().clear();
+        featureListView.getItems().addAll(features);
     }
 }

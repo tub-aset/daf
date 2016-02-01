@@ -24,7 +24,7 @@
 		</dependency>
 		<dependency>
 			<groupId>de.jpwinkler.daf</groupId>
-			<artifactId>documenttagging</artifactId>
+			<artifactId>dataprocessing</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
@@ -36,6 +36,11 @@
 			<groupId>org.antlr</groupId>
 			<artifactId>antlr4</artifactId>
 			<version>4.5.1</version>
+		</dependency>
+		<dependency>
+			<groupId>de.jpwinkler.daf</groupId>
+			<artifactId>documenttagging</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>

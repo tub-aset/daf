@@ -13,6 +13,7 @@ filterExpression
 	|	filterExpression '|' filterExpression #OrFilterExpression
 	|	'(' filterExpression ')' #BracketFilterExpression
 	|	attributeName = STRING 'MISSING' #AttributeMissingExpression
-	|	(attributeName = STRING)? 'HAS' attributeValue = STRING #AttributeExpression
+	|	(attributeName = STRING)? 'HAS' attributeValue = STRING #AttributeLikeExpression
 	|	(attributeName = STRING)? 'LIKE' regexp = STRING #AttributeRegexpExpression
+	|	(attributeName = STRING)? 'IS' attributeValue = STRING #AttributeIsExpression
 	;
