@@ -1,6 +1,7 @@
 package de.jpwinkler.daf.dafcore.util;
 
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
+import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
 
 public class DoorsModuleUtil {
 
@@ -18,6 +19,12 @@ public class DoorsModuleUtil {
         } else {
             return null;
         }
+    }
+
+    public static int countObjects(final DoorsTreeNode module) {
+
+        return 1 + module.getChildren().stream().mapToInt(n -> countObjects(n)).sum();
+
     }
 
 }
