@@ -30,7 +30,6 @@ public class DoorsApplicationImpl implements DoorsApplication {
     private static final Logger LOGGER = Logger.getLogger(DoorsApplicationImpl.class.getName());
 
     private final Map<Thread, ActiveXComponent> doorsApplications;
-    private final DoorsScriptCache cache = new DoorsScriptCache();
     private final WindowManager windowManager = new WindowManager();
     private OutputStream outputStream;
 
@@ -98,13 +97,12 @@ public class DoorsApplicationImpl implements DoorsApplication {
         Dispatch.call(doorsApplication, "runStr", dxl);
     }
 
-    @SuppressWarnings("unused")
-    synchronized private void runFile(final String filename) throws DoorsNotRunningException {
+    synchronized private void runFile(final String fileName) throws DoorsNotRunningException {
         if (!isDoorsRunning()) {
             throw new DoorsNotRunningException();
         }
         final ActiveXComponent doorsApplication = getDoorsApplication();
-        Dispatch.call(doorsApplication, "runFile", filename);
+        Dispatch.call(doorsApplication, "runFile", fileName);
     }
 
     private File getTempFile() throws IOException {
@@ -116,7 +114,7 @@ public class DoorsApplicationImpl implements DoorsApplication {
     @Override
     public void ack(final String message) throws DoorsException, IOException {
         buildAndRunCommand(builder -> {
-            builder.addScript("ack.dxl");
+            builder.addScript(new InternalDXLScript("ack.dxl"));
             builder.setVariable("message", message);
         });
     }
@@ -134,9 +132,9 @@ public class DoorsApplicationImpl implements DoorsApplication {
     @Override
     public void exportModuleToCSV(final DoorsURL url, final File file, final String view) throws DoorsException, IOException {
         buildAndRunCommand(builder -> {
-            builder.addScript("utils.dxl");
-            builder.addScript("export_csv.dxl");
-            builder.addScript("export_csv_url.dxl");
+            builder.addScript(new InternalDXLScript("utils.dxl"));
+            builder.addScript(new InternalDXLScript("export_csv.dxl"));
+            builder.addScript(new InternalDXLScript("export_csv_url.dxl"));
             builder.setVariable("moduleUrl", url.getUrl());
             builder.setVariable("view", view);
             builder.setVariable("file", file.getAbsolutePath());
@@ -146,9 +144,9 @@ public class DoorsApplicationImpl implements DoorsApplication {
     @Override
     public void exportModuleToCSV(final String modulePath, final File file, final String view) throws DoorsException, IOException {
         buildAndRunCommand(builder -> {
-            builder.addScript("utils.dxl");
-            builder.addScript("export_csv.dxl");
-            builder.addScript("export_csv_path.dxl");
+            builder.addScript(new InternalDXLScript("utils.dxl"));
+            builder.addScript(new InternalDXLScript("export_csv.dxl"));
+            builder.addScript(new InternalDXLScript("export_csv_path.dxl"));
             builder.setVariable("modulePath", modulePath);
             builder.setVariable("view", view);
             builder.setVariable("file", file.getAbsolutePath());
@@ -158,9 +156,9 @@ public class DoorsApplicationImpl implements DoorsApplication {
     @Override
     public void exportModulesToCSV(final File moduleListFile, final File targetFolder) throws IOException, DoorsException {
         buildAndRunCommand(builder -> {
-            builder.addScript("utils.dxl");
-            builder.addScript("export_csv.dxl");
-            builder.addScript("export_many.dxl");
+            builder.addScript(new InternalDXLScript("utils.dxl"));
+            builder.addScript(new InternalDXLScript("export_csv.dxl"));
+            builder.addScript(new InternalDXLScript("export_many.dxl"));
             builder.setVariable("moduleListFile", moduleListFile.getAbsolutePath());
             builder.setVariable("targetFolder", targetFolder.getAbsolutePath());
         });
@@ -175,30 +173,44 @@ public class DoorsApplicationImpl implements DoorsApplication {
     @Override
     public void gotoObject(final String modulePath, final int absoluteNumber) throws DoorsException, IOException {
         buildAndRunCommand(builder -> {
-            builder.addScript("goto_object.dxl");
+            builder.addScript(new InternalDXLScript("goto_object.dxl"));
             builder.setVariable("modulePath", modulePath);
             builder.setVariable("absoluteNumber", String.valueOf(absoluteNumber));
         });
     }
 
+    @Override
+    public void runScript(final File scriptFile) throws DoorsException, IOException {
+        buildAndRunCommand(builder -> {
+            builder.addScript(new ExternalDXLScript(scriptFile));
+        });
+    }
+
+    @Override
+    public void runScript(final String dxlCode) throws DoorsException, IOException {
+        buildAndRunCommand(builder -> {
+            builder.addScript(new InMemoryDXLScript(dxlCode));
+        });
+    }
+
     private void buildAndRunCommand(final Consumer<DoorsScriptBuilder> prepareScriptBuilder) throws IOException, DoorsException {
-        final DoorsScriptBuilder builder = new DoorsScriptBuilder(cache);
+        final DoorsScriptBuilder builder = new DoorsScriptBuilder();
         final boolean redirectOutput = outputStream != null;
 
         final File exceptionFile = getTempFile();
 
-        builder.addScript("exception_handling_pre.dxl");
+        builder.addScript(new InternalDXLScript("exception_handling_pre.dxl"));
         builder.setVariable("exceptionFilename", exceptionFile.getAbsolutePath());
 
         if (redirectOutput) {
-            builder.addScript("redirect_output_pre.dxl");
+            builder.addScript(new InternalDXLScript("redirect_output_pre.dxl"));
         }
 
         prepareScriptBuilder.accept(builder);
 
         MyTailer t = null;
         if (redirectOutput) {
-            builder.addScript("redirect_output_post.dxl");
+            builder.addScript(new InternalDXLScript("redirect_output_post.dxl"));
 
             final File outputFile = File.createTempFile("doorsOutput", "");
             // file.deleteOnExit();

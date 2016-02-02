@@ -8,12 +8,10 @@ import java.util.logging.Logger;
  * Hello world!
  *
  */
-public class App
-{
+public class App {
     private static final Logger LOGGER = Logger.getLogger(App.class.getName());
 
-    public static void main( final String[] args )
-    {
+    public static void main(final String[] args) {
         try {
             DoorsApplicationFactory.getDoorsApplication().ack("Hello World!");
         } catch (DoorsException | IOException e) {

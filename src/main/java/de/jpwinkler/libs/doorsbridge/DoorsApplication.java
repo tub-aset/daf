@@ -22,6 +22,10 @@ public interface DoorsApplication {
 
     void gotoObject(DoorsURL url, int absoluteNumber) throws DoorsException, IOException;
 
+    void runScript(File scriptFile) throws DoorsException, IOException;
+
+    void runScript(String dxlCode) throws DoorsException, IOException;
+
     boolean isDoorsRunning();
 
     void redirectOutput(OutputStream stream);

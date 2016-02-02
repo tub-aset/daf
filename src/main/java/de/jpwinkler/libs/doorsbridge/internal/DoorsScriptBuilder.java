@@ -1,5 +1,6 @@
 package de.jpwinkler.libs.doorsbridge.internal;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,17 +9,10 @@ import java.util.Map.Entry;
 
 public class DoorsScriptBuilder {
 
-    private final DoorsScriptCache cache;
-
-    private final List<String> scripts = new ArrayList<>();
+    private final List<DXLScript> scripts = new ArrayList<>();
     private final Map<String, String> variables = new HashMap<>();
 
-    public DoorsScriptBuilder(final DoorsScriptCache cache) {
-        super();
-        this.cache = cache;
-    }
-
-    public DoorsScriptBuilder addScript(final String name) {
+    public DoorsScriptBuilder addScript(final DXLScript name) {
         scripts.add(name);
         return this;
     }
@@ -28,11 +22,11 @@ public class DoorsScriptBuilder {
         return this;
     }
 
-    public String build() throws ScriptNotFoundException {
+    public String build() throws ScriptNotFoundException, IOException {
         final StringBuilder builder = new StringBuilder();
 
-        for (final String scriptName : scripts) {
-            builder.append(cache.getScript(scriptName));
+        for (final DXLScript script : scripts) {
+            builder.append(script.getDXL());
             builder.append("\n");
         }
 
