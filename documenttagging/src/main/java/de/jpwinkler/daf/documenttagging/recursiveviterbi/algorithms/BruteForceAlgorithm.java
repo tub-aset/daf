@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.jpwinkler.daf.documenttagging.recursiveviterbi.scenario.TreeNode;
-import de.jpwinkler.daf.documenttagging.recursiveviterbi.scenario.util.BigDecimals;
+import de.jpwinkler.daf.documenttagging.util.BigDecimals;
 
 /**
  * An algorithm using brute force methods to determine the most probable states

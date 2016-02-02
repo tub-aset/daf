@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.Set;
 
 import de.jpwinkler.daf.documenttagging.hypermarkovchain.Edge;
-import de.jpwinkler.daf.documenttagging.maxent.util.CompositeKey2;
+import de.jpwinkler.daf.documenttagging.util.CompositeKey2;
 
 public abstract class AbstractSmoothingTechnique<T> {
 

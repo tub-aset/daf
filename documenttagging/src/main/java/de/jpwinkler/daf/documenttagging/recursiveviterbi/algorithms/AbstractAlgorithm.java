@@ -8,7 +8,7 @@ import java.util.Map.Entry;
 import de.jpwinkler.daf.documenttagging.recursiveviterbi.scenario.Scenario;
 import de.jpwinkler.daf.documenttagging.recursiveviterbi.scenario.ScenarioResult;
 import de.jpwinkler.daf.documenttagging.recursiveviterbi.scenario.TreeNode;
-import de.jpwinkler.daf.documenttagging.recursiveviterbi.scenario.util.BigDecimals;
+import de.jpwinkler.daf.documenttagging.util.BigDecimals;
 
 /**
  * This class is the base class for algorithm implementations that tag the tree

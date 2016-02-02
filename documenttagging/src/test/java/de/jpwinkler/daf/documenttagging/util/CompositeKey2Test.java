@@ -1,4 +1,4 @@
-package de.jpwinkler.daf.documenttagging.maxent.util;
+package de.jpwinkler.daf.documenttagging.util;
 
 import static org.junit.Assert.*;
 
@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.junit.Test;
+
+import de.jpwinkler.daf.documenttagging.util.CompositeKey2;
 
 public class CompositeKey2Test {
 

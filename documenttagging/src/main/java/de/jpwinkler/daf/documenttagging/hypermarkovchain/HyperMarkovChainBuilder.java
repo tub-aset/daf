@@ -8,7 +8,7 @@ import java.util.function.Function;
 
 import de.jpwinkler.daf.documenttagging.DocumentAccessor;
 import de.jpwinkler.daf.documenttagging.hypermarkovchain.smoothing.AbstractSmoothingTechnique;
-import de.jpwinkler.daf.documenttagging.maxent.util.CompositeKey2;
+import de.jpwinkler.daf.documenttagging.util.CompositeKey2;
 
 public class HyperMarkovChainBuilder<T> {
 

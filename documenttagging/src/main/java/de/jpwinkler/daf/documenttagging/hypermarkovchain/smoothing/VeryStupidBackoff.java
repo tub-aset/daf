@@ -8,7 +8,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import de.jpwinkler.daf.documenttagging.hypermarkovchain.Edge;
-import de.jpwinkler.daf.documenttagging.maxent.util.CompositeKey2;
+import de.jpwinkler.daf.documenttagging.util.CompositeKey2;
 
 public class VeryStupidBackoff<T> extends AbstractSmoothingTechnique<T> {
 

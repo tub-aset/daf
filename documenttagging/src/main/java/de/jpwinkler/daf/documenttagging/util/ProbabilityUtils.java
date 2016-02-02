@@ -1,4 +1,4 @@
-package de.jpwinkler.daf.documenttagging.recursiveviterbi.scenario.util;
+package de.jpwinkler.daf.documenttagging.util;
 
 import java.math.BigDecimal;
 import java.util.Random;

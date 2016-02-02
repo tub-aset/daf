@@ -7,7 +7,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.jpwinkler.daf.documenttagging.recursiveviterbi.scenario.util.ProbabilityUtils;
+import de.jpwinkler.daf.documenttagging.util.ProbabilityUtils;
 
 public class ProbabilityUtilsTest {
 

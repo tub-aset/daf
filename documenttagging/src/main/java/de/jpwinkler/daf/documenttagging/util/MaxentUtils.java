@@ -1,4 +1,4 @@
-package de.jpwinkler.daf.documenttagging.maxent.util;
+package de.jpwinkler.daf.documenttagging.util;
 
 import java.util.ArrayList;
 import java.util.Collections;

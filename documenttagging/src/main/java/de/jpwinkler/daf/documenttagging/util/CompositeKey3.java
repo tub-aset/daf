@@ -1,4 +1,4 @@
-package de.jpwinkler.daf.documenttagging.maxent.util;
+package de.jpwinkler.daf.documenttagging.util;
 
 public class CompositeKey3<K1, K2, K3> {
 

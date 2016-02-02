@@ -2,7 +2,7 @@ package de.jpwinkler.daf.documenttagging.recursiveviterbi.scenario;
 
 import java.util.Random;
 
-import de.jpwinkler.daf.documenttagging.recursiveviterbi.scenario.util.ProbabilityUtils;
+import de.jpwinkler.daf.documenttagging.util.ProbabilityUtils;
 
 /**
  * This class generates random scenarios.
