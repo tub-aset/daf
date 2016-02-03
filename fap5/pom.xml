@@ -3,11 +3,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<relativePath>../base.xml</relativePath>
+		<relativePath>../parent/pom.xml</relativePath>
 		<groupId>de.jpwinkler.daf</groupId>
-		<artifactId>base</artifactId>
+		<artifactId>dafparent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
+
 
 	<artifactId>fap5</artifactId>
 	<packaging>jar</packaging>
@@ -64,14 +65,14 @@
 			<version>2.6</version>
 		</dependency>
 		<dependency>
-			<groupId>de.jpwinkler.daf</groupId>
-			<artifactId>doorsbridge</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
 			<groupId>edu.stanford.nlp</groupId>
 			<artifactId>stanford-parser</artifactId>
 			<version>3.5.2</version>
+		</dependency>
+		<dependency>
+			<groupId>de.jpwinkler.libs</groupId>
+			<artifactId>doorsbridge</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>

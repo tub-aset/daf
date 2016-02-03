@@ -3,11 +3,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<relativePath>../base.xml</relativePath>
+		<relativePath>../parent/pom.xml</relativePath>
 		<groupId>de.jpwinkler.daf</groupId>
-		<artifactId>base</artifactId>
+		<artifactId>dafparent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
+
 
 	<artifactId>dataprocessing</artifactId>
 	<packaging>jar</packaging>
