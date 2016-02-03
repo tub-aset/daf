@@ -299,8 +299,7 @@ public class CSVEditorController {
     }
 
     public void newTabFromFile(final File selectedFile) throws IOException, CSVParseException {
-        final FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(new File("view/csveditortab.fxml").toURI().toURL());
+        final FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/csveditortab.fxml"));
         final Parent root = loader.load();
         final CSVEditorTabController controller = loader.getController();
         final Tab tab = new Tab(selectedFile != null ? selectedFile.getName() : "New Document", root);

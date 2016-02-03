@@ -446,8 +446,7 @@ public class CSVEditorTabController {
     public void setupColumns() {
         try {
             final Stage dialogStage = new Stage();
-            final FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(new File("view/selectcolumns.fxml").toURI().toURL());
+            final FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/selectcolumns.fxml"));
             final Parent root = loader.load();
             dialogStage.initModality(Modality.APPLICATION_MODAL);
             dialogStage.initOwner(primaryStage);

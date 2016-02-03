@@ -21,8 +21,7 @@ public class CSVEditorApplication extends Application {
     @Override
     public void start(final Stage primaryStage) throws Exception {
         try {
-            final FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(new File("view/csveditor.fxml").toURI().toURL());
+            final FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/csveditor.fxml"));
             final Parent root = loader.load();
 
             csvEditorController = loader.getController();
