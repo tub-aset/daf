@@ -39,7 +39,7 @@ public abstract class RuleBasedModelConstructor extends AbstractStepImpl impleme
 
     @Override
     public ModelObject execute() {
-        LOGGER.info(String.format("Starting transformation run with model constructor %s on module %s.", getClass().getName(), module.getName()));
+        LOGGER.fine(String.format("Starting transformation run with model constructor %s on module %s.", getClass().getName(), module.getName()));
         final long t1 = System.currentTimeMillis();
 
         if (!probe(module)) {
@@ -56,18 +56,18 @@ public abstract class RuleBasedModelConstructor extends AbstractStepImpl impleme
         }
         preProcess(context.getRootModelObject(), context);
         while (context.beginStage()) {
-            LOGGER.info(String.format("Starting transformation stage %d. Active Rules: %s", context.getStage(), context.getActiveRules()));
+            LOGGER.fine(String.format("Starting transformation stage %d. Active Rules: %s", context.getStage(), context.getActiveRules()));
             final long t2 = System.currentTimeMillis();
 
             context.getModule().accept(new RuleApplicationVisitor(context.getActiveRules(), context));
 
             context.endStage();
 
-            LOGGER.info(String.format("Transformation stage %d completed in %d ms.", context.getStage(), System.currentTimeMillis() - t2));
+            LOGGER.fine(String.format("Transformation stage %d completed in %d ms.", context.getStage(), System.currentTimeMillis() - t2));
         }
         postProcess(context.getRootModelObject(), context);
 
-        LOGGER.info(String.format("Transformation run completed in %d ms.", System.currentTimeMillis() - t1));
+        LOGGER.fine(String.format("Transformation run completed in %d ms.", System.currentTimeMillis() - t1));
 
         if (!context.getRulePool().isEmpty()) {
             LOGGER.warning("Some rules were not executed: " + context.getRulePool());
@@ -77,11 +77,11 @@ public abstract class RuleBasedModelConstructor extends AbstractStepImpl impleme
         context.getModule().accept(markedObjectVisitor);
 
         if (!markedObjectVisitor.getUnmarkedObjects().isEmpty()) {
-            LOGGER.warning(String.format("%d out of %d objects were left unmarked.", markedObjectVisitor.getUnmarkedObjects().size(), markedObjectVisitor.getUnmarkedObjects().size() + markedObjectVisitor.getMarkedObjects().size()));
+            LOGGER.fine(String.format("%d out of %d objects were left unmarked.", markedObjectVisitor.getUnmarkedObjects().size(), markedObjectVisitor.getUnmarkedObjects().size() + markedObjectVisitor.getMarkedObjects().size()));
         }
 
         for (final String markerType : context.getUsedMarkerTypes()) {
-            LOGGER.info(String.format("Number of objects marked with %s: %d", markerType, context.getMarkedObjects(markerType).size()));
+            LOGGER.fine(String.format("Number of objects marked with %s: %d", markerType, context.getMarkedObjects(markerType).size()));
         }
 
         return context.getRootModelObject();
