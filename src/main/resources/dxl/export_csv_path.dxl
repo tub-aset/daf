@@ -12,10 +12,11 @@ if (!null m) {
 	if (load(m, view "$$view$$")) {
 		exportModuleToCSV(m, "$$file$$")
 		exportModuleMetaData(m, "$$file$$.mmd", null)
+		close m
 	} else {
+		close m
 		throw("Cannot find view $$view$$ in module " name(m) ".")
 	}
-	close m
 } else {
 	throw("Cannot load module $$modulePath$$.")
 }
