@@ -78,14 +78,18 @@ public class ExportModulesOp extends AbstractStepImpl implements ModelOperationI
         if (validateModulePath(path, name)) {
             final String fullName = path + "/" + name;
             final String id = fullName + (view != null && !view.isEmpty() ? ":" + view : "");
-            LOGGER.info("Exporting " + id);
             final File directory = new File(exportFolder + path);
             directory.mkdirs();
             final File file = new File(directory, name + "-" + view + ".csv");
-            if (view != null && !view.isEmpty()) {
-                app.exportModuleToCSV(fullName, file, view);
+            if (file.exists()) {
+                LOGGER.warning("Module already exported: " + id);
             } else {
-                app.exportModuleToCSV(fullName, file);
+                LOGGER.info("Exporting " + id);
+                if (view != null && !view.isEmpty()) {
+                    app.exportModuleToCSV(fullName, file, view);
+                } else {
+                    app.exportModuleToCSV(fullName, file);
+                }
             }
         }
     }

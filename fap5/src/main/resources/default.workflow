@@ -16,7 +16,7 @@ op ExportModulesOp {
 }
 
 constructor CodeBeamerModelConstructor {
-	//dependency ExportModulesOp export
+	dependency ExportModulesOp export
 	source CodeBeamer
 	implementation "de.jpwinkler.daf.fap5.CodeBeamerModelConstructor"
 }
