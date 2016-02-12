@@ -31,10 +31,10 @@ public class FeatureVectorGenerator<E, F> {
         this.featureGenerators.add(featureGenerator);
     }
 
-    private List<F> getFeatures(final E element) {
-        final List<F> features = new ArrayList<>();
+    private HashMap<F, Integer> getFeatures(final E element) {
+        final HashMap<F, Integer> features = new HashMap<>();
         for (final FeatureGenerator<E, F> generator : featureGenerators) {
-            features.addAll(generator.getFeatures(element));
+            generator.getFeatures(element, features);
         }
         return features;
     }
@@ -42,9 +42,9 @@ public class FeatureVectorGenerator<E, F> {
     public double[] getFeatureVector(final E element) {
         final double[] vector = new double[featureIndices.size()];
 
-        for (final F feature : getFeatures(element)) {
-            if (featureIndices.containsKey(feature)) {
-                vector[featureIndices.get(feature)] += 1;
+        for (final Entry<F, Integer> feature : getFeatures(element).entrySet()) {
+            if (featureIndices.containsKey(feature.getKey())) {
+                vector[featureIndices.get(feature.getKey())] = feature.getValue();
             }
         }
 
@@ -52,15 +52,15 @@ public class FeatureVectorGenerator<E, F> {
     }
 
     public int[] getFeatureIndexVector(final E element) {
-        return getFeatures(element).stream().filter(f -> featureIndices.containsKey(f)).mapToInt(f -> featureIndices.get(f)).toArray();
+        return getFeatures(element).entrySet().stream().filter(e -> featureIndices.containsKey(e.getKey())).mapToInt(e -> featureIndices.get(e.getKey())).toArray();
     }
 
     public void addElement(final E element) {
-        for (final F feature : getFeatures(element)) {
-            if (!featureCounts.containsKey(feature)) {
-                featureCounts.put(feature, 1);
+        for (final Entry<F, Integer> feature : getFeatures(element).entrySet()) {
+            if (!featureCounts.containsKey(feature.getKey())) {
+                featureCounts.put(feature.getKey(), feature.getValue());
             } else {
-                featureCounts.put(feature, featureCounts.get(feature) + 1);
+                featureCounts.put(feature.getKey(), featureCounts.get(feature.getKey()) + feature.getValue());
             }
         }
     }

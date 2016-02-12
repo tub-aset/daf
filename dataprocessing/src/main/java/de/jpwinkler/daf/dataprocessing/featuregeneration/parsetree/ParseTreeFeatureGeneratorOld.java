@@ -1,23 +1,23 @@
-package de.jpwinkler.daf.dataprocessing.featuregeneration;
+package de.jpwinkler.daf.dataprocessing.featuregeneration.parsetree;
 
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
 
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
+import de.jpwinkler.daf.dataprocessing.featuregeneration.FeatureGenerator;
 import de.jpwinkler.daf.dataprocessing.preprocessing.ObjectTextPreprocessor;
 import edu.stanford.nlp.ling.HasWord;
 import edu.stanford.nlp.parser.lexparser.LexicalizedParser;
 import edu.stanford.nlp.process.DocumentPreprocessor;
 import edu.stanford.nlp.trees.Tree;
 
-public class ParseTreeFeatureGenerator extends FeatureGenerator<DoorsObject, String> {
+public class ParseTreeFeatureGeneratorOld extends FeatureGenerator<DoorsObject, String> {
 
     private static final List<String> VERB_TAGS = Arrays.asList("ADV", "VVFIN", "VVIMP", "VVINF", "VVIZU", "VVPP", "VAFIN", "VAIMP", "VAINF", "VAPP", "VMFIN", "VMINF", "VMPP");
 
@@ -26,7 +26,7 @@ public class ParseTreeFeatureGenerator extends FeatureGenerator<DoorsObject, Str
     private final LexicalizedParser parser;
     private final ObjectTextPreprocessor objectTextPreprocessor;
 
-    public ParseTreeFeatureGenerator() throws IOException {
+    public ParseTreeFeatureGeneratorOld() throws IOException {
         parser = LexicalizedParser.loadModel("germanPCFG.ser.gz");
 
         objectTextPreprocessor = ObjectTextPreprocessor.getDefaultPreprocessor();
@@ -45,53 +45,47 @@ public class ParseTreeFeatureGenerator extends FeatureGenerator<DoorsObject, Str
             for (final List<HasWord> x : preprocessor) {
                 final Tree tree = parser.apply(x);
 
-                traverseTree(tree, t -> {
-                    processTree(t);
-                    return true;
-                });
+                // traverseTree(tree, t -> {
+                // processTree(t);
+                // return true;
+                // });
 
             }
         }
 
     }
 
-    private void traverseTree(final Tree tree, final Function<Tree, Boolean> f) {
-        if (f.apply(tree)) {
-            for (final Tree child : tree.children()) {
-                traverseTree(child, f);
-            }
-        }
-    }
 
-    private void processTree(final Tree tree) {
-        buildVerbFeatures(tree);
-        // buildWordGroupFeatures(tree);
-    }
+    // private void processTree(final Tree tree) {
+    // buildVerbFeatures(tree);
+    // buildWordGroupFeatures(tree);
+    // }
 
-    private void buildVerbFeatures(final Tree tree) {
-        if (SENTENCE_TAGS.contains(tree.label().toString())) {
-            final List<String> b = new ArrayList<>();
-            final List<String> b2 = new ArrayList<>();
-            traverseTree(tree, t -> {
-                if (t != tree && SENTENCE_TAGS.contains(t.label().toString())) {
-                    return false;
-                } else if (t.numChildren() == 1 && t.getChild(0).isLeaf() && VERB_TAGS.contains(t.label().toString())) {
-                    b.add(t.getChild(0).label().toString());
-                    if (t.label().toString().startsWith("VV")) {
-                        b2.add("X");
-                    } else {
-                        b2.add(t.getChild(0).label().toString());
-                    }
-                    return true;
-                } else {
-                    return true;
-                }
-            });
-            emitFeature(StringUtils.join(b, " ").trim().toLowerCase());
-            emitFeature(StringUtils.join(b2, " ").trim().toLowerCase());
-        }
-
-    }
+    // private void buildVerbFeatures(final Tree tree) {
+    // if (SENTENCE_TAGS.contains(tree.label().toString())) {
+    // final List<String> b = new ArrayList<>();
+    // final List<String> b2 = new ArrayList<>();
+    // traverseTree(tree, t -> {
+    // if (t != tree && SENTENCE_TAGS.contains(t.label().toString())) {
+    // return false;
+    // } else if (t.numChildren() == 1 && t.getChild(0).isLeaf() &&
+    // VERB_TAGS.contains(t.label().toString())) {
+    // b.add(t.getChild(0).label().toString());
+    // if (t.label().toString().startsWith("VV")) {
+    // b2.add("X");
+    // } else {
+    // b2.add(t.getChild(0).label().toString());
+    // }
+    // return true;
+    // } else {
+    // return true;
+    // }
+    // });
+    // emitFeature(StringUtils.join(b, " ").trim().toLowerCase());
+    // emitFeature(StringUtils.join(b2, " ").trim().toLowerCase());
+    // }
+    //
+    // }
 
     private void buildWordGroupFeatures(final Tree tree) {
         final List<String> words = new ArrayList<>();

@@ -13,6 +13,7 @@ typedef NUMBER_HEXADECIMAL(NUMBER)
 "0",'x[0-9A-Fa-f]+' -> concat(NUMBER_HEXADECIMAL)
 '[0-9]*'+ -> concat(NUMBER)
 repeat t:NUMBER,".",t:NUMBER -> concat(NUMBER)
+repeat t:NUMBER,t:NUMBER -> concat(NUMBER)
 t:NUMBER,",",t:NUMBER -> concat(NUMBER)
 t:NUMBER,"^","-"?,t:NUMBER -> concat(NUMBER)
 
@@ -24,20 +25,22 @@ repeat {
 	t:UNIT,"/",t:UNIT -> concat(UNIT)
 	"(",t:UNIT,")" -> concat(UNIT)
 }
-
 ("+","/","-")|"±" -> concat(SIGN)
 ("+"|"-"|t:SIGN)?,t:NUMBER,t:UNIT -> concat(NUMBER_WITH_UNIT, " ")
-
-t:UNIT -> untype
+t:UNIT -> untype //sequences looking like units not in the context of numbers are not considered units.
 
 //stuff
-("Klemme")|("KL"|"Kl","."?),"-"?,t:NUMBER,(("#",t:NUMBER)|'[A-Za-z]'|("_","x"))? -> concat(KLEMME)
+//("Klemme")|("KL"|"Kl","."?),"-"?,t:NUMBER,(("#",t:NUMBER)|'[A-Za-z]'|("_","x"))? -> concat(KLEMME)
 
-'[A-Z]+',"-"?,t:NUMBER -> concat(REFERENCE)
-"[",t:REFERENCE,"]" -> concat(REFERENCE)
-"A",t:NUMBER -> concat(REFERENCE)
+//references
+//'[A-Z]+',"-"?,t:NUMBER -> concat(REFERENCE)
+"[",_+,"]" -> concat(REFERENCE)
 t:QUOTED_STRING,t:REFERENCE -> concat(REFERENCE)
 t:REFERENCE,t:QUOTED_STRING -> concat(REFERENCE)
+
+//Identifier
+!t:*&'.+[0-9].*' -> concat(ID)
+repeat t:ID,t:NUMBER -> concat(ID)
 
 //brackets
 "(",_+,")" -> remove

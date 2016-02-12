@@ -1,20 +1,22 @@
 package de.jpwinkler.daf.dataprocessing.featuregeneration;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Map;
 
 public abstract class FeatureGenerator<E, F> {
 
-    private final Set<F> features = new HashSet<>();
+    private Map<F, Integer> features;
 
-    protected final void emitFeature(final F feature) {
-        this.features.add(feature);
+    public final void emitFeature(final F feature) {
+        if (features.containsKey(feature)) {
+            features.put(feature, features.get(feature) + 1);
+        } else {
+            features.put(feature, 1);
+        }
     }
 
-    public final Set<F> getFeatures(final E element) {
-        features.clear();
+    public final void getFeatures(final E element, final Map<F, Integer> features) {
+        this.features = features;
         runGenerator(element);
-        return new HashSet<>(features);
     }
 
     protected abstract void runGenerator(E element);
