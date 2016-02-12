@@ -18,7 +18,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="DoorsObject" eSuperTypes="#//DoorsTreeNode">
     <eOperations name="isHeading" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="body" value="return !getObjectHeading().isEmpty();"/>
+        <details key="body" value="return getObjectHeading() != null &amp;&amp; !getObjectHeading().isEmpty();"/>
       </eAnnotations>
     </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="objectIdentifier" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"

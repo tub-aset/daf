@@ -377,11 +377,12 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
     @Override
     public DoorsModule getModule() {
         if (module != null && module.eIsProxy()) {
-            InternalEObject oldModule = (InternalEObject)module;
+            final InternalEObject oldModule = (InternalEObject)module;
             module = (DoorsModule)eResolveProxy(oldModule);
             if (module != oldModule) {
-                if (eNotificationRequired())
+                if (eNotificationRequired()) {
                     eNotify(new ENotificationImpl(this, Notification.RESOLVE, CSVPackage.DOORS_OBJECT__MODULE, oldModule, module));
+                }
             }
         }
         return module;
@@ -402,11 +403,12 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
      * @generated
      */
     @Override
-    public void setModule(DoorsModule newModule) {
-        DoorsModule oldModule = module;
+    public void setModule(final DoorsModule newModule) {
+        final DoorsModule oldModule = module;
         module = newModule;
-        if (eNotificationRequired())
+        if (eNotificationRequired()) {
             eNotify(new ENotificationImpl(this, Notification.SET, CSVPackage.DOORS_OBJECT__MODULE, oldModule, module));
+        }
     }
 
     /**
@@ -416,7 +418,7 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
      */
     @Override
     public boolean isHeading() {
-        return !getObjectHeading().isEmpty();
+        return getObjectHeading() != null && !getObjectHeading().isEmpty();
     }
 
     /**
@@ -426,12 +428,12 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+    public NotificationChain eInverseAdd(final InternalEObject otherEnd, final int featureID, final NotificationChain msgs) {
         switch (featureID) {
-            case CSVPackage.DOORS_OBJECT__OUTGOING_LINKS:
-                return ((InternalEList<InternalEObject>)(InternalEList<?>)getOutgoingLinks()).basicAdd(otherEnd, msgs);
-            case CSVPackage.DOORS_OBJECT__INCOMING_LINKS:
-                return ((InternalEList<InternalEObject>)(InternalEList<?>)getIncomingLinks()).basicAdd(otherEnd, msgs);
+        case CSVPackage.DOORS_OBJECT__OUTGOING_LINKS:
+            return ((InternalEList<InternalEObject>)(InternalEList<?>)getOutgoingLinks()).basicAdd(otherEnd, msgs);
+        case CSVPackage.DOORS_OBJECT__INCOMING_LINKS:
+            return ((InternalEList<InternalEObject>)(InternalEList<?>)getIncomingLinks()).basicAdd(otherEnd, msgs);
         }
         return super.eInverseAdd(otherEnd, featureID, msgs);
     }
@@ -442,12 +444,12 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+    public NotificationChain eInverseRemove(final InternalEObject otherEnd, final int featureID, final NotificationChain msgs) {
         switch (featureID) {
-            case CSVPackage.DOORS_OBJECT__OUTGOING_LINKS:
-                return ((InternalEList<?>)getOutgoingLinks()).basicRemove(otherEnd, msgs);
-            case CSVPackage.DOORS_OBJECT__INCOMING_LINKS:
-                return ((InternalEList<?>)getIncomingLinks()).basicRemove(otherEnd, msgs);
+        case CSVPackage.DOORS_OBJECT__OUTGOING_LINKS:
+            return ((InternalEList<?>)getOutgoingLinks()).basicRemove(otherEnd, msgs);
+        case CSVPackage.DOORS_OBJECT__INCOMING_LINKS:
+            return ((InternalEList<?>)getIncomingLinks()).basicRemove(otherEnd, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
     }
@@ -458,31 +460,33 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
      * @generated
      */
     @Override
-    public Object eGet(int featureID, boolean resolve, boolean coreType) {
+    public Object eGet(final int featureID, final boolean resolve, final boolean coreType) {
         switch (featureID) {
-            case CSVPackage.DOORS_OBJECT__OBJECT_IDENTIFIER:
-                return getObjectIdentifier();
-            case CSVPackage.DOORS_OBJECT__OBJECT_LEVEL:
-                return getObjectLevel();
-            case CSVPackage.DOORS_OBJECT__OBJECT_NUMBER:
-                return getObjectNumber();
-            case CSVPackage.DOORS_OBJECT__ABSOLUTE_NUMBER:
-                return getAbsoluteNumber();
-            case CSVPackage.DOORS_OBJECT__OBJECT_TEXT:
-                return getObjectText();
-            case CSVPackage.DOORS_OBJECT__OBJECT_SHORT_TEXT:
-                return getObjectShortText();
-            case CSVPackage.DOORS_OBJECT__OBJECT_HEADING:
-                return getObjectHeading();
-            case CSVPackage.DOORS_OBJECT__TEXT:
-                return getText();
-            case CSVPackage.DOORS_OBJECT__OUTGOING_LINKS:
-                return getOutgoingLinks();
-            case CSVPackage.DOORS_OBJECT__INCOMING_LINKS:
-                return getIncomingLinks();
-            case CSVPackage.DOORS_OBJECT__MODULE:
-                if (resolve) return getModule();
-                return basicGetModule();
+        case CSVPackage.DOORS_OBJECT__OBJECT_IDENTIFIER:
+            return getObjectIdentifier();
+        case CSVPackage.DOORS_OBJECT__OBJECT_LEVEL:
+            return getObjectLevel();
+        case CSVPackage.DOORS_OBJECT__OBJECT_NUMBER:
+            return getObjectNumber();
+        case CSVPackage.DOORS_OBJECT__ABSOLUTE_NUMBER:
+            return getAbsoluteNumber();
+        case CSVPackage.DOORS_OBJECT__OBJECT_TEXT:
+            return getObjectText();
+        case CSVPackage.DOORS_OBJECT__OBJECT_SHORT_TEXT:
+            return getObjectShortText();
+        case CSVPackage.DOORS_OBJECT__OBJECT_HEADING:
+            return getObjectHeading();
+        case CSVPackage.DOORS_OBJECT__TEXT:
+            return getText();
+        case CSVPackage.DOORS_OBJECT__OUTGOING_LINKS:
+            return getOutgoingLinks();
+        case CSVPackage.DOORS_OBJECT__INCOMING_LINKS:
+            return getIncomingLinks();
+        case CSVPackage.DOORS_OBJECT__MODULE:
+            if (resolve) {
+                return getModule();
+            }
+            return basicGetModule();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -494,43 +498,43 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public void eSet(int featureID, Object newValue) {
+    public void eSet(final int featureID, final Object newValue) {
         switch (featureID) {
-            case CSVPackage.DOORS_OBJECT__OBJECT_IDENTIFIER:
-                setObjectIdentifier((String)newValue);
-                return;
-            case CSVPackage.DOORS_OBJECT__OBJECT_LEVEL:
-                setObjectLevel((Integer)newValue);
-                return;
-            case CSVPackage.DOORS_OBJECT__OBJECT_NUMBER:
-                setObjectNumber((String)newValue);
-                return;
-            case CSVPackage.DOORS_OBJECT__ABSOLUTE_NUMBER:
-                setAbsoluteNumber((Integer)newValue);
-                return;
-            case CSVPackage.DOORS_OBJECT__OBJECT_TEXT:
-                setObjectText((String)newValue);
-                return;
-            case CSVPackage.DOORS_OBJECT__OBJECT_SHORT_TEXT:
-                setObjectShortText((String)newValue);
-                return;
-            case CSVPackage.DOORS_OBJECT__OBJECT_HEADING:
-                setObjectHeading((String)newValue);
-                return;
-            case CSVPackage.DOORS_OBJECT__TEXT:
-                setText((String)newValue);
-                return;
-            case CSVPackage.DOORS_OBJECT__OUTGOING_LINKS:
-                getOutgoingLinks().clear();
-                getOutgoingLinks().addAll((Collection<? extends Link>)newValue);
-                return;
-            case CSVPackage.DOORS_OBJECT__INCOMING_LINKS:
-                getIncomingLinks().clear();
-                getIncomingLinks().addAll((Collection<? extends ResolvedLink>)newValue);
-                return;
-            case CSVPackage.DOORS_OBJECT__MODULE:
-                setModule((DoorsModule)newValue);
-                return;
+        case CSVPackage.DOORS_OBJECT__OBJECT_IDENTIFIER:
+            setObjectIdentifier((String)newValue);
+            return;
+        case CSVPackage.DOORS_OBJECT__OBJECT_LEVEL:
+            setObjectLevel((Integer)newValue);
+            return;
+        case CSVPackage.DOORS_OBJECT__OBJECT_NUMBER:
+            setObjectNumber((String)newValue);
+            return;
+        case CSVPackage.DOORS_OBJECT__ABSOLUTE_NUMBER:
+            setAbsoluteNumber((Integer)newValue);
+            return;
+        case CSVPackage.DOORS_OBJECT__OBJECT_TEXT:
+            setObjectText((String)newValue);
+            return;
+        case CSVPackage.DOORS_OBJECT__OBJECT_SHORT_TEXT:
+            setObjectShortText((String)newValue);
+            return;
+        case CSVPackage.DOORS_OBJECT__OBJECT_HEADING:
+            setObjectHeading((String)newValue);
+            return;
+        case CSVPackage.DOORS_OBJECT__TEXT:
+            setText((String)newValue);
+            return;
+        case CSVPackage.DOORS_OBJECT__OUTGOING_LINKS:
+            getOutgoingLinks().clear();
+            getOutgoingLinks().addAll((Collection<? extends Link>)newValue);
+            return;
+        case CSVPackage.DOORS_OBJECT__INCOMING_LINKS:
+            getIncomingLinks().clear();
+            getIncomingLinks().addAll((Collection<? extends ResolvedLink>)newValue);
+            return;
+        case CSVPackage.DOORS_OBJECT__MODULE:
+            setModule((DoorsModule)newValue);
+            return;
         }
         super.eSet(featureID, newValue);
     }
@@ -541,41 +545,41 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
      * @generated
      */
     @Override
-    public void eUnset(int featureID) {
+    public void eUnset(final int featureID) {
         switch (featureID) {
-            case CSVPackage.DOORS_OBJECT__OBJECT_IDENTIFIER:
-                setObjectIdentifier(OBJECT_IDENTIFIER_EDEFAULT);
-                return;
-            case CSVPackage.DOORS_OBJECT__OBJECT_LEVEL:
-                setObjectLevel(OBJECT_LEVEL_EDEFAULT);
-                return;
-            case CSVPackage.DOORS_OBJECT__OBJECT_NUMBER:
-                setObjectNumber(OBJECT_NUMBER_EDEFAULT);
-                return;
-            case CSVPackage.DOORS_OBJECT__ABSOLUTE_NUMBER:
-                setAbsoluteNumber(ABSOLUTE_NUMBER_EDEFAULT);
-                return;
-            case CSVPackage.DOORS_OBJECT__OBJECT_TEXT:
-                setObjectText(OBJECT_TEXT_EDEFAULT);
-                return;
-            case CSVPackage.DOORS_OBJECT__OBJECT_SHORT_TEXT:
-                setObjectShortText(OBJECT_SHORT_TEXT_EDEFAULT);
-                return;
-            case CSVPackage.DOORS_OBJECT__OBJECT_HEADING:
-                setObjectHeading(OBJECT_HEADING_EDEFAULT);
-                return;
-            case CSVPackage.DOORS_OBJECT__TEXT:
-                setText(TEXT_EDEFAULT);
-                return;
-            case CSVPackage.DOORS_OBJECT__OUTGOING_LINKS:
-                getOutgoingLinks().clear();
-                return;
-            case CSVPackage.DOORS_OBJECT__INCOMING_LINKS:
-                getIncomingLinks().clear();
-                return;
-            case CSVPackage.DOORS_OBJECT__MODULE:
-                setModule((DoorsModule)null);
-                return;
+        case CSVPackage.DOORS_OBJECT__OBJECT_IDENTIFIER:
+            setObjectIdentifier(OBJECT_IDENTIFIER_EDEFAULT);
+            return;
+        case CSVPackage.DOORS_OBJECT__OBJECT_LEVEL:
+            setObjectLevel(OBJECT_LEVEL_EDEFAULT);
+            return;
+        case CSVPackage.DOORS_OBJECT__OBJECT_NUMBER:
+            setObjectNumber(OBJECT_NUMBER_EDEFAULT);
+            return;
+        case CSVPackage.DOORS_OBJECT__ABSOLUTE_NUMBER:
+            setAbsoluteNumber(ABSOLUTE_NUMBER_EDEFAULT);
+            return;
+        case CSVPackage.DOORS_OBJECT__OBJECT_TEXT:
+            setObjectText(OBJECT_TEXT_EDEFAULT);
+            return;
+        case CSVPackage.DOORS_OBJECT__OBJECT_SHORT_TEXT:
+            setObjectShortText(OBJECT_SHORT_TEXT_EDEFAULT);
+            return;
+        case CSVPackage.DOORS_OBJECT__OBJECT_HEADING:
+            setObjectHeading(OBJECT_HEADING_EDEFAULT);
+            return;
+        case CSVPackage.DOORS_OBJECT__TEXT:
+            setText(TEXT_EDEFAULT);
+            return;
+        case CSVPackage.DOORS_OBJECT__OUTGOING_LINKS:
+            getOutgoingLinks().clear();
+            return;
+        case CSVPackage.DOORS_OBJECT__INCOMING_LINKS:
+            getIncomingLinks().clear();
+            return;
+        case CSVPackage.DOORS_OBJECT__MODULE:
+            setModule((DoorsModule)null);
+            return;
         }
         super.eUnset(featureID);
     }
@@ -586,30 +590,30 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
      * @generated
      */
     @Override
-    public boolean eIsSet(int featureID) {
+    public boolean eIsSet(final int featureID) {
         switch (featureID) {
-            case CSVPackage.DOORS_OBJECT__OBJECT_IDENTIFIER:
-                return OBJECT_IDENTIFIER_EDEFAULT == null ? getObjectIdentifier() != null : !OBJECT_IDENTIFIER_EDEFAULT.equals(getObjectIdentifier());
-            case CSVPackage.DOORS_OBJECT__OBJECT_LEVEL:
-                return getObjectLevel() != OBJECT_LEVEL_EDEFAULT;
-            case CSVPackage.DOORS_OBJECT__OBJECT_NUMBER:
-                return OBJECT_NUMBER_EDEFAULT == null ? getObjectNumber() != null : !OBJECT_NUMBER_EDEFAULT.equals(getObjectNumber());
-            case CSVPackage.DOORS_OBJECT__ABSOLUTE_NUMBER:
-                return getAbsoluteNumber() != ABSOLUTE_NUMBER_EDEFAULT;
-            case CSVPackage.DOORS_OBJECT__OBJECT_TEXT:
-                return OBJECT_TEXT_EDEFAULT == null ? getObjectText() != null : !OBJECT_TEXT_EDEFAULT.equals(getObjectText());
-            case CSVPackage.DOORS_OBJECT__OBJECT_SHORT_TEXT:
-                return OBJECT_SHORT_TEXT_EDEFAULT == null ? getObjectShortText() != null : !OBJECT_SHORT_TEXT_EDEFAULT.equals(getObjectShortText());
-            case CSVPackage.DOORS_OBJECT__OBJECT_HEADING:
-                return OBJECT_HEADING_EDEFAULT == null ? getObjectHeading() != null : !OBJECT_HEADING_EDEFAULT.equals(getObjectHeading());
-            case CSVPackage.DOORS_OBJECT__TEXT:
-                return TEXT_EDEFAULT == null ? getText() != null : !TEXT_EDEFAULT.equals(getText());
-            case CSVPackage.DOORS_OBJECT__OUTGOING_LINKS:
-                return outgoingLinks != null && !outgoingLinks.isEmpty();
-            case CSVPackage.DOORS_OBJECT__INCOMING_LINKS:
-                return incomingLinks != null && !incomingLinks.isEmpty();
-            case CSVPackage.DOORS_OBJECT__MODULE:
-                return module != null;
+        case CSVPackage.DOORS_OBJECT__OBJECT_IDENTIFIER:
+            return OBJECT_IDENTIFIER_EDEFAULT == null ? getObjectIdentifier() != null : !OBJECT_IDENTIFIER_EDEFAULT.equals(getObjectIdentifier());
+        case CSVPackage.DOORS_OBJECT__OBJECT_LEVEL:
+            return getObjectLevel() != OBJECT_LEVEL_EDEFAULT;
+        case CSVPackage.DOORS_OBJECT__OBJECT_NUMBER:
+            return OBJECT_NUMBER_EDEFAULT == null ? getObjectNumber() != null : !OBJECT_NUMBER_EDEFAULT.equals(getObjectNumber());
+        case CSVPackage.DOORS_OBJECT__ABSOLUTE_NUMBER:
+            return getAbsoluteNumber() != ABSOLUTE_NUMBER_EDEFAULT;
+        case CSVPackage.DOORS_OBJECT__OBJECT_TEXT:
+            return OBJECT_TEXT_EDEFAULT == null ? getObjectText() != null : !OBJECT_TEXT_EDEFAULT.equals(getObjectText());
+        case CSVPackage.DOORS_OBJECT__OBJECT_SHORT_TEXT:
+            return OBJECT_SHORT_TEXT_EDEFAULT == null ? getObjectShortText() != null : !OBJECT_SHORT_TEXT_EDEFAULT.equals(getObjectShortText());
+        case CSVPackage.DOORS_OBJECT__OBJECT_HEADING:
+            return OBJECT_HEADING_EDEFAULT == null ? getObjectHeading() != null : !OBJECT_HEADING_EDEFAULT.equals(getObjectHeading());
+        case CSVPackage.DOORS_OBJECT__TEXT:
+            return TEXT_EDEFAULT == null ? getText() != null : !TEXT_EDEFAULT.equals(getText());
+        case CSVPackage.DOORS_OBJECT__OUTGOING_LINKS:
+            return outgoingLinks != null && !outgoingLinks.isEmpty();
+        case CSVPackage.DOORS_OBJECT__INCOMING_LINKS:
+            return incomingLinks != null && !incomingLinks.isEmpty();
+        case CSVPackage.DOORS_OBJECT__MODULE:
+            return module != null;
         }
         return super.eIsSet(featureID);
     }
@@ -619,10 +623,10 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
      * @generated
      */
     @Override
-    public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+    public Object eInvoke(final int operationID, final EList<?> arguments) throws InvocationTargetException {
         switch (operationID) {
-            case CSVPackage.DOORS_OBJECT___IS_HEADING:
-                return isHeading();
+        case CSVPackage.DOORS_OBJECT___IS_HEADING:
+            return isHeading();
         }
         return super.eInvoke(operationID, arguments);
     }
