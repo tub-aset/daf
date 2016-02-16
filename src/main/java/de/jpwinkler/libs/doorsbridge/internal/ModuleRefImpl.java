@@ -4,8 +4,8 @@ import java.io.File;
 import java.io.IOException;
 
 import de.jpwinkler.libs.doorsbridge.DoorsException;
-import de.jpwinkler.libs.doorsbridge.ModuleRef;
 import de.jpwinkler.libs.doorsbridge.DoorsURL;
+import de.jpwinkler.libs.doorsbridge.ModuleRef;
 
 public class ModuleRefImpl implements ModuleRef {
 
@@ -38,8 +38,9 @@ public class ModuleRefImpl implements ModuleRef {
             throw new DoorsException("Module is closed.");
         }
         doorsApplicationImpl.buildAndRunCommand(builder -> {
-            builder.addScript(new InternalDXLScript("utils.dxl"));
-            builder.addScript(new InternalDXLScript("export_csv.dxl"));
+            builder.addLibrary(new InternalDXLScript("lib/utils.dxl"));
+            builder.addLibrary(new InternalDXLScript("lib/export_csv.dxl"));
+            builder.addScript(new InternalDXLScript("export_csv_single.dxl"));
             builder.setVariable("url", url != null ? url.getUrl() : null);
             builder.setVariable("name", name);
             builder.setVariable("view", view);
@@ -53,7 +54,7 @@ public class ModuleRefImpl implements ModuleRef {
             throw new DoorsException("Module is closed.");
         }
         doorsApplicationImpl.buildAndRunCommand(builder -> {
-            builder.addScript(new InternalDXLScript("utils.dxl"));
+            builder.addLibrary(new InternalDXLScript("lib/utils.dxl"));
             builder.addScript(new InternalDXLScript("goto_object.dxl"));
             builder.setVariable("url", url != null ? url.getUrl() : null);
             builder.setVariable("name", name);
@@ -67,7 +68,7 @@ public class ModuleRefImpl implements ModuleRef {
             throw new DoorsException("Module is closed.");
         }
         doorsApplicationImpl.buildAndRunCommand(builder -> {
-            builder.addScript(new InternalDXLScript("utils.dxl"));
+            builder.addLibrary(new InternalDXLScript("lib/utils.dxl"));
             builder.addScript(new InternalDXLScript("close_module.dxl"));
             builder.setVariable("url", url != null ? url.getUrl() : null);
             builder.setVariable("name", name);

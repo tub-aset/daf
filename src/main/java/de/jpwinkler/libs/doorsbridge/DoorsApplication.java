@@ -6,6 +6,10 @@ import java.io.OutputStream;
 
 public interface DoorsApplication {
 
+    void beginBatchMode();
+
+    void endBatchMode() throws DoorsException, IOException;
+
     void ack(String message) throws DoorsException, IOException;
 
     ModuleRef openModule(DoorsURL url) throws IOException, DoorsException;

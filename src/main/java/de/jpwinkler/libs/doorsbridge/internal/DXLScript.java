@@ -2,8 +2,8 @@ package de.jpwinkler.libs.doorsbridge.internal;
 
 import java.io.IOException;
 
-public abstract class DXLScript {
+public interface DXLScript {
 
-    public abstract String getDXL() throws IOException;
+    String getDXL() throws IOException;
 
 }

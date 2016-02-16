@@ -31,8 +31,32 @@ public class DoorsApplicationImpl implements DoorsApplication {
     private final WindowManager windowManager = new WindowManager();
     private OutputStream outputStream;
 
+    private boolean batchMode = false;
+    private DoorsScriptBuilder scriptBuilder;
+
     public DoorsApplicationImpl() {
         doorsApplications = new HashMap<Thread, ActiveXComponent>();
+    }
+
+    @Override
+    public void beginBatchMode() {
+        if (batchMode) {
+            throw new RuntimeException("Already in batch mode.");
+        }
+
+        batchMode = true;
+        scriptBuilder = new DoorsScriptBuilder();
+    }
+
+    @Override
+    public void endBatchMode() throws DoorsException, IOException {
+        if (!batchMode) {
+            throw new RuntimeException("Not in batch mode.");
+        }
+
+        batchMode = false;
+
+        runCommand();
     }
 
     private ActiveXComponent getDoorsApplication() {
@@ -109,7 +133,7 @@ public class DoorsApplicationImpl implements DoorsApplication {
     @Override
     public ModuleRef openModule(final DoorsURL url) throws IOException, DoorsException {
         buildAndRunCommand(builder -> {
-            builder.addScript(new InternalDXLScript("utils.dxl"));
+            builder.addLibrary(new InternalDXLScript("lib/utils.dxl"));
             builder.addScript(new InternalDXLScript("open_module.dxl"));
             builder.setVariable("url", url.getUrl());
         });
@@ -119,7 +143,7 @@ public class DoorsApplicationImpl implements DoorsApplication {
     @Override
     public ModuleRef openModule(final String name) throws IOException, DoorsException {
         buildAndRunCommand(builder -> {
-            builder.addScript(new InternalDXLScript("utils.dxl"));
+            builder.addLibrary(new InternalDXLScript("lib/utils.dxl"));
             builder.addScript(new InternalDXLScript("open_module.dxl"));
             builder.setVariable("name", name);
         });
@@ -129,9 +153,9 @@ public class DoorsApplicationImpl implements DoorsApplication {
     @Override
     public void exportModulesToCSV(final File moduleListFile, final File targetFolder) throws IOException, DoorsException {
         buildAndRunCommand(builder -> {
-            builder.addScript(new InternalDXLScript("utils.dxl"));
-            builder.addScript(new InternalDXLScript("export_csv.dxl"));
-            builder.addScript(new InternalDXLScript("export_many.dxl"));
+            builder.addLibrary(new InternalDXLScript("lin/utils.dxl"));
+            builder.addLibrary(new InternalDXLScript("lib/export_csv.dxl"));
+            builder.addScript(new InternalDXLScript("export_csv_many.dxl"));
             builder.setVariable("moduleListFile", moduleListFile.getAbsolutePath());
             builder.setVariable("targetFolder", targetFolder.getAbsolutePath());
         });
@@ -152,34 +176,46 @@ public class DoorsApplicationImpl implements DoorsApplication {
     }
 
     public void buildAndRunCommand(final Consumer<DoorsScriptBuilder> prepareScriptBuilder) throws IOException, DoorsException {
-        final DoorsScriptBuilder builder = new DoorsScriptBuilder();
+        if (!batchMode) {
+            scriptBuilder = new DoorsScriptBuilder();
+        }
+
+        scriptBuilder.beginScope();
+        prepareScriptBuilder.accept(scriptBuilder);
+        scriptBuilder.endScope();
+
+        if (!batchMode) {
+            runCommand();
+        }
+    }
+
+    private void runCommand() throws DoorsException, IOException {
+
         final boolean redirectOutput = outputStream != null;
 
         final File exceptionFile = getTempFile();
 
-        builder.addScript(new InternalDXLScript("exception_handling_pre.dxl"));
-        builder.setVariable("exceptionFilename", exceptionFile.getAbsolutePath());
+        scriptBuilder.addPreamble(new InternalDXLScript("pre/exception_handling.dxl"));
+        scriptBuilder.setVariable("exceptionFilename", exceptionFile.getAbsolutePath());
 
         if (redirectOutput) {
-            builder.addScript(new InternalDXLScript("redirect_output_pre.dxl"));
+            scriptBuilder.addPreamble(new InternalDXLScript("pre/redirect_output.dxl"));
         }
-
-        prepareScriptBuilder.accept(builder);
 
         MyTailer t = null;
         if (redirectOutput) {
-            builder.addScript(new InternalDXLScript("redirect_output_post.dxl"));
+            scriptBuilder.addScript(new InternalDXLScript("lib/redirect_output_post.dxl"));
 
             final File outputFile = File.createTempFile("doorsOutput", "");
             // file.deleteOnExit();
-            builder.setVariable("outputRedirectFilename", outputFile.getAbsolutePath());
+            scriptBuilder.setVariable("outputRedirectFilename", outputFile.getAbsolutePath());
             if (!outputFile.exists()) {
                 outputFile.createNewFile();
             }
             t = MyTailer.create(outputFile, outputStream);
         }
 
-        runStr(builder.build());
+        runStr(scriptBuilder.build());
 
         if (redirectOutput) {
             t.stop();
@@ -191,5 +227,6 @@ public class DoorsApplicationImpl implements DoorsApplication {
                 throw new DoorsException(message);
             }
         }
+
     }
 }

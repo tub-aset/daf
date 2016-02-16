@@ -1,0 +1,19 @@
+/**
+ * Created by: jonwink
+ * Creation date: 26.03.2015
+ *
+ * DXL Editor is provided by SODIUS (www.sodius.com)
+ */
+pragma encoding, "UTF-8"
+
+Module m = myRead("$$url$$", "$$name$$", false)
+if (!null m) {
+	if (load(m, view "$$view$$")) {
+		exportModuleToCSV(m, "$$file$$")
+		exportModuleMetaData(m, "$$file$$.mmd", null)
+	} else {
+		throw("Cannot find view $$view$$ in module " name(m) ".")
+	}
+} else {
+	throw("Cannot load module $$url$$$$name$$.")
+}

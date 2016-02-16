@@ -1,8 +1,6 @@
-
 void throw(string message) {
 	Stream dxl_exception_stream = append "$$exceptionFilename$$"
 	dxl_exception_stream << message
 	close dxl_exception_stream
 	halt
 }
-

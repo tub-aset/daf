@@ -92,15 +92,3 @@ void exportModuleMetaData(Module m, string fileName, string moduleListKey) {
 	close outFile
 	
 }
-
-Module m = myRead("$$url$$", "$$name$$", false)
-if (!null m) {
-	if (load(m, view "$$view$$")) {
-		exportModuleToCSV(m, "$$file$$")
-		exportModuleMetaData(m, "$$file$$.mmd", null)
-	} else {
-		throw("Cannot find view $$view$$ in module " name(m) ".")
-	}
-} else {
-	throw("Cannot load module $$url$$$$name$$.")
-}
