@@ -10,7 +10,6 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import com.jacob.activeX.ActiveXComponent;
@@ -20,12 +19,11 @@ import de.jpwinkler.libs.doorsbridge.DoorsApplication;
 import de.jpwinkler.libs.doorsbridge.DoorsException;
 import de.jpwinkler.libs.doorsbridge.DoorsNotRunningException;
 import de.jpwinkler.libs.doorsbridge.DoorsURL;
+import de.jpwinkler.libs.doorsbridge.ModuleRef;
 import de.jpwinkler.libs.doorsbridge.user32.Window;
 import de.jpwinkler.libs.doorsbridge.user32.WindowManager;
 
 public class DoorsApplicationImpl implements DoorsApplication {
-
-    private static final String STANDARD_VIEW = "Standard view";
 
     private static final Logger LOGGER = Logger.getLogger(DoorsApplicationImpl.class.getName());
 
@@ -33,20 +31,8 @@ public class DoorsApplicationImpl implements DoorsApplication {
     private final WindowManager windowManager = new WindowManager();
     private OutputStream outputStream;
 
-    private boolean batchMode;
-    private String doorsServer;
-    private String user;
-    private String password;
-
     public DoorsApplicationImpl() {
         doorsApplications = new HashMap<Thread, ActiveXComponent>();
-    }
-
-    public void initBatchMode(final String doorsServer, final String user, final String password) {
-        batchMode = true;
-        this.doorsServer = doorsServer;
-        this.user = user;
-        this.password = password;
     }
 
     private ActiveXComponent getDoorsApplication() {
@@ -97,6 +83,7 @@ public class DoorsApplicationImpl implements DoorsApplication {
         Dispatch.call(doorsApplication, "runStr", dxl);
     }
 
+    @SuppressWarnings("unused")
     synchronized private void runFile(final String fileName) throws DoorsNotRunningException {
         if (!isDoorsRunning()) {
             throw new DoorsNotRunningException();
@@ -120,37 +107,23 @@ public class DoorsApplicationImpl implements DoorsApplication {
     }
 
     @Override
-    public void exportModuleToCSV(final String modulePath, final File file) throws DoorsException, IOException {
-        exportModuleToCSV(modulePath, file, STANDARD_VIEW);
-    }
-
-    @Override
-    public void exportModuleToCSV(final DoorsURL url, final File file) throws DoorsException, IOException {
-        exportModuleToCSV(url, file, STANDARD_VIEW);
-    }
-
-    @Override
-    public void exportModuleToCSV(final DoorsURL url, final File file, final String view) throws DoorsException, IOException {
+    public ModuleRef openModule(final DoorsURL url) throws IOException, DoorsException {
         buildAndRunCommand(builder -> {
             builder.addScript(new InternalDXLScript("utils.dxl"));
-            builder.addScript(new InternalDXLScript("export_csv.dxl"));
-            builder.addScript(new InternalDXLScript("export_csv_url.dxl"));
-            builder.setVariable("moduleUrl", url.getUrl());
-            builder.setVariable("view", view);
-            builder.setVariable("file", file.getAbsolutePath());
+            builder.addScript(new InternalDXLScript("open_module.dxl"));
+            builder.setVariable("url", url.getUrl());
         });
+        return new ModuleRefImpl(this, url);
     }
 
     @Override
-    public void exportModuleToCSV(final String modulePath, final File file, final String view) throws DoorsException, IOException {
+    public ModuleRef openModule(final String name) throws IOException, DoorsException {
         buildAndRunCommand(builder -> {
             builder.addScript(new InternalDXLScript("utils.dxl"));
-            builder.addScript(new InternalDXLScript("export_csv.dxl"));
-            builder.addScript(new InternalDXLScript("export_csv_path.dxl"));
-            builder.setVariable("modulePath", modulePath);
-            builder.setVariable("view", view);
-            builder.setVariable("file", file.getAbsolutePath());
+            builder.addScript(new InternalDXLScript("open_module.dxl"));
+            builder.setVariable("name", name);
         });
+        return new ModuleRefImpl(this, name);
     }
 
     @Override
@@ -161,21 +134,6 @@ public class DoorsApplicationImpl implements DoorsApplication {
             builder.addScript(new InternalDXLScript("export_many.dxl"));
             builder.setVariable("moduleListFile", moduleListFile.getAbsolutePath());
             builder.setVariable("targetFolder", targetFolder.getAbsolutePath());
-        });
-    }
-
-    @Override
-    public void gotoObject(final DoorsURL url, final int absoluteNumber) throws DoorsException, IOException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void gotoObject(final String modulePath, final int absoluteNumber) throws DoorsException, IOException {
-        buildAndRunCommand(builder -> {
-            builder.addScript(new InternalDXLScript("goto_object.dxl"));
-            builder.setVariable("modulePath", modulePath);
-            builder.setVariable("absoluteNumber", String.valueOf(absoluteNumber));
         });
     }
 
@@ -193,7 +151,7 @@ public class DoorsApplicationImpl implements DoorsApplication {
         });
     }
 
-    private void buildAndRunCommand(final Consumer<DoorsScriptBuilder> prepareScriptBuilder) throws IOException, DoorsException {
+    public void buildAndRunCommand(final Consumer<DoorsScriptBuilder> prepareScriptBuilder) throws IOException, DoorsException {
         final DoorsScriptBuilder builder = new DoorsScriptBuilder();
         final boolean redirectOutput = outputStream != null;
 
@@ -221,11 +179,7 @@ public class DoorsApplicationImpl implements DoorsApplication {
             t = MyTailer.create(outputFile, outputStream);
         }
 
-        if (batchMode) {
-            runInBatchMode(builder.build());
-        } else {
-            runStr(builder.build());
-        }
+        runStr(builder.build());
 
         if (redirectOutput) {
             t.stop();
@@ -236,24 +190,6 @@ public class DoorsApplicationImpl implements DoorsApplication {
             if (!message.isEmpty()) {
                 throw new DoorsException(message);
             }
-        }
-    }
-
-    private void runInBatchMode(final String dxl) throws IOException {
-        final File f = getTempFile();
-        FileUtils.write(f, dxl);
-
-        final String[] cmdLine = new String[] { "C:\\Program Files (x86)\\DOORS 9.5.2.0\\bin\\doors.exe", "-b", f.getAbsolutePath(), "-d", doorsServer, "-u", user, "-P", "xxxx" };
-
-        LOGGER.info(String.format("Running DOORS in batch mode. Command line: %s", String.join(" ", cmdLine)));
-
-        cmdLine[cmdLine.length - 1] = password;
-
-        final Process exec = Runtime.getRuntime().exec(cmdLine);
-        try {
-            exec.waitFor();
-        } catch (final InterruptedException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 }

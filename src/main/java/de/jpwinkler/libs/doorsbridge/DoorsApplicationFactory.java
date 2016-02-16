@@ -8,10 +8,12 @@ public class DoorsApplicationFactory {
         return new DoorsApplicationImpl();
     }
 
-    public static DoorsApplication getBatchModeDoorsApplication(final String doorsServer, final String user, final String password) {
-        final DoorsApplicationImpl doorsApplicationImpl = new DoorsApplicationImpl();
-        doorsApplicationImpl.initBatchMode(doorsServer, user, password);
-        return doorsApplicationImpl;
-    }
+    // public static DoorsApplication getBatchModeDoorsApplication(final String
+    // doorsServer, final String user, final String password) {
+    // final DoorsApplicationImpl doorsApplicationImpl = new
+    // DoorsApplicationImpl();
+    // doorsApplicationImpl.initBatchMode(doorsServer, user, password);
+    // return doorsApplicationImpl;
+    // }
 
 }

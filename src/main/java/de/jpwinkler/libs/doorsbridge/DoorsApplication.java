@@ -8,19 +8,11 @@ public interface DoorsApplication {
 
     void ack(String message) throws DoorsException, IOException;
 
-    void exportModuleToCSV(String modulePath, File file) throws DoorsException, IOException;
+    ModuleRef openModule(DoorsURL url) throws IOException, DoorsException;
 
-    void exportModuleToCSV(DoorsURL url, File file) throws DoorsException, IOException;
-
-    void exportModuleToCSV(String modulePath, File file, String view) throws DoorsException, IOException;
-
-    void exportModuleToCSV(DoorsURL url, File file, String view) throws DoorsException, IOException;
+    ModuleRef openModule(String name) throws IOException, DoorsException;
 
     void exportModulesToCSV(File moduleListFile, File targetFolder) throws IOException, DoorsException;
-
-    void gotoObject(String modulePath, int absoluteNumber) throws DoorsException, IOException;
-
-    void gotoObject(DoorsURL url, int absoluteNumber) throws DoorsException, IOException;
 
     void runScript(File scriptFile) throws DoorsException, IOException;
 

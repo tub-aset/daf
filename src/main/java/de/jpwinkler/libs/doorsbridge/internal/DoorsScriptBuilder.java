@@ -18,7 +18,9 @@ public class DoorsScriptBuilder {
     }
 
     public DoorsScriptBuilder setVariable(final String variable, final String value) {
-        variables.put(variable, value);
+        if (value != null) {
+            variables.put(variable, value);
+        }
         return this;
     }
 
@@ -30,18 +32,18 @@ public class DoorsScriptBuilder {
             builder.append("\n");
         }
 
+        String script = builder.toString();
+
         for (final Entry<String, String> e : variables.entrySet()) {
             final String variable = "$$" + e.getKey() + "$$";
-            int index = builder.indexOf(variable);
-            while (index != -1) {
-                final String newValue = escapeString(e.getValue());
-                builder.replace(index, index + variable.length(), newValue);
-                index += newValue.length();
-                index = builder.indexOf(variable, index);
-            }
+
+            script = script.replace(variable, escapeString(e.getValue()));
+
         }
 
-        return builder.toString();
+        script = script.replaceAll("\\$\\$(.*?)\\$\\$", "");
+
+        return script;
     }
 
     private String escapeString(final String value) {

@@ -5,8 +5,10 @@
  * DXL Editor is provided by SODIUS (www.sodius.com)
  */
 pragma encoding, "UTF-8"
-pragma runLim,0
 
-Module m = myRead("$$url$$", "$$name$$", true)
-
-gotoObject($$absoluteNumber$$, m)
+Module m = myRead("$$url$$", "$$name$$", false)
+if (!null m) {
+	close m
+} else {
+	throw("Cannot close module $$url$$$$name$$.")
+}

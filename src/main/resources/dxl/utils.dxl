@@ -33,3 +33,13 @@ string getModuleNameFromUrl(string url) {
 		return null string
 	}
 }
+
+Module myRead(string url, string name, bool visible) {
+	if (length(url) > 0) {
+		return read(getModuleNameFromUrl(url), visible)
+	} else if (length(name) > 0) {
+		return read(name, visible)
+	} else {
+		throw("neither url nor name given")
+	}
+}
