@@ -1,11 +1,3 @@
-/**
- * Created by: jonwink
- * Creation date: 26.03.2015
- *
- * DXL Editor is provided by SODIUS (www.sodius.com)
- */
-pragma encoding, "UTF-8"
-
 Module m = myRead("$$url$$", "$$name$$", false)
 if (!null m) {
 	if (load(m, view "$$view$$")) {

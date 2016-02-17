@@ -10,6 +10,7 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import com.jacob.activeX.ActiveXComponent;
@@ -32,7 +33,14 @@ public class DoorsApplicationImpl implements DoorsApplication {
     private OutputStream outputStream;
 
     private boolean batchMode = false;
+    private boolean silentMode = false;
     private DoorsScriptBuilder scriptBuilder;
+
+    private String doorsServer;
+
+    private String user;
+
+    private String password;
 
     public DoorsApplicationImpl() {
         doorsApplications = new HashMap<Thread, ActiveXComponent>();
@@ -151,17 +159,6 @@ public class DoorsApplicationImpl implements DoorsApplication {
     }
 
     @Override
-    public void exportModulesToCSV(final File moduleListFile, final File targetFolder) throws IOException, DoorsException {
-        buildAndRunCommand(builder -> {
-            builder.addLibrary(new InternalDXLScript("lin/utils.dxl"));
-            builder.addLibrary(new InternalDXLScript("lib/export_csv.dxl"));
-            builder.addScript(new InternalDXLScript("export_csv_many.dxl"));
-            builder.setVariable("moduleListFile", moduleListFile.getAbsolutePath());
-            builder.setVariable("targetFolder", targetFolder.getAbsolutePath());
-        });
-    }
-
-    @Override
     public void runScript(final File scriptFile) throws DoorsException, IOException {
         buildAndRunCommand(builder -> {
             builder.addScript(new ExternalDXLScript(scriptFile));
@@ -172,6 +169,14 @@ public class DoorsApplicationImpl implements DoorsApplication {
     public void runScript(final String dxlCode) throws DoorsException, IOException {
         buildAndRunCommand(builder -> {
             builder.addScript(new InMemoryDXLScript(dxlCode));
+        });
+    }
+
+    @Override
+    public void print(final String message) throws DoorsException, IOException {
+        buildAndRunCommand(builder -> {
+            builder.addScript(new InternalDXLScript("print.dxl"));
+            builder.setVariable("message", message);
         });
     }
 
@@ -207,7 +212,7 @@ public class DoorsApplicationImpl implements DoorsApplication {
             scriptBuilder.addScript(new InternalDXLScript("lib/redirect_output_post.dxl"));
 
             final File outputFile = File.createTempFile("doorsOutput", "");
-            // file.deleteOnExit();
+            // outputFile.deleteOnExit();
             scriptBuilder.setVariable("outputRedirectFilename", outputFile.getAbsolutePath());
             if (!outputFile.exists()) {
                 outputFile.createNewFile();
@@ -215,7 +220,12 @@ public class DoorsApplicationImpl implements DoorsApplication {
             t = MyTailer.create(outputFile, outputStream);
         }
 
-        runStr(scriptBuilder.build());
+        final String dxl = scriptBuilder.build();
+        if (silentMode) {
+            runInSilentMode(dxl);
+        } else {
+            runStr(dxl);
+        }
 
         if (redirectOutput) {
             t.stop();
@@ -228,5 +238,31 @@ public class DoorsApplicationImpl implements DoorsApplication {
             }
         }
 
+    }
+
+    public void initSilentMode(final String doorsServer, final String user, final String password) {
+        this.doorsServer = doorsServer;
+        this.user = user;
+        this.password = password;
+        silentMode = true;
+    }
+
+    private void runInSilentMode(final String dxl) throws IOException {
+        final File f = getTempFile();
+        FileUtils.write(f, dxl);
+
+        // TODO: this might change!
+        final String[] cmdLine = new String[] { "C:\\Program Files (x86)\\DOORS 9.5.2.0\\bin\\doors.exe", "-b", f.getAbsolutePath(), "-d", doorsServer, "-u", user, "-P", "xxxx" };
+
+        LOGGER.info(String.format("Running DOORS in silent mode. Command line: %s", String.join(" ", cmdLine)));
+
+        cmdLine[cmdLine.length - 1] = password;
+
+        final Process exec = Runtime.getRuntime().exec(cmdLine);
+        try {
+            exec.waitFor();
+        } catch (final InterruptedException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+        }
     }
 }

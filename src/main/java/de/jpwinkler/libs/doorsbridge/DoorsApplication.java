@@ -12,11 +12,11 @@ public interface DoorsApplication {
 
     void ack(String message) throws DoorsException, IOException;
 
+    void print(String message) throws DoorsException, IOException;
+
     ModuleRef openModule(DoorsURL url) throws IOException, DoorsException;
 
     ModuleRef openModule(String name) throws IOException, DoorsException;
-
-    void exportModulesToCSV(File moduleListFile, File targetFolder) throws IOException, DoorsException;
 
     void runScript(File scriptFile) throws DoorsException, IOException;
 

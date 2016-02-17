@@ -18,24 +18,27 @@ public class DoorsScriptBuilder {
 
     private DXLScriptScope currentScope;
 
-    public void beginScope() {
+    public DoorsScriptBuilder beginScope() {
         if (currentScope == null) {
             currentScope = new DXLScriptScope();
             scripts.add(currentScope);
         } else {
             throw new RuntimeException("Already in a scope.");
         }
+        return this;
     }
 
-    public void endScope() {
+    public DoorsScriptBuilder endScope() {
         if (currentScope == null) {
             throw new RuntimeException("Not in a scope.");
         }
         currentScope = null;
+        return this;
     }
 
-    public void addPreamble(final DXLScript script) {
+    public DoorsScriptBuilder addPreamble(final DXLScript script) {
         preamble.add(script);
+        return this;
     }
 
     public DoorsScriptBuilder addLibrary(final DXLScript library) {
@@ -78,8 +81,8 @@ public class DoorsScriptBuilder {
 
         for (final DXLScript script : scripts) {
             // Curly brackets are used to keep variables local within their
-            // script and avoid name clashes, if the same script is used
-            // multiple times.
+            // script and avoid name clashes. That would happen if the same
+            // script is used multiple times.
             builder.append("{");
             builder.append(script.getDXL());
             builder.append("}");
