@@ -284,7 +284,6 @@ public class DoorsApplicationImpl implements DoorsApplication {
         final File f = getTempFile();
         FileUtils.write(f, dxl);
 
-        // TODO: this might change!
         final String[] cmdLine = new String[] { doorsPath, "-b", f.getAbsolutePath(), "-d", doorsServer, "-u", user, "-P", "xxxx" };
 
         LOGGER.info(String.format("Running DOORS in silent mode. Command line: %s", String.join(" ", cmdLine)));

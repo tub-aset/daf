@@ -22,8 +22,6 @@ import java.io.OutputStream;
 
 public interface DoorsApplication {
 
-    public static final String DOORS_9520 = "C:\\Program Files (x86)\\DOORS 9.5.2.0\\bin\\doors.exe";
-
     /**
      * Enter batch mode. When batch mode is active, commands are not sent to
      * DOORS and are stored in a buffer instead and executed as a single command
