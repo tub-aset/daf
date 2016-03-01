@@ -16,6 +16,20 @@ bool startsWith(string theString, string startsWithWhat)
 	return theString[0:length(startsWithWhat)-1]==startsWithWhat
 }
 
+void completePath(Project p, Buffer sb) {
+	if (!null getParentProject(p)) {
+		completePath(getParentProject(p), sb)
+		sb += path(p)
+	}
+}
+
+string completePath(Module m) {
+	Buffer sb = create
+	completePath(getParentProject(m), sb)
+	sb += fullName(m)
+	return stringOf(sb)
+}
+
 string getModuleNameFromUrl(string url) {
 	string dbHost
 	int dbPort

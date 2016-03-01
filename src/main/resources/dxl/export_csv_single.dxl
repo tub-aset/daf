@@ -1,11 +1,7 @@
 Module m = myRead("$$url$$", "$$name$$", false)
-if (!null m) {
-	if (load(m, view "$$view$$")) {
-		exportModuleToCSV(m, "$$file$$")
-		exportModuleMetaData(m, "$$file$$.mmd", null)
-	} else {
-		throw("Cannot find view $$view$$ in module " name(m) ".")
-	}
+if (load(m, view "$$view$$")) {
+	exportModuleToCSV(m, "$$file$$")
+	exportModuleMetaData(m, "$$file$$.mmd")
 } else {
-	throw("Cannot load module $$url$$$$name$$.")
+	throw("Cannot find view $$view$$ in module " name(m) ".")
 }

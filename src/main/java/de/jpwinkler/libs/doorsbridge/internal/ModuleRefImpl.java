@@ -1,9 +1,9 @@
 package de.jpwinkler.libs.doorsbridge.internal;
 
 import java.io.File;
-import java.io.IOException;
 
 import de.jpwinkler.libs.doorsbridge.DoorsException;
+import de.jpwinkler.libs.doorsbridge.DoorsRuntimeException;
 import de.jpwinkler.libs.doorsbridge.DoorsURL;
 import de.jpwinkler.libs.doorsbridge.ModuleRef;
 
@@ -28,14 +28,14 @@ public class ModuleRefImpl implements ModuleRef {
     }
 
     @Override
-    public void exportToCSV(final File file) throws DoorsException, IOException {
+    public void exportToCSV(final File file) throws DoorsException {
         exportToCSV(file, STANDARD_VIEW);
     }
 
     @Override
-    public void exportToCSV(final File file, final String view) throws DoorsException, IOException {
+    public void exportToCSV(final File file, final String view) throws DoorsException {
         if (closed) {
-            throw new DoorsException("Module is closed.");
+            throw new DoorsRuntimeException("Module is closed.");
         }
         doorsApplicationImpl.buildAndRunCommand(builder -> {
             builder.addLibrary(new InternalDXLScript("lib/utils.dxl"));
@@ -49,30 +49,40 @@ public class ModuleRefImpl implements ModuleRef {
     }
 
     @Override
-    public void gotoObject(final int absoluteNumber) throws DoorsException, IOException {
+    public void gotoObject(final int absoluteNumber) {
         if (closed) {
-            throw new DoorsException("Module is closed.");
+            throw new DoorsRuntimeException("Module is closed.");
         }
-        doorsApplicationImpl.buildAndRunCommand(builder -> {
-            builder.addLibrary(new InternalDXLScript("lib/utils.dxl"));
-            builder.addScript(new InternalDXLScript("goto_object.dxl"));
-            builder.setVariable("url", url != null ? url.getUrl() : null);
-            builder.setVariable("name", name);
-            builder.setVariable("absoluteNumber", String.valueOf(absoluteNumber));
-        });
+        try {
+            doorsApplicationImpl.buildAndRunCommand(builder -> {
+                builder.addLibrary(new InternalDXLScript("lib/utils.dxl"));
+                builder.addScript(new InternalDXLScript("goto_object.dxl"));
+                builder.setVariable("url", url != null ? url.getUrl() : null);
+                builder.setVariable("name", name);
+                builder.setVariable("absoluteNumber", String.valueOf(absoluteNumber));
+            });
+        } catch (final DoorsException e) {
+            // This should never happen, because the script never calls 'throw'.
+            throw new DoorsRuntimeException();
+        }
     }
 
     @Override
-    public void close() throws IOException, DoorsException {
+    public void close() {
         if (closed) {
-            throw new DoorsException("Module is closed.");
+            throw new DoorsRuntimeException("Module is closed.");
         }
-        doorsApplicationImpl.buildAndRunCommand(builder -> {
-            builder.addLibrary(new InternalDXLScript("lib/utils.dxl"));
-            builder.addScript(new InternalDXLScript("close_module.dxl"));
-            builder.setVariable("url", url != null ? url.getUrl() : null);
-            builder.setVariable("name", name);
-        });
+        try {
+            doorsApplicationImpl.buildAndRunCommand(builder -> {
+                builder.addLibrary(new InternalDXLScript("lib/utils.dxl"));
+                builder.addScript(new InternalDXLScript("close_module.dxl"));
+                builder.setVariable("url", url != null ? url.getUrl() : null);
+                builder.setVariable("name", name);
+            });
+        } catch (final DoorsException e) {
+            // This should never happen, because the script never calls 'throw'.
+            throw new DoorsRuntimeException();
+        }
         closed = true;
     }
 

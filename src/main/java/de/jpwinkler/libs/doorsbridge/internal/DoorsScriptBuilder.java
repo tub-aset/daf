@@ -58,15 +58,13 @@ public class DoorsScriptBuilder {
     public DoorsScriptBuilder setVariable(final String variable, final String value) {
         if (currentScope != null) {
             currentScope.getBuilder().setVariable(variable, value);
-        } else {
-            if (value != null) {
-                variables.put(variable, value);
-            }
+        } else if (value != null) {
+            variables.put(variable, value);
         }
         return this;
     }
 
-    public String build() throws ScriptNotFoundException, IOException {
+    public String build() throws IOException {
         final StringBuilder builder = new StringBuilder();
 
         for (final DXLScript script : preamble) {
@@ -98,6 +96,8 @@ public class DoorsScriptBuilder {
 
         }
 
+        // Replace any unknown variables.
+        // TODO: log unknown variables as warnings.
         script = script.replaceAll("\\$\\$(.*?)\\$\\$", "");
 
         return script;

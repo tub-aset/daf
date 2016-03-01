@@ -1,6 +1,6 @@
 package de.jpwinkler.libs.doorsbridge;
 
-public class DoorsNotRunningException extends DoorsException {
+public class DoorsNotRunningException extends DoorsRuntimeException {
 
     private static final long serialVersionUID = 1L;
 

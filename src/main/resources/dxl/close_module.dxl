@@ -1,6 +1,2 @@
 Module m = myRead("$$url$$", "$$name$$", false)
-if (!null m) {
-	close m
-} else {
-	throw("Cannot close module $$url$$$$name$$.")
-}
+close m

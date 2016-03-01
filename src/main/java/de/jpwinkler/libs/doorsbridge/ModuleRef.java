@@ -1,16 +1,50 @@
 package de.jpwinkler.libs.doorsbridge;
 
 import java.io.File;
-import java.io.IOException;
 
 public interface ModuleRef {
 
-    void exportToCSV(File file) throws DoorsException, IOException;
+    /**
+     * Exports the contents of the module in csv format.
+     *
+     * Also exports a module metadata file (csv file + ".mmd" extension),
+     * containing all module properties and the module path, url and view used
+     * for exporting.
+     *
+     * @param file
+     *            The file to write the csv records to.
+     * @throws DoorsException
+     *             If the default view does not exist for some reason.
+     */
+    void exportToCSV(File file) throws DoorsException;
 
-    void exportToCSV(File file, String view) throws DoorsException, IOException;
+    /**
+     * Exports the contents of the module in csv format. Switches to the given
+     * view first and activates filtering, if defined for the view.
+     *
+     * Also exports a module metadata file (csv file + ".mmd" extension),
+     * containing all module properties and the module path, url and view used
+     * for exporting.
+     *
+     * @param file
+     *            The file to write the csv records to.
+     * @param view
+     *            ThE view to export.
+     * @throws DoorsException
+     *             IF the view does not exist.
+     */
+    void exportToCSV(File file, String view) throws DoorsException;
 
-    void gotoObject(int absoluteNumber) throws DoorsException, IOException;
+    /**
+     * Selects the object with the given absolute number.
+     *
+     * @param absoluteNumber
+     */
+    void gotoObject(int absoluteNumber);
 
-    void close() throws IOException, DoorsException;
+    /**
+     * Closes the module.
+     */
+    void close();
 
 }

@@ -19,6 +19,7 @@ import com.jacob.com.Dispatch;
 import de.jpwinkler.libs.doorsbridge.DoorsApplication;
 import de.jpwinkler.libs.doorsbridge.DoorsException;
 import de.jpwinkler.libs.doorsbridge.DoorsNotRunningException;
+import de.jpwinkler.libs.doorsbridge.DoorsRuntimeException;
 import de.jpwinkler.libs.doorsbridge.DoorsURL;
 import de.jpwinkler.libs.doorsbridge.ModuleRef;
 import de.jpwinkler.libs.doorsbridge.user32.Window;
@@ -28,28 +29,34 @@ public class DoorsApplicationImpl implements DoorsApplication {
 
     private static final Logger LOGGER = Logger.getLogger(DoorsApplicationImpl.class.getName());
 
-    private final Map<Thread, ActiveXComponent> doorsApplications;
+    // ActiveXComponent seems to be bound to the current thread, thus we store
+    // one ActiveXComponent per thread.
+    private final Map<Thread, ActiveXComponent> doorsApplications = new HashMap<Thread, ActiveXComponent>();
+
+    /**
+     * Used for detecting whether the DOORS window is visible.
+     */
     private final WindowManager windowManager = new WindowManager();
+
+    /**
+     * If assigned, output is redirected here.
+     */
     private OutputStream outputStream;
 
     private boolean batchMode = false;
     private boolean silentMode = false;
     private DoorsScriptBuilder scriptBuilder;
 
+    // Database connection settings for use with silent mode.
+    private String doorsPath;
     private String doorsServer;
-
     private String user;
-
     private String password;
-
-    public DoorsApplicationImpl() {
-        doorsApplications = new HashMap<Thread, ActiveXComponent>();
-    }
 
     @Override
     public void beginBatchMode() {
         if (batchMode) {
-            throw new RuntimeException("Already in batch mode.");
+            throw new DoorsRuntimeException("Already in batch mode.");
         }
 
         batchMode = true;
@@ -57,14 +64,18 @@ public class DoorsApplicationImpl implements DoorsApplication {
     }
 
     @Override
-    public void endBatchMode() throws DoorsException, IOException {
+    public void endBatchMode() throws DoorsException {
         if (!batchMode) {
-            throw new RuntimeException("Not in batch mode.");
+            throw new DoorsRuntimeException("Not in batch mode.");
         }
 
         batchMode = false;
 
-        runCommand();
+        try {
+            runCommand();
+        } catch (final IOException e) {
+            throw new DoorsRuntimeException(e);
+        }
     }
 
     private ActiveXComponent getDoorsApplication() {
@@ -107,21 +118,12 @@ public class DoorsApplicationImpl implements DoorsApplication {
         return false;
     }
 
-    synchronized private void runStr(final String dxl) throws DoorsNotRunningException {
+    synchronized private void runStr(final String dxl) {
         if (!isDoorsRunning()) {
             throw new DoorsNotRunningException();
         }
         final ActiveXComponent doorsApplication = getDoorsApplication();
         Dispatch.call(doorsApplication, "runStr", dxl);
-    }
-
-    @SuppressWarnings("unused")
-    synchronized private void runFile(final String fileName) throws DoorsNotRunningException {
-        if (!isDoorsRunning()) {
-            throw new DoorsNotRunningException();
-        }
-        final ActiveXComponent doorsApplication = getDoorsApplication();
-        Dispatch.call(doorsApplication, "runFile", fileName);
     }
 
     private File getTempFile() throws IOException {
@@ -131,15 +133,20 @@ public class DoorsApplicationImpl implements DoorsApplication {
     }
 
     @Override
-    public void ack(final String message) throws DoorsException, IOException {
-        buildAndRunCommand(builder -> {
-            builder.addScript(new InternalDXLScript("ack.dxl"));
-            builder.setVariable("message", message);
-        });
+    public void ack(final String message) {
+        try {
+            buildAndRunCommand(builder -> {
+                builder.addScript(new InternalDXLScript("ack.dxl"));
+                builder.setVariable("message", message);
+            });
+        } catch (final DoorsException e) {
+            // This should never happen, because the script never calls 'throw'.
+            throw new DoorsRuntimeException();
+        }
     }
 
     @Override
-    public ModuleRef openModule(final DoorsURL url) throws IOException, DoorsException {
+    public ModuleRef openModule(final DoorsURL url) throws DoorsException {
         buildAndRunCommand(builder -> {
             builder.addLibrary(new InternalDXLScript("lib/utils.dxl"));
             builder.addScript(new InternalDXLScript("open_module.dxl"));
@@ -149,7 +156,7 @@ public class DoorsApplicationImpl implements DoorsApplication {
     }
 
     @Override
-    public ModuleRef openModule(final String name) throws IOException, DoorsException {
+    public ModuleRef openModule(final String name) throws DoorsException {
         buildAndRunCommand(builder -> {
             builder.addLibrary(new InternalDXLScript("lib/utils.dxl"));
             builder.addScript(new InternalDXLScript("open_module.dxl"));
@@ -159,28 +166,33 @@ public class DoorsApplicationImpl implements DoorsApplication {
     }
 
     @Override
-    public void runScript(final File scriptFile) throws DoorsException, IOException {
+    public void runScript(final File scriptFile) throws DoorsException {
         buildAndRunCommand(builder -> {
             builder.addScript(new ExternalDXLScript(scriptFile));
         });
     }
 
     @Override
-    public void runScript(final String dxlCode) throws DoorsException, IOException {
+    public void runScript(final String dxlCode) throws DoorsException {
         buildAndRunCommand(builder -> {
             builder.addScript(new InMemoryDXLScript(dxlCode));
         });
     }
 
     @Override
-    public void print(final String message) throws DoorsException, IOException {
-        buildAndRunCommand(builder -> {
-            builder.addScript(new InternalDXLScript("print.dxl"));
-            builder.setVariable("message", message);
-        });
+    public void print(final String message) {
+        try {
+            buildAndRunCommand(builder -> {
+                builder.addScript(new InternalDXLScript("print.dxl"));
+                builder.setVariable("message", message);
+            });
+        } catch (final DoorsException e) {
+            // This should never happen, because the script never calls 'throw'.
+            throw new DoorsRuntimeException();
+        }
     }
 
-    public void buildAndRunCommand(final Consumer<DoorsScriptBuilder> prepareScriptBuilder) throws IOException, DoorsException {
+    public void buildAndRunCommand(final Consumer<DoorsScriptBuilder> prepareScriptBuilder) throws DoorsException {
         if (!batchMode) {
             scriptBuilder = new DoorsScriptBuilder();
         }
@@ -190,11 +202,15 @@ public class DoorsApplicationImpl implements DoorsApplication {
         scriptBuilder.endScope();
 
         if (!batchMode) {
-            runCommand();
+            try {
+                runCommand();
+            } catch (final IOException e) {
+                throw new DoorsRuntimeException(e);
+            }
         }
     }
 
-    private void runCommand() throws DoorsException, IOException {
+    private void runCommand() throws IOException, DoorsException {
 
         final boolean redirectOutput = outputStream != null;
 
@@ -211,8 +227,7 @@ public class DoorsApplicationImpl implements DoorsApplication {
         if (redirectOutput) {
             scriptBuilder.addScript(new InternalDXLScript("lib/redirect_output_post.dxl"));
 
-            final File outputFile = File.createTempFile("doorsOutput", "");
-            // outputFile.deleteOnExit();
+            final File outputFile = getTempFile();
             scriptBuilder.setVariable("outputRedirectFilename", outputFile.getAbsolutePath());
             if (!outputFile.exists()) {
                 outputFile.createNewFile();
@@ -240,7 +255,8 @@ public class DoorsApplicationImpl implements DoorsApplication {
 
     }
 
-    public void initSilentMode(final String doorsServer, final String user, final String password) {
+    public void initSilentMode(final String doorsPath, final String doorsServer, final String user, final String password) {
+        this.doorsPath = doorsPath;
         this.doorsServer = doorsServer;
         this.user = user;
         this.password = password;
@@ -252,7 +268,7 @@ public class DoorsApplicationImpl implements DoorsApplication {
         FileUtils.write(f, dxl);
 
         // TODO: this might change!
-        final String[] cmdLine = new String[] { "C:\\Program Files (x86)\\DOORS 9.5.2.0\\bin\\doors.exe", "-b", f.getAbsolutePath(), "-d", doorsServer, "-u", user, "-P", "xxxx" };
+        final String[] cmdLine = new String[] { doorsPath, "-b", f.getAbsolutePath(), "-d", doorsServer, "-u", user, "-P", "xxxx" };
 
         LOGGER.info(String.format("Running DOORS in silent mode. Command line: %s", String.join(" ", cmdLine)));
 
