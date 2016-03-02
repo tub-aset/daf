@@ -78,6 +78,10 @@ public interface DoorsApplication {
      */
     ModuleRef openModule(String name) throws DoorsException;
 
+    ItemRef getRoot();
+
+    ItemRef getFolder(String path) throws DoorsException;
+
     /**
      * Runs a DXL script stored in a file.
      *

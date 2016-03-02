@@ -18,9 +18,9 @@
 package de.jpwinkler.libs.doorsbridge.internal;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -28,16 +28,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.Dispatch;
 
 import de.jpwinkler.libs.doorsbridge.DoorsApplication;
 import de.jpwinkler.libs.doorsbridge.DoorsException;
+import de.jpwinkler.libs.doorsbridge.DoorsItemType;
 import de.jpwinkler.libs.doorsbridge.DoorsNotRunningException;
 import de.jpwinkler.libs.doorsbridge.DoorsRuntimeException;
 import de.jpwinkler.libs.doorsbridge.DoorsURL;
+import de.jpwinkler.libs.doorsbridge.ItemRef;
 import de.jpwinkler.libs.doorsbridge.ModuleRef;
 import de.jpwinkler.libs.doorsbridge.user32.Window;
 import de.jpwinkler.libs.doorsbridge.user32.WindowManager;
@@ -93,6 +94,14 @@ public class DoorsApplicationImpl implements DoorsApplication {
         } catch (final IOException e) {
             throw new DoorsRuntimeException(e);
         }
+    }
+
+    public boolean isBatchMode() {
+        return batchMode;
+    }
+
+    public boolean isSilentMode() {
+        return silentMode;
     }
 
     private ActiveXComponent getDoorsApplication() {
@@ -209,7 +218,24 @@ public class DoorsApplicationImpl implements DoorsApplication {
         }
     }
 
-    public void buildAndRunCommand(final Consumer<DoorsScriptBuilder> prepareScriptBuilder) throws DoorsException {
+    @Override
+    public ItemRef getRoot() {
+        return new ItemRefImpl(this, "", "", DoorsItemType.ROOT);
+    }
+
+    @Override
+    public ItemRef getFolder(final String path) {
+        // TODO: check validity of path
+
+        final int slashIndex = path.lastIndexOf("/");
+        final String first = path.substring(0, slashIndex);
+        final String second = path.substring(slashIndex + 1);
+
+        // TODO: maybe query for the type
+        return new ItemRefImpl(this, first, second, DoorsItemType.UNKNOWN);
+    }
+
+    public String buildAndRunCommand(final Consumer<DoorsScriptBuilder> prepareScriptBuilder) throws DoorsException {
         if (!batchMode) {
             scriptBuilder = new DoorsScriptBuilder();
         }
@@ -220,21 +246,27 @@ public class DoorsApplicationImpl implements DoorsApplication {
 
         if (!batchMode) {
             try {
-                runCommand();
+                return runCommand();
             } catch (final IOException e) {
                 throw new DoorsRuntimeException(e);
             }
+        } else {
+            return null;
         }
     }
 
-    private void runCommand() throws IOException, DoorsException {
+    private String runCommand() throws IOException, DoorsException {
 
         final boolean redirectOutput = outputStream != null;
 
         final File exceptionFile = getTempFile();
+        final File returnFile = getTempFile();
 
         scriptBuilder.addPreamble(new InternalDXLScript("pre/exception_handling.dxl"));
         scriptBuilder.setVariable("exceptionFilename", exceptionFile.getAbsolutePath());
+
+        scriptBuilder.addPreamble(new InternalDXLScript("pre/return.dxl"));
+        scriptBuilder.setVariable("returnFilename", returnFile.getAbsolutePath());
 
         if (redirectOutput) {
             scriptBuilder.addPreamble(new InternalDXLScript("pre/redirect_output.dxl"));
@@ -264,12 +296,17 @@ public class DoorsApplicationImpl implements DoorsApplication {
         }
 
         if (exceptionFile.exists()) {
-            final String message = IOUtils.toString(new FileInputStream(exceptionFile));
+            final String message = FileUtils.readFileToString(exceptionFile, Charset.forName("Cp1252"));
             if (!message.isEmpty()) {
                 throw new DoorsException(message);
             }
         }
 
+        if (returnFile.exists()) {
+            return FileUtils.readFileToString(returnFile, Charset.forName("Cp1252"));
+        } else {
+            return null;
+        }
     }
 
     public void initSilentMode(final String doorsPath, final String doorsServer, final String user, final String password) {
