@@ -1,13 +1,13 @@
 # General
 
-doorsbridge is a java library used to control DOORS from Java.
+doorsbridge is a java library used to control IBM Rational DOORS from Java.
 
 # Basic usage
 
 * Make sure that jacob-1.18-x64.dll or jacob-1.18-x86.dll are on the java library path. The easiest way to ensure that is to copy both files to your project root directory.
 * Use DoorsApplicationFactory to acquire a DoorsApplication instance.
 * Start DOORS and authenticate yourself, if needed.
-* Use the DoorsApplication instance to send commands to DOORS. 
+* Use the DoorsApplication instance to send commands to DOORS.
 
 # Advanced features
 
@@ -17,11 +17,15 @@ Silent mode does not require a running DOORS session. In silent mode, DOORS is s
 
 ## Batch mode
 
-Batch mode groups multiple commands together and executes them as a single, large dxl script. Batch mode is started by calling 'beginBatchMode()'. Commands are stored in an internal buffer until 'endBatchMode()' is called. This is particularly useful in conjunction with silent mode, since invoking 
+Batch mode groups multiple commands together and executes them as a single, large dxl script. Batch mode is started by calling 'beginBatchMode()'. Commands are stored in an internal buffer until 'endBatchMode()' is called. This is particularly useful in conjunction with silent mode, since invoking
+
+## Return values
+
+doorsbridge provides a mechanism to return data from DXL to Java. DXL scripts may use the 'returnToJava(String data)' function to send arbitrary data. DoorsApplicationImpl.runCommand returns the data provided by DXL scripts, or null, if returnToJava was not called. 
 
 ## Output redirection
 
-doorsbridge provides output redirection. Calling the 'print' function from dxl with active output redirection causes any messages to be redirected to a designated stream. Activate output redirection by calling DoorsApplication.redirectOutput(), providing an output stream (i.e. System.out or some FileOutputStream instance).
+doorsbridge provides output redirection. Calling the 'print' function from dxl with active output redirection causes any messages to be redirected to a designated output stream. Activate output redirection by calling DoorsApplication.redirectOutput(), providing an output stream (i.e. System.out, some FileOutputStream instance, ...).
 
 ## Exception handling
 
