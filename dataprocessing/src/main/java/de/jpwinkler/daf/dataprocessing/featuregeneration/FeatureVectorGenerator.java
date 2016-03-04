@@ -3,6 +3,7 @@ package de.jpwinkler.daf.dataprocessing.featuregeneration;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -18,17 +19,18 @@ import java.util.Map.Entry;
  */
 public class FeatureVectorGenerator<E, F> {
 
-    private int cutoff;
     private final Map<F, Integer> featureCounts = new HashMap<>();
     private final Map<F, Integer> featureIndices = new HashMap<>();
     private final List<FeatureGenerator<E, F>> featureGenerators = new ArrayList<>();
-
-    public FeatureVectorGenerator(final int cutoff) {
-        this.cutoff = cutoff;
-    }
+    private final List<FeatureFilter<F>> featureFilters = new ArrayList<>();
 
     public void addFeatureGenerator(final FeatureGenerator<E, F> featureGenerator) {
         this.featureGenerators.add(featureGenerator);
+    }
+
+    public void addFeatureFilter(final FeatureFilter<F> featureFilter) {
+        featureFilters.add(featureFilter);
+        featureFilter.setFeatureVectorGenerator(this);
     }
 
     private HashMap<F, Integer> getFeatures(final E element) {
@@ -71,8 +73,19 @@ public class FeatureVectorGenerator<E, F> {
         int idx = 0;
 
         for (final Entry<F, Integer> e : featureCounts.entrySet()) {
-            if (e.getValue() >= cutoff) {
-                featureIndices.put(e.getKey(), idx++);
+            featureIndices.put(e.getKey(), idx++);
+        }
+    }
+
+    public void filter() {
+
+        for (final FeatureFilter<F> featureFilter : featureFilters) {
+            final Iterator<Entry<F, Integer>> i = featureCounts.entrySet().iterator();
+            while (i.hasNext()) {
+                final Entry<F, Integer> next = i.next();
+                if (!featureFilter.test(next.getKey())) {
+                    i.remove();
+                }
             }
         }
     }
@@ -99,14 +112,6 @@ public class FeatureVectorGenerator<E, F> {
         featureIndices.clear();
     }
 
-    public int getCutoff() {
-        return cutoff;
-    }
-
-    public void setCutoff(final int cutoff) {
-        this.cutoff = cutoff;
-    }
-
     public void printFeatureStatistics() {
         final List<Entry<F, Integer>> featureList = new ArrayList<>(featureCounts.entrySet());
 
@@ -118,10 +123,16 @@ public class FeatureVectorGenerator<E, F> {
         });
 
         for (final Entry<F, Integer> e : featureList) {
-            if (e.getValue() >= cutoff) {
-                System.out.println(e.getValue() + " " + e.getKey());
-            }
+            System.out.println(e.getValue() + " " + e.getKey());
         }
 
+    }
+
+    public Map<F, Integer> getFeatureCounts() {
+        return featureCounts;
+    }
+
+    public Map<F, Integer> getFeatureIndices() {
+        return featureIndices;
     }
 }

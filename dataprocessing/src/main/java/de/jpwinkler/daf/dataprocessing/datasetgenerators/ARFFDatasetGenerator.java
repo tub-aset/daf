@@ -5,17 +5,16 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import weka.core.Attribute;
 import weka.core.Instances;
 import weka.core.SparseInstance;
 
-public class ARFFDatasetGenerator extends DatasetGenerator<DoorsObject, String> {
+public class ARFFDatasetGenerator<E> extends DatasetGenerator<E, String> {
 
     private Instances data;
     private Attribute classAttribute;
 
-    public ARFFDatasetGenerator(final LabelGenerator<DoorsObject> labelGenerator, final boolean unique) {
+    public ARFFDatasetGenerator(final LabelGenerator<E> labelGenerator, final boolean unique) {
         super(labelGenerator, unique);
     }
 
@@ -37,7 +36,7 @@ public class ARFFDatasetGenerator extends DatasetGenerator<DoorsObject, String> 
     }
 
     @Override
-    protected void addDatasetRecord(final OutputStream stream, final DoorsObject object, final double[] featureVector, final String outcome) throws IOException {
+    protected void addDatasetRecord(final OutputStream stream, final E object, final double[] featureVector, final String outcome) throws IOException {
         final double[] dataVector = Arrays.copyOf(featureVector, featureVector.length + 1);
         dataVector[dataVector.length - 1] = classAttribute.indexOfValue(outcome);
         data.add(new SparseInstance(1, dataVector));

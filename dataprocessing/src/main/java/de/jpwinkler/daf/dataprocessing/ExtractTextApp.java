@@ -29,8 +29,6 @@ public class ExtractTextApp {
 
         final Set<Integer> writtenObjects = new HashSet<>();
 
-        // final ObjectTextPreprocessor preprocessor =
-        // ObjectTextPreprocessor.getDefaultPreprocessor();
         final Iterator<DoorsObject> i = getIterator();
         while (i.hasNext()) {
             final DoorsObject next = i.next();
@@ -39,9 +37,9 @@ public class ExtractTextApp {
 
                 final String text = next.getText();
 
-                if (!writtenObjects.contains(text.hashCode())) {
+                if (!text.trim().isEmpty() && !writtenObjects.contains(text.hashCode())) {
                     if (!writers.containsKey(ot)) {
-                        writers.put(ot, new OutputStreamWriter(new FileOutputStream(new File("urgh/" + ot + ".txt"))));
+                        writers.put(ot, new OutputStreamWriter(new FileOutputStream(new File("temp/" + ot + ".txt"))));
                     }
 
                     writers.get(ot).write(text + "\n");

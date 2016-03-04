@@ -22,12 +22,18 @@ import de.jpwinkler.daf.dataprocessing.utils.DoorsObjectSentenceIterator;
 public class Word2VecApp {
 
     public static void main(final String[] args) throws IOException {
-        buildWord2VecModel();
-        testWord2VecModel();
+        // buildWord2VecModel();
+        final WordVectors vec = WordVectorSerializer.loadTxtVectors(new File("words.txt"));
+        testWord2VecModel(vec, "dauerhaft");
+        testWord2VecModel(vec, "neue");
+        testWord2VecModel(vec, "laufende");
+        testWord2VecModel(vec, "Volt");
+        testWord2VecModel(vec, "volt");
+        testWord2VecModel(vec, "V");
     }
 
     private static Iterator<DoorsObject> getIterator() {
-        return StreamSupport.stream(new SimpleFolderCSVSpliterator(new File("C:\\WORK\\DOORS\\export\\body\\comp\\de"), true), false).iterator();
+        return StreamSupport.stream(new SimpleFolderCSVSpliterator(new File("C:/WORK/ml-tasks/reqinf-comp"), false), false).iterator();
     }
 
     public static void buildWord2VecModel() throws IOException {
@@ -47,7 +53,7 @@ public class Word2VecApp {
         final TokenizerFactory tokenizer = new DefaultTokenizerFactory();
 
         final int batchSize = 1000;
-        final int iterations = 30;
+        final int iterations = 3;
         final int layerSize = 500;
 
         final Word2Vec vec = new Word2Vec.Builder()
@@ -74,9 +80,7 @@ public class Word2VecApp {
 
     }
 
-    public static void testWord2VecModel() throws FileNotFoundException {
-        final WordVectors vec = WordVectorSerializer.loadTxtVectors(new File("words.txt"));
-        final String word = "ohm";
+    public static void testWord2VecModel(final WordVectors vec, final String word) throws FileNotFoundException {
         final Collection<String> words = vec.wordsNearest(word, 10);
         System.out.println("words nearest to '" + word + "': " + words);
     }
