@@ -14,6 +14,7 @@ import de.jpwinkler.daf.fap5.util.LogOutputStream;
 import de.jpwinkler.libs.doorsbridge.DoorsApplication;
 import de.jpwinkler.libs.doorsbridge.DoorsApplicationFactory;
 import de.jpwinkler.libs.doorsbridge.DoorsException;
+import de.jpwinkler.libs.doorsbridge.ModuleRef;
 
 public class ExportModulesOp extends AbstractStepImpl implements ModelOperationImpl {
 
@@ -55,11 +56,9 @@ public class ExportModulesOp extends AbstractStepImpl implements ModelOperationI
 
                     try {
                         if (verifiedViews != null) {
-                            for (final String verifiedView : verifiedViews) {
-                                export(targetVerifiedPath, targetModule, verifiedView);
-                            }
+                            export(targetVerifiedPath, targetModule, verifiedViews);
                         } else {
-                            export(targetVerifiedPath, targetModule, null);
+                            export(targetVerifiedPath, targetModule, (String) null);
                         }
                     } catch (final DoorsException e) {
                         LOGGER.warning(e.getMessage());
@@ -74,23 +73,27 @@ public class ExportModulesOp extends AbstractStepImpl implements ModelOperationI
         return null;
     }
 
-    private void export(final String path, final String name, final String view) throws DoorsException, IOException {
+    private void export(final String path, final String name, final String... views) throws DoorsException, IOException {
         if (validateModulePath(path, name)) {
             final String fullName = path + "/" + name;
-            final String id = fullName + (view != null && !view.isEmpty() ? ":" + view : "");
-            final File directory = new File(exportFolder + path);
-            directory.mkdirs();
-            final File file = new File(directory, name + "-" + view + ".csv");
-            if (file.exists()) {
-                LOGGER.warning("Module already exported: " + id);
-            } else {
-                LOGGER.info("Exporting " + id);
-                if (view != null && !view.isEmpty()) {
-                    app.exportModuleToCSV(fullName, file, view);
+            final ModuleRef moduleRef = app.openModule(fullName);
+            for (final String view : views) {
+                final String id = fullName + (view != null && !view.isEmpty() ? ":" + view : "");
+                final File directory = new File(exportFolder + path);
+                directory.mkdirs();
+                final File file = new File(directory, name + "-" + view + ".csv");
+                if (file.exists()) {
+                    LOGGER.warning("Module already exported: " + id);
                 } else {
-                    app.exportModuleToCSV(fullName, file);
+                    LOGGER.info("Exporting " + id);
+                    if (view != null && !view.isEmpty()) {
+                        moduleRef.exportToCSV(file, view);
+                    } else {
+                        moduleRef.exportToCSV(file);
+                    }
                 }
             }
+            moduleRef.close();
         }
     }
 
