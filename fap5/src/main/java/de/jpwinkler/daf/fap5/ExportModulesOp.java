@@ -73,27 +73,38 @@ public class ExportModulesOp extends AbstractStepImpl implements ModelOperationI
         return null;
     }
 
-    private void export(final String path, final String name, final String... views) throws DoorsException, IOException {
+    private void export(final String path, final String name, final String... views) throws IOException, DoorsException {
         if (validateModulePath(path, name)) {
             final String fullName = path + "/" + name;
-            final ModuleRef moduleRef = app.openModule(fullName);
-            for (final String view : views) {
-                final String id = fullName + (view != null && !view.isEmpty() ? ":" + view : "");
-                final File directory = new File(exportFolder + path);
-                directory.mkdirs();
-                final File file = new File(directory, name + "-" + view + ".csv");
-                if (file.exists()) {
-                    LOGGER.warning("Module already exported: " + id);
-                } else {
-                    LOGGER.info("Exporting " + id);
-                    if (view != null && !view.isEmpty()) {
-                        moduleRef.exportToCSV(file, view);
+            ModuleRef moduleRef = null;
+
+            try (ModuleRef s = app.openModule(fullName)) {
+
+            }
+
+            try {
+                moduleRef = app.openModule(fullName);
+                for (final String view : views) {
+                    final String id = fullName + (view != null && !view.isEmpty() ? ":" + view : "");
+                    final File directory = new File(exportFolder + path);
+                    directory.mkdirs();
+                    final File file = new File(directory, name + "-" + view + ".csv");
+                    if (file.exists()) {
+                        LOGGER.warning("Module already exported: " + id);
                     } else {
-                        moduleRef.exportToCSV(file);
+                        LOGGER.info("Exporting " + id);
+                        if (view != null && !view.isEmpty()) {
+                            moduleRef.exportToCSV(file, view);
+                        } else {
+                            moduleRef.exportToCSV(file);
+                        }
                     }
                 }
+            } finally {
+                if (moduleRef != null && moduleRef.isOpen()) {
+                    moduleRef.close();
+                }
             }
-            moduleRef.close();
         }
     }
 
