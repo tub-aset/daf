@@ -78,10 +78,6 @@ public class ExportModulesOp extends AbstractStepImpl implements ModelOperationI
             final String fullName = path + "/" + name;
             ModuleRef moduleRef = null;
 
-            try (ModuleRef s = app.openModule(fullName)) {
-
-            }
-
             try {
                 moduleRef = app.openModule(fullName);
                 for (final String view : views) {
