@@ -7,12 +7,19 @@ import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 
 public class EmergentDatasetGenerator extends DatasetGenerator<DoorsObject, String> {
 
-    public EmergentDatasetGenerator(final LabelGenerator<DoorsObject> labelGenerator, final boolean unique) {
+    private OutputStream stream;
+
+	public EmergentDatasetGenerator(final LabelGenerator<DoorsObject> labelGenerator, final boolean unique) {
         super(labelGenerator, unique);
+    }
+    
+    @Override
+    protected void setStream(OutputStream stream) {
+		this.stream = stream;
     }
 
     @Override
-    protected void beforeDatasetGeneration(final OutputStream stream) throws IOException {
+    protected void beforeDatasetGeneration() throws IOException {
         final StringBuilder sb = new StringBuilder();
         sb.append("_H:\t$Name\t");
         for (int i = 0; i < getFeatureVectorGenerator().getFeatureCount(); i++) {
@@ -36,10 +43,10 @@ public class EmergentDatasetGenerator extends DatasetGenerator<DoorsObject, Stri
     }
 
     @Override
-    protected void addDatasetRecord(final OutputStream stream, final DoorsObject object, final double[] featureVector, final String outcome) throws IOException {
+    protected void addDatasetRecord(final DoorsObject object, final int[] featureVector, final String outcome) throws IOException {
         final StringBuilder sb = new StringBuilder();
         sb.append("_D:\t\"" + object.getObjectIdentifier() + "\"\t");
-        for (final double d : featureVector) {
+        for (final int d : featureVector) {
             sb.append(d);
             sb.append("\t");
         }

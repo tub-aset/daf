@@ -2,8 +2,8 @@ package de.jpwinkler.daf.dataprocessing.utils;
 
 public class VectorUtils {
 
-    public static double[] oneHotVector(final int index, final int size) {
-        final double[] result = new double[size];
+    public static int[] oneHotVector(final int index, final int size) {
+        final int[] result = new int[size];
 
         result[index] = 1;
 

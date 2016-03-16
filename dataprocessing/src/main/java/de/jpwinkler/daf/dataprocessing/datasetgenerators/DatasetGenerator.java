@@ -63,13 +63,15 @@ public abstract class DatasetGenerator<E, F> {
 
     public final void generateDataset(final Iterator<E> iterator, final OutputStream stream) throws IOException {
         final Set<Integer> examples = new HashSet<>();
+        
+        setStream(stream);
 
-        beforeDatasetGeneration(stream);
+        beforeDatasetGeneration();
 
         while (iterator.hasNext()) {
             final E element = iterator.next();
             if (isObjectValid(element)) {
-                final double[] featureVector = featureVectorGenerator.getFeatureVector(element);
+                final int[] featureVector = featureVectorGenerator.getFeatureVector(element);
                 final List<String> labels = labelGenerator.getLabels(element);
                 final int hashCode = 997 * Arrays.toString(featureVector).hashCode() ^ 991 * labels.hashCode();
 
@@ -77,9 +79,9 @@ public abstract class DatasetGenerator<E, F> {
                     examples.add(hashCode);
                     try {
                         if (labels.size() > 1) {
-                            addMultiClassDatasetRecord(stream, element, featureVector, labels);
+                            addMultiClassDatasetRecord(element, featureVector, labels);
                         } else {
-                            addDatasetRecord(stream, element, featureVector, labels.get(0));
+                            addDatasetRecord(element, featureVector, labels.get(0));
                         }
                     } catch (final IOException e) {
                         e.printStackTrace();
@@ -88,21 +90,22 @@ public abstract class DatasetGenerator<E, F> {
             }
         }
 
-        afterDatasetGeneration(stream);
-        stream.close();
+        afterDatasetGeneration();
     }
 
-    protected void beforeDatasetGeneration(final OutputStream stream) throws IOException {
+    protected abstract void setStream(OutputStream stream);
+
+	protected void beforeDatasetGeneration() throws IOException {
     }
 
-    protected void addMultiClassDatasetRecord(final OutputStream stream, final E object, final double[] featureVector, final List<String> outcome) throws IOException {
+    protected void addMultiClassDatasetRecord(final E object, final int[] featureVector, final List<String> outcome) throws IOException {
         throw new UnsupportedOperationException("Multilabel classification is not supported by dataset generator " + getClass().getName());
     }
 
-    protected void addDatasetRecord(final OutputStream stream, final E object, final double[] featureVector, final String outcome) throws IOException {
+    protected void addDatasetRecord(final E object, final int[] featureVector, final String outcome) throws IOException {
     }
 
-    protected void afterDatasetGeneration(final OutputStream stream) throws IOException {
+    protected void afterDatasetGeneration() throws IOException {
     }
 
 }

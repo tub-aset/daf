@@ -41,8 +41,8 @@ public class FeatureVectorGenerator<E, F> {
         return features;
     }
 
-    public double[] getFeatureVector(final E element) {
-        final double[] vector = new double[featureIndices.size()];
+    public int[] getFeatureVector(final E element) {
+        final int[] vector = new int[featureIndices.size()];
 
         for (final Entry<F, Integer> feature : getFeatures(element).entrySet()) {
             if (featureIndices.containsKey(feature.getKey())) {

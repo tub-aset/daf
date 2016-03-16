@@ -13,8 +13,8 @@ import java.util.zip.GZIPOutputStream;
 
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dataprocessing.datasetgenerators.DatasetGenerator;
+import de.jpwinkler.daf.dataprocessing.datasetgenerators.FancyDatasetGenerator;
 import de.jpwinkler.daf.dataprocessing.datasetgenerators.FilteringLabelGenerator;
-import de.jpwinkler.daf.dataprocessing.datasetgenerators.SimpleTensorFlowDatasetGenerator;
 import de.jpwinkler.daf.dataprocessing.featuregeneration.CutoffFilter;
 import de.jpwinkler.daf.dataprocessing.featuregeneration.FeatureVectorGenerator;
 import de.jpwinkler.daf.dataprocessing.featuregeneration.NgramOrderFilter;
@@ -46,7 +46,7 @@ public class DatasetGenerationApp {
         featureVectorGenerator.addFeatureGenerator(new WordFeatureGenerator(MIN_N_GRAM_LENGTH, MAX_N_GRAM_LENGTH, MIN_WORD_LENGTH));
 
         final FilteringLabelGenerator labelGenerator = new FilteringLabelGenerator("Object Type", Arrays.asList("information", "requirement"));
-        final DatasetGenerator<DoorsObject, String> tfDatasetGenerator = new SimpleTensorFlowDatasetGenerator(labelGenerator, true);
+        final DatasetGenerator<DoorsObject, String> tfDatasetGenerator = new FancyDatasetGenerator(labelGenerator, true);
         tfDatasetGenerator.init(getIterator(), featureVectorGenerator);
 
         LOGGER.info("Dataset initialization done.");
