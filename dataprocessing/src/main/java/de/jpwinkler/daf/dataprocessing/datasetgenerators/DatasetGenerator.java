@@ -48,6 +48,7 @@ public abstract class DatasetGenerator<E, F> {
                 }
             }
         }
+        featureVectorGenerator.filter();
         featureVectorGenerator.buildFeatureIndexMap();
 
     }
