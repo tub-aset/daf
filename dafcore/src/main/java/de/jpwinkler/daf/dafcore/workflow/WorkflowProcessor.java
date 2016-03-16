@@ -38,6 +38,7 @@ import de.jpwinkler.libs.doorsbridge.DoorsApplication;
 import de.jpwinkler.libs.doorsbridge.DoorsApplicationFactory;
 import de.jpwinkler.libs.doorsbridge.DoorsException;
 import de.jpwinkler.libs.doorsbridge.DoorsURL;
+import de.jpwinkler.libs.doorsbridge.ModuleRef;
 
 public class WorkflowProcessor {
 
@@ -293,7 +294,7 @@ public class WorkflowProcessor {
         final DoorsModule module = new ModuleCSVParser().parseCSV(file);
         final File metaDataFile = new File(file.getAbsoluteFile() + ".mmd");
         if (metaDataFile.exists()) {
-            new ModuleMetaDataParser().parseModuleMetaData(metaDataFile, module);
+            new ModuleMetaDataParser().updateModuleMetaData(metaDataFile, module);
         }
         return module;
     }
@@ -304,7 +305,9 @@ public class WorkflowProcessor {
             final File tempMetaFile = new File(tempFile.getAbsolutePath() + ".mmd");
             tempFile.deleteOnExit();
             tempMetaFile.deleteOnExit();
-            doorsApp.exportModuleToCSV(doorsURL, tempFile);
+            final ModuleRef mod = doorsApp.openModule(doorsURL);
+            mod.exportToCSV(tempFile);
+            mod.close();
             final DoorsModule module = loadDoorsModuleFromCSV(tempFile);
             return module;
         } catch (IOException | DoorsException | CSVParseException e) {
@@ -318,7 +321,9 @@ public class WorkflowProcessor {
             final File tempMetaFile = new File(tempFile.getAbsolutePath() + ".mmd");
             tempFile.deleteOnExit();
             tempMetaFile.deleteOnExit();
-            doorsApp.exportModuleToCSV(reference, tempFile);
+            final ModuleRef mod = doorsApp.openModule(reference);
+            mod.exportToCSV(tempFile);
+            mod.close();
             final DoorsModule module = loadDoorsModuleFromCSV(tempFile);
             return module;
         } catch (IOException | DoorsException | CSVParseException e) {

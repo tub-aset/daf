@@ -3,6 +3,9 @@ package de.jpwinkler.daf.dafcore.csv;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -18,26 +21,40 @@ public class ModuleMetaDataParser {
             .withIgnoreSurroundingSpaces()
             .withRecordSeparator("\r\n");
 
-    public void parseModuleMetaData(final File metaDataFile, final DoorsModule module) throws IOException {
+    public Map<String, String> parseModuleMetaData(final File metaDataFile) throws IOException {
 
         final CSVParser parser = CSVParser.parse(metaDataFile, Charset.forName("Cp1252"), FORMAT);
 
+        final Map<String, String> metadata = new HashMap<>();
+
         for (final CSVRecord record : parser.getRecords()) {
-            module.getAttributes().put(record.get(0), record.get(1));
-            if (record.get(0).equals("Name")) {
-                module.setName(record.get(1));
-            }
-            if (record.get(0).equals("__url__")) {
-                module.setUrl(record.get(1));
-            }
-            if (record.get(0).equals("__path__")) {
-                module.setPath(record.get(1));
-            }
-            if (record.get(0).equals("__view__")) {
-                module.setView(record.get(1));
-            }
+            metadata.put(record.get(0), record.get(1));
         }
         parser.close();
+
+        return metadata;
     }
+
+    public void updateModuleMetaData(final File metaDataFile, final DoorsModule module) throws IOException {
+        final Map<String, String> metadata = parseModuleMetaData(metaDataFile);
+
+        for (final Entry<String, String> e : metadata.entrySet()) {
+            module.getAttributes().put(e.getKey(), e.getValue());
+            if (e.getKey().equals("Name")) {
+                module.setName(e.getValue());
+            }
+            if (e.getKey().equals("__url__")) {
+                module.setUrl(e.getValue());
+            }
+            if (e.getKey().equals("__path__")) {
+                module.setPath(e.getValue());
+            }
+            if (e.getKey().equals("__view__")) {
+                module.setView(e.getValue());
+            }
+
+        }
+    }
+
 
 }

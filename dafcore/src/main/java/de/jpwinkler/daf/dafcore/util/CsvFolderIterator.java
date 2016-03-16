@@ -53,7 +53,7 @@ public class CsvFolderIterator implements Iterator<DoorsModule> {
             final DoorsModule module = new ModuleCSVParser().parseCSV(next);
             final File metaDataFile = new File(next.getAbsoluteFile() + ".mmd");
             if (metaDataFile.exists()) {
-                new ModuleMetaDataParser().parseModuleMetaData(metaDataFile, module);
+                new ModuleMetaDataParser().updateModuleMetaData(metaDataFile, module);
             }
             return module;
         } catch (IOException | CSVParseException e) {
