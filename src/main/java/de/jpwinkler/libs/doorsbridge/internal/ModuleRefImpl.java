@@ -103,4 +103,10 @@ public class ModuleRefImpl implements ModuleRef {
         closed = true;
     }
 
+    @Override
+    public boolean isOpen() {
+        // TODO: implement an actual doors script that checks the state of the
+        // module, maybe.
+        return !closed;
+    }
 }

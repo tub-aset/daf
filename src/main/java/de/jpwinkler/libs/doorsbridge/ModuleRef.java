@@ -64,4 +64,6 @@ public interface ModuleRef {
      */
     void close();
 
+    boolean isOpen();
+
 }
