@@ -51,7 +51,8 @@ public class TaskGenerationApp {
 
         final Map<String, Set<Integer>> writtenObjects = new HashMap<>();
 
-        final ObjectCSVWriter csvWriter = new ObjectCSVWriter(header, new FileOutputStream("temp/task.csv"));
+        final ObjectCSVWriter csvWriterTrain = new ObjectCSVWriter(header, new FileOutputStream("temp/task-train.csv"));
+        final ObjectCSVWriter csvWriterTest = new ObjectCSVWriter(header, new FileOutputStream("temp/task-test.csv"));
 
         iterator = getIterator();
         while (iterator.hasNext()) {
@@ -67,18 +68,18 @@ public class TaskGenerationApp {
                 final String text = next.getText();
 
                 if (!text.trim().isEmpty() && !writtenObjects.get(ot).contains(text.hashCode())) {
-
+                	
                     if (ot.equals("information") || ot.equals("requirement")) {
+                    	ObjectCSVWriter csvWriter = r.nextFloat() > 0.9 ? csvWriterTest : csvWriterTrain;
                         csvWriter.writeObject(next);
                         writtenObjects.get(ot).add(text.hashCode());
                     }
-
-
                 }
             }
         }
 
-        csvWriter.close();
+        csvWriterTest.close();
+        csvWriterTrain.close();
 
         for (final Entry<String, Set<Integer>> e : writtenObjects.entrySet()) {
             System.out.println(e.getKey() + ": " + e.getValue().size());
