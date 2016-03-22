@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="doorsdbmodel" nsURI="de.jpwinkler.daf.doorsdb.doorsdbmodel"
+    nsPrefix="doorsdbmodel">
+  <eClassifiers xsi:type="ecore:EClass" name="DBItem" abstract="true">
+    <eOperations name="accept">
+      <eParameters name="visitor" eType="#//DoorsDBVisitor"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="children" upperBound="-1"
+        eType="#//DBItem" containment="true" eOpposite="#//DBItem/parent"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//DBItem"
+        eOpposite="#//DBItem/children"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="fullName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        changeable="false" volatile="true" transient="true" derived="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DBFolder" eSuperTypes="#//DBItem">
+    <eOperations name="getFolder" eType="#//DBFolder">
+      <eParameters name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eOperations>
+    <eOperations name="getModule" eType="#//DBModule">
+      <eParameters name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eOperations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DBModule" eSuperTypes="#//DBItem">
+    <eOperations name="getLatestVersion" eType="#//DBVersion"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="versions" upperBound="-1"
+        eType="#//DBVersion" containment="true" eOpposite="#//DBVersion/module"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="url" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tags" upperBound="-1" eType="#//DBTag"
+        eOpposite="#//DBTag/modules"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DBVersion">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="module" eType="#//DBModule"
+        eOpposite="#//DBModule/versions"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="csvLocation" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DoorsDB">
+    <eOperations name="accept">
+      <eParameters name="visitor" eType="#//DoorsDBVisitor"/>
+    </eOperations>
+    <eOperations name="getTag" eType="#//DBTag">
+      <eParameters name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dbLocation" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tags" upperBound="-1" eType="#//DBTag"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="root" eType="#//DBFolder"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DBTag">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="modules" upperBound="-1"
+        eType="#//DBModule" eOpposite="#//DBModule/tags"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="DoorsDBVisitor" instanceClassName="de.jpwinkler.daf.doorsdb.util.DoorsDBVisitor"/>
+</ecore:EPackage>

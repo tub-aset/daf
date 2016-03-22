@@ -15,6 +15,7 @@
 		<module>../documenttagging</module>
 		<module>../csveditor</module>
 		<module>../dataprocessing</module>
+		<module>../doorsdb</module>
 	</modules>
 
 	<build>
