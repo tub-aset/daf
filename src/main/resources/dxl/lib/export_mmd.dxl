@@ -1,0 +1,18 @@
+string exportModuleMetaData(Module m) {
+	
+	Buffer b = create
+		
+	AttrDef ad
+	
+	for ad in m do {
+		if (ad.module) {
+			b += "\"" ad.name "\", \"" escape(m.(ad.name) "",'\\',"\"") "\"\n"
+		}
+	}
+	b += "\"__url__\", \"" getURL(m) "\"\n"
+	b += "\"__path__\", \"" path(m) "\"\n" 
+	b += "\"__view__\", \"" currentView(m) "\"\n"
+
+	return stringOf(b)
+	
+}

@@ -18,6 +18,13 @@
 package de.jpwinkler.libs.doorsbridge.internal;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 
 import de.jpwinkler.libs.doorsbridge.DoorsException;
 import de.jpwinkler.libs.doorsbridge.DoorsRuntimeException;
@@ -27,6 +34,12 @@ import de.jpwinkler.libs.doorsbridge.ModuleRef;
 public class ModuleRefImpl implements ModuleRef {
 
     private static final String STANDARD_VIEW = "Standard view";
+
+    private static final CSVFormat FORMAT = CSVFormat.newFormat(',')
+            .withQuote('"')
+            .withEscape('\\')
+            .withIgnoreSurroundingSpaces()
+            .withRecordSeparator("\r\n");
 
     private final DoorsApplicationImpl doorsApplicationImpl;
     private DoorsURL url;
@@ -57,6 +70,7 @@ public class ModuleRefImpl implements ModuleRef {
         doorsApplicationImpl.buildAndRunCommand(builder -> {
             builder.addLibrary(new InternalDXLScript("lib/utils.dxl"));
             builder.addLibrary(new InternalDXLScript("lib/export_csv.dxl"));
+            builder.addLibrary(new InternalDXLScript("lib/export_mmd.dxl"));
             builder.addScript(new InternalDXLScript("export_csv_single.dxl"));
             builder.setVariable("url", url != null ? url.getUrl() : null);
             builder.setVariable("name", name);
@@ -108,5 +122,37 @@ public class ModuleRefImpl implements ModuleRef {
         // TODO: implement an actual doors script that checks the state of the
         // module, maybe.
         return !closed;
+    }
+
+    @Override
+    public Map<String, String> getModuleAttributes() {
+        if (closed) {
+            throw new DoorsRuntimeException("Module is closed.");
+        }
+        String result;
+        try {
+            result = doorsApplicationImpl.buildAndRunCommand(builder -> {
+                builder.addLibrary(new InternalDXLScript("lib/utils.dxl"));
+                builder.addLibrary(new InternalDXLScript("lib/export_mmd.dxl"));
+                builder.addScript(new InternalDXLScript("get_module_attributes.dxl"));
+                builder.setVariable("url", url != null ? url.getUrl() : null);
+                builder.setVariable("name", name);
+            });
+        } catch (final DoorsException e) {
+            throw new DoorsRuntimeException(e);
+        }
+
+        try {
+            final CSVParser parser = CSVParser.parse(result, FORMAT);
+            final Map<String, String> metadata = new HashMap<>();
+            for (final CSVRecord record : parser.getRecords()) {
+                metadata.put(record.get(0), record.get(1));
+            }
+            parser.close();
+            return metadata;
+        } catch (final IOException e) {
+            throw new DoorsRuntimeException(e);
+        }
+
     }
 }

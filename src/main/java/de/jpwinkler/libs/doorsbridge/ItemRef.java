@@ -21,13 +21,13 @@ import java.util.List;
 
 public interface ItemRef {
 
-    DoorsItemType getType();
+    DoorsItemType getType() throws DoorsException;
 
-    String getName();
+    ItemName getItemName();
 
-    String getPath();
+    boolean exists();
 
-    String getFullName();
+    ItemRef getParent();
 
     List<ItemRef> getChildren() throws DoorsException;
 

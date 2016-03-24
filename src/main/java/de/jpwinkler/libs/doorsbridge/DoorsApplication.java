@@ -80,7 +80,7 @@ public interface DoorsApplication {
 
     ItemRef getRoot();
 
-    ItemRef getFolder(String path) throws DoorsException;
+    ItemRef getItem(String path);
 
     /**
      * Runs a DXL script stored in a file.

@@ -18,6 +18,7 @@
 package de.jpwinkler.libs.doorsbridge;
 
 import java.io.File;
+import java.util.Map;
 
 public interface ModuleRef {
 
@@ -65,5 +66,7 @@ public interface ModuleRef {
     void close();
 
     boolean isOpen();
+
+    Map<String, String> getModuleAttributes() throws DoorsException;
 
 }

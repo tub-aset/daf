@@ -24,28 +24,49 @@ import java.util.logging.Logger;
 import de.jpwinkler.libs.doorsbridge.DoorsException;
 import de.jpwinkler.libs.doorsbridge.DoorsItemType;
 import de.jpwinkler.libs.doorsbridge.DoorsRuntimeException;
+import de.jpwinkler.libs.doorsbridge.ItemName;
 import de.jpwinkler.libs.doorsbridge.ItemRef;
 import de.jpwinkler.libs.doorsbridge.ModuleRef;
+import de.jpwinkler.libs.doorsbridge.utils.DoorsItemTypeUtil;
 
 public class ItemRefImpl implements ItemRef {
 
     private static final Logger LOGGER = Logger.getLogger(ItemRefImpl.class.getName());
 
     private final DoorsApplicationImpl doorsApplicationImpl;
-    private final DoorsItemType type;
-    private final String path;
-    private final String name;
+    private DoorsItemType type;
+    private final ItemName name;
 
-    public ItemRefImpl(final DoorsApplicationImpl doorsApplicationImpl, final String path, final String name, final DoorsItemType type) {
+    public ItemRefImpl(final DoorsApplicationImpl doorsApplicationImpl, final String fullName, final DoorsItemType type) {
+        this(doorsApplicationImpl, new ItemName(fullName), type);
+    }
+
+    private ItemRefImpl(final DoorsApplicationImpl doorsApplicationImpl, final ItemName name, final DoorsItemType type) {
+        super();
         this.doorsApplicationImpl = doorsApplicationImpl;
-        this.path = path;
         this.name = name;
         this.type = type;
     }
 
     @Override
-    public DoorsItemType getType() {
+    public DoorsItemType getType() throws DoorsException {
+        if (type == null) {
+            final String typeStr = doorsApplicationImpl.buildAndRunCommand(builder -> {
+                builder.addScript(new InternalDXLScript("get_type.dxl"));
+                builder.setVariable("item", name.getFullName());
+            });
+            type = DoorsItemTypeUtil.getType(typeStr);
+        }
         return type;
+    }
+
+    @Override
+    public ItemRef getParent() {
+        if (name.getParent() == null) {
+            return null;
+        } else {
+            return new ItemRefImpl(doorsApplicationImpl, name.getParent(), null);
+        }
     }
 
     @Override
@@ -55,7 +76,7 @@ public class ItemRefImpl implements ItemRef {
         }
         final String resultString = doorsApplicationImpl.buildAndRunCommand(builder -> {
             builder.addScript(new InternalDXLScript("get_children.dxl"));
-            builder.setVariable("folder", getFullName());
+            builder.setVariable("folder", name.getFullName());
         });
 
         final List<ItemRef> result = new ArrayList<>();
@@ -73,62 +94,43 @@ public class ItemRefImpl implements ItemRef {
                 LOGGER.severe(String.format("Invalid result format: %s.", line));
                 continue;
             }
-            DoorsItemType type;
-            switch (split[0]) {
-            case "Folder":
-                type = DoorsItemType.FOLDER;
-                break;
-            case "Formal":
-                type = DoorsItemType.FORMAL;
-                break;
-            case "Link":
-                type = DoorsItemType.LINK;
-                break;
-            case "Project":
-                type = DoorsItemType.PROJECT;
-                break;
-            default:
-                LOGGER.severe(String.format("Unknown DOORS item type: %s.", split[0]));
-                type = DoorsItemType.UNKNOWN;
-            }
-            result.add(new ItemRefImpl(doorsApplicationImpl, getFullName(), split[1], type));
+            final DoorsItemType type = DoorsItemTypeUtil.getType(split[0]);
+            result.add(new ItemRefImpl(doorsApplicationImpl, new ItemName(name, split[1]), type));
         }
-
         return result;
     }
 
     @Override
     public ModuleRef open() throws DoorsException {
-        if (type == DoorsItemType.FORMAL) {
-            return doorsApplicationImpl.openModule(getFullName());
+        if (getType() == DoorsItemType.FORMAL) {
+            return doorsApplicationImpl.openModule(name.getFullName());
         } else {
-            throw new DoorsRuntimeException("Not a formal model: " + getFullName());
+            throw new DoorsRuntimeException("Not a formal model: " + name.getFullName());
+        }
+    }
+
+    @Override
+    public boolean exists() {
+        try {
+            final String result = doorsApplicationImpl.buildAndRunCommand(builder -> {
+                builder.addScript(new InternalDXLScript("exists.dxl"));
+                builder.setVariable("item", name.getFullName());
+            });
+            return result.equals("true");
+        } catch (final DoorsException e) {
+            // Should never throw this exception
+            throw new DoorsRuntimeException();
         }
     }
 
     @Override
     public String toString() {
-        return getFullName();
+        return name.toString();
     }
 
     @Override
-    public String getPath() {
-        return path;
-    }
-
-    @Override
-    public String getName() {
+    public ItemName getItemName() {
         return name;
-    }
-
-    @Override
-    public String getFullName() {
-        if (getPath().endsWith("/")) {
-            return getPath() + getName();
-        } else {
-            return getPath() + "/" + getName();
-        }
-
     }
 }
 

@@ -149,6 +149,7 @@ public class DoorsApplicationImpl implements DoorsApplication {
             throw new DoorsNotRunningException();
         }
         final ActiveXComponent doorsApplication = getDoorsApplication();
+
         Dispatch.call(doorsApplication, "runStr", dxl);
     }
 
@@ -220,19 +221,12 @@ public class DoorsApplicationImpl implements DoorsApplication {
 
     @Override
     public ItemRef getRoot() {
-        return new ItemRefImpl(this, "", "", DoorsItemType.ROOT);
+        return new ItemRefImpl(this, "/", DoorsItemType.FOLDER);
     }
 
     @Override
-    public ItemRef getFolder(final String path) {
-        // TODO: check validity of path
-
-        final int slashIndex = path.lastIndexOf("/");
-        final String first = path.substring(0, slashIndex);
-        final String second = path.substring(slashIndex + 1);
-
-        // TODO: maybe query for the type
-        return new ItemRefImpl(this, first, second, DoorsItemType.UNKNOWN);
+    public ItemRef getItem(final String path) {
+        return new ItemRefImpl(this, path, null);
     }
 
     public String buildAndRunCommand(final Consumer<DoorsScriptBuilder> prepareScriptBuilder) throws DoorsException {
