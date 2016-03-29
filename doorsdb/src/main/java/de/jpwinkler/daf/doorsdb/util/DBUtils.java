@@ -10,7 +10,7 @@ import de.jpwinkler.libs.doorsbridge.ItemRef;
 public class DBUtils {
 
     public static DBFolder mkdirs(final DoorsDB database, final ItemRef path) {
-        return ensurePath(database.getRoot(), path.getPathSegments());
+        return ensurePath(database.getRoot(), path.getItemName().getPathSegments());
     }
 
     private static DBFolder ensurePath(final DBFolder parent, final List<String> path) {

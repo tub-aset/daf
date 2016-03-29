@@ -2,8 +2,6 @@ package de.jpwinkler.daf.csveditor;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,11 +23,6 @@ import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
 import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.util.CSVParseException;
 import de.jpwinkler.daf.dataprocessing.preprocessing.ObjectTextPreprocessor;
-import de.jpwinkler.daf.documenttagging.ConfusionMatrix;
-import de.jpwinkler.daf.documenttagging.DocumentAccessor;
-import de.jpwinkler.daf.documenttagging.DocumentTaggingAlgorithm;
-import de.jpwinkler.daf.documenttagging.TaggedDocument;
-import de.jpwinkler.daf.documenttagging.doors.DoorsDocumentAccessor;
 import de.jpwinkler.libs.stringprocessing.patternprogram.PatternProgram;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -44,6 +37,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Menu;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
@@ -57,7 +51,6 @@ import javafx.scene.control.ToolBar;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
@@ -66,12 +59,9 @@ public class CSVEditorController {
 
     private static final Logger LOGGER = Logger.getLogger(CSVEditorController.class.getName());
 
-    private static final List<SupportedAlgorithm> SUPPORTED_ALGORITHMS = Arrays.asList();
-
     private Stage primaryStage;
 
     private final Map<Tab, CSVEditorTabController> tabControllers = new HashMap<>();
-    private AbstractAlgorithmConfigurationController algorithmConfigurationController;
 
     final FileChooser chooser = new FileChooser();
 
@@ -93,12 +83,6 @@ public class CSVEditorController {
     private TreeView<OutlineTreeItem> outlineTreeView;
 
     @FXML
-    private VBox algorithmSelectionContainer;
-
-    @FXML
-    private TitledPane algorithmConfigurationContainer;
-
-    @FXML
     private TitledPane trainingDataContainer;
 
     @FXML
@@ -106,10 +90,6 @@ public class CSVEditorController {
 
     @FXML
     private Label statusBarLabel;
-
-    private DocumentTaggingAlgorithm<DoorsTreeNode, String> algorithm;
-
-    private TaggedDocument<DoorsTreeNode, String> lastResult;
 
     final Map<DoorsTreeNode, Boolean> expanded = new WeakHashMap<>();
 
@@ -152,6 +132,9 @@ public class CSVEditorController {
 
     @FXML
     private ListView<String> featureListView;
+
+    @FXML
+    private Menu recentMenu;
 
 
     private ChangeListener<TreeItem<OutlineTreeItem>> outlineListener;
@@ -206,14 +189,6 @@ public class CSVEditorController {
 
         outlineTreeView.getSelectionModel().selectedItemProperty().addListener(outlineListener);
 
-        for (final SupportedAlgorithm algorithm : SUPPORTED_ALGORITHMS) {
-            final RadioButton radioButton = new RadioButton(algorithm.getName());
-            radioButton.setToggleGroup(algorithmToggleGroup);
-            radioButton.getProperties().put("algorithm", algorithm);
-            radioButton.setOnAction(this::algorithmChanged);
-            algorithmSelectionContainer.getChildren().add(radioButton);
-        }
-
         backgroundTaskStatusToolBar.setManaged(false);
         backgroundTaskStatusToolBar.setVisible(false);
         backgroundTaskStatusMonitor.addListener(new BackgroundTaskStatusListener() {
@@ -237,20 +212,6 @@ public class CSVEditorController {
             }
 
         });
-    }
-
-    private void algorithmChanged(final ActionEvent event) {
-        try {
-            final FXMLLoader loader = new FXMLLoader();
-            final String viewName = ((SupportedAlgorithm) algorithmToggleGroup.getSelectedToggle().getProperties().get("algorithm")).getConfigurationViewFile();
-            loader.setLocation(new File(viewName).toURI().toURL());
-            final Parent root = loader.load();
-            algorithmConfigurationContainer.setContent(root);
-            algorithmConfigurationController = loader.getController();
-        } catch (final IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
     }
 
     public void populateOutlineTreeView(final DoorsModule module) {
@@ -521,73 +482,10 @@ public class CSVEditorController {
     }
 
     @FXML
-    public void trainButtonClicked() {
-        if (algorithmConfigurationController != null) {
-            final List<DocumentAccessor<DoorsTreeNode>> trainingDocuments = new ArrayList<>();
-
-            for (final Tab tab : tabPane.getTabs()) {
-                if (!tab.isSelected()) {
-                    trainingDocuments.add(new DoorsDocumentAccessor(tabControllers.get(tab).getModule()));
-                    System.out.println(tabControllers.get(tab).getModule());
-                }
-            }
-
-            algorithm = algorithmConfigurationController.getTrainedAlgorithm(trainingDocuments);
-        }
-    }
-
-    @FXML
     public void flattenClicked() {
         final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
         if (selectedTab != null) {
             tabControllers.get(selectedTab).flatten();
-        }
-    }
-
-    @FXML
-    public void tagButtonClicked() {
-        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-        if (algorithm != null && selectedTab != null) {
-            final CSVEditorTabController curentTabController = tabControllers.get(selectedTab);
-            final TaggedDocument<DoorsTreeNode, String> result = algorithm.tagDocument(new DoorsDocumentAccessor(curentTabController.getModule()));
-            curentTabController.setTaggingResult(result);
-            lastResult = result;
-            buildResultGridPane();
-        }
-    }
-
-    private void buildResultGridPane() {
-        resultGridPane.getChildren().clear();
-        final ConfusionMatrix<String> confusionMatrix = new ConfusionMatrix<>(lastResult);
-        resultGridPane.add(new Label("Tag"), 0, 0);
-        resultGridPane.add(new Label("Precision"), 1, 0);
-        resultGridPane.add(new Label("Recall"), 2, 0);
-        resultGridPane.add(new Label("F1"), 3, 0);
-
-        for (int i = 0; i < confusionMatrix.getTags().size(); i++) {
-            final String tag = confusionMatrix.getTags().get(i);
-
-            resultGridPane.add(new Label(tag), 0, i + 1);
-            resultGridPane.add(new Label(String.valueOf(confusionMatrix.getPrecision(tag))), 1, i + 1);
-            resultGridPane.add(new Label(String.valueOf(confusionMatrix.getRecall(tag))), 2, i + 1);
-            resultGridPane.add(new Label(String.valueOf(confusionMatrix.getF1Score(tag))), 3, i + 1);
-        }
-
-        resultGridPane.add(new Label("micro"), 0, confusionMatrix.getTags().size() + 1);
-        resultGridPane.add(new Label(String.valueOf(confusionMatrix.getMicroPrecision())), 1, confusionMatrix.getTags().size() + 1);
-        resultGridPane.add(new Label(String.valueOf(confusionMatrix.getMicroRecall())), 2, confusionMatrix.getTags().size() + 1);
-        resultGridPane.add(new Label(String.valueOf(confusionMatrix.getMicroF1Score())), 3, confusionMatrix.getTags().size() + 1);
-
-        resultGridPane.add(new Label("macro"), 0, confusionMatrix.getTags().size() + 2);
-        resultGridPane.add(new Label(String.valueOf(confusionMatrix.getMacroPrecision())), 1, confusionMatrix.getTags().size() + 2);
-        resultGridPane.add(new Label(String.valueOf(confusionMatrix.getMacroRecall())), 2, confusionMatrix.getTags().size() + 2);
-        resultGridPane.add(new Label(String.valueOf(confusionMatrix.getMacroF1Score())), 3, confusionMatrix.getTags().size() + 2);
-    }
-
-    @FXML
-    public void showConfusionMatrixDialog() {
-        if (lastResult != null) {
-            new ConfusionMatrixDialog(new ConfusionMatrix<>(lastResult), primaryStage).show();
         }
     }
 
@@ -678,5 +576,13 @@ public class CSVEditorController {
     public void setFeatureList(final List<String> features) {
         featureListView.getItems().clear();
         featureListView.getItems().addAll(features);
+    }
+
+    @FXML
+    public void splitLinesClicked() {
+        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+        if (selectedTab != null) {
+            tabControllers.get(selectedTab).splitLines();
+        }
     }
 }

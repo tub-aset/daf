@@ -26,6 +26,7 @@ import de.jpwinkler.daf.csveditor.commands.NewObjectAfterCommand;
 import de.jpwinkler.daf.csveditor.commands.NewObjectBelowCommand;
 import de.jpwinkler.daf.csveditor.commands.PromoteObjectCommand;
 import de.jpwinkler.daf.csveditor.commands.ReduceToSelectionCommand;
+import de.jpwinkler.daf.csveditor.commands.SplitLinesCommand;
 import de.jpwinkler.daf.csveditor.commands.SwapObjectHeadingAndTextCommand;
 import de.jpwinkler.daf.csveditor.commands.UnwrapChildrenCommand;
 import de.jpwinkler.daf.csveditor.commands.UpdateAction;
@@ -48,12 +49,10 @@ import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
 import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.util.CSVParseException;
+import de.jpwinkler.daf.dafcore.util.DoorsModuleUtil;
 import de.jpwinkler.daf.dataprocessing.preprocessing.ObjectTextPreprocessor;
-import de.jpwinkler.daf.documenttagging.TaggedDocument;
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -64,7 +63,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextInputDialog;
@@ -72,8 +70,6 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Callback;
-import javafx.util.Pair;
 
 public class CSVEditorTabController {
 
@@ -95,8 +91,6 @@ public class CSVEditorTabController {
 
     @FXML
     private TableView<DoorsObject> contentTableView;
-
-    private TaggedDocument<DoorsTreeNode, String> algorithmResult;
 
     private ObjectTextPreprocessor preprocessor;
 
@@ -173,12 +167,6 @@ public class CSVEditorTabController {
 
         contentTableView.getColumns().clear();
 
-        final ColumnDefinition tagColumn = new ColumnDefinition();
-        tagColumn.setColumnTitle("TAG");
-        tagColumn.setColumnType(ColumnType.TAG_COLUMN);
-        tagColumn.setWidth(100);
-        viewModel.getDisplayedColumns().add(tagColumn);
-
         ColumnDefinition columnDefinition = new ColumnDefinition();
         columnDefinition.setColumnType(ColumnType.OBJECT_TEXT_HEADING_COLUMN);
         columnDefinition.setColumnTitle(MAIN_COLUMN);
@@ -236,24 +224,6 @@ public class CSVEditorTabController {
                     // contentTableView.getFocusModel().getFocusedCell().getTableColumn());
                 });
                 contentTableView.getColumns().add(c);
-                break;
-            case TAG_COLUMN:
-                final TableColumn<DoorsObject, Pair<String, String>> c2 = new TableColumn<>(columnDefinition.getColumnTitle());
-                c2.setSortable(false);
-                c2.setPrefWidth(columnDefinition.getWidth());
-                c2.setCellFactory(param -> new TagTableCell());
-                c2.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<DoorsObject, Pair<String, String>>, ObservableValue<Pair<String, String>>>() {
-
-                    @Override
-                    public ObservableValue<Pair<String, String>> call(final CellDataFeatures<DoorsObject, Pair<String, String>> param) {
-                        if (algorithmResult != null) {
-                            return new ReadOnlyObjectWrapper<Pair<String, String>>(new Pair<>(algorithmResult.getPredictedTag(param.getValue()), algorithmResult.getActualTag(param.getValue())));
-                        } else {
-                            return new ReadOnlyObjectWrapper<>(new Pair<String, String>("", ""));
-                        }
-                    }
-                });
-                contentTableView.getColumns().add(c2);
                 break;
             }
 
@@ -441,6 +411,14 @@ public class CSVEditorTabController {
 
         populateContentTableView();
 
+        final int totalObjects = DoorsModuleUtil.countObjects(module);
+        final int visibleObjects = totalObjects - viewModel.getFilteredObjects().size();
+
+        if (visibleObjects < totalObjects) {
+            csvEditorController.setStatus(String.format("Showing %d out of %d objects.", visibleObjects, totalObjects));
+        } else {
+            csvEditorController.setStatus("");
+        }
     }
 
     public void setupColumns() {
@@ -493,11 +471,6 @@ public class CSVEditorTabController {
         this.csvEditorController = csvEditorController;
     }
 
-    public void setTaggingResult(final TaggedDocument<DoorsTreeNode, String> result) {
-        algorithmResult = result;
-        populateContentTableView();
-    }
-
     public void flatten() {
         executeCommand(new FlattenCommand(module));
     }
@@ -531,6 +504,10 @@ public class CSVEditorTabController {
             }
         });
         executeCommand(new MassEditCommand(module, objects, operation));
+    }
+
+    public void splitLines() {
+        executeCommand(new SplitLinesCommand(module));
     }
 
 }

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.util.CSVParseException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,8 +19,15 @@ public class CSVEditorApplication extends Application {
 
     private CSVEditorController csvEditorController;
 
+    private Stage primaryStage;
+
+    public CSVEditorApplication() {
+        super();
+    }
+
     @Override
     public void start(final Stage primaryStage) throws Exception {
+        this.primaryStage = primaryStage;
         try {
             final FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/csveditor.fxml"));
             final Parent root = loader.load();
@@ -56,7 +64,23 @@ public class CSVEditorApplication extends Application {
         }
     }
 
+    public void openFile(final File file) {
+        if (file != null) {
+            try {
+                csvEditorController.newTabFromFile(file);
+            } catch (IOException | CSVParseException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
+    }
+
     public static void main(final String[] args) {
         launch(args);
+    }
+
+    public Stage getPrimaryStage() {
+        return primaryStage;
     }
 }

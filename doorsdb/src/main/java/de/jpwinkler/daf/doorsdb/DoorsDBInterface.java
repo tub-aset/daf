@@ -5,22 +5,20 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import org.apache.commons.io.FileUtils;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
-import de.jpwinkler.daf.dafcore.csv.ModuleMetaDataParser;
 import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.util.CSVParseException;
 import de.jpwinkler.daf.dafcore.util.DoorsModuleUtil;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBFolder;
@@ -40,8 +38,6 @@ import de.jpwinkler.libs.doorsbridge.ItemRef;
 import de.jpwinkler.libs.doorsbridge.ModuleRef;
 
 public class DoorsDBInterface {
-
-    private static final Logger LOGGER = Logger.getLogger(DoorsDBInterface.class.getName());
 
     private final DoorsDB db;
     private final File file;
@@ -82,7 +78,7 @@ public class DoorsDBInterface {
         this.db = db;
     }
 
-    public void addModule(final String moduleName) throws DoorsException, IOException, CSVParseException, ParseException {
+    public DBModule addModule(final String moduleName) throws DoorsException, IOException, CSVParseException, ParseException {
         final ItemRef i = app.getItem(moduleName);
 
         if (!i.exists()) {
@@ -95,62 +91,64 @@ public class DoorsDBInterface {
 
         final DBFolder folder = DBUtils.mkdirs(db, i.getParent());
 
-        DBModule module = folder.getModule(i.getName());
+        DBModule module = folder.getModule(i.getItemName().getName());
         if (module == null) {
             module = DoorsDBModelFactory.eINSTANCE.createDBModule();
             module.setParent(folder);
-            module.setName(i.getName());
+            module.setName(i.getItemName().getName());
         }
         updateModule(module);
+        return module;
     }
 
-    private void updateModule(final DBModule module) throws DoorsException, IOException, ParseException {
-        LOGGER.info("Updating module " + module.getFullName());
-        final File tempFile = File.createTempFile("doorsdb", "export");
+    public boolean updateModule(final DBModule module) throws DoorsException, IOException, ParseException {
         final ItemRef i = app.getItem(module.getFullName());
         final ModuleRef modRef = i.open();
-        modRef.exportToCSV(tempFile);
-        modRef.close();
 
-        final Map<String, String> metaData = new ModuleMetaDataParser().parseModuleMetaData(new File(tempFile.getAbsolutePath() + ".mmd"));
+        final Map<String, String> metaData = modRef.getModuleAttributes();
         final Date lastChangedOn = DoorsModuleUtil.parseDate(metaData.get("Last Modified On"));
 
         final String realFile = mapToFile(i, lastChangedOn);
 
+        boolean result = false;
+
         if (module.getLatestVersion() == null || module.getLatestVersion().getDate().before(lastChangedOn)) {
-            FileUtils.moveFile(tempFile, new File(realFile + ".csv"));
-            FileUtils.moveFile(new File(tempFile.getAbsolutePath() + ".mmd"), new File(realFile + ".csv.mmd"));
+            modRef.exportToCSV(new File(realFile + ".csv"));
+
             final DBVersion version = DoorsDBModelFactory.eINSTANCE.createDBVersion();
             version.setCsvLocation(realFile + ".csv");
             version.setDate(lastChangedOn);
             module.getVersions().add(version);
-            LOGGER.info("Added new version.");
-        } else {
-            LOGGER.info("No new version available.");
+            result = true;
+            saveDB();
         }
-        saveDB();
+        modRef.close();
+        return result;
     }
 
     private String mapToFile(final ItemRef i, final Date lastChangedOn) {
         File file = new File(db.getDbLocation());
-        for (final String pathSegment : i.getParent().getPathSegments()) {
+        for (final String pathSegment : i.getParent().getItemName().getPathSegments()) {
             file = new File(file, pathSegment);
         }
         file.mkdirs();
-        return new File(file, i.getName() + "_" + new SimpleDateFormat("yyyyMMdd").format(lastChangedOn)).getAbsolutePath();
+        return new File(file, i.getItemName() + "_" + new SimpleDateFormat("yyyyMMdd").format(lastChangedOn)).getAbsolutePath();
     }
 
-    public void updateAllModules() {
-        db.accept(new DoorsDBVisitor() {
+    public List<DBModule> updateAllModules() {
+        final List<DBModule> updatedModules = new ArrayList<>();
 
-            @Override
-            public void visit(final DBVersion version) {
-            }
+        db.accept(new DoorsDBVisitor() {
 
             @Override
             public void visit(final DBModule module) {
                 try {
-                    updateModule(module);
+                    System.out.print("updating " + module.getFullName() + "... ");
+                    if (updateModule(module)) {
+                        System.out.println("added new version.");
+                    } else {
+                        System.out.println("up to date.");
+                    }
                 } catch (DoorsException | IOException | ParseException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -161,6 +159,7 @@ public class DoorsDBInterface {
             public void visit(final DBFolder folder) {
             }
         });
+        return updatedModules;
     }
 
     public void saveDB() throws IOException {
@@ -204,6 +203,33 @@ public class DoorsDBInterface {
 
     public List<String> getTags(final DBModule value) {
         return value.getTags().stream().map(t -> t.getName()).collect(Collectors.toList());
+    }
+
+    public void removeModule(final DBModule module) {
+        module.setParent(null);
+        module.getTags().clear();
+        module.getVersions().forEach(v -> {
+            new File(v.getCsvLocation()).delete();
+            new File(v.getCsvLocation() + ".mmd").delete();
+        });
+        module.getVersions().clear();
+    }
+
+    public void removeFolder(final DBFolder folder) {
+        final List<DBModule> markedForDeletion = new ArrayList<>();
+        folder.accept(new DoorsDBVisitor() {
+
+            @Override
+            public void visit(final DBModule module) {
+                markedForDeletion.add(module);
+            }
+
+            @Override
+            public void visit(final DBFolder folder) {
+            }
+        });
+        markedForDeletion.forEach(m -> removeModule(m));
+        folder.setParent(null);
     }
 
 }

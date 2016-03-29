@@ -6,6 +6,4 @@ public enum ColumnType {
 
     OBJECT_TEXT_HEADING_COLUMN,
 
-    TAG_COLUMN,
-
 }
