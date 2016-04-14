@@ -93,4 +93,12 @@ public interface DBModule extends DBItem {
      */
     DBVersion getLatestVersion();
 
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @model
+     * @generated
+     */
+    boolean hasTag(String tag);
+
 } // DBModule

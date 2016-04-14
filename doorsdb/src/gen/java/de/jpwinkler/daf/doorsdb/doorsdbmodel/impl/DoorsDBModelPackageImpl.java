@@ -19,6 +19,7 @@ import de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDB;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDBModelFactory;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDBModelPackage;
 import de.jpwinkler.daf.doorsdb.util.DoorsDBVisitor;
+import java.util.Map;
 
 /**
  * <!-- begin-user-doc -->
@@ -67,6 +68,13 @@ public class DoorsDBModelPackageImpl extends EPackageImpl implements DoorsDBMode
      * <!-- end-user-doc -->
      * @generated
      */
+    private EClass stringToStringMapEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     private EClass dbItemEClass = null;
 
     /**
@@ -104,7 +112,7 @@ public class DoorsDBModelPackageImpl extends EPackageImpl implements DoorsDBMode
 
     /**
      * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
-     *
+     * 
      * <p>This method is used to initialize {@link DoorsDBModelPackage#eINSTANCE} when that field is accessed.
      * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
      * <!-- begin-user-doc -->
@@ -115,12 +123,10 @@ public class DoorsDBModelPackageImpl extends EPackageImpl implements DoorsDBMode
      * @generated
      */
     public static DoorsDBModelPackage init() {
-        if (isInited) {
-            return (DoorsDBModelPackage)EPackage.Registry.INSTANCE.getEPackage(DoorsDBModelPackage.eNS_URI);
-        }
+        if (isInited) return (DoorsDBModelPackage)EPackage.Registry.INSTANCE.getEPackage(DoorsDBModelPackage.eNS_URI);
 
         // Obtain or create and register package
-        final DoorsDBModelPackageImpl theDoorsDBModelPackage = (DoorsDBModelPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof DoorsDBModelPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new DoorsDBModelPackageImpl());
+        DoorsDBModelPackageImpl theDoorsDBModelPackage = (DoorsDBModelPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof DoorsDBModelPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new DoorsDBModelPackageImpl());
 
         isInited = true;
 
@@ -133,7 +139,7 @@ public class DoorsDBModelPackageImpl extends EPackageImpl implements DoorsDBMode
         // Mark meta-data to indicate it can't be changed
         theDoorsDBModelPackage.freeze();
 
-
+  
         // Update the registry and return the package
         EPackage.Registry.INSTANCE.put(DoorsDBModelPackage.eNS_URI, theDoorsDBModelPackage);
         return theDoorsDBModelPackage;
@@ -224,6 +230,15 @@ public class DoorsDBModelPackageImpl extends EPackageImpl implements DoorsDBMode
      * <!-- end-user-doc -->
      * @generated
      */
+    public EOperation getDBModule__HasTag__String() {
+        return dbModuleEClass.getEOperations().get(1);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public EClass getDBVersion() {
         return dbVersionEClass;
@@ -257,6 +272,15 @@ public class DoorsDBModelPackageImpl extends EPackageImpl implements DoorsDBMode
     @Override
     public EAttribute getDBVersion_Date() {
         return (EAttribute)dbVersionEClass.getEStructuralFeatures().get(2);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getDBVersion_Attributes() {
+        return (EReference)dbVersionEClass.getEStructuralFeatures().get(3);
     }
 
     /**
@@ -354,6 +378,33 @@ public class DoorsDBModelPackageImpl extends EPackageImpl implements DoorsDBMode
      * <!-- end-user-doc -->
      * @generated
      */
+    public EClass getStringToStringMap() {
+        return stringToStringMapEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getStringToStringMap_Key() {
+        return (EAttribute)stringToStringMapEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getStringToStringMap_Value() {
+        return (EAttribute)stringToStringMapEClass.getEStructuralFeatures().get(1);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public EClass getDBItem() {
         return dbItemEClass;
@@ -444,9 +495,7 @@ public class DoorsDBModelPackageImpl extends EPackageImpl implements DoorsDBMode
      * @generated
      */
     public void createPackageContents() {
-        if (isCreated) {
-            return;
-        }
+        if (isCreated) return;
         isCreated = true;
 
         // Create classes and their features
@@ -466,11 +515,13 @@ public class DoorsDBModelPackageImpl extends EPackageImpl implements DoorsDBMode
         createEAttribute(dbModuleEClass, DB_MODULE__URL);
         createEReference(dbModuleEClass, DB_MODULE__TAGS);
         createEOperation(dbModuleEClass, DB_MODULE___GET_LATEST_VERSION);
+        createEOperation(dbModuleEClass, DB_MODULE___HAS_TAG__STRING);
 
         dbVersionEClass = createEClass(DB_VERSION);
         createEReference(dbVersionEClass, DB_VERSION__MODULE);
         createEAttribute(dbVersionEClass, DB_VERSION__CSV_LOCATION);
         createEAttribute(dbVersionEClass, DB_VERSION__DATE);
+        createEReference(dbVersionEClass, DB_VERSION__ATTRIBUTES);
 
         doorsDBEClass = createEClass(DOORS_DB);
         createEAttribute(doorsDBEClass, DOORS_DB__DB_LOCATION);
@@ -482,6 +533,10 @@ public class DoorsDBModelPackageImpl extends EPackageImpl implements DoorsDBMode
         dbTagEClass = createEClass(DB_TAG);
         createEAttribute(dbTagEClass, DB_TAG__NAME);
         createEReference(dbTagEClass, DB_TAG__MODULES);
+
+        stringToStringMapEClass = createEClass(STRING_TO_STRING_MAP);
+        createEAttribute(stringToStringMapEClass, STRING_TO_STRING_MAP__KEY);
+        createEAttribute(stringToStringMapEClass, STRING_TO_STRING_MAP__VALUE);
 
         // Create data types
         doorsDBVisitorEDataType = createEDataType(DOORS_DB_VISITOR);
@@ -502,9 +557,7 @@ public class DoorsDBModelPackageImpl extends EPackageImpl implements DoorsDBMode
      * @generated
      */
     public void initializePackageContents() {
-        if (isInitialized) {
-            return;
-        }
+        if (isInitialized) return;
         isInitialized = true;
 
         // Initialize package
@@ -517,53 +570,61 @@ public class DoorsDBModelPackageImpl extends EPackageImpl implements DoorsDBMode
         // Set bounds for type parameters
 
         // Add supertypes to classes
-        dbFolderEClass.getESuperTypes().add(getDBItem());
-        dbModuleEClass.getESuperTypes().add(getDBItem());
+        dbFolderEClass.getESuperTypes().add(this.getDBItem());
+        dbModuleEClass.getESuperTypes().add(this.getDBItem());
 
         // Initialize classes, features, and operations; add parameters
         initEClass(dbItemEClass, DBItem.class, "DBItem", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEReference(getDBItem_Children(), getDBItem(), getDBItem_Parent(), "children", null, 0, -1, DBItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getDBItem_Parent(), getDBItem(), getDBItem_Children(), "parent", null, 0, 1, DBItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getDBItem_Children(), this.getDBItem(), this.getDBItem_Parent(), "children", null, 0, -1, DBItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getDBItem_Parent(), this.getDBItem(), this.getDBItem_Children(), "parent", null, 0, 1, DBItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getDBItem_Name(), ecorePackage.getEString(), "name", null, 0, 1, DBItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getDBItem_FullName(), ecorePackage.getEString(), "fullName", null, 0, 1, DBItem.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 
         EOperation op = initEOperation(getDBItem__Accept__DoorsDBVisitor(), null, "accept", 0, 1, IS_UNIQUE, IS_ORDERED);
-        addEParameter(op, getDoorsDBVisitor(), "visitor", 0, 1, IS_UNIQUE, IS_ORDERED);
+        addEParameter(op, this.getDoorsDBVisitor(), "visitor", 0, 1, IS_UNIQUE, IS_ORDERED);
 
         initEClass(dbFolderEClass, DBFolder.class, "DBFolder", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-        op = initEOperation(getDBFolder__GetFolder__String(), getDBFolder(), "getFolder", 0, 1, IS_UNIQUE, IS_ORDERED);
+        op = initEOperation(getDBFolder__GetFolder__String(), this.getDBFolder(), "getFolder", 0, 1, IS_UNIQUE, IS_ORDERED);
         addEParameter(op, ecorePackage.getEString(), "name", 0, 1, IS_UNIQUE, IS_ORDERED);
 
-        op = initEOperation(getDBFolder__GetModule__String(), getDBModule(), "getModule", 0, 1, IS_UNIQUE, IS_ORDERED);
+        op = initEOperation(getDBFolder__GetModule__String(), this.getDBModule(), "getModule", 0, 1, IS_UNIQUE, IS_ORDERED);
         addEParameter(op, ecorePackage.getEString(), "name", 0, 1, IS_UNIQUE, IS_ORDERED);
 
         initEClass(dbModuleEClass, DBModule.class, "DBModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEReference(getDBModule_Versions(), getDBVersion(), getDBVersion_Module(), "versions", null, 0, -1, DBModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getDBModule_Versions(), this.getDBVersion(), this.getDBVersion_Module(), "versions", null, 0, -1, DBModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getDBModule_Url(), ecorePackage.getEString(), "url", null, 0, 1, DBModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getDBModule_Tags(), getDBTag(), getDBTag_Modules(), "tags", null, 0, -1, DBModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getDBModule_Tags(), this.getDBTag(), this.getDBTag_Modules(), "tags", null, 0, -1, DBModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-        initEOperation(getDBModule__GetLatestVersion(), getDBVersion(), "getLatestVersion", 0, 1, IS_UNIQUE, IS_ORDERED);
+        initEOperation(getDBModule__GetLatestVersion(), this.getDBVersion(), "getLatestVersion", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+        op = initEOperation(getDBModule__HasTag__String(), ecorePackage.getEBoolean(), "hasTag", 0, 1, IS_UNIQUE, IS_ORDERED);
+        addEParameter(op, ecorePackage.getEString(), "tag", 0, 1, IS_UNIQUE, IS_ORDERED);
 
         initEClass(dbVersionEClass, DBVersion.class, "DBVersion", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEReference(getDBVersion_Module(), getDBModule(), getDBModule_Versions(), "module", null, 0, 1, DBVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getDBVersion_Module(), this.getDBModule(), this.getDBModule_Versions(), "module", null, 0, 1, DBVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getDBVersion_CsvLocation(), ecorePackage.getEString(), "csvLocation", null, 0, 1, DBVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getDBVersion_Date(), ecorePackage.getEDate(), "date", null, 0, 1, DBVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getDBVersion_Attributes(), this.getStringToStringMap(), null, "attributes", null, 0, -1, DBVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(doorsDBEClass, DoorsDB.class, "DoorsDB", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getDoorsDB_DbLocation(), ecorePackage.getEString(), "dbLocation", null, 0, 1, DoorsDB.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getDoorsDB_Tags(), getDBTag(), null, "tags", null, 0, -1, DoorsDB.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getDoorsDB_Root(), getDBFolder(), null, "root", null, 0, 1, DoorsDB.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getDoorsDB_Tags(), this.getDBTag(), null, "tags", null, 0, -1, DoorsDB.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getDoorsDB_Root(), this.getDBFolder(), null, "root", null, 0, 1, DoorsDB.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         op = initEOperation(getDoorsDB__Accept__DoorsDBVisitor(), null, "accept", 0, 1, IS_UNIQUE, IS_ORDERED);
-        addEParameter(op, getDoorsDBVisitor(), "visitor", 0, 1, IS_UNIQUE, IS_ORDERED);
+        addEParameter(op, this.getDoorsDBVisitor(), "visitor", 0, 1, IS_UNIQUE, IS_ORDERED);
 
-        op = initEOperation(getDoorsDB__GetTag__String(), getDBTag(), "getTag", 0, 1, IS_UNIQUE, IS_ORDERED);
+        op = initEOperation(getDoorsDB__GetTag__String(), this.getDBTag(), "getTag", 0, 1, IS_UNIQUE, IS_ORDERED);
         addEParameter(op, ecorePackage.getEString(), "name", 0, 1, IS_UNIQUE, IS_ORDERED);
 
         initEClass(dbTagEClass, DBTag.class, "DBTag", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getDBTag_Name(), ecorePackage.getEString(), "name", null, 0, 1, DBTag.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getDBTag_Modules(), getDBModule(), getDBModule_Tags(), "modules", null, 0, -1, DBTag.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getDBTag_Modules(), this.getDBModule(), this.getDBModule_Tags(), "modules", null, 0, -1, DBTag.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+        initEClass(stringToStringMapEClass, Map.Entry.class, "StringToStringMap", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
+        initEAttribute(getStringToStringMap_Key(), ecorePackage.getEString(), "key", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getStringToStringMap_Value(), ecorePackage.getEString(), "value", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         // Initialize data types
         initEDataType(doorsDBVisitorEDataType, DoorsDBVisitor.class, "DoorsDBVisitor", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);

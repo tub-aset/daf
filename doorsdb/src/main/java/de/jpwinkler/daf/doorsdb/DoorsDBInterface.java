@@ -6,11 +6,13 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
@@ -19,6 +21,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
+import de.jpwinkler.daf.dafcore.csv.ModuleMetaDataParser;
 import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.util.CSVParseException;
 import de.jpwinkler.daf.dafcore.util.DoorsModuleUtil;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBFolder;
@@ -28,6 +31,7 @@ import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBVersion;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDB;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDBModelFactory;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDBModelPackage;
+import de.jpwinkler.daf.doorsdb.search.DBSearchExpression;
 import de.jpwinkler.daf.doorsdb.util.DBUtils;
 import de.jpwinkler.daf.doorsdb.util.DoorsDBVisitor;
 import de.jpwinkler.libs.doorsbridge.DoorsApplication;
@@ -118,6 +122,12 @@ public class DoorsDBInterface {
             final DBVersion version = DoorsDBModelFactory.eINSTANCE.createDBVersion();
             version.setCsvLocation(realFile + ".csv");
             version.setDate(lastChangedOn);
+            final File mmdFile = new File(realFile + ".csv.mmd");
+            final Map<String, String> attributes = new ModuleMetaDataParser().parseModuleMetaData(mmdFile);
+            for (final Entry<String, String> e : attributes.entrySet()) {
+                version.getAttributes().put(e.getKey(), e.getValue());
+            }
+            mmdFile.delete();
             module.getVersions().add(version);
             result = true;
             saveDB();
@@ -137,11 +147,18 @@ public class DoorsDBInterface {
 
     public List<DBModule> updateAllModules() {
         final List<DBModule> updatedModules = new ArrayList<>();
+        final Calendar c = Calendar.getInstance();
+        c.add(Calendar.YEAR, -1);
+        final Date cutoff = c.getTime();
 
         db.accept(new DoorsDBVisitor() {
 
             @Override
             public void visit(final DBModule module) {
+                if (module.getLatestVersion() != null && module.getLatestVersion().getDate().before(cutoff)) {
+                    System.out.println("skipping " + module.getFullName());
+                    return;
+                }
                 try {
                     System.out.print("updating " + module.getFullName() + "... ");
                     if (updateModule(module)) {
@@ -230,6 +247,40 @@ public class DoorsDBInterface {
         });
         markedForDeletion.forEach(m -> removeModule(m));
         folder.setParent(null);
+    }
+
+    public List<DBModule> getAllModules() {
+        final List<DBModule> result = new ArrayList<>();
+        db.getRoot().accept(new DoorsDBVisitor() {
+
+            @Override
+            public void visit(final DBModule module) {
+                result.add(module);
+            }
+
+            @Override
+            public void visit(final DBFolder folder) {
+            }
+        });
+        return result;
+    }
+
+    public List<DBModule> findModules(final DBSearchExpression e) {
+        final List<DBModule> result = new ArrayList<>();
+        db.getRoot().accept(new DoorsDBVisitor() {
+
+            @Override
+            public void visit(final DBModule module) {
+                if (e.matches(module)) {
+                    result.add(module);
+                }
+            }
+
+            @Override
+            public void visit(final DBFolder folder) {
+            }
+        });
+        return result;
     }
 
 }

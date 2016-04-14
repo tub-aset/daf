@@ -118,9 +118,7 @@ public abstract class DBItemImpl extends MinimalEObjectImpl.Container implements
      */
     @Override
     public DBItem getParent() {
-        if (eContainerFeatureID() != DoorsDBModelPackage.DB_ITEM__PARENT) {
-            return null;
-        }
+        if (eContainerFeatureID() != DoorsDBModelPackage.DB_ITEM__PARENT) return null;
         return (DBItem)eInternalContainer();
     }
 
@@ -129,7 +127,7 @@ public abstract class DBItemImpl extends MinimalEObjectImpl.Container implements
      * <!-- end-user-doc -->
      * @generated
      */
-    public NotificationChain basicSetParent(final DBItem newParent, NotificationChain msgs) {
+    public NotificationChain basicSetParent(DBItem newParent, NotificationChain msgs) {
         msgs = eBasicSetContainer((InternalEObject)newParent, DoorsDBModelPackage.DB_ITEM__PARENT, msgs);
         return msgs;
     }
@@ -140,26 +138,20 @@ public abstract class DBItemImpl extends MinimalEObjectImpl.Container implements
      * @generated
      */
     @Override
-    public void setParent(final DBItem newParent) {
+    public void setParent(DBItem newParent) {
         if (newParent != eInternalContainer() || (eContainerFeatureID() != DoorsDBModelPackage.DB_ITEM__PARENT && newParent != null)) {
-            if (EcoreUtil.isAncestor(this, newParent)) {
+            if (EcoreUtil.isAncestor(this, newParent))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
-            }
             NotificationChain msgs = null;
-            if (eInternalContainer() != null) {
+            if (eInternalContainer() != null)
                 msgs = eBasicRemoveFromContainer(msgs);
-            }
-            if (newParent != null) {
+            if (newParent != null)
                 msgs = ((InternalEObject)newParent).eInverseAdd(this, DoorsDBModelPackage.DB_ITEM__CHILDREN, DBItem.class, msgs);
-            }
             msgs = basicSetParent(newParent, msgs);
-            if (msgs != null) {
-                msgs.dispatch();
-            }
+            if (msgs != null) msgs.dispatch();
         }
-        else if (eNotificationRequired()) {
+        else if (eNotificationRequired())
             eNotify(new ENotificationImpl(this, Notification.SET, DoorsDBModelPackage.DB_ITEM__PARENT, newParent, newParent));
-        }
     }
 
     /**
@@ -178,12 +170,11 @@ public abstract class DBItemImpl extends MinimalEObjectImpl.Container implements
      * @generated
      */
     @Override
-    public void setName(final String newName) {
-        final String oldName = name;
+    public void setName(String newName) {
+        String oldName = name;
         name = newName;
-        if (eNotificationRequired()) {
+        if (eNotificationRequired())
             eNotify(new ENotificationImpl(this, Notification.SET, DoorsDBModelPackage.DB_ITEM__NAME, oldName, name));
-        }
     }
 
     /**
@@ -218,15 +209,14 @@ public abstract class DBItemImpl extends MinimalEObjectImpl.Container implements
      */
     @SuppressWarnings("unchecked")
     @Override
-    public NotificationChain eInverseAdd(final InternalEObject otherEnd, final int featureID, NotificationChain msgs) {
+    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
         switch (featureID) {
-        case DoorsDBModelPackage.DB_ITEM__CHILDREN:
-            return ((InternalEList<InternalEObject>)(InternalEList<?>)getChildren()).basicAdd(otherEnd, msgs);
-        case DoorsDBModelPackage.DB_ITEM__PARENT:
-            if (eInternalContainer() != null) {
-                msgs = eBasicRemoveFromContainer(msgs);
-            }
-            return basicSetParent((DBItem)otherEnd, msgs);
+            case DoorsDBModelPackage.DB_ITEM__CHILDREN:
+                return ((InternalEList<InternalEObject>)(InternalEList<?>)getChildren()).basicAdd(otherEnd, msgs);
+            case DoorsDBModelPackage.DB_ITEM__PARENT:
+                if (eInternalContainer() != null)
+                    msgs = eBasicRemoveFromContainer(msgs);
+                return basicSetParent((DBItem)otherEnd, msgs);
         }
         return super.eInverseAdd(otherEnd, featureID, msgs);
     }
@@ -237,12 +227,12 @@ public abstract class DBItemImpl extends MinimalEObjectImpl.Container implements
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(final InternalEObject otherEnd, final int featureID, final NotificationChain msgs) {
+    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
         switch (featureID) {
-        case DoorsDBModelPackage.DB_ITEM__CHILDREN:
-            return ((InternalEList<?>)getChildren()).basicRemove(otherEnd, msgs);
-        case DoorsDBModelPackage.DB_ITEM__PARENT:
-            return basicSetParent(null, msgs);
+            case DoorsDBModelPackage.DB_ITEM__CHILDREN:
+                return ((InternalEList<?>)getChildren()).basicRemove(otherEnd, msgs);
+            case DoorsDBModelPackage.DB_ITEM__PARENT:
+                return basicSetParent(null, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
     }
@@ -253,10 +243,10 @@ public abstract class DBItemImpl extends MinimalEObjectImpl.Container implements
      * @generated
      */
     @Override
-    public NotificationChain eBasicRemoveFromContainerFeature(final NotificationChain msgs) {
+    public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
         switch (eContainerFeatureID()) {
-        case DoorsDBModelPackage.DB_ITEM__PARENT:
-            return eInternalContainer().eInverseRemove(this, DoorsDBModelPackage.DB_ITEM__CHILDREN, DBItem.class, msgs);
+            case DoorsDBModelPackage.DB_ITEM__PARENT:
+                return eInternalContainer().eInverseRemove(this, DoorsDBModelPackage.DB_ITEM__CHILDREN, DBItem.class, msgs);
         }
         return super.eBasicRemoveFromContainerFeature(msgs);
     }
@@ -267,16 +257,16 @@ public abstract class DBItemImpl extends MinimalEObjectImpl.Container implements
      * @generated
      */
     @Override
-    public Object eGet(final int featureID, final boolean resolve, final boolean coreType) {
+    public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-        case DoorsDBModelPackage.DB_ITEM__CHILDREN:
-            return getChildren();
-        case DoorsDBModelPackage.DB_ITEM__PARENT:
-            return getParent();
-        case DoorsDBModelPackage.DB_ITEM__NAME:
-            return getName();
-        case DoorsDBModelPackage.DB_ITEM__FULL_NAME:
-            return getFullName();
+            case DoorsDBModelPackage.DB_ITEM__CHILDREN:
+                return getChildren();
+            case DoorsDBModelPackage.DB_ITEM__PARENT:
+                return getParent();
+            case DoorsDBModelPackage.DB_ITEM__NAME:
+                return getName();
+            case DoorsDBModelPackage.DB_ITEM__FULL_NAME:
+                return getFullName();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -288,18 +278,18 @@ public abstract class DBItemImpl extends MinimalEObjectImpl.Container implements
      */
     @SuppressWarnings("unchecked")
     @Override
-    public void eSet(final int featureID, final Object newValue) {
+    public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-        case DoorsDBModelPackage.DB_ITEM__CHILDREN:
-            getChildren().clear();
-            getChildren().addAll((Collection<? extends DBItem>)newValue);
-            return;
-        case DoorsDBModelPackage.DB_ITEM__PARENT:
-            setParent((DBItem)newValue);
-            return;
-        case DoorsDBModelPackage.DB_ITEM__NAME:
-            setName((String)newValue);
-            return;
+            case DoorsDBModelPackage.DB_ITEM__CHILDREN:
+                getChildren().clear();
+                getChildren().addAll((Collection<? extends DBItem>)newValue);
+                return;
+            case DoorsDBModelPackage.DB_ITEM__PARENT:
+                setParent((DBItem)newValue);
+                return;
+            case DoorsDBModelPackage.DB_ITEM__NAME:
+                setName((String)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
@@ -310,17 +300,17 @@ public abstract class DBItemImpl extends MinimalEObjectImpl.Container implements
      * @generated
      */
     @Override
-    public void eUnset(final int featureID) {
+    public void eUnset(int featureID) {
         switch (featureID) {
-        case DoorsDBModelPackage.DB_ITEM__CHILDREN:
-            getChildren().clear();
-            return;
-        case DoorsDBModelPackage.DB_ITEM__PARENT:
-            setParent((DBItem)null);
-            return;
-        case DoorsDBModelPackage.DB_ITEM__NAME:
-            setName(NAME_EDEFAULT);
-            return;
+            case DoorsDBModelPackage.DB_ITEM__CHILDREN:
+                getChildren().clear();
+                return;
+            case DoorsDBModelPackage.DB_ITEM__PARENT:
+                setParent((DBItem)null);
+                return;
+            case DoorsDBModelPackage.DB_ITEM__NAME:
+                setName(NAME_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
@@ -331,16 +321,16 @@ public abstract class DBItemImpl extends MinimalEObjectImpl.Container implements
      * @generated
      */
     @Override
-    public boolean eIsSet(final int featureID) {
+    public boolean eIsSet(int featureID) {
         switch (featureID) {
-        case DoorsDBModelPackage.DB_ITEM__CHILDREN:
-            return children != null && !children.isEmpty();
-        case DoorsDBModelPackage.DB_ITEM__PARENT:
-            return getParent() != null;
-        case DoorsDBModelPackage.DB_ITEM__NAME:
-            return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-        case DoorsDBModelPackage.DB_ITEM__FULL_NAME:
-            return FULL_NAME_EDEFAULT == null ? getFullName() != null : !FULL_NAME_EDEFAULT.equals(getFullName());
+            case DoorsDBModelPackage.DB_ITEM__CHILDREN:
+                return children != null && !children.isEmpty();
+            case DoorsDBModelPackage.DB_ITEM__PARENT:
+                return getParent() != null;
+            case DoorsDBModelPackage.DB_ITEM__NAME:
+                return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+            case DoorsDBModelPackage.DB_ITEM__FULL_NAME:
+                return FULL_NAME_EDEFAULT == null ? getFullName() != null : !FULL_NAME_EDEFAULT.equals(getFullName());
         }
         return super.eIsSet(featureID);
     }
@@ -351,11 +341,11 @@ public abstract class DBItemImpl extends MinimalEObjectImpl.Container implements
      * @generated
      */
     @Override
-    public Object eInvoke(final int operationID, final EList<?> arguments) throws InvocationTargetException {
+    public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
         switch (operationID) {
-        case DoorsDBModelPackage.DB_ITEM___ACCEPT__DOORSDBVISITOR:
-            accept((DoorsDBVisitor)arguments.get(0));
-            return null;
+            case DoorsDBModelPackage.DB_ITEM___ACCEPT__DOORSDBVISITOR:
+                accept((DoorsDBVisitor)arguments.get(0));
+                return null;
         }
         return super.eInvoke(operationID, arguments);
     }

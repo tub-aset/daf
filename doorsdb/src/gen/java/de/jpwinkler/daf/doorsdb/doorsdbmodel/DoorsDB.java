@@ -97,7 +97,7 @@ public interface DoorsDB extends EObject {
     /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @model visitorDataType="de.jpwinkler.doors_db.doorsdbmodel.DoorsDBVisitor"
+     * @model visitorDataType="de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDBVisitor"
      * @generated
      */
     void accept(DoorsDBVisitor visitor);

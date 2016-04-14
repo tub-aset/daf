@@ -6,12 +6,16 @@ import java.util.Date;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+import org.eclipse.emf.ecore.util.EcoreEMap;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
+import org.eclipse.emf.ecore.util.InternalEList;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBModule;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBVersion;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDBModelPackage;
@@ -27,6 +31,7 @@ import de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDBModelPackage;
  *   <li>{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.impl.DBVersionImpl#getModule <em>Module</em>}</li>
  *   <li>{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.impl.DBVersionImpl#getCsvLocation <em>Csv Location</em>}</li>
  *   <li>{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.impl.DBVersionImpl#getDate <em>Date</em>}</li>
+ *   <li>{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.impl.DBVersionImpl#getAttributes <em>Attributes</em>}</li>
  * </ul>
  *
  * @generated
@@ -71,6 +76,16 @@ public class DBVersionImpl extends MinimalEObjectImpl.Container implements DBVer
      * @ordered
      */
     protected Date date = DATE_EDEFAULT;
+
+    /**
+     * The cached value of the '{@link #getAttributes() <em>Attributes</em>}' map.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getAttributes()
+     * @generated
+     * @ordered
+     */
+    protected EMap<String, String> attributes;
 
     /**
      * <!-- begin-user-doc -->
@@ -185,6 +200,18 @@ public class DBVersionImpl extends MinimalEObjectImpl.Container implements DBVer
      * <!-- end-user-doc -->
      * @generated
      */
+    public EMap<String, String> getAttributes() {
+        if (attributes == null) {
+            attributes = new EcoreEMap<String,String>(DoorsDBModelPackage.Literals.STRING_TO_STRING_MAP, StringToStringMapImpl.class, this, DoorsDBModelPackage.DB_VERSION__ATTRIBUTES);
+        }
+        return attributes;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
         switch (featureID) {
@@ -206,6 +233,8 @@ public class DBVersionImpl extends MinimalEObjectImpl.Container implements DBVer
         switch (featureID) {
             case DoorsDBModelPackage.DB_VERSION__MODULE:
                 return basicSetModule(null, msgs);
+            case DoorsDBModelPackage.DB_VERSION__ATTRIBUTES:
+                return ((InternalEList<?>)getAttributes()).basicRemove(otherEnd, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
     }
@@ -238,6 +267,9 @@ public class DBVersionImpl extends MinimalEObjectImpl.Container implements DBVer
                 return getCsvLocation();
             case DoorsDBModelPackage.DB_VERSION__DATE:
                 return getDate();
+            case DoorsDBModelPackage.DB_VERSION__ATTRIBUTES:
+                if (coreType) return getAttributes();
+                else return getAttributes().map();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -258,6 +290,9 @@ public class DBVersionImpl extends MinimalEObjectImpl.Container implements DBVer
                 return;
             case DoorsDBModelPackage.DB_VERSION__DATE:
                 setDate((Date)newValue);
+                return;
+            case DoorsDBModelPackage.DB_VERSION__ATTRIBUTES:
+                ((EStructuralFeature.Setting)getAttributes()).set(newValue);
                 return;
         }
         super.eSet(featureID, newValue);
@@ -280,6 +315,9 @@ public class DBVersionImpl extends MinimalEObjectImpl.Container implements DBVer
             case DoorsDBModelPackage.DB_VERSION__DATE:
                 setDate(DATE_EDEFAULT);
                 return;
+            case DoorsDBModelPackage.DB_VERSION__ATTRIBUTES:
+                getAttributes().clear();
+                return;
         }
         super.eUnset(featureID);
     }
@@ -298,6 +336,8 @@ public class DBVersionImpl extends MinimalEObjectImpl.Container implements DBVer
                 return CSV_LOCATION_EDEFAULT == null ? csvLocation != null : !CSV_LOCATION_EDEFAULT.equals(csvLocation);
             case DoorsDBModelPackage.DB_VERSION__DATE:
                 return DATE_EDEFAULT == null ? date != null : !DATE_EDEFAULT.equals(date);
+            case DoorsDBModelPackage.DB_VERSION__ATTRIBUTES:
+                return attributes != null && !attributes.isEmpty();
         }
         return super.eIsSet(featureID);
     }

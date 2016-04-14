@@ -124,11 +124,12 @@ public class DBModuleImpl extends DBItemImpl implements DBModule {
      * @generated
      */
     @Override
-    public void setUrl(String newUrl) {
-        String oldUrl = url;
+    public void setUrl(final String newUrl) {
+        final String oldUrl = url;
         url = newUrl;
-        if (eNotificationRequired())
+        if (eNotificationRequired()) {
             eNotify(new ENotificationImpl(this, Notification.SET, DoorsDBModelPackage.DB_MODULE__URL, oldUrl, url));
+        }
     }
 
     /**
@@ -161,18 +162,28 @@ public class DBModuleImpl extends DBItemImpl implements DBModule {
     }
 
     /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated NOT
+     */
+    @Override
+    public boolean hasTag(final String tag) {
+        return getTags().stream().anyMatch(t -> t.getName().equals(tag));
+    }
+
+    /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
     @SuppressWarnings("unchecked")
     @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+    public NotificationChain eInverseAdd(final InternalEObject otherEnd, final int featureID, final NotificationChain msgs) {
         switch (featureID) {
-            case DoorsDBModelPackage.DB_MODULE__VERSIONS:
-                return ((InternalEList<InternalEObject>)(InternalEList<?>)getVersions()).basicAdd(otherEnd, msgs);
-            case DoorsDBModelPackage.DB_MODULE__TAGS:
-                return ((InternalEList<InternalEObject>)(InternalEList<?>)getTags()).basicAdd(otherEnd, msgs);
+        case DoorsDBModelPackage.DB_MODULE__VERSIONS:
+            return ((InternalEList<InternalEObject>)(InternalEList<?>)getVersions()).basicAdd(otherEnd, msgs);
+        case DoorsDBModelPackage.DB_MODULE__TAGS:
+            return ((InternalEList<InternalEObject>)(InternalEList<?>)getTags()).basicAdd(otherEnd, msgs);
         }
         return super.eInverseAdd(otherEnd, featureID, msgs);
     }
@@ -183,12 +194,12 @@ public class DBModuleImpl extends DBItemImpl implements DBModule {
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+    public NotificationChain eInverseRemove(final InternalEObject otherEnd, final int featureID, final NotificationChain msgs) {
         switch (featureID) {
-            case DoorsDBModelPackage.DB_MODULE__VERSIONS:
-                return ((InternalEList<?>)getVersions()).basicRemove(otherEnd, msgs);
-            case DoorsDBModelPackage.DB_MODULE__TAGS:
-                return ((InternalEList<?>)getTags()).basicRemove(otherEnd, msgs);
+        case DoorsDBModelPackage.DB_MODULE__VERSIONS:
+            return ((InternalEList<?>)getVersions()).basicRemove(otherEnd, msgs);
+        case DoorsDBModelPackage.DB_MODULE__TAGS:
+            return ((InternalEList<?>)getTags()).basicRemove(otherEnd, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
     }
@@ -199,14 +210,14 @@ public class DBModuleImpl extends DBItemImpl implements DBModule {
      * @generated
      */
     @Override
-    public Object eGet(int featureID, boolean resolve, boolean coreType) {
+    public Object eGet(final int featureID, final boolean resolve, final boolean coreType) {
         switch (featureID) {
-            case DoorsDBModelPackage.DB_MODULE__VERSIONS:
-                return getVersions();
-            case DoorsDBModelPackage.DB_MODULE__URL:
-                return getUrl();
-            case DoorsDBModelPackage.DB_MODULE__TAGS:
-                return getTags();
+        case DoorsDBModelPackage.DB_MODULE__VERSIONS:
+            return getVersions();
+        case DoorsDBModelPackage.DB_MODULE__URL:
+            return getUrl();
+        case DoorsDBModelPackage.DB_MODULE__TAGS:
+            return getTags();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -218,19 +229,19 @@ public class DBModuleImpl extends DBItemImpl implements DBModule {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public void eSet(int featureID, Object newValue) {
+    public void eSet(final int featureID, final Object newValue) {
         switch (featureID) {
-            case DoorsDBModelPackage.DB_MODULE__VERSIONS:
-                getVersions().clear();
-                getVersions().addAll((Collection<? extends DBVersion>)newValue);
-                return;
-            case DoorsDBModelPackage.DB_MODULE__URL:
-                setUrl((String)newValue);
-                return;
-            case DoorsDBModelPackage.DB_MODULE__TAGS:
-                getTags().clear();
-                getTags().addAll((Collection<? extends DBTag>)newValue);
-                return;
+        case DoorsDBModelPackage.DB_MODULE__VERSIONS:
+            getVersions().clear();
+            getVersions().addAll((Collection<? extends DBVersion>)newValue);
+            return;
+        case DoorsDBModelPackage.DB_MODULE__URL:
+            setUrl((String)newValue);
+            return;
+        case DoorsDBModelPackage.DB_MODULE__TAGS:
+            getTags().clear();
+            getTags().addAll((Collection<? extends DBTag>)newValue);
+            return;
         }
         super.eSet(featureID, newValue);
     }
@@ -241,17 +252,17 @@ public class DBModuleImpl extends DBItemImpl implements DBModule {
      * @generated
      */
     @Override
-    public void eUnset(int featureID) {
+    public void eUnset(final int featureID) {
         switch (featureID) {
-            case DoorsDBModelPackage.DB_MODULE__VERSIONS:
-                getVersions().clear();
-                return;
-            case DoorsDBModelPackage.DB_MODULE__URL:
-                setUrl(URL_EDEFAULT);
-                return;
-            case DoorsDBModelPackage.DB_MODULE__TAGS:
-                getTags().clear();
-                return;
+        case DoorsDBModelPackage.DB_MODULE__VERSIONS:
+            getVersions().clear();
+            return;
+        case DoorsDBModelPackage.DB_MODULE__URL:
+            setUrl(URL_EDEFAULT);
+            return;
+        case DoorsDBModelPackage.DB_MODULE__TAGS:
+            getTags().clear();
+            return;
         }
         super.eUnset(featureID);
     }
@@ -262,14 +273,14 @@ public class DBModuleImpl extends DBItemImpl implements DBModule {
      * @generated
      */
     @Override
-    public boolean eIsSet(int featureID) {
+    public boolean eIsSet(final int featureID) {
         switch (featureID) {
-            case DoorsDBModelPackage.DB_MODULE__VERSIONS:
-                return versions != null && !versions.isEmpty();
-            case DoorsDBModelPackage.DB_MODULE__URL:
-                return URL_EDEFAULT == null ? url != null : !URL_EDEFAULT.equals(url);
-            case DoorsDBModelPackage.DB_MODULE__TAGS:
-                return tags != null && !tags.isEmpty();
+        case DoorsDBModelPackage.DB_MODULE__VERSIONS:
+            return versions != null && !versions.isEmpty();
+        case DoorsDBModelPackage.DB_MODULE__URL:
+            return URL_EDEFAULT == null ? url != null : !URL_EDEFAULT.equals(url);
+        case DoorsDBModelPackage.DB_MODULE__TAGS:
+            return tags != null && !tags.isEmpty();
         }
         return super.eIsSet(featureID);
     }
@@ -280,28 +291,28 @@ public class DBModuleImpl extends DBItemImpl implements DBModule {
      * @generated
      */
     @Override
-    public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+    public Object eInvoke(final int operationID, final EList<?> arguments) throws InvocationTargetException {
         switch (operationID) {
-            case DoorsDBModelPackage.DB_MODULE___GET_LATEST_VERSION:
-                return getLatestVersion();
+        case DoorsDBModelPackage.DB_MODULE___GET_LATEST_VERSION:
+            return getLatestVersion();
+        case DoorsDBModelPackage.DB_MODULE___HAS_TAG__STRING:
+            return hasTag((String)arguments.get(0));
         }
         return super.eInvoke(operationID, arguments);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated NOT
      */
     @Override
     public String toString() {
-        if (eIsProxy()) return super.toString();
+        if (eIsProxy()) {
+            return super.toString();
+        }
 
-        StringBuffer result = new StringBuffer(super.toString());
-        result.append(" (url: ");
-        result.append(url);
-        result.append(')');
-        return result.toString();
+        return getName();
     }
 
 } //DBModuleImpl

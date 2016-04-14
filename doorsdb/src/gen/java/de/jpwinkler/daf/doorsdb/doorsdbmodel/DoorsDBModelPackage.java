@@ -323,13 +323,22 @@ public interface DoorsDBModelPackage extends EPackage {
     int DB_MODULE___GET_LATEST_VERSION = DB_ITEM_OPERATION_COUNT + 0;
 
     /**
+     * The operation id for the '<em>Has Tag</em>' operation.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DB_MODULE___HAS_TAG__STRING = DB_ITEM_OPERATION_COUNT + 1;
+
+    /**
      * The number of operations of the '<em>DB Module</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DB_MODULE_OPERATION_COUNT = DB_ITEM_OPERATION_COUNT + 1;
+    int DB_MODULE_OPERATION_COUNT = DB_ITEM_OPERATION_COUNT + 2;
 
     /**
      * The meta object id for the '{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.impl.DBVersionImpl <em>DB Version</em>}' class.
@@ -369,13 +378,22 @@ public interface DoorsDBModelPackage extends EPackage {
     int DB_VERSION__DATE = 2;
 
     /**
+     * The feature id for the '<em><b>Attributes</b></em>' map.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DB_VERSION__ATTRIBUTES = 3;
+
+    /**
      * The number of structural features of the '<em>DB Version</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DB_VERSION_FEATURE_COUNT = 3;
+    int DB_VERSION_FEATURE_COUNT = 4;
 
     /**
      * The number of operations of the '<em>DB Version</em>' class.
@@ -506,14 +524,60 @@ public interface DoorsDBModelPackage extends EPackage {
     int DB_TAG_OPERATION_COUNT = 0;
 
     /**
+     * The meta object id for the '{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.impl.StringToStringMapImpl <em>String To String Map</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see de.jpwinkler.daf.doorsdb.doorsdbmodel.impl.StringToStringMapImpl
+     * @see de.jpwinkler.daf.doorsdb.doorsdbmodel.impl.DoorsDBModelPackageImpl#getStringToStringMap()
+     * @generated
+     */
+    int STRING_TO_STRING_MAP = 6;
+
+    /**
+     * The feature id for the '<em><b>Key</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int STRING_TO_STRING_MAP__KEY = 0;
+
+    /**
+     * The feature id for the '<em><b>Value</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int STRING_TO_STRING_MAP__VALUE = 1;
+
+    /**
+     * The number of structural features of the '<em>String To String Map</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int STRING_TO_STRING_MAP_FEATURE_COUNT = 2;
+
+    /**
+     * The number of operations of the '<em>String To String Map</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int STRING_TO_STRING_MAP_OPERATION_COUNT = 0;
+
+    /**
      * The meta object id for the '<em>Doors DB Visitor</em>' data type.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see de.jpwinkler.doors_db.util.DoorsDBVisitor
+     * @see de.jpwinkler.daf.doorsdb.util.DoorsDBVisitor
      * @see de.jpwinkler.daf.doorsdb.doorsdbmodel.impl.DoorsDBModelPackageImpl#getDoorsDBVisitor()
      * @generated
      */
-    int DOORS_DB_VISITOR = 6;
+    int DOORS_DB_VISITOR = 7;
 
 
     /**
@@ -600,6 +664,16 @@ public interface DoorsDBModelPackage extends EPackage {
     EOperation getDBModule__GetLatestVersion();
 
     /**
+     * Returns the meta object for the '{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.DBModule#hasTag(java.lang.String) <em>Has Tag</em>}' operation.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the '<em>Has Tag</em>' operation.
+     * @see de.jpwinkler.daf.doorsdb.doorsdbmodel.DBModule#hasTag(java.lang.String)
+     * @generated
+     */
+    EOperation getDBModule__HasTag__String();
+
+    /**
      * Returns the meta object for class '{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.DBVersion <em>DB Version</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -641,6 +715,17 @@ public interface DoorsDBModelPackage extends EPackage {
      * @generated
      */
     EAttribute getDBVersion_Date();
+
+    /**
+     * Returns the meta object for the map '{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.DBVersion#getAttributes <em>Attributes</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the map '<em>Attributes</em>'.
+     * @see de.jpwinkler.daf.doorsdb.doorsdbmodel.DBVersion#getAttributes()
+     * @see #getDBVersion()
+     * @generated
+     */
+    EReference getDBVersion_Attributes();
 
     /**
      * Returns the meta object for class '{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDB <em>Doors DB</em>}'.
@@ -686,11 +771,11 @@ public interface DoorsDBModelPackage extends EPackage {
     EReference getDoorsDB_Root();
 
     /**
-     * Returns the meta object for the '{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDB#accept(de.jpwinkler.doors_db.util.DoorsDBVisitor) <em>Accept</em>}' operation.
+     * Returns the meta object for the '{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDB#accept(de.jpwinkler.daf.doorsdb.util.DoorsDBVisitor) <em>Accept</em>}' operation.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @return the meta object for the '<em>Accept</em>' operation.
-     * @see de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDB#accept(de.jpwinkler.doors_db.util.DoorsDBVisitor)
+     * @see de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDB#accept(de.jpwinkler.daf.doorsdb.util.DoorsDBVisitor)
      * @generated
      */
     EOperation getDoorsDB__Accept__DoorsDBVisitor();
@@ -736,6 +821,40 @@ public interface DoorsDBModelPackage extends EPackage {
      * @generated
      */
     EReference getDBTag_Modules();
+
+    /**
+     * Returns the meta object for class '{@link java.util.Map.Entry <em>String To String Map</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>String To String Map</em>'.
+     * @see java.util.Map.Entry
+     * @model keyDataType="org.eclipse.emf.ecore.EString"
+     *        valueDataType="org.eclipse.emf.ecore.EString"
+     * @generated
+     */
+    EClass getStringToStringMap();
+
+    /**
+     * Returns the meta object for the attribute '{@link java.util.Map.Entry <em>Key</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Key</em>'.
+     * @see java.util.Map.Entry
+     * @see #getStringToStringMap()
+     * @generated
+     */
+    EAttribute getStringToStringMap_Key();
+
+    /**
+     * Returns the meta object for the attribute '{@link java.util.Map.Entry <em>Value</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Value</em>'.
+     * @see java.util.Map.Entry
+     * @see #getStringToStringMap()
+     * @generated
+     */
+    EAttribute getStringToStringMap_Value();
 
     /**
      * Returns the meta object for class '{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.DBItem <em>DB Item</em>}'.
@@ -792,22 +911,22 @@ public interface DoorsDBModelPackage extends EPackage {
     EAttribute getDBItem_FullName();
 
     /**
-     * Returns the meta object for the '{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.DBItem#accept(de.jpwinkler.doors_db.util.DoorsDBVisitor) <em>Accept</em>}' operation.
+     * Returns the meta object for the '{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.DBItem#accept(de.jpwinkler.daf.doorsdb.util.DoorsDBVisitor) <em>Accept</em>}' operation.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @return the meta object for the '<em>Accept</em>' operation.
-     * @see de.jpwinkler.daf.doorsdb.doorsdbmodel.DBItem#accept(de.jpwinkler.doors_db.util.DoorsDBVisitor)
+     * @see de.jpwinkler.daf.doorsdb.doorsdbmodel.DBItem#accept(de.jpwinkler.daf.doorsdb.util.DoorsDBVisitor)
      * @generated
      */
     EOperation getDBItem__Accept__DoorsDBVisitor();
 
     /**
-     * Returns the meta object for data type '{@link de.jpwinkler.doors_db.util.DoorsDBVisitor <em>Doors DB Visitor</em>}'.
+     * Returns the meta object for data type '{@link de.jpwinkler.daf.doorsdb.util.DoorsDBVisitor <em>Doors DB Visitor</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @return the meta object for data type '<em>Doors DB Visitor</em>'.
-     * @see de.jpwinkler.doors_db.util.DoorsDBVisitor
-     * @model instanceClass="de.jpwinkler.doors_db.util.DoorsDBVisitor"
+     * @see de.jpwinkler.daf.doorsdb.util.DoorsDBVisitor
+     * @model instanceClass="de.jpwinkler.daf.doorsdb.util.DoorsDBVisitor"
      * @generated
      */
     EDataType getDoorsDBVisitor();
@@ -904,6 +1023,14 @@ public interface DoorsDBModelPackage extends EPackage {
         EOperation DB_MODULE___GET_LATEST_VERSION = eINSTANCE.getDBModule__GetLatestVersion();
 
         /**
+         * The meta object literal for the '<em><b>Has Tag</b></em>' operation.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EOperation DB_MODULE___HAS_TAG__STRING = eINSTANCE.getDBModule__HasTag__String();
+
+        /**
          * The meta object literal for the '{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.impl.DBVersionImpl <em>DB Version</em>}' class.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
@@ -936,6 +1063,14 @@ public interface DoorsDBModelPackage extends EPackage {
          * @generated
          */
         EAttribute DB_VERSION__DATE = eINSTANCE.getDBVersion_Date();
+
+        /**
+         * The meta object literal for the '<em><b>Attributes</b></em>' map feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference DB_VERSION__ATTRIBUTES = eINSTANCE.getDBVersion_Attributes();
 
         /**
          * The meta object literal for the '{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.impl.DoorsDBImpl <em>Doors DB</em>}' class.
@@ -1014,6 +1149,32 @@ public interface DoorsDBModelPackage extends EPackage {
         EReference DB_TAG__MODULES = eINSTANCE.getDBTag_Modules();
 
         /**
+         * The meta object literal for the '{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.impl.StringToStringMapImpl <em>String To String Map</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see de.jpwinkler.daf.doorsdb.doorsdbmodel.impl.StringToStringMapImpl
+         * @see de.jpwinkler.daf.doorsdb.doorsdbmodel.impl.DoorsDBModelPackageImpl#getStringToStringMap()
+         * @generated
+         */
+        EClass STRING_TO_STRING_MAP = eINSTANCE.getStringToStringMap();
+
+        /**
+         * The meta object literal for the '<em><b>Key</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute STRING_TO_STRING_MAP__KEY = eINSTANCE.getStringToStringMap_Key();
+
+        /**
+         * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute STRING_TO_STRING_MAP__VALUE = eINSTANCE.getStringToStringMap_Value();
+
+        /**
          * The meta object literal for the '{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.impl.DBItemImpl <em>DB Item</em>}' class.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
@@ -1067,7 +1228,7 @@ public interface DoorsDBModelPackage extends EPackage {
          * The meta object literal for the '<em>Doors DB Visitor</em>' data type.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
-         * @see de.jpwinkler.doors_db.util.DoorsDBVisitor
+         * @see de.jpwinkler.daf.doorsdb.util.DoorsDBVisitor
          * @see de.jpwinkler.daf.doorsdb.doorsdbmodel.impl.DoorsDBModelPackageImpl#getDoorsDBVisitor()
          * @generated
          */

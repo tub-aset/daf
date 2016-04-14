@@ -10,6 +10,7 @@ import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 import org.eclipse.emf.ecore.EObject;
 
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.*;
+import java.util.Map;
 
 /**
  * <!-- begin-user-doc -->
@@ -90,6 +91,10 @@ public class DoorsDBModelAdapterFactory extends AdapterFactoryImpl {
             @Override
             public Adapter caseDBTag(DBTag object) {
                 return createDBTagAdapter();
+            }
+            @Override
+            public Adapter caseStringToStringMap(Map.Entry<String, String> object) {
+                return createStringToStringMapAdapter();
             }
             @Override
             public Adapter defaultCase(EObject object) {
@@ -178,6 +183,20 @@ public class DoorsDBModelAdapterFactory extends AdapterFactoryImpl {
      * @generated
      */
     public Adapter createDBTagAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link java.util.Map.Entry <em>String To String Map</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see java.util.Map.Entry
+     * @generated
+     */
+    public Adapter createStringToStringMapAdapter() {
         return null;
     }
 

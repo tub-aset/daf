@@ -2,6 +2,7 @@
  */
 package de.jpwinkler.daf.doorsdb.doorsdbmodel.impl;
 
+import de.jpwinkler.daf.doorsdb.doorsdbmodel.*;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
@@ -17,6 +18,7 @@ import de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDB;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDBModelFactory;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDBModelPackage;
 import de.jpwinkler.daf.doorsdb.util.DoorsDBVisitor;
+import java.util.Map;
 
 /**
  * <!-- begin-user-doc -->
@@ -33,12 +35,12 @@ public class DoorsDBModelFactoryImpl extends EFactoryImpl implements DoorsDBMode
      */
     public static DoorsDBModelFactory init() {
         try {
-            final DoorsDBModelFactory theDoorsDBModelFactory = (DoorsDBModelFactory)EPackage.Registry.INSTANCE.getEFactory(DoorsDBModelPackage.eNS_URI);
+            DoorsDBModelFactory theDoorsDBModelFactory = (DoorsDBModelFactory)EPackage.Registry.INSTANCE.getEFactory(DoorsDBModelPackage.eNS_URI);
             if (theDoorsDBModelFactory != null) {
                 return theDoorsDBModelFactory;
             }
         }
-        catch (final Exception exception) {
+        catch (Exception exception) {
             EcorePlugin.INSTANCE.log(exception);
         }
         return new DoorsDBModelFactoryImpl();
@@ -60,15 +62,16 @@ public class DoorsDBModelFactoryImpl extends EFactoryImpl implements DoorsDBMode
      * @generated
      */
     @Override
-    public EObject create(final EClass eClass) {
+    public EObject create(EClass eClass) {
         switch (eClass.getClassifierID()) {
-        case DoorsDBModelPackage.DB_FOLDER: return createDBFolder();
-        case DoorsDBModelPackage.DB_MODULE: return createDBModule();
-        case DoorsDBModelPackage.DB_VERSION: return createDBVersion();
-        case DoorsDBModelPackage.DOORS_DB: return createDoorsDB();
-        case DoorsDBModelPackage.DB_TAG: return createDBTag();
-        default:
-            throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
+            case DoorsDBModelPackage.DB_FOLDER: return createDBFolder();
+            case DoorsDBModelPackage.DB_MODULE: return createDBModule();
+            case DoorsDBModelPackage.DB_VERSION: return createDBVersion();
+            case DoorsDBModelPackage.DOORS_DB: return createDoorsDB();
+            case DoorsDBModelPackage.DB_TAG: return createDBTag();
+            case DoorsDBModelPackage.STRING_TO_STRING_MAP: return (EObject)createStringToStringMap();
+            default:
+                throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
         }
     }
 
@@ -78,12 +81,12 @@ public class DoorsDBModelFactoryImpl extends EFactoryImpl implements DoorsDBMode
      * @generated
      */
     @Override
-    public Object createFromString(final EDataType eDataType, final String initialValue) {
+    public Object createFromString(EDataType eDataType, String initialValue) {
         switch (eDataType.getClassifierID()) {
-        case DoorsDBModelPackage.DOORS_DB_VISITOR:
-            return createDoorsDBVisitorFromString(eDataType, initialValue);
-        default:
-            throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
+            case DoorsDBModelPackage.DOORS_DB_VISITOR:
+                return createDoorsDBVisitorFromString(eDataType, initialValue);
+            default:
+                throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
         }
     }
 
@@ -93,12 +96,12 @@ public class DoorsDBModelFactoryImpl extends EFactoryImpl implements DoorsDBMode
      * @generated
      */
     @Override
-    public String convertToString(final EDataType eDataType, final Object instanceValue) {
+    public String convertToString(EDataType eDataType, Object instanceValue) {
         switch (eDataType.getClassifierID()) {
-        case DoorsDBModelPackage.DOORS_DB_VISITOR:
-            return convertDoorsDBVisitorToString(eDataType, instanceValue);
-        default:
-            throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
+            case DoorsDBModelPackage.DOORS_DB_VISITOR:
+                return convertDoorsDBVisitorToString(eDataType, instanceValue);
+            default:
+                throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
         }
     }
 
@@ -109,7 +112,7 @@ public class DoorsDBModelFactoryImpl extends EFactoryImpl implements DoorsDBMode
      */
     @Override
     public DBFolder createDBFolder() {
-        final DBFolderImpl dbFolder = new DBFolderImpl();
+        DBFolderImpl dbFolder = new DBFolderImpl();
         return dbFolder;
     }
 
@@ -120,7 +123,7 @@ public class DoorsDBModelFactoryImpl extends EFactoryImpl implements DoorsDBMode
      */
     @Override
     public DBModule createDBModule() {
-        final DBModuleImpl dbModule = new DBModuleImpl();
+        DBModuleImpl dbModule = new DBModuleImpl();
         return dbModule;
     }
 
@@ -131,7 +134,7 @@ public class DoorsDBModelFactoryImpl extends EFactoryImpl implements DoorsDBMode
      */
     @Override
     public DBVersion createDBVersion() {
-        final DBVersionImpl dbVersion = new DBVersionImpl();
+        DBVersionImpl dbVersion = new DBVersionImpl();
         return dbVersion;
     }
 
@@ -142,7 +145,7 @@ public class DoorsDBModelFactoryImpl extends EFactoryImpl implements DoorsDBMode
      */
     @Override
     public DoorsDB createDoorsDB() {
-        final DoorsDBImpl doorsDB = new DoorsDBImpl();
+        DoorsDBImpl doorsDB = new DoorsDBImpl();
         return doorsDB;
     }
 
@@ -153,7 +156,7 @@ public class DoorsDBModelFactoryImpl extends EFactoryImpl implements DoorsDBMode
      */
     @Override
     public DBTag createDBTag() {
-        final DBTagImpl dbTag = new DBTagImpl();
+        DBTagImpl dbTag = new DBTagImpl();
         return dbTag;
     }
 
@@ -162,7 +165,17 @@ public class DoorsDBModelFactoryImpl extends EFactoryImpl implements DoorsDBMode
      * <!-- end-user-doc -->
      * @generated
      */
-    public DoorsDBVisitor createDoorsDBVisitorFromString(final EDataType eDataType, final String initialValue) {
+    public Map.Entry<String, String> createStringToStringMap() {
+        StringToStringMapImpl stringToStringMap = new StringToStringMapImpl();
+        return stringToStringMap;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public DoorsDBVisitor createDoorsDBVisitorFromString(EDataType eDataType, String initialValue) {
         return (DoorsDBVisitor)super.createFromString(eDataType, initialValue);
     }
 
@@ -171,7 +184,7 @@ public class DoorsDBModelFactoryImpl extends EFactoryImpl implements DoorsDBMode
      * <!-- end-user-doc -->
      * @generated
      */
-    public String convertDoorsDBVisitorToString(final EDataType eDataType, final Object instanceValue) {
+    public String convertDoorsDBVisitorToString(EDataType eDataType, Object instanceValue) {
         return super.convertToString(eDataType, instanceValue);
     }
 

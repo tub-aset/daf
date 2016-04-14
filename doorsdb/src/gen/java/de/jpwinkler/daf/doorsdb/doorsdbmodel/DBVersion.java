@@ -4,6 +4,7 @@ package de.jpwinkler.daf.doorsdb.doorsdbmodel;
 
 import java.util.Date;
 
+import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -18,6 +19,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.DBVersion#getModule <em>Module</em>}</li>
  *   <li>{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.DBVersion#getCsvLocation <em>Csv Location</em>}</li>
  *   <li>{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.DBVersion#getDate <em>Date</em>}</li>
+ *   <li>{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.DBVersion#getAttributes <em>Attributes</em>}</li>
  * </ul>
  *
  * @see de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDBModelPackage#getDBVersion()
@@ -104,5 +106,22 @@ public interface DBVersion extends EObject {
      * @generated
      */
     void setDate(Date value);
+
+    /**
+     * Returns the value of the '<em><b>Attributes</b></em>' map.
+     * The key is of type {@link java.lang.String},
+     * and the value is of type {@link java.lang.String},
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Attributes</em>' map isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Attributes</em>' map.
+     * @see de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDBModelPackage#getDBVersion_Attributes()
+     * @model mapType="de.jpwinkler.daf.doorsdb.doorsdbmodel.StringToStringMap<org.eclipse.emf.ecore.EString, org.eclipse.emf.ecore.EString>"
+     * @generated
+     */
+    EMap<String, String> getAttributes();
 
 } // DBVersion

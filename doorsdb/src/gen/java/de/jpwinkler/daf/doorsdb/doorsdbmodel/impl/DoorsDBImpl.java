@@ -112,12 +112,11 @@ public class DoorsDBImpl extends MinimalEObjectImpl.Container implements DoorsDB
      * @generated
      */
     @Override
-    public void setDbLocation(final String newDbLocation) {
-        final String oldDbLocation = dbLocation;
+    public void setDbLocation(String newDbLocation) {
+        String oldDbLocation = dbLocation;
         dbLocation = newDbLocation;
-        if (eNotificationRequired()) {
+        if (eNotificationRequired())
             eNotify(new ENotificationImpl(this, Notification.SET, DoorsDBModelPackage.DOORS_DB__DB_LOCATION, oldDbLocation, dbLocation));
-        }
     }
 
     /**
@@ -148,16 +147,12 @@ public class DoorsDBImpl extends MinimalEObjectImpl.Container implements DoorsDB
      * <!-- end-user-doc -->
      * @generated
      */
-    public NotificationChain basicSetRoot(final DBFolder newRoot, NotificationChain msgs) {
-        final DBFolder oldRoot = root;
+    public NotificationChain basicSetRoot(DBFolder newRoot, NotificationChain msgs) {
+        DBFolder oldRoot = root;
         root = newRoot;
         if (eNotificationRequired()) {
-            final ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, DoorsDBModelPackage.DOORS_DB__ROOT, oldRoot, newRoot);
-            if (msgs == null) {
-                msgs = notification;
-            } else {
-                msgs.add(notification);
-            }
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, DoorsDBModelPackage.DOORS_DB__ROOT, oldRoot, newRoot);
+            if (msgs == null) msgs = notification; else msgs.add(notification);
         }
         return msgs;
     }
@@ -168,23 +163,18 @@ public class DoorsDBImpl extends MinimalEObjectImpl.Container implements DoorsDB
      * @generated
      */
     @Override
-    public void setRoot(final DBFolder newRoot) {
+    public void setRoot(DBFolder newRoot) {
         if (newRoot != root) {
             NotificationChain msgs = null;
-            if (root != null) {
+            if (root != null)
                 msgs = ((InternalEObject)root).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - DoorsDBModelPackage.DOORS_DB__ROOT, null, msgs);
-            }
-            if (newRoot != null) {
+            if (newRoot != null)
                 msgs = ((InternalEObject)newRoot).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - DoorsDBModelPackage.DOORS_DB__ROOT, null, msgs);
-            }
             msgs = basicSetRoot(newRoot, msgs);
-            if (msgs != null) {
-                msgs.dispatch();
-            }
+            if (msgs != null) msgs.dispatch();
         }
-        else if (eNotificationRequired()) {
+        else if (eNotificationRequired())
             eNotify(new ENotificationImpl(this, Notification.SET, DoorsDBModelPackage.DOORS_DB__ROOT, newRoot, newRoot));
-        }
     }
 
     /**
@@ -218,12 +208,12 @@ public class DoorsDBImpl extends MinimalEObjectImpl.Container implements DoorsDB
      * @generated
      */
     @Override
-    public NotificationChain eInverseRemove(final InternalEObject otherEnd, final int featureID, final NotificationChain msgs) {
+    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
         switch (featureID) {
-        case DoorsDBModelPackage.DOORS_DB__TAGS:
-            return ((InternalEList<?>)getTags()).basicRemove(otherEnd, msgs);
-        case DoorsDBModelPackage.DOORS_DB__ROOT:
-            return basicSetRoot(null, msgs);
+            case DoorsDBModelPackage.DOORS_DB__TAGS:
+                return ((InternalEList<?>)getTags()).basicRemove(otherEnd, msgs);
+            case DoorsDBModelPackage.DOORS_DB__ROOT:
+                return basicSetRoot(null, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
     }
@@ -234,14 +224,14 @@ public class DoorsDBImpl extends MinimalEObjectImpl.Container implements DoorsDB
      * @generated
      */
     @Override
-    public Object eGet(final int featureID, final boolean resolve, final boolean coreType) {
+    public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-        case DoorsDBModelPackage.DOORS_DB__DB_LOCATION:
-            return getDbLocation();
-        case DoorsDBModelPackage.DOORS_DB__TAGS:
-            return getTags();
-        case DoorsDBModelPackage.DOORS_DB__ROOT:
-            return getRoot();
+            case DoorsDBModelPackage.DOORS_DB__DB_LOCATION:
+                return getDbLocation();
+            case DoorsDBModelPackage.DOORS_DB__TAGS:
+                return getTags();
+            case DoorsDBModelPackage.DOORS_DB__ROOT:
+                return getRoot();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -253,18 +243,18 @@ public class DoorsDBImpl extends MinimalEObjectImpl.Container implements DoorsDB
      */
     @SuppressWarnings("unchecked")
     @Override
-    public void eSet(final int featureID, final Object newValue) {
+    public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-        case DoorsDBModelPackage.DOORS_DB__DB_LOCATION:
-            setDbLocation((String)newValue);
-            return;
-        case DoorsDBModelPackage.DOORS_DB__TAGS:
-            getTags().clear();
-            getTags().addAll((Collection<? extends DBTag>)newValue);
-            return;
-        case DoorsDBModelPackage.DOORS_DB__ROOT:
-            setRoot((DBFolder)newValue);
-            return;
+            case DoorsDBModelPackage.DOORS_DB__DB_LOCATION:
+                setDbLocation((String)newValue);
+                return;
+            case DoorsDBModelPackage.DOORS_DB__TAGS:
+                getTags().clear();
+                getTags().addAll((Collection<? extends DBTag>)newValue);
+                return;
+            case DoorsDBModelPackage.DOORS_DB__ROOT:
+                setRoot((DBFolder)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
@@ -275,17 +265,17 @@ public class DoorsDBImpl extends MinimalEObjectImpl.Container implements DoorsDB
      * @generated
      */
     @Override
-    public void eUnset(final int featureID) {
+    public void eUnset(int featureID) {
         switch (featureID) {
-        case DoorsDBModelPackage.DOORS_DB__DB_LOCATION:
-            setDbLocation(DB_LOCATION_EDEFAULT);
-            return;
-        case DoorsDBModelPackage.DOORS_DB__TAGS:
-            getTags().clear();
-            return;
-        case DoorsDBModelPackage.DOORS_DB__ROOT:
-            setRoot((DBFolder)null);
-            return;
+            case DoorsDBModelPackage.DOORS_DB__DB_LOCATION:
+                setDbLocation(DB_LOCATION_EDEFAULT);
+                return;
+            case DoorsDBModelPackage.DOORS_DB__TAGS:
+                getTags().clear();
+                return;
+            case DoorsDBModelPackage.DOORS_DB__ROOT:
+                setRoot((DBFolder)null);
+                return;
         }
         super.eUnset(featureID);
     }
@@ -296,14 +286,14 @@ public class DoorsDBImpl extends MinimalEObjectImpl.Container implements DoorsDB
      * @generated
      */
     @Override
-    public boolean eIsSet(final int featureID) {
+    public boolean eIsSet(int featureID) {
         switch (featureID) {
-        case DoorsDBModelPackage.DOORS_DB__DB_LOCATION:
-            return DB_LOCATION_EDEFAULT == null ? dbLocation != null : !DB_LOCATION_EDEFAULT.equals(dbLocation);
-        case DoorsDBModelPackage.DOORS_DB__TAGS:
-            return tags != null && !tags.isEmpty();
-        case DoorsDBModelPackage.DOORS_DB__ROOT:
-            return root != null;
+            case DoorsDBModelPackage.DOORS_DB__DB_LOCATION:
+                return DB_LOCATION_EDEFAULT == null ? dbLocation != null : !DB_LOCATION_EDEFAULT.equals(dbLocation);
+            case DoorsDBModelPackage.DOORS_DB__TAGS:
+                return tags != null && !tags.isEmpty();
+            case DoorsDBModelPackage.DOORS_DB__ROOT:
+                return root != null;
         }
         return super.eIsSet(featureID);
     }
@@ -314,13 +304,13 @@ public class DoorsDBImpl extends MinimalEObjectImpl.Container implements DoorsDB
      * @generated
      */
     @Override
-    public Object eInvoke(final int operationID, final EList<?> arguments) throws InvocationTargetException {
+    public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
         switch (operationID) {
-        case DoorsDBModelPackage.DOORS_DB___ACCEPT__DOORSDBVISITOR:
-            accept((DoorsDBVisitor)arguments.get(0));
-            return null;
-        case DoorsDBModelPackage.DOORS_DB___GET_TAG__STRING:
-            return getTag((String)arguments.get(0));
+            case DoorsDBModelPackage.DOORS_DB___ACCEPT__DOORSDBVISITOR:
+                accept((DoorsDBVisitor)arguments.get(0));
+                return null;
+            case DoorsDBModelPackage.DOORS_DB___GET_TAG__STRING:
+                return getTag((String)arguments.get(0));
         }
         return super.eInvoke(operationID, arguments);
     }
@@ -332,11 +322,9 @@ public class DoorsDBImpl extends MinimalEObjectImpl.Container implements DoorsDB
      */
     @Override
     public String toString() {
-        if (eIsProxy()) {
-            return super.toString();
-        }
+        if (eIsProxy()) return super.toString();
 
-        final StringBuffer result = new StringBuffer(super.toString());
+        StringBuffer result = new StringBuffer(super.toString());
         result.append(" (dbLocation: ");
         result.append(dbLocation);
         result.append(')');

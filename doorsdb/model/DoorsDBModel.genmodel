@@ -4,7 +4,7 @@
     rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" importerID="org.eclipse.emf.importer.ecore"
     complianceLevel="8.0" copyrightFields="false" operationReflection="true" importOrganizing="true">
   <foreignModel>DoorsDBModel.ecore</foreignModel>
-  <genPackages prefix="DoorsDBModel" basePackage="de.jpwinkler.doors_db" disposableProviderFactory="true"
+  <genPackages prefix="DoorsDBModel" basePackage="de.jpwinkler.daf.doorsdb" disposableProviderFactory="true"
       ecorePackage="DoorsDBModel.ecore#/">
     <genDataTypes ecoreDataType="DoorsDBModel.ecore#//DoorsDBVisitor"/>
     <genClasses image="false" ecoreClass="DoorsDBModel.ecore#//DBItem">
@@ -29,6 +29,9 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DoorsDBModel.ecore#//DBModule/url"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DoorsDBModel.ecore#//DBModule/tags"/>
       <genOperations ecoreOperation="DoorsDBModel.ecore#//DBModule/getLatestVersion"/>
+      <genOperations ecoreOperation="DoorsDBModel.ecore#//DBModule/hasTag">
+        <genParameters ecoreParameter="DoorsDBModel.ecore#//DBModule/hasTag/tag"/>
+      </genOperations>
     </genClasses>
     <genClasses ecoreClass="DoorsDBModel.ecore#//DBVersion">
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference DoorsDBModel.ecore#//DBVersion/module"/>
