@@ -4,7 +4,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map.Entry;
 import java.util.function.Consumer;
 
 import de.jpwinkler.daf.csveditor.CSVEditorApplication;
@@ -15,14 +18,21 @@ import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBItem;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBModule;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBTag;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBVersion;
+import de.jpwinkler.daf.doorsdb.search.DBSearchExpression;
 import de.jpwinkler.libs.doorsbridge.DoorsApplication;
 import de.jpwinkler.libs.doorsbridge.DoorsApplicationFactory;
 import de.jpwinkler.libs.doorsbridge.DoorsException;
 import de.jpwinkler.libs.doorsbridge.DoorsItemType;
 import de.jpwinkler.libs.doorsbridge.ItemRef;
+import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
@@ -57,6 +67,21 @@ public class BrowserController {
     @FXML
     private ComboBox<String> newTagComboBox;
 
+    @FXML
+    private TableView<Entry<String, String>> attributesTableView;
+
+    @FXML
+    private TableColumn<Entry<String, String>, String> attributeNameColumn;
+
+    @FXML
+    private TableColumn<Entry<String, String>, String> attributeValueColumn;
+
+    @FXML
+    private TextField searchTextField;
+
+    @FXML
+    private ListView<DBModule> searchResultListView;
+
     public void setStage(final Stage primaryStage) {
         this.primaryStage = primaryStage;
     }
@@ -71,15 +96,15 @@ public class BrowserController {
 
         remoteTreeView.setOnMouseClicked(event -> {
             try {
-                if (event.getClickCount() == 2 && remoteTreeView.getSelectionModel().getSelectedItem() != null && remoteTreeView.getSelectionModel().getSelectedItem().getValue().getType() == DoorsItemType.FORMAL) {
-                    final ItemRef item = remoteTreeView.getSelectionModel().getSelectedItem().getValue();
-                    downloadQueueListView.getItems().add(item.getItemName().getFullName());
+                if (event.getClickCount() == 2) {
+                    remoteDownloadOpenPressed();
                 }
-            } catch (final DoorsException e) {
+            } catch (final Exception e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         });
+        remoteTreeView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         localTreeView.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2 && localTreeView.getSelectionModel().getSelectedItem() != null && localTreeView.getSelectionModel().getSelectedItem().getValue() instanceof DBModule) {
@@ -96,10 +121,33 @@ public class BrowserController {
         });
 
         localTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            updateTagsListView();
-            updateVersionsListView();
+            final DBModule module = newValue != null && newValue.getValue() instanceof DBModule ? (DBModule) newValue.getValue() : null;
+            updateTagsListView(module);
+            updateVersionsListView(module);
+            updateAttributesView(module);
         });
 
+        searchTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            updateSearch(newValue);
+        });
+
+        searchResultListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            final DBModule module = newValue instanceof DBModule ? (DBModule) newValue : null;
+            updateTagsListView(module);
+            updateVersionsListView(module);
+            updateAttributesView(module);
+        });
+
+        searchResultListView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2 && searchResultListView.getSelectionModel().getSelectedItem() != null && searchResultListView.getSelectionModel().getSelectedItem() instanceof DBModule) {
+                final DBModule item = searchResultListView.getSelectionModel().getSelectedItem();
+                openInCSVBrowser(item.getLatestVersion());
+
+            }
+        });
+
+        attributeNameColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getKey()));
+        attributeValueColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getValue()));
     }
 
     private void openInCSVBrowser(final DBVersion dbVersion) {
@@ -133,9 +181,10 @@ public class BrowserController {
     public void addTagPressed() throws IOException {
         final TreeItem<DBItem> selectedItem = localTreeView.getSelectionModel().getSelectedItem();
         if (selectedItem != null && selectedItem.getValue() instanceof DBModule) {
-            db.addTag((DBModule) selectedItem.getValue(), newTagComboBox.getValue());
+            final DBModule module = (DBModule) selectedItem.getValue();
+            db.addTag(module, newTagComboBox.getValue());
             db.saveDB();
-            updateTagsListView();
+            updateTagsListView(module);
             updateNewTagComboBox();
         }
     }
@@ -144,10 +193,11 @@ public class BrowserController {
     public void removeTagsPressed() throws IOException {
         final TreeItem<DBItem> selectedItem = localTreeView.getSelectionModel().getSelectedItem();
         if (selectedItem != null && selectedItem.getValue() instanceof DBModule) {
+            final DBModule module = (DBModule) selectedItem.getValue();
             for (final String tag : tagsListView.getSelectionModel().getSelectedItems()) {
-                db.removeTag((DBModule) selectedItem.getValue(), tag);
+                db.removeTag(module, tag);
             }
-            updateTagsListView();
+            updateTagsListView(module);
             db.saveDB();
         }
     }
@@ -170,11 +220,63 @@ public class BrowserController {
     public void localUpdatePressed() throws IOException, DoorsException, ParseException {
         final TreeItem<DBItem> selectedItem = localTreeView.getSelectionModel().getSelectedItem();
         if (selectedItem != null && selectedItem.getValue() instanceof DBModule) {
-            db.updateModule((DBModule) selectedItem.getValue());
+            final DBModule module = (DBModule) selectedItem.getValue();
+            db.updateModule(module);
             db.saveDB();
-            updateVersionsListView();
+            updateVersionsListView(module);
         }
 
+    }
+
+    @FXML
+    public void remoteAddToQueuePressed() throws DoorsException {
+        for (final TreeItem<ItemRef> selectedItem : remoteTreeView.getSelectionModel().getSelectedItems()) {
+            if (selectedItem.getValue().getType() == DoorsItemType.FORMAL) {
+                final ItemRef item = selectedItem.getValue();
+                downloadQueueListView.getItems().add(item.getItemName().getFullName());
+            }
+        }
+    }
+
+    @FXML
+    public void remoteDownloadPressed() throws DoorsException, IOException, CSVParseException, ParseException {
+        for (final TreeItem<ItemRef> selectedItem : remoteTreeView.getSelectionModel().getSelectedItems()) {
+            if (selectedItem.getValue().getType() == DoorsItemType.FORMAL) {
+                final ItemRef item = selectedItem.getValue();
+                db.addModule(item.getItemName().getFullName());
+                updateLocalTree();
+            }
+        }
+    }
+
+    @FXML
+    public void remoteDownloadOpenPressed() throws DoorsException, IOException, CSVParseException, ParseException {
+        for (final TreeItem<ItemRef> selectedItem : remoteTreeView.getSelectionModel().getSelectedItems()) {
+            if (selectedItem.getValue().getType() == DoorsItemType.FORMAL) {
+                final ItemRef item = selectedItem.getValue();
+                final DBModule module = db.addModule(item.getItemName().getFullName());
+                openInCSVBrowser(module.getLatestVersion());
+                updateLocalTree();
+            }
+        }
+    }
+
+    @FXML
+    public void cancelSearchPressed() {
+        searchTextField.setText("");
+        searchResultListView.setVisible(false);
+        localTreeView.setVisible(true);
+    }
+
+    private void updateSearch(final String search) {
+        searchResultListView.setVisible(true);
+        localTreeView.setVisible(false);
+        final DBSearchExpression searchExpression = DBSearchExpression.compile(search);
+        if (searchExpression != null) {
+            final List<DBModule> findModules = db.findModules(searchExpression);
+            searchResultListView.getItems().clear();
+            searchResultListView.getItems().addAll(findModules);
+        }
     }
 
     private void updateLocalTree() {
@@ -182,7 +284,7 @@ public class BrowserController {
         if (localTreeView.getRoot() != null) {
             traverseTreeItem(localTreeView.getRoot(), i -> expanded.put(i.getValue(), i.isExpanded()));
         }
-        localTreeView.setRoot(new LocalTreeItem(db.getDB().getRoot()));
+        localTreeView.setRoot(new LocalTreeItem(db.getDB().getRoot(), new ImageView(Images.IMAGE_DB)));
         traverseTreeItem(localTreeView.getRoot(), i -> i.setExpanded(expanded.containsKey(i.getValue()) && expanded.get(i.getValue())));
     }
 
@@ -191,23 +293,32 @@ public class BrowserController {
         newTagComboBox.getItems().clear();
         for (final DBTag tag : db.getDB().getTags()) {
             newTagComboBox.getItems().add(tag.getName());
+            Collections.sort(newTagComboBox.getItems());
         }
         newTagComboBox.setValue(oldValue);
     }
 
-    private void updateTagsListView() {
-        final TreeItem<DBItem> selectedItem = localTreeView.getSelectionModel().getSelectedItem();
+    private void updateTagsListView(final DBModule module) {
         tagsListView.getItems().clear();
-        if (selectedItem != null && selectedItem.getValue() instanceof DBModule) {
-            tagsListView.getItems().addAll(db.getTags((DBModule) selectedItem.getValue()));
+        if (module != null) {
+            tagsListView.getItems().addAll(db.getTags(module));
         }
     }
 
-    private void updateVersionsListView() {
-        final TreeItem<DBItem> selectedItem = localTreeView.getSelectionModel().getSelectedItem();
+    private void updateVersionsListView(final DBModule module) {
         versionsListView.getItems().clear();
-        if (selectedItem != null && selectedItem.getValue() instanceof DBModule) {
-            versionsListView.getItems().addAll(((DBModule) selectedItem.getValue()).getVersions());
+        if (module != null) {
+            versionsListView.getItems().addAll(module.getVersions());
+        }
+    }
+
+    private void updateAttributesView(final DBModule module) {
+        attributesTableView.getItems().clear();
+        if (module != null) {
+            final DBVersion latestVersion = module.getLatestVersion();
+            if (latestVersion != null) {
+                attributesTableView.setItems(FXCollections.observableArrayList(latestVersion.getAttributes().entrySet()));
+            }
         }
     }
 

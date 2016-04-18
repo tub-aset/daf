@@ -7,7 +7,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class RemoteTreeItem extends TreeItem<ItemRef> {
@@ -53,24 +52,19 @@ public class RemoteTreeItem extends TreeItem<ItemRef> {
     }
 
     private ImageView imageForType(final DoorsItemType type) {
-        String imageFile = null;
         switch (type) {
         case FOLDER:
-            imageFile = "/icons/doors_folder.png";
-            break;
+            return new ImageView(Images.IMAGE_FOLDER);
         case FORMAL:
-            imageFile = "/icons/doors_formal.png";
-            break;
+            return new ImageView(Images.IMAGE_FORMAL);
         case LINK:
-            imageFile = "/icons/doors_link.png";
-            break;
+            return new ImageView(Images.IMAGE_LINK);
         case PROJECT:
-            imageFile = "/icons/doors_project.png";
-            break;
+            return new ImageView(Images.IMAGE_PROJECT);
         default:
-            break;
+            return new ImageView();
         }
-        return new ImageView(new Image(getClass().getResourceAsStream(imageFile)));
+
     }
 
     @Override

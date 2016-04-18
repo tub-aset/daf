@@ -1,5 +1,6 @@
 package de.jpwinkler.daf.doorsdbgui;
 
+import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBFolder;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBItem;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBModule;
 import de.jpwinkler.libs.doorsbridge.DoorsException;
@@ -7,6 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
+import javafx.scene.image.ImageView;
 
 public class LocalTreeItem extends TreeItem<DBItem> {
 
@@ -41,12 +43,22 @@ public class LocalTreeItem extends TreeItem<DBItem> {
         if (getValue() != null) {
             final ObservableList<TreeItem<DBItem>> list = FXCollections.observableArrayList();
             for (final DBItem c : getValue().getChildren()) {
-                list.add(new LocalTreeItem(c));
+                list.add(new LocalTreeItem(c, imageForItem(c)));
             }
             list.sort(new DBItemComparator());
             return list;
         } else {
             return FXCollections.emptyObservableList();
+        }
+    }
+
+    private ImageView imageForItem(final DBItem item) {
+        if (item instanceof DBFolder) {
+            return new ImageView(Images.IMAGE_FOLDER);
+        } else if (item instanceof DBModule) {
+            return new ImageView(Images.IMAGE_FORMAL);
+        } else {
+            return new ImageView();
         }
     }
 
