@@ -155,13 +155,16 @@
                                           <RadioButton fx:id="massEditSelectedObjectsCheckBox" mnemonicParsing="false" text="All Selected Objects" toggleGroup="$massEditTarget" />
                                           <RadioButton fx:id="massEditFilteredObjectsCheckBox" mnemonicParsing="false" text="All Visible Objects" toggleGroup="$massEditTarget" />
                                           <Separator prefWidth="200.0" />
-                                          <RadioButton fx:id="massEditSetAttributeCheckBox" mnemonicParsing="false" text="Set Attribute">
+                                          <RadioButton fx:id="massEditSetAttributeCheckBox" mnemonicParsing="false" selected="true" text="Set Attribute">
                                              <toggleGroup>
                                                 <ToggleGroup fx:id="massEditAction" />
                                              </toggleGroup>
                                           </RadioButton>
                                           <TextField fx:id="massEditSetAttributeNameTextField" />
                                           <TextField fx:id="massEditSetAttributeValueTextField" />
+                                          <RadioButton fx:id="massEditCopyAttributeCheckBox" mnemonicParsing="false" text="Copy Attribute" toggleGroup="$massEditAction" />
+                                          <TextField fx:id="massEditCopyAttributeFromTextField" />
+                                          <TextField fx:id="massEditCopyAttributeToTextField" />
                                           <Separator prefWidth="200.0" />
                                           <Button mnemonicParsing="false" onAction="#massEditRunClicked" text="Run" />
                                        </children>

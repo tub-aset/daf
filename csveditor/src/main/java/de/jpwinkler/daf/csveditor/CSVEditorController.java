@@ -15,6 +15,7 @@ import de.jpwinkler.daf.csveditor.background.BackgroundTask;
 import de.jpwinkler.daf.csveditor.background.BackgroundTaskStatusListener;
 import de.jpwinkler.daf.csveditor.background.BackgroundTaskStatusMonitor;
 import de.jpwinkler.daf.csveditor.commands.UpdateAction;
+import de.jpwinkler.daf.csveditor.massedit.CopyAttributeOperation;
 import de.jpwinkler.daf.csveditor.massedit.MassEditOperation;
 import de.jpwinkler.daf.csveditor.massedit.MassEditTarget;
 import de.jpwinkler.daf.csveditor.massedit.SetAttributeOperation;
@@ -98,13 +99,13 @@ public class CSVEditorController {
     private final BackgroundTaskStatusMonitor backgroundTaskStatusMonitor = new BackgroundTaskStatusMonitor();
 
     @FXML
-    TextArea preprocessorTextArea;
+    private TextArea preprocessorTextArea;
 
     @FXML
-    CheckBox preprocessorEnableCheckBox;
+    private CheckBox preprocessorEnableCheckBox;
 
     @FXML
-    ToggleButton filterExpressionToggleButton;
+    private ToggleButton filterExpressionToggleButton;
 
     @FXML
     private RadioButton massEditAllObjectsCheckBox;
@@ -120,6 +121,15 @@ public class CSVEditorController {
     private TextField massEditSetAttributeNameTextField;
     @FXML
     private TextField massEditSetAttributeValueTextField;
+
+    @FXML
+    private RadioButton massEditCopyAttributeCheckBox;
+
+    @FXML
+    private TextField massEditCopyAttributeFromTextField;
+
+    @FXML
+    private TextField massEditCopyAttributeToTextField;
 
     @FXML
     private Label backgroundTaskStatusLabel;
@@ -558,6 +568,8 @@ public class CSVEditorController {
 
         if (massEditSetAttributeCheckBox.isSelected()) {
             operation = new SetAttributeOperation(massEditSetAttributeNameTextField.getText(), massEditSetAttributeValueTextField.getText());
+        } else if (massEditCopyAttributeCheckBox.isSelected()) {
+            operation = new CopyAttributeOperation(massEditCopyAttributeFromTextField.getText(), massEditCopyAttributeToTextField.getText());
         } else {
             throw new RuntimeException("No viable operation for mass edit found.");
         }
