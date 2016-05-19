@@ -2,7 +2,6 @@
  */
 package de.jpwinkler.daf.doorsdb.doorsdbmodel.impl;
 
-import de.jpwinkler.daf.doorsdb.doorsdbmodel.*;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;

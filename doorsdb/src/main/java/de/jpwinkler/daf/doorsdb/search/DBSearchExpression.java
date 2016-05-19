@@ -1,13 +1,33 @@
 package de.jpwinkler.daf.doorsdb.search;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.Recognizer;
 
 import de.jpwinkler.daf.doorsdb.DBSearchLexer;
 import de.jpwinkler.daf.doorsdb.DBSearchParser;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBModule;
 
 public abstract class DBSearchExpression {
+
+    private static class MyErrorListener extends BaseErrorListener {
+
+        private final List<String> errors = new ArrayList<>();
+
+        @Override
+        public void syntaxError(final Recognizer<?, ?> recognizer, final Object offendingSymbol, final int line, final int charPositionInLine, final String msg, final RecognitionException e) {
+            errors.add("line " + line + ":" + charPositionInLine + " " + msg);
+        }
+
+        public List<String> getErrors() {
+            return errors;
+        }
+    }
 
     public abstract boolean matches(DBModule module);
 
@@ -18,8 +38,14 @@ public abstract class DBSearchExpression {
         final DBSearchListenerImpl listener = new DBSearchListenerImpl();
 
         parser.addParseListener(listener);
+        final MyErrorListener errorListener = new MyErrorListener();
+        parser.addErrorListener(errorListener);
         parser.searchExpression();
-        return listener.getSearchExpression();
+        if (errorListener.getErrors().isEmpty()) {
+            return listener.getSearchExpression();
+        } else {
+            return null;
+        }
 
     }
 
