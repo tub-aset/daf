@@ -40,6 +40,7 @@
          <bottom>
             <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <items>
+                  <ToggleButton fx:id="fullTextToggleButton" mnemonicParsing="false" text="Fulltext" />
                   <TextField fx:id="searchTextField" prefHeight="25.0" prefWidth="305.0" />
                   <Button mnemonicParsing="false" onAction="#cancelSearchPressed" text="X" />
                </items>
@@ -56,6 +57,7 @@
                <children>
                         <TreeView fx:id="localTreeView" style="-fx-background-color: transparent;" />
                   <ListView fx:id="searchResultListView" style="-fx-background-color: transparent;" visible="false" />
+                  <ListView fx:id="fullTextSearchResultListView" visible="false" />
                </children>
             </GridPane>
          </center>

@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.function.Consumer;
 
+import org.apache.lucene.document.Document;
+
 import de.jpwinkler.daf.csveditor.CSVEditorApplication;
 import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.util.CSVParseException;
 import de.jpwinkler.daf.doorsdb.DoorsDBInterface;
@@ -25,6 +27,7 @@ import de.jpwinkler.libs.doorsbridge.DoorsException;
 import de.jpwinkler.libs.doorsbridge.DoorsItemType;
 import de.jpwinkler.libs.doorsbridge.ItemRef;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -33,6 +36,7 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
@@ -82,6 +86,14 @@ public class BrowserController {
     @FXML
     private ListView<DBModule> searchResultListView;
 
+    @FXML
+    private ListView<Document> fullTextSearchResultListView;
+
+    @FXML
+    private ToggleButton fullTextToggleButton;
+
+    private final SimpleObjectProperty<DBItem> selectedItem = new SimpleObjectProperty<>();
+
     public void setStage(final Stage primaryStage) {
         this.primaryStage = primaryStage;
     }
@@ -110,7 +122,6 @@ public class BrowserController {
             if (event.getClickCount() == 2 && localTreeView.getSelectionModel().getSelectedItem() != null && localTreeView.getSelectionModel().getSelectedItem().getValue() instanceof DBModule) {
                 final DBModule item = (DBModule) localTreeView.getSelectionModel().getSelectedItem().getValue();
                 openInCSVBrowser(item.getLatestVersion());
-
             }
         });
 
@@ -120,23 +131,11 @@ public class BrowserController {
             }
         });
 
-        localTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            final DBModule module = newValue != null && newValue.getValue() instanceof DBModule ? (DBModule) newValue.getValue() : null;
-            updateTagsListView(module);
-            updateVersionsListView(module);
-            updateAttributesView(module);
-        });
+        localTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> selectedItem.set(newValue != null ? newValue.getValue() : null));
 
-        searchTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            updateSearch(newValue);
-        });
+        searchTextField.textProperty().addListener((observable, oldValue, newValue) -> updateSearch(newValue));
 
-        searchResultListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            final DBModule module = newValue instanceof DBModule ? (DBModule) newValue : null;
-            updateTagsListView(module);
-            updateVersionsListView(module);
-            updateAttributesView(module);
-        });
+        searchResultListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> selectedItem.set(newValue));
 
         searchResultListView.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2 && searchResultListView.getSelectionModel().getSelectedItem() != null && searchResultListView.getSelectionModel().getSelectedItem() instanceof DBModule) {
@@ -146,8 +145,16 @@ public class BrowserController {
             }
         });
 
+        fullTextSearchResultListView.setCellFactory(param -> new MyListCell());
+
         attributeNameColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getKey()));
         attributeValueColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getValue()));
+
+        selectedItem.addListener((observable, oldValue, newValue) -> {
+            updateTagsListView();
+            updateVersionsListView();
+            updateAttributesView();
+        });
     }
 
     private void openInCSVBrowser(final DBVersion dbVersion) {
@@ -170,7 +177,7 @@ public class BrowserController {
                 db.addModule(item);
             }
             downloadQueueListView.getItems().clear();
-        } catch (DoorsException | IOException | CSVParseException | ParseException e) {
+        } catch (DoorsException | IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
@@ -179,38 +186,35 @@ public class BrowserController {
 
     @FXML
     public void addTagPressed() throws IOException {
-        final TreeItem<DBItem> selectedItem = localTreeView.getSelectionModel().getSelectedItem();
-        if (selectedItem != null && selectedItem.getValue() instanceof DBModule) {
-            final DBModule module = (DBModule) selectedItem.getValue();
+        if (selectedItem.get() instanceof DBModule) {
+            final DBModule module = (DBModule) selectedItem.get();
             db.addTag(module, newTagComboBox.getValue());
             db.saveDB();
-            updateTagsListView(module);
+            updateTagsListView();
             updateNewTagComboBox();
         }
     }
 
     @FXML
     public void removeTagsPressed() throws IOException {
-        final TreeItem<DBItem> selectedItem = localTreeView.getSelectionModel().getSelectedItem();
-        if (selectedItem != null && selectedItem.getValue() instanceof DBModule) {
-            final DBModule module = (DBModule) selectedItem.getValue();
+        if (selectedItem.get() instanceof DBModule) {
+            final DBModule module = (DBModule) selectedItem.get();
             for (final String tag : tagsListView.getSelectionModel().getSelectedItems()) {
                 db.removeTag(module, tag);
             }
-            updateTagsListView(module);
+            updateTagsListView();
             db.saveDB();
         }
     }
 
     @FXML
     public void localDeletePressed() throws IOException {
-        final TreeItem<DBItem> selectedItem = localTreeView.getSelectionModel().getSelectedItem();
-        if (selectedItem != null && selectedItem.getValue() instanceof DBModule) {
-            db.removeModule((DBModule) selectedItem.getValue());
+        if (selectedItem.getValue() instanceof DBModule) {
+            db.removeModule((DBModule) selectedItem.get());
             updateLocalTree();
             db.saveDB();
-        } else if (selectedItem != null && selectedItem.getValue() instanceof DBFolder) {
-            db.removeFolder((DBFolder) selectedItem.getValue());
+        } else if (selectedItem.getValue() instanceof DBFolder) {
+            db.removeFolder((DBFolder) selectedItem.get());
             updateLocalTree();
             db.saveDB();
         }
@@ -218,12 +222,11 @@ public class BrowserController {
 
     @FXML
     public void localUpdatePressed() throws IOException, DoorsException, ParseException {
-        final TreeItem<DBItem> selectedItem = localTreeView.getSelectionModel().getSelectedItem();
-        if (selectedItem != null && selectedItem.getValue() instanceof DBModule) {
+        if (selectedItem.getValue() instanceof DBModule) {
             final DBModule module = (DBModule) selectedItem.getValue();
             db.updateModule(module);
             db.saveDB();
-            updateVersionsListView(module);
+            updateVersionsListView();
         }
 
     }
@@ -265,17 +268,31 @@ public class BrowserController {
     public void cancelSearchPressed() {
         searchTextField.setText("");
         searchResultListView.setVisible(false);
+        fullTextSearchResultListView.setVisible(false);
         localTreeView.setVisible(true);
+        selectedItem.set(localTreeView.getSelectionModel().getSelectedItem() != null ? localTreeView.getSelectionModel().getSelectedItem().getValue() : null);
     }
 
     private void updateSearch(final String search) {
-        searchResultListView.setVisible(true);
+        if (!searchResultListView.isVisible()) {
+            selectedItem.set(null);
+            searchResultListView.getSelectionModel().clearSelection();
+        }
+        final boolean fullText = fullTextToggleButton.isSelected();
+        searchResultListView.setVisible(!fullText);
+        fullTextSearchResultListView.setVisible(fullText);
         localTreeView.setVisible(false);
-        final DBSearchExpression searchExpression = DBSearchExpression.compile(search);
-        if (searchExpression != null) {
-            final List<DBModule> findModules = db.findModules(searchExpression);
-            searchResultListView.getItems().clear();
-            searchResultListView.getItems().addAll(findModules);
+        if (fullText) {
+            final List<Document> result = db.findObjects(search, 50);
+            fullTextSearchResultListView.getItems().clear();
+            fullTextSearchResultListView.getItems().addAll(result);
+        } else {
+            final DBSearchExpression searchExpression = DBSearchExpression.compile(search);
+            if (searchExpression != null) {
+                final List<DBModule> findModules = db.findModules(searchExpression);
+                searchResultListView.getItems().clear();
+                searchResultListView.getItems().addAll(findModules);
+            }
         }
     }
 
@@ -298,24 +315,24 @@ public class BrowserController {
         newTagComboBox.setValue(oldValue);
     }
 
-    private void updateTagsListView(final DBModule module) {
+    private void updateTagsListView() {
         tagsListView.getItems().clear();
-        if (module != null) {
-            tagsListView.getItems().addAll(db.getTags(module));
+        if (selectedItem.get() instanceof DBModule) {
+            tagsListView.getItems().addAll(db.getTags((DBModule) selectedItem.get()));
         }
     }
 
-    private void updateVersionsListView(final DBModule module) {
+    private void updateVersionsListView() {
         versionsListView.getItems().clear();
-        if (module != null) {
-            versionsListView.getItems().addAll(module.getVersions());
+        if (selectedItem.get() instanceof DBModule) {
+            versionsListView.getItems().addAll(((DBModule) selectedItem.get()).getVersions());
         }
     }
 
-    private void updateAttributesView(final DBModule module) {
+    private void updateAttributesView() {
         attributesTableView.getItems().clear();
-        if (module != null) {
-            final DBVersion latestVersion = module.getLatestVersion();
+        if (selectedItem.get() instanceof DBModule) {
+            final DBVersion latestVersion = ((DBModule) selectedItem.get()).getLatestVersion();
             if (latestVersion != null) {
                 attributesTableView.setItems(FXCollections.observableArrayList(latestVersion.getAttributes().entrySet()));
             }
