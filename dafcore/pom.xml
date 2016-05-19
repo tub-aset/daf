@@ -67,11 +67,6 @@
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>org.mozilla</groupId>
-			<artifactId>rhino</artifactId>
-			<version>1.7.7</version>
-		</dependency>
-		<dependency>
 			<groupId>de.jpwinkler.libs</groupId>
 			<artifactId>doorsbridge</artifactId>
 			<version>0.0.1-SNAPSHOT</version>

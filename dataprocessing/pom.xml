@@ -44,29 +44,24 @@
 		<dependency>
 			<groupId>edu.stanford.nlp</groupId>
 			<artifactId>stanford-parser</artifactId>
-			<version>3.5.2</version>
+			<version>3.6.0</version>
 		</dependency>
 		<dependency>
 			<groupId>edu.stanford.nlp</groupId>
 			<artifactId>stanford-parser</artifactId>
-			<version>3.5.2</version>
+			<version>3.6.0</version>
 			<classifier>models</classifier>
 		</dependency>
-		
+
 		<dependency>
-			<groupId>org.deeplearning4j</groupId>
-			<artifactId>deeplearning4j-nlp</artifactId>
-			<version>0.4-rc3.8</version>
+			<groupId>de.jpwinkler.daf</groupId>
+			<artifactId>doorsdb</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>org.deeplearning4j</groupId>
-			<artifactId>deeplearning4j-ui</artifactId>
-			<version>0.4-rc3.8</version>
-		</dependency>
-		<dependency>
-			<groupId>org.nd4j</groupId>
-			<artifactId>nd4j-x86</artifactId>
-			<version>0.4-rc3.8</version>
+			<groupId>de.jpwinkler.daf</groupId>
+			<artifactId>reqinfclassifier</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>
