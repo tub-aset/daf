@@ -352,4 +352,8 @@ public class DoorsDBInterface {
         return current.getModule(pathSegments.get(pathSegments.size() - 1));
     }
 
+    public static DoorsDBInterface getDefaultDatabase() throws FileNotFoundException, IOException {
+        return createOrOpenDB(new File("C:/WORK/DoorsDB/db.doorsdbmodel"));
+    }
+
 }

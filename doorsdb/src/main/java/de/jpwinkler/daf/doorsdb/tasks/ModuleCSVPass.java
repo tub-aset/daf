@@ -8,31 +8,30 @@ import de.jpwinkler.daf.dafcore.csv.ModuleCSVParser;
 import de.jpwinkler.daf.dafcore.csv.ModuleCSVWriter;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.util.CSVParseException;
-import de.jpwinkler.daf.doorsdb.DoorsDBInterface;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBModule;
 
-public abstract class ModuleCSVTask extends ModuleTask {
+public abstract class ModuleCSVPass extends ModulePass {
 
-    private boolean saveModule = false;
+    private boolean saveModule;
     private DoorsModule parsedModule;
+    private DBModule module;
 
-    public ModuleCSVTask(final DoorsDBInterface databaseInterface) {
-        super(databaseInterface);
+    protected void preprocessParsedModule(final DoorsModule module) {
     }
 
-    public ModuleCSVTask(final DoorsDBInterface databaseInterface, final ModuleSource source) {
-        super(databaseInterface, source);
+    protected void postprocessParsedModule(final DoorsModule module) {
     }
 
     @Override
     protected void processModule(final DBModule module) {
+        this.module = module;
         try {
             saveModule = false;
             final File f = new File(module.getLatestVersion().getCsvLocation());
             parsedModule = new ModuleCSVParser().parseCSV(f);
-            preprocessParsedModule();
-            processParsedModule();
-            postprocessParsedModule();
+            preprocessParsedModule(parsedModule);
+            processParsedModule(parsedModule);
+            postprocessParsedModule(parsedModule);
             if (saveModule) {
                 try (ModuleCSVWriter writer = new ModuleCSVWriter(new FileOutputStream(f))) {
                     writer.writeModule(parsedModule);
@@ -44,13 +43,11 @@ public abstract class ModuleCSVTask extends ModuleTask {
         }
     }
 
-    protected void preprocessParsedModule() {
-    }
+    protected abstract void processParsedModule(DoorsModule module);
 
-    protected void postprocessParsedModule() {
+    public DBModule getModule() {
+        return module;
     }
-
-    protected abstract void processParsedModule();
 
     protected DoorsModule getParsedModule() {
         return parsedModule;

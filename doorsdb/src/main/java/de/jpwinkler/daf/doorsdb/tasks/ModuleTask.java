@@ -1,40 +1,51 @@
 package de.jpwinkler.daf.doorsdb.tasks;
 
 import java.io.IOException;
+import java.util.List;
 
 import de.jpwinkler.daf.dafcore.util.Counter;
 import de.jpwinkler.daf.doorsdb.DoorsDBInterface;
-import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBModule;
+import de.jpwinkler.daf.doorsdb.search.DBSearchExpression;
 
-public abstract class ModuleTask extends DoorsDBTask {
-
-    private boolean saveDatabase = false;
+public class ModuleTask extends DoorsDBTask {
 
     private final ModuleSource source;
 
-    private DBModule module = null;
+    private final List<ModulePass> passes;
 
-    public ModuleTask(final DoorsDBInterface databaseInterface) {
-        this(databaseInterface, new AllModulesSource(databaseInterface));
-    }
+    private boolean saveDatabase = false;
 
-    public ModuleTask(final DoorsDBInterface databaseInterface, final ModuleSource source) {
+    private final DBSearchExpression filter;
+
+    public ModuleTask(final DoorsDBInterface databaseInterface, final List<ModulePass> passes, final ModuleSource source, final DBSearchExpression filter) {
         super(databaseInterface);
         this.source = source;
+        this.passes = passes;
+        this.filter = filter;
     }
 
     @Override
     public void execute() {
         preprocess();
-        final Counter moduleCounter = new Counter();
-        source.run(m -> {
-            module = m;
-            preprocessModule();
-            processModule(m);
-            postprocessModule();
-            moduleCounter.inc();
+        saveDatabase = false;
+        passes.forEach(p -> {
+            final Counter moduleCounter = new Counter();
+            p.setDatabaseInterface(getDatabaseInterface());
+            p.preprocess();
+            source.run(getDatabaseInterface(), m -> {
+                if (filter == null || filter.matches(m)) {
+                    p.preprocessModule(m);
+                    p.processModule(m);
+                    p.postprocessModule(m);
+
+                    if (p.isSaveDatabase()) {
+                        saveDatabase = true;
+                    }
+                }
+            });
+            p.postprocess();
+            System.out.println(moduleCounter.get() + " modules processed.");
         });
-        System.out.println(moduleCounter.get() + " modules processed.");
         postprocess();
         if (saveDatabase) {
             try {
@@ -50,21 +61,5 @@ public abstract class ModuleTask extends DoorsDBTask {
     }
 
     protected void postprocess() {
-    }
-
-    protected void preprocessModule() {
-    }
-
-    protected void postprocessModule() {
-    }
-
-    protected DBModule getModule() {
-        return module;
-    }
-
-    protected abstract void processModule(DBModule module);
-
-    protected void saveDatabase() {
-        saveDatabase = true;
     }
 }
