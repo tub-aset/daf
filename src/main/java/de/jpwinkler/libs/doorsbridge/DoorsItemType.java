@@ -19,14 +19,16 @@ package de.jpwinkler.libs.doorsbridge;
 
 public enum DoorsItemType {
 
-    PROJECT,
+	PROJECT,
 
-    FOLDER,
+	FOLDER,
 
-    FORMAL,
+	FORMAL,
 
-    LINK,
+	LINK,
 
-    UNKNOWN
+	DESCRIPTIVE,
+
+	UNKNOWN
 
 }
