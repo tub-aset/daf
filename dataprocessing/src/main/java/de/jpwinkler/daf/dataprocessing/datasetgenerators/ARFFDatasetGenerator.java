@@ -12,15 +12,15 @@ public class ARFFDatasetGenerator<E> extends DatasetGenerator<E, String> {
 
     private Instances data;
     private Attribute classAttribute;
-	private OutputStream stream;
+    private OutputStream stream;
 
     public ARFFDatasetGenerator(final LabelGenerator<E> labelGenerator, final boolean unique) {
         super(labelGenerator, unique);
     }
-    
+
     @Override
-    protected void setStream(OutputStream stream) {
-    	this.stream = stream;
+    protected void setStream(final OutputStream stream) {
+        this.stream = stream;
     }
 
     @Override
@@ -32,7 +32,9 @@ public class ARFFDatasetGenerator<E> extends DatasetGenerator<E, String> {
         }
 
         final ArrayList<String> classValues = new ArrayList<>(getLabels().keySet());
-        classValues.add(0, "");
+        if (!classValues.contains("")) {
+            classValues.add(0, "");
+        }
         classAttribute = new Attribute("$class$", classValues);
         attributes.add(classAttribute);
 
@@ -42,10 +44,10 @@ public class ARFFDatasetGenerator<E> extends DatasetGenerator<E, String> {
 
     @Override
     protected void addDatasetRecord(final E object, final int[] featureVector, final String outcome) throws IOException {
-    	final double[] dataVector = new double[featureVector.length+1];
-    	for (int i = 0; i < featureVector.length; i++) {
-			dataVector[i] = featureVector[i];
-		}
+        final double[] dataVector = new double[featureVector.length+1];
+        for (int i = 0; i < featureVector.length; i++) {
+            dataVector[i] = featureVector[i];
+        }
         dataVector[dataVector.length - 1] = classAttribute.indexOfValue(outcome);
         data.add(new SparseInstance(1, dataVector));
     }

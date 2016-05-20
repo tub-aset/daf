@@ -34,7 +34,7 @@ public class ObjectTextPreprocessor {
 
     public String preprocessTextToString(final String text) {
         if (enabled) {
-            return StringUtils.join(preprocessText(text), " ");
+            return StringUtils.join(preprocessText(text), "");
         } else {
             return text;
         }

@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -31,25 +30,33 @@ public abstract class DatasetGenerator<E, F> {
         return labelGenerator.hasLabel(object);
     }
 
-    public void init(final Iterator<E> iterator, final FeatureVectorGenerator<E, F> featureVectorGenerator) throws IOException {
+    public ElementSink<E> init(final FeatureVectorGenerator<E, F> featureVectorGenerator) throws IOException {
         this.featureVectorGenerator = featureVectorGenerator;
 
         outcomes.clear();
 
-        while (iterator.hasNext()) {
-            final E element = iterator.next();
-            if (isObjectValid(element)) {
-                featureVectorGenerator.addElement(element);
-                final List<String> labels = labelGenerator.getLabels(element);
-                for (final String label : labels) {
-                    if (!outcomes.containsKey(label)) {
-                        outcomes.put(label, outcomes.size());
+        return new ElementSink<E>() {
+
+            @Override
+            public void add(final E element) {
+                if (isObjectValid(element)) {
+                    featureVectorGenerator.addElement(element);
+                    final List<String> labels = labelGenerator.getLabels(element);
+                    for (final String label : labels) {
+                        if (!outcomes.containsKey(label)) {
+                            outcomes.put(label, outcomes.size());
+                        }
                     }
                 }
             }
-        }
-        featureVectorGenerator.filter();
-        featureVectorGenerator.buildFeatureIndexMap();
+
+            @Override
+            public void finish() {
+                featureVectorGenerator.filter();
+                featureVectorGenerator.buildFeatureIndexMap();
+            }
+
+        };
 
     }
 
@@ -61,41 +68,48 @@ public abstract class DatasetGenerator<E, F> {
         return Collections.unmodifiableMap(outcomes);
     }
 
-    public final void generateDataset(final Iterator<E> iterator, final OutputStream stream) throws IOException {
+    public final ElementSink<E> generateDataset(final OutputStream stream) throws IOException {
         final Set<Integer> examples = new HashSet<>();
-        
+
         setStream(stream);
 
         beforeDatasetGeneration();
 
-        while (iterator.hasNext()) {
-            final E element = iterator.next();
-            if (isObjectValid(element)) {
-                final int[] featureVector = featureVectorGenerator.getFeatureVector(element);
-                final List<String> labels = labelGenerator.getLabels(element);
-                final int hashCode = 997 * Arrays.toString(featureVector).hashCode() ^ 991 * labels.hashCode();
+        return new ElementSink<E>() {
 
-                if (!unique || !examples.contains(hashCode)) {
-                    examples.add(hashCode);
-                    try {
-                        if (labels.size() > 1) {
-                            addMultiClassDatasetRecord(element, featureVector, labels);
-                        } else {
-                            addDatasetRecord(element, featureVector, labels.get(0));
+            @Override
+            public void add(final E element) {
+                if (isObjectValid(element)) {
+                    final int[] featureVector = featureVectorGenerator.getFeatureVector(element);
+                    final List<String> labels = labelGenerator.getLabels(element);
+                    final int hashCode = 997 * Arrays.toString(featureVector).hashCode() ^ 991 * labels.hashCode();
+
+                    if (!unique || !examples.contains(hashCode)) {
+                        examples.add(hashCode);
+                        try {
+                            if (labels.size() > 1) {
+                                addMultiClassDatasetRecord(element, featureVector, labels);
+                            } else {
+                                addDatasetRecord(element, featureVector, labels.get(0));
+                            }
+                        } catch (final IOException e) {
+                            e.printStackTrace();
                         }
-                    } catch (final IOException e) {
-                        e.printStackTrace();
                     }
                 }
             }
-        }
 
-        afterDatasetGeneration();
+            @Override
+            public void finish() throws IOException {
+                afterDatasetGeneration();
+            }
+        };
+
     }
 
     protected abstract void setStream(OutputStream stream);
 
-	protected void beforeDatasetGeneration() throws IOException {
+    protected void beforeDatasetGeneration() throws IOException {
     }
 
     protected void addMultiClassDatasetRecord(final E object, final int[] featureVector, final List<String> outcome) throws IOException {

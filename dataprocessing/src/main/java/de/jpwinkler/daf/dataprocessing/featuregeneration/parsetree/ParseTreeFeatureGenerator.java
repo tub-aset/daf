@@ -41,8 +41,8 @@ public class ParseTreeFeatureGenerator extends FeatureGenerator<DoorsObject, Str
 
             final DocumentPreprocessor preprocessor = new DocumentPreprocessor(new StringReader(line));
 
-            for (final List<HasWord> x : preprocessor) {
-                final Tree tree = parser.apply(x);
+            for (final List<HasWord> sentence : preprocessor) {
+                final Tree tree = parser.apply(sentence);
 
                 ParseTreeUtils.traverseTree(tree, t -> {
                     processTree(t);
