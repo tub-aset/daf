@@ -76,10 +76,8 @@ public class CSVEditorTabController {
     private static final Logger LOGGER = Logger.getLogger(CSVEditorTabController.class.getName());
 
     private static final String MAIN_COLUMN = "Object Heading & Object Text";
-    private static final String SYNTACTIC_TYPE_COLUMN = "SyntacticType";
-    private static final String LANGUAGE_COLUMN = "Language";
 
-    private static final List<String> WANTED_ATTRIBUTES = Arrays.asList("SourceID", LANGUAGE_COLUMN, SYNTACTIC_TYPE_COLUMN, MAIN_COLUMN, "Object Type", "Potential Verification Method");
+    private static final List<String> WANTED_ATTRIBUTES = Arrays.asList("SourceID", MAIN_COLUMN, "Object Type");
 
 
     private Stage primaryStage;
@@ -178,13 +176,6 @@ public class CSVEditorTabController {
         columnDefinition.setVisible(true);
         viewModel.getDisplayedColumns().add(columnDefinition);
 
-        columnDefinition = new ColumnDefinition();
-        columnDefinition.setColumnType(ColumnType.SYNTACTIC_TYPE);
-        columnDefinition.setColumnTitle(SYNTACTIC_TYPE_COLUMN);
-        columnDefinition.setWidth(100);
-        columnDefinition.setVisible(true);
-        viewModel.getDisplayedColumns().add(columnDefinition);
-
         for (final AttributeDefinition attributeDefinition : module.getAttributeDefinitions()) {
             columnDefinition = new ColumnDefinition();
             columnDefinition.setColumnType(ColumnType.ATTRIBUTE_COLUMN);
@@ -233,10 +224,6 @@ public class CSVEditorTabController {
                     // contentTableView.edit(contentTableView.getFocusModel().getFocusedIndex(),
                     // contentTableView.getFocusModel().getFocusedCell().getTableColumn());
                 });
-                break;
-            case SYNTACTIC_TYPE:
-                c.setCellFactory(TextFieldTableCell.forTableColumn());
-                c.setCellValueFactory(new SyntacticTypeCellValueFactory());
                 break;
             }
             contentTableView.getColumns().add(c);

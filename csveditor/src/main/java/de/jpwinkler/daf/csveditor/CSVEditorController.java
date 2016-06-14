@@ -45,13 +45,10 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TitledPane;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
@@ -65,8 +62,6 @@ public class CSVEditorController {
     private final Map<Tab, CSVEditorTabController> tabControllers = new HashMap<>();
 
     final FileChooser chooser = new FileChooser();
-
-    final ToggleGroup algorithmToggleGroup = new ToggleGroup();
 
     @FXML
     private TabPane tabPane;
@@ -82,12 +77,6 @@ public class CSVEditorController {
 
     @FXML
     private TreeView<OutlineTreeItem> outlineTreeView;
-
-    @FXML
-    private TitledPane trainingDataContainer;
-
-    @FXML
-    private GridPane resultGridPane;
 
     @FXML
     private Label statusBarLabel;
