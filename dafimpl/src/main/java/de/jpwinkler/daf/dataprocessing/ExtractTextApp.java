@@ -12,8 +12,8 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
+import de.jpwinkler.daf.dafcore.util.WeightedRandomNumberGenerator;
 import de.jpwinkler.daf.dataprocessing.preprocessing.ObjectTextPreprocessor;
-import de.jpwinkler.daf.dataprocessing.utils.WeightedRandomNumberGenerator;
 import de.jpwinkler.daf.doorsdb.search.HasTagsSearchExpression;
 
 public class ExtractTextApp extends AbstractApp {
