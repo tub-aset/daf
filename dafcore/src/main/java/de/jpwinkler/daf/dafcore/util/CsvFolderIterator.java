@@ -11,7 +11,6 @@ import org.apache.commons.io.FilenameUtils;
 import de.jpwinkler.daf.dafcore.csv.ModuleCSVParser;
 import de.jpwinkler.daf.dafcore.csv.ModuleMetaDataParser;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
-import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.util.CSVParseException;
 
 public class CsvFolderIterator implements Iterator<DoorsModule> {
 

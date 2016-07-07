@@ -9,13 +9,11 @@
 
 	<modules>
 		<module>../dafcore</module>
-		<module>../fap5</module>
-		<module>../workflowdsl</module>
-		<module>../fap5gui</module>
-		<module>../documenttagging</module>
+		<module>../dafimpl</module>
 		<module>../csveditor</module>
 		<module>../dataprocessing</module>
 		<module>../doorsdb</module>
+		<module>../doorsdbgui</module>
 	</modules>
 
 	<build>

@@ -13,13 +13,13 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EcoreEMap;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor;
-import de.jpwinkler.daf.dafcore.model.common.impl.ModelObjectImpl;
 import de.jpwinkler.daf.dafcore.model.csv.CSVPackage;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
@@ -39,7 +39,7 @@ import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
  *
  * @generated
  */
-public class DoorsTreeNodeImpl extends ModelObjectImpl implements DoorsTreeNode {
+public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements DoorsTreeNode {
     /**
      * The cached value of the '{@link #getChildren() <em>Children</em>}' containment reference list.
      * <!-- begin-user-doc -->

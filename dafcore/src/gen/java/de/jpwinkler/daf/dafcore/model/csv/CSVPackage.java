@@ -9,8 +9,6 @@ import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 
-import de.jpwinkler.daf.dafcore.model.common.CommonPackage;
-
 /**
  * <!-- begin-user-doc -->
  * The <b>Package</b> for the model.
@@ -71,22 +69,13 @@ public interface CSVPackage extends EPackage {
     int DOORS_TREE_NODE = 6;
 
     /**
-     * The feature id for the '<em><b>Source</b></em>' reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int DOORS_TREE_NODE__SOURCE = CommonPackage.MODEL_OBJECT__SOURCE;
-
-    /**
      * The feature id for the '<em><b>Children</b></em>' containment reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DOORS_TREE_NODE__CHILDREN = CommonPackage.MODEL_OBJECT_FEATURE_COUNT + 0;
+    int DOORS_TREE_NODE__CHILDREN = 0;
 
     /**
      * The feature id for the '<em><b>Parent</b></em>' container reference.
@@ -95,7 +84,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_TREE_NODE__PARENT = CommonPackage.MODEL_OBJECT_FEATURE_COUNT + 1;
+    int DOORS_TREE_NODE__PARENT = 1;
 
     /**
      * The feature id for the '<em><b>Attributes</b></em>' map.
@@ -104,7 +93,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_TREE_NODE__ATTRIBUTES = CommonPackage.MODEL_OBJECT_FEATURE_COUNT + 2;
+    int DOORS_TREE_NODE__ATTRIBUTES = 2;
 
     /**
      * The number of structural features of the '<em>Doors Tree Node</em>' class.
@@ -113,7 +102,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_TREE_NODE_FEATURE_COUNT = CommonPackage.MODEL_OBJECT_FEATURE_COUNT + 3;
+    int DOORS_TREE_NODE_FEATURE_COUNT = 3;
 
     /**
      * The operation id for the '<em>Accept</em>' operation.
@@ -122,7 +111,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_TREE_NODE___ACCEPT__DOORSTREENODEVISITOR = CommonPackage.MODEL_OBJECT_OPERATION_COUNT + 0;
+    int DOORS_TREE_NODE___ACCEPT__DOORSTREENODEVISITOR = 0;
 
     /**
      * The number of operations of the '<em>Doors Tree Node</em>' class.
@@ -131,7 +120,7 @@ public interface CSVPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_TREE_NODE_OPERATION_COUNT = CommonPackage.MODEL_OBJECT_OPERATION_COUNT + 1;
+    int DOORS_TREE_NODE_OPERATION_COUNT = 1;
 
     /**
      * The meta object id for the '{@link de.jpwinkler.daf.dafcore.model.csv.impl.DoorsModuleImpl <em>Doors Module</em>}' class.
@@ -142,15 +131,6 @@ public interface CSVPackage extends EPackage {
      * @generated
      */
     int DOORS_MODULE = 0;
-
-    /**
-     * The feature id for the '<em><b>Source</b></em>' reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int DOORS_MODULE__SOURCE = DOORS_TREE_NODE__SOURCE;
 
     /**
      * The feature id for the '<em><b>Children</b></em>' containment reference list.
@@ -278,15 +258,6 @@ public interface CSVPackage extends EPackage {
      * @generated
      */
     int DOORS_OBJECT = 1;
-
-    /**
-     * The feature id for the '<em><b>Source</b></em>' reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int DOORS_OBJECT__SOURCE = DOORS_TREE_NODE__SOURCE;
 
     /**
      * The feature id for the '<em><b>Children</b></em>' containment reference list.

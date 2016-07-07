@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 import org.apache.lucene.document.Document;
 
 import de.jpwinkler.daf.csveditor.CSVEditorApplication;
-import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.util.CSVParseException;
+import de.jpwinkler.daf.dafcore.util.CSVParseException;
 import de.jpwinkler.daf.doorsdb.DoorsDBInterface;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBFolder;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBItem;

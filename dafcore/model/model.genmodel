@@ -18,8 +18,12 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute csv.ecore#//DoorsModule/path"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute csv.ecore#//DoorsModule/url"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference csv.ecore#//DoorsModule/attributeDefinitions"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute csv.ecore#//DoorsModule/view"/>
       <genOperations ecoreOperation="csv.ecore#//DoorsModule/findAttributeDefinition">
         <genParameters ecoreParameter="csv.ecore#//DoorsModule/findAttributeDefinition/name"/>
+      </genOperations>
+      <genOperations ecoreOperation="csv.ecore#//DoorsModule/findObject">
+        <genParameters ecoreParameter="csv.ecore#//DoorsModule/findObject/objectIdentifier"/>
       </genOperations>
     </genClasses>
     <genClasses ecoreClass="csv.ecore#//DoorsObject">
@@ -30,11 +34,11 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute csv.ecore#//DoorsObject/objectText"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute csv.ecore#//DoorsObject/objectShortText"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute csv.ecore#//DoorsObject/objectHeading"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute csv.ecore#//DoorsObject/text"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference csv.ecore#//DoorsObject/outgoingLinks"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference csv.ecore#//DoorsObject/incomingLinks"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference csv.ecore#//DoorsObject/module"/>
       <genOperations ecoreOperation="csv.ecore#//DoorsObject/isHeading"/>
-      <genOperations ecoreOperation="csv.ecore#//DoorsObject/getText"/>
     </genClasses>
     <genClasses ecoreClass="csv.ecore#//StringToStringMap">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute csv.ecore#//StringToStringMap/key"/>
@@ -60,12 +64,6 @@
     </genClasses>
     <genClasses ecoreClass="csv.ecore#//AttributeDefinition">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute csv.ecore#//AttributeDefinition/name"/>
-    </genClasses>
-  </genPackages>
-  <genPackages prefix="Common" basePackage="de.jpwinkler.daf.dafcore.model" disposableProviderFactory="true"
-      ecorePackage="common.ecore#/">
-    <genClasses ecoreClass="common.ecore#//ModelObject">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference common.ecore#//ModelObject/source"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

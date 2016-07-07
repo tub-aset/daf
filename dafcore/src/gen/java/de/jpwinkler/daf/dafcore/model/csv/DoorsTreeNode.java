@@ -3,10 +3,9 @@
 package de.jpwinkler.daf.dafcore.model.csv;
 
 import de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor;
-import de.jpwinkler.daf.dafcore.model.common.ModelObject;
-
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
+import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
@@ -26,7 +25,7 @@ import org.eclipse.emf.common.util.EMap;
  * @model
  * @generated
  */
-public interface DoorsTreeNode extends ModelObject {
+public interface DoorsTreeNode extends EObject {
     /**
      * Returns the value of the '<em><b>Children</b></em>' containment reference list.
      * The list contents are of type {@link de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode}.

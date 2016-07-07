@@ -12,8 +12,6 @@ import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
-import de.jpwinkler.daf.dafcore.model.common.CommonPackage;
-import de.jpwinkler.daf.dafcore.model.common.impl.CommonPackageImpl;
 import de.jpwinkler.daf.dafcore.model.csv.AttributeDefinition;
 import de.jpwinkler.daf.dafcore.model.csv.CSVFactory;
 import de.jpwinkler.daf.dafcore.model.csv.CSVPackage;
@@ -140,16 +138,11 @@ public class CSVPackageImpl extends EPackageImpl implements CSVPackage {
 
         isInited = true;
 
-        // Obtain or create and register interdependencies
-        CommonPackageImpl theCommonPackage = (CommonPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(CommonPackage.eNS_URI) instanceof CommonPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(CommonPackage.eNS_URI) : CommonPackage.eINSTANCE);
-
         // Create package meta-data objects
         theCSVPackage.createPackageContents();
-        theCommonPackage.createPackageContents();
 
         // Initialize created meta-data
         theCSVPackage.initializePackageContents();
-        theCommonPackage.initializePackageContents();
 
         // Mark meta-data to indicate it can't be changed
         theCSVPackage.freeze();
@@ -638,9 +631,6 @@ public class CSVPackageImpl extends EPackageImpl implements CSVPackage {
         setNsPrefix(eNS_PREFIX);
         setNsURI(eNS_URI);
 
-        // Obtain other dependent packages
-        CommonPackage theCommonPackage = (CommonPackage)EPackage.Registry.INSTANCE.getEPackage(CommonPackage.eNS_URI);
-
         // Create type parameters
 
         // Set bounds for type parameters
@@ -650,7 +640,6 @@ public class CSVPackageImpl extends EPackageImpl implements CSVPackage {
         doorsObjectEClass.getESuperTypes().add(this.getDoorsTreeNode());
         resolvedLinkEClass.getESuperTypes().add(this.getLink());
         unresolvedLinkEClass.getESuperTypes().add(this.getLink());
-        doorsTreeNodeEClass.getESuperTypes().add(theCommonPackage.getModelObject());
 
         // Initialize classes, features, and operations; add parameters
         initEClass(doorsModuleEClass, DoorsModule.class, "DoorsModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

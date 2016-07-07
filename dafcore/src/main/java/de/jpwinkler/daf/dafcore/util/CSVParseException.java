@@ -1,4 +1,4 @@
-package de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.util;
+package de.jpwinkler.daf.dafcore.util;
 
 public class CSVParseException extends Exception {
 

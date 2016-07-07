@@ -48,7 +48,7 @@ import de.jpwinkler.daf.dafcore.model.csv.CSVFactory;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
-import de.jpwinkler.daf.dafcore.rulebasedmodelconstructor.util.CSVParseException;
+import de.jpwinkler.daf.dafcore.util.CSVParseException;
 import de.jpwinkler.daf.dafcore.util.DoorsModuleUtil;
 import de.jpwinkler.daf.dataprocessing.preprocessing.ObjectTextPreprocessor;
 import javafx.beans.property.ReadOnlyStringWrapper;

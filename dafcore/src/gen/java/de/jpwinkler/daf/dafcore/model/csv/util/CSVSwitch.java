@@ -7,8 +7,6 @@ import java.util.Map;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.util.Switch;
-
-import de.jpwinkler.daf.dafcore.model.common.ModelObject;
 import de.jpwinkler.daf.dafcore.model.csv.*;
 import de.jpwinkler.daf.dafcore.model.csv.CSVPackage;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
@@ -78,7 +76,6 @@ public class CSVSwitch<T> extends Switch<T> {
                 DoorsModule doorsModule = (DoorsModule)theEObject;
                 T result = caseDoorsModule(doorsModule);
                 if (result == null) result = caseDoorsTreeNode(doorsModule);
-                if (result == null) result = caseModelObject(doorsModule);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
@@ -86,7 +83,6 @@ public class CSVSwitch<T> extends Switch<T> {
                 DoorsObject doorsObject = (DoorsObject)theEObject;
                 T result = caseDoorsObject(doorsObject);
                 if (result == null) result = caseDoorsTreeNode(doorsObject);
-                if (result == null) result = caseModelObject(doorsObject);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
@@ -119,7 +115,6 @@ public class CSVSwitch<T> extends Switch<T> {
             case CSVPackage.DOORS_TREE_NODE: {
                 DoorsTreeNode doorsTreeNode = (DoorsTreeNode)theEObject;
                 T result = caseDoorsTreeNode(doorsTreeNode);
-                if (result == null) result = caseModelObject(doorsTreeNode);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
@@ -250,21 +245,6 @@ public class CSVSwitch<T> extends Switch<T> {
      * @generated
      */
     public T caseAttributeDefinition(AttributeDefinition object) {
-        return null;
-    }
-
-    /**
-     * Returns the result of interpreting the object as an instance of '<em>Model Object</em>'.
-     * <!-- begin-user-doc -->
-     * This implementation returns null;
-     * returning a non-null result will terminate the switch.
-     * <!-- end-user-doc -->
-     * @param object the target of the switch.
-     * @return the result of interpreting the object as an instance of '<em>Model Object</em>'.
-     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-     * @generated
-     */
-    public T caseModelObject(ModelObject object) {
         return null;
     }
 

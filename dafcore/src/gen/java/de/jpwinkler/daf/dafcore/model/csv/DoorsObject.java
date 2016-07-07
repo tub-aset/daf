@@ -280,7 +280,7 @@ public interface DoorsObject extends DoorsTreeNode {
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @model kind="operation"
-     *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return !getObjectHeading().isEmpty();'"
+     *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return getObjectHeading() != null && !getObjectHeading().isEmpty();'"
      * @generated
      */
     boolean isHeading();
