@@ -3,7 +3,6 @@ package de.jpwinkler.daf.doorsdb.tasks;
 import java.io.IOException;
 import java.util.List;
 
-import de.jpwinkler.daf.dafcore.util.Counter;
 import de.jpwinkler.daf.doorsdb.DoorsDBInterface;
 import de.jpwinkler.daf.doorsdb.search.DBSearchExpression;
 
@@ -29,7 +28,6 @@ public class ModuleTask extends DoorsDBTask {
         preprocess();
         saveDatabase = false;
         passes.forEach(p -> {
-            final Counter moduleCounter = new Counter();
             p.setDatabaseInterface(getDatabaseInterface());
             p.preprocess();
             source.run(getDatabaseInterface(), m -> {
@@ -44,7 +42,6 @@ public class ModuleTask extends DoorsDBTask {
                 }
             });
             p.postprocess();
-            System.out.println(moduleCounter.get() + " modules processed.");
         });
         postprocess();
         if (saveDatabase) {
