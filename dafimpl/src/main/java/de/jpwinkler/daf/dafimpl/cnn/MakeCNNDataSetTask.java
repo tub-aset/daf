@@ -9,6 +9,7 @@ import java.util.Random;
 import java.util.Set;
 
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
+import de.jpwinkler.daf.dafimpl.Attributes;
 import de.jpwinkler.daf.doorsdb.search.HasTagsSearchExpression;
 import de.jpwinkler.daf.doorsdb.tasks.FolderSource;
 import de.jpwinkler.daf.doorsdb.tasks.ModuleTaskBuilder;
@@ -27,11 +28,11 @@ public class MakeCNNDataSetTask {
         private final PrintWriter writerTest;
         private final Random r = new Random(24367);
         private final ClassifierContext classifierContext = ClassifierContext.getInstance();
-        private final StructuralClassifier syntacticClassifier = new StructuralClassifier(classifierContext);
+        private final StructuralClassifier structuralClassifier = new StructuralClassifier(classifierContext);
 
         public Pass() throws FileNotFoundException {
-            writerTrain = new PrintWriter(new FileOutputStream("train.txt"));
-            writerTest = new PrintWriter(new FileOutputStream("test.txt"));
+            writerTrain = new PrintWriter(new FileOutputStream("temp/train.txt"));
+            writerTest = new PrintWriter(new FileOutputStream("temp/test.txt"));
         }
 
         @Override
@@ -50,16 +51,16 @@ public class MakeCNNDataSetTask {
             if (object.isHeading()) {
                 return;
             }
-            final String srcId = object.getAttributes().get("SourceID");
+            final String srcId = object.getAttributes().get(Attributes.SOURCE_ID);
             // if (srcId == null || srcId.startsWith("STLH-") ||
             // srcId.startsWith("SB-")) {
             // return;
             // }
-            final String syntacticType = syntacticClassifier.classify(object);
-            if (syntacticType == null || !syntacticType.contains("sentence")) {
+            final String structuralType = structuralClassifier.classify(object);
+            if (structuralType == null || !structuralType.contains("sentence")) {
                 return;
             }
-            final String ot = object.getAttributes().get("Object Type Corrected");
+            final String ot = object.getAttributes().get(Attributes.OBJECT_TYPE_CORRECT);
 
             writtenObjects.add(text);
             final PrintWriter w = r.nextFloat() > 0.9 ? writerTest : writerTrain;

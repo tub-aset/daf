@@ -23,11 +23,11 @@ public class MakeWord2VecTask {
 
         private final Set<String> writtenObjects = new HashSet<>();
         private final ClassifierContext classifierContext = ClassifierContext.getInstance();
-        private final StructuralClassifier syntacticClassifier = new StructuralClassifier(classifierContext);
+        private final StructuralClassifier structuralClassifier = new StructuralClassifier(classifierContext);
         private final PrintWriter writerW2V;
 
         public Pass() throws FileNotFoundException {
-            writerW2V = new PrintWriter(new FileOutputStream("w2v.txt"));
+            writerW2V = new PrintWriter(new FileOutputStream("temp/w2v.txt"));
         }
 
         @Override
@@ -50,8 +50,8 @@ public class MakeWord2VecTask {
             if (srcId == null || srcId.startsWith("STLH-") || srcId.startsWith("SB-")) {
                 return;
             }
-            final String syntacticType = syntacticClassifier.classify(object);
-            if (syntacticType == null || !syntacticType.contains("sentence")) {
+            final String structuralType = structuralClassifier.classify(object);
+            if (structuralType == null || !structuralType.contains("sentence")) {
                 return;
             }
 
