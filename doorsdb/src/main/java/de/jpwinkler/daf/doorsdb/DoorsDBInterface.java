@@ -20,7 +20,7 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.IndexNotFoundException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
@@ -59,10 +59,9 @@ public class DoorsDBInterface {
 
     private final DoorsApplication app = DoorsApplicationFactory.getDoorsApplication();
 
-    private final Directory index;
-    private final IndexReader indexReader;
-    private final IndexSearcher indexSearcher;
-    private final QueryParser queryParser;
+    private Directory index;
+    private IndexSearcher indexSearcher;
+    private QueryParser queryParser;
 
     public static DoorsDBInterface createDB(final File file) throws IOException {
         final DoorsDB db = DoorsDBModelFactory.eINSTANCE.createDoorsDB();
@@ -96,11 +95,19 @@ public class DoorsDBInterface {
     private DoorsDBInterface(final File file, final DoorsDB db) throws IOException {
         this.file = file;
         this.db = db;
-        index = FSDirectory.open(new File(file.getParentFile(), "__index").toPath());
-        indexReader = DirectoryReader.open(index);
-        final Analyzer analyzer = new StandardAnalyzer();
-        indexSearcher = new IndexSearcher(indexReader);
-        queryParser = new QueryParser("text", analyzer);
+        try {
+            index = FSDirectory.open(new File(file.getParentFile(), "__index").toPath());
+            final DirectoryReader indexReader = DirectoryReader.open(index);
+            final Analyzer analyzer = new StandardAnalyzer();
+            indexSearcher = new IndexSearcher(indexReader);
+            queryParser = new QueryParser("text", analyzer);
+        } catch (final IndexNotFoundException e) {
+            e.printStackTrace();
+            index = null;
+            indexSearcher = null;
+            queryParser = null;
+
+        }
     }
 
     public DBModule addModule(final String moduleName) throws DoorsException, IOException {
