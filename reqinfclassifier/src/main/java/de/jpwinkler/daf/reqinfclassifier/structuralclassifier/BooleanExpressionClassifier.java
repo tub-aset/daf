@@ -1,4 +1,4 @@
-package de.jpwinkler.daf.reqinfclassifier.syntacticclassifier;
+package de.jpwinkler.daf.reqinfclassifier.structuralclassifier;
 
 import de.jpwinkler.daf.reqinfclassifier.Classifier;
 import de.jpwinkler.daf.reqinfclassifier.ClassifierContext;

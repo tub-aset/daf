@@ -1,4 +1,4 @@
-package de.jpwinkler.daf.dataprocessing;
+package de.jpwinkler.daf.dafimpl.old;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -18,7 +18,7 @@ import de.jpwinkler.daf.doorsdb.search.HasTagsSearchExpression;
 import de.jpwinkler.daf.doorsdb.tasks.ModuleTaskBuilder;
 import de.jpwinkler.daf.doorsdb.tasks.ObjectCSVPass;
 import de.jpwinkler.daf.reqinfclassifier.ClassifierContext;
-import de.jpwinkler.daf.reqinfclassifier.syntacticclassifier.SyntacticClassifier;
+import de.jpwinkler.daf.reqinfclassifier.structuralclassifier.StructuralClassifier;
 import edu.stanford.nlp.trees.Tree;
 
 public class ExtractAbstractTextApp {
@@ -30,7 +30,7 @@ public class ExtractAbstractTextApp {
         private final Pattern objectTypePattern = Pattern.compile("requirement|information");
         private final ClassifierContext classifierContext = ClassifierContext.getInstance();
 
-        private final SyntacticClassifier syntacticClassifier = new SyntacticClassifier(classifierContext);
+        private final StructuralClassifier syntacticClassifier = new StructuralClassifier(classifierContext);
 
         private final Set<Integer> writtenObjects = new HashSet<>();
 

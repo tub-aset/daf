@@ -1,4 +1,4 @@
-package de.jpwinkler.daf.dafimpl.dbtasks;
+package de.jpwinkler.daf.dafimpl.maintenance;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,6 +15,7 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
+import de.jpwinkler.daf.dafimpl.Attributes;
 import de.jpwinkler.daf.doorsdb.tasks.ModuleTaskBuilder;
 import de.jpwinkler.daf.doorsdb.tasks.ObjectCSVPass;
 
@@ -37,7 +38,7 @@ public class MakeLuceneIndexTask {
             doc.add(new TextField("text", object.getText(), Field.Store.YES));
             final String source = getModule().getFullName() + ":" + object.getObjectIdentifier();
             doc.add(new StringField("source", source, Field.Store.YES));
-            final String ot = object.getAttributes().get("Object Type");
+            final String ot = object.getAttributes().get(Attributes.OBJECT_TYPE_ORIGINAL);
             if (ot != null && !ot.isEmpty()) {
                 doc.add(new StringField("type", ot, Field.Store.YES));
             }
@@ -49,6 +50,15 @@ public class MakeLuceneIndexTask {
             }
         }
 
+        @Override
+        public void postprocess() {
+            try {
+                writer.close();
+            } catch (final IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
     }
 
     public static void main(final String[] args) throws FileNotFoundException, IOException {

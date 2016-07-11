@@ -2,21 +2,21 @@ package de.jpwinkler.daf.reqinfclassifier;
 
 import de.jpwinkler.daf.reqinfclassifier.clusterclassifier.ClusterClassifier;
 import de.jpwinkler.daf.reqinfclassifier.convnetclassifier.ConvNetClassifier;
-import de.jpwinkler.daf.reqinfclassifier.syntacticclassifier.SyntacticClassifier;
+import de.jpwinkler.daf.reqinfclassifier.structuralclassifier.StructuralClassifier;
 import de.jpwinkler.daf.reqinfclassifier.templateclassifier.TemplateClassifier;
 
 public class ReqInfClassifier extends Classifier<String> {
 
     private final ClusterClassifier clusterClassifier;
     private final TemplateClassifier templateClassifier;
-    private final SyntacticClassifier syntacticClassifier;
+    private final StructuralClassifier syntacticClassifier;
     private final ConvNetClassifier convNetClassifier;
 
     public ReqInfClassifier(final ClassifierContext context, final String templateName) {
         super(context);
         templateClassifier = new TemplateClassifier(context, templateName);
         clusterClassifier = new ClusterClassifier(context);
-        syntacticClassifier = new SyntacticClassifier(context);
+        syntacticClassifier = new StructuralClassifier(context);
         convNetClassifier = new ConvNetClassifier(context);
     }
 

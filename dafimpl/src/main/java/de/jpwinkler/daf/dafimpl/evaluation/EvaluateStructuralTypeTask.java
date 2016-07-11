@@ -1,4 +1,4 @@
-package de.jpwinkler.daf.dafimpl.dbtasks;
+package de.jpwinkler.daf.dafimpl.evaluation;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -7,11 +7,12 @@ import java.util.Arrays;
 import com.aliasi.classify.ConfusionMatrix;
 
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
+import de.jpwinkler.daf.dafimpl.Attributes;
 import de.jpwinkler.daf.doorsdb.tasks.ModuleListSource;
 import de.jpwinkler.daf.doorsdb.tasks.ModuleTaskBuilder;
 import de.jpwinkler.daf.doorsdb.tasks.ObjectCSVPass;
 
-public class EvaluateSyntacticTypeTask {
+public class EvaluateStructuralTypeTask {
 
     private static class Pass extends ObjectCSVPass {
         private final ConfusionMatrix confusionMatrix;
@@ -22,10 +23,9 @@ public class EvaluateSyntacticTypeTask {
 
         @Override
         protected void processObject(final DoorsObject object) {
-            final String reference = object.getAttributes().get("__syntactic_type__");
-            final String response = object.getAttributes().get("__syntactic_type_2__");
+            final String reference = object.getAttributes().get(Attributes.STRUCTURAL_TYPE_CORRECT);
+            final String response = object.getAttributes().get(Attributes.STRUCTURAL_TYPE_PREDICTED);
 
-            System.out.println(reference + " " + response);
             confusionMatrix.increment(reference, response);
         }
 

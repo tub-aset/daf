@@ -14,14 +14,13 @@ import de.jpwinkler.daf.doorsdb.tasks.AllModulesSource;
 import de.jpwinkler.daf.doorsdb.tasks.ModuleCSVPass;
 import de.jpwinkler.daf.doorsdb.tasks.ModuleTaskBuilder;
 import de.jpwinkler.daf.reqinfclassifier.ClassifierContext;
-import de.jpwinkler.daf.reqinfclassifier.syntacticclassifier.SyntacticClassifier;
+import de.jpwinkler.daf.reqinfclassifier.structuralclassifier.StructuralClassifier;
 
-public class ApplySyntacticTypeTask {
+public class ApplyStructuralTypeTask {
 
     private static class Pass extends ModuleCSVPass {
 
-        protected static final String ATTRIBUTE_NAME = "__SyntacticType";
-        private final SyntacticClassifier classifier = new SyntacticClassifier(ClassifierContext.getInstance());
+        private final StructuralClassifier classifier = new StructuralClassifier(ClassifierContext.getInstance());
 
         @Override
         protected void processParsedModule(final DoorsModule module) {

@@ -13,6 +13,7 @@ import org.apache.commons.io.IOUtils;
 import com.google.gson.GsonBuilder;
 
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
+import de.jpwinkler.daf.dafimpl.Attributes;
 import de.jpwinkler.daf.doorsdb.tasks.ModuleListSource;
 import de.jpwinkler.daf.doorsdb.tasks.ModuleTaskBuilder;
 import de.jpwinkler.daf.doorsdb.tasks.ObjectCSVPass;
@@ -31,8 +32,8 @@ public class ExtractTemplateDataTask {
 
         @Override
         protected void processObject(final DoorsObject object) {
-            final String srcID = object.getAttributes().get("SourceID");
-            final String ot = object.getAttributes().get("Object Type");
+            final String srcID = object.getAttributes().get(Attributes.SOURCE_ID);
+            final String ot = object.getAttributes().get(Attributes.OBJECT_TYPE_ORIGINAL);
             final String text = object.getText();
             if (IGNORE_LIST.contains(text.trim())) {
                 return;

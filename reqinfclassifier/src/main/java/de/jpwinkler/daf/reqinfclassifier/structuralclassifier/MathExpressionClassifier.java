@@ -1,4 +1,4 @@
-package de.jpwinkler.daf.reqinfclassifier.syntacticclassifier;
+package de.jpwinkler.daf.reqinfclassifier.structuralclassifier;
 
 import java.util.Arrays;
 import java.util.List;

@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.util.Counter;
+import de.jpwinkler.daf.dafimpl.Attributes;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBModule;
 import de.jpwinkler.daf.doorsdb.tasks.ModuleTaskBuilder;
 import de.jpwinkler.daf.doorsdb.tasks.ObjectCSVPass;
@@ -22,7 +23,7 @@ public class FindEmptyModulesTask {
 
         @Override
         protected void processObject(final DoorsObject object) {
-            final String sourceID = object.getAttributes().get("SourceID");
+            final String sourceID = object.getAttributes().get(Attributes.SOURCE_ID);
             if (!object.isHeading() && (sourceID == null || (!sourceID.startsWith("SB-") && !sourceID.startsWith("STLH-")))) {
                 c.inc();
             }

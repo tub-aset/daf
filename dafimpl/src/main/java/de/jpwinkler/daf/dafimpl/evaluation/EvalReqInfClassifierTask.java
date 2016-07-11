@@ -1,4 +1,4 @@
-package de.jpwinkler.daf.dafimpl.dbtasks;
+package de.jpwinkler.daf.dafimpl.evaluation;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import com.aliasi.classify.ConfusionMatrix;
 
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
+import de.jpwinkler.daf.dafimpl.Attributes;
 import de.jpwinkler.daf.doorsdb.tasks.ModuleListSource;
 import de.jpwinkler.daf.doorsdb.tasks.ModuleTaskBuilder;
 import de.jpwinkler.daf.doorsdb.tasks.ObjectCSVPass;
@@ -35,7 +36,7 @@ public class EvalReqInfClassifierTask {
 
         @Override
         protected void processObject(final DoorsObject object) {
-            final String reference = object.getAttributes().get("Object Type");
+            final String reference = object.getAttributes().get(Attributes.OBJECT_TYPE_ORIGINAL);
 
             if (object.isHeading()) {
                 return;
@@ -45,7 +46,7 @@ public class EvalReqInfClassifierTask {
                 return;
             }
 
-            final String classifiedOt = object.getAttributes().get("__classified_ot__");
+            final String classifiedOt = object.getAttributes().get(Attributes.OBJECT_TYPE_PREDICTED);
             if (classifiedOt == null || classifiedOt.isEmpty()) {
 
                 return;

@@ -1,4 +1,4 @@
-package de.jpwinkler.daf.dafimpl.dbtasks;
+package de.jpwinkler.daf.dafimpl.analysis;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -7,6 +7,7 @@ import java.util.Set;
 
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.util.Counter;
+import de.jpwinkler.daf.dafimpl.Attributes;
 import de.jpwinkler.daf.doorsdb.tasks.ModuleTaskBuilder;
 import de.jpwinkler.daf.doorsdb.tasks.ObjectCSVPass;
 
@@ -23,8 +24,8 @@ public class CountPredefTask {
 
         @Override
         protected void processObject(final DoorsObject object) {
-            final String srcId = object.getAttributes().get("SourceID");
-            final String ot = object.getAttributes().get("Object Type");
+            final String srcId = object.getAttributes().get(Attributes.SOURCE_ID);
+            final String ot = object.getAttributes().get(Attributes.OBJECT_TYPE_ORIGINAL);
             if (object.isHeading() || ot == null || srcId == null || srcId.contains("SB-") || srcId.contains("STLH-")) {
                 return;
             }

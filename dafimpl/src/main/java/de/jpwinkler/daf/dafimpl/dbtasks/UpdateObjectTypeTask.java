@@ -13,9 +13,10 @@ import org.apache.commons.io.IOUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
-import de.jpwinkler.daf.dafcore.model.csv.AttributeDefinition;
-import de.jpwinkler.daf.dafcore.model.csv.CSVFactory;
+import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
+import de.jpwinkler.daf.dafcore.util.DoorsModuleUtil;
+import de.jpwinkler.daf.dafimpl.Attributes;
 import de.jpwinkler.daf.doorsdb.search.HasTagsSearchExpression;
 import de.jpwinkler.daf.doorsdb.tasks.FolderSource;
 import de.jpwinkler.daf.doorsdb.tasks.ModuleTaskBuilder;
@@ -23,8 +24,6 @@ import de.jpwinkler.daf.doorsdb.tasks.ObjectCSVPass;
 import de.jpwinkler.daf.reqinfclassifier.clusterclassifier.Cluster;
 
 public class UpdateObjectTypeTask {
-
-    private static final String ATTRIBUTE_OBJECT_TYPE_CORRECTED = "Object Type Corrected";
 
     private static class Pass extends ObjectCSVPass {
 
@@ -42,25 +41,25 @@ public class UpdateObjectTypeTask {
         }
 
         @Override
+        protected void preprocessParsedModule(final DoorsModule module) {
+            DoorsModuleUtil.ensureAttributeDefinition(module, Attributes.OBJECT_TYPE_CORRECT);
+        }
+
+        @Override
         protected void processObject(final DoorsObject object) {
             if (object.isHeading()) {
                 return;
             }
-            final String srcID = object.getAttributes().get("SourceID");
+            final String srcID = object.getAttributes().get(Attributes.SOURCE_ID);
             if (srcID == null || srcID.startsWith("STLH-") || srcID.startsWith("SB-")) {
                 return;
             }
 
-            String otNew = object.getAttributes().get("Object Type");
+            String otNew = object.getAttributes().get(Attributes.OBJECT_TYPE_ORIGINAL);
             if (objectTypeMap.containsKey(object.getText())) {
                 otNew = objectTypeMap.get(object.getText());
             }
-            object.getAttributes().put(ATTRIBUTE_OBJECT_TYPE_CORRECTED, otNew);
-            if (getParsedModule().findAttributeDefinition(ATTRIBUTE_OBJECT_TYPE_CORRECTED) == null) {
-                final AttributeDefinition ad = CSVFactory.eINSTANCE.createAttributeDefinition();
-                ad.setName(ATTRIBUTE_OBJECT_TYPE_CORRECTED);
-                getParsedModule().getAttributeDefinitions().add(ad);
-            }
+            object.getAttributes().put(Attributes.OBJECT_TYPE_CORRECT, otNew);
             saveModule();
         }
 

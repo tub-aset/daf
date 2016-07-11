@@ -1,4 +1,4 @@
-package de.jpwinkler.daf.dafimpl.dbtasks;
+package de.jpwinkler.daf.dafimpl.analysis;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
+import de.jpwinkler.daf.dafimpl.Attributes;
 import de.jpwinkler.daf.doorsdb.tasks.ModuleTaskBuilder;
 import de.jpwinkler.daf.doorsdb.tasks.ObjectCSVPass;
 
@@ -17,11 +18,11 @@ public class CountPVMTask {
 
         @Override
         protected void processObject(final DoorsObject object) {
-            final String srcId = object.getAttributes().get("SourceID");
-            if (object.isHeading() || srcId == null || srcId.contains("SB-") || object.getAttributes().get("SourceID").contains("STLH-")) {
+            final String srcId = object.getAttributes().get(Attributes.SOURCE_ID);
+            if (object.isHeading() || srcId == null || srcId.contains("SB-") || srcId.contains("STLH-")) {
                 return;
             }
-            final String pvm = object.getAttributes().get("Potential Verification Method").toLowerCase();
+            final String pvm = object.getAttributes().get(Attributes.POTENTIAL_VERIFICATION_METHOD).toLowerCase();
             if (pvm != null && pvm.contains("develop")) {
                 positive.add(object.getText().hashCode());
             } else if (pvm != null && !pvm.contains("t.b.d")) {

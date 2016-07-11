@@ -18,7 +18,7 @@ import de.jpwinkler.daf.doorsdb.tasks.ModuleTaskBuilder;
 import de.jpwinkler.daf.doorsdb.tasks.ObjectCSVPass;
 import de.jpwinkler.daf.reqinfclassifier.ClassifierContext;
 import de.jpwinkler.daf.reqinfclassifier.convnetclassifier.NounPopularity;
-import de.jpwinkler.daf.reqinfclassifier.syntacticclassifier.SyntacticClassifier;
+import de.jpwinkler.daf.reqinfclassifier.structuralclassifier.StructuralClassifier;
 import edu.stanford.nlp.io.IOUtils;
 import edu.stanford.nlp.trees.Tree;
 
@@ -26,12 +26,12 @@ public class CommonWordTypeExtractorTask {
 
     private static class Pass extends ObjectCSVPass {
         private final ClassifierContext context;
-        private final SyntacticClassifier classifier;
+        private final StructuralClassifier classifier;
         private final Map<String, Map<String, Counter>> nouns = new HashMap<>();
 
         public Pass() {
             context = ClassifierContext.getInstance();
-            classifier = new SyntacticClassifier(context);
+            classifier = new StructuralClassifier(context);
         }
 
         private double calculateNounDocumentDistribution(final String noun) {

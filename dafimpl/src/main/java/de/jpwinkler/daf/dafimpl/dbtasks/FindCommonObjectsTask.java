@@ -10,6 +10,7 @@ import java.util.Map;
 
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.util.Counter;
+import de.jpwinkler.daf.dafimpl.Attributes;
 import de.jpwinkler.daf.doorsdb.tasks.FolderSource;
 import de.jpwinkler.daf.doorsdb.tasks.ModuleTaskBuilder;
 import de.jpwinkler.daf.doorsdb.tasks.ObjectCSVPass;
@@ -30,11 +31,11 @@ public class FindCommonObjectsTask {
             if (object.isHeading() || object.getText().trim().isEmpty()) {
                 return;
             }
-            final String srcId = object.getAttributes().get("SourceID");
+            final String srcId = object.getAttributes().get(Attributes.SOURCE_ID);
             if (srcId == null || srcId.startsWith("STLH-") || srcId.startsWith("SB-") || srcId.isEmpty()) {
                 return;
             }
-            final String ot = object.getAttributes().get("Object Type");
+            final String ot = object.getAttributes().get(Attributes.OBJECT_TYPE_ORIGINAL);
             if (ot == null) {
                 return;
             }
