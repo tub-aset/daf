@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor;
+import de.jpwinkler.daf.dafcore.model.csv.AttributeDefinition;
+import de.jpwinkler.daf.dafcore.model.csv.CSVFactory;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
@@ -28,6 +30,14 @@ public class DoorsModuleUtil {
             return (DoorsObject) o.getParent().getChildren().get(o.getParent().getChildren().indexOf(o) + 1);
         } else {
             return null;
+        }
+    }
+
+    public static void ensureAttributeDefinition(final DoorsModule module, final String attributeName) {
+        if (module.findAttributeDefinition(attributeName) == null) {
+            final AttributeDefinition ad = CSVFactory.eINSTANCE.createAttributeDefinition();
+            ad.setName(attributeName);
+            module.getAttributeDefinitions().add(ad);
         }
     }
 

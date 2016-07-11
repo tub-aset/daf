@@ -1,6 +1,14 @@
 "(",_*,")" -> remove
 "[",_*,"]" -> remove
-"\"",_*,"\"" -> replace("QS")
+//"\"",_*,"\"" -> replace("QS")
+
+'[0-9]*' -> concat(NUMBER)
+repeat {
+  t:NUMBER,t:NUMBER -> concat(NUMBER)
+  t:NUMBER,".",t:NUMBER -> concat(NUMBER)
+  t:NUMBER,",",t:NUMBER -> concat(NUMBER)
+}
+t:NUMBER -> replace("0")
 
 "allg","." -> replace("allgemein")
 "z",".","B","." -> replace("zum Beispiel")

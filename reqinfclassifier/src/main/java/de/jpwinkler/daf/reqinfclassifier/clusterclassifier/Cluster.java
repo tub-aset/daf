@@ -1,6 +1,9 @@
 package de.jpwinkler.daf.reqinfclassifier.clusterclassifier;
 
+import java.util.Map;
 import java.util.Set;
+
+import de.jpwinkler.daf.dafcore.util.Counter;
 
 public class Cluster {
 
@@ -8,6 +11,7 @@ public class Cluster {
     private Set<String> examples;
     private double sourceDistribution;
     private double labelDistribution;
+    private Map<String, Counter> typeMap;
 
     public Cluster() {
         super();
@@ -52,6 +56,14 @@ public class Cluster {
 
     public void setLabelDistribution(final double labelDistribution) {
         this.labelDistribution = labelDistribution;
+    }
+
+    public Map<String, Counter> getTypeMap() {
+        return typeMap;
+    }
+
+    public void setTypeMap(final Map<String, Counter> typeMap) {
+        this.typeMap = typeMap;
     }
 
 }
