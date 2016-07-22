@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<relativePath>../parent/pom.xml</relativePath>
+		<relativePath>../dafparent/pom.xml</relativePath>
 		<groupId>de.jpwinkler.daf</groupId>
 		<artifactId>dafparent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
