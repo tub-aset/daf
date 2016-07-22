@@ -3,7 +3,7 @@ package de.jpwinkler.daf.doorsdb.search;
 import java.util.Deque;
 import java.util.LinkedList;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import de.jpwinkler.daf.doorsdb.DBSearchBaseListener;
 import de.jpwinkler.daf.doorsdb.DBSearchParser.AndSearchExpressionContext;

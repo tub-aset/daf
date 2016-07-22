@@ -62,11 +62,6 @@
 			<version>2.4</version>
 		</dependency>
 		<dependency>
-			<groupId>de.jpwinkler.daf</groupId>
-			<artifactId>workflowdsl</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
 			<groupId>de.jpwinkler.libs</groupId>
 			<artifactId>doorsbridge</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
