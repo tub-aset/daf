@@ -17,7 +17,6 @@ import de.jpwinkler.daf.dataprocessing.datasetgenerators.SimpleLabelGenerator;
 import de.jpwinkler.daf.dataprocessing.featuregeneration.CharacterFeatureGenerator;
 import de.jpwinkler.daf.dataprocessing.featuregeneration.CutoffFilter;
 import de.jpwinkler.daf.dataprocessing.featuregeneration.FeatureVectorGenerator;
-import de.jpwinkler.daf.dataprocessing.featuregeneration.ObjectTextFeatureGenerator;
 import de.jpwinkler.daf.doorsdb.tasks.ModuleListSource;
 import de.jpwinkler.daf.doorsdb.tasks.ModuleTaskBuilder;
 import de.jpwinkler.daf.doorsdb.tasks.ObjectCSVPass;
@@ -122,7 +121,7 @@ public class DatasetGenerationTask {
 
         featureVectorGenerator = new FeatureVectorGenerator<>();
         featureVectorGenerator.addFeatureFilter(new CutoffFilter<>(CUTOFF));
-        featureVectorGenerator.addFeatureGenerator(new ObjectTextFeatureGenerator<>(new CharacterFeatureGenerator(3, 4)));
+        featureVectorGenerator.addFeatureGenerator(new CharacterFeatureGenerator(3, 4));
 
         final LabelGenerator<DoorsObject> labelGenerator = new SimpleLabelGenerator("__structural_type_ref");
         datasetGenerator = new ARFFDatasetGenerator<>(labelGenerator, true);
