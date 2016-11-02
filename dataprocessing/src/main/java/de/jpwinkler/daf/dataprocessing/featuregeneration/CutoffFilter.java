@@ -11,7 +11,7 @@ public class CutoffFilter<F> extends FeatureFilter<F> {
 
     @Override
     public boolean test(final F feature) {
-        return getFeatureVectorGenerator().getFeatureCounts().get(feature) > cutoff;
+        return getFeatureVectorGenerator().getFeatureCounts().get(feature) >= cutoff;
     }
 
 }
