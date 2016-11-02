@@ -15,6 +15,7 @@
 		<module>../doorsdb</module>
 		<module>../doorsdbgui</module>
 		<module>../reqinfclassifier</module>
+		<module>../datasetutil</module>
 	</modules>
 
 	<build>
