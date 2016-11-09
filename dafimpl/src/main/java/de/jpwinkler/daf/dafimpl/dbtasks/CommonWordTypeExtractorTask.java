@@ -12,12 +12,12 @@ import com.google.gson.GsonBuilder;
 
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.util.Counter;
+import de.jpwinkler.daf.dafimpl.util.NounPopularity;
 import de.jpwinkler.daf.doorsdb.search.HasTagsSearchExpression;
 import de.jpwinkler.daf.doorsdb.tasks.AllModulesSource;
 import de.jpwinkler.daf.doorsdb.tasks.ModuleTaskBuilder;
 import de.jpwinkler.daf.doorsdb.tasks.ObjectCSVPass;
 import de.jpwinkler.daf.reqinfclassifier.ClassifierContext;
-import de.jpwinkler.daf.reqinfclassifier.convnetclassifier.NounPopularity;
 import de.jpwinkler.daf.reqinfclassifier.structuralclassifier.StructuralClassifier;
 import edu.stanford.nlp.io.IOUtils;
 import edu.stanford.nlp.trees.Tree;

@@ -1,4 +1,4 @@
-package de.jpwinkler.daf.reqinfclassifier.convnetclassifier;
+package de.jpwinkler.daf.dafimpl.util;
 
 public class NounPopularity {
 
