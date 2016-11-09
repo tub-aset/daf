@@ -6,13 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.jpwinkler.daf.doorsdb.DoorsDBInterface;
+import de.jpwinkler.daf.doorsdb.search.AndSearchExpression;
 import de.jpwinkler.daf.doorsdb.search.DBSearchExpression;
 
 public class ModuleTaskBuilder {
 
     private final List<ModulePass> passes = new ArrayList<>();
     private ModuleSource source = new AllModulesSource();
-    private DBSearchExpression filter;
+    private final List<DBSearchExpression> filters = new ArrayList<>();
 
     private final DoorsDBInterface databaseInterface;
 
@@ -31,7 +32,7 @@ public class ModuleTaskBuilder {
     }
 
     public ModuleTaskBuilder withFilter(final DBSearchExpression filter) {
-        this.filter = filter;
+        filters.add(filter);
         return this;
     }
 
@@ -41,7 +42,7 @@ public class ModuleTaskBuilder {
     }
 
     public ModuleTask build() {
-        return new ModuleTask(databaseInterface, passes, source, filter);
+        return new ModuleTask(databaseInterface, passes, source, new AndSearchExpression(filters));
     }
 
     public void buildAndRun() {
