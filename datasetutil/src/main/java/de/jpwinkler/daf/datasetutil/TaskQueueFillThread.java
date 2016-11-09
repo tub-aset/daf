@@ -1,15 +1,12 @@
 package de.jpwinkler.daf.datasetutil;
 
-import java.net.URISyntaxException;
-
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
 import de.jpwinkler.daf.dafcore.util.DoorsModuleUtil;
 import de.jpwinkler.daf.reqinfclassifier.ClassifierContext;
 import de.jpwinkler.daf.reqinfclassifier.DoorsObjectContext;
 import de.jpwinkler.daf.reqinfclassifier.clusterclassifier.ClusterClassifier;
-import de.jpwinkler.daf.reqinfclassifier.convnetclassifier.LocalConvNetClassifier;
-import de.jpwinkler.daf.reqinfclassifier.convnetclassifier.RemoteConvNetClassifier;
+import de.jpwinkler.daf.reqinfclassifier.convnetclassifier.ConvNetClassifier;
 import de.jpwinkler.daf.reqinfclassifier.structuralclassifier.StructuralClassifier;
 import info.debatty.java.stringsimilarity.Cosine;
 import info.debatty.java.stringsimilarity.interfaces.NormalizedStringSimilarity;
@@ -20,9 +17,7 @@ public class TaskQueueFillThread extends Thread {
     private final SynchronizedQueue<DoorsObject> objectQueue;
     private final SynchronizedQueue<Task> taskQueue;
 
-    private RemoteConvNetClassifier remoteConvNetClassifier;
-
-    private final LocalConvNetClassifier convNetClassifier;
+    private final ConvNetClassifier convNetClassifier;
 
     private final ClusterClassifier clusterClassifier;
 
@@ -87,13 +82,6 @@ public class TaskQueueFillThread extends Thread {
         t.setConvNetInf((Double) ctx.getProperties().get(DoorsObjectContext.PROPERTY_CONVNET_CLASSIFIER_INFORMATION));
         t.setConvNetReq((Double) ctx.getProperties().get(DoorsObjectContext.PROPERTY_CONVNET_CLASSIFIER_REQUIREMENT));
 
-        t.setOnlineConvNetClassification(remoteConvNetClassifier.classify(ctx));
-        t.setOnlineConvNetInf((Double) ctx.getProperties().get(DoorsObjectContext.PROPERTY_REMOTE_CONVNET_CLASSIFIER_INFORMATION));
-        t.setOnlineConvNetReq((Double) ctx.getProperties().get(DoorsObjectContext.PROPERTY_REMOTE_CONVNET_CLASSIFIER_REQUIREMENT));
-        t.setOnlineConvNetPredef((Double) ctx.getProperties().get(DoorsObjectContext.PROPERTY_REMOTE_CONVNET_CLASSIFIER_PREDEFINITION));
-        t.setOnlineConvNetProcReq((Double) ctx.getProperties().get(DoorsObjectContext.PROPERTY_REMOTE_CONVNET_CLASSIFIER_PROCESS_REQUIREMENT));
-        t.setOnlineConvNetZeroFrac((Double) ctx.getProperties().get(DoorsObjectContext.PROPERTY_REMOTE_CONVNET_CLASSIFIER_ZERO_FRAC));
-
         // if (t.getOnlineConvNetClassification().equals(t.getOriginalObjectType())) {
         // return null;
         // }
@@ -120,13 +108,7 @@ public class TaskQueueFillThread extends Thread {
 
         structuralClassifier = new StructuralClassifier(ClassifierContext.getInstance());
         clusterClassifier = new ClusterClassifier(ClassifierContext.getInstance());
-        convNetClassifier = new LocalConvNetClassifier(ClassifierContext.getInstance());
-        try {
-            remoteConvNetClassifier = new RemoteConvNetClassifier(ClassifierContext.getInstance(), "192.168.229.128", 8080);
-        } catch (final URISyntaxException e) {
-            e.printStackTrace();
-            remoteConvNetClassifier = null;
-        }
+        convNetClassifier = new ConvNetClassifier(ClassifierContext.getInstance());
     }
 
     @Override

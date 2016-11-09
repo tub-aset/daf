@@ -22,13 +22,6 @@ public class Task {
     private Double convNetReq;
     private Double convNetInf;
 
-    private String onlineConvNetClassification;
-    private Double onlineConvNetReq;
-    private Double onlineConvNetInf;
-    private Double onlineConvNetProcReq;
-    private Double onlineConvNetPredef;
-    private Double onlineConvNetZeroFrac;
-
     private String similiarityAnalysisObjectType;
     private String similiarityAnalysisStructuralType;
     private double greatestSimiliarity;
@@ -175,54 +168,6 @@ public class Task {
 
     public void setSimiliarityAnalysisStructuralType(final String similiarityAnalysisStructuralType) {
         this.similiarityAnalysisStructuralType = similiarityAnalysisStructuralType;
-    }
-
-    public String getOnlineConvNetClassification() {
-        return onlineConvNetClassification;
-    }
-
-    public void setOnlineConvNetClassification(final String onlineConvNetClassification) {
-        this.onlineConvNetClassification = onlineConvNetClassification;
-    }
-
-    public Double getOnlineConvNetReq() {
-        return onlineConvNetReq;
-    }
-
-    public void setOnlineConvNetReq(final Double onlineConvNetReq) {
-        this.onlineConvNetReq = onlineConvNetReq;
-    }
-
-    public Double getOnlineConvNetInf() {
-        return onlineConvNetInf;
-    }
-
-    public void setOnlineConvNetInf(final Double onlineConvNetInf) {
-        this.onlineConvNetInf = onlineConvNetInf;
-    }
-
-    public Double getOnlineConvNetZeroFrac() {
-        return onlineConvNetZeroFrac;
-    }
-
-    public void setOnlineConvNetZeroFrac(final Double onlineConvNetZeroFrac) {
-        this.onlineConvNetZeroFrac = onlineConvNetZeroFrac;
-    }
-
-    public Double getOnlineConvNetProcReq() {
-        return onlineConvNetProcReq;
-    }
-
-    public void setOnlineConvNetProcReq(final Double onlineConvNetProcReq) {
-        this.onlineConvNetProcReq = onlineConvNetProcReq;
-    }
-
-    public Double getOnlineConvNetPredef() {
-        return onlineConvNetPredef;
-    }
-
-    public void setOnlineConvNetPredef(final Double onlineConvNetPredef) {
-        this.onlineConvNetPredef = onlineConvNetPredef;
     }
 
 }

@@ -114,15 +114,6 @@ public class DataSetUtilController implements ClipboardOwner {
         taskInfo.add(Pair.of("", ""));
         taskInfo.add(Pair.of("Cluster OT", task.getClusterAnalysisObjectType()));
         taskInfo.add(Pair.of("", ""));
-        if (task.getOnlineConvNetClassification() != null) {
-            taskInfo.add(Pair.of("OnlineConvNet OT", task.getOnlineConvNetClassification()));
-            taskInfo.add(Pair.of("OnlineConvNet Info", Double.toString(task.getOnlineConvNetInf())));
-            taskInfo.add(Pair.of("OnlineConvNet Req", Double.toString(task.getOnlineConvNetReq())));
-            taskInfo.add(Pair.of("OnlineConvNet ProcReq", Double.toString(task.getOnlineConvNetProcReq())));
-            taskInfo.add(Pair.of("OnlineConvNet Predef", Double.toString(task.getOnlineConvNetPredef())));
-            taskInfo.add(Pair.of("OnlineConvNet Zero Frac", Double.toString(task.getOnlineConvNetZeroFrac())));
-            taskInfo.add(Pair.of("", ""));
-        }
         taskInfo.add(Pair.of("ConvNet OT", task.getConvNetClassification()));
         taskInfo.add(Pair.of("ConvNet Info", Double.toString(task.getConvNetInf())));
         taskInfo.add(Pair.of("ConvNet Req", Double.toString(task.getConvNetReq())));
