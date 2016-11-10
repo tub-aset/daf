@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import de.jpwinkler.daf.reqinfclassifier.Classifier;
 import de.jpwinkler.daf.reqinfclassifier.ClassifierContext;
-import de.jpwinkler.daf.reqinfclassifier.DoorsObjectContext;
+import de.jpwinkler.daf.reqinfclassifier.ExampleContext;
 
 public class EnumerationClassifier extends Classifier<String> {
 
@@ -19,7 +19,7 @@ public class EnumerationClassifier extends Classifier<String> {
     }
 
     @Override
-    protected String run(final DoorsObjectContext context) {
+    protected String run(final ExampleContext context) {
         if (context.getLines().size() < 2) {
             return null;
         }

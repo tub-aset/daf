@@ -14,7 +14,7 @@ import org.apache.commons.lang.StringUtils;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
 
-import de.jpwinkler.daf.dafcore.util.Counter;
+import de.jpwinkler.daf.reqinfclassifier.utils.Counter;
 import de.jpwinkler.libs.stringprocessing.patternprogram.PatternProgram;
 import de.jpwinkler.libs.stringprocessing.tokens.Tokenizer;
 import edu.stanford.nlp.parser.lexparser.LexicalizedParser;

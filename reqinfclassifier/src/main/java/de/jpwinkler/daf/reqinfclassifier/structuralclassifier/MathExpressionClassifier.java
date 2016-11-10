@@ -5,7 +5,7 @@ import java.util.List;
 
 import de.jpwinkler.daf.reqinfclassifier.Classifier;
 import de.jpwinkler.daf.reqinfclassifier.ClassifierContext;
-import de.jpwinkler.daf.reqinfclassifier.DoorsObjectContext;
+import de.jpwinkler.daf.reqinfclassifier.ExampleContext;
 
 public class MathExpressionClassifier extends Classifier<String> {
 
@@ -19,8 +19,8 @@ public class MathExpressionClassifier extends Classifier<String> {
     }
 
     @Override
-    protected String run(final DoorsObjectContext context) {
-        final String text = context.getDoorsObject().getText();
+    protected String run(final ExampleContext context) {
+        final String text = context.getExample().getText();
         int mathSymbolCount = 0;
         int totalSymbolCount = 0;
         for (int i = 0; i < text.length(); i++) {

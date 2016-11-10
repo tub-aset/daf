@@ -9,7 +9,7 @@ import com.google.gson.JsonSyntaxException;
 
 import de.jpwinkler.daf.reqinfclassifier.Classifier;
 import de.jpwinkler.daf.reqinfclassifier.ClassifierContext;
-import de.jpwinkler.daf.reqinfclassifier.DoorsObjectContext;
+import de.jpwinkler.daf.reqinfclassifier.ExampleContext;
 import info.debatty.java.stringsimilarity.NormalizedLevenshtein;
 
 public class ClusterClassifier extends Classifier<String> {
@@ -29,8 +29,8 @@ public class ClusterClassifier extends Classifier<String> {
     }
 
     @Override
-    protected String run(final DoorsObjectContext context) {
-        final String text = context.getDoorsObject().getText();
+    protected String run(final ExampleContext context) {
+        final String text = context.getExample().getText();
 
         double minDistance = Double.MAX_VALUE;
         String label = null;

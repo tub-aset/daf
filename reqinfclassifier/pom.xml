@@ -21,11 +21,6 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>de.jpwinkler.daf</groupId>
-			<artifactId>dafcore</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
 			<groupId>edu.stanford.nlp</groupId>
 			<artifactId>stanford-parser</artifactId>
 			<version>3.6.0</version>

@@ -8,12 +8,12 @@ import com.google.gson.Gson;
 
 import de.jpwinkler.daf.reqinfclassifier.Classifier;
 import de.jpwinkler.daf.reqinfclassifier.ClassifierContext;
-import de.jpwinkler.daf.reqinfclassifier.DoorsObjectContext;
+import de.jpwinkler.daf.reqinfclassifier.ExampleContext;
 import de.jpwinkler.libs.convnet.model.ConvNetModel;
 import de.jpwinkler.libs.convnet.model.Word2VecModel;
 import de.jpwinkler.libs.convnet.tensors.Tensor;
 
-public class ConvNetClassifier extends Classifier<String> {
+public class ConvNetClassifier extends Classifier<ConvNetClassificationResult> {
 
     private Word2VecModel word2VecModel;
     private ConvNetModel convNetModel;
@@ -36,15 +36,17 @@ public class ConvNetClassifier extends Classifier<String> {
     }
 
     @Override
-    protected String run(final DoorsObjectContext context) {
+    protected ConvNetClassificationResult run(final ExampleContext context) {
         final Tensor eval = convNetModel.eval(context.getConvNetPreprocessedText());
-        context.getProperties().put(DoorsObjectContext.PROPERTY_CONVNET_CLASSIFIER_INFORMATION, eval.get(0));
-        context.getProperties().put(DoorsObjectContext.PROPERTY_CONVNET_CLASSIFIER_REQUIREMENT, eval.get(1));
+        final ConvNetClassificationResult result = new ConvNetClassificationResult();
+        result.getProbabilities().put("information", eval.get(0));
+        result.getProbabilities().put("requirement", eval.get(1));
         if (eval.get(0) > eval.get(1)) {
-            return "information";
+            result.setObjectType("information");
         } else {
-            return "requirement";
+            result.setObjectType("requirement");
         }
+        return result;
     }
 
 }

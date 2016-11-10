@@ -4,7 +4,7 @@ import java.util.List;
 
 import de.jpwinkler.daf.reqinfclassifier.Classifier;
 import de.jpwinkler.daf.reqinfclassifier.ClassifierContext;
-import de.jpwinkler.daf.reqinfclassifier.DoorsObjectContext;
+import de.jpwinkler.daf.reqinfclassifier.ExampleContext;
 import de.jpwinkler.daf.reqinfclassifier.utils.SentenceUtils;
 import edu.stanford.nlp.trees.Tree;
 
@@ -15,7 +15,7 @@ public class SentenceClassifier extends Classifier<String> {
     }
 
     @Override
-    protected String run(final DoorsObjectContext context) {
+    protected String run(final ExampleContext context) {
         final List<Tree> trees = context.getTrees(context.getPreprocessedText());
 
         if (trees.size() == 1 && SentenceUtils.isSentence(trees.get(0))) {
@@ -34,7 +34,7 @@ public class SentenceClassifier extends Classifier<String> {
             // t.getChild(0).label().toString()).collect(Collectors.toList())).map(l
             // -> StringUtils.join(l, ",")).collect(Collectors.toList());
             // return StringUtils.join(collect, "\n");
-            return "other";
+            return null;
         }
     }
 

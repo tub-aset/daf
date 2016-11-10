@@ -2,7 +2,7 @@ package de.jpwinkler.daf.reqinfclassifier.structuralclassifier;
 
 import de.jpwinkler.daf.reqinfclassifier.Classifier;
 import de.jpwinkler.daf.reqinfclassifier.ClassifierContext;
-import de.jpwinkler.daf.reqinfclassifier.DoorsObjectContext;
+import de.jpwinkler.daf.reqinfclassifier.ExampleContext;
 
 public class MultiLineDefinitionClassifier extends Classifier<String> {
 
@@ -11,7 +11,7 @@ public class MultiLineDefinitionClassifier extends Classifier<String> {
     }
 
     @Override
-    protected String run(final DoorsObjectContext context) {
+    protected String run(final ExampleContext context) {
         if (context.getLines().size() >= 2 && context.getLines().get(0).endsWith(":")) {
             return "multiline_definition";
         } else {

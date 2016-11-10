@@ -7,7 +7,7 @@ import java.util.Map;
 
 import de.jpwinkler.daf.reqinfclassifier.Classifier;
 import de.jpwinkler.daf.reqinfclassifier.ClassifierContext;
-import de.jpwinkler.daf.reqinfclassifier.DoorsObjectContext;
+import de.jpwinkler.daf.reqinfclassifier.ExampleContext;
 
 public class ItemizationClassifier extends Classifier<String> {
 
@@ -19,7 +19,7 @@ public class ItemizationClassifier extends Classifier<String> {
     }
 
     @Override
-    protected String run(final DoorsObjectContext context) {
+    protected String run(final ExampleContext context) {
         final Map<Character, Integer> firstCharacters = new HashMap<>();
 
         final List<String> lines = context.getLines();

@@ -11,7 +11,7 @@ import com.google.gson.JsonSyntaxException;
 
 import de.jpwinkler.daf.reqinfclassifier.Classifier;
 import de.jpwinkler.daf.reqinfclassifier.ClassifierContext;
-import de.jpwinkler.daf.reqinfclassifier.DoorsObjectContext;
+import de.jpwinkler.daf.reqinfclassifier.ExampleContext;
 
 public class TemplateClassifier extends Classifier<String> {
 
@@ -28,8 +28,8 @@ public class TemplateClassifier extends Classifier<String> {
     }
 
     @Override
-    protected String run(final DoorsObjectContext context) {
-        final String srcId = context.getDoorsObject().getAttributes().get("SourceID");
+    protected String run(final ExampleContext context) {
+        final String srcId = context.getExample().getKey();
         if (srcId != null) {
             return templateTypes.get(srcId);
         } else {

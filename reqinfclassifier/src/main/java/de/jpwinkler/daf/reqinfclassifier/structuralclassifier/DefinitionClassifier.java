@@ -5,7 +5,7 @@ import java.util.List;
 
 import de.jpwinkler.daf.reqinfclassifier.Classifier;
 import de.jpwinkler.daf.reqinfclassifier.ClassifierContext;
-import de.jpwinkler.daf.reqinfclassifier.DoorsObjectContext;
+import de.jpwinkler.daf.reqinfclassifier.ExampleContext;
 import de.jpwinkler.daf.reqinfclassifier.utils.SentenceUtils;
 
 public class DefinitionClassifier extends Classifier<String> {
@@ -18,7 +18,7 @@ public class DefinitionClassifier extends Classifier<String> {
     }
 
     @Override
-    protected String run(final DoorsObjectContext context) {
+    protected String run(final ExampleContext context) {
         int positive = 0;
         for (final String line : context.getPreprocessedLines()) {
 

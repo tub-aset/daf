@@ -4,7 +4,7 @@ import java.util.regex.Pattern;
 
 import de.jpwinkler.daf.reqinfclassifier.Classifier;
 import de.jpwinkler.daf.reqinfclassifier.ClassifierContext;
-import de.jpwinkler.daf.reqinfclassifier.DoorsObjectContext;
+import de.jpwinkler.daf.reqinfclassifier.ExampleContext;
 import de.jpwinkler.daf.reqinfclassifier.utils.SentenceUtils;
 
 public class IdentifierClassifier extends Classifier<String> {
@@ -17,7 +17,7 @@ public class IdentifierClassifier extends Classifier<String> {
     }
 
     @Override
-    protected String run(final DoorsObjectContext context) {
+    protected String run(final ExampleContext context) {
         if (context.getLines().size() > 0) {
             final long numMatches = context.getLines().stream().filter(l -> isIdentifier(context, l)).count();
             if (context.getLines().size() == 1 && numMatches == 1) {
@@ -29,7 +29,7 @@ public class IdentifierClassifier extends Classifier<String> {
         return null;
     }
 
-    private boolean isIdentifier(final DoorsObjectContext context, final String s) {
+    private boolean isIdentifier(final ExampleContext context, final String s) {
         if (context.getTrees(s).size() == 1 && SentenceUtils.isSingleNoun(context.getTrees(s).get(0))) {
             return true;
         } else if (IDENTIFIER_PATTERN.matcher(s.toLowerCase()).matches()) {

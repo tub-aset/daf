@@ -6,7 +6,7 @@ import de.jpwinkler.daf.reqinfclassifier.SequenceClassifier;
 public class StructuralClassifier extends SequenceClassifier<String> {
 
     public StructuralClassifier(final ClassifierContext context) {
-        super(context);
+        super(context, "other");
         getClassifiers().add(new HeadingClassifier(context));
         getClassifiers().add(new IdentifierClassifier(context));
         getClassifiers().add(new ItemizationClassifier(context));

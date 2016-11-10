@@ -1,11 +1,12 @@
 package de.jpwinkler.daf.reqinfclassifier;
 
 import de.jpwinkler.daf.reqinfclassifier.clusterclassifier.ClusterClassifier;
+import de.jpwinkler.daf.reqinfclassifier.convnetclassifier.ConvNetClassificationResult;
 import de.jpwinkler.daf.reqinfclassifier.convnetclassifier.ConvNetClassifier;
 import de.jpwinkler.daf.reqinfclassifier.structuralclassifier.StructuralClassifier;
 import de.jpwinkler.daf.reqinfclassifier.templateclassifier.TemplateClassifier;
 
-public class ReqInfClassifier extends Classifier<String> {
+public class ReqInfClassifier extends Classifier<ReqInfClassificationResult> {
 
     private final ClusterClassifier clusterClassifier;
     private final TemplateClassifier templateClassifier;
@@ -21,33 +22,30 @@ public class ReqInfClassifier extends Classifier<String> {
     }
 
     @Override
-    protected String run(final DoorsObjectContext context) {
+    protected ReqInfClassificationResult run(final ExampleContext context) {
 
-        if (context.getDoorsObject().isHeading()) {
-            return "(syntactic)heading";
-        }
+        final ReqInfClassificationResult result = new ReqInfClassificationResult();
 
-        String label = null;
-
-        label = templateClassifier.classify(context);
-        if (label != null) {
-            return "(template)" + label;
-        }
-
-        final String structuralType = structuralClassifier.classify(context);
-        label = clusterClassifier.classify(context);
-        if (label != null) {
-            return "(cluster)" + label;
-        }
-
-        if (structuralType.contains("sentence")) {
-            label = convNetClassifier.classify(context);
+        if (context.getExample().isHeading()) {
+            result.setObjectType("heading");
+        } else {
+            String label = templateClassifier.classify(context);
             if (label != null) {
-                return "(convnet)" + label;
+                result.setObjectType(label);
+            } else {
+                final String structuralType = structuralClassifier.classify(context);
+                label = clusterClassifier.classify(context);
+                if (label != null) {
+                    result.setObjectType(label);
+                } else if (structuralType.contains("sentence")) {
+                    final ConvNetClassificationResult convNetResult = convNetClassifier.classify(context);
+                    result.setObjectType(convNetResult.getObjectType());
+                }
+
             }
         }
 
-        return null;
+        return result;
     }
 
 }

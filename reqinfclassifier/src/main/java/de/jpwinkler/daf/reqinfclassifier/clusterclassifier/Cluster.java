@@ -3,7 +3,7 @@ package de.jpwinkler.daf.reqinfclassifier.clusterclassifier;
 import java.util.Map;
 import java.util.Set;
 
-import de.jpwinkler.daf.dafcore.util.Counter;
+import de.jpwinkler.daf.reqinfclassifier.utils.Counter;
 
 public class Cluster {
 

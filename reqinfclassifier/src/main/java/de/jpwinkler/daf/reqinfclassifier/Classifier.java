@@ -1,8 +1,6 @@
 package de.jpwinkler.daf.reqinfclassifier;
 
-import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
-
-public abstract class Classifier<E> {
+public abstract class Classifier<O> {
 
     private final ClassifierContext context;
 
@@ -10,14 +8,14 @@ public abstract class Classifier<E> {
         this.context = context;
     }
 
-    public final E classify(final DoorsObject doorsObject) {
-        return run(new DoorsObjectContext(doorsObject, context));
+    public final O classify(final Example example) {
+        return run(new ExampleContext(example, context));
     }
 
-    public final E classify(final DoorsObjectContext doorsObjectContext) {
-        return run(doorsObjectContext);
+    public final O classify(final ExampleContext exampleContext) {
+        return run(exampleContext);
     }
 
-    protected abstract E run(final DoorsObjectContext context);
+    protected abstract O run(final ExampleContext exampleContext);
 
 }
