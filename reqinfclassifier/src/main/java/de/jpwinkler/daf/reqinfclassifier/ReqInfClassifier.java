@@ -1,12 +1,11 @@
 package de.jpwinkler.daf.reqinfclassifier;
 
 import de.jpwinkler.daf.reqinfclassifier.clusterclassifier.ClusterClassifier;
-import de.jpwinkler.daf.reqinfclassifier.convnetclassifier.ConvNetClassificationResult;
 import de.jpwinkler.daf.reqinfclassifier.convnetclassifier.ConvNetClassifier;
 import de.jpwinkler.daf.reqinfclassifier.structuralclassifier.StructuralClassifier;
 import de.jpwinkler.daf.reqinfclassifier.templateclassifier.TemplateClassifier;
 
-public class ReqInfClassifier extends Classifier<ReqInfClassificationResult> {
+public class ReqInfClassifier extends Classifier<ClassificationResult> {
 
     private final ClusterClassifier clusterClassifier;
     private final TemplateClassifier templateClassifier;
@@ -22,26 +21,20 @@ public class ReqInfClassifier extends Classifier<ReqInfClassificationResult> {
     }
 
     @Override
-    protected ReqInfClassificationResult run(final ExampleContext context) {
+    protected ClassificationResult run(final ExampleContext context) {
 
-        final ReqInfClassificationResult result = new ReqInfClassificationResult();
+        ClassificationResult result;
 
         if (context.getExample().isHeading()) {
-            result.setObjectType("heading");
+            result = new ClassificationResult("heading", "heading");
         } else {
-            String label = templateClassifier.classify(context);
-            if (label != null) {
-                result.setObjectType(label);
-            } else {
+            result = templateClassifier.classify(context);
+            if (result == null) {
                 final String structuralType = structuralClassifier.classify(context);
-                label = clusterClassifier.classify(context);
-                if (label != null) {
-                    result.setObjectType(label);
-                } else if (structuralType.contains("sentence")) {
-                    final ConvNetClassificationResult convNetResult = convNetClassifier.classify(context);
-                    result.setObjectType(convNetResult.getObjectType());
+                result = clusterClassifier.classify(context);
+                if (result == null && structuralType.contains("sentence")) {
+                    result = convNetClassifier.classify(context);
                 }
-
             }
         }
 

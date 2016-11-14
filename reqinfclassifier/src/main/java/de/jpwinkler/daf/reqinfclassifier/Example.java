@@ -4,7 +4,7 @@ public interface Example {
 
     String getText();
 
-    String getKey();
-
     boolean isHeading();
+
+    String getAttributeValue(String attributeName);
 }

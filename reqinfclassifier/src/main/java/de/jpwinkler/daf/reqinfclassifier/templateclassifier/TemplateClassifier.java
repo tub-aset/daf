@@ -9,11 +9,12 @@ import org.apache.commons.io.IOUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
+import de.jpwinkler.daf.reqinfclassifier.ClassificationResult;
 import de.jpwinkler.daf.reqinfclassifier.Classifier;
 import de.jpwinkler.daf.reqinfclassifier.ClassifierContext;
 import de.jpwinkler.daf.reqinfclassifier.ExampleContext;
 
-public class TemplateClassifier extends Classifier<String> {
+public class TemplateClassifier extends Classifier<ClassificationResult> {
 
     private Map<String, String> templateTypes;
 
@@ -28,10 +29,10 @@ public class TemplateClassifier extends Classifier<String> {
     }
 
     @Override
-    protected String run(final ExampleContext context) {
-        final String srcId = context.getExample().getKey();
+    protected ClassificationResult run(final ExampleContext context) {
+        final String srcId = context.getExample().getAttributeValue("SourceID");
         if (srcId != null) {
-            return templateTypes.get(srcId);
+            return new ClassificationResult(templateTypes.get(srcId), "template");
         } else {
             return null;
         }

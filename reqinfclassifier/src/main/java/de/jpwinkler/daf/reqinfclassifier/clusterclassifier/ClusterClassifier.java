@@ -7,12 +7,13 @@ import org.apache.commons.io.IOUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
+import de.jpwinkler.daf.reqinfclassifier.ClassificationResult;
 import de.jpwinkler.daf.reqinfclassifier.Classifier;
 import de.jpwinkler.daf.reqinfclassifier.ClassifierContext;
 import de.jpwinkler.daf.reqinfclassifier.ExampleContext;
 import info.debatty.java.stringsimilarity.NormalizedLevenshtein;
 
-public class ClusterClassifier extends Classifier<String> {
+public class ClusterClassifier extends Classifier<ClassificationResult> {
 
     private Cluster[] clusters;
     private final NormalizedLevenshtein distance;
@@ -29,7 +30,7 @@ public class ClusterClassifier extends Classifier<String> {
     }
 
     @Override
-    protected String run(final ExampleContext context) {
+    protected ClassificationResult run(final ExampleContext context) {
         final String text = context.getExample().getText();
 
         double minDistance = Double.MAX_VALUE;
@@ -50,7 +51,7 @@ public class ClusterClassifier extends Classifier<String> {
         }
 
         if (label != null && minDistance < 0.5) {
-            return label;
+            return new ClassificationResult(label, "cluster");
         } else {
             return null;
         }
