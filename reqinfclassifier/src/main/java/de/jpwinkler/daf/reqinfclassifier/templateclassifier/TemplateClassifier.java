@@ -31,7 +31,7 @@ public class TemplateClassifier extends Classifier<ClassificationResult> {
     @Override
     protected ClassificationResult run(final ExampleContext context) {
         final String srcId = context.getExample().getAttributeValue("SourceID");
-        if (srcId != null) {
+        if (srcId != null && templateTypes.containsKey(srcId)) {
             return new ClassificationResult(templateTypes.get(srcId), "template");
         } else {
             return null;
