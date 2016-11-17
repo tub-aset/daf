@@ -1,5 +1,7 @@
 package de.jpwinkler.daf.reqinfclassifier.clusterclassifier;
 
+import info.debatty.java.stringsimilarity.NormalizedLevenshtein;
+
 import java.io.IOException;
 
 import org.apache.commons.io.IOUtils;
@@ -7,11 +9,12 @@ import org.apache.commons.io.IOUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
+import de.jpwinkler.daf.reqinfclassifier.ClassificationReliability;
 import de.jpwinkler.daf.reqinfclassifier.ClassificationResult;
+import de.jpwinkler.daf.reqinfclassifier.ClassifiedBy;
 import de.jpwinkler.daf.reqinfclassifier.Classifier;
 import de.jpwinkler.daf.reqinfclassifier.ClassifierContext;
 import de.jpwinkler.daf.reqinfclassifier.ExampleContext;
-import info.debatty.java.stringsimilarity.NormalizedLevenshtein;
 
 public class ClusterClassifier extends Classifier<ClassificationResult> {
 
@@ -51,7 +54,7 @@ public class ClusterClassifier extends Classifier<ClassificationResult> {
         }
 
         if (label != null && minDistance < 0.5) {
-            return new ClassificationResult(label, "cluster");
+            return new ClassificationResult(label, ClassifiedBy.CLUSTER_CLASSIFIER, ClassificationReliability.MOST_LIKELY_CORRECT);
         } else {
             return null;
         }

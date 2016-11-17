@@ -3,27 +3,33 @@ package de.jpwinkler.daf.reqinfclassifier;
 public class ClassificationResult {
 
     private String objectType;
-    private String classifier;
+    private ClassifiedBy classifiedBy;
+    private ClassificationReliability reliability;
+    
 
-    public String getClassifier() {
-        return classifier;
-    }
+    
 
-    public void setClassifier(final String classifier) {
-        this.classifier = classifier;
-    }
+	public ClassificationResult() {
+		super();
+	}
 
-    public ClassificationResult() {
-        super();
-    }
+	public ClassificationResult(String objectType, ClassifiedBy classifiedBy,
+			ClassificationReliability reliability) {
+		super();
+		this.objectType = objectType;
+		this.classifiedBy = classifiedBy;
+		this.reliability = reliability;
+	}
 
-    public ClassificationResult(final String objectType, final String classifier) {
-        super();
-        this.objectType = objectType;
-        this.classifier = classifier;
-    }
+	public ClassifiedBy getClassifiedBy() {
+		return classifiedBy;
+	}
 
-    public String getObjectType() {
+	public void setClassifiedBy(ClassifiedBy classifiedBy) {
+		this.classifiedBy = classifiedBy;
+	}
+
+	public String getObjectType() {
         return objectType;
     }
 
@@ -31,4 +37,14 @@ public class ClassificationResult {
         this.objectType = objectType;
     }
 
+	public ClassificationReliability getReliability() {
+		return reliability;
+	}
+
+	public void setReliability(ClassificationReliability reliability) {
+		this.reliability = reliability;
+	}
+    
+    
+    
 }

@@ -1,52 +1,56 @@
 package de.jpwinkler.daf.reqinfclassifier.convnetclassifier;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+import de.jpwinkler.daf.reqinfclassifier.ClassificationReliability;
 import de.jpwinkler.daf.reqinfclassifier.ClassificationResult;
+import de.jpwinkler.daf.reqinfclassifier.ClassifiedBy;
 
 public class ConvNetClassificationResult extends ClassificationResult {
 
-    private final Map<String, Double> probabilities = new HashMap<>();
+	private final Map<String, Double> probabilities = new HashMap<>();
 
-    private List<Double> influenceVector = new ArrayList<>();
+	private SentenceMarkup sentenceMarkup;
 
-    private double outputDifference;
+	private double outputDifference;
 
-    private double fractionOfKnownWords;
+	private double fractionOfKnownWords;
 
-    public ConvNetClassificationResult() {
-        setClassifier("convnet");
-    }
+	public ConvNetClassificationResult() {
+		super();
+	}
 
-    public Map<String, Double> getProbabilities() {
-        return probabilities;
-    }
+	public ConvNetClassificationResult(final String objectType, final ClassifiedBy classifiedBy, final ClassificationReliability reliability) {
+		super(objectType, classifiedBy, reliability);
+	}
 
-    public List<Double> getInfluenceVector() {
-        return influenceVector;
-    }
+	public Map<String, Double> getProbabilities() {
+		return probabilities;
+	}
 
-    public void setInfluenceVector(final List<Double> influenceVector) {
-        this.influenceVector = influenceVector;
-    }
+	public SentenceMarkup getSentenceMarkup() {
+		return sentenceMarkup;
+	}
 
-    public double getOutputDifference() {
-        return outputDifference;
-    }
+	public void setSentenceMarkup(final SentenceMarkup sentenceMarkup) {
+		this.sentenceMarkup = sentenceMarkup;
+	}
 
-    public void setOutputDifference(final double outputDifference) {
-        this.outputDifference = outputDifference;
-    }
+	public double getOutputDifference() {
+		return outputDifference;
+	}
 
-    public double getFractionOfKnownWords() {
-        return fractionOfKnownWords;
-    }
+	public void setOutputDifference(final double outputDifference) {
+		this.outputDifference = outputDifference;
+	}
 
-    public void setFractionOfKnownWords(final double fractionOfKnownWords) {
-        this.fractionOfKnownWords = fractionOfKnownWords;
-    }
+	public double getFractionOfKnownWords() {
+		return fractionOfKnownWords;
+	}
+
+	public void setFractionOfKnownWords(final double fractionOfKnownWords) {
+		this.fractionOfKnownWords = fractionOfKnownWords;
+	}
 
 }

@@ -16,6 +16,7 @@ import org.mapdb.DBMaker;
 
 import de.jpwinkler.daf.reqinfclassifier.utils.Counter;
 import de.jpwinkler.libs.stringprocessing.patternprogram.PatternProgram;
+import de.jpwinkler.libs.stringprocessing.tokens.Token;
 import de.jpwinkler.libs.stringprocessing.tokens.Tokenizer;
 import edu.stanford.nlp.parser.lexparser.LexicalizedParser;
 import edu.stanford.nlp.process.DocumentPreprocessor;
@@ -74,8 +75,8 @@ public class ClassifierContext {
         return StringUtils.join(preprocessor.execute(Tokenizer.tokenizeString(input)), separator);
     }
 
-    public String convNetPreprocess(final String input) {
-        return StringUtils.join(convNetPreprocessor.execute(preprocessor.execute(Tokenizer.tokenizeString(input))), " ");
+    public List<Token> convNetPreprocess(final String input) {
+        return convNetPreprocessor.execute(preprocessor.execute(Tokenizer.tokenizeString(input)));
     }
 
     public List<Tree> parseTrees(final String text) {

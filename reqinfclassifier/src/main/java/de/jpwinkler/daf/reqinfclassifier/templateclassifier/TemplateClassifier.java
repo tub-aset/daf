@@ -9,7 +9,9 @@ import org.apache.commons.io.IOUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
+import de.jpwinkler.daf.reqinfclassifier.ClassificationReliability;
 import de.jpwinkler.daf.reqinfclassifier.ClassificationResult;
+import de.jpwinkler.daf.reqinfclassifier.ClassifiedBy;
 import de.jpwinkler.daf.reqinfclassifier.Classifier;
 import de.jpwinkler.daf.reqinfclassifier.ClassifierContext;
 import de.jpwinkler.daf.reqinfclassifier.ExampleContext;
@@ -32,7 +34,7 @@ public class TemplateClassifier extends Classifier<ClassificationResult> {
     protected ClassificationResult run(final ExampleContext context) {
         final String srcId = context.getExample().getAttributeValue("SourceID");
         if (srcId != null && templateTypes.containsKey(srcId)) {
-            return new ClassificationResult(templateTypes.get(srcId), "template");
+            return new ClassificationResult(templateTypes.get(srcId), ClassifiedBy.TEMPLATE_CLASSIFIER, ClassificationReliability.DEFINITELY_CORRECT);
         } else {
             return null;
         }

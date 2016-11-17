@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import de.jpwinkler.libs.stringprocessing.tokens.Token;
 import edu.stanford.nlp.trees.Tree;
 
 public class ExampleContext {
@@ -13,7 +14,7 @@ public class ExampleContext {
     private final Example example;
 
     private String preprocessedText;
-    private String convNetPreprocessedText;
+    private List<Token> convNetPreprocessedTokens;
 
     private List<String> lines;
     private List<String> preprocessedLines;
@@ -42,11 +43,15 @@ public class ExampleContext {
         return preprocessedText;
     }
 
-    public String getConvNetPreprocessedText() {
-        if (convNetPreprocessedText == null) {
-            convNetPreprocessedText = context.convNetPreprocess(example.getText());
-        }
-        return convNetPreprocessedText;
+    public List<String> getConvNetPreprocessedText() {
+        return getConvNetPreprocessedTokens().stream().map(t -> t.getString()).collect(Collectors.toList());
+    }
+    
+    public List<Token> getConvNetPreprocessedTokens() {
+    	if (convNetPreprocessedTokens == null) {
+    		convNetPreprocessedTokens = context.convNetPreprocess(example.getText());
+    	}
+    	return convNetPreprocessedTokens;
     }
 
     public List<String> getLines() {
