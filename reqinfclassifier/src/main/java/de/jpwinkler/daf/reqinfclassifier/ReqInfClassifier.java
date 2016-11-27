@@ -12,7 +12,7 @@ public class ReqInfClassifier extends Classifier<ClassificationResult> {
     private final TemplateClassifier templateClassifier;
     private final StructuralClassifier structuralClassifier;
     private final ConvNetClassifier convNetClassifier;
-	private final HeadingClassifier headingClassifier;
+    private final HeadingClassifier headingClassifier;
 
     public ReqInfClassifier(final ClassifierContext context, final String templateName) {
         super(context);
@@ -30,27 +30,27 @@ public class ReqInfClassifier extends Classifier<ClassificationResult> {
 
         result = headingClassifier.classify(context);
         if (result != null) {
-        	return result;
+            return result;
         }
-        
+
         result = templateClassifier.classify(context);
         if (result != null) {
-        	return result;
+            return result;
         }
-        
+
         result = clusterClassifier.classify(context);
         if (result != null) {
-        	return result;
+            return result;
         }
-        
+
         final String structuralType = structuralClassifier.classify(context);
         if (structuralType.contains("sentence")) {
             result = convNetClassifier.classify(context);
             if (result != null) {
-            	return result;
+                return result;
             }
         }
-        
+
         return null;
     }
 

@@ -29,6 +29,10 @@ public class ConvNetClassificationResult extends ClassificationResult {
 		return probabilities;
 	}
 
+	public double getHighestProbability() {
+		return probabilities.values().stream().mapToDouble(d -> d).max().getAsDouble();
+	}
+
 	public SentenceMarkup getSentenceMarkup() {
 		return sentenceMarkup;
 	}

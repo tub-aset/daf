@@ -7,4 +7,6 @@ public interface Example {
     boolean isHeading();
 
     String getAttributeValue(String attributeName);
+
+    String getKey();
 }

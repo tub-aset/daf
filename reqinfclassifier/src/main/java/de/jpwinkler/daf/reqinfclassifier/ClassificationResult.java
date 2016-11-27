@@ -5,31 +5,27 @@ public class ClassificationResult {
     private String objectType;
     private ClassifiedBy classifiedBy;
     private ClassificationReliability reliability;
-    
 
-    
+    public ClassificationResult() {
+        super();
+    }
 
-	public ClassificationResult() {
-		super();
-	}
+    public ClassificationResult(final String objectType, final ClassifiedBy classifiedBy, final ClassificationReliability reliability) {
+        super();
+        this.objectType = objectType;
+        this.classifiedBy = classifiedBy;
+        this.reliability = reliability;
+    }
 
-	public ClassificationResult(String objectType, ClassifiedBy classifiedBy,
-			ClassificationReliability reliability) {
-		super();
-		this.objectType = objectType;
-		this.classifiedBy = classifiedBy;
-		this.reliability = reliability;
-	}
+    public ClassifiedBy getClassifiedBy() {
+        return classifiedBy;
+    }
 
-	public ClassifiedBy getClassifiedBy() {
-		return classifiedBy;
-	}
+    public void setClassifiedBy(final ClassifiedBy classifiedBy) {
+        this.classifiedBy = classifiedBy;
+    }
 
-	public void setClassifiedBy(ClassifiedBy classifiedBy) {
-		this.classifiedBy = classifiedBy;
-	}
-
-	public String getObjectType() {
+    public String getObjectType() {
         return objectType;
     }
 
@@ -37,14 +33,12 @@ public class ClassificationResult {
         this.objectType = objectType;
     }
 
-	public ClassificationReliability getReliability() {
-		return reliability;
-	}
+    public ClassificationReliability getReliability() {
+        return reliability;
+    }
 
-	public void setReliability(ClassificationReliability reliability) {
-		this.reliability = reliability;
-	}
-    
-    
-    
+    public void setReliability(final ClassificationReliability reliability) {
+        this.reliability = reliability;
+    }
+
 }

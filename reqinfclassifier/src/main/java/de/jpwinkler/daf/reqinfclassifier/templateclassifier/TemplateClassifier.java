@@ -32,9 +32,9 @@ public class TemplateClassifier extends Classifier<ClassificationResult> {
 
     @Override
     protected ClassificationResult run(final ExampleContext context) {
-        final String srcId = context.getExample().getAttributeValue("SourceID");
-        if (srcId != null && templateTypes.containsKey(srcId)) {
-            return new ClassificationResult(templateTypes.get(srcId), ClassifiedBy.TEMPLATE_CLASSIFIER, ClassificationReliability.DEFINITELY_CORRECT);
+        final String key = context.getExample().getKey();
+        if (key != null && templateTypes.containsKey(key)) {
+            return new ClassificationResult(templateTypes.get(key), ClassifiedBy.TEMPLATE_CLASSIFIER, ClassificationReliability.DEFINITELY_CORRECT);
         } else {
             return null;
         }
