@@ -14,7 +14,6 @@ import java.util.logging.Logger;
 import de.jpwinkler.daf.csveditor.background.BackgroundTask;
 import de.jpwinkler.daf.csveditor.background.BackgroundTaskStatusListener;
 import de.jpwinkler.daf.csveditor.background.BackgroundTaskStatusMonitor;
-import de.jpwinkler.daf.csveditor.commands.UpdateAction;
 import de.jpwinkler.daf.csveditor.massedit.CopyAttributeOperation;
 import de.jpwinkler.daf.csveditor.massedit.MassEditOperation;
 import de.jpwinkler.daf.csveditor.massedit.MassEditTarget;
@@ -23,12 +22,9 @@ import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
 import de.jpwinkler.daf.dafcore.util.CSVParseException;
-import de.jpwinkler.daf.dataprocessing.preprocessing.ObjectTextPreprocessor;
-import de.jpwinkler.libs.stringprocessing.patternprogram.PatternProgram;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -43,7 +39,6 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToolBar;
@@ -83,15 +78,7 @@ public class CSVEditorController {
 
     final Map<DoorsTreeNode, Boolean> expanded = new WeakHashMap<>();
 
-    private final ObjectTextPreprocessor preprocessor = ObjectTextPreprocessor.getEmptyDisabledPreprocessor();
-
     private final BackgroundTaskStatusMonitor backgroundTaskStatusMonitor = new BackgroundTaskStatusMonitor();
-
-    @FXML
-    private TextArea preprocessorTextArea;
-
-    @FXML
-    private CheckBox preprocessorEnableCheckBox;
 
     @FXML
     private ToggleButton filterExpressionToggleButton;
@@ -229,7 +216,7 @@ public class CSVEditorController {
     }
 
     private TreeItem<OutlineTreeItem> wrapModule(final DoorsTreeNode doorsTreeNode) {
-        final TreeItem<OutlineTreeItem> treeItem = new TreeItem<OutlineTreeItem>(new OutlineTreeItem(doorsTreeNode));
+        final TreeItem<OutlineTreeItem> treeItem = new TreeItem<>(new OutlineTreeItem(doorsTreeNode));
 
         for (final DoorsTreeNode childNode : doorsTreeNode.getChildren()) {
             treeItem.getChildren().add(wrapModule(childNode));
@@ -267,7 +254,6 @@ public class CSVEditorController {
         tab.setClosable(true);
 
         controller.setMainController(this);
-        controller.setPreprocessor(preprocessor);
         controller.setFile(selectedFile);
         controller.setStage(primaryStage);
         controller.setTab(tab);
@@ -485,35 +471,6 @@ public class CSVEditorController {
         final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
         if (selectedTab != null) {
             tabControllers.get(selectedTab).flatten();
-        }
-    }
-
-    @FXML
-    public void preprocessorUpdateClicked(final ActionEvent event) {
-        preprocessor.setProgram(PatternProgram.compile(preprocessorTextArea.getText()));
-        for (final CSVEditorTabController tabController : tabControllers.values()) {
-            tabController.updateGui(UpdateAction.UPDATE_CONTENT_VIEW);
-        }
-    }
-
-    @FXML
-    public void applyPreprocessingClicked(final ActionEvent event) {
-        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-        if (selectedTab != null) {
-            tabControllers.get(selectedTab).applyPreprocessing();
-            preprocessorEnableCheckBox.setSelected(false);
-            preprocessor.setEnabled(false);
-            for (final CSVEditorTabController tabController : tabControllers.values()) {
-                tabController.updateGui(UpdateAction.UPDATE_CONTENT_VIEW);
-            }
-        }
-    }
-
-    @FXML
-    public void preprocessorEnableClicked(final ActionEvent event) {
-        preprocessor.setEnabled(preprocessorEnableCheckBox.isSelected());
-        for (final CSVEditorTabController tabController : tabControllers.values()) {
-            tabController.updateGui(UpdateAction.UPDATE_CONTENT_VIEW);
         }
     }
 

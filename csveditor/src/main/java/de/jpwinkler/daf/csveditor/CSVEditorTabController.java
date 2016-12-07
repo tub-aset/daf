@@ -13,7 +13,6 @@ import java.util.logging.Logger;
 
 import de.jpwinkler.daf.csveditor.commands.AbstractCommand;
 import de.jpwinkler.daf.csveditor.commands.AddColumnCommand;
-import de.jpwinkler.daf.csveditor.commands.ApplyPreprocessingCommand;
 import de.jpwinkler.daf.csveditor.commands.CopyObjectsAfterCommand;
 import de.jpwinkler.daf.csveditor.commands.CopyObjectsBelowCommand;
 import de.jpwinkler.daf.csveditor.commands.DeleteObjectCommand;
@@ -50,7 +49,6 @@ import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
 import de.jpwinkler.daf.dafcore.util.CSVParseException;
 import de.jpwinkler.daf.dafcore.util.DoorsModuleUtil;
-import de.jpwinkler.daf.dataprocessing.preprocessing.ObjectTextPreprocessor;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
@@ -93,8 +91,6 @@ public class CSVEditorTabController {
 
     @FXML
     private TableView<DoorsObject> contentTableView;
-
-    private ObjectTextPreprocessor preprocessor;
 
     @FXML
     public void initialize() {
@@ -215,7 +211,7 @@ public class CSVEditorTabController {
                 });
                 break;
             case OBJECT_TEXT_HEADING_COLUMN:
-                c.setCellFactory(param -> new ObjectHeadingAndObjectTextTableCell(preprocessor));
+                c.setCellFactory(param -> new ObjectHeadingAndObjectTextTableCell());
                 c.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getText()));
                 c.setOnEditCommit(event -> {
                     executeCommand(new EditObjectHeadingTextCommand(module, event.getRowValue(), event.getNewValue()));
@@ -476,10 +472,6 @@ public class CSVEditorTabController {
         executeCommand(new FlattenCommand(module));
     }
 
-    public void setPreprocessor(final ObjectTextPreprocessor preprocessor) {
-        this.preprocessor = preprocessor;
-    }
-
     public ViewModel getViewModel() {
         return viewModel;
     }
@@ -487,10 +479,6 @@ public class CSVEditorTabController {
     public void selectObject(final DoorsObject object) {
         contentTableView.getSelectionModel().select(object);
         contentTableView.scrollTo(object);
-    }
-
-    public void applyPreprocessing() {
-        executeCommand(new ApplyPreprocessingCommand(module, preprocessor));
     }
 
     public void massEdit(final MassEditTarget target, final MassEditOperation operation) {

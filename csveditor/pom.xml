@@ -19,6 +19,19 @@
 	<build>
 		<plugins>
 			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>de.jpwinkler.daf.csveditor.CSVEditorApplication</mainClass>
+						</manifest>
+					</archive>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+				</configuration>
+			</plugin>
+			<plugin>
 				<groupId>org.antlr</groupId>
 				<artifactId>antlr4-maven-plugin</artifactId>
 				<version>4.5.1</version>
@@ -33,7 +46,7 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>de.jpwinkler.daf</groupId>
@@ -51,14 +64,9 @@
 			<version>4.5.1</version>
 		</dependency>
 		<dependency>
-			<groupId>de.jpwinkler.libs</groupId>
-			<artifactId>stringprocessing</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>de.jpwinkler.daf</groupId>
-			<artifactId>dataprocessing</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.6</version>
 		</dependency>
 	</dependencies>
 </project>

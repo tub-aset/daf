@@ -136,75 +136,45 @@
       <SplitPane dividerPositions="0.28075117370892017" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <items>
             <TreeView fx:id="outlineTreeView" prefHeight="710.0" prefWidth="339.0" SplitPane.resizableWithParent="false" />
-            <SplitPane dividerPositions="0.6901408450704225" orientation="VERTICAL" prefHeight="200.0" prefWidth="700.0">
+            <SplitPane dividerPositions="0.7313237221494102" prefHeight="565.0" prefWidth="764.0">
               <items>
-                  <SplitPane dividerPositions="0.7313237221494102" prefHeight="565.0" prefWidth="764.0">
-                    <items>
-                        <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" />
-                        <TabPane SplitPane.resizableWithParent="false">
-                           <tabs>
-                              <Tab closable="false" text="Mass Edit">
-                                 <content>
-                                    <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0">
-                                       <children>
-                                          <RadioButton fx:id="massEditAllObjectsCheckBox" mnemonicParsing="false" selected="true" text="All Objects">
-                                             <toggleGroup>
-                                                <ToggleGroup fx:id="massEditTarget" />
-                                             </toggleGroup>
-                                          </RadioButton>
-                                          <RadioButton fx:id="massEditSelectedObjectsCheckBox" mnemonicParsing="false" text="All Selected Objects" toggleGroup="$massEditTarget" />
-                                          <RadioButton fx:id="massEditFilteredObjectsCheckBox" mnemonicParsing="false" text="All Visible Objects" toggleGroup="$massEditTarget" />
-                                          <Separator prefWidth="200.0" />
-                                          <RadioButton fx:id="massEditSetAttributeCheckBox" mnemonicParsing="false" selected="true" text="Set Attribute">
-                                             <toggleGroup>
-                                                <ToggleGroup fx:id="massEditAction" />
-                                             </toggleGroup>
-                                          </RadioButton>
-                                          <TextField fx:id="massEditSetAttributeNameTextField" />
-                                          <TextField fx:id="massEditSetAttributeValueTextField" />
-                                          <RadioButton fx:id="massEditCopyAttributeCheckBox" mnemonicParsing="false" text="Copy Attribute" toggleGroup="$massEditAction" />
-                                          <TextField fx:id="massEditCopyAttributeFromTextField" />
-                                          <TextField fx:id="massEditCopyAttributeToTextField" />
-                                          <Separator prefWidth="200.0" />
-                                          <Button mnemonicParsing="false" onAction="#massEditRunClicked" text="Run" />
-                                       </children>
-                                       <padding>
-                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                       </padding>
-                                    </VBox>
-                                 </content>
-                              </Tab>
-                              <Tab closable="false" text="Feature Spy">
-                                 <content>
-                                    <ListView fx:id="featureListView" prefHeight="200.0" prefWidth="200.0" />
-                                 </content>
-                              </Tab>
-                           </tabs>
-                        </TabPane>
-                    </items>
-                  </SplitPane>
+                  <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" />
                   <TabPane SplitPane.resizableWithParent="false">
                      <tabs>
-                        <Tab closable="false" text="Preprocessor">
+                        <Tab closable="false" text="Mass Edit">
                            <content>
-                              <BorderPane prefHeight="200.0" prefWidth="200.0">
-                                 <top>
-                                    <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-                                      <items>
-                                          <CheckBox fx:id="preprocessorEnableCheckBox" mnemonicParsing="false" onAction="#preprocessorEnableClicked" text="Enable Preprocessor" />
-                                        <Button mnemonicParsing="false" onAction="#preprocessorUpdateClicked" text="Update" />
-                                          <Button mnemonicParsing="false" onAction="#applyPreprocessingClicked" text="Apply Preprocessing" />
-                                      </items>
-                                    </ToolBar>
-                                 </top>
-                                 <center>
-                                    <TextArea fx:id="preprocessorTextArea" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-                                       <font>
-                                          <Font name="Courier New" size="12.0" />
-                                       </font>
-                                    </TextArea>
-                                 </center>
-                              </BorderPane>
+                              <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0">
+                                 <children>
+                                    <RadioButton fx:id="massEditAllObjectsCheckBox" mnemonicParsing="false" selected="true" text="All Objects">
+                                       <toggleGroup>
+                                          <ToggleGroup fx:id="massEditTarget" />
+                                       </toggleGroup>
+                                    </RadioButton>
+                                    <RadioButton fx:id="massEditSelectedObjectsCheckBox" mnemonicParsing="false" text="All Selected Objects" toggleGroup="$massEditTarget" />
+                                    <RadioButton fx:id="massEditFilteredObjectsCheckBox" mnemonicParsing="false" text="All Visible Objects" toggleGroup="$massEditTarget" />
+                                    <Separator prefWidth="200.0" />
+                                    <RadioButton fx:id="massEditSetAttributeCheckBox" mnemonicParsing="false" selected="true" text="Set Attribute">
+                                       <toggleGroup>
+                                          <ToggleGroup fx:id="massEditAction" />
+                                       </toggleGroup>
+                                    </RadioButton>
+                                    <TextField fx:id="massEditSetAttributeNameTextField" />
+                                    <TextField fx:id="massEditSetAttributeValueTextField" />
+                                    <RadioButton fx:id="massEditCopyAttributeCheckBox" mnemonicParsing="false" text="Copy Attribute" toggleGroup="$massEditAction" />
+                                    <TextField fx:id="massEditCopyAttributeFromTextField" />
+                                    <TextField fx:id="massEditCopyAttributeToTextField" />
+                                    <Separator prefWidth="200.0" />
+                                    <Button mnemonicParsing="false" onAction="#massEditRunClicked" text="Run" />
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </padding>
+                              </VBox>
+                           </content>
+                        </Tab>
+                        <Tab closable="false" text="Feature Spy">
+                           <content>
+                              <ListView fx:id="featureListView" prefHeight="200.0" prefWidth="200.0" />
                            </content>
                         </Tab>
                      </tabs>
@@ -219,7 +189,7 @@
          <center>
             <ToolBar prefWidth="200.0" BorderPane.alignment="CENTER">
                <items>
-                  <Label fx:id="statusBarLabel" text="You feel somewhat out of place..." />
+                  <Label fx:id="statusBarLabel" text="You feel somehow out of place..." />
                </items>
             </ToolBar>
          </center>
