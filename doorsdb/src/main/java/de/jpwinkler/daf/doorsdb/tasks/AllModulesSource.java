@@ -19,7 +19,6 @@ public class AllModulesSource implements ModuleSource {
 
             @Override
             public void visit(final DBModule module) {
-                System.out.println(module.getFullName());
                 consumer.accept(module);
             }
 
