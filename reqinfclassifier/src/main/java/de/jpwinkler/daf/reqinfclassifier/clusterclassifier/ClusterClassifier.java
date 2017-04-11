@@ -1,6 +1,7 @@
 package de.jpwinkler.daf.reqinfclassifier.clusterclassifier;
 
-import info.debatty.java.stringsimilarity.NormalizedLevenshtein;
+import info.debatty.java.stringsimilarity.JaroWinkler;
+import info.debatty.java.stringsimilarity.interfaces.NormalizedStringSimilarity;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,59 +25,68 @@ import de.jpwinkler.daf.reqinfclassifier.ExampleContext;
 public class ClusterClassifier extends Classifier<ClusterClassificationResult> {
 
     private Cluster[] clusters;
-    private final NormalizedLevenshtein distance;
+    private final NormalizedStringSimilarity similiarityFunction;
 
     public ClusterClassifier(final ClassifierContext context) {
         super(context);
         try {
             clusters = new Gson().fromJson(IOUtils.toString(getClass().getClassLoader().getResourceAsStream("de/jpwinkler/daf/reqinfclassifier/clusterclassifier/clusters.json")), Cluster[].class);
         } catch (JsonSyntaxException | IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        distance = new NormalizedLevenshtein();
+        similiarityFunction = new JaroWinkler();
     }
 
     @Override
     protected ClusterClassificationResult run(final ExampleContext context) {
-        final String text = context.getExample().getText();
+        final String text = context.getPreprocessedText();
 
-        double minDistance = Double.MAX_VALUE;
+        double maxSimiliarity = Double.MIN_VALUE;
         Cluster cluster = null;
 
-        final Map<String, Double> distances = new HashMap<>();
+        final Map<String, Double> similiarityMap = new HashMap<>();
 
         for (final Cluster c : clusters) {
 
-            double distanceSum = 0;
+            double similiaritySum = 0;
 
             for (final String example : c.getExamples()) {
 
-                final double d = distance.distance(example, text);
-                distanceSum += d;
-                distances.put(example, d);
+                final double similiarity = similiarityFunction.similarity(example, text);
+                similiaritySum += similiarity;
+                similiarityMap.put(example, similiarity);
 
             }
-            final double avgDistance = (distanceSum / c.getExamples().size());
-            if (avgDistance < minDistance) {
-                minDistance = avgDistance;
+            final double avgSimiliarity = (similiaritySum / c.getExamples().size());
+            if (avgSimiliarity > maxSimiliarity) {
+                maxSimiliarity = avgSimiliarity;
                 cluster = c;
             }
         }
 
-        if (cluster != null && minDistance < 0.5) {
+        ClassificationReliability reliability = null;
+        if (maxSimiliarity > 0.95) {
+            reliability = ClassificationReliability.MOST_LIKELY_CORRECT;
+        } else if (maxSimiliarity > 0.8) {
+            reliability = ClassificationReliability.MAYBE_CORRECT;
+        }
 
-            final ClusterClassificationResult result = new ClusterClassificationResult(cluster.getLabel(), ClassifiedBy.CLUSTER_CLASSIFIER, ClassificationReliability.MOST_LIKELY_CORRECT);
+        if (cluster != null && reliability != null) {
+
+            final ClusterClassificationResult result = new ClusterClassificationResult(cluster.getLabel(), ClassifiedBy.CLUSTER_CLASSIFIER, reliability);
             final List<String> list = new ArrayList<>(cluster.getExamples());
             Collections.sort(list, new Comparator<String>() {
 
                 @Override
                 public int compare(final String o1, final String o2) {
-                    return Double.compare(distances.get(o1), distances.get(o2));
+                    return Double.compare(similiarityMap.get(o2), similiarityMap.get(o1));
                 }
             });
-            result.getSimiliarExamples().addAll(list.subList(0, Math.min(list.size(), 3)));
-            result.setMinDistance(minDistance);
+            for (int i = 0; i < Math.min(list.size(), 3); i++) {
+                result.getMostSimiliarExamples().add(list.get(i));
+                result.getExampleSimiliarities().add(similiarityMap.get(list.get(i)));
+            }
+            result.setObjectType(cluster.getLabel());
             return result;
         } else {
             return null;

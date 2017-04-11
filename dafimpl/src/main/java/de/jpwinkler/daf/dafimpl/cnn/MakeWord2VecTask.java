@@ -7,11 +7,13 @@ import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
+
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
-import de.jpwinkler.daf.dafimpl.Attributes;
+import de.jpwinkler.daf.dafimpl.util.DoorsObjectWrapper;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBModule;
 import de.jpwinkler.daf.doorsdb.search.HasTagsSearchExpression;
-import de.jpwinkler.daf.doorsdb.tasks.FolderSource;
+import de.jpwinkler.daf.doorsdb.tasks.AllModulesSource;
 import de.jpwinkler.daf.doorsdb.tasks.ModuleTaskBuilder;
 import de.jpwinkler.daf.doorsdb.tasks.ObjectCSVPass;
 import de.jpwinkler.daf.reqinfclassifier.ClassifierContext;
@@ -32,30 +34,16 @@ public class MakeWord2VecTask {
 
         @Override
         protected void processObject(final DoorsObject object) {
-            String text = classifierContext.preprocess(object.getText(), " ");
-            text = text.toLowerCase();
-            text = text.replace("\n", " ");
-            text = text.replace("\r", " ");
-            text = text.replace("\t", " ");
-            while (text.contains("  ")) {
-                text = text.replace("  ", " ");
-            }
-            if (writtenObjects.contains(text)) {
-                return;
-            }
-            if (object.isHeading()) {
-                return;
-            }
-            final String srcId = object.getAttributes().get(Attributes.SOURCE_ID);
-            if (srcId == null || srcId.startsWith("STLH-") || srcId.startsWith("SB-")) {
-                return;
-            }
-            final String structuralType = structuralClassifier.classify(object);
-            if (structuralType == null || !structuralType.contains("sentence")) {
+            final String text = StringUtils.join(classifierContext.convNetPreprocess(object.getText()), ' ');
+            // if (writtenObjects.contains(text)) {
+            // return;
+            // }
+            final String structuralType = structuralClassifier.classify(new DoorsObjectWrapper(object));
+            if (!object.isHeading() && (structuralType == null || !structuralType.contains("sentence"))) {
                 return;
             }
 
-            writtenObjects.add(text);
+            // writtenObjects.add(text);
             writerW2V.write(text + "\n");
         }
 
@@ -77,7 +65,7 @@ public class MakeWord2VecTask {
     }
 
     public static void main(final String[] args) throws FileNotFoundException, IOException {
-        new ModuleTaskBuilder().withPass(new Pass()).withSource(new FolderSource("/Body")).withFilter(new HasTagsSearchExpression("lang:de")).buildAndRun();
+        new ModuleTaskBuilder().withPass(new Pass()).withSource(new AllModulesSource()).withFilter(new HasTagsSearchExpression("lang:de")).buildAndRun();
     }
 
 }

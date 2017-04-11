@@ -5,10 +5,10 @@ import java.util.List;
 
 public class SentenceMarkup {
 
-	private final List<SentenceMarkupRange> ranges = new ArrayList<SentenceMarkupRange>();
+    private final List<SentenceMarkupRange> ranges = new ArrayList<>();
 
-	public List<SentenceMarkupRange> getRanges() {
-		return ranges;
-	}
+    public List<SentenceMarkupRange> getRanges() {
+        return ranges;
+    }
 
 }

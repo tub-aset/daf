@@ -20,11 +20,10 @@ import de.jpwinkler.daf.doorsdb.tasks.ObjectCSVPass;
 
 public class ExtractTemplateDataTask {
 
-    private static final String TEMPLATE_VER = "6.3.2";
+    private static final String TEMPLATE_VER = "2.0";
     private static final List<String> IGNORE_LIST = Arrays.asList("", "»...«");
-    private static final String TEMPLATE = "/Templates/KLH/Standardvorlage Technik-KLH/Vorlagen/KLH " + TEMPLATE_VER + "/KLH " + TEMPLATE_VER + " Content";
 
-    private static final String TEMPLATE2 = "/Templates/KLH/Standardvorlage Technik-KLH/Vorlagen/KLH 6.x/KLHV Content Complete " + TEMPLATE_VER;
+    private static final String TEMPLATE2 = "/Templates/SLH/Vorlagen/SB " + TEMPLATE_VER + "/SB " + TEMPLATE_VER + " Content";
 
     private static class Pass extends ObjectCSVPass {
         private final Map<String, String> types = new HashMap<>();
@@ -48,12 +47,12 @@ public class ExtractTemplateDataTask {
 
         @Override
         public void postprocess() {
-            try (FileOutputStream fos = new FileOutputStream("stlh-" + TEMPLATE_VER + ".json")) {
+            try (FileOutputStream fos = new FileOutputStream("slh-" + TEMPLATE_VER + ".json")) {
                 IOUtils.write(new GsonBuilder().setPrettyPrinting().create().toJson(types), fos);
             } catch (final IOException e) {
                 e.printStackTrace();
             }
-            try (FileOutputStream fos = new FileOutputStream("stlh-" + TEMPLATE_VER + "-text.json")) {
+            try (FileOutputStream fos = new FileOutputStream("slh-" + TEMPLATE_VER + "-text.json")) {
                 IOUtils.write(new GsonBuilder().setPrettyPrinting().create().toJson(texts), fos);
             } catch (final IOException e) {
                 e.printStackTrace();

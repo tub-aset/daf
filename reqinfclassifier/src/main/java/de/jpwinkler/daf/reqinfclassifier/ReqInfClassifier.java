@@ -1,6 +1,7 @@
 package de.jpwinkler.daf.reqinfclassifier;
 
 import de.jpwinkler.daf.reqinfclassifier.clusterclassifier.ClusterClassifier;
+import de.jpwinkler.daf.reqinfclassifier.convnetclassifier.ConvNetClassificationResult;
 import de.jpwinkler.daf.reqinfclassifier.convnetclassifier.ConvNetClassifier;
 import de.jpwinkler.daf.reqinfclassifier.headingclassifier.HeadingClassifier;
 import de.jpwinkler.daf.reqinfclassifier.structuralclassifier.StructuralClassifier;
@@ -13,6 +14,7 @@ public class ReqInfClassifier extends Classifier<ClassificationResult> {
     private final StructuralClassifier structuralClassifier;
     private final ConvNetClassifier convNetClassifier;
     private final HeadingClassifier headingClassifier;
+    private final MultiSentenceClassifier multiSentenceClassifier;
 
     public ReqInfClassifier(final ClassifierContext context, final String templateName) {
         super(context);
@@ -21,6 +23,7 @@ public class ReqInfClassifier extends Classifier<ClassificationResult> {
         clusterClassifier = new ClusterClassifier(context);
         structuralClassifier = new StructuralClassifier(context);
         convNetClassifier = new ConvNetClassifier(context);
+        multiSentenceClassifier = new MultiSentenceClassifier(context, convNetClassifier);
     }
 
     @Override
@@ -45,9 +48,13 @@ public class ReqInfClassifier extends Classifier<ClassificationResult> {
 
         final String structuralType = structuralClassifier.classify(context);
         if (structuralType.contains("sentence")) {
-            result = convNetClassifier.classify(context);
+            result = multiSentenceClassifier.classify(context);
             if (result != null) {
                 return result;
+            }
+            final ConvNetClassificationResult convNetClassificationResult = convNetClassifier.classify(context);
+            if (convNetClassificationResult != null && convNetClassificationResult.getReliability().atLeast(ClassificationReliability.MAYBE_CORRECT)) {
+                return convNetClassificationResult;
             }
         }
 

@@ -12,6 +12,7 @@ import com.google.gson.GsonBuilder;
 
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.util.Counter;
+import de.jpwinkler.daf.dafimpl.util.DoorsObjectWrapper;
 import de.jpwinkler.daf.dafimpl.util.NounPopularity;
 import de.jpwinkler.daf.doorsdb.search.HasTagsSearchExpression;
 import de.jpwinkler.daf.doorsdb.tasks.AllModulesSource;
@@ -71,7 +72,7 @@ public class CommonWordTypeExtractorTask {
         @Override
         protected void processObject(final DoorsObject object) {
             final String srcId = object.getAttributes().get("SourceID");
-            if (srcId != null && !srcId.contains("STLH-") && !srcId.contains("SB-") && classifier.classify(object).startsWith("sentence")) {
+            if (srcId != null && !srcId.contains("STLH-") && !srcId.contains("SB-") && classifier.classify(new DoorsObjectWrapper(object)).startsWith("sentence")) {
                 final List<Tree> parsedSentences = context.parseTrees(context.preprocess(object.getText()));
 
                 parsedSentences.forEach(t -> extractWords(t));

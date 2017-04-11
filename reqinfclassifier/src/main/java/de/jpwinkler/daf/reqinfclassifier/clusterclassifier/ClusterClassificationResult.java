@@ -9,28 +9,24 @@ import de.jpwinkler.daf.reqinfclassifier.ClassifiedBy;
 
 public class ClusterClassificationResult extends ClassificationResult {
 
-	private final List<String> similiarExamples = new ArrayList<>();
+    private final List<String> mostSimiliarExamples = new ArrayList<>();
 
-	private double minDistance;
+    private final List<Double> exampleSimiliarities = new ArrayList<>();
 
-	public ClusterClassificationResult() {
-		super();
-	}
+    public ClusterClassificationResult() {
+        super();
+    }
 
-	public ClusterClassificationResult(final String objectType, final ClassifiedBy classifiedBy, final ClassificationReliability reliability) {
-		super(objectType, classifiedBy, reliability);
-	}
+    public ClusterClassificationResult(final String objectType, final ClassifiedBy classifiedBy, final ClassificationReliability reliability) {
+        super(objectType, classifiedBy, reliability);
+    }
 
-	public List<String> getSimiliarExamples() {
-		return similiarExamples;
-	}
+    public List<String> getMostSimiliarExamples() {
+        return mostSimiliarExamples;
+    }
 
-	public double getMinDistance() {
-		return minDistance;
-	}
-
-	public void setMinDistance(final double minDistance) {
-		this.minDistance = minDistance;
-	}
+    public List<Double> getExampleSimiliarities() {
+        return exampleSimiliarities;
+    }
 
 }

@@ -4,7 +4,7 @@ import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
 import de.jpwinkler.daf.dafcore.util.DoorsModuleUtil;
 import de.jpwinkler.daf.reqinfclassifier.ClassifierContext;
-import de.jpwinkler.daf.reqinfclassifier.DoorsObjectContext;
+import de.jpwinkler.daf.reqinfclassifier.ExampleContext;
 import de.jpwinkler.daf.reqinfclassifier.clusterclassifier.ClusterClassifier;
 import de.jpwinkler.daf.reqinfclassifier.convnetclassifier.ConvNetClassifier;
 import de.jpwinkler.daf.reqinfclassifier.structuralclassifier.StructuralClassifier;
@@ -68,7 +68,7 @@ public class TaskQueueFillThread extends Thread {
             return null;
         }
 
-        final DoorsObjectContext ctx = new DoorsObjectContext(object, ClassifierContext.getInstance());
+        final ExampleContext ctx = new ExampleContext(object, ClassifierContext.getInstance());
 
         t.setStructuralType(structuralClassifier.classify(ctx));
 
@@ -79,8 +79,8 @@ public class TaskQueueFillThread extends Thread {
         t.setClusterAnalysisObjectType(clusterClassifier.classify(ctx));
 
         t.setConvNetClassification(convNetClassifier.classify(ctx));
-        t.setConvNetInf((Double) ctx.getProperties().get(DoorsObjectContext.PROPERTY_CONVNET_CLASSIFIER_INFORMATION));
-        t.setConvNetReq((Double) ctx.getProperties().get(DoorsObjectContext.PROPERTY_CONVNET_CLASSIFIER_REQUIREMENT));
+        t.setConvNetInf((Double) ctx.getProperties().get(ExampleContext.PROPERTY_CONVNET_CLASSIFIER_INFORMATION));
+        t.setConvNetReq((Double) ctx.getProperties().get(ExampleContext.PROPERTY_CONVNET_CLASSIFIER_REQUIREMENT));
 
         // if (t.getOnlineConvNetClassification().equals(t.getOriginalObjectType())) {
         // return null;
