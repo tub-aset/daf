@@ -41,4 +41,9 @@ public class ClassificationResult {
         this.reliability = reliability;
     }
 
+    @Override
+    public String toString() {
+        return getObjectType();
+    }
+
 }
