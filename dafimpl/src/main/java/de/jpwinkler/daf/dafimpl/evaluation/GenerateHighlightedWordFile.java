@@ -48,7 +48,7 @@ public class GenerateHighlightedWordFile {
 
         final ConvNetClassifier convNetClassifier = new ConvNetClassifier(ClassifierContext.getInstance());
 
-        final List<String> examples = IOUtils.readLines(new FileInputStream("temp.txt"));
+        final List<String> examples = IOUtils.readLines(new FileInputStream("temp/case-study-data.txt"));
 
         final XWPFDocument doc = new XWPFDocument();
 
@@ -88,7 +88,7 @@ public class GenerateHighlightedWordFile {
              */
         }
 
-        doc.write(new FileOutputStream("test.docx"));
+        doc.write(new FileOutputStream("case-study-highlighted.docx"));
 
     }
 
