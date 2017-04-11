@@ -1,0 +1,6 @@
+#requirement S << (ART . NN|NP .. (PP < (ADV < muss)))
+#requirement (VMFIN < soll) . (VP < (VAINF < werden) << VVPP)
+#requirement S < (NP . (VVFIN < beträgt))
+#information gibt
+#requirement (ADV < muss) . (VP < VVPP) .. (VAINF < werden)
+requirement (ADV < muss) .. (S < (KOUS < wenn))

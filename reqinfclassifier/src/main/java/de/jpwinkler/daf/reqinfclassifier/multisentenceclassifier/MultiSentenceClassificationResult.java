@@ -1,6 +1,8 @@
-package de.jpwinkler.daf.reqinfclassifier;
+package de.jpwinkler.daf.reqinfclassifier.multisentenceclassifier;
 
 import java.util.List;
+
+import de.jpwinkler.daf.reqinfclassifier.ClassificationResult;
 
 public class MultiSentenceClassificationResult extends ClassificationResult {
 

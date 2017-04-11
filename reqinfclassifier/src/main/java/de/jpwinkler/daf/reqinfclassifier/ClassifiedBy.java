@@ -12,4 +12,6 @@ public enum ClassifiedBy {
 
     MULTI_SENTENCE_CLASSIFIER,
 
+    PARSE_TREE_CLASSIFIER,
+
 }

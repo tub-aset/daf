@@ -88,7 +88,7 @@ public class ClassifierContext {
             trees.put(text, l);
             synchronized (i) {
                 i.inc();
-                if (i.get() > 1000) {
+                if (i.get() > 100) {
                     i.set(0);
                     LOGGER.info("committing...");
                     db.commit();
