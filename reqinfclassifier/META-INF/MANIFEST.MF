@@ -12,5 +12,6 @@ Export-Package: de.jpwinkler.daf.reqinfclassifier,
 Bundle-ClassPath: .
 Bundle-Vendor: DCAITI
 Require-Bundle: de.jpwinkler.libs.stringprocessing;bundle-version="1.0.0",
- de.jpwinkler.libs.convnet;bundle-version="1.0.0"
+ de.jpwinkler.libs.convnet;bundle-version="1.0.0",
+ de.jpwinkler.re.methods.sharedlibs;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
