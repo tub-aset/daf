@@ -150,12 +150,14 @@ public class DoorsDBInterface {
         boolean result = false;
 
         if (module.getLatestVersion() == null || module.getLatestVersion().getDate().before(lastChangedOn)) {
-            modRef.exportToCSV(new File(realFile + ".csv"));
+            final File csvFile = new File(realFile + ".csv");
+            final File mmdFile = new File(realFile + ".csv.mmd");
+
+            modRef.exportToCSV(csvFile);
 
             final DBVersion version = DoorsDBModelFactory.eINSTANCE.createDBVersion();
-            version.setCsvLocation(realFile + ".csv");
+            version.setCsvLocation(csvFile.getAbsolutePath());
             version.setDate(lastChangedOn);
-            final File mmdFile = new File(realFile + ".csv.mmd");
             final Map<String, String> attributes = new ModuleMetaDataParser().parseModuleMetaData(mmdFile);
             for (final Entry<String, String> e : attributes.entrySet()) {
                 version.getAttributes().put(e.getKey(), e.getValue());
