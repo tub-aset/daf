@@ -4,7 +4,6 @@ import de.jpwinkler.daf.reqinfclassifier.clusterclassifier.ClusterClassifier;
 import de.jpwinkler.daf.reqinfclassifier.convnetclassifier.ConvNetClassificationResult;
 import de.jpwinkler.daf.reqinfclassifier.convnetclassifier.ConvNetClassifier;
 import de.jpwinkler.daf.reqinfclassifier.headingclassifier.HeadingClassifier;
-//import de.jpwinkler.daf.reqinfclassifier.multisentenceclassifier.MultiSentenceClassifier;
 import de.jpwinkler.daf.reqinfclassifier.structuralclassifier.StructuralClassifier;
 import de.jpwinkler.daf.reqinfclassifier.templateclassifier.TemplateClassifier;
 
