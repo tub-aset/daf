@@ -127,7 +127,6 @@ public class CSVEditorController {
 
     @FXML
     public void initialize() {
-        chooser.setInitialDirectory(new File("C:/WORK/DOORS"));
         chooser.getExtensionFilters().add(new ExtensionFilter("CSV", "*.csv"));
         filterTextField.textProperty().addListener((ChangeListener<String>) (observable, oldValue, newValue) -> {
             final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
