@@ -38,6 +38,7 @@ import de.jpwinkler.daf.csveditor.massedit.MassEditTarget;
 import de.jpwinkler.daf.csveditor.util.ColumnDefinition;
 import de.jpwinkler.daf.csveditor.util.ColumnType;
 import de.jpwinkler.daf.csveditor.util.CommandStack;
+import de.jpwinkler.daf.csveditor.util.ExceptionDialog;
 import de.jpwinkler.daf.csveditor.util.ViewModel;
 import de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.dafcore.csv.ModuleCSVParser;
@@ -76,7 +77,6 @@ public class CSVEditorTabController {
     private static final String MAIN_COLUMN = "Object Heading & Object Text";
 
     private static final List<String> WANTED_ATTRIBUTES = Arrays.asList("SourceID", MAIN_COLUMN, "Object Type");
-
 
     private Stage primaryStage;
     private CSVEditorController csvEditorController;
@@ -134,6 +134,7 @@ public class CSVEditorTabController {
             updateTabTitle();
             return true;
         } catch (final IOException e) {
+            ExceptionDialog.showExceptionDialog(e);
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
             return false;
         }
@@ -435,15 +436,11 @@ public class CSVEditorTabController {
             dialogStage.showAndWait();
 
         } catch (final Exception e) {
+            ExceptionDialog.showExceptionDialog(e);
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
-    }
-
-    public void setupFilter() {
-        // TODO Implement this method.
-        throw new UnsupportedOperationException("Not yet implemented.");
     }
 
     public void pasteBelow() {

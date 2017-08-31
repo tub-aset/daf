@@ -18,6 +18,7 @@ import de.jpwinkler.daf.csveditor.massedit.CopyAttributeOperation;
 import de.jpwinkler.daf.csveditor.massedit.MassEditOperation;
 import de.jpwinkler.daf.csveditor.massedit.MassEditTarget;
 import de.jpwinkler.daf.csveditor.massedit.SetAttributeOperation;
+import de.jpwinkler.daf.csveditor.util.ExceptionDialog;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
@@ -238,6 +239,7 @@ public class CSVEditorController {
             try {
                 newTabFromFile(selectedFile);
             } catch (IOException | CSVParseException e) {
+                ExceptionDialog.showExceptionDialog(e);
                 LOGGER.log(Level.SEVERE, e.getMessage(), e);
             }
 
@@ -396,6 +398,7 @@ public class CSVEditorController {
         try {
             newTabFromFile(null);
         } catch (IOException | CSVParseException e) {
+            ExceptionDialog.showExceptionDialog(e);
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
     }
@@ -422,15 +425,6 @@ public class CSVEditorController {
         if (selectedTab != null) {
             tabControllers.get(selectedTab).setupColumns();
         }
-    }
-
-    @FXML
-    public void filterClicked() {
-        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-        if (selectedTab != null) {
-            tabControllers.get(selectedTab).setupFilter();
-        }
-
     }
 
     @FXML
