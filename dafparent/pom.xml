@@ -4,18 +4,16 @@
 
 	<groupId>de.jpwinkler.daf</groupId>
 	<artifactId>dafparent</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>pom</packaging>
 
 	<modules>
 		<module>../dafcore</module>
 		<module>../dafimpl</module>
 		<module>../csveditor</module>
-		<module>../dataprocessing</module>
 		<module>../doorsdb</module>
 		<module>../doorsdbgui</module>
 		<module>../reqinfclassifier</module>
-		<module>../datasetutil</module>
 	</modules>
 
 	<build>

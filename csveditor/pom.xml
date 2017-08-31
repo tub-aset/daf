@@ -6,7 +6,7 @@
 		<relativePath>../dafparent/pom.xml</relativePath>
 		<groupId>de.jpwinkler.daf</groupId>
 		<artifactId>dafparent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>1.0.0</version>
 	</parent>
 
 	<artifactId>csveditor</artifactId>
