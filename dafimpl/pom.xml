@@ -24,12 +24,12 @@
 		<dependency>
 			<groupId>de.jpwinkler.daf</groupId>
 			<artifactId>doorsdb</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>de.jpwinkler.daf</groupId>
 			<artifactId>reqinfclassifier</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>de.julielab</groupId>
