@@ -68,6 +68,7 @@ public class DoorsDBInterface {
 
         final ResourceSet resourceSet = new ResourceSetImpl();
 
+        // TODO verify
         final Resource resource = resourceSet.getResource(URI.createFileURI(databaseFile.toString()), true);
         final DoorsDB db = (DoorsDB) resource.getContents().get(0);
         return new DoorsDBInterface(databaseFile, db);
