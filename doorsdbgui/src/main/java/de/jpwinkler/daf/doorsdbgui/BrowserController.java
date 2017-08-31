@@ -1,6 +1,5 @@
 package de.jpwinkler.daf.doorsdbgui;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
@@ -9,8 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.function.Consumer;
-
-import org.apache.lucene.document.Document;
 
 import de.jpwinkler.daf.csveditor.CSVEditorApplication;
 import de.jpwinkler.daf.dafcore.util.CSVParseException;
@@ -36,7 +33,6 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
@@ -86,12 +82,6 @@ public class BrowserController {
     @FXML
     private ListView<DBModule> searchResultListView;
 
-    @FXML
-    private ListView<Document> fullTextSearchResultListView;
-
-    @FXML
-    private ToggleButton fullTextToggleButton;
-
     private final SimpleObjectProperty<DBItem> selectedItem = new SimpleObjectProperty<>();
 
     public void setStage(final Stage primaryStage) {
@@ -101,7 +91,7 @@ public class BrowserController {
     @FXML
     public void initialize() throws FileNotFoundException, IOException {
         app = DoorsApplicationFactory.getDoorsApplication();
-        db = DoorsDBInterface.createOrOpenDB(new File("C:/WORK/DoorsDB/db.doorsdbmodel"));
+        db = DoorsDBInterface.getDefaultDatabase();
         updateLocalTree();
         updateNewTagComboBox();
         remoteTreeView.setRoot(new RemoteTreeItem(app.getRoot(), new ImageView(new Image(getClass().getResourceAsStream("/icons/doors_db.png")))));
@@ -145,8 +135,6 @@ public class BrowserController {
             }
         });
 
-        fullTextSearchResultListView.setCellFactory(param -> new MyListCell());
-
         attributeNameColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getKey()));
         attributeValueColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getValue()));
 
@@ -163,7 +151,7 @@ public class BrowserController {
                 csvEditorApplication = new CSVEditorApplication();
                 csvEditorApplication.start(new Stage());
             }
-            csvEditorApplication.openFile(new File(dbVersion.getCsvLocation()));
+            csvEditorApplication.openFile(db.getCSVLocation(dbVersion).toFile());
         } catch (final Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -268,7 +256,6 @@ public class BrowserController {
     public void cancelSearchPressed() {
         searchTextField.setText("");
         searchResultListView.setVisible(false);
-        fullTextSearchResultListView.setVisible(false);
         localTreeView.setVisible(true);
         selectedItem.set(localTreeView.getSelectionModel().getSelectedItem() != null ? localTreeView.getSelectionModel().getSelectedItem().getValue() : null);
     }
@@ -278,21 +265,13 @@ public class BrowserController {
             selectedItem.set(null);
             searchResultListView.getSelectionModel().clearSelection();
         }
-        final boolean fullText = fullTextToggleButton.isSelected();
-        searchResultListView.setVisible(!fullText);
-        fullTextSearchResultListView.setVisible(fullText);
+        searchResultListView.setVisible(true);
         localTreeView.setVisible(false);
-        if (fullText) {
-            final List<Document> result = db.findObjects(search, 50);
-            fullTextSearchResultListView.getItems().clear();
-            fullTextSearchResultListView.getItems().addAll(result);
-        } else {
-            final DBSearchExpression searchExpression = DBSearchExpression.compile(search);
-            if (searchExpression != null) {
-                final List<DBModule> findModules = db.findModules(searchExpression);
-                searchResultListView.getItems().clear();
-                searchResultListView.getItems().addAll(findModules);
-            }
+        final DBSearchExpression searchExpression = DBSearchExpression.compile(search);
+        if (searchExpression != null) {
+            final List<DBModule> findModules = db.findModules(searchExpression);
+            searchResultListView.getItems().clear();
+            searchResultListView.getItems().addAll(findModules);
         }
     }
 
