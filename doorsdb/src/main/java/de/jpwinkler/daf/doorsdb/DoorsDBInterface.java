@@ -1,8 +1,10 @@
 package de.jpwinkler.daf.doorsdb;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -16,17 +18,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexNotFoundException;
-import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.FSDirectory;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -55,22 +46,20 @@ import de.jpwinkler.libs.doorsbridge.ModuleRef;
 public class DoorsDBInterface {
 
     private final DoorsDB db;
-    private final File file;
+    private final Path databaseFile;
+    private final Path databaseRoot;
 
     private final DoorsApplication app = DoorsApplicationFactory.getDoorsApplication();
 
-    private Directory index;
-    private IndexSearcher indexSearcher;
-    private QueryParser queryParser;
-
-    public static DoorsDBInterface createDB(final File file) throws IOException {
+    public static DoorsDBInterface createDB(final Path databaseFile) throws IOException {
         final DoorsDB db = DoorsDBModelFactory.eINSTANCE.createDoorsDB();
-        db.setDbLocation(file.getParentFile().getAbsolutePath());
         db.setRoot(DoorsDBModelFactory.eINSTANCE.createDBFolder());
-        return new DoorsDBInterface(file, db);
+        final DoorsDBInterface doorsDBInterface = new DoorsDBInterface(databaseFile, db);
+        doorsDBInterface.saveDB();
+        return doorsDBInterface;
     }
 
-    public static DoorsDBInterface openDB(final File file) throws IOException {
+    public static DoorsDBInterface openDB(final Path databaseFile) throws IOException {
 
         DoorsDBModelPackage.eINSTANCE.eClass();
 
@@ -79,35 +68,31 @@ public class DoorsDBInterface {
 
         final ResourceSet resourceSet = new ResourceSetImpl();
 
-        final Resource resource = resourceSet.getResource(URI.createFileURI(file.getAbsolutePath()), true);
+        final Resource resource = resourceSet.getResource(URI.createFileURI(databaseFile.toString()), true);
         final DoorsDB db = (DoorsDB) resource.getContents().get(0);
-        return new DoorsDBInterface(file, db);
+        return new DoorsDBInterface(databaseFile, db);
     }
 
-    public static DoorsDBInterface createOrOpenDB(final File file) throws FileNotFoundException, IOException {
-        if (file.exists()) {
-            return openDB(file);
+    public static DoorsDBInterface createOrOpenDB(final Path databaseFile) throws FileNotFoundException, IOException {
+        if (Files.exists(databaseFile)) {
+            return openDB(databaseFile);
         } else {
-            return createDB(file);
+            return createDB(databaseFile);
         }
     }
 
-    private DoorsDBInterface(final File file, final DoorsDB db) throws IOException {
-        this.file = file;
+    private DoorsDBInterface(final Path databaseFile, final DoorsDB db) throws IOException {
+        this.databaseFile = databaseFile.toAbsolutePath();
+        databaseRoot = databaseFile.toAbsolutePath().getParent();
         this.db = db;
-        try {
-            index = FSDirectory.open(new File(file.getParentFile(), "__index").toPath());
-            final DirectoryReader indexReader = DirectoryReader.open(index);
-            final Analyzer analyzer = new StandardAnalyzer();
-            indexSearcher = new IndexSearcher(indexReader);
-            queryParser = new QueryParser("text", analyzer);
-        } catch (final IndexNotFoundException e) {
-            e.printStackTrace();
-            index = null;
-            indexSearcher = null;
-            queryParser = null;
+    }
 
-        }
+    public Path getCSVLocation(final DBVersion v) {
+        return Paths.get(databaseRoot.toString(), v.getModule().getParent().getFullName(), v.getModule().getName() + "_" + new SimpleDateFormat("yyyyMMdd").format(v.getDate()) + ".csv");
+    }
+
+    private Path getMMDLocation(final DBVersion v) {
+        return Paths.get(getCSVLocation(v).toString() + ".mmd");
     }
 
     public DBModule addModule(final String moduleName) throws DoorsException, IOException {
@@ -145,39 +130,26 @@ public class DoorsDBInterface {
             throw new RuntimeException(e);
         }
 
-        final String realFile = mapToFile(i, lastChangedOn);
-
         boolean result = false;
 
         if (module.getLatestVersion() == null || module.getLatestVersion().getDate().before(lastChangedOn)) {
-            final File csvFile = new File(realFile + ".csv");
-            final File mmdFile = new File(realFile + ".csv.mmd");
-
-            modRef.exportToCSV(csvFile);
-
             final DBVersion version = DoorsDBModelFactory.eINSTANCE.createDBVersion();
-            version.setCsvLocation(csvFile.getAbsolutePath());
             version.setDate(lastChangedOn);
-            final Map<String, String> attributes = new ModuleMetaDataParser().parseModuleMetaData(mmdFile);
+            version.setModule(module);
+
+            Files.createDirectories(getCSVLocation(version).getParent());
+            modRef.exportToCSV(getCSVLocation(version).toFile());
+
+            final Map<String, String> attributes = new ModuleMetaDataParser().parseModuleMetaData(getMMDLocation(version).toFile());
             for (final Entry<String, String> e : attributes.entrySet()) {
                 version.getAttributes().put(e.getKey(), e.getValue());
             }
-            mmdFile.delete();
-            module.getVersions().add(version);
+            Files.delete(getMMDLocation(version));
             result = true;
             saveDB();
         }
         modRef.close();
         return result;
-    }
-
-    private String mapToFile(final ItemRef i, final Date lastChangedOn) {
-        File file = new File(db.getDbLocation());
-        for (final String pathSegment : i.getParent().getItemName().getPathSegments()) {
-            file = new File(file, pathSegment);
-        }
-        file.mkdirs();
-        return new File(file, i.getItemName() + "_" + new SimpleDateFormat("yyyyMMdd").format(lastChangedOn)).getAbsolutePath();
     }
 
     public List<DBModule> updateAllModules() {
@@ -218,7 +190,7 @@ public class DoorsDBInterface {
         final Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
         reg.getExtensionToFactoryMap().put("doorsdbmodel", new XMIResourceFactoryImpl());
         final ResourceSet resourceSet = new ResourceSetImpl();
-        final Resource resource = resourceSet.createResource(URI.createFileURI(file.getAbsolutePath()));
+        final Resource resource = resourceSet.createResource(URI.createFileURI(databaseFile.toString()));
         resource.getContents().add(db);
         resource.save(new HashMap<>());
     }
@@ -261,8 +233,13 @@ public class DoorsDBInterface {
         module.setParent(null);
         module.getTags().clear();
         module.getVersions().forEach(v -> {
-            new File(v.getCsvLocation()).delete();
-            new File(v.getCsvLocation() + ".mmd").delete();
+            try {
+                Files.deleteIfExists(getCSVLocation(v));
+                Files.deleteIfExists(getMMDLocation(v));
+            } catch (final IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         });
         module.getVersions().clear();
     }
@@ -318,25 +295,6 @@ public class DoorsDBInterface {
         return result;
     }
 
-    public List<Document> findObjects(final String text, final int numResults) {
-        try {
-            final Query q = queryParser.parse(text);
-            final TopDocs search = indexSearcher.search(q, numResults);
-            return Arrays.asList(search.scoreDocs).stream().map(sd -> {
-                try {
-                    return indexSearcher.doc(sd.doc);
-                } catch (final Exception e) {
-                    e.printStackTrace();
-                    return null;
-                }
-            }).filter(d -> d != null).collect(Collectors.toList());
-        } catch (org.apache.lucene.queryparser.classic.ParseException | IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return Collections.emptyList();
-        }
-    }
-
     public DBFolder getFolder(final String path) {
         final List<String> pathSegments = Arrays.asList(path.split("/")).stream().filter(s -> !s.isEmpty()).collect(Collectors.toList());
         DBFolder current = getDB().getRoot();
@@ -362,7 +320,9 @@ public class DoorsDBInterface {
     }
 
     public static DoorsDBInterface getDefaultDatabase() throws FileNotFoundException, IOException {
-        return createOrOpenDB(new File("C:/WORK/DoorsDB/db.doorsdbmodel"));
+        final Path path = Paths.get("database");
+        Files.createDirectory(path);
+        return createOrOpenDB(path.resolve("db.doorsdbmodel"));
     }
 
 }

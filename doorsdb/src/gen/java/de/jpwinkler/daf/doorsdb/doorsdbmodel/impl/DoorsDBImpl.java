@@ -29,7 +29,6 @@ import de.jpwinkler.daf.doorsdb.util.DoorsDBVisitor;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.impl.DoorsDBImpl#getDbLocation <em>Db Location</em>}</li>
  *   <li>{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.impl.DoorsDBImpl#getTags <em>Tags</em>}</li>
  *   <li>{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.impl.DoorsDBImpl#getRoot <em>Root</em>}</li>
  * </ul>
@@ -37,26 +36,6 @@ import de.jpwinkler.daf.doorsdb.util.DoorsDBVisitor;
  * @generated
  */
 public class DoorsDBImpl extends MinimalEObjectImpl.Container implements DoorsDB {
-    /**
-     * The default value of the '{@link #getDbLocation() <em>Db Location</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see #getDbLocation()
-     * @generated
-     * @ordered
-     */
-    protected static final String DB_LOCATION_EDEFAULT = null;
-
-    /**
-     * The cached value of the '{@link #getDbLocation() <em>Db Location</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see #getDbLocation()
-     * @generated
-     * @ordered
-     */
-    protected String dbLocation = DB_LOCATION_EDEFAULT;
-
     /**
      * The cached value of the '{@link #getTags() <em>Tags</em>}' containment reference list.
      * <!-- begin-user-doc -->
@@ -94,29 +73,6 @@ public class DoorsDBImpl extends MinimalEObjectImpl.Container implements DoorsDB
     @Override
     protected EClass eStaticClass() {
         return DoorsDBModelPackage.Literals.DOORS_DB;
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    @Override
-    public String getDbLocation() {
-        return dbLocation;
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    @Override
-    public void setDbLocation(String newDbLocation) {
-        String oldDbLocation = dbLocation;
-        dbLocation = newDbLocation;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, DoorsDBModelPackage.DOORS_DB__DB_LOCATION, oldDbLocation, dbLocation));
     }
 
     /**
@@ -226,8 +182,6 @@ public class DoorsDBImpl extends MinimalEObjectImpl.Container implements DoorsDB
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-            case DoorsDBModelPackage.DOORS_DB__DB_LOCATION:
-                return getDbLocation();
             case DoorsDBModelPackage.DOORS_DB__TAGS:
                 return getTags();
             case DoorsDBModelPackage.DOORS_DB__ROOT:
@@ -245,9 +199,6 @@ public class DoorsDBImpl extends MinimalEObjectImpl.Container implements DoorsDB
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-            case DoorsDBModelPackage.DOORS_DB__DB_LOCATION:
-                setDbLocation((String)newValue);
-                return;
             case DoorsDBModelPackage.DOORS_DB__TAGS:
                 getTags().clear();
                 getTags().addAll((Collection<? extends DBTag>)newValue);
@@ -267,9 +218,6 @@ public class DoorsDBImpl extends MinimalEObjectImpl.Container implements DoorsDB
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-            case DoorsDBModelPackage.DOORS_DB__DB_LOCATION:
-                setDbLocation(DB_LOCATION_EDEFAULT);
-                return;
             case DoorsDBModelPackage.DOORS_DB__TAGS:
                 getTags().clear();
                 return;
@@ -288,8 +236,6 @@ public class DoorsDBImpl extends MinimalEObjectImpl.Container implements DoorsDB
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-            case DoorsDBModelPackage.DOORS_DB__DB_LOCATION:
-                return DB_LOCATION_EDEFAULT == null ? dbLocation != null : !DB_LOCATION_EDEFAULT.equals(dbLocation);
             case DoorsDBModelPackage.DOORS_DB__TAGS:
                 return tags != null && !tags.isEmpty();
             case DoorsDBModelPackage.DOORS_DB__ROOT:
@@ -313,22 +259,6 @@ public class DoorsDBImpl extends MinimalEObjectImpl.Container implements DoorsDB
                 return getTag((String)arguments.get(0));
         }
         return super.eInvoke(operationID, arguments);
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    @Override
-    public String toString() {
-        if (eIsProxy()) return super.toString();
-
-        StringBuffer result = new StringBuffer(super.toString());
-        result.append(" (dbLocation: ");
-        result.append(dbLocation);
-        result.append(')');
-        return result.toString();
     }
 
 } //DoorsDBImpl

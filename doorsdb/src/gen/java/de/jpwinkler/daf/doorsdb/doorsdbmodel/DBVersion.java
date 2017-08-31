@@ -17,7 +17,6 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  * <ul>
  *   <li>{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.DBVersion#getModule <em>Module</em>}</li>
- *   <li>{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.DBVersion#getCsvLocation <em>Csv Location</em>}</li>
  *   <li>{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.DBVersion#getDate <em>Date</em>}</li>
  *   <li>{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.DBVersion#getAttributes <em>Attributes</em>}</li>
  * </ul>
@@ -54,32 +53,6 @@ public interface DBVersion extends EObject {
      * @generated
      */
     void setModule(DBModule value);
-
-    /**
-     * Returns the value of the '<em><b>Csv Location</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <p>
-     * If the meaning of the '<em>Csv Location</em>' attribute isn't clear,
-     * there really should be more of a description here...
-     * </p>
-     * <!-- end-user-doc -->
-     * @return the value of the '<em>Csv Location</em>' attribute.
-     * @see #setCsvLocation(String)
-     * @see de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDBModelPackage#getDBVersion_CsvLocation()
-     * @model
-     * @generated
-     */
-    String getCsvLocation();
-
-    /**
-     * Sets the value of the '{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.DBVersion#getCsvLocation <em>Csv Location</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Csv Location</em>' attribute.
-     * @see #getCsvLocation()
-     * @generated
-     */
-    void setCsvLocation(String value);
 
     /**
      * Returns the value of the '<em><b>Date</b></em>' attribute.

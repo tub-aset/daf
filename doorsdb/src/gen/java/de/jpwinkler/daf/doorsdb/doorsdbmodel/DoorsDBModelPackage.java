@@ -360,22 +360,13 @@ public interface DoorsDBModelPackage extends EPackage {
     int DB_VERSION__MODULE = 0;
 
     /**
-     * The feature id for the '<em><b>Csv Location</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int DB_VERSION__CSV_LOCATION = 1;
-
-    /**
      * The feature id for the '<em><b>Date</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DB_VERSION__DATE = 2;
+    int DB_VERSION__DATE = 1;
 
     /**
      * The feature id for the '<em><b>Attributes</b></em>' map.
@@ -384,7 +375,7 @@ public interface DoorsDBModelPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DB_VERSION__ATTRIBUTES = 3;
+    int DB_VERSION__ATTRIBUTES = 2;
 
     /**
      * The number of structural features of the '<em>DB Version</em>' class.
@@ -393,7 +384,7 @@ public interface DoorsDBModelPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DB_VERSION_FEATURE_COUNT = 4;
+    int DB_VERSION_FEATURE_COUNT = 3;
 
     /**
      * The number of operations of the '<em>DB Version</em>' class.
@@ -415,22 +406,13 @@ public interface DoorsDBModelPackage extends EPackage {
     int DOORS_DB = 4;
 
     /**
-     * The feature id for the '<em><b>Db Location</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int DOORS_DB__DB_LOCATION = 0;
-
-    /**
      * The feature id for the '<em><b>Tags</b></em>' containment reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DOORS_DB__TAGS = 1;
+    int DOORS_DB__TAGS = 0;
 
     /**
      * The feature id for the '<em><b>Root</b></em>' containment reference.
@@ -439,7 +421,7 @@ public interface DoorsDBModelPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_DB__ROOT = 2;
+    int DOORS_DB__ROOT = 1;
 
     /**
      * The number of structural features of the '<em>Doors DB</em>' class.
@@ -448,7 +430,7 @@ public interface DoorsDBModelPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOORS_DB_FEATURE_COUNT = 3;
+    int DOORS_DB_FEATURE_COUNT = 2;
 
     /**
      * The operation id for the '<em>Accept</em>' operation.
@@ -581,6 +563,17 @@ public interface DoorsDBModelPackage extends EPackage {
 
 
     /**
+     * The meta object id for the '<em>Path</em>' data type.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see java.nio.file.Path
+     * @see de.jpwinkler.daf.doorsdb.doorsdbmodel.impl.DoorsDBModelPackageImpl#getPath()
+     * @generated
+     */
+    int PATH = 8;
+
+
+    /**
      * Returns the meta object for class '{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.DBFolder <em>DB Folder</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -695,17 +688,6 @@ public interface DoorsDBModelPackage extends EPackage {
     EReference getDBVersion_Module();
 
     /**
-     * Returns the meta object for the attribute '{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.DBVersion#getCsvLocation <em>Csv Location</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for the attribute '<em>Csv Location</em>'.
-     * @see de.jpwinkler.daf.doorsdb.doorsdbmodel.DBVersion#getCsvLocation()
-     * @see #getDBVersion()
-     * @generated
-     */
-    EAttribute getDBVersion_CsvLocation();
-
-    /**
      * Returns the meta object for the attribute '{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.DBVersion#getDate <em>Date</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -736,17 +718,6 @@ public interface DoorsDBModelPackage extends EPackage {
      * @generated
      */
     EClass getDoorsDB();
-
-    /**
-     * Returns the meta object for the attribute '{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDB#getDbLocation <em>Db Location</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for the attribute '<em>Db Location</em>'.
-     * @see de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDB#getDbLocation()
-     * @see #getDoorsDB()
-     * @generated
-     */
-    EAttribute getDoorsDB_DbLocation();
 
     /**
      * Returns the meta object for the containment reference list '{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDB#getTags <em>Tags</em>}'.
@@ -932,6 +903,17 @@ public interface DoorsDBModelPackage extends EPackage {
     EDataType getDoorsDBVisitor();
 
     /**
+     * Returns the meta object for data type '{@link java.nio.file.Path <em>Path</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for data type '<em>Path</em>'.
+     * @see java.nio.file.Path
+     * @model instanceClass="java.nio.file.Path"
+     * @generated
+     */
+    EDataType getPath();
+
+    /**
      * Returns the factory that creates the instances of the model.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1049,14 +1031,6 @@ public interface DoorsDBModelPackage extends EPackage {
         EReference DB_VERSION__MODULE = eINSTANCE.getDBVersion_Module();
 
         /**
-         * The meta object literal for the '<em><b>Csv Location</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @generated
-         */
-        EAttribute DB_VERSION__CSV_LOCATION = eINSTANCE.getDBVersion_CsvLocation();
-
-        /**
          * The meta object literal for the '<em><b>Date</b></em>' attribute feature.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
@@ -1081,14 +1055,6 @@ public interface DoorsDBModelPackage extends EPackage {
          * @generated
          */
         EClass DOORS_DB = eINSTANCE.getDoorsDB();
-
-        /**
-         * The meta object literal for the '<em><b>Db Location</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @generated
-         */
-        EAttribute DOORS_DB__DB_LOCATION = eINSTANCE.getDoorsDB_DbLocation();
 
         /**
          * The meta object literal for the '<em><b>Tags</b></em>' containment reference list feature.
@@ -1233,6 +1199,16 @@ public interface DoorsDBModelPackage extends EPackage {
          * @generated
          */
         EDataType DOORS_DB_VISITOR = eINSTANCE.getDoorsDBVisitor();
+
+        /**
+         * The meta object literal for the '<em>Path</em>' data type.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see java.nio.file.Path
+         * @see de.jpwinkler.daf.doorsdb.doorsdbmodel.impl.DoorsDBModelPackageImpl#getPath()
+         * @generated
+         */
+        EDataType PATH = eINSTANCE.getPath();
 
     }
 

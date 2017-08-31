@@ -16,7 +16,6 @@ import de.jpwinkler.daf.doorsdb.util.DoorsDBVisitor;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDB#getDbLocation <em>Db Location</em>}</li>
  *   <li>{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDB#getTags <em>Tags</em>}</li>
  *   <li>{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDB#getRoot <em>Root</em>}</li>
  * </ul>
@@ -26,32 +25,6 @@ import de.jpwinkler.daf.doorsdb.util.DoorsDBVisitor;
  * @generated
  */
 public interface DoorsDB extends EObject {
-    /**
-     * Returns the value of the '<em><b>Db Location</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <p>
-     * If the meaning of the '<em>Db Location</em>' attribute isn't clear,
-     * there really should be more of a description here...
-     * </p>
-     * <!-- end-user-doc -->
-     * @return the value of the '<em>Db Location</em>' attribute.
-     * @see #setDbLocation(String)
-     * @see de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDBModelPackage#getDoorsDB_DbLocation()
-     * @model
-     * @generated
-     */
-    String getDbLocation();
-
-    /**
-     * Sets the value of the '{@link de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDB#getDbLocation <em>Db Location</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Db Location</em>' attribute.
-     * @see #getDbLocation()
-     * @generated
-     */
-    void setDbLocation(String value);
-
     /**
      * Returns the value of the '<em><b>Tags</b></em>' containment reference list.
      * The list contents are of type {@link de.jpwinkler.daf.doorsdb.doorsdbmodel.DBTag}.

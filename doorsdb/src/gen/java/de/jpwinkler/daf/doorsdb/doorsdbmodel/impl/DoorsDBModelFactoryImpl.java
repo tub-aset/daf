@@ -17,6 +17,7 @@ import de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDB;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDBModelFactory;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDBModelPackage;
 import de.jpwinkler.daf.doorsdb.util.DoorsDBVisitor;
+import java.nio.file.Path;
 import java.util.Map;
 
 /**
@@ -84,6 +85,8 @@ public class DoorsDBModelFactoryImpl extends EFactoryImpl implements DoorsDBMode
         switch (eDataType.getClassifierID()) {
             case DoorsDBModelPackage.DOORS_DB_VISITOR:
                 return createDoorsDBVisitorFromString(eDataType, initialValue);
+            case DoorsDBModelPackage.PATH:
+                return createPathFromString(eDataType, initialValue);
             default:
                 throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
         }
@@ -99,6 +102,8 @@ public class DoorsDBModelFactoryImpl extends EFactoryImpl implements DoorsDBMode
         switch (eDataType.getClassifierID()) {
             case DoorsDBModelPackage.DOORS_DB_VISITOR:
                 return convertDoorsDBVisitorToString(eDataType, instanceValue);
+            case DoorsDBModelPackage.PATH:
+                return convertPathToString(eDataType, instanceValue);
             default:
                 throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
         }
@@ -184,6 +189,24 @@ public class DoorsDBModelFactoryImpl extends EFactoryImpl implements DoorsDBMode
      * @generated
      */
     public String convertDoorsDBVisitorToString(EDataType eDataType, Object instanceValue) {
+        return super.convertToString(eDataType, instanceValue);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public Path createPathFromString(EDataType eDataType, String initialValue) {
+        return (Path)super.createFromString(eDataType, initialValue);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public String convertPathToString(EDataType eDataType, Object instanceValue) {
         return super.convertToString(eDataType, instanceValue);
     }
 

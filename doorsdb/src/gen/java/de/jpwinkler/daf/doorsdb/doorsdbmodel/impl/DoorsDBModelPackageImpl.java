@@ -19,6 +19,7 @@ import de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDB;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDBModelFactory;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDBModelPackage;
 import de.jpwinkler.daf.doorsdb.util.DoorsDBVisitor;
+import java.nio.file.Path;
 import java.util.Map;
 
 /**
@@ -83,6 +84,13 @@ public class DoorsDBModelPackageImpl extends EPackageImpl implements DoorsDBMode
      * @generated
      */
     private EDataType doorsDBVisitorEDataType = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EDataType pathEDataType = null;
 
     /**
      * Creates an instance of the model <b>Package</b>, registered with
@@ -260,7 +268,7 @@ public class DoorsDBModelPackageImpl extends EPackageImpl implements DoorsDBMode
      * @generated
      */
     @Override
-    public EAttribute getDBVersion_CsvLocation() {
+    public EAttribute getDBVersion_Date() {
         return (EAttribute)dbVersionEClass.getEStructuralFeatures().get(1);
     }
 
@@ -269,18 +277,8 @@ public class DoorsDBModelPackageImpl extends EPackageImpl implements DoorsDBMode
      * <!-- end-user-doc -->
      * @generated
      */
-    @Override
-    public EAttribute getDBVersion_Date() {
-        return (EAttribute)dbVersionEClass.getEStructuralFeatures().get(2);
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
     public EReference getDBVersion_Attributes() {
-        return (EReference)dbVersionEClass.getEStructuralFeatures().get(3);
+        return (EReference)dbVersionEClass.getEStructuralFeatures().get(2);
     }
 
     /**
@@ -299,18 +297,8 @@ public class DoorsDBModelPackageImpl extends EPackageImpl implements DoorsDBMode
      * @generated
      */
     @Override
-    public EAttribute getDoorsDB_DbLocation() {
-        return (EAttribute)doorsDBEClass.getEStructuralFeatures().get(0);
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    @Override
     public EReference getDoorsDB_Tags() {
-        return (EReference)doorsDBEClass.getEStructuralFeatures().get(1);
+        return (EReference)doorsDBEClass.getEStructuralFeatures().get(0);
     }
 
     /**
@@ -320,7 +308,7 @@ public class DoorsDBModelPackageImpl extends EPackageImpl implements DoorsDBMode
      */
     @Override
     public EReference getDoorsDB_Root() {
-        return (EReference)doorsDBEClass.getEStructuralFeatures().get(2);
+        return (EReference)doorsDBEClass.getEStructuralFeatures().get(1);
     }
 
     /**
@@ -445,7 +433,6 @@ public class DoorsDBModelPackageImpl extends EPackageImpl implements DoorsDBMode
      * <!-- end-user-doc -->
      * @generated
      */
-    @Override
     public EAttribute getDBItem_FullName() {
         return (EAttribute)dbItemEClass.getEStructuralFeatures().get(3);
     }
@@ -468,6 +455,15 @@ public class DoorsDBModelPackageImpl extends EPackageImpl implements DoorsDBMode
     @Override
     public EDataType getDoorsDBVisitor() {
         return doorsDBVisitorEDataType;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EDataType getPath() {
+        return pathEDataType;
     }
 
     /**
@@ -519,12 +515,10 @@ public class DoorsDBModelPackageImpl extends EPackageImpl implements DoorsDBMode
 
         dbVersionEClass = createEClass(DB_VERSION);
         createEReference(dbVersionEClass, DB_VERSION__MODULE);
-        createEAttribute(dbVersionEClass, DB_VERSION__CSV_LOCATION);
         createEAttribute(dbVersionEClass, DB_VERSION__DATE);
         createEReference(dbVersionEClass, DB_VERSION__ATTRIBUTES);
 
         doorsDBEClass = createEClass(DOORS_DB);
-        createEAttribute(doorsDBEClass, DOORS_DB__DB_LOCATION);
         createEReference(doorsDBEClass, DOORS_DB__TAGS);
         createEReference(doorsDBEClass, DOORS_DB__ROOT);
         createEOperation(doorsDBEClass, DOORS_DB___ACCEPT__DOORSDBVISITOR);
@@ -540,6 +534,7 @@ public class DoorsDBModelPackageImpl extends EPackageImpl implements DoorsDBMode
 
         // Create data types
         doorsDBVisitorEDataType = createEDataType(DOORS_DB_VISITOR);
+        pathEDataType = createEDataType(PATH);
     }
 
     /**
@@ -603,12 +598,10 @@ public class DoorsDBModelPackageImpl extends EPackageImpl implements DoorsDBMode
 
         initEClass(dbVersionEClass, DBVersion.class, "DBVersion", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEReference(getDBVersion_Module(), this.getDBModule(), this.getDBModule_Versions(), "module", null, 0, 1, DBVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getDBVersion_CsvLocation(), ecorePackage.getEString(), "csvLocation", null, 0, 1, DBVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getDBVersion_Date(), ecorePackage.getEDate(), "date", null, 0, 1, DBVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getDBVersion_Attributes(), this.getStringToStringMap(), null, "attributes", null, 0, -1, DBVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(doorsDBEClass, DoorsDB.class, "DoorsDB", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEAttribute(getDoorsDB_DbLocation(), ecorePackage.getEString(), "dbLocation", null, 0, 1, DoorsDB.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getDoorsDB_Tags(), this.getDBTag(), null, "tags", null, 0, -1, DoorsDB.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getDoorsDB_Root(), this.getDBFolder(), null, "root", null, 0, 1, DoorsDB.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -628,6 +621,7 @@ public class DoorsDBModelPackageImpl extends EPackageImpl implements DoorsDBMode
 
         // Initialize data types
         initEDataType(doorsDBVisitorEDataType, DoorsDBVisitor.class, "DoorsDBVisitor", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+        initEDataType(pathEDataType, Path.class, "Path", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
         // Create resource
         createResource(eNS_URI);

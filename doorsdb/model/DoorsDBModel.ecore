@@ -36,7 +36,6 @@
   <eClassifiers xsi:type="ecore:EClass" name="DBVersion">
     <eStructuralFeatures xsi:type="ecore:EReference" name="module" eType="#//DBModule"
         eOpposite="#//DBModule/versions"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="csvLocation" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" upperBound="-1"
         eType="#//StringToStringMap" containment="true"/>
@@ -48,7 +47,6 @@
     <eOperations name="getTag" eType="#//DBTag">
       <eParameters name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eOperations>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dbLocation" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="tags" upperBound="-1" eType="#//DBTag"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="root" eType="#//DBFolder"
@@ -64,4 +62,5 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="Path" instanceClassName="java.nio.file.Path"/>
 </ecore:EPackage>

@@ -27,7 +27,7 @@ public abstract class ModuleCSVPass extends ModulePass {
         this.module = module;
         try {
             saveModule = false;
-            final File f = new File(module.getLatestVersion().getCsvLocation());
+            final File f = getDatabaseInterface().getCSVLocation(module.getLatestVersion()).toFile();
             parsedModule = new ModuleCSVParser().parseCSV(f);
             preprocessParsedModule(parsedModule);
             processParsedModule(parsedModule);
