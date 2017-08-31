@@ -321,8 +321,10 @@ public class DoorsDBInterface {
     }
 
     public static DoorsDBInterface getDefaultDatabase() throws FileNotFoundException, IOException {
-        final Path path = Paths.get("database");
-        Files.createDirectory(path);
+        final Path path = Paths.get(System.getProperty("user.home"), ".doorsdb");
+        if (!Files.exists(path)) {
+            Files.createDirectory(path);
+        }
         return createOrOpenDB(path.resolve("db.doorsdbmodel"));
     }
 
