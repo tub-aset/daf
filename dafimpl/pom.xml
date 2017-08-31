@@ -37,11 +37,6 @@
 			<version>4.1.0</version>
 		</dependency>
 		<dependency>
-			<groupId>de.jpwinkler.daf</groupId>
-			<artifactId>dataprocessing</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
 			<groupId>info.debatty</groupId>
 			<artifactId>java-string-similarity</artifactId>
 			<version>0.13</version>
