@@ -6,4 +6,6 @@ public enum ColumnType {
 
     OBJECT_TEXT_HEADING_COLUMN,
 
+    WARNING_COLUMN,
+
 }

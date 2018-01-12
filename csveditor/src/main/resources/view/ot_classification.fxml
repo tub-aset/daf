@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox prefHeight="300.0" prefWidth="250.0" spacing="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.jpwinkler.daf.csveditor.otclassification.ObjectTypeClassificationController">
+   <children>
+      <Label fx:id="explanation1Label" text="Explanation 1" wrapText="true" />
+      <Label fx:id="explanation2Label" text="Explanation 2" wrapText="true" />
+      <FlowPane fx:id="classifiedSentenceContainer" minHeight="10.0" />
+      <HBox fx:id="fixButtonGroup" alignment="CENTER" spacing="10.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#fix" text="Fix">
+               <tooltip>
+                  <Tooltip text="Correct this issue according to the remark." />
+               </tooltip>
+            </Button>
+<!--             <Button mnemonicParsing="false" onAction="#notAnIssue" text="Not an issue"> -->
+<!--                <tooltip> -->
+<!--                   <Tooltip text="Treat this and similar items as &quot;asd&quot; from now on." /> -->
+<!--                </tooltip> -->
+<!--             </Button> -->
+         </children>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </HBox>
+      <HBox fx:id="issueButtonGroup" alignment="CENTER" layoutX="20.0" layoutY="222.0" spacing="10.0">
+         <children>
+<!--             <Button mnemonicParsing="false" onAction="#thisIsAnIssue" text="This is an issue"> -->
+<!--                <tooltip> -->
+<!--                   <Tooltip text="This item is not classified correctly" /> -->
+<!--                </tooltip> -->
+<!--             </Button> -->
+         </children>
+      </HBox>
+      <HBox fx:id="ignoreButtonGroup" alignment="CENTER" spacing="10.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#ignoreOnce" text="Ignore Once">
+               <tooltip>
+                  <Tooltip text="Do not analyse this item for issues" />
+               </tooltip>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#ignoreAlways" text="Ignore Always">
+               <tooltip>
+                  <Tooltip text="Do not analyse items like this for issues everywhere" />
+               </tooltip>
+            </Button>
+         </children>
+      </HBox>
+      <HBox fx:id="unIgnoreButtonGroup" alignment="CENTER" spacing="10.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#unIgnore" text="Un-Ignore">
+               <tooltip>
+                  <Tooltip text="Stop ignoring this item" />
+               </tooltip>
+            </Button>
+         </children>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+</VBox>

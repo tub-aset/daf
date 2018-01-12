@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.input.*?>
@@ -87,6 +88,7 @@
                   </Menu>
                   <Menu mnemonicParsing="false" text="Module">
                     <items>
+                      <MenuItem mnemonicParsing="false" onAction="#analyzeObjectTypeClicked" text="Analyze Object Type..." />
                       <MenuItem mnemonicParsing="false" onAction="#addColumnClicked" text="Add Column..." />
                         <MenuItem mnemonicParsing="false" onAction="#reduceToSelectionClicked" text="Reduce to Selection" />
                         <MenuItem mnemonicParsing="false" onAction="#flattenClicked" text="Flatten" />
@@ -135,11 +137,12 @@
       <SplitPane dividerPositions="0.28075117370892017" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <items>
             <TreeView fx:id="outlineTreeView" prefHeight="710.0" prefWidth="339.0" SplitPane.resizableWithParent="false" />
-            <SplitPane dividerPositions="0.7313237221494102" prefHeight="565.0" prefWidth="764.0">
+            <SplitPane dividerPositions="0.593006993006993" prefHeight="565.0" prefWidth="764.0">
               <items>
                   <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" />
                   <TabPane SplitPane.resizableWithParent="false">
                      <tabs>
+                        <Tab fx:id="objectTypeClassificationTab" closable="false" text="OT Classification" />
                         <Tab closable="false" text="Mass Edit">
                            <content>
                               <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0">
