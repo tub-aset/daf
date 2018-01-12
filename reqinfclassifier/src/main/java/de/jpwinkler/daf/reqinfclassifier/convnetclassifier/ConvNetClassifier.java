@@ -46,24 +46,30 @@ public class ConvNetClassifier extends Classifier<ConvNetClassificationResult> {
 
         result.setClassifiedBy(ClassifiedBy.CONVNET_CLASSIFIER);
 
-        result.setFractionOfKnownWords(convNetModel.getWord2VecModel().calculateFractionOfKnownWords(context.getConvNetPreprocessedText()));
+        final double fractionOfKnownWords = convNetModel.getWord2VecModel().calculateFractionOfKnownWords(context.getConvNetPreprocessedText());
 
-        result.getProbabilities().put("information", eval.get(0));
-        result.getProbabilities().put("requirement", eval.get(1));
+        if (fractionOfKnownWords > 0.5) {
+            result.setFractionOfKnownWords(fractionOfKnownWords);
 
-        if (result.getFractionOfKnownWords() > 0.8 && result.getHighestProbability() > 0.95) {
-            result.setReliability(ClassificationReliability.MOST_LIKELY_CORRECT);
-        } else if (result.getFractionOfKnownWords() < 0.2 || result.getHighestProbability() < 0.7) {
-            result.setReliability(ClassificationReliability.AMBIGUOUS);
+            result.getProbabilities().put("information", eval.get(0));
+            result.getProbabilities().put("requirement", eval.get(1));
+
+            if (result.getFractionOfKnownWords() > 0.8 && result.getHighestProbability() > 0.95) {
+                result.setReliability(ClassificationReliability.MOST_LIKELY_CORRECT);
+            } else if (result.getFractionOfKnownWords() < 0.2 || result.getHighestProbability() < 0.7) {
+                result.setReliability(ClassificationReliability.AMBIGUOUS);
+            } else {
+                result.setReliability(ClassificationReliability.MAYBE_CORRECT);
+            }
+
+            final Tensor2D influenceVector = ConvNetUtils.calculateInfluenceVectorNormalized2(convNetModel, 0.4);
+            final SentenceMarkup sentenceMarkup = createSentenceMarkup(context.getExample().getText().length(), influenceVector, context.getConvNetPreprocessedTokens());
+            result.setSentenceMarkup(sentenceMarkup);
+
+            return result;
         } else {
-            result.setReliability(ClassificationReliability.MAYBE_CORRECT);
+            return null;
         }
-
-        final Tensor2D influenceVector = ConvNetUtils.calculateInfluenceVectorNormalized2(convNetModel, 0.4);
-        final SentenceMarkup sentenceMarkup = createSentenceMarkup(context.getExample().getText().length(), influenceVector, context.getConvNetPreprocessedTokens());
-        result.setSentenceMarkup(sentenceMarkup);
-
-        return result;
     }
 
     private SentenceMarkup createSentenceMarkup(final int sentenceLength, final Tensor2D influenceVector, final List<Token> tokens) {

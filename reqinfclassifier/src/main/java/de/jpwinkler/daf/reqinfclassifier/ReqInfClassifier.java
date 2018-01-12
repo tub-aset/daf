@@ -48,17 +48,17 @@ public class ReqInfClassifier extends Classifier<ClassificationResult> {
             return result;
         }
 
-        final String structuralType = structuralClassifier.classify(context);
-        if (structuralType.contains("sentence")) {
-            // result = multiSentenceClassifier.classify(context);
-            // if (result != null) {
-            // return result;
-            // }
-            final ConvNetClassificationResult convNetClassificationResult = convNetClassifier.classify(context);
-            if (convNetClassificationResult != null && convNetClassificationResult.getReliability().atLeast(ClassificationReliability.MAYBE_CORRECT)) {
-                return convNetClassificationResult;
-            }
+        // final String structuralType = structuralClassifier.classify(context);
+        // if (structuralType.contains("sentence")) {
+        // result = multiSentenceClassifier.classify(context);
+        // if (result != null) {
+        // return result;
+        // }
+        final ConvNetClassificationResult convNetClassificationResult = convNetClassifier.classify(context);
+        if (convNetClassificationResult != null && convNetClassificationResult.getReliability().atLeast(ClassificationReliability.MAYBE_CORRECT)) {
+            return convNetClassificationResult;
         }
+        // }
 
         return null;
     }

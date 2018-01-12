@@ -88,7 +88,7 @@ public class ModuleCSVParser {
     }
 
     public DoorsModule parseCSV(final InputStream is) throws IOException, CSVParseException {
-        final String csvString = IOUtils.toString(new BOMInputStream(is), Charset.defaultCharset());
+        final String csvString = IOUtils.toString(new BOMInputStream(is), Charset.forName("UTF-8"));
         final DoorsModule parseCSV = buildModuleModel(CSVParser.parse(csvString, FORMAT));
         return parseCSV;
     }
