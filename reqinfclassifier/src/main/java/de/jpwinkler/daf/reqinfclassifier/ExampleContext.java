@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import de.jpwinkler.libs.stringprocessing.tokens.Token;
-import edu.stanford.nlp.trees.Tree;
 
 public class ExampleContext {
 
@@ -30,10 +29,6 @@ public class ExampleContext {
 
     public Example getExample() {
         return example;
-    }
-
-    public List<Tree> getTrees(final String text) {
-        return context.parseTrees(text);
     }
 
     public String getPreprocessedText() {

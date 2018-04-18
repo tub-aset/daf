@@ -4,14 +4,12 @@ import de.jpwinkler.daf.reqinfclassifier.clusterclassifier.ClusterClassifier;
 import de.jpwinkler.daf.reqinfclassifier.convnetclassifier.ConvNetClassificationResult;
 import de.jpwinkler.daf.reqinfclassifier.convnetclassifier.ConvNetClassifier;
 import de.jpwinkler.daf.reqinfclassifier.headingclassifier.HeadingClassifier;
-import de.jpwinkler.daf.reqinfclassifier.structuralclassifier.StructuralClassifier;
 import de.jpwinkler.daf.reqinfclassifier.templateclassifier.TemplateClassifier;
 
 public class ReqInfClassifier extends Classifier<ClassificationResult> {
 
     private final ClusterClassifier clusterClassifier;
     private final TemplateClassifier templateClassifier;
-    private final StructuralClassifier structuralClassifier;
     private final ConvNetClassifier convNetClassifier;
     private final HeadingClassifier headingClassifier;
 
@@ -22,7 +20,6 @@ public class ReqInfClassifier extends Classifier<ClassificationResult> {
         headingClassifier = new HeadingClassifier(context);
         templateClassifier = new TemplateClassifier(context, templateName);
         clusterClassifier = new ClusterClassifier(context);
-        structuralClassifier = new StructuralClassifier(context);
         convNetClassifier = new ConvNetClassifier(context);
         // multiSentenceClassifier = new MultiSentenceClassifier(context,
         // convNetClassifier);

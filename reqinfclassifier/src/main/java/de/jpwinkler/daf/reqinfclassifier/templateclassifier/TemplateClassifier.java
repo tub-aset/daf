@@ -22,19 +22,28 @@ public class TemplateClassifier extends Classifier<ClassificationResult> {
 
     public TemplateClassifier(final ClassifierContext context, final String templateName) {
         super(context);
-        try (InputStream is = getClass().getClassLoader().getResourceAsStream("de/jpwinkler/daf/reqinfclassifier/templateclassifier/" + templateName + ".json")) {
-            templateTypes = new Gson().fromJson(IOUtils.toString(is), Map.class);
-        } catch (JsonSyntaxException | IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        if (templateName != null) {
+            try (InputStream is = getClass().getClassLoader().getResourceAsStream("de/jpwinkler/daf/reqinfclassifier/templateclassifier/" + templateName + ".json")) {
+                templateTypes = new Gson().fromJson(IOUtils.toString(is), Map.class);
+            } catch (JsonSyntaxException | IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                templateTypes = null;
+            }
+        } else {
+            templateTypes = null;
         }
     }
 
     @Override
     protected ClassificationResult run(final ExampleContext context) {
-        final String key = context.getExample().getKey();
-        if (key != null && templateTypes.containsKey(key)) {
-            return new ClassificationResult(templateTypes.get(key), ClassifiedBy.TEMPLATE_CLASSIFIER, ClassificationReliability.DEFINITELY_CORRECT);
+        if (templateTypes != null) {
+            final String key = context.getExample().getKey();
+            if (key != null && templateTypes.containsKey(key)) {
+                return new ClassificationResult(templateTypes.get(key), ClassifiedBy.TEMPLATE_CLASSIFIER, ClassificationReliability.DEFINITELY_CORRECT);
+            } else {
+                return null;
+            }
         } else {
             return null;
         }
