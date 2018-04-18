@@ -90,4 +90,24 @@ public class DoorsModuleUtil {
             }
         }
     }
+
+    public static String getTemplateName(final DoorsModule module) {
+        String moduleType = "";
+        final String templateShortName = module.getAttributes().get("IN_TemplateShortName");
+        if ("STLH".equals(templateShortName)) {
+            moduleType = "stlh";
+        } else if ("SB".equals(templateShortName)) {
+            moduleType = "slh";
+        } else {
+            return null;
+        }
+        final String templateVersion = module.getAttributes().get("Template Version");
+        if (templateVersion != null) {
+            return moduleType + "-" + templateVersion;
+        } else {
+            return null;
+        }
+
+    }
 }
+
