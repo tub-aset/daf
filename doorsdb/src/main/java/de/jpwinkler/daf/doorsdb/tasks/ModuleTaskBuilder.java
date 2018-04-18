@@ -12,7 +12,7 @@ import de.jpwinkler.daf.doorsdb.search.DBSearchExpression;
 public class ModuleTaskBuilder {
 
     private final List<ModulePass> passes = new ArrayList<>();
-    private ModuleSource source = new AllModulesSource();
+    private final List<ModuleSource> sources = new ArrayList<>();
     private final List<DBSearchExpression> filters = new ArrayList<>();
 
     private final DoorsDBInterface databaseInterface;
@@ -27,7 +27,7 @@ public class ModuleTaskBuilder {
     }
 
     public ModuleTaskBuilder withSource(final ModuleSource source) {
-        this.source = source;
+        sources.add(source);
         return this;
     }
 
@@ -42,7 +42,7 @@ public class ModuleTaskBuilder {
     }
 
     public ModuleTask build() {
-        return new ModuleTask(databaseInterface, passes, source, new AndSearchExpression(filters));
+        return new ModuleTask(databaseInterface, passes, sources, new AndSearchExpression(filters));
     }
 
     public void buildAndRun() {

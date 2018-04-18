@@ -321,7 +321,7 @@ public class DoorsDBInterface {
     }
 
     public static DoorsDBInterface getDefaultDatabase() throws FileNotFoundException, IOException {
-        final Path path = Paths.get(System.getProperty("user.home"), ".doorsdb");
+        final Path path = Paths.get(System.getenv("LOCALAPPDATA"), "DoorsDB");
         if (!Files.exists(path)) {
             Files.createDirectory(path);
         }

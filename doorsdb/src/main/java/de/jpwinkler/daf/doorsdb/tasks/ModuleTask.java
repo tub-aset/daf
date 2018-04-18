@@ -8,19 +8,22 @@ import de.jpwinkler.daf.doorsdb.search.DBSearchExpression;
 
 public class ModuleTask extends DoorsDBTask {
 
-    private final ModuleSource source;
-
     private final List<ModulePass> passes;
 
     private boolean saveDatabase = false;
 
     private final DBSearchExpression filter;
 
-    public ModuleTask(final DoorsDBInterface databaseInterface, final List<ModulePass> passes, final ModuleSource source, final DBSearchExpression filter) {
+    private final List<ModuleSource> sources;
+
+    public ModuleTask(final DoorsDBInterface databaseInterface, final List<ModulePass> passes, final List<ModuleSource> sources, final DBSearchExpression filter) {
         super(databaseInterface);
-        this.source = source;
+        this.sources = sources;
         this.passes = passes;
         this.filter = filter;
+        if (sources.isEmpty()) {
+            sources.add(new AllModulesSource());
+        }
     }
 
     @Override
@@ -30,7 +33,7 @@ public class ModuleTask extends DoorsDBTask {
         passes.forEach(p -> {
             p.setDatabaseInterface(getDatabaseInterface());
             p.preprocess();
-            source.run(getDatabaseInterface(), m -> {
+            sources.forEach(source -> source.run(getDatabaseInterface(), m -> {
                 if (filter == null || filter.matches(m)) {
                     p.preprocessModule(m);
                     p.processModule(m);
@@ -40,7 +43,7 @@ public class ModuleTask extends DoorsDBTask {
                         saveDatabase = true;
                     }
                 }
-            });
+            }));
             p.postprocess();
         });
         postprocess();
