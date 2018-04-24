@@ -14,9 +14,9 @@ public class ObjectHeadingAndObjectTextTableCell extends TextFieldTableCell<Door
     @Override
     public void updateItem(final String item, final boolean empty) {
         super.updateItem(item, empty);
+        String style = "";
         if (!empty && getTableRow() != null) {
             final DoorsObject o = getTableView().getItems().get(getTableRow().getIndex());
-            String style = "";
             if (o.isHeading()) {
                 setText(o.getObjectNumber() + " " + o.getObjectHeading());
                 style += "-fx-font-weight: bold;";
@@ -40,8 +40,8 @@ public class ObjectHeadingAndObjectTextTableCell extends TextFieldTableCell<Door
                 style += "-fx-text-fill: #000080;";
             }
             setPadding(new Insets(0, 0, 0, (o.getObjectLevel() - 1) * 10));
-            setStyle(style);
         }
+        setStyle(style);
     }
 
 }

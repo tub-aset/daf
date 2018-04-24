@@ -26,6 +26,8 @@ import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
 import de.jpwinkler.daf.dafcore.util.CSVParseException;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -136,6 +138,15 @@ public class CSVEditorController {
 
     private ObjectTypeClassificationController objectTypeClassificationController;
 
+    private final BooleanProperty simpleMode = new SimpleBooleanProperty(false);
+
+    public boolean getSimpleMode() {
+        return simpleMode.get();
+    }
+
+    public void setSimpleMode(final boolean value) {
+        simpleMode.set(value);
+    }
 
     @FXML
     public void initialize() {

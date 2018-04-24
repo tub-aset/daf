@@ -37,7 +37,11 @@ public class DoorsObjectExample implements Example {
 
     @Override
     public String getKey() {
-        return object.getObjectIdentifier();
+        if (object.getAttributes().containsKey("SourceID")) {
+            return object.getAttributes().get("SourceID");
+        } else {
+            return object.getObjectIdentifier();
+        }
     }
 
     @Override

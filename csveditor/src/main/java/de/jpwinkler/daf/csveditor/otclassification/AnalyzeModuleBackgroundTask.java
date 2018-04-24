@@ -19,11 +19,12 @@ public class AnalyzeModuleBackgroundTask extends BackgroundTask {
     private final Map<DoorsObject, ClassificationResult> results;
     private final List<DoorsObject> objectsToAnalyze = new ArrayList<>();
 
-    private final ReqInfClassifier classifier = new ReqInfClassifier(ClassifierContext.getInstance(), "stlh-6.2.4");
+    private final ReqInfClassifier classifier;
     private final CSVEditorTabController tabController;
 
     public AnalyzeModuleBackgroundTask(final CSVEditorTabController tabController, final DoorsModule module, final Map<DoorsObject, ClassificationResult> results) {
-        super("");
+        super("Analyzing module...");
+        classifier = new ReqInfClassifier(ClassifierContext.getInstance(), "slh-6.1");
         this.tabController = tabController;
         this.results = results;
         module.accept(new DoorsTreeNodeVisitor() {
@@ -35,15 +36,9 @@ public class AnalyzeModuleBackgroundTask extends BackgroundTask {
         });
     }
 
-    public AnalyzeModuleBackgroundTask(final CSVEditorTabController tabController, final List<DoorsObject> objects, final Map<DoorsObject, ClassificationResult> results) {
-        super("");
-        this.tabController = tabController;
-        this.results = results;
-        objectsToAnalyze.addAll(objects);
-    }
-
     public AnalyzeModuleBackgroundTask(final CSVEditorTabController tabController, final DoorsObject object, final Map<DoorsObject, ClassificationResult> results) {
-        super("");
+        super("Analyzing object...");
+        classifier = new ReqInfClassifier(ClassifierContext.getInstance(), "slh-6.1");
         this.tabController = tabController;
         this.results = results;
         objectsToAnalyze.add(object);

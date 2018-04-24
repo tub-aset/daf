@@ -16,13 +16,13 @@
               <menus>
                 <Menu mnemonicParsing="false" text="File">
                   <items>
-                        <MenuItem mnemonicParsing="false" onAction="#newClicked" text="New" />
+                        <MenuItem mnemonicParsing="false" onAction="#newClicked" text="New"  disable="${controller.simpleMode}"/>
                     <MenuItem mnemonicParsing="false" onAction="#openClicked" text="Open...">
                            <accelerator>
                               <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator>
                         </MenuItem>
-                        <Menu fx:id="recentMenu" mnemonicParsing="false" text="Recent" />
+                        <Menu fx:id="recentMenu" mnemonicParsing="false" text="Recent" disable="${controller.simpleMode}"/>
                         <MenuItem mnemonicParsing="false" onAction="#saveClicked" text="Save">
                            <accelerator>
                               <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
@@ -54,27 +54,27 @@
                            </accelerator>
                         </MenuItem>
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" onAction="#cutClicked" text="Cut">
+                        <MenuItem mnemonicParsing="false" onAction="#cutClicked" text="Cut" disable="${controller.simpleMode}">
                            <accelerator>
                               <KeyCodeCombination alt="UP" code="X" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator>
                         </MenuItem>
-                        <MenuItem mnemonicParsing="false" onAction="#copyClicked" text="Copy">
+                        <MenuItem mnemonicParsing="false" onAction="#copyClicked" text="Copy" disable="${controller.simpleMode}">
                            <accelerator>
                               <KeyCodeCombination alt="UP" code="C" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator>
                         </MenuItem>
-                        <MenuItem mnemonicParsing="false" onAction="#pasteAfterClicked" text="Paste after">
+                        <MenuItem mnemonicParsing="false" onAction="#pasteAfterClicked" text="Paste after" disable="${controller.simpleMode}">
                            <accelerator>
                               <KeyCodeCombination alt="UP" code="V" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator>
                         </MenuItem>
-                        <MenuItem mnemonicParsing="false" onAction="#pasteBelowClicked" text="Paste below">
+                        <MenuItem mnemonicParsing="false" onAction="#pasteBelowClicked" text="Paste below" disable="${controller.simpleMode}">
                            <accelerator>
                               <KeyCodeCombination alt="UP" code="V" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                            </accelerator>
                         </MenuItem>
-                        <MenuItem mnemonicParsing="false" onAction="#deleteObjectClicked" text="Delete">
+                        <MenuItem mnemonicParsing="false" onAction="#deleteObjectClicked" text="Delete" disable="${controller.simpleMode}">
                            <accelerator>
                               <KeyCodeCombination alt="UP" code="DELETE" control="UP" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator>
@@ -83,30 +83,30 @@
                   </Menu>
                   <Menu mnemonicParsing="false" text="View">
                     <items>
-                      <MenuItem mnemonicParsing="false" onAction="#columnsClicked" text="Columns..." />
+                      <MenuItem mnemonicParsing="false" onAction="#columnsClicked" text="Columns..."  disable="${controller.simpleMode}"/>
                     </items>
                   </Menu>
                   <Menu mnemonicParsing="false" text="Module">
                     <items>
                       <MenuItem mnemonicParsing="false" onAction="#analyzeObjectTypeClicked" text="Analyze Object Type..." />
-                      <MenuItem mnemonicParsing="false" onAction="#addColumnClicked" text="Add Column..." />
-                        <MenuItem mnemonicParsing="false" onAction="#reduceToSelectionClicked" text="Reduce to Selection" />
-                        <MenuItem mnemonicParsing="false" onAction="#flattenClicked" text="Flatten" />
-                        <MenuItem mnemonicParsing="false" onAction="#splitLinesClicked" text="Split lines" />
+                      <MenuItem mnemonicParsing="false" onAction="#addColumnClicked" text="Add Column..."  disable="${controller.simpleMode}"/>
+                        <MenuItem mnemonicParsing="false" onAction="#reduceToSelectionClicked" text="Reduce to Selection"  disable="${controller.simpleMode}"/>
+                        <MenuItem mnemonicParsing="false" onAction="#flattenClicked" text="Flatten"  disable="${controller.simpleMode}"/>
+                        <MenuItem mnemonicParsing="false" onAction="#splitLinesClicked" text="Split lines"  disable="${controller.simpleMode}"/>
                     </items>
                   </Menu>
                   <Menu mnemonicParsing="false" text="Object">
                     <items>
-                      <MenuItem mnemonicParsing="false" onAction="#swapObjectHeadingAndTextClicked" text="Swap Object Heading and Text" />
-                        <MenuItem mnemonicParsing="false" onAction="#unwrapChildrenClicked" text="Unwrap Children" />
-                        <MenuItem mnemonicParsing="false" onAction="#newObjectAfterClicked" text="New Object after" />
-                        <MenuItem mnemonicParsing="false" onAction="#newObjectBelowClicked" text="New Object below" />
-                        <MenuItem mnemonicParsing="false" onAction="#promoteObjectClicked" text="Promote Object">
+                      <MenuItem mnemonicParsing="false" onAction="#swapObjectHeadingAndTextClicked" text="Swap Object Heading and Text"  disable="${controller.simpleMode}"/>
+                        <MenuItem mnemonicParsing="false" onAction="#unwrapChildrenClicked" text="Unwrap Children"  disable="${controller.simpleMode}"/>
+                        <MenuItem mnemonicParsing="false" onAction="#newObjectAfterClicked" text="New Object after"  disable="${controller.simpleMode}"/>
+                        <MenuItem mnemonicParsing="false" onAction="#newObjectBelowClicked" text="New Object below"  disable="${controller.simpleMode}"/>
+                        <MenuItem mnemonicParsing="false" onAction="#promoteObjectClicked" text="Promote Object" disable="${controller.simpleMode}">
                            <accelerator>
                               <KeyCodeCombination alt="UP" code="P" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                            </accelerator>
                         </MenuItem>
-                        <MenuItem mnemonicParsing="false" onAction="#demoteObjectClicked" text="Demote Object">
+                        <MenuItem mnemonicParsing="false" onAction="#demoteObjectClicked" text="Demote Object" disable="${controller.simpleMode}">
                            <accelerator>
                               <KeyCodeCombination alt="UP" code="D" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                            </accelerator>
@@ -143,7 +143,7 @@
                   <TabPane SplitPane.resizableWithParent="false">
                      <tabs>
                         <Tab fx:id="objectTypeClassificationTab" closable="false" text="OT Classification" />
-                        <Tab closable="false" text="Mass Edit">
+                        <Tab closable="false" text="Mass Edit" disable="${controller.simpleMode}">
                            <content>
                               <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0">
                                  <children>
@@ -174,7 +174,7 @@
                               </VBox>
                            </content>
                         </Tab>
-                        <Tab closable="false" text="Feature Spy">
+                        <Tab closable="false" text="Feature Spy" disable="${controller.simpleMode}">
                            <content>
                               <ListView fx:id="featureListView" prefHeight="200.0" prefWidth="200.0" />
                            </content>
@@ -191,7 +191,7 @@
          <center>
             <ToolBar prefWidth="200.0" BorderPane.alignment="CENTER">
                <items>
-                  <Label fx:id="statusBarLabel" text="You feel somehow out of place..." />
+                  <Label fx:id="statusBarLabel" text="" />
                </items>
             </ToolBar>
          </center>

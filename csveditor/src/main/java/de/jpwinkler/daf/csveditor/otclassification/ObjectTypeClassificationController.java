@@ -152,7 +152,10 @@ public class ObjectTypeClassificationController {
             classifiedSentenceContainer.getChildren().add(coloredLabel);
         }
         if (lastEnd < object.getText().length()) {
-            classifiedSentenceContainer.getChildren().add(new Label(object.getText().substring(lastEnd)));
+            final String remainingText = object.getText().substring(lastEnd);
+            for (final String subString : remainingText.split(" ")) {
+                classifiedSentenceContainer.getChildren().add(new Label(" " + subString));
+            }
         }
     }
 
