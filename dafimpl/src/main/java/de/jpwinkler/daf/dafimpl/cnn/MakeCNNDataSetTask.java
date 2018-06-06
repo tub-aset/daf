@@ -25,14 +25,12 @@ import com.cybozu.labs.langdetect.LangDetectException;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.util.DoorsModuleUtil;
 import de.jpwinkler.daf.dafimpl.Attributes;
-import de.jpwinkler.daf.dafimpl.util.DoorsObjectWrapper;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBModule;
 import de.jpwinkler.daf.doorsdb.search.HasTagsSearchExpression;
 import de.jpwinkler.daf.doorsdb.tasks.AllModulesSource;
 import de.jpwinkler.daf.doorsdb.tasks.ModuleTaskBuilder;
 import de.jpwinkler.daf.doorsdb.tasks.ObjectCSVPass;
 import de.jpwinkler.daf.reqinfclassifier.ClassifierContext;
-import de.jpwinkler.daf.reqinfclassifier.structuralclassifier.StructuralClassifier;
 
 public class MakeCNNDataSetTask {
 
@@ -50,7 +48,6 @@ public class MakeCNNDataSetTask {
         private final Set<String> writtenObjects = new HashSet<>();
         private final CSVPrinter writer;
         private final ClassifierContext classifierContext = ClassifierContext.getInstance();
-        private final StructuralClassifier structuralClassifier = new StructuralClassifier(classifierContext);
 
         private final Random r = new Random();
         private String currentModuleFullName;
@@ -80,10 +77,6 @@ public class MakeCNNDataSetTask {
             }
             final String srcId = object.getAttributes().get(Attributes.SOURCE_ID);
             if (srcId == null || srcId.startsWith("STLH-") || srcId.startsWith("SB-")) {
-                return;
-            }
-            final String structuralType = structuralClassifier.classify(new DoorsObjectWrapper(object));
-            if (structuralType == null || !structuralType.contains("sentence")) {
                 return;
             }
             final String ot = object.getAttributes().get(Attributes.OBJECT_TYPE_ORIGINAL);

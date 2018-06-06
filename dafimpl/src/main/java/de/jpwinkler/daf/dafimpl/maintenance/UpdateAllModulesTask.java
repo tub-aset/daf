@@ -18,7 +18,14 @@ public class UpdateAllModulesTask {
                 final boolean updated = getDatabaseInterface().updateModule(module);
                 System.out.println(updated ? "added new version." : "up to date.");
             } catch (DoorsException | IOException e) {
+                getDatabaseInterface().addTag(module, "UpdateError: " + e.getMessage());
                 e.printStackTrace();
+                try {
+                    getDatabaseInterface().saveDB();
+                } catch (final IOException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
             }
         }
 
