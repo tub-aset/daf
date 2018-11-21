@@ -16,6 +16,7 @@ public class ModuleTaskBuilder {
     private final List<DBSearchExpression> filters = new ArrayList<>();
 
     private final DoorsDBInterface databaseInterface;
+    private boolean parallel = false;
 
     public ModuleTaskBuilder() throws FileNotFoundException, IOException {
         this(DoorsDBInterface.getDefaultDatabase());
@@ -41,8 +42,13 @@ public class ModuleTaskBuilder {
         return this;
     }
 
+    public ModuleTaskBuilder parallel() {
+        parallel = true;
+        return this;
+    }
+
     public ModuleTask build() {
-        return new ModuleTask(databaseInterface, passes, sources, new AndSearchExpression(filters));
+        return new ModuleTask(databaseInterface, passes, sources, new AndSearchExpression(filters), parallel);
     }
 
     public void buildAndRun() {

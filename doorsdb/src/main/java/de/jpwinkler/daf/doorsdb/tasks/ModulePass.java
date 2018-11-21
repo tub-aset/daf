@@ -23,11 +23,11 @@ public abstract class ModulePass {
     public void postprocess() {
     }
 
-    public boolean isSaveDatabase() {
+    public synchronized boolean isSaveDatabase() {
         return saveDatabase;
     }
 
-    public void saveDatabase() {
+    public synchronized void saveDatabase() {
         saveDatabase = true;
     }
 
