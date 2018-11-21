@@ -1,5 +1,8 @@
 package de.jpwinkler.daf.doorsdb.util;
 
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBFolder;
@@ -11,6 +14,16 @@ public class DBUtils {
 
     public static DBFolder mkdirs(final DoorsDB database, final ItemRef path) {
         return ensurePath(database.getRoot(), path.getItemName().getPathSegments());
+    }
+
+    public static DBFolder mkdirs(final DoorsDB database, final Path path) {
+        System.out.println(path);
+        final List<String> segments = new ArrayList<>();
+        final Iterator<Path> iterator = path.iterator();
+        while (iterator.hasNext()) {
+            segments.add(iterator.next().toString());
+        }
+        return ensurePath(database.getRoot(), segments);
     }
 
     private static DBFolder ensurePath(final DBFolder parent, final List<String> path) {

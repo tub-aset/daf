@@ -1,5 +1,6 @@
 package de.jpwinkler.daf.doorsdb;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -18,6 +19,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -320,8 +323,54 @@ public class DoorsDBInterface {
         return current.getModule(pathSegments.get(pathSegments.size() - 1));
     }
 
+    public DBModule importModule(final Path src, final Path dst) throws IOException {
+        final DBFolder folder = DBUtils.mkdirs(db, dst);
+
+        final String moduleName = FilenameUtils.removeExtension(src.getFileName().toString());
+        DBModule module = folder.getModule(moduleName);
+        if (module == null) {
+            Date lastChangedOn;
+            Map<String, String> attributes;
+            try {
+                attributes = new ModuleMetaDataParser().parseModuleMetaData(new File(src + ".mmd"));
+                lastChangedOn = DoorsModuleUtil.parseDate(attributes.get("Last Modified On"));
+            } catch (final FileNotFoundException e) {
+                lastChangedOn = new Date();
+                attributes = Collections.emptyMap();
+            } catch (final ParseException e) {
+                throw new RuntimeException(e);
+            }
+
+            module = DoorsDBModelFactory.eINSTANCE.createDBModule();
+            module.setParent(folder);
+            module.setName(moduleName);
+
+            final DBVersion version = DoorsDBModelFactory.eINSTANCE.createDBVersion();
+            version.setDate(lastChangedOn);
+            version.setModule(module);
+
+            Files.createDirectories(getCSVLocation(version).getParent());
+
+            FileUtils.copyFile(src.toFile(), getCSVLocation(version).toFile());
+
+            for (final Entry<String, String> e : attributes.entrySet()) {
+                version.getAttributes().put(e.getKey(), e.getValue());
+            }
+        } else {
+            System.out.println("Skipping " + src + ", already exists");
+        }
+
+        return module;
+    }
+
     public static DoorsDBInterface getDefaultDatabase() throws FileNotFoundException, IOException {
-        final Path path = Paths.get(System.getenv("LOCALAPPDATA"), "DoorsDB");
+        final String doorsdb_home = System.getenv("DOORSDB_HOME");
+        Path path;
+        if (doorsdb_home != null) {
+            path = Paths.get(doorsdb_home);
+        } else {
+            path = Paths.get(System.getenv("LOCALAPPDATA"), "DoorsDB");
+        }
         if (!Files.exists(path)) {
             Files.createDirectory(path);
         }
