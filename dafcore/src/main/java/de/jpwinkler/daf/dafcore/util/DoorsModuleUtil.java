@@ -42,8 +42,12 @@ public class DoorsModuleUtil {
     }
 
     public static int countObjects(final DoorsTreeNode module) {
-
-        return 1 + module.getChildren().stream().mapToInt(n -> countObjects(n)).sum();
+        final int childCount = module.getChildren().stream().mapToInt(n -> countObjects(n)).sum();
+        if (module instanceof DoorsModule) {
+            return childCount;
+        } else {
+            return 1 + childCount;
+        }
 
     }
 
