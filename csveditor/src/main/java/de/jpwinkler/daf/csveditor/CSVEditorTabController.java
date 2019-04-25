@@ -7,9 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,7 +35,6 @@ import de.jpwinkler.daf.csveditor.filter.ObjectTextAndHeadingFilter;
 import de.jpwinkler.daf.csveditor.filter.ReverseCascadingFilter;
 import de.jpwinkler.daf.csveditor.massedit.MassEditOperation;
 import de.jpwinkler.daf.csveditor.massedit.MassEditTarget;
-import de.jpwinkler.daf.csveditor.otclassification.AnalyzeModuleBackgroundTask;
 import de.jpwinkler.daf.csveditor.util.ColumnDefinition;
 import de.jpwinkler.daf.csveditor.util.ColumnType;
 import de.jpwinkler.daf.csveditor.util.CommandStack;
@@ -53,7 +50,6 @@ import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
 import de.jpwinkler.daf.dafcore.util.CSVParseException;
 import de.jpwinkler.daf.dafcore.util.DoorsModuleUtil;
-import de.jpwinkler.libs.reqinfclassifier.ClassificationResult;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
@@ -94,8 +90,6 @@ public class CSVEditorTabController {
     private final List<DoorsObject> clipboard = new ArrayList<>();
     private final ViewModel viewModel = new ViewModel();
 
-    private final Map<DoorsObject, ClassificationResult> classificationResults = new ConcurrentHashMap<>();
-
     @FXML
     private TableView<DoorsObject> contentTableView;
 
@@ -105,11 +99,8 @@ public class CSVEditorTabController {
 
         contentTableView.getSelectionModel().selectedItemProperty().addListener((ChangeListener<DoorsObject>) (observable, oldValue, newValue) -> {
             csvEditorController.objectSelected(newValue);
-            if (newValue != null) {
-                csvEditorController.getObjectTypeClassificationController().updatePanels(newValue, classificationResults.get(newValue));
-            } else {
-                csvEditorController.getObjectTypeClassificationController().updatePanels(null, null);
-            }
+            throw new UnsupportedOperationException("Not implemented");
+
         });
 
     }
@@ -141,7 +132,7 @@ public class CSVEditorTabController {
     }
 
     public boolean save() {
-        try (ModuleCSVWriter writer = new ModuleCSVWriter(new FileOutputStream(file))) {
+        try ( ModuleCSVWriter writer = new ModuleCSVWriter(new FileOutputStream(file))) {
             writer.writeModule(module);
             commandStack.setSavePoint();
             updateTabTitle();
@@ -222,31 +213,27 @@ public class CSVEditorTabController {
             c.setPrefWidth(columnDefinition.getWidth());
 
             switch (columnDefinition.getColumnType()) {
-            case ATTRIBUTE_COLUMN:
-                c.setCellFactory(TextFieldTableCell.forTableColumn());
-                c.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getAttributes().get(columnDefinition.getAttributeName())));
-                c.setOnEditCommit(event -> {
-                    executeCommand(new EditObjectAttributeCommand(module, event.getRowValue(), columnDefinition.getAttributeName(), event.getNewValue()));
-                    contentTableView.requestFocus();
-                    contentTableView.getFocusModel().focusNext();
-                });
-                break;
-            case OBJECT_TEXT_HEADING_COLUMN:
-                c.setCellFactory(param -> new ObjectHeadingAndObjectTextTableCell());
-                c.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getText()));
-                c.setOnEditCommit(event -> {
-                    executeCommand(new EditObjectHeadingTextCommand(module, event.getRowValue(), event.getNewValue()));
-                    contentTableView.requestFocus();
-                    contentTableView.getFocusModel().focusNext();
-                    csvEditorController.runBackgroundTask(new AnalyzeModuleBackgroundTask(this, event.getRowValue(), classificationResults));
-                    // contentTableView.edit(contentTableView.getFocusModel().getFocusedIndex(),
-                    // contentTableView.getFocusModel().getFocusedCell().getTableColumn());
-                });
-                break;
-            case WARNING_COLUMN:
-                c.setCellFactory(param -> new WarningTableCell(classificationResults, csvEditorController.getIgnoreList()));
-                c.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getText()));
-                break;
+                case ATTRIBUTE_COLUMN:
+                    c.setCellFactory(TextFieldTableCell.forTableColumn());
+                    c.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getAttributes().get(columnDefinition.getAttributeName())));
+                    c.setOnEditCommit(event -> {
+                        executeCommand(new EditObjectAttributeCommand(module, event.getRowValue(), columnDefinition.getAttributeName(), event.getNewValue()));
+                        contentTableView.requestFocus();
+                        contentTableView.getFocusModel().focusNext();
+                    });
+                    break;
+                case OBJECT_TEXT_HEADING_COLUMN:
+                    c.setCellFactory(param -> new ObjectHeadingAndObjectTextTableCell());
+                    c.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getText()));
+                    c.setOnEditCommit(event -> {
+                        executeCommand(new EditObjectHeadingTextCommand(module, event.getRowValue(), event.getNewValue()));
+                        contentTableView.requestFocus();
+                        contentTableView.getFocusModel().focusNext();
+                    });
+                    break;
+                case WARNING_COLUMN:
+                    c.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getText()));
+                    break;
             }
             contentTableView.getColumns().add(c);
 
@@ -370,23 +357,23 @@ public class CSVEditorTabController {
     public void updateGui(final UpdateAction... updateActions) {
         for (final UpdateAction action : updateActions) {
             switch (action) {
-            case FIX_OBJECT_LEVELS:
-                fixObjectLevels();
-                break;
-            case FIX_OBJECT_NUMBERS:
-                fixObjectNumbers(module, "");
-                break;
-            case UPDATE_CONTENT_VIEW:
-                populateContentTableView();
-                break;
-            case UPDATE_OUTLINE_VIEW:
-                csvEditorController.populateOutlineTreeView(module);
-                break;
-            case UPDATE_COLUMNS:
-                updateView();
-                break;
-            default:
-                break;
+                case FIX_OBJECT_LEVELS:
+                    fixObjectLevels();
+                    break;
+                case FIX_OBJECT_NUMBERS:
+                    fixObjectNumbers(module, "");
+                    break;
+                case UPDATE_CONTENT_VIEW:
+                    populateContentTableView();
+                    break;
+                case UPDATE_OUTLINE_VIEW:
+                    csvEditorController.populateOutlineTreeView(module);
+                    break;
+                case UPDATE_COLUMNS:
+                    updateView();
+                    break;
+                default:
+                    break;
             }
         }
         updateTabTitle();
@@ -522,9 +509,7 @@ public class CSVEditorTabController {
     }
 
     public void analyzeObjectType() {
-        classificationResults.clear();
         refreshTable();
-        csvEditorController.runBackgroundTask(new AnalyzeModuleBackgroundTask(this, module, classificationResults));
     }
 
     public void refreshTable() {

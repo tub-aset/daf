@@ -18,8 +18,6 @@ import de.jpwinkler.daf.csveditor.massedit.CopyAttributeOperation;
 import de.jpwinkler.daf.csveditor.massedit.MassEditOperation;
 import de.jpwinkler.daf.csveditor.massedit.MassEditTarget;
 import de.jpwinkler.daf.csveditor.massedit.SetAttributeOperation;
-import de.jpwinkler.daf.csveditor.otclassification.IgnoreList;
-import de.jpwinkler.daf.csveditor.otclassification.ObjectTypeClassificationController;
 import de.jpwinkler.daf.csveditor.util.ExceptionDialog;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
@@ -55,7 +53,6 @@ import javafx.stage.Stage;
 
 public class CSVEditorController {
 
-    private final IgnoreList ignoreList = new IgnoreList();
 
     private static final Logger LOGGER = Logger.getLogger(CSVEditorController.class.getName());
 
@@ -136,8 +133,6 @@ public class CSVEditorController {
 
     private ChangeListener<TreeItem<OutlineTreeItem>> outlineListener;
 
-    private ObjectTypeClassificationController objectTypeClassificationController;
-
     private final BooleanProperty simpleMode = new SimpleBooleanProperty(false);
 
     public boolean getSimpleMode() {
@@ -183,16 +178,7 @@ public class CSVEditorController {
         });
 
         outlineListener = (ChangeListener<TreeItem<OutlineTreeItem>>) (observable, oldValue, newValue) -> {
-            if (newValue != null) {
-
-                final DoorsTreeNode treeNode = newValue.getValue().getTreeNode();
-                if (treeNode instanceof DoorsObject) {
-                    final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-                    if (selectedTab != null) {
-                        tabControllers.get(selectedTab).selectObject((DoorsObject) treeNode);
-                    }
-                }
-            }
+            throw new UnsupportedOperationException("Not implemented");
         };
 
         outlineTreeView.getSelectionModel().selectedItemProperty().addListener(outlineListener);
@@ -221,16 +207,6 @@ public class CSVEditorController {
 
         });
 
-        try {
-            final FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ot_classification.fxml"));
-            final Parent root = loader.load();
-            objectTypeClassificationTab.setContent(root);
-            objectTypeClassificationController = loader.getController();
-            objectTypeClassificationController.setCsvEditorController(this);
-        } catch (final IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
     }
 
     public void populateOutlineTreeView(final DoorsModule module) {
@@ -295,10 +271,6 @@ public class CSVEditorController {
 
         tabPane.getTabs().add(tab);
         tabPane.getSelectionModel().select(tab);
-    }
-
-    public ObjectTypeClassificationController getObjectTypeClassificationController() {
-        return objectTypeClassificationController;
     }
 
     @FXML
@@ -589,10 +561,6 @@ public class CSVEditorController {
         } else {
             return null;
         }
-    }
-
-    public IgnoreList getIgnoreList() {
-        return ignoreList;
     }
 
 }
