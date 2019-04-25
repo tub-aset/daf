@@ -62,7 +62,7 @@ public class ConvNetClassifier extends Classifier<ConvNetClassificationResult> {
                 result.setReliability(ClassificationReliability.MAYBE_CORRECT);
             }
 
-            final Tensor2D influenceVector = ConvNetUtils.calculateInfluenceVectorNormalized2(convNetModel, 0.4);
+            final Tensor2D influenceVector = ConvNetUtils.calculateInfluenceVectorNormalized2(convNetModel.trace(), 0.4);
             final SentenceMarkup sentenceMarkup = createSentenceMarkup(context.getExample().getText().length(), influenceVector, context.getConvNetPreprocessedTokens());
             result.setSentenceMarkup(sentenceMarkup);
 
