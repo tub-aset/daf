@@ -2,10 +2,10 @@ package de.jpwinkler.daf.csveditor.otclassification;
 
 import de.jpwinkler.daf.csveditor.CSVEditorController;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
-import de.jpwinkler.daf.reqinfclassifier.ClassificationResult;
-import de.jpwinkler.daf.reqinfclassifier.convnetclassifier.ConvNetClassificationResult;
-import de.jpwinkler.daf.reqinfclassifier.convnetclassifier.SentenceMarkup;
-import de.jpwinkler.daf.reqinfclassifier.convnetclassifier.SentenceMarkupRange;
+import de.jpwinkler.libs.reqinfclassifier.ClassificationResult;
+import de.jpwinkler.libs.reqinfclassifier.convnetclassifier.ConvNetClassificationResult;
+import de.jpwinkler.libs.reqinfclassifier.convnetclassifier.SentenceMarkup;
+import de.jpwinkler.libs.reqinfclassifier.convnetclassifier.SentenceMarkupRange;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Background;

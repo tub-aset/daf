@@ -4,7 +4,7 @@ import java.util.Map;
 
 import de.jpwinkler.daf.csveditor.otclassification.IgnoreList;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
-import de.jpwinkler.daf.reqinfclassifier.ClassificationResult;
+import de.jpwinkler.libs.reqinfclassifier.ClassificationResult;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.DefaultStringConverter;
 

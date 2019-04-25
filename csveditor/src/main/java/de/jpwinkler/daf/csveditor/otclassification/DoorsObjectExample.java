@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
-import de.jpwinkler.daf.reqinfclassifier.Example;
+import de.jpwinkler.libs.reqinfclassifier.Example;
 
 public class DoorsObjectExample implements Example {
 

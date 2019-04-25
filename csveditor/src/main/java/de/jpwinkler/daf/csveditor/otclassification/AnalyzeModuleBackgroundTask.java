@@ -9,9 +9,9 @@ import de.jpwinkler.daf.csveditor.background.BackgroundTask;
 import de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
-import de.jpwinkler.daf.reqinfclassifier.ClassificationResult;
-import de.jpwinkler.daf.reqinfclassifier.ClassifierContext;
-import de.jpwinkler.daf.reqinfclassifier.ReqInfClassifier;
+import de.jpwinkler.libs.reqinfclassifier.ClassificationResult;
+import de.jpwinkler.libs.reqinfclassifier.ClassifierContext;
+import de.jpwinkler.libs.reqinfclassifier.ReqInfClassifier;
 import javafx.application.Platform;
 
 public class AnalyzeModuleBackgroundTask extends BackgroundTask {
