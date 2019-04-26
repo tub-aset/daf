@@ -1,5 +1,6 @@
 package de.jpwinkler.daf.csveditor;
 
+import de.jpwinkler.daf.csveditor.util.ExceptionDialog;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -69,8 +70,7 @@ public class CSVEditorApplication extends Application {
             try {
                 csvEditorController.newTabFromFile(file);
             } catch (IOException | CSVParseException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                ExceptionDialog.showExceptionDialog(e);
             }
         }
 

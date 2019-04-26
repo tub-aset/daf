@@ -447,10 +447,8 @@ public class CSVEditorTabController {
 
             dialogStage.showAndWait();
 
-        } catch (final Exception e) {
+        } catch (final IOException e) {
             ExceptionDialog.showExceptionDialog(e);
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         }
 
     }
