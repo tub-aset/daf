@@ -4,7 +4,7 @@ import de.jpwinkler.daf.csveditor.util.ColumnDefinition;
 import de.jpwinkler.daf.csveditor.util.ColumnType;
 import de.jpwinkler.daf.csveditor.util.ViewModel;
 import de.jpwinkler.daf.dafcore.model.csv.AttributeDefinition;
-import de.jpwinkler.daf.dafcore.model.csv.CSVFactory;
+import de.jpwinkler.daf.dafcore.model.csv.DoorsCSVFactory;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 
 public class AddColumnCommand extends AbstractCommand {
@@ -28,7 +28,7 @@ public class AddColumnCommand extends AbstractCommand {
 
     @Override
     public void apply() {
-        attributeDefinition = CSVFactory.eINSTANCE.createAttributeDefinition();
+        attributeDefinition = DoorsCSVFactory.eINSTANCE.createAttributeDefinition();
         attributeDefinition.setName(newColumnName);
         columnDefinition = new ColumnDefinition(ColumnType.ATTRIBUTE_COLUMN, newColumnName, newColumnName, 50, true);
         redo();

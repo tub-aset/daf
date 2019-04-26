@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor;
-import de.jpwinkler.daf.dafcore.model.csv.CSVFactory;
+import de.jpwinkler.daf.dafcore.model.csv.DoorsCSVFactory;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 
@@ -60,7 +60,7 @@ public class SplitLinesCommand extends AbstractCommand {
     }
 
     private void newObjectAfter(final DoorsObject object, final int i, final String string) {
-        final DoorsObject newObject = CSVFactory.eINSTANCE.createDoorsObject();
+        final DoorsObject newObject = DoorsCSVFactory.eINSTANCE.createDoorsObject();
         for (final Entry<String, String> attribute : object.getAttributes().entrySet()) {
             newObject.getAttributes().put(attribute.getKey(), attribute.getValue());
         }

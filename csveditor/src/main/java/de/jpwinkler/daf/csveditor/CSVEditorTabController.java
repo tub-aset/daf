@@ -44,7 +44,7 @@ import de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.dafcore.csv.ModuleCSVParser;
 import de.jpwinkler.daf.dafcore.csv.ModuleCSVWriter;
 import de.jpwinkler.daf.dafcore.model.csv.AttributeDefinition;
-import de.jpwinkler.daf.dafcore.model.csv.CSVFactory;
+import de.jpwinkler.daf.dafcore.model.csv.DoorsCSVFactory;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
@@ -164,7 +164,7 @@ public class CSVEditorTabController {
             module = new ModuleCSVParser().parseCSV(file);
             this.file = file;
         } else {
-            module = CSVFactory.eINSTANCE.createDoorsModule();
+            module = DoorsCSVFactory.eINSTANCE.createDoorsModule();
             this.file = null;
         }
 
