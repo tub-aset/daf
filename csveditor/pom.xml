@@ -55,7 +55,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>de.jpwinkler</groupId>
+            <groupId>de.jpwinkler.daf</groupId>
             <artifactId>dafcore</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
