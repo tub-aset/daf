@@ -1,4 +1,4 @@
-package de.jpwinkler.daf.doorsdb.util;
+package de.jpwinkler.daf.doorsdb;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -8,7 +8,7 @@ import java.util.List;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBFolder;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDB;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDBFactory;
-import de.jpwinkler.libs.doorsbridge.ItemRef;
+import de.jpwinkler.daf.doorsbridge.ItemRef;
 
 public class DBUtils {
 

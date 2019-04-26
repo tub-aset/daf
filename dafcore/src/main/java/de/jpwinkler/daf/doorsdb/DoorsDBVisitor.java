@@ -1,4 +1,4 @@
-package de.jpwinkler.daf.doorsdb.util;
+package de.jpwinkler.daf.doorsdb;
 
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBFolder;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBModule;

@@ -37,14 +37,12 @@ import de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDB;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDBFactory;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDBPackage;
 import de.jpwinkler.daf.doorsdb.search.DBSearchExpression;
-import de.jpwinkler.daf.doorsdb.util.DBUtils;
-import de.jpwinkler.daf.doorsdb.util.DoorsDBVisitor;
-import de.jpwinkler.libs.doorsbridge.DoorsApplication;
-import de.jpwinkler.libs.doorsbridge.DoorsApplicationFactory;
-import de.jpwinkler.libs.doorsbridge.DoorsException;
-import de.jpwinkler.libs.doorsbridge.DoorsItemType;
-import de.jpwinkler.libs.doorsbridge.ItemRef;
-import de.jpwinkler.libs.doorsbridge.ModuleRef;
+import de.jpwinkler.daf.doorsbridge.DoorsApplication;
+import de.jpwinkler.daf.doorsbridge.DoorsApplicationFactory;
+import de.jpwinkler.daf.doorsbridge.DoorsException;
+import de.jpwinkler.daf.doorsbridge.DoorsItemType;
+import de.jpwinkler.daf.doorsbridge.ItemRef;
+import de.jpwinkler.daf.doorsbridge.ModuleRef;
 
 public class DoorsDBInterface {
 
