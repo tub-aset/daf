@@ -9,10 +9,23 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.3</version>
+
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                </configuration>
+            </plugin>
+            
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
@@ -25,36 +38,60 @@
                         </goals>
                         <configuration>
                             <sources>
-                                <source>src/gen/java</source>
+                                <source>${project.build.directory}/src-doorsdb/src/gen/java</source>
+                                <source>${project.build.directory}/src-doorscsv/src/gen/java</source>
                             </sources>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
+            
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.3</version>
-
+                <groupId>org.eclipse.tycho.extras</groupId>
+                <artifactId>tycho-eclipserun-plugin</artifactId>
+                <version>1.4.0</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <dependencies>
+                        <dependency>
+                            <artifactId>org.eclipse.emf.codegen.ecore</artifactId>
+                            <type>eclipse-plugin</type>
+                        </dependency>
+                    </dependencies>
+                    <repositories>
+                        <repository>
+                            <id>2019-06</id>
+                            <layout>p2</layout>
+                            <url>https://download.eclipse.org/releases/2019-06</url>
+                        </repository>
+                    </repositories>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>DoorsCSV</id>
+                        <goals>
+                            <goal>eclipse-run</goal>
+                        </goals>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <appArgLine>-data target/workspace -application org.eclipse.emf.codegen.ecore.Generator -model ${project.basedir}/src/main/emf/DoorsCSV.genmodel ${project.build.directory}/src-doorscsv</appArgLine>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>DoorsDB</id>
+                        <goals>
+                            <goal>eclipse-run</goal>
+                        </goals>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <appArgLine>-data target/workspace -application org.eclipse.emf.codegen.ecore.Generator -model ${project.basedir}/src/main/emf/DoorsDB.genmodel ${project.build.directory}/src-doorsdb</appArgLine>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
 
     <dependencies>
-        <dependency>
-            <groupId>org.eclipse.emf</groupId>
-            <artifactId>org.eclipse.emf.common</artifactId>
-            <version>2.11.0-v20150123-0347</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.emf</groupId>
-            <artifactId>org.eclipse.emf.ecore</artifactId>
-            <version>2.11.0-v20150123-0347</version>
-        </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-csv</artifactId>
@@ -64,6 +101,44 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.4</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4</artifactId>
+            <version>4.5.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4-runtime</artifactId>
+            <version>4.5.1</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>de.jpwinkler</groupId>
+            <artifactId>doorsbridge</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.emf</groupId>
+            <artifactId>org.eclipse.emf.ecore</artifactId>
+            <version>2.15.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.emf</groupId>
+            <artifactId>org.eclipse.emf.common</artifactId>
+            <version>2.15.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.emf</groupId>
+            <artifactId>org.eclipse.emf.ecore.xmi</artifactId>
+            <version>2.15.0</version>
+            <type>jar</type>
         </dependency>
     </dependencies>
 </project>

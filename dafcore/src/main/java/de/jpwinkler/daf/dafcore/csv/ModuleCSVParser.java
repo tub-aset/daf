@@ -15,8 +15,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.BOMInputStream;
 
 import de.jpwinkler.daf.dafcore.model.csv.AttributeDefinition;
-import de.jpwinkler.daf.dafcore.model.csv.CSVFactory;
-import de.jpwinkler.daf.dafcore.model.csv.CSVPackage;
+import de.jpwinkler.daf.dafcore.model.csv.DoorsCSVPackage;
+import de.jpwinkler.daf.dafcore.model.csv.DoorsCSVFactory;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
@@ -32,7 +32,7 @@ public class ModuleCSVParser {
             .withRecordSeparator("\r\n");
 
     private DoorsModule buildModuleModel(final CSVParser csvParser) throws CSVParseException, NumberFormatException, IOException {
-        final CSVFactory factory = CSVPackage.eINSTANCE.getCSVFactory();
+        final DoorsCSVFactory factory = DoorsCSVPackage.eINSTANCE.getDoorsCSVFactory();
 
         final DoorsModule module = factory.createDoorsModule();
 
@@ -71,7 +71,7 @@ public class ModuleCSVParser {
         }
 
         for (final String header : csvParser.getHeaderMap().keySet()) {
-            final AttributeDefinition attributeDefinition = CSVFactory.eINSTANCE.createAttributeDefinition();
+            final AttributeDefinition attributeDefinition = DoorsCSVFactory.eINSTANCE.createAttributeDefinition();
             attributeDefinition.setName(header);
             module.getAttributeDefinitions().add(attributeDefinition);
         }
@@ -80,7 +80,7 @@ public class ModuleCSVParser {
     }
 
     public DoorsModule parseCSV(final File file) throws IOException, CSVParseException {
-        try (InputStream is = new FileInputStream(file)) {
+        try ( InputStream is = new FileInputStream(file)) {
             final DoorsModule parseCSV = parseCSV(is);
             parseCSV.setName(FilenameUtils.getBaseName(file.getAbsolutePath()));
             return parseCSV;

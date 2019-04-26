@@ -34,8 +34,8 @@ import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBModule;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBTag;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBVersion;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDB;
-import de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDBModelFactory;
-import de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDBModelPackage;
+import de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDBFactory;
+import de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDBPackage;
 import de.jpwinkler.daf.doorsdb.search.DBSearchExpression;
 import de.jpwinkler.daf.doorsdb.util.DBUtils;
 import de.jpwinkler.daf.doorsdb.util.DoorsDBVisitor;
@@ -55,8 +55,8 @@ public class DoorsDBInterface {
     private final DoorsApplication app = DoorsApplicationFactory.getDoorsApplication();
 
     public static DoorsDBInterface createDB(final Path databaseFile) throws IOException {
-        final DoorsDB db = DoorsDBModelFactory.eINSTANCE.createDoorsDB();
-        db.setRoot(DoorsDBModelFactory.eINSTANCE.createDBFolder());
+        final DoorsDB db = DoorsDBFactory.eINSTANCE.createDoorsDB();
+        db.setRoot(DoorsDBFactory.eINSTANCE.createDBFolder());
         final DoorsDBInterface doorsDBInterface = new DoorsDBInterface(databaseFile, db);
         doorsDBInterface.saveDB();
         return doorsDBInterface;
@@ -64,7 +64,7 @@ public class DoorsDBInterface {
 
     public static DoorsDBInterface openDB(final Path databaseFile) throws IOException {
 
-        DoorsDBModelPackage.eINSTANCE.eClass();
+        DoorsDBPackage.eINSTANCE.eClass();
 
         final Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
         reg.getExtensionToFactoryMap().put("doorsdbmodel", new XMIResourceFactoryImpl());
@@ -114,7 +114,7 @@ public class DoorsDBInterface {
 
         DBModule module = folder.getModule(i.getItemName().getName());
         if (module == null) {
-            module = DoorsDBModelFactory.eINSTANCE.createDBModule();
+            module = DoorsDBFactory.eINSTANCE.createDBModule();
             module.setParent(folder);
             module.setName(i.getItemName().getName());
         }
@@ -137,7 +137,7 @@ public class DoorsDBInterface {
         boolean result = false;
 
         if (module.getLatestVersion() == null || module.getLatestVersion().getDate().before(lastChangedOn)) {
-            final DBVersion version = DoorsDBModelFactory.eINSTANCE.createDBVersion();
+            final DBVersion version = DoorsDBFactory.eINSTANCE.createDBVersion();
             version.setDate(lastChangedOn);
             version.setModule(module);
 
@@ -206,7 +206,7 @@ public class DoorsDBInterface {
     public void addTag(final DBModule module, final String tag) {
         DBTag tagObject = db.getTag(tag);
         if (tagObject == null) {
-            tagObject = DoorsDBModelFactory.eINSTANCE.createDBTag();
+            tagObject = DoorsDBFactory.eINSTANCE.createDBTag();
             tagObject.setName(tag);
             db.getTags().add(tagObject);
         }
@@ -341,11 +341,11 @@ public class DoorsDBInterface {
                 throw new RuntimeException(e);
             }
 
-            module = DoorsDBModelFactory.eINSTANCE.createDBModule();
+            module = DoorsDBFactory.eINSTANCE.createDBModule();
             module.setParent(folder);
             module.setName(moduleName);
 
-            final DBVersion version = DoorsDBModelFactory.eINSTANCE.createDBVersion();
+            final DBVersion version = DoorsDBFactory.eINSTANCE.createDBVersion();
             version.setDate(lastChangedOn);
             version.setModule(module);
 

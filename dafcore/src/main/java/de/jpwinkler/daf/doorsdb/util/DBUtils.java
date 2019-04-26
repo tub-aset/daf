@@ -7,7 +7,7 @@ import java.util.List;
 
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBFolder;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDB;
-import de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDBModelFactory;
+import de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDBFactory;
 import de.jpwinkler.libs.doorsbridge.ItemRef;
 
 public class DBUtils {
@@ -30,7 +30,7 @@ public class DBUtils {
         if (path.size() > 0) {
             DBFolder folder = parent.getFolder(path.get(0));
             if (folder == null) {
-                folder = DoorsDBModelFactory.eINSTANCE.createDBFolder();
+                folder = DoorsDBFactory.eINSTANCE.createDBFolder();
                 folder.setName(path.get(0));
                 parent.getChildren().add(folder);
             }
