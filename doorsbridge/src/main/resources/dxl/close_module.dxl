@@ -1,0 +1,2 @@
+Module m = myRead("$$url$$", "$$name$$", false)
+close m

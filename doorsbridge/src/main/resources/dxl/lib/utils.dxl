@@ -1,0 +1,53 @@
+pragma encoding, "UTF-8"
+
+// http://www.capri-soft.de/blog/?p=832
+bool startsWith(string theString, string startsWithWhat)
+{
+	if(length(theString)<length(startsWithWhat))
+	{
+		return false;
+	}
+	return theString[0:length(startsWithWhat)-1]==startsWithWhat
+}
+
+void completePath(Project p, Buffer sb) {
+	if (!null getParentProject(p)) {
+		completePath(getParentProject(p), sb)
+		sb += path(p)
+	}
+}
+
+string completePath(Module m) {
+	Buffer sb = create
+	completePath(getParentProject(m), sb)
+	sb += fullName(m)
+	return stringOf(sb)
+}
+
+string getModuleNameFromUrl(string url) {
+	string dbHost
+	int dbPort
+	string dbName
+	string dbId
+	Item it
+	ModuleVersion modVer
+	int objectAbsno
+	
+	decodeURL(url, dbHost, dbPort, dbName, dbId, it, modVer, objectAbsno)
+	
+	if (!null it) {
+		return fullName(it)
+	} else {
+		return null string
+	}
+}
+
+Module myRead(string url, string name, bool visible) {
+	if (length(url) > 0) {
+		return read(getModuleNameFromUrl(url), visible)
+	} else if (length(name) > 0) {
+		return read(name, visible)
+	} else {
+		throw("neither url nor name given")
+	}
+}

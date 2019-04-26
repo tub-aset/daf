@@ -1,0 +1,67 @@
+pragma encoding, "UTF-8"
+pragma runLim,0
+
+void exportModuleToCSV(Module m, string fileName) {
+	current = m
+	//filtering off
+	
+	Skip attrs = create
+
+	AttrDef ad
+	AttrType at
+	AttrBaseType abt
+	
+	for ad in m do {
+		if (isVisibleAttribute(ad) && !ad.dxl) {
+			put(attrs, ad, ad)
+		}
+	}
+	
+	Stream outFile = write(fileName, CP_UTF8)
+	
+	outFile << "\"Object Identifier\", \"Object Level\", \"Object Number\""
+	
+	
+	for ad in attrs do {
+		outFile << ", \"" ad.name "\""
+	}
+	
+	outFile << ", \"DOORS_LINKS\""
+	
+	outFile << "\n"
+	
+	Object o
+	
+	for o in m do {
+		
+		outFile << "\"" identifier(o) "\", " level(o) ", \"" number(o) "\""
+		
+		for ad in attrs do {
+			
+			at = ad.type
+			abt = at.type
+			
+			if (abt == attrInteger || abt == attrReal) {
+				outFile << ", " o.(ad.name) ""
+			} else {
+				outFile << ", \"" escape(o.(ad.name) "",'\\',"\"") "\""
+			}
+		}
+		
+		outFile << ", \""
+		
+		Link outLink
+		bool firstLink = true
+		for outLink in o -> "*" do {
+			ModName_ t_name = target(outLink)
+			int t_id = targetAbsNo(outLink)
+			outFile << (firstLink?"":"\n") fullName(t_name) ":" t_id ""
+			firstLink = false
+		}
+
+		outFile << "\"\n"
+		
+	}
+	
+	close outFile
+}

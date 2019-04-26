@@ -1,0 +1,9 @@
+Folder folderRef = folder "$$folder$$"
+
+Buffer result = create
+Item itemRef 
+for itemRef in folderRef do
+    result += type(itemRef) ":" name(itemRef) "\n" 
+
+returnToJava(stringOf(result))
+ 

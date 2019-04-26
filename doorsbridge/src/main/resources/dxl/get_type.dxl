@@ -1,0 +1,6 @@
+Item i = item("$$item$$")
+if (!null i) {
+	returnToJava(type(i))
+} else {
+	throw("$$item$$ does not exist.")
+}

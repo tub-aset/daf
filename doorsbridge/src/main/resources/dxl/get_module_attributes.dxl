@@ -1,0 +1,3 @@
+Module m = myRead("$$url$$", "$$name$$", false)
+
+returnToJava(exportModuleMetaData(m))

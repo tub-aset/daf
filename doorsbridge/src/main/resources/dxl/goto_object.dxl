@@ -1,0 +1,3 @@
+Module m = myRead("$$url$$", "$$name$$", true)
+
+gotoObject($$absoluteNumber$$, m)

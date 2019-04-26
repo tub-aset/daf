@@ -1,0 +1,5 @@
+void returnToJava(string data) {
+	Stream dxl_return_stream = append "$$returnFilename$$"
+	dxl_return_stream << data
+	close dxl_return_stream
+}
