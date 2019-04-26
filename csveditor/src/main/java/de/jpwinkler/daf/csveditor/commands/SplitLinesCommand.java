@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor;
+import de.jpwinkler.daf.doorscsv.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsCSVFactory;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;

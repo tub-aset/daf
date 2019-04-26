@@ -53,7 +53,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" unique="false" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" unique="false" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EDataType" name="DoorsTreeNodeVisitor" instanceClassName="de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="DoorsTreeNodeVisitor" instanceClassName="de.jpwinkler.daf.doorscsv.DoorsTreeNodeVisitor"/>
   <eClassifiers xsi:type="ecore:EClass" name="Link" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="#//DoorsObject"
         eOpposite="#//DoorsObject/outgoingLinks"/>

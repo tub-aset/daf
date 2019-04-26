@@ -4,10 +4,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import de.jpwinkler.daf.dafcore.csv.ModuleCSVParser;
-import de.jpwinkler.daf.dafcore.csv.ModuleCSVWriter;
+import de.jpwinkler.daf.doorscsv.ModuleCSVParser;
+import de.jpwinkler.daf.doorscsv.ModuleCSVWriter;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
-import de.jpwinkler.daf.dafcore.util.CSVParseException;
+import de.jpwinkler.daf.doorscsv.util.CSVParseException;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBModule;
 
 public abstract class ModuleCSVPass extends ModulePass {

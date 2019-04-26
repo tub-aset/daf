@@ -27,8 +27,8 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
-import de.jpwinkler.daf.dafcore.csv.ModuleMetaDataParser;
-import de.jpwinkler.daf.dafcore.util.DoorsModuleUtil;
+import de.jpwinkler.daf.doorscsv.ModuleMetaDataParser;
+import de.jpwinkler.daf.doorscsv.util.DoorsModuleUtil;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBFolder;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBModule;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBTag;
@@ -37,12 +37,12 @@ import de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDB;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDBFactory;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDBPackage;
 import de.jpwinkler.daf.doorsdb.search.DBSearchExpression;
-import de.jpwinkler.daf.doorsbridge.DoorsApplication;
-import de.jpwinkler.daf.doorsbridge.DoorsApplicationFactory;
-import de.jpwinkler.daf.doorsbridge.DoorsException;
-import de.jpwinkler.daf.doorsbridge.DoorsItemType;
-import de.jpwinkler.daf.doorsbridge.ItemRef;
-import de.jpwinkler.daf.doorsbridge.ModuleRef;
+import de.jpwinkler.daf.doorsdb.bridge.DoorsApplication;
+import de.jpwinkler.daf.doorsdb.bridge.DoorsApplicationFactory;
+import de.jpwinkler.daf.doorsdb.bridge.DoorsException;
+import de.jpwinkler.daf.doorsdb.bridge.DoorsItemType;
+import de.jpwinkler.daf.doorsdb.bridge.ItemRef;
+import de.jpwinkler.daf.doorsdb.bridge.ModuleRef;
 
 public class DoorsDBInterface {
 

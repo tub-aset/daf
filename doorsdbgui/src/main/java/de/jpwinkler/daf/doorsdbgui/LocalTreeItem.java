@@ -3,7 +3,7 @@ package de.jpwinkler.daf.doorsdbgui;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBFolder;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBItem;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBModule;
-import de.jpwinkler.daf.doorsbridge.DoorsException;
+import de.jpwinkler.daf.doorsdb.bridge.DoorsException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;

@@ -1,6 +1,6 @@
 package de.jpwinkler.daf.doorsdb.tasks;
 
-import de.jpwinkler.daf.dafcore.csv.DoorsTreeNodeVisitor;
+import de.jpwinkler.daf.doorscsv.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 

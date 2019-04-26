@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import de.jpwinkler.daf.dafcore.util.CSVParseException;
+import de.jpwinkler.daf.doorscsv.util.CSVParseException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

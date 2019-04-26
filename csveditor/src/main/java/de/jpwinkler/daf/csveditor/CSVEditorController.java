@@ -22,7 +22,7 @@ import de.jpwinkler.daf.csveditor.util.ExceptionDialog;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
 import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
-import de.jpwinkler.daf.dafcore.util.CSVParseException;
+import de.jpwinkler.daf.doorscsv.util.CSVParseException;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;

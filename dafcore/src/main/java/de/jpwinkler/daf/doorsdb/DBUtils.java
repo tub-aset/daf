@@ -8,7 +8,7 @@ import java.util.List;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBFolder;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDB;
 import de.jpwinkler.daf.doorsdb.doorsdbmodel.DoorsDBFactory;
-import de.jpwinkler.daf.doorsbridge.ItemRef;
+import de.jpwinkler.daf.doorsdb.bridge.ItemRef;
 
 public class DBUtils {
 
