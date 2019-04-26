@@ -29,13 +29,6 @@
         </plugins>
         <resources>
             <resource>
-                <directory>.</directory>
-                <includes>
-                    <include>jacob-1.18-x86.dll</include>
-                    <include>jacob-1.18-x64.dll</include>
-                </includes>
-            </resource>
-            <resource>
                 <directory>src/main/resources</directory>
             </resource>
         </resources>
