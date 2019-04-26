@@ -2,8 +2,8 @@ package de.jpwinkler.daf.doorsdbgui;
 
 import java.util.Comparator;
 
-import de.jpwinkler.libs.doorsbridge.DoorsException;
-import de.jpwinkler.libs.doorsbridge.ItemRef;
+import de.jpwinkler.daf.doorsbridge.DoorsException;
+import de.jpwinkler.daf.doorsbridge.ItemRef;
 import javafx.scene.control.TreeItem;
 
 public class ItemRefComparator implements Comparator<TreeItem<ItemRef>> {

@@ -1,8 +1,8 @@
 package de.jpwinkler.daf.doorsdbgui;
 
-import de.jpwinkler.libs.doorsbridge.DoorsException;
-import de.jpwinkler.libs.doorsbridge.DoorsItemType;
-import de.jpwinkler.libs.doorsbridge.ItemRef;
+import de.jpwinkler.daf.doorsbridge.DoorsException;
+import de.jpwinkler.daf.doorsbridge.DoorsItemType;
+import de.jpwinkler.daf.doorsbridge.ItemRef;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
