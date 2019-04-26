@@ -73,7 +73,7 @@
                         </goals>
                         <phase>generate-sources</phase>
                         <configuration>
-                            <appArgLine>-data target/workspace -application org.eclipse.emf.codegen.ecore.Generator -model ${project.basedir}/src/main/emf/DoorsCSV.genmodel ${project.build.directory}/src-doorscsv</appArgLine>
+                            <appArgLine>-data target/workspace -application org.eclipse.emf.codegen.ecore.Generator -model ${project.basedir}/src/main/emf/de/jpwinkler/daf/doorsdb/DoorsCSV.genmodel ${project.build.directory}/src-doorscsv</appArgLine>
                         </configuration>
                     </execution>
                     <execution>
@@ -83,8 +83,22 @@
                         </goals>
                         <phase>generate-sources</phase>
                         <configuration>
-                            <appArgLine>-data target/workspace -application org.eclipse.emf.codegen.ecore.Generator -model ${project.basedir}/src/main/emf/DoorsDB.genmodel ${project.build.directory}/src-doorsdb</appArgLine>
+                            <appArgLine>-data target/workspace -application org.eclipse.emf.codegen.ecore.Generator -model ${project.basedir}/src/main/emf/de/jpwinkler/daf/doorsdb/DoorsDB.genmodel ${project.build.directory}/src-doorsdb</appArgLine>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.antlr</groupId>
+                <artifactId>antlr4-maven-plugin</artifactId>
+                <version>4.7.2</version>
+                <executions>
+                    <execution>
+                        <id>antlr</id>
+                        <goals>
+                            <goal>antlr4</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -111,12 +125,12 @@
         <dependency>
             <groupId>org.antlr</groupId>
             <artifactId>antlr4</artifactId>
-            <version>4.5.1</version>
+            <version>4.7.2</version>
         </dependency>
         <dependency>
             <groupId>org.antlr</groupId>
             <artifactId>antlr4-runtime</artifactId>
-            <version>4.5.1</version>
+            <version>4.7.2</version>
         </dependency>
         
         <dependency>
