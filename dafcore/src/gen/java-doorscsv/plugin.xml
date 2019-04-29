@@ -24,8 +24,8 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated DoorsCSV -->
       <package
-            uri="de.jpwinkler.daf.dafcore.model.csv"
-            class="de.jpwinkler.daf.dafcore.model.csv.DoorsCSVPackage"/>
+            uri="de.jpwinkler.daf.doorscsv.model"
+            class="de.jpwinkler.daf.doorscsv.model.DoorsCSVPackage"/>
    </extension>
 
 </plugin>

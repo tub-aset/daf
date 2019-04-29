@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/dafcore/src/gen/java" editDirectory="/com.daimler.jonwink.srstp.core.edit/src-gen"
+    editorDirectory="/com.daimler.jonwink.srstp.core.editor/src-gen" modelPluginID="de.jpwinkler.daf.dafcore"
+    templateDirectory="" modelName="Model" editPluginClass="" editorPluginClass=""
+    rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" testsDirectory="/com.daimler.jonwink.srstp.core.tests/src-gen"
+    testSuiteClass="" importerID="org.eclipse.emf.importer.ecore" bundleManifest="false"
+    complianceLevel="8.0" copyrightFields="false" editPluginID="de.jpwinkler.daf.dafcore.edit"
+    editorPluginID="de.jpwinkler.daf.dafcore.editor" testsPluginID="com.daimler.jonwink.srstp.core.core.tests"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>DoorsCSV.ecore</foreignModel>
+  <genPackages prefix="DoorsCSV" basePackage="de.jpwinkler.daf.doorscsv" disposableProviderFactory="true"
+      ecorePackage="DoorsCSV.ecore#/">
+    <genDataTypes ecoreDataType="DoorsCSV.ecore#//DoorsTreeNodeVisitor"/>
+    <genClasses ecoreClass="DoorsCSV.ecore#//DoorsModule">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DoorsCSV.ecore#//DoorsModule/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DoorsCSV.ecore#//DoorsModule/path"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DoorsCSV.ecore#//DoorsModule/url"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference DoorsCSV.ecore#//DoorsModule/attributeDefinitions"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DoorsCSV.ecore#//DoorsModule/view"/>
+      <genOperations ecoreOperation="DoorsCSV.ecore#//DoorsModule/findAttributeDefinition">
+        <genParameters ecoreParameter="DoorsCSV.ecore#//DoorsModule/findAttributeDefinition/name"/>
+      </genOperations>
+      <genOperations ecoreOperation="DoorsCSV.ecore#//DoorsModule/findObject">
+        <genParameters ecoreParameter="DoorsCSV.ecore#//DoorsModule/findObject/objectIdentifier"/>
+      </genOperations>
+    </genClasses>
+    <genClasses ecoreClass="DoorsCSV.ecore#//DoorsObject">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DoorsCSV.ecore#//DoorsObject/objectIdentifier"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DoorsCSV.ecore#//DoorsObject/objectLevel"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DoorsCSV.ecore#//DoorsObject/objectNumber"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DoorsCSV.ecore#//DoorsObject/absoluteNumber"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DoorsCSV.ecore#//DoorsObject/objectText"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DoorsCSV.ecore#//DoorsObject/objectShortText"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DoorsCSV.ecore#//DoorsObject/objectHeading"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DoorsCSV.ecore#//DoorsObject/text"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference DoorsCSV.ecore#//DoorsObject/outgoingLinks"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DoorsCSV.ecore#//DoorsObject/incomingLinks"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DoorsCSV.ecore#//DoorsObject/module"/>
+      <genOperations ecoreOperation="DoorsCSV.ecore#//DoorsObject/isHeading"/>
+    </genClasses>
+    <genClasses ecoreClass="DoorsCSV.ecore#//StringToStringMap">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DoorsCSV.ecore#//StringToStringMap/key"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DoorsCSV.ecore#//StringToStringMap/value"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="DoorsCSV.ecore#//Link">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference DoorsCSV.ecore#//Link/source"/>
+    </genClasses>
+    <genClasses ecoreClass="DoorsCSV.ecore#//ResolvedLink">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference DoorsCSV.ecore#//ResolvedLink/target"/>
+    </genClasses>
+    <genClasses ecoreClass="DoorsCSV.ecore#//UnresolvedLink">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DoorsCSV.ecore#//UnresolvedLink/targetModule"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DoorsCSV.ecore#//UnresolvedLink/targetObject"/>
+    </genClasses>
+    <genClasses ecoreClass="DoorsCSV.ecore#//DoorsTreeNode">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference DoorsCSV.ecore#//DoorsTreeNode/children"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference DoorsCSV.ecore#//DoorsTreeNode/parent"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference DoorsCSV.ecore#//DoorsTreeNode/attributes"/>
+      <genOperations ecoreOperation="DoorsCSV.ecore#//DoorsTreeNode/accept">
+        <genParameters ecoreParameter="DoorsCSV.ecore#//DoorsTreeNode/accept/visitor"/>
+      </genOperations>
+    </genClasses>
+    <genClasses ecoreClass="DoorsCSV.ecore#//AttributeDefinition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute DoorsCSV.ecore#//AttributeDefinition/name"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

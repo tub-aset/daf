@@ -1,6 +1,6 @@
 package de.jpwinkler.daf.doorsdb.search;
 
-import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBModule;
+import de.jpwinkler.daf.doorsdb.model.DBModule;
 
 public class OrSearchExpression extends DBSearchExpression {
 

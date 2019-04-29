@@ -7,7 +7,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 
-import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
+import de.jpwinkler.daf.doorscsv.model.DoorsModule;
 
 public abstract class ModuleWriter extends OutputStreamWriter {
 

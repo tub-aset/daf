@@ -3,8 +3,8 @@ package de.jpwinkler.daf.doorsdb.tasks;
 import java.util.function.Consumer;
 
 import de.jpwinkler.daf.doorsdb.DoorsDBInterface;
-import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBFolder;
-import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBModule;
+import de.jpwinkler.daf.doorsdb.model.DBFolder;
+import de.jpwinkler.daf.doorsdb.model.DBModule;
 import de.jpwinkler.daf.doorsdb.DoorsDBVisitor;
 
 public class AllModulesSource implements ModuleSource {

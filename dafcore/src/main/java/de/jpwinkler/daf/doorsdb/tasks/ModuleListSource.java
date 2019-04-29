@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import de.jpwinkler.daf.doorsdb.DoorsDBInterface;
-import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBModule;
+import de.jpwinkler.daf.doorsdb.model.DBModule;
 
 public class ModuleListSource implements ModuleSource {
 

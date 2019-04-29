@@ -1,6 +1,6 @@
 package de.jpwinkler.daf.csveditor.massedit;
 
-import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
+import de.jpwinkler.daf.doorscsv.model.DoorsObject;
 
 public class SetAttributeOperation implements MassEditOperation {
 

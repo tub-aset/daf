@@ -11,7 +11,7 @@ import org.antlr.v4.runtime.Recognizer;
 
 import de.jpwinkler.daf.doorsdb.DBSearchLexer;
 import de.jpwinkler.daf.doorsdb.DBSearchParser;
-import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBModule;
+import de.jpwinkler.daf.doorsdb.model.DBModule;
 
 public abstract class DBSearchExpression {
 

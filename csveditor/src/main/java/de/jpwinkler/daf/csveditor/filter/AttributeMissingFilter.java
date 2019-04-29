@@ -1,6 +1,6 @@
 package de.jpwinkler.daf.csveditor.filter;
 
-import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
+import de.jpwinkler.daf.doorscsv.model.DoorsObject;
 
 public class AttributeMissingFilter extends DoorsObjectFilter {
 

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
+import de.jpwinkler.daf.doorscsv.model.DoorsObject;
 
 public class CompositeAndFilter extends DoorsObjectFilter {
 

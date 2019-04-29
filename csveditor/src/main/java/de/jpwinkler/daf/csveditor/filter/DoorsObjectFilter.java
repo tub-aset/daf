@@ -3,7 +3,7 @@ package de.jpwinkler.daf.csveditor.filter;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 
-import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
+import de.jpwinkler.daf.doorscsv.model.DoorsObject;
 
 public abstract class DoorsObjectFilter {
 

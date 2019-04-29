@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import de.jpwinkler.daf.doorscsv.DoorsTreeNodeVisitor;
-import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
-import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
-import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
+import de.jpwinkler.daf.doorscsv.model.DoorsModule;
+import de.jpwinkler.daf.doorscsv.model.DoorsObject;
+import de.jpwinkler.daf.doorscsv.model.DoorsTreeNode;
 
 public class FlattenCommand extends AbstractCommand {
 

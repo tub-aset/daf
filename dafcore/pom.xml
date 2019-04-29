@@ -73,7 +73,7 @@
                         </goals>
                         <phase>generate-sources</phase>
                         <configuration>
-                            <appArgLine>-data target/workspace -application org.eclipse.emf.codegen.ecore.Generator -model ${project.basedir}/src/main/emf/de/jpwinkler/daf/doorsdb/DoorsCSV.genmodel ${project.basedir}/src/gen/java-doorscsv</appArgLine>
+                            <appArgLine>-data target/workspace -application org.eclipse.emf.codegen.ecore.Generator -model ${project.basedir}/src/main/emf/de/jpwinkler/daf/doorscsv/DoorsCSV.genmodel ${project.basedir}/src/gen/java-doorscsv</appArgLine>
                         </configuration>
                     </execution>
                     <execution>

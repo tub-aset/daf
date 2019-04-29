@@ -2,7 +2,7 @@ package de.jpwinkler.daf.csveditor.filter;
 
 import java.util.function.Predicate;
 
-import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
+import de.jpwinkler.daf.doorscsv.model.DoorsObject;
 
 public class PredicateFilter extends DoorsObjectFilter {
 

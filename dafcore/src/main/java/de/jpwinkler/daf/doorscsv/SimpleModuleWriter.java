@@ -9,8 +9,8 @@ import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
-import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
+import de.jpwinkler.daf.doorscsv.model.DoorsModule;
+import de.jpwinkler.daf.doorscsv.model.DoorsObject;
 
 public class SimpleModuleWriter extends ModuleWriter {
 

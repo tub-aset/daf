@@ -14,12 +14,12 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.BOMInputStream;
 
-import de.jpwinkler.daf.dafcore.model.csv.AttributeDefinition;
-import de.jpwinkler.daf.dafcore.model.csv.DoorsCSVPackage;
-import de.jpwinkler.daf.dafcore.model.csv.DoorsCSVFactory;
-import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
-import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
-import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
+import de.jpwinkler.daf.doorscsv.model.AttributeDefinition;
+import de.jpwinkler.daf.doorscsv.model.DoorsCSVPackage;
+import de.jpwinkler.daf.doorscsv.model.DoorsCSVFactory;
+import de.jpwinkler.daf.doorscsv.model.DoorsModule;
+import de.jpwinkler.daf.doorscsv.model.DoorsObject;
+import de.jpwinkler.daf.doorscsv.model.DoorsTreeNode;
 import de.jpwinkler.daf.doorscsv.util.CSVParseException;
 
 public class ModuleCSVParser {

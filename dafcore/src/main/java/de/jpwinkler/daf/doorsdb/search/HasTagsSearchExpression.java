@@ -3,7 +3,7 @@ package de.jpwinkler.daf.doorsdb.search;
 import java.util.Arrays;
 import java.util.List;
 
-import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBModule;
+import de.jpwinkler.daf.doorsdb.model.DBModule;
 
 public class HasTagsSearchExpression extends DBSearchExpression {
 

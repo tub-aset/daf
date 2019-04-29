@@ -1,8 +1,8 @@
 package de.jpwinkler.daf.csveditor;
 
-import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
-import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
-import de.jpwinkler.daf.dafcore.model.csv.DoorsTreeNode;
+import de.jpwinkler.daf.doorscsv.model.DoorsModule;
+import de.jpwinkler.daf.doorscsv.model.DoorsObject;
+import de.jpwinkler.daf.doorscsv.model.DoorsTreeNode;
 
 public class OutlineTreeItem {
 

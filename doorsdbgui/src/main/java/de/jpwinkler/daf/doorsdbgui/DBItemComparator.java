@@ -2,9 +2,9 @@ package de.jpwinkler.daf.doorsdbgui;
 
 import java.util.Comparator;
 
-import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBFolder;
-import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBItem;
-import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBModule;
+import de.jpwinkler.daf.doorsdb.model.DBFolder;
+import de.jpwinkler.daf.doorsdb.model.DBItem;
+import de.jpwinkler.daf.doorsdb.model.DBModule;
 import javafx.scene.control.TreeItem;
 
 public class DBItemComparator implements Comparator<TreeItem<DBItem>> {

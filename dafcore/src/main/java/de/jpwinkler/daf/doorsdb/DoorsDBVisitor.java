@@ -1,7 +1,7 @@
 package de.jpwinkler.daf.doorsdb;
 
-import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBFolder;
-import de.jpwinkler.daf.doorsdb.doorsdbmodel.DBModule;
+import de.jpwinkler.daf.doorsdb.model.DBFolder;
+import de.jpwinkler.daf.doorsdb.model.DBModule;
 
 public interface DoorsDBVisitor {
 

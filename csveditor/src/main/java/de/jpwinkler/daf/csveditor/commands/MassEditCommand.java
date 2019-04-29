@@ -3,8 +3,8 @@ package de.jpwinkler.daf.csveditor.commands;
 import java.util.List;
 
 import de.jpwinkler.daf.csveditor.massedit.MassEditOperation;
-import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
-import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
+import de.jpwinkler.daf.doorscsv.model.DoorsModule;
+import de.jpwinkler.daf.doorscsv.model.DoorsObject;
 
 public class MassEditCommand extends AbstractCommand {
 

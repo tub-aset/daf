@@ -1,8 +1,8 @@
 package de.jpwinkler.daf.csveditor.commands;
 
-import de.jpwinkler.daf.dafcore.model.csv.DoorsCSVFactory;
-import de.jpwinkler.daf.dafcore.model.csv.DoorsModule;
-import de.jpwinkler.daf.dafcore.model.csv.DoorsObject;
+import de.jpwinkler.daf.doorscsv.model.DoorsCSVFactory;
+import de.jpwinkler.daf.doorscsv.model.DoorsModule;
+import de.jpwinkler.daf.doorscsv.model.DoorsObject;
 
 public class NewObjectBelowCommand extends AbstractCommand {
 
