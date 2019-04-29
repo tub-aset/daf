@@ -2,27 +2,23 @@
  */
 package de.jpwinkler.daf.doorsdb.model.impl;
 
-import de.jpwinkler.daf.doorsdb.model.DBModule;
-import de.jpwinkler.daf.doorsdb.model.DBVersion;
-import de.jpwinkler.daf.doorsdb.model.DoorsDBPackage;
-
 import java.util.Date;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EMap;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-
 import org.eclipse.emf.ecore.util.EcoreEMap;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+
 import org.eclipse.emf.ecore.util.InternalEList;
+import de.jpwinkler.daf.doorsdb.model.DBModule;
+import de.jpwinkler.daf.doorsdb.model.DBVersion;
+import de.jpwinkler.daf.doorsdb.model.DoorsDBPackage;
 
 /**
  * <!-- begin-user-doc -->
@@ -40,83 +36,83 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * @generated
  */
 public class DBVersionImpl extends MinimalEObjectImpl.Container implements DBVersion {
-	/**
+    /**
 	 * The default value of the '{@link #getDate() <em>Date</em>}' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @see #getDate()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final Date DATE_EDEFAULT = null;
+    protected static final Date DATE_EDEFAULT = null;
 
-	/**
+    /**
 	 * The cached value of the '{@link #getDate() <em>Date</em>}' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @see #getDate()
 	 * @generated
 	 * @ordered
 	 */
-	protected Date date = DATE_EDEFAULT;
+    protected Date date = DATE_EDEFAULT;
 
-	/**
+    /**
 	 * The cached value of the '{@link #getAttributes() <em>Attributes</em>}' map.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @see #getAttributes()
 	 * @generated
 	 * @ordered
 	 */
-	protected EMap<String, String> attributes;
+    protected EMap<String, String> attributes;
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected DBVersionImpl() {
+    protected DBVersionImpl() {
 		super();
 	}
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	protected EClass eStaticClass() {
+    @Override
+    protected EClass eStaticClass() {
 		return DoorsDBPackage.Literals.DB_VERSION;
 	}
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public DBModule getModule() {
+    @Override
+    public DBModule getModule() {
 		if (eContainerFeatureID() != DoorsDBPackage.DB_VERSION__MODULE) return null;
 		return (DBModule)eInternalContainer();
 	}
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetModule(DBModule newModule, NotificationChain msgs) {
+    public NotificationChain basicSetModule(DBModule newModule, NotificationChain msgs) {
 		msgs = eBasicSetContainer((InternalEObject)newModule, DoorsDBPackage.DB_VERSION__MODULE, msgs);
 		return msgs;
 	}
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public void setModule(DBModule newModule) {
+    @Override
+    public void setModule(DBModule newModule) {
 		if (newModule != eInternalContainer() || (eContainerFeatureID() != DoorsDBPackage.DB_VERSION__MODULE && newModule != null)) {
 			if (EcoreUtil.isAncestor(this, newModule))
 				throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
@@ -132,49 +128,49 @@ public class DBVersionImpl extends MinimalEObjectImpl.Container implements DBVer
 			eNotify(new ENotificationImpl(this, Notification.SET, DoorsDBPackage.DB_VERSION__MODULE, newModule, newModule));
 	}
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public Date getDate() {
+    @Override
+    public Date getDate() {
 		return date;
 	}
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public void setDate(Date newDate) {
+    @Override
+    public void setDate(Date newDate) {
 		Date oldDate = date;
 		date = newDate;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, DoorsDBPackage.DB_VERSION__DATE, oldDate, date));
 	}
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public EMap<String, String> getAttributes() {
+    @Override
+				public EMap<String, String> getAttributes() {
 		if (attributes == null) {
 			attributes = new EcoreEMap<String,String>(DoorsDBPackage.Literals.STRING_TO_STRING_MAP, StringToStringMapImpl.class, this, DoorsDBPackage.DB_VERSION__ATTRIBUTES);
 		}
 		return attributes;
 	}
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case DoorsDBPackage.DB_VERSION__MODULE:
 				if (eInternalContainer() != null)
@@ -184,13 +180,13 @@ public class DBVersionImpl extends MinimalEObjectImpl.Container implements DBVer
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case DoorsDBPackage.DB_VERSION__MODULE:
 				return basicSetModule(null, msgs);
@@ -200,13 +196,13 @@ public class DBVersionImpl extends MinimalEObjectImpl.Container implements DBVer
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
+    @Override
+    public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
 		switch (eContainerFeatureID()) {
 			case DoorsDBPackage.DB_VERSION__MODULE:
 				return eInternalContainer().eInverseRemove(this, DoorsDBPackage.DB_MODULE__VERSIONS, DBModule.class, msgs);
@@ -214,13 +210,13 @@ public class DBVersionImpl extends MinimalEObjectImpl.Container implements DBVer
 		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+    @Override
+    public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case DoorsDBPackage.DB_VERSION__MODULE:
 				return getModule();
@@ -233,13 +229,13 @@ public class DBVersionImpl extends MinimalEObjectImpl.Container implements DBVer
 		return super.eGet(featureID, resolve, coreType);
 	}
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public void eSet(int featureID, Object newValue) {
+    @Override
+    public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case DoorsDBPackage.DB_VERSION__MODULE:
 				setModule((DBModule)newValue);
@@ -254,13 +250,13 @@ public class DBVersionImpl extends MinimalEObjectImpl.Container implements DBVer
 		super.eSet(featureID, newValue);
 	}
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public void eUnset(int featureID) {
+    @Override
+    public void eUnset(int featureID) {
 		switch (featureID) {
 			case DoorsDBPackage.DB_VERSION__MODULE:
 				setModule((DBModule)null);
@@ -275,13 +271,13 @@ public class DBVersionImpl extends MinimalEObjectImpl.Container implements DBVer
 		super.eUnset(featureID);
 	}
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public boolean eIsSet(int featureID) {
+    @Override
+    public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case DoorsDBPackage.DB_VERSION__MODULE:
 				return getModule() != null;
@@ -293,20 +289,14 @@ public class DBVersionImpl extends MinimalEObjectImpl.Container implements DBVer
 		return super.eIsSet(featureID);
 	}
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString() {
-		if (eIsProxy()) return super.toString();
-
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (date: ");
-		result.append(date);
-		result.append(')');
-		return result.toString();
-	}
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated NOT
+     */
+    @Override
+    public String toString() {
+        return date != null ? date.toString() : "null";
+    }
 
 } //DBVersionImpl

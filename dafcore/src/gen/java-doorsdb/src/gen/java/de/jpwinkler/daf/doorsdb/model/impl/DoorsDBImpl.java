@@ -2,30 +2,24 @@
  */
 package de.jpwinkler.daf.doorsdb.model.impl;
 
-import de.jpwinkler.daf.doorsdb.DoorsDBVisitor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
+
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.InternalEList;
 
 import de.jpwinkler.daf.doorsdb.model.DBFolder;
 import de.jpwinkler.daf.doorsdb.model.DBTag;
 import de.jpwinkler.daf.doorsdb.model.DoorsDB;
 import de.jpwinkler.daf.doorsdb.model.DoorsDBPackage;
-
-import java.lang.reflect.InvocationTargetException;
-
-import java.util.Collection;
-
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
-
-import org.eclipse.emf.common.util.EList;
-
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.InternalEObject;
-
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
-import org.eclipse.emf.ecore.util.InternalEList;
+import de.jpwinkler.daf.doorsdb.DoorsDBVisitor;
 
 /**
  * <!-- begin-user-doc -->
@@ -42,74 +36,74 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * @generated
  */
 public class DoorsDBImpl extends MinimalEObjectImpl.Container implements DoorsDB {
-	/**
+    /**
 	 * The cached value of the '{@link #getTags() <em>Tags</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @see #getTags()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<DBTag> tags;
+    protected EList<DBTag> tags;
 
-	/**
+    /**
 	 * The cached value of the '{@link #getRoot() <em>Root</em>}' containment reference.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @see #getRoot()
 	 * @generated
 	 * @ordered
 	 */
-	protected DBFolder root;
+    protected DBFolder root;
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected DoorsDBImpl() {
+    protected DoorsDBImpl() {
 		super();
 	}
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	protected EClass eStaticClass() {
+    @Override
+    protected EClass eStaticClass() {
 		return DoorsDBPackage.Literals.DOORS_DB;
 	}
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public EList<DBTag> getTags() {
+    @Override
+    public EList<DBTag> getTags() {
 		if (tags == null) {
 			tags = new EObjectContainmentEList<DBTag>(DBTag.class, this, DoorsDBPackage.DOORS_DB__TAGS);
 		}
 		return tags;
 	}
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public DBFolder getRoot() {
+    @Override
+    public DBFolder getRoot() {
 		return root;
 	}
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetRoot(DBFolder newRoot, NotificationChain msgs) {
+    public NotificationChain basicSetRoot(DBFolder newRoot, NotificationChain msgs) {
 		DBFolder oldRoot = root;
 		root = newRoot;
 		if (eNotificationRequired()) {
@@ -119,13 +113,13 @@ public class DoorsDBImpl extends MinimalEObjectImpl.Container implements DoorsDB
 		return msgs;
 	}
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public void setRoot(DBFolder newRoot) {
+    @Override
+    public void setRoot(DBFolder newRoot) {
 		if (newRoot != root) {
 			NotificationChain msgs = null;
 			if (root != null)
@@ -139,37 +133,38 @@ public class DoorsDBImpl extends MinimalEObjectImpl.Container implements DoorsDB
 			eNotify(new ENotificationImpl(this, Notification.SET, DoorsDBPackage.DOORS_DB__ROOT, newRoot, newRoot));
 	}
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void accept(DoorsDBVisitor visitor) {
-		// TODO: implement this method
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated NOT
+     */
+    @Override
+    public void accept(final DoorsDBVisitor visitor) {
+        getRoot().accept(visitor);
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public DBTag getTag(String name) {
-		// TODO: implement this method
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated NOT
+     */
+    @Override
+    public DBTag getTag(final String name) {
+        for (final DBTag tag : getTags()) {
+            if (tag.getName().equals(name)) {
+                return tag;
+            }
+        }
+        return null;
+    }
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case DoorsDBPackage.DOORS_DB__TAGS:
 				return ((InternalEList<?>)getTags()).basicRemove(otherEnd, msgs);
@@ -179,13 +174,13 @@ public class DoorsDBImpl extends MinimalEObjectImpl.Container implements DoorsDB
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+    @Override
+    public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case DoorsDBPackage.DOORS_DB__TAGS:
 				return getTags();
@@ -195,14 +190,14 @@ public class DoorsDBImpl extends MinimalEObjectImpl.Container implements DoorsDB
 		return super.eGet(featureID, resolve, coreType);
 	}
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public void eSet(int featureID, Object newValue) {
+    @SuppressWarnings("unchecked")
+    @Override
+    public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case DoorsDBPackage.DOORS_DB__TAGS:
 				getTags().clear();
@@ -215,13 +210,13 @@ public class DoorsDBImpl extends MinimalEObjectImpl.Container implements DoorsDB
 		super.eSet(featureID, newValue);
 	}
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public void eUnset(int featureID) {
+    @Override
+    public void eUnset(int featureID) {
 		switch (featureID) {
 			case DoorsDBPackage.DOORS_DB__TAGS:
 				getTags().clear();
@@ -233,13 +228,13 @@ public class DoorsDBImpl extends MinimalEObjectImpl.Container implements DoorsDB
 		super.eUnset(featureID);
 	}
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public boolean eIsSet(int featureID) {
+    @Override
+    public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case DoorsDBPackage.DOORS_DB__TAGS:
 				return tags != null && !tags.isEmpty();
@@ -249,13 +244,13 @@ public class DoorsDBImpl extends MinimalEObjectImpl.Container implements DoorsDB
 		return super.eIsSet(featureID);
 	}
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+    @Override
+    public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
 			case DoorsDBPackage.DOORS_DB___ACCEPT__DOORSDBVISITOR:
 				accept((DoorsDBVisitor)arguments.get(0));

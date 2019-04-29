@@ -2,29 +2,24 @@
  */
 package de.jpwinkler.daf.doorscsv.model.impl;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
+
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
+import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
+import org.eclipse.emf.ecore.util.InternalEList;
+
 import de.jpwinkler.daf.doorscsv.model.DoorsCSVPackage;
 import de.jpwinkler.daf.doorscsv.model.DoorsModule;
 import de.jpwinkler.daf.doorscsv.model.DoorsObject;
 import de.jpwinkler.daf.doorscsv.model.Link;
 import de.jpwinkler.daf.doorscsv.model.ResolvedLink;
-
-import java.lang.reflect.InvocationTargetException;
-
-import java.util.Collection;
-
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
-
-import org.eclipse.emf.common.util.EList;
-
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.InternalEObject;
-
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
-import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
-import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
-import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -50,360 +45,337 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * @generated
  */
 public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
-	/**
+    /**
 	 * The default value of the '{@link #getObjectIdentifier() <em>Object Identifier</em>}' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @see #getObjectIdentifier()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String OBJECT_IDENTIFIER_EDEFAULT = "";
+    protected static final String OBJECT_IDENTIFIER_EDEFAULT = "";
 
-	/**
+    /**
 	 * The default value of the '{@link #getObjectLevel() <em>Object Level</em>}' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @see #getObjectLevel()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final int OBJECT_LEVEL_EDEFAULT = 0;
+    protected static final int OBJECT_LEVEL_EDEFAULT = 0;
 
-	/**
+    /**
 	 * The default value of the '{@link #getObjectNumber() <em>Object Number</em>}' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @see #getObjectNumber()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String OBJECT_NUMBER_EDEFAULT = null;
+    protected static final String OBJECT_NUMBER_EDEFAULT = null;
 
-	/**
+    /**
 	 * The default value of the '{@link #getAbsoluteNumber() <em>Absolute Number</em>}' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @see #getAbsoluteNumber()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final int ABSOLUTE_NUMBER_EDEFAULT = 0;
+    protected static final int ABSOLUTE_NUMBER_EDEFAULT = 0;
 
-	/**
+    /**
 	 * The default value of the '{@link #getObjectText() <em>Object Text</em>}' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @see #getObjectText()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String OBJECT_TEXT_EDEFAULT = null;
+    protected static final String OBJECT_TEXT_EDEFAULT = null;
 
-	/**
+    /**
 	 * The default value of the '{@link #getObjectShortText() <em>Object Short Text</em>}' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @see #getObjectShortText()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String OBJECT_SHORT_TEXT_EDEFAULT = null;
+    protected static final String OBJECT_SHORT_TEXT_EDEFAULT = null;
 
-	/**
+    /**
 	 * The default value of the '{@link #getObjectHeading() <em>Object Heading</em>}' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @see #getObjectHeading()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String OBJECT_HEADING_EDEFAULT = null;
+    protected static final String OBJECT_HEADING_EDEFAULT = null;
 
-	/**
+    /**
 	 * The default value of the '{@link #getText() <em>Text</em>}' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @see #getText()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String TEXT_EDEFAULT = "";
+    protected static final String TEXT_EDEFAULT = "";
 
-	/**
+    /**
 	 * The cached value of the '{@link #getOutgoingLinks() <em>Outgoing Links</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @see #getOutgoingLinks()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<Link> outgoingLinks;
+    protected EList<Link> outgoingLinks;
 
-	/**
+    /**
 	 * The cached value of the '{@link #getIncomingLinks() <em>Incoming Links</em>}' reference list.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @see #getIncomingLinks()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<ResolvedLink> incomingLinks;
+    protected EList<ResolvedLink> incomingLinks;
 
-	/**
+    /**
 	 * The cached value of the '{@link #getModule() <em>Module</em>}' reference.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @see #getModule()
 	 * @generated
 	 * @ordered
 	 */
-	protected DoorsModule module;
+    protected DoorsModule module;
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected DoorsObjectImpl() {
+    protected DoorsObjectImpl() {
 		super();
 	}
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	protected EClass eStaticClass() {
+    @Override
+    protected EClass eStaticClass() {
 		return DoorsCSVPackage.Literals.DOORS_OBJECT;
 	}
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String getObjectIdentifier() {
-		// TODO: implement this method to return the 'Object Identifier' attribute
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
-	}
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setObjectIdentifier(String newObjectIdentifier) {
-		// TODO: implement this method to set the 'Object Identifier' attribute
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated NOT
+     */
+    @Override
+    public String getObjectIdentifier() {
+        return getAttributes().get("Object Identifier");
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public int getObjectLevel() {
-		// TODO: implement this method to return the 'Object Level' attribute
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated NOT
+     */
+    @Override
+    public void setObjectIdentifier(final String newObjectIdentifier) {
+        getAttributes().put("Object Identifier", newObjectIdentifier);
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setObjectLevel(int newObjectLevel) {
-		// TODO: implement this method to set the 'Object Level' attribute
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated NOT
+     */
+    @Override
+    public int getObjectLevel() {
+        return Integer.parseInt(getAttributes().get("Object Level"));
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String getObjectNumber() {
-		// TODO: implement this method to return the 'Object Number' attribute
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated NOT
+     */
+    @Override
+    public void setObjectLevel(final int newObjectLevel) {
+        getAttributes().put("Object Level", String.valueOf(newObjectLevel));
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setObjectNumber(String newObjectNumber) {
-		// TODO: implement this method to set the 'Object Number' attribute
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated NOT
+     */
+    @Override
+    public String getObjectNumber() {
+        return getAttributes().get("Object Number");
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public int getAbsoluteNumber() {
-		// TODO: implement this method to return the 'Absolute Number' attribute
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated NOT
+     */
+    @Override
+    public void setObjectNumber(final String newObjectNumber) {
+        getAttributes().put("Object Number", newObjectNumber);
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setAbsoluteNumber(int newAbsoluteNumber) {
-		// TODO: implement this method to set the 'Absolute Number' attribute
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated NOT
+     */
+    @Override
+    public int getAbsoluteNumber() {
+        return Integer.parseInt(getAttributes().get("Absolute Number"));
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String getObjectText() {
-		// TODO: implement this method to return the 'Object Text' attribute
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated NOT
+     */
+    @Override
+    public void setAbsoluteNumber(final int newAbsoluteNumber) {
+        getAttributes().put("Absolute Number", String.valueOf(newAbsoluteNumber));
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setObjectText(String newObjectText) {
-		// TODO: implement this method to set the 'Object Text' attribute
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated NOT
+     */
+    @Override
+    public String getObjectText() {
+        return getAttributes().get("Object Text");
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String getObjectShortText() {
-		// TODO: implement this method to return the 'Object Short Text' attribute
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated NOT
+     */
+    @Override
+    public void setObjectText(final String newObjectText) {
+        getAttributes().put("Object Text", newObjectText);
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setObjectShortText(String newObjectShortText) {
-		// TODO: implement this method to set the 'Object Short Text' attribute
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated NOT
+     */
+    @Override
+    public String getObjectShortText() {
+        return getAttributes().get("Object Short Text");
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String getObjectHeading() {
-		// TODO: implement this method to return the 'Object Heading' attribute
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated NOT
+     */
+    @Override
+    public void setObjectShortText(final String newObjectShortText) {
+        getAttributes().put("Object Short Text", newObjectShortText);
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setObjectHeading(String newObjectHeading) {
-		// TODO: implement this method to set the 'Object Heading' attribute
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated NOT
+     */
+    @Override
+    public String getObjectHeading() {
+        return getAttributes().get("Object Heading");
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String getText() {
-		// TODO: implement this method to return the 'Text' attribute
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated NOT
+     */
+    @Override
+    public void setObjectHeading(final String newObjectHeading) {
+        getAttributes().put("Object Heading", newObjectHeading);
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setText(String newText) {
-		// TODO: implement this method to set the 'Text' attribute
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated NOT
+     */
+    @Override
+    public String getText() {
+        if (isHeading()) {
+            return getObjectHeading();
+        } else {
+            return getObjectText();
+        }
+    }
 
-	/**
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated NOT
+     */
+    @Override
+    public void setText(final String newText) {
+        if (isHeading()) {
+            setObjectHeading(newText);
+        } else {
+            setObjectText(newText);
+        }
+    }
+
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public EList<Link> getOutgoingLinks() {
+    @Override
+    public EList<Link> getOutgoingLinks() {
 		if (outgoingLinks == null) {
 			outgoingLinks = new EObjectContainmentWithInverseEList<Link>(Link.class, this, DoorsCSVPackage.DOORS_OBJECT__OUTGOING_LINKS, DoorsCSVPackage.LINK__SOURCE);
 		}
 		return outgoingLinks;
 	}
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public EList<ResolvedLink> getIncomingLinks() {
+    @Override
+    public EList<ResolvedLink> getIncomingLinks() {
 		if (incomingLinks == null) {
 			incomingLinks = new EObjectWithInverseResolvingEList<ResolvedLink>(ResolvedLink.class, this, DoorsCSVPackage.DOORS_OBJECT__INCOMING_LINKS, DoorsCSVPackage.RESOLVED_LINK__TARGET);
 		}
 		return incomingLinks;
 	}
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public DoorsModule getModule() {
+    @Override
+    public DoorsModule getModule() {
 		if (module != null && module.eIsProxy()) {
 			InternalEObject oldModule = (InternalEObject)module;
 			module = (DoorsModule)eResolveProxy(oldModule);
@@ -415,46 +387,46 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 		return module;
 	}
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public DoorsModule basicGetModule() {
+    public DoorsModule basicGetModule() {
 		return module;
 	}
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public void setModule(DoorsModule newModule) {
+    @Override
+    public void setModule(DoorsModule newModule) {
 		DoorsModule oldModule = module;
 		module = newModule;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, DoorsCSVPackage.DOORS_OBJECT__MODULE, oldModule, module));
 	}
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public boolean isHeading() {
+    @Override
+    public boolean isHeading() {
 		return getObjectHeading() != null && !getObjectHeading().isEmpty();
 	}
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+    @SuppressWarnings("unchecked")
+    @Override
+    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case DoorsCSVPackage.DOORS_OBJECT__OUTGOING_LINKS:
 				return ((InternalEList<InternalEObject>)(InternalEList<?>)getOutgoingLinks()).basicAdd(otherEnd, msgs);
@@ -464,13 +436,13 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+    @Override
+    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case DoorsCSVPackage.DOORS_OBJECT__OUTGOING_LINKS:
 				return ((InternalEList<?>)getOutgoingLinks()).basicRemove(otherEnd, msgs);
@@ -480,13 +452,13 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+    @Override
+    public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case DoorsCSVPackage.DOORS_OBJECT__OBJECT_IDENTIFIER:
 				return getObjectIdentifier();
@@ -515,14 +487,14 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 		return super.eGet(featureID, resolve, coreType);
 	}
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public void eSet(int featureID, Object newValue) {
+    @SuppressWarnings("unchecked")
+    @Override
+    public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case DoorsCSVPackage.DOORS_OBJECT__OBJECT_IDENTIFIER:
 				setObjectIdentifier((String)newValue);
@@ -563,13 +535,13 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 		super.eSet(featureID, newValue);
 	}
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public void eUnset(int featureID) {
+    @Override
+    public void eUnset(int featureID) {
 		switch (featureID) {
 			case DoorsCSVPackage.DOORS_OBJECT__OBJECT_IDENTIFIER:
 				setObjectIdentifier(OBJECT_IDENTIFIER_EDEFAULT);
@@ -608,13 +580,13 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 		super.eUnset(featureID);
 	}
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public boolean eIsSet(int featureID) {
+    @Override
+    public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case DoorsCSVPackage.DOORS_OBJECT__OBJECT_IDENTIFIER:
 				return OBJECT_IDENTIFIER_EDEFAULT == null ? getObjectIdentifier() != null : !OBJECT_IDENTIFIER_EDEFAULT.equals(getObjectIdentifier());
@@ -642,13 +614,12 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 		return super.eIsSet(featureID);
 	}
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+    /**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+    @Override
+    public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
 			case DoorsCSVPackage.DOORS_OBJECT___IS_HEADING:
 				return isHeading();
@@ -656,4 +627,25 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 		return super.eInvoke(operationID, arguments);
 	}
 
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated NOT
+     */
+    @Override
+    public String toString() {
+        if (eIsProxy()) {
+            return super.toString();
+        }
+
+        final StringBuffer result = new StringBuffer();
+        result.append(getObjectIdentifier());
+        result.append(" ");
+        if (isHeading()) {
+            result.append(getObjectNumber());
+            result.append(" ");
+        }
+        result.append(getText());
+        return result.toString();
+    }
 } //DoorsObjectImpl
