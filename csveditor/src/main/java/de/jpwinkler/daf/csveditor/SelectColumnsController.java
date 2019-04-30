@@ -17,7 +17,7 @@ public class SelectColumnsController {
     @FXML
     private ListView<ColumnDefinition> listView;
 
-    private CSVEditorTabController tabController;
+    private FilePaneController tabController;
     private Stage dialogStage;
 
     private final Map<ColumnDefinition, Boolean> newVisibilities = new HashMap<>();
@@ -31,7 +31,7 @@ public class SelectColumnsController {
         }));
     }
 
-    public void setTabController(final CSVEditorTabController tabController) {
+    public void setTabController(final FilePaneController tabController) {
         this.tabController = tabController;
         listView.getItems().addAll(tabController.getViewModel().getDisplayedColumns());
     }

@@ -45,8 +45,10 @@ import de.jpwinkler.daf.doorscsv.model.DoorsCSVFactory;
 import de.jpwinkler.daf.doorscsv.model.DoorsModule;
 import de.jpwinkler.daf.doorscsv.model.DoorsObject;
 import de.jpwinkler.daf.doorscsv.model.DoorsTreeNode;
-import de.jpwinkler.daf.doorscsv.util.CSVParseException;
 import de.jpwinkler.daf.doorscsv.util.DoorsModuleUtil;
+import java.util.Map;
+import java.util.WeakHashMap;
+import java.util.function.Consumer;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
@@ -62,22 +64,23 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class CSVEditorTabController {
+public class FilePaneController {
 
-    private static final Logger LOGGER = Logger.getLogger(CSVEditorTabController.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(FilePaneController.class.getName());
 
     private static final String MAIN_COLUMN = "Object Heading & Object Text";
     private static final String WARNING_COLUMN = "Warnings";
 
     private static final List<String> WANTED_ATTRIBUTES = Arrays.asList("SourceID", MAIN_COLUMN, "Object Type", WARNING_COLUMN);
 
-    private Stage primaryStage;
-    private CSVEditorController csvEditorController;
+    private ApplicationStateController applicationStateController;
 
     private Tab tab;
     private File file;
@@ -88,6 +91,9 @@ public class CSVEditorTabController {
     private final ViewModel viewModel = new ViewModel();
 
     @FXML
+    private TreeView<OutlineTreeItem> outlineTreeView;
+
+    @FXML
     private TableView<DoorsObject> contentTableView;
 
     @FXML
@@ -95,19 +101,42 @@ public class CSVEditorTabController {
         contentTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         contentTableView.getSelectionModel().selectedItemProperty().addListener((ChangeListener<DoorsObject>) (observable, oldValue, newValue) -> {
-            csvEditorController.objectSelected(newValue);
-            throw new UnsupportedOperationException("Not implemented");
-
+            this.objectSelected(newValue);
         });
 
     }
+    
+    private final Map<DoorsTreeNode, Boolean> expanded = new WeakHashMap<>();
 
-    public DoorsModule getModule() {
-        return module;
+    private void populateOutlineTreeView(final DoorsModule module) {
+        if (outlineTreeView.getRoot() != null) {
+            traverseTreeItem(outlineTreeView.getRoot(), ti -> expanded.put(ti.getValue().getTreeNode(), ti.isExpanded()));
+        }
+
+        if (module != null) {
+
+            final TreeItem<OutlineTreeItem> wrappedModule = wrapModule(module);
+            traverseTreeItem(wrappedModule, ti -> ti.setExpanded(expanded.containsKey(ti.getValue().getTreeNode()) && expanded.get(ti.getValue().getTreeNode())));
+            outlineTreeView.setRoot(wrappedModule);
+        } else {
+            outlineTreeView.setRoot(null);
+        }
     }
 
-    public void setStage(final Stage primaryStage) {
-        this.primaryStage = primaryStage;
+    private TreeItem<OutlineTreeItem> wrapModule(final DoorsTreeNode doorsTreeNode) {
+        final TreeItem<OutlineTreeItem> treeItem = new TreeItem<>(new OutlineTreeItem(doorsTreeNode));
+
+        for (final DoorsTreeNode childNode : doorsTreeNode.getChildren()) {
+            treeItem.getChildren().add(wrapModule(childNode));
+        }
+        return treeItem;
+    }
+
+    private <T> void traverseTreeItem(final TreeItem<T> root, final Consumer<TreeItem<T>> f) {
+        f.accept(root);
+        for (final TreeItem<T> child : root.getChildren()) {
+            traverseTreeItem(child, f);
+        }
     }
 
     private void populateContentTableView() {
@@ -129,6 +158,10 @@ public class CSVEditorTabController {
     }
 
     public boolean save() {
+        if (file == null) {
+            return saveAs();
+        }
+
         try ( ModuleCSVWriter writer = new ModuleCSVWriter(new FileOutputStream(file))) {
             writer.writeModule(module);
             commandStack.setSavePoint();
@@ -145,18 +178,23 @@ public class CSVEditorTabController {
         tab.setText((file != null ? file.getName() : "New Document") + (commandStack.isDirty() ? " *" : ""));
     }
 
-    public void saveAs() {
+    public boolean saveAs() {
         final FileChooser chooser = new FileChooser();
-        chooser.setInitialDirectory(file.getParentFile());
-        chooser.setInitialFileName(file.getName());
-        final File newFile = chooser.showSaveDialog(primaryStage);
+        if (file != null) {
+            chooser.setInitialDirectory(file.getParentFile());
+            chooser.setInitialFileName(file.getName());
+        }
+
+        final File newFile = chooser.showSaveDialog(outlineTreeView.getScene().getWindow());
         if (newFile != null) {
             file = newFile;
-            save();
+            return save();
+        } else {
+            return false;
         }
     }
 
-    public void setFile(final File file) throws IOException, CSVParseException {
+    public void setFile(final File file) throws IOException {
         if (file != null) {
             module = new ModuleCSVParser().parseCSV(file);
             this.file = file;
@@ -259,7 +297,7 @@ public class CSVEditorTabController {
         final Optional<String> result = textInputDialog.showAndWait();
         if (result.isPresent()) {
             if (module.findAttributeDefinition(result.get()) != null) {
-                new Alert(AlertType.ERROR, "Attribute already exists.", ButtonType.OK).show();
+                new Alert(AlertType.ERROR, "Attribute does already exist.", ButtonType.OK).show();
             } else {
                 executeCommand(new AddColumnCommand(module, viewModel, result.get()));
             }
@@ -272,7 +310,7 @@ public class CSVEditorTabController {
 
     private void executeCommand(final AbstractCommand command) {
         if (!command.isApplicable()) {
-            csvEditorController.setStatus(command.getName() + ": Command is not appicable for this selection.");
+            applicationStateController.setStatus(command.getName() + ": Command is not appicable for this selection.");
         }
 
         command.apply();
@@ -364,7 +402,7 @@ public class CSVEditorTabController {
                     populateContentTableView();
                     break;
                 case UPDATE_OUTLINE_VIEW:
-                    csvEditorController.populateOutlineTreeView(module);
+                    populateOutlineTreeView(module);
                     break;
                 case UPDATE_COLUMNS:
                     updateView();
@@ -380,7 +418,7 @@ public class CSVEditorTabController {
         if (commandStack.getUndoCommand() != null) {
             final AbstractCommand commandToUndo = commandStack.undo();
             if (!commandToUndo.canUndo()) {
-                new Alert(AlertType.ERROR, "Last command cannot be undone, sorry.").show();
+                applicationStateController.setStatus("Undo: Last command cannot be undone, sorry.");
             } else {
                 commandToUndo.undo();
                 updateGui(commandToUndo.getUpdateActions());
@@ -421,16 +459,16 @@ public class CSVEditorTabController {
         final int totalObjects = DoorsModuleUtil.countObjects(module);
         final int visibleObjects = totalObjects - viewModel.getFilteredObjects().size();
 
-        csvEditorController.setStatus(visibleObjects < totalObjects ? String.format("Showing %d out of %d objects.", visibleObjects, totalObjects) : "");
+        applicationStateController.setStatus(visibleObjects < totalObjects ? String.format("Showing %d out of %d objects.", visibleObjects, totalObjects) : "");
     }
 
     public void setupColumns() {
         try {
             final Stage dialogStage = new Stage();
-            final FXMLLoader loader = new FXMLLoader(CSVEditorApplication.class.getResource("selectcolumns.fxml"));
+            final FXMLLoader loader = new FXMLLoader(MainFX.class.getResource("selectcolumns.fxml"));
             final Parent root = loader.load();
             dialogStage.initModality(Modality.APPLICATION_MODAL);
-            dialogStage.initOwner(primaryStage);
+            dialogStage.initOwner(outlineTreeView.getScene().getWindow());
 
             dialogStage.setScene(new Scene(root));
 
@@ -464,8 +502,8 @@ public class CSVEditorTabController {
         executeCommand(new DeleteObjectCommand(module, getCurrentObjects()));
     }
 
-    public void setMainController(final CSVEditorController csvEditorController) {
-        this.csvEditorController = csvEditorController;
+    public void setMainController(final ApplicationStateController applicationStateController) {
+        this.applicationStateController = applicationStateController;
     }
 
     public void flatten() {
@@ -492,5 +530,12 @@ public class CSVEditorTabController {
     public void refreshTable() {
         contentTableView.refresh();
     }
-
+    
+    private void objectSelected(final DoorsObject newValue) {
+        traverseTreeItem(outlineTreeView.getRoot(), item -> {
+            if (item.getValue().getTreeNode().equals(newValue)) {
+                outlineTreeView.getSelectionModel().select(item);
+            }
+        });
+    }
 }

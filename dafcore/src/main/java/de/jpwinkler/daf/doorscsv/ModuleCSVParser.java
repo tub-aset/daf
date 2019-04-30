@@ -79,7 +79,7 @@ public class ModuleCSVParser {
         return module;
     }
 
-    public DoorsModule parseCSV(final File file) throws IOException, CSVParseException {
+    public DoorsModule parseCSV(final File file) throws IOException {
         try ( InputStream is = new FileInputStream(file)) {
             final DoorsModule parseCSV = parseCSV(is);
             parseCSV.setName(FilenameUtils.getBaseName(file.getAbsolutePath()));

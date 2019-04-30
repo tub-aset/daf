@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.function.Consumer;
 
-import de.jpwinkler.daf.csveditor.CSVEditorApplication;
+import de.jpwinkler.daf.csveditor.MainFX;
 import de.jpwinkler.daf.doorscsv.util.CSVParseException;
 import de.jpwinkler.daf.doorsdb.DoorsDBInterface;
 import de.jpwinkler.daf.doorsdb.model.DBFolder;
@@ -41,7 +41,7 @@ import javafx.stage.Stage;
 
 public class BrowserController {
 
-    private CSVEditorApplication csvEditorApplication;
+    private MainFX csvEditorApplication;
 
     private Stage primaryStage;
 
@@ -148,7 +148,7 @@ public class BrowserController {
     private void openInCSVBrowser(final DBVersion dbVersion) {
         try {
             if (csvEditorApplication == null || !csvEditorApplication.getPrimaryStage().isShowing()) {
-                csvEditorApplication = new CSVEditorApplication();
+                csvEditorApplication = new MainFX();
                 csvEditorApplication.start(new Stage());
             }
             csvEditorApplication.openFile(db.getCSVLocation(dbVersion).toFile());

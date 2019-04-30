@@ -5,15 +5,11 @@
  */
 package de.jpwinkler.daf.csveditor;
 
-import static javafx.application.Application.launch;
-
 /**
  *
  * @author fwiesweg
  */
-public class Main {
-
-    public static void main(final String[] args) {
-        launch(MainFX.class, args);
-    }
+public interface ApplicationStateController {
+    void setStatus(final String status);
+   
 }
