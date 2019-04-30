@@ -271,13 +271,13 @@ public class CSVEditorTabController {
     }
 
     private void executeCommand(final AbstractCommand command) {
-        if (command.isApplicable()) {
-            command.apply();
-            commandStack.addCommand(command);
-            updateGui(command.getUpdateActions());
-        } else {
-            new Alert(AlertType.ERROR, "Command is not applicable for current selection", ButtonType.OK).show();
+        if (!command.isApplicable()) {
+            csvEditorController.setStatus(command.getName() + ": Command is not appicable for this selection.");
         }
+
+        command.apply();
+        commandStack.addCommand(command);
+        updateGui(command.getUpdateActions());
     }
 
     private void fixObjectNumbers(final DoorsTreeNode object, final String parentObjectNumber) {
@@ -421,11 +421,7 @@ public class CSVEditorTabController {
         final int totalObjects = DoorsModuleUtil.countObjects(module);
         final int visibleObjects = totalObjects - viewModel.getFilteredObjects().size();
 
-        if (visibleObjects < totalObjects) {
-            csvEditorController.setStatus(String.format("Showing %d out of %d objects.", visibleObjects, totalObjects));
-        } else {
-            csvEditorController.setStatus("");
-        }
+        csvEditorController.setStatus(visibleObjects < totalObjects ? String.format("Showing %d out of %d objects.", visibleObjects, totalObjects) : "");
     }
 
     public void setupColumns() {
