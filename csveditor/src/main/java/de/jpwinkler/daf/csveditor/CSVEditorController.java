@@ -14,10 +14,6 @@ import java.util.logging.Logger;
 import de.jpwinkler.daf.csveditor.background.BackgroundTask;
 import de.jpwinkler.daf.csveditor.background.BackgroundTaskStatusListener;
 import de.jpwinkler.daf.csveditor.background.BackgroundTaskStatusMonitor;
-import de.jpwinkler.daf.csveditor.massedit.CopyAttributeOperation;
-import de.jpwinkler.daf.csveditor.massedit.MassEditOperation;
-import de.jpwinkler.daf.csveditor.massedit.MassEditTarget;
-import de.jpwinkler.daf.csveditor.massedit.SetAttributeOperation;
 import de.jpwinkler.daf.csveditor.util.ExceptionDialog;
 import de.jpwinkler.daf.doorscsv.model.DoorsModule;
 import de.jpwinkler.daf.doorscsv.model.DoorsObject;
@@ -37,9 +33,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.Menu;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
@@ -88,31 +82,6 @@ public class CSVEditorController {
     private ToggleButton filterExpressionToggleButton;
 
     @FXML
-    private RadioButton massEditAllObjectsCheckBox;
-
-    @FXML
-    private RadioButton massEditSelectedObjectsCheckBox;
-    @FXML
-    private RadioButton massEditFilteredObjectsCheckBox;
-
-    @FXML
-    private RadioButton massEditSetAttributeCheckBox;
-
-    @FXML
-    private TextField massEditSetAttributeNameTextField;
-    @FXML
-    private TextField massEditSetAttributeValueTextField;
-
-    @FXML
-    private RadioButton massEditCopyAttributeCheckBox;
-
-    @FXML
-    private TextField massEditCopyAttributeFromTextField;
-
-    @FXML
-    private TextField massEditCopyAttributeToTextField;
-
-    @FXML
     private Label backgroundTaskStatusLabel;
 
     @FXML
@@ -123,13 +92,6 @@ public class CSVEditorController {
 
     @FXML
     private ListView<String> featureListView;
-
-    @FXML
-    private Menu recentMenu;
-
-    @FXML
-    private Tab objectTypeClassificationTab;
-
 
     private ChangeListener<TreeItem<OutlineTreeItem>> outlineListener;
 
@@ -256,7 +218,7 @@ public class CSVEditorController {
     }
 
     public void newTabFromFile(final File selectedFile) throws IOException, CSVParseException {
-        final FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/csveditortab.fxml"));
+        final FXMLLoader loader = new FXMLLoader(CSVEditorApplication.class.getResource("csveditortab.fxml"));
         final Parent root = loader.load();
         final CSVEditorTabController controller = loader.getController();
         final Tab tab = new Tab(selectedFile != null ? selectedFile.getName() : "New Document", root);
@@ -496,36 +458,6 @@ public class CSVEditorController {
 
     public void setStatus(final String status) {
         statusBarLabel.setText(status);
-    }
-
-    @FXML
-    public void massEditRunClicked() {
-        MassEditTarget target;
-
-        if (massEditAllObjectsCheckBox.isSelected()) {
-            target = MassEditTarget.ALL_OBJECTS;
-        } else if (massEditFilteredObjectsCheckBox.isSelected()) {
-            target = MassEditTarget.FILTERED_OBJECTS;
-        } else if (massEditSelectedObjectsCheckBox.isSelected()) {
-            target = MassEditTarget.SELECTED_OBJECTS;
-        } else {
-            throw new RuntimeException("No viable value for mass edit target available.");
-        }
-
-        MassEditOperation operation;
-
-        if (massEditSetAttributeCheckBox.isSelected()) {
-            operation = new SetAttributeOperation(massEditSetAttributeNameTextField.getText(), massEditSetAttributeValueTextField.getText());
-        } else if (massEditCopyAttributeCheckBox.isSelected()) {
-            operation = new CopyAttributeOperation(massEditCopyAttributeFromTextField.getText(), massEditCopyAttributeToTextField.getText());
-        } else {
-            throw new RuntimeException("No viable operation for mass edit found.");
-        }
-
-        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-        if (selectedTab != null) {
-            tabControllers.get(selectedTab).massEdit(target, operation);
-        }
     }
 
     public void runBackgroundTask(final BackgroundTask backgroundTask) {

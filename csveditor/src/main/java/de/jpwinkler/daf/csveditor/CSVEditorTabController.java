@@ -20,7 +20,6 @@ import de.jpwinkler.daf.csveditor.commands.DemoteObjectCommand;
 import de.jpwinkler.daf.csveditor.commands.EditObjectAttributeCommand;
 import de.jpwinkler.daf.csveditor.commands.EditObjectHeadingTextCommand;
 import de.jpwinkler.daf.csveditor.commands.FlattenCommand;
-import de.jpwinkler.daf.csveditor.commands.MassEditCommand;
 import de.jpwinkler.daf.csveditor.commands.NewObjectAfterCommand;
 import de.jpwinkler.daf.csveditor.commands.NewObjectBelowCommand;
 import de.jpwinkler.daf.csveditor.commands.PromoteObjectCommand;
@@ -33,8 +32,6 @@ import de.jpwinkler.daf.csveditor.filter.CascadingFilter;
 import de.jpwinkler.daf.csveditor.filter.DoorsObjectFilter;
 import de.jpwinkler.daf.csveditor.filter.ObjectTextAndHeadingFilter;
 import de.jpwinkler.daf.csveditor.filter.ReverseCascadingFilter;
-import de.jpwinkler.daf.csveditor.massedit.MassEditOperation;
-import de.jpwinkler.daf.csveditor.massedit.MassEditTarget;
 import de.jpwinkler.daf.csveditor.util.ColumnDefinition;
 import de.jpwinkler.daf.csveditor.util.ColumnType;
 import de.jpwinkler.daf.csveditor.util.CommandStack;
@@ -434,7 +431,7 @@ public class CSVEditorTabController {
     public void setupColumns() {
         try {
             final Stage dialogStage = new Stage();
-            final FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/selectcolumns.fxml"));
+            final FXMLLoader loader = new FXMLLoader(CSVEditorApplication.class.getResource("selectcolumns.fxml"));
             final Parent root = loader.load();
             dialogStage.initModality(Modality.APPLICATION_MODAL);
             dialogStage.initOwner(primaryStage);
@@ -486,20 +483,6 @@ public class CSVEditorTabController {
     public void selectObject(final DoorsObject object) {
         contentTableView.getSelectionModel().select(object);
         contentTableView.scrollTo(object);
-    }
-
-    public void massEdit(final MassEditTarget target, final MassEditOperation operation) {
-        final List<DoorsObject> objects = new ArrayList<>();
-        module.accept(new DoorsTreeNodeVisitor() {
-            @Override
-            public boolean visitPreTraverse(final DoorsObject object) {
-                if (target == MassEditTarget.ALL_OBJECTS || (target == MassEditTarget.FILTERED_OBJECTS && !viewModel.getFilteredObjects().contains(object)) || (target == MassEditTarget.SELECTED_OBJECTS && contentTableView.getSelectionModel().getSelectedItems().contains(object))) {
-                    objects.add(object);
-                }
-                return true;
-            }
-        });
-        executeCommand(new MassEditCommand(module, objects, operation));
     }
 
     public void splitLines() {

@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.input.*?>
-<?import javafx.scene.control.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.input.KeyCodeCombination?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.jpwinkler.daf.csveditor.CSVEditorController">
+<BorderPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.jpwinkler.daf.csveditor.CSVEditorController">
    <top>
       <VBox>
          <children>
@@ -16,13 +25,13 @@
               <menus>
                 <Menu mnemonicParsing="false" text="File">
                   <items>
-                        <MenuItem mnemonicParsing="false" onAction="#newClicked" text="New"  disable="${controller.simpleMode}"/>
+                        <MenuItem disable="${controller.simpleMode}" mnemonicParsing="false" onAction="#newClicked" text="New" />
                     <MenuItem mnemonicParsing="false" onAction="#openClicked" text="Open...">
                            <accelerator>
                               <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator>
                         </MenuItem>
-                        <Menu fx:id="recentMenu" mnemonicParsing="false" text="Recent" disable="${controller.simpleMode}"/>
+                        <Menu fx:id="recentMenu" disable="${controller.simpleMode}" mnemonicParsing="false" text="Recent Files" />
                         <MenuItem mnemonicParsing="false" onAction="#saveClicked" text="Save">
                            <accelerator>
                               <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
@@ -54,27 +63,27 @@
                            </accelerator>
                         </MenuItem>
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" onAction="#cutClicked" text="Cut" disable="${controller.simpleMode}">
+                        <MenuItem disable="${controller.simpleMode}" mnemonicParsing="false" onAction="#cutClicked" text="Cut">
                            <accelerator>
                               <KeyCodeCombination alt="UP" code="X" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator>
                         </MenuItem>
-                        <MenuItem mnemonicParsing="false" onAction="#copyClicked" text="Copy" disable="${controller.simpleMode}">
+                        <MenuItem disable="${controller.simpleMode}" mnemonicParsing="false" onAction="#copyClicked" text="Copy">
                            <accelerator>
                               <KeyCodeCombination alt="UP" code="C" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator>
                         </MenuItem>
-                        <MenuItem mnemonicParsing="false" onAction="#pasteAfterClicked" text="Paste after" disable="${controller.simpleMode}">
+                        <MenuItem disable="${controller.simpleMode}" mnemonicParsing="false" onAction="#pasteAfterClicked" text="Paste after">
                            <accelerator>
                               <KeyCodeCombination alt="UP" code="V" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator>
                         </MenuItem>
-                        <MenuItem mnemonicParsing="false" onAction="#pasteBelowClicked" text="Paste below" disable="${controller.simpleMode}">
+                        <MenuItem disable="${controller.simpleMode}" mnemonicParsing="false" onAction="#pasteBelowClicked" text="Paste below">
                            <accelerator>
                               <KeyCodeCombination alt="UP" code="V" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                            </accelerator>
                         </MenuItem>
-                        <MenuItem mnemonicParsing="false" onAction="#deleteObjectClicked" text="Delete" disable="${controller.simpleMode}">
+                        <MenuItem disable="${controller.simpleMode}" mnemonicParsing="false" onAction="#deleteObjectClicked" text="Delete">
                            <accelerator>
                               <KeyCodeCombination alt="UP" code="DELETE" control="UP" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator>
@@ -83,30 +92,30 @@
                   </Menu>
                   <Menu mnemonicParsing="false" text="View">
                     <items>
-                      <MenuItem mnemonicParsing="false" onAction="#columnsClicked" text="Columns..."  disable="${controller.simpleMode}"/>
+                      <MenuItem disable="${controller.simpleMode}" mnemonicParsing="false" onAction="#columnsClicked" text="Columns..." />
                     </items>
                   </Menu>
                   <Menu mnemonicParsing="false" text="Module">
                     <items>
                       <MenuItem mnemonicParsing="false" onAction="#analyzeObjectTypeClicked" text="Analyze Object Type..." />
-                      <MenuItem mnemonicParsing="false" onAction="#addColumnClicked" text="Add Column..."  disable="${controller.simpleMode}"/>
-                        <MenuItem mnemonicParsing="false" onAction="#reduceToSelectionClicked" text="Reduce to Selection"  disable="${controller.simpleMode}"/>
-                        <MenuItem mnemonicParsing="false" onAction="#flattenClicked" text="Flatten"  disable="${controller.simpleMode}"/>
-                        <MenuItem mnemonicParsing="false" onAction="#splitLinesClicked" text="Split lines"  disable="${controller.simpleMode}"/>
+                      <MenuItem disable="${controller.simpleMode}" mnemonicParsing="false" onAction="#addColumnClicked" text="Add Column..." />
+                        <MenuItem disable="${controller.simpleMode}" mnemonicParsing="false" onAction="#reduceToSelectionClicked" text="Reduce to Selection" />
+                        <MenuItem disable="${controller.simpleMode}" mnemonicParsing="false" onAction="#flattenClicked" text="Flatten" />
+                        <MenuItem disable="${controller.simpleMode}" mnemonicParsing="false" onAction="#splitLinesClicked" text="Split lines" />
                     </items>
                   </Menu>
                   <Menu mnemonicParsing="false" text="Object">
                     <items>
-                      <MenuItem mnemonicParsing="false" onAction="#swapObjectHeadingAndTextClicked" text="Swap Object Heading and Text"  disable="${controller.simpleMode}"/>
-                        <MenuItem mnemonicParsing="false" onAction="#unwrapChildrenClicked" text="Unwrap Children"  disable="${controller.simpleMode}"/>
-                        <MenuItem mnemonicParsing="false" onAction="#newObjectAfterClicked" text="New Object after"  disable="${controller.simpleMode}"/>
-                        <MenuItem mnemonicParsing="false" onAction="#newObjectBelowClicked" text="New Object below"  disable="${controller.simpleMode}"/>
-                        <MenuItem mnemonicParsing="false" onAction="#promoteObjectClicked" text="Promote Object" disable="${controller.simpleMode}">
+                      <MenuItem disable="${controller.simpleMode}" mnemonicParsing="false" onAction="#swapObjectHeadingAndTextClicked" text="Swap Object Heading and Text" />
+                        <MenuItem disable="${controller.simpleMode}" mnemonicParsing="false" onAction="#unwrapChildrenClicked" text="Unwrap Children" />
+                        <MenuItem disable="${controller.simpleMode}" mnemonicParsing="false" onAction="#newObjectAfterClicked" text="New Object after" />
+                        <MenuItem disable="${controller.simpleMode}" mnemonicParsing="false" onAction="#newObjectBelowClicked" text="New Object below" />
+                        <MenuItem disable="${controller.simpleMode}" mnemonicParsing="false" onAction="#promoteObjectClicked" text="Promote Object">
                            <accelerator>
                               <KeyCodeCombination alt="UP" code="P" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                            </accelerator>
                         </MenuItem>
-                        <MenuItem mnemonicParsing="false" onAction="#demoteObjectClicked" text="Demote Object" disable="${controller.simpleMode}">
+                        <MenuItem disable="${controller.simpleMode}" mnemonicParsing="false" onAction="#demoteObjectClicked" text="Demote Object">
                            <accelerator>
                               <KeyCodeCombination alt="UP" code="D" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                            </accelerator>
@@ -137,52 +146,7 @@
       <SplitPane dividerPositions="0.28075117370892017" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <items>
             <TreeView fx:id="outlineTreeView" prefHeight="710.0" prefWidth="339.0" SplitPane.resizableWithParent="false" />
-            <SplitPane dividerPositions="0.593006993006993" prefHeight="565.0" prefWidth="764.0">
-              <items>
-                  <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" />
-                  <TabPane SplitPane.resizableWithParent="false">
-                     <tabs>
-                        <Tab fx:id="objectTypeClassificationTab" closable="false" text="OT Classification" />
-                        <Tab closable="false" text="Mass Edit" disable="${controller.simpleMode}">
-                           <content>
-                              <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0">
-                                 <children>
-                                    <RadioButton fx:id="massEditAllObjectsCheckBox" mnemonicParsing="false" selected="true" text="All Objects">
-                                       <toggleGroup>
-                                          <ToggleGroup fx:id="massEditTarget" />
-                                       </toggleGroup>
-                                    </RadioButton>
-                                    <RadioButton fx:id="massEditSelectedObjectsCheckBox" mnemonicParsing="false" text="All Selected Objects" toggleGroup="$massEditTarget" />
-                                    <RadioButton fx:id="massEditFilteredObjectsCheckBox" mnemonicParsing="false" text="All Visible Objects" toggleGroup="$massEditTarget" />
-                                    <Separator prefWidth="200.0" />
-                                    <RadioButton fx:id="massEditSetAttributeCheckBox" mnemonicParsing="false" selected="true" text="Set Attribute">
-                                       <toggleGroup>
-                                          <ToggleGroup fx:id="massEditAction" />
-                                       </toggleGroup>
-                                    </RadioButton>
-                                    <TextField fx:id="massEditSetAttributeNameTextField" />
-                                    <TextField fx:id="massEditSetAttributeValueTextField" />
-                                    <RadioButton fx:id="massEditCopyAttributeCheckBox" mnemonicParsing="false" text="Copy Attribute" toggleGroup="$massEditAction" />
-                                    <TextField fx:id="massEditCopyAttributeFromTextField" />
-                                    <TextField fx:id="massEditCopyAttributeToTextField" />
-                                    <Separator prefWidth="200.0" />
-                                    <Button mnemonicParsing="false" onAction="#massEditRunClicked" text="Run" />
-                                 </children>
-                                 <padding>
-                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                 </padding>
-                              </VBox>
-                           </content>
-                        </Tab>
-                        <Tab closable="false" text="Feature Spy" disable="${controller.simpleMode}">
-                           <content>
-                              <ListView fx:id="featureListView" prefHeight="200.0" prefWidth="200.0" />
-                           </content>
-                        </Tab>
-                     </tabs>
-                  </TabPane>
-              </items>
-            </SplitPane>
+            <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" />
         </items>
       </SplitPane>
    </center>
