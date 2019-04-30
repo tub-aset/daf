@@ -1,15 +1,13 @@
 package de.jpwinkler.daf.doorscsv.util;
 
-public class CSVParseException extends Exception {
+import java.io.IOException;
+
+public class CSVParseException extends IOException {
 
     private static final long serialVersionUID = 1L;
 
     public CSVParseException() {
         super();
-    }
-
-    public CSVParseException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
     }
 
     public CSVParseException(String message, Throwable cause) {

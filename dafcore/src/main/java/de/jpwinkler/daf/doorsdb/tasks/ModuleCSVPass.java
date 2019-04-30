@@ -37,9 +37,8 @@ public abstract class ModuleCSVPass extends ModulePass {
                     writer.writeModule(parsedModule);
                 }
             }
-        } catch (IOException | CSVParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
     }
 
