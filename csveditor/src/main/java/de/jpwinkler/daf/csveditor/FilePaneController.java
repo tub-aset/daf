@@ -57,7 +57,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Menu;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
@@ -79,14 +79,15 @@ public class FilePaneController implements FileStateController {
 
     private static final List<String> WANTED_ATTRIBUTES = Arrays.asList("SourceID", MAIN_COLUMN, "Object Type", WARNING_COLUMN);
 
+    private final CommandStack<AbstractCommand> commandStack = new CommandStack<>();
+    private final List<DoorsObject> clipboard = new ArrayList<>();
+    private final ViewModel viewModel = new ViewModel();
+    private final List<ViewConfiguration> viewConfigurations = new ArrayList<>();
+    
     private ApplicationStateController applicationStateController;
 
     private File file;
     private DoorsModule module;
-
-    private final CommandStack<AbstractCommand> commandStack = new CommandStack<>();
-    private final List<DoorsObject> clipboard = new ArrayList<>();
-    private final ViewModel viewModel = new ViewModel();
     private List<Menu> menus;
 
     @FXML
@@ -99,13 +100,13 @@ public class FilePaneController implements FileStateController {
     private TextField filterTextField;
 
     @FXML
-    private CheckMenuItem filterExpressionCheckBox;
+    private CheckBox filterExpressionCheckBox;
 
     @FXML
-    private CheckMenuItem includeChildrenCheckbox;
+    private CheckBox includeChildrenCheckbox;
 
     @FXML
-    private CheckMenuItem includeParentsCheckbox;
+    private CheckBox includeParentsCheckbox;
 
     @FXML
     public void initialize() {
