@@ -27,8 +27,6 @@ public interface FileStateController {
 
     boolean saveAs();
 
-    void updateFilter(final String text, final boolean includeParents, final boolean includeChildren, final boolean isExpression);
-
     Collection<Menu> getMenus();
 
     public static FileStateController empty() {
@@ -55,10 +53,6 @@ public interface FileStateController {
             @Override
             public boolean saveAs() {
                 return false;
-            }
-
-            @Override
-            public void updateFilter(String text, boolean includeParents, boolean includeChildren, boolean isExpression) {
             }
 
             @Override

@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.BorderPane?>
@@ -16,56 +13,37 @@
 
 <BorderPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.jpwinkler.daf.csveditor.ApplicationPaneController">
     <top>
-        <VBox>
-            <children>
-                <MenuBar fx:id="mainMenuBar" BorderPane.alignment="CENTER">
-                    <menus>
-                        <Menu mnemonicParsing="false" text="File">
-                            <items>
-                                <MenuItem mnemonicParsing="false" onAction="#newClicked" text="New" />
-                                <MenuItem mnemonicParsing="false" onAction="#openClicked" text="Open...">
-                                    <accelerator>
-                                        <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                                    </accelerator>
-                                </MenuItem>
-                                <Menu fx:id="recentMenu" mnemonicParsing="false" text="Recent Files" />
-                                <MenuItem mnemonicParsing="false" onAction="#saveClicked" text="Save">
-                                    <accelerator>
-                                        <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                                    </accelerator>
-                                </MenuItem>
-                                <MenuItem mnemonicParsing="false" onAction="#saveAsClicked" text="Save As">
-                                    <accelerator>
-                                        <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
-                                    </accelerator>
-                                </MenuItem>
-                                <MenuItem mnemonicParsing="false" onAction="#closeClicked" text="Close">
-                                    <accelerator>
-                                        <KeyCodeCombination alt="UP" code="W" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                                    </accelerator>
-                                </MenuItem>
-                                <MenuItem mnemonicParsing="false" onAction="#exitClicked" text="Exit" />
-                            </items>
-                        </Menu>
-                    </menus>
-                </MenuBar>
-                <BorderPane prefHeight="40.0">
-                    <center>
-                        <ToolBar maxHeight="1.7976931348623157E308" BorderPane.alignment="CENTER" />
-                    </center>
-                    <right>
-                        <ToolBar maxHeight="1.7976931348623157E308" nodeOrientation="RIGHT_TO_LEFT" BorderPane.alignment="CENTER">
-                            <items>
-                                <CheckBox fx:id="includeChildrenCheckbox" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" text="Include children" />
-                                <CheckBox fx:id="includeParentsCheckbox" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" text="Include parents" />
-                                <TextField fx:id="filterTextField" nodeOrientation="LEFT_TO_RIGHT" prefWidth="250.0" promptText="Quick Filter" />
-                                <ToggleButton fx:id="filterExpressionToggleButton" mnemonicParsing="false" onAction="#filterExpressionToggleButtonClicked" text="e^x" />
-                            </items>
-                        </ToolBar>
-                    </right>
-                </BorderPane>
-            </children>
-        </VBox>
+        <MenuBar fx:id="mainMenuBar" BorderPane.alignment="CENTER">
+            <menus>
+                <Menu mnemonicParsing="false" text="File">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#newClicked" text="New" />
+                        <MenuItem mnemonicParsing="false" onAction="#openClicked" text="Open...">
+                            <accelerator>
+                                <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                            </accelerator>
+                        </MenuItem>
+                        <Menu fx:id="recentMenu" mnemonicParsing="false" text="Recent Files" />
+                        <MenuItem mnemonicParsing="false" onAction="#saveClicked" text="Save">
+                            <accelerator>
+                                <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                            </accelerator>
+                        </MenuItem>
+                        <MenuItem mnemonicParsing="false" onAction="#saveAsClicked" text="Save As">
+                            <accelerator>
+                                <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+                            </accelerator>
+                        </MenuItem>
+                        <MenuItem mnemonicParsing="false" onAction="#closeClicked" text="Close">
+                            <accelerator>
+                                <KeyCodeCombination alt="UP" code="W" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                            </accelerator>
+                        </MenuItem>
+                        <MenuItem mnemonicParsing="false" onAction="#exitClicked" text="Exit" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
     </top>
     <bottom>
         <BorderPane BorderPane.alignment="CENTER">

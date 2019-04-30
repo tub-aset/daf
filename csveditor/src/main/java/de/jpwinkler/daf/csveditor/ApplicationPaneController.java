@@ -46,19 +46,7 @@ public class ApplicationPaneController implements ApplicationStateController {
     private TabPane tabPane;
 
     @FXML
-    private TextField filterTextField;
-
-    @FXML
-    private CheckBox includeChildrenCheckbox;
-
-    @FXML
-    private CheckBox includeParentsCheckbox;
-
-    @FXML
     private Label statusBarLabel;
-
-    @FXML
-    private ToggleButton filterExpressionToggleButton;
 
     @FXML
     private Label backgroundTaskStatusLabel;
@@ -75,15 +63,6 @@ public class ApplicationPaneController implements ApplicationStateController {
     @FXML
     public void initialize() {
         chooser.getExtensionFilters().add(new ExtensionFilter("CSV", "*.csv"));
-        filterTextField.textProperty().addListener((ChangeListener<String>) (observable, oldValue, newValue) -> {
-            getCurrentFileStateController().updateFilter(newValue, includeParentsCheckbox.isSelected(), includeChildrenCheckbox.isSelected(), filterExpressionToggleButton.isSelected());
-        });
-        includeChildrenCheckbox.selectedProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
-            getCurrentFileStateController().updateFilter(filterTextField.getText(), includeParentsCheckbox.isSelected(), newValue, filterExpressionToggleButton.isSelected());
-        });
-        includeParentsCheckbox.selectedProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
-            getCurrentFileStateController().updateFilter(filterTextField.getText(), newValue, includeChildrenCheckbox.isSelected(), filterExpressionToggleButton.isSelected());
-        });
 
         tabPane.getSelectionModel().selectedItemProperty().addListener((ChangeListener<Tab>) (observable, oldValue, newValue) -> {
             getFileStateController(oldValue).getMenus().forEach(m -> {
@@ -228,10 +207,5 @@ public class ApplicationPaneController implements ApplicationStateController {
         }
 
         Platform.exit();
-    }
-
-    @FXML
-    public void filterExpressionToggleButtonClicked() {
-        getCurrentFileStateController().updateFilter(filterTextField.getText(), includeParentsCheckbox.isSelected(), includeChildrenCheckbox.isSelected(), filterExpressionToggleButton.isSelected());
     }
 }

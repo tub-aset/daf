@@ -1,23 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.control.TreeView?>
-<?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.VBox?>
 
 
-<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.jpwinkler.daf.csveditor.FilePaneController">
-   <children>
-      <SplitPane dividerPositions="0.5" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
-          <items>
-              <TreeView fx:id="outlineTreeView" prefHeight="200.0" prefWidth="200.0" />
-              <TableView fx:id="contentTableView" editable="true" prefHeight="200.0" prefWidth="200.0" />
-          </items>
-      </SplitPane>
-   </children>
-</VBox>
+  <SplitPane dividerPositions="0.46690734055354993" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.jpwinkler.daf.csveditor.FilePaneController">
+      <items>
+          <TreeView fx:id="outlineTreeView" />
+      <VBox>
+         <children>
+                <ToolBar maxHeight="1.7976931348623157E308" nodeOrientation="RIGHT_TO_LEFT">
+                    <items>
+                        <CheckBox fx:id="includeChildrenCheckbox" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" text="Include children" />
+                        <CheckBox fx:id="includeParentsCheckbox" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" text="Include parents" />
+                        <TextField fx:id="filterTextField" nodeOrientation="LEFT_TO_RIGHT" prefWidth="250.0" promptText="Quick Filter" />
+                        <ToggleButton fx:id="filterExpressionToggleButton" mnemonicParsing="false" onAction="#filterExpressionToggleButtonClicked" text="e^x" />
+                    </items>
+                </ToolBar>
+                <TableView fx:id="contentTableView" editable="true" />
+         </children>
+      </VBox>
+      </items>
+  </SplitPane>

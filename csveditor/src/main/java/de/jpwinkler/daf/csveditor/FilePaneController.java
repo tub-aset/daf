@@ -8,8 +8,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import de.jpwinkler.daf.csveditor.commands.AbstractCommand;
 import de.jpwinkler.daf.csveditor.commands.AddColumnCommand;
@@ -35,7 +33,6 @@ import de.jpwinkler.daf.csveditor.filter.ReverseCascadingFilter;
 import de.jpwinkler.daf.csveditor.util.ColumnDefinition;
 import de.jpwinkler.daf.csveditor.util.ColumnType;
 import de.jpwinkler.daf.csveditor.util.CommandStack;
-import de.jpwinkler.daf.csveditor.util.ExceptionDialog;
 import de.jpwinkler.daf.csveditor.util.ViewModel;
 import de.jpwinkler.daf.doorscsv.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.doorscsv.ModuleCSVParser;
@@ -60,13 +57,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.TextFieldTableCell;
@@ -96,12 +95,34 @@ public class FilePaneController implements FileStateController {
 
     @FXML
     private TableView<DoorsObject> contentTableView;
+    
+    @FXML
+    private ToggleButton filterExpressionToggleButton;
+
+    @FXML
+    private TextField filterTextField;
+
+    @FXML
+    private CheckBox includeChildrenCheckbox;
+
+    @FXML
+    private CheckBox includeParentsCheckbox;
 
     @FXML
     public void initialize() {
         contentTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         contentTableView.getSelectionModel().selectedItemProperty().addListener((ChangeListener<DoorsObject>) (observable, oldValue, newValue) -> {
             this.objectSelected(newValue);
+        });
+        
+        filterTextField.textProperty().addListener((ChangeListener<String>) (observable, oldValue, newValue) -> {
+            this.updateFilter(newValue, includeParentsCheckbox.isSelected(), includeChildrenCheckbox.isSelected(), filterExpressionToggleButton.isSelected());
+        });
+        includeChildrenCheckbox.selectedProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
+            this.updateFilter(filterTextField.getText(), includeParentsCheckbox.isSelected(), newValue, filterExpressionToggleButton.isSelected());
+        });
+        includeParentsCheckbox.selectedProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
+            this.updateFilter(filterTextField.getText(), newValue, includeChildrenCheckbox.isSelected(), filterExpressionToggleButton.isSelected());
         });
 
     }
@@ -457,8 +478,7 @@ public class FilePaneController implements FileStateController {
         }
     }
 
-    @Override
-    public void updateFilter(final String text, final boolean includeParents, final boolean includeChildren, final boolean isExpression) {
+    private void updateFilter(final String text, final boolean includeParents, final boolean includeChildren, final boolean isExpression) {
 
         DoorsObjectFilter filter = isExpression ? DoorsObjectFilter.compile(text) : new ObjectTextAndHeadingFilter(text, false, false);
         if (includeChildren) {
@@ -558,5 +578,10 @@ public class FilePaneController implements FileStateController {
                 outlineTreeView.getSelectionModel().select(item);
             }
         });
+    }
+    
+    @FXML
+    public void filterExpressionToggleButtonClicked() {
+        this.updateFilter(filterTextField.getText(), includeParentsCheckbox.isSelected(), includeChildrenCheckbox.isSelected(), filterExpressionToggleButton.isSelected());
     }
 }
