@@ -169,6 +169,7 @@ public class FilePaneController implements FileStateController {
         updateView();
 
         populateContentTableView();
+        populateOutlineTreeView(module);
         
         try {
             final FXMLLoader loader = new FXMLLoader(MainFX.class.getResource("FilePaneMenu.fxml"));

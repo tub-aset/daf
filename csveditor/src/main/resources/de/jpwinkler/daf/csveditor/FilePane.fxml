@@ -12,7 +12,7 @@
 
   <SplitPane dividerPositions="0.46690734055354993" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.jpwinkler.daf.csveditor.FilePaneController">
       <items>
-          <TreeView fx:id="outlineTreeView" />
+          <TreeView fx:id="outlineTreeView" prefWidth="150.0" />
       <VBox>
          <children>
                 <ToolBar maxHeight="1.7976931348623157E308" nodeOrientation="RIGHT_TO_LEFT">
@@ -23,7 +23,7 @@
                         <ToggleButton fx:id="filterExpressionToggleButton" mnemonicParsing="false" onAction="#filterExpressionToggleButtonClicked" text="e^x" />
                     </items>
                 </ToolBar>
-                <TableView fx:id="contentTableView" editable="true" />
+                <TableView fx:id="contentTableView" editable="true" VBox.vgrow="ALWAYS" />
          </children>
       </VBox>
       </items>
