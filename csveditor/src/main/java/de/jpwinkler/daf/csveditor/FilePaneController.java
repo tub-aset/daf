@@ -95,7 +95,7 @@ public class FilePaneController implements FileStateController {
 
     @FXML
     private TableView<DoorsObject> contentTableView;
-    
+
     @FXML
     private ToggleButton filterExpressionToggleButton;
 
@@ -114,7 +114,7 @@ public class FilePaneController implements FileStateController {
         contentTableView.getSelectionModel().selectedItemProperty().addListener((ChangeListener<DoorsObject>) (observable, oldValue, newValue) -> {
             this.objectSelected(newValue);
         });
-        
+
         filterTextField.textProperty().addListener((ChangeListener<String>) (observable, oldValue, newValue) -> {
             this.updateFilter(newValue, includeParentsCheckbox.isSelected(), includeChildrenCheckbox.isSelected(), filterExpressionToggleButton.isSelected());
         });
@@ -171,6 +171,9 @@ public class FilePaneController implements FileStateController {
         populateContentTableView();
         populateOutlineTreeView(module);
         
+        
+        traverseTreeItem(outlineTreeView.getRoot(), ti -> ti.setExpanded(true));
+
         try {
             final FXMLLoader loader = new FXMLLoader(MainFX.class.getResource("FilePaneMenu.fxml"));
             loader.setController(this);
@@ -241,7 +244,7 @@ public class FilePaneController implements FileStateController {
     }
 
     @Override
-    public boolean save() {
+    public File save() {
         if (file == null) {
             return saveAs();
         }
@@ -249,15 +252,15 @@ public class FilePaneController implements FileStateController {
         try ( ModuleCSVWriter writer = new ModuleCSVWriter(new FileOutputStream(file))) {
             writer.writeModule(module);
             commandStack.setSavePoint();
-            return true;
+            return file;
         } catch (final IOException ex) {
             applicationStateController.setStatus("Open: Failed to open file; " + ex.getMessage());
-            return false;
+            return null;
         }
     }
 
     @Override
-    public boolean saveAs() {
+    public File saveAs() {
         final FileChooser chooser = new FileChooser();
         if (file != null) {
             chooser.setInitialDirectory(file.getParentFile());
@@ -265,12 +268,11 @@ public class FilePaneController implements FileStateController {
         }
 
         final File newFile = chooser.showSaveDialog(outlineTreeView.getScene().getWindow());
-        if (newFile != null) {
-            file = newFile;
-            return save();
-        } else {
-            return false;
+        if (newFile == null) {
+            return null;
         }
+        file = newFile;
+        return save();
     }
 
     @Override
@@ -580,7 +582,7 @@ public class FilePaneController implements FileStateController {
             }
         });
     }
-    
+
     @FXML
     public void filterExpressionToggleButtonClicked() {
         this.updateFilter(filterTextField.getText(), includeParentsCheckbox.isSelected(), includeChildrenCheckbox.isSelected(), filterExpressionToggleButton.isSelected());

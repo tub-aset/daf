@@ -23,9 +23,9 @@ public interface FileStateController {
 
     boolean isDirty();
 
-    boolean save();
+    File save();
 
-    boolean saveAs();
+    File saveAs();
 
     Collection<Menu> getMenus();
 
@@ -46,13 +46,13 @@ public interface FileStateController {
             }
 
             @Override
-            public boolean save() {
-                return true;
+            public File save() {
+                return null;
             }
 
             @Override
-            public boolean saveAs() {
-                return false;
+            public File saveAs() {
+                return null;
             }
 
             @Override
