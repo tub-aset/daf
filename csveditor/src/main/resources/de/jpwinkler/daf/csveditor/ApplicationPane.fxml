@@ -6,7 +6,6 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ProgressBar?>
-<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleButton?>
@@ -16,150 +15,78 @@
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.jpwinkler.daf.csveditor.ApplicationPaneController">
-   <top>
-      <VBox>
-         <children>
-            <MenuBar fx:id="mainMenuBar" BorderPane.alignment="CENTER">
-              <menus>
-                <Menu mnemonicParsing="false" text="File">
-                  <items>
-                        <MenuItem disable="${controller.simpleMode}" mnemonicParsing="false" onAction="#newClicked" text="New" />
-                    <MenuItem mnemonicParsing="false" onAction="#openClicked" text="Open...">
-                           <accelerator>
-                              <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                           </accelerator>
-                        </MenuItem>
-                        <Menu fx:id="recentMenu" disable="${controller.simpleMode}" mnemonicParsing="false" text="Recent Files" />
-                        <MenuItem mnemonicParsing="false" onAction="#saveClicked" text="Save">
-                           <accelerator>
-                              <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                           </accelerator>
-                        </MenuItem>
-                        <MenuItem mnemonicParsing="false" onAction="#saveAsClicked" text="Save As">
-                           <accelerator>
-                              <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
-                           </accelerator>
-                        </MenuItem>
-                        <MenuItem mnemonicParsing="false" onAction="#closeClicked" text="Close">
-                           <accelerator>
-                              <KeyCodeCombination alt="UP" code="W" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                           </accelerator>
-                        </MenuItem>
-                        <MenuItem mnemonicParsing="false" onAction="#exitClicked" text="Exit" />
-                  </items>
-                </Menu>
-                  <Menu mnemonicParsing="false" text="Edit">
+    <top>
+        <VBox>
+            <children>
+                <MenuBar fx:id="mainMenuBar" BorderPane.alignment="CENTER">
+                    <menus>
+                        <Menu mnemonicParsing="false" text="File">
+                            <items>
+                                <MenuItem mnemonicParsing="false" onAction="#newClicked" text="New" />
+                                <MenuItem mnemonicParsing="false" onAction="#openClicked" text="Open...">
+                                    <accelerator>
+                                        <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                                    </accelerator>
+                                </MenuItem>
+                                <Menu fx:id="recentMenu" mnemonicParsing="false" text="Recent Files" />
+                                <MenuItem mnemonicParsing="false" onAction="#saveClicked" text="Save">
+                                    <accelerator>
+                                        <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                                    </accelerator>
+                                </MenuItem>
+                                <MenuItem mnemonicParsing="false" onAction="#saveAsClicked" text="Save As">
+                                    <accelerator>
+                                        <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+                                    </accelerator>
+                                </MenuItem>
+                                <MenuItem mnemonicParsing="false" onAction="#closeClicked" text="Close">
+                                    <accelerator>
+                                        <KeyCodeCombination alt="UP" code="W" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                                    </accelerator>
+                                </MenuItem>
+                                <MenuItem mnemonicParsing="false" onAction="#exitClicked" text="Exit" />
+                            </items>
+                        </Menu>
+                    </menus>
+                </MenuBar>
+                <BorderPane prefHeight="40.0">
+                    <center>
+                        <ToolBar maxHeight="1.7976931348623157E308" BorderPane.alignment="CENTER" />
+                    </center>
+                    <right>
+                        <ToolBar maxHeight="1.7976931348623157E308" nodeOrientation="RIGHT_TO_LEFT" BorderPane.alignment="CENTER">
+                            <items>
+                                <CheckBox fx:id="includeChildrenCheckbox" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" text="Include children" />
+                                <CheckBox fx:id="includeParentsCheckbox" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" text="Include parents" />
+                                <TextField fx:id="filterTextField" nodeOrientation="LEFT_TO_RIGHT" prefWidth="250.0" promptText="Quick Filter" />
+                                <ToggleButton fx:id="filterExpressionToggleButton" mnemonicParsing="false" onAction="#filterExpressionToggleButtonClicked" text="e^x" />
+                            </items>
+                        </ToolBar>
+                    </right>
+                </BorderPane>
+            </children>
+        </VBox>
+    </top>
+    <bottom>
+        <BorderPane BorderPane.alignment="CENTER">
+            <center>
+                <ToolBar prefWidth="200.0" BorderPane.alignment="CENTER">
                     <items>
-                      <MenuItem mnemonicParsing="false" onAction="#undoClicked" text="Undo">
-                           <accelerator>
-                              <KeyCodeCombination alt="UP" code="Z" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                           </accelerator>
-                        </MenuItem>
-                        <MenuItem mnemonicParsing="false" onAction="#redoClicked" text="Redo">
-                           <accelerator>
-                              <KeyCodeCombination alt="UP" code="Y" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                           </accelerator>
-                        </MenuItem>
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem disable="${controller.simpleMode}" mnemonicParsing="false" onAction="#cutClicked" text="Cut">
-                           <accelerator>
-                              <KeyCodeCombination alt="UP" code="X" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                           </accelerator>
-                        </MenuItem>
-                        <MenuItem disable="${controller.simpleMode}" mnemonicParsing="false" onAction="#copyClicked" text="Copy">
-                           <accelerator>
-                              <KeyCodeCombination alt="UP" code="C" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                           </accelerator>
-                        </MenuItem>
-                        <MenuItem disable="${controller.simpleMode}" mnemonicParsing="false" onAction="#pasteAfterClicked" text="Paste after">
-                           <accelerator>
-                              <KeyCodeCombination alt="UP" code="V" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                           </accelerator>
-                        </MenuItem>
-                        <MenuItem disable="${controller.simpleMode}" mnemonicParsing="false" onAction="#pasteBelowClicked" text="Paste below">
-                           <accelerator>
-                              <KeyCodeCombination alt="UP" code="V" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
-                           </accelerator>
-                        </MenuItem>
-                        <MenuItem disable="${controller.simpleMode}" mnemonicParsing="false" onAction="#deleteObjectClicked" text="Delete">
-                           <accelerator>
-                              <KeyCodeCombination alt="UP" code="DELETE" control="UP" meta="UP" shift="UP" shortcut="UP" />
-                           </accelerator>
-                        </MenuItem>
+                        <Label fx:id="statusBarLabel" text="" />
                     </items>
-                  </Menu>
-                  <Menu mnemonicParsing="false" text="View">
+                </ToolBar>
+            </center>
+            <right>
+                <ToolBar fx:id="backgroundTaskStatusToolBar" BorderPane.alignment="CENTER">
                     <items>
-                      <MenuItem disable="${controller.simpleMode}" mnemonicParsing="false" onAction="#columnsClicked" text="Columns..." />
+                        <Label fx:id="backgroundTaskStatusLabel" text="2 Background Tasks running." />
+                        <ProgressBar fx:id="backgroundTaskStatusProgressBar" prefWidth="200.0" progress="1.0" />
                     </items>
-                  </Menu>
-                  <Menu mnemonicParsing="false" text="Module">
-                    <items>
-                      <MenuItem mnemonicParsing="false" onAction="#analyzeObjectTypeClicked" text="Analyze Object Type..." />
-                      <MenuItem disable="${controller.simpleMode}" mnemonicParsing="false" onAction="#addColumnClicked" text="Add Column..." />
-                        <MenuItem disable="${controller.simpleMode}" mnemonicParsing="false" onAction="#reduceToSelectionClicked" text="Reduce to Selection" />
-                        <MenuItem disable="${controller.simpleMode}" mnemonicParsing="false" onAction="#flattenClicked" text="Flatten" />
-                        <MenuItem disable="${controller.simpleMode}" mnemonicParsing="false" onAction="#splitLinesClicked" text="Split lines" />
-                    </items>
-                  </Menu>
-                  <Menu mnemonicParsing="false" text="Object">
-                    <items>
-                      <MenuItem disable="${controller.simpleMode}" mnemonicParsing="false" onAction="#swapObjectHeadingAndTextClicked" text="Swap Object Heading and Text" />
-                        <MenuItem disable="${controller.simpleMode}" mnemonicParsing="false" onAction="#unwrapChildrenClicked" text="Unwrap Children" />
-                        <MenuItem disable="${controller.simpleMode}" mnemonicParsing="false" onAction="#newObjectAfterClicked" text="New Object after" />
-                        <MenuItem disable="${controller.simpleMode}" mnemonicParsing="false" onAction="#newObjectBelowClicked" text="New Object below" />
-                        <MenuItem disable="${controller.simpleMode}" mnemonicParsing="false" onAction="#promoteObjectClicked" text="Promote Object">
-                           <accelerator>
-                              <KeyCodeCombination alt="UP" code="P" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
-                           </accelerator>
-                        </MenuItem>
-                        <MenuItem disable="${controller.simpleMode}" mnemonicParsing="false" onAction="#demoteObjectClicked" text="Demote Object">
-                           <accelerator>
-                              <KeyCodeCombination alt="UP" code="D" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
-                           </accelerator>
-                        </MenuItem>
-                    </items>
-                  </Menu>
-              </menus>
-            </MenuBar>
-            <BorderPane prefHeight="40.0">
-               <center>
-                  <ToolBar maxHeight="1.7976931348623157E308" BorderPane.alignment="CENTER" />
-               </center>
-               <right>
-                  <ToolBar maxHeight="1.7976931348623157E308" nodeOrientation="RIGHT_TO_LEFT" BorderPane.alignment="CENTER">
-                     <items>
-                        <CheckBox fx:id="includeChildrenCheckbox" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" text="Include children" />
-                        <CheckBox fx:id="includeParentsCheckbox" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" text="Include parents" />
-                        <TextField fx:id="filterTextField" nodeOrientation="LEFT_TO_RIGHT" prefWidth="250.0" promptText="Quick Filter" />
-                        <ToggleButton fx:id="filterExpressionToggleButton" mnemonicParsing="false" onAction="#filterExpressionToggleButtonClicked" text="e^x" />
-                     </items>
-                  </ToolBar>
-               </right>
-            </BorderPane>
-         </children>
-      </VBox>
-   </top>
-   <bottom>
-      <BorderPane BorderPane.alignment="CENTER">
-         <center>
-            <ToolBar prefWidth="200.0" BorderPane.alignment="CENTER">
-               <items>
-                  <Label fx:id="statusBarLabel" text="" />
-               </items>
-            </ToolBar>
-         </center>
-         <right>
-            <ToolBar fx:id="backgroundTaskStatusToolBar" BorderPane.alignment="CENTER">
-               <items>
-                  <Label fx:id="backgroundTaskStatusLabel" text="2 Background Tasks running." />
-                  <ProgressBar fx:id="backgroundTaskStatusProgressBar" prefWidth="200.0" progress="1.0" />
-               </items>
-            </ToolBar>
-         </right>
-      </BorderPane>
-   </bottom>
-   <center>
-      <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER" />
-   </center>
+                </ToolBar>
+            </right>
+        </BorderPane>
+    </bottom>
+    <center>
+        <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+    </center>
 </BorderPane>

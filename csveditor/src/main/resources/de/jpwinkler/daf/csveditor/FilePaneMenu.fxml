@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.input.KeyCodeCombination?>
+
+
+<Menu xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" >
+    <Menu mnemonicParsing="false" text="Edit">
+        <items>
+            <MenuItem mnemonicParsing="false" onAction="#undoClicked" text="Undo">
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="Z" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                </accelerator>
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#redoClicked" text="Redo">
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="Y" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                </accelerator>
+            </MenuItem>
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" onAction="#cutClicked" text="Cut">
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="X" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                </accelerator>
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#copyClicked" text="Copy">
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="C" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                </accelerator>
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#pasteAfterClicked" text="Paste after">
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="V" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                </accelerator>
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#pasteBelowClicked" text="Paste below">
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="V" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+                </accelerator>
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#deleteObjectClicked" text="Delete">
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="DELETE" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                </accelerator>
+            </MenuItem>
+        </items>
+    </Menu>
+    <Menu mnemonicParsing="false" text="View">
+        <items>
+            <MenuItem mnemonicParsing="false" onAction="#columnsClicked" text="Columns..." />
+        </items>
+    </Menu>
+    <Menu mnemonicParsing="false" text="Module">
+        <items>
+            <MenuItem mnemonicParsing="false" onAction="#analyzeObjectTypeClicked" text="Analyze Object Type..." />
+            <MenuItem mnemonicParsing="false" onAction="#addColumnClicked" text="Add Column..." />
+            <MenuItem mnemonicParsing="false" onAction="#reduceToSelectionClicked" text="Reduce to Selection" />
+            <MenuItem mnemonicParsing="false" onAction="#flattenClicked" text="Flatten" />
+            <MenuItem mnemonicParsing="false" onAction="#splitLinesClicked" text="Split lines" />
+        </items>
+    </Menu>
+    <Menu mnemonicParsing="false" text="Object">
+        <items>
+            <MenuItem mnemonicParsing="false" onAction="#swapObjectHeadingAndTextClicked" text="Swap Object Heading and Text" />
+            <MenuItem mnemonicParsing="false" onAction="#unwrapChildrenClicked" text="Unwrap Children" />
+            <MenuItem mnemonicParsing="false" onAction="#newObjectAfterClicked" text="New Object after" />
+            <MenuItem mnemonicParsing="false" onAction="#newObjectBelowClicked" text="New Object below" />
+            <MenuItem mnemonicParsing="false" onAction="#promoteObjectClicked" text="Promote Object">
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="P" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+                </accelerator>
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#demoteObjectClicked" text="Demote Object">
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="D" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+                </accelerator>
+            </MenuItem>
+        </items>
+    </Menu>
+</Menu>

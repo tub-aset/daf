@@ -46,9 +46,11 @@ import de.jpwinkler.daf.doorscsv.model.DoorsModule;
 import de.jpwinkler.daf.doorscsv.model.DoorsObject;
 import de.jpwinkler.daf.doorscsv.model.DoorsTreeNode;
 import de.jpwinkler.daf.doorscsv.util.DoorsModuleUtil;
+import java.util.Collection;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
@@ -58,8 +60,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.SelectionMode;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
@@ -71,9 +74,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class FilePaneController {
-
-    private static final Logger LOGGER = Logger.getLogger(FilePaneController.class.getName());
+public class FilePaneController implements FileStateController {
 
     private static final String MAIN_COLUMN = "Object Heading & Object Text";
     private static final String WARNING_COLUMN = "Warnings";
@@ -82,13 +83,13 @@ public class FilePaneController {
 
     private ApplicationStateController applicationStateController;
 
-    private Tab tab;
     private File file;
     private DoorsModule module;
 
     private final CommandStack<AbstractCommand> commandStack = new CommandStack<>();
     private final List<DoorsObject> clipboard = new ArrayList<>();
     private final ViewModel viewModel = new ViewModel();
+    private List<Menu> menus;
 
     @FXML
     private TreeView<OutlineTreeItem> outlineTreeView;
@@ -99,13 +100,68 @@ public class FilePaneController {
     @FXML
     public void initialize() {
         contentTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-
         contentTableView.getSelectionModel().selectedItemProperty().addListener((ChangeListener<DoorsObject>) (observable, oldValue, newValue) -> {
             this.objectSelected(newValue);
         });
 
     }
-    
+
+    @Override
+    public void initialize(ApplicationStateController applicationStateController, File file) throws IOException {
+        this.applicationStateController = applicationStateController;
+        if (file != null) {
+            module = new ModuleCSVParser().parseCSV(file);
+            this.file = file;
+        } else {
+            module = DoorsCSVFactory.eINSTANCE.createDoorsModule();
+            this.file = null;
+        }
+
+        contentTableView.getColumns().clear();
+
+        ColumnDefinition columnDefinition = new ColumnDefinition();
+        columnDefinition.setColumnType(ColumnType.OBJECT_TEXT_HEADING_COLUMN);
+        columnDefinition.setColumnTitle(MAIN_COLUMN);
+        columnDefinition.setWidth(700);
+        columnDefinition.setVisible(true);
+        viewModel.getDisplayedColumns().add(columnDefinition);
+
+        columnDefinition = new ColumnDefinition();
+        columnDefinition.setColumnType(ColumnType.WARNING_COLUMN);
+        columnDefinition.setColumnTitle(WARNING_COLUMN);
+        columnDefinition.setWidth(100);
+        columnDefinition.setVisible(true);
+        viewModel.getDisplayedColumns().add(columnDefinition);
+
+        for (final AttributeDefinition attributeDefinition : module.getAttributeDefinitions()) {
+            columnDefinition = new ColumnDefinition();
+            columnDefinition.setColumnType(ColumnType.ATTRIBUTE_COLUMN);
+            columnDefinition.setAttributeName(attributeDefinition.getName());
+            columnDefinition.setColumnTitle(attributeDefinition.getName());
+            columnDefinition.setWidth(100);
+            columnDefinition.setVisible(WANTED_ATTRIBUTES.contains(attributeDefinition.getName()));
+            viewModel.getDisplayedColumns().add(columnDefinition);
+        }
+
+        Collections.sort(viewModel.getDisplayedColumns(), new PredefinedOrderComparator(WANTED_ATTRIBUTES));
+
+        updateView();
+
+        populateContentTableView();
+        
+        try {
+            final FXMLLoader loader = new FXMLLoader(MainFX.class.getResource("FilePaneMenu.fxml"));
+            loader.setController(this);
+            final Menu rootMenu = loader.load();
+            this.menus = rootMenu.getItems().stream()
+                    .filter(m -> m instanceof Menu)
+                    .map(m -> (Menu) m)
+                    .collect(Collectors.toList());
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
     private final Map<DoorsTreeNode, Boolean> expanded = new WeakHashMap<>();
 
     private void populateOutlineTreeView(final DoorsModule module) {
@@ -157,6 +213,12 @@ public class FilePaneController {
         }
     }
 
+    @Override
+    public Collection<Menu> getMenus() {
+        return menus;
+    }
+
+    @Override
     public boolean save() {
         if (file == null) {
             return saveAs();
@@ -165,19 +227,14 @@ public class FilePaneController {
         try ( ModuleCSVWriter writer = new ModuleCSVWriter(new FileOutputStream(file))) {
             writer.writeModule(module);
             commandStack.setSavePoint();
-            updateTabTitle();
             return true;
-        } catch (final IOException e) {
-            ExceptionDialog.showExceptionDialog(e);
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+        } catch (final IOException ex) {
+            applicationStateController.setStatus("Open: Failed to open file; " + ex.getMessage());
             return false;
         }
     }
 
-    private void updateTabTitle() {
-        tab.setText((file != null ? file.getName() : "New Document") + (commandStack.isDirty() ? " *" : ""));
-    }
-
+    @Override
     public boolean saveAs() {
         final FileChooser chooser = new FileChooser();
         if (file != null) {
@@ -194,46 +251,14 @@ public class FilePaneController {
         }
     }
 
-    public void setFile(final File file) throws IOException {
-        if (file != null) {
-            module = new ModuleCSVParser().parseCSV(file);
-            this.file = file;
-        } else {
-            module = DoorsCSVFactory.eINSTANCE.createDoorsModule();
-            this.file = null;
-        }
+    @Override
+    public File getFile() {
+        return file;
+    }
 
-        contentTableView.getColumns().clear();
-
-        ColumnDefinition columnDefinition = new ColumnDefinition();
-        columnDefinition.setColumnType(ColumnType.OBJECT_TEXT_HEADING_COLUMN);
-        columnDefinition.setColumnTitle(MAIN_COLUMN);
-        columnDefinition.setWidth(700);
-        columnDefinition.setVisible(true);
-        viewModel.getDisplayedColumns().add(columnDefinition);
-
-        columnDefinition = new ColumnDefinition();
-        columnDefinition.setColumnType(ColumnType.WARNING_COLUMN);
-        columnDefinition.setColumnTitle(WARNING_COLUMN);
-        columnDefinition.setWidth(100);
-        columnDefinition.setVisible(true);
-        viewModel.getDisplayedColumns().add(columnDefinition);
-
-        for (final AttributeDefinition attributeDefinition : module.getAttributeDefinitions()) {
-            columnDefinition = new ColumnDefinition();
-            columnDefinition.setColumnType(ColumnType.ATTRIBUTE_COLUMN);
-            columnDefinition.setAttributeName(attributeDefinition.getName());
-            columnDefinition.setColumnTitle(attributeDefinition.getName());
-            columnDefinition.setWidth(100);
-            columnDefinition.setVisible(WANTED_ATTRIBUTES.contains(attributeDefinition.getName()));
-            viewModel.getDisplayedColumns().add(columnDefinition);
-        }
-
-        Collections.sort(viewModel.getDisplayedColumns(), new PredefinedOrderComparator(WANTED_ATTRIBUTES));
-
-        updateView();
-
-        populateContentTableView();
+    @Override
+    public boolean isDirty() {
+        return commandStack.isDirty();
     }
 
     private void updateView() {
@@ -275,11 +300,8 @@ public class FilePaneController {
         }
     }
 
-    public void setTab(final Tab tab) {
-        this.tab = tab;
-    }
-
-    public void reduceToSelection() {
+    @FXML
+    public void reduceToSelectionClicked() {
         executeCommand(new ReduceToSelectionCommand(module, getCurrentObject()));
     }
 
@@ -292,7 +314,8 @@ public class FilePaneController {
         }
     }
 
-    public void addColumn() {
+    @FXML
+    public void addColumnClicked() {
         final TextInputDialog textInputDialog = new TextInputDialog();
         final Optional<String> result = textInputDialog.showAndWait();
         if (result.isPresent()) {
@@ -304,7 +327,8 @@ public class FilePaneController {
         }
     }
 
-    public void swapObjectHeadingAndText() {
+    @FXML
+    public void swapObjectHeadingAndTextClicked() {
         executeCommand(new SwapObjectHeadingAndTextCommand(module, getCurrentObject()));
     }
 
@@ -349,11 +373,13 @@ public class FilePaneController {
         return contentTableView.getSelectionModel().getSelectedItems();
     }
 
-    public void deleteObject() {
+    @FXML
+    public void deleteObjectClicked() {
         executeCommand(new DeleteObjectCommand(module, getCurrentObjects()));
     }
 
-    public void unwrapChildren() {
+    @FXML
+    public void unwrapChildrenClicked() {
         executeCommand(new UnwrapChildrenCommand(module, getCurrentObject()));
     }
 
@@ -365,23 +391,28 @@ public class FilePaneController {
         }
     }
 
-    public void demoteObject() {
+    @FXML
+    public void demoteObjectClicked() {
         executeCommand(new DemoteObjectCommand(module, getCurrentObject()));
     }
 
-    public void promoteObject() {
+    @FXML
+    public void promoteObjectClicked() {
         executeCommand(new PromoteObjectCommand(module, getCurrentObject()));
     }
 
-    public void newObjectBelow() {
+    @FXML
+    public void newObjectBelowClicked() {
         executeCommand(new NewObjectBelowCommand(module, getCurrentObject()));
     }
 
-    public void newObjectAfter() {
+    @FXML
+    public void newObjectAfterClicked() {
         executeCommand(new NewObjectAfterCommand(module, getCurrentObject()));
     }
 
-    public void redo() {
+    @FXML
+    public void redoClicked() {
         if (commandStack.getRedoCommand() != null) {
             final AbstractCommand commandToRedo = commandStack.redo();
             commandToRedo.redo();
@@ -411,10 +442,10 @@ public class FilePaneController {
                     break;
             }
         }
-        updateTabTitle();
     }
 
-    public void undo() {
+    @FXML
+    public void undoClicked() {
         if (commandStack.getUndoCommand() != null) {
             final AbstractCommand commandToUndo = commandStack.undo();
             if (!commandToUndo.canUndo()) {
@@ -426,10 +457,7 @@ public class FilePaneController {
         }
     }
 
-    public boolean isDirty() {
-        return commandStack.isDirty();
-    }
-
+    @Override
     public void updateFilter(final String text, final boolean includeParents, final boolean includeChildren, final boolean isExpression) {
 
         DoorsObjectFilter filter = isExpression ? DoorsObjectFilter.compile(text) : new ObjectTextAndHeadingFilter(text, false, false);
@@ -462,7 +490,8 @@ public class FilePaneController {
         applicationStateController.setStatus(visibleObjects < totalObjects ? String.format("Showing %d out of %d objects.", visibleObjects, totalObjects) : "");
     }
 
-    public void setupColumns() {
+    @FXML
+    public void columnsClicked() {
         try {
             final Stage dialogStage = new Stage();
             final FXMLLoader loader = new FXMLLoader(MainFX.class.getResource("selectcolumns.fxml"));
@@ -477,36 +506,35 @@ public class FilePaneController {
             selectColumnsController.setDialogStage(dialogStage);
 
             dialogStage.showAndWait();
-
-        } catch (final IOException e) {
-            ExceptionDialog.showExceptionDialog(e);
+        } catch (final IOException ex) {
+            throw new RuntimeException(ex);
         }
-
     }
 
-    public void pasteBelow() {
+    @FXML
+    public void pasteBelowClicked() {
         executeCommand(new CopyObjectsBelowCommand(module, contentTableView.getSelectionModel().getSelectedItem(), clipboard));
     }
 
-    public void pasteAfter() {
+    @FXML
+    public void pasteAfterClicked() {
         executeCommand(new CopyObjectsAfterCommand(module, contentTableView.getSelectionModel().getSelectedItem(), clipboard));
     }
 
-    public void copy() {
+    @FXML
+    public void copyClicked() {
         clipboard.clear();
         clipboard.addAll(contentTableView.getSelectionModel().getSelectedItems());
     }
 
-    public void cut() {
-        copy();
+    @FXML
+    public void cutClicked() {
+        copyClicked();
         executeCommand(new DeleteObjectCommand(module, getCurrentObjects()));
     }
 
-    public void setMainController(final ApplicationStateController applicationStateController) {
-        this.applicationStateController = applicationStateController;
-    }
-
-    public void flatten() {
+    @FXML
+    public void flattenClicked() {
         executeCommand(new FlattenCommand(module));
     }
 
@@ -514,23 +542,16 @@ public class FilePaneController {
         return viewModel;
     }
 
-    public void selectObject(final DoorsObject object) {
-        contentTableView.getSelectionModel().select(object);
-        contentTableView.scrollTo(object);
-    }
-
-    public void splitLines() {
+    @FXML
+    public void splitLinesClicked() {
         executeCommand(new SplitLinesCommand(module));
     }
 
-    public void analyzeObjectType() {
-        refreshTable();
-    }
-
-    public void refreshTable() {
+    @FXML
+    public void analyzeObjectTypeClicked() {
         contentTableView.refresh();
     }
-    
+
     private void objectSelected(final DoorsObject newValue) {
         traverseTreeItem(outlineTreeView.getRoot(), item -> {
             if (item.getValue().getTreeNode().equals(newValue)) {

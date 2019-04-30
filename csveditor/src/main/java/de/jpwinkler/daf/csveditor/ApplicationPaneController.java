@@ -8,9 +8,13 @@ import java.util.Optional;
 
 import de.jpwinkler.daf.csveditor.background.BackgroundTaskStatusListener;
 import de.jpwinkler.daf.csveditor.background.BackgroundTaskStatusMonitor;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
-import javafx.event.ActionEvent;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -19,6 +23,8 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -30,7 +36,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
 
 public class ApplicationPaneController implements ApplicationStateController {
 
-    private final Map<Tab, FilePaneController> fileStateControllers = new HashMap<>();
+    private final Map<Tab, FileStateController> fileStateControllers = new HashMap<>();
 
     private final FileChooser chooser = new FileChooser();
 
@@ -58,6 +64,9 @@ public class ApplicationPaneController implements ApplicationStateController {
     private Label backgroundTaskStatusLabel;
 
     @FXML
+    private MenuBar mainMenuBar;
+
+    @FXML
     private ProgressBar backgroundTaskStatusProgressBar;
 
     @FXML
@@ -67,21 +76,45 @@ public class ApplicationPaneController implements ApplicationStateController {
     public void initialize() {
         chooser.getExtensionFilters().add(new ExtensionFilter("CSV", "*.csv"));
         filterTextField.textProperty().addListener((ChangeListener<String>) (observable, oldValue, newValue) -> {
-            final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-            if (selectedTab != null) {
-                fileStateControllers.get(selectedTab).updateFilter(newValue, includeParentsCheckbox.isSelected(), includeChildrenCheckbox.isSelected(), filterExpressionToggleButton.isSelected());
-            }
+            getCurrentFileStateController().updateFilter(newValue, includeParentsCheckbox.isSelected(), includeChildrenCheckbox.isSelected(), filterExpressionToggleButton.isSelected());
         });
         includeChildrenCheckbox.selectedProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
-            final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-            if (selectedTab != null) {
-                fileStateControllers.get(selectedTab).updateFilter(filterTextField.getText(), includeParentsCheckbox.isSelected(), newValue, filterExpressionToggleButton.isSelected());
-            }
+            getCurrentFileStateController().updateFilter(filterTextField.getText(), includeParentsCheckbox.isSelected(), newValue, filterExpressionToggleButton.isSelected());
         });
         includeParentsCheckbox.selectedProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
-            final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-            if (selectedTab != null) {
-                fileStateControllers.get(selectedTab).updateFilter(filterTextField.getText(), newValue, includeChildrenCheckbox.isSelected(), filterExpressionToggleButton.isSelected());
+            getCurrentFileStateController().updateFilter(filterTextField.getText(), newValue, includeChildrenCheckbox.isSelected(), filterExpressionToggleButton.isSelected());
+        });
+
+        tabPane.getSelectionModel().selectedItemProperty().addListener((ChangeListener<Tab>) (observable, oldValue, newValue) -> {
+            getFileStateController(oldValue).getMenus().forEach(m -> {
+                mainMenuBar.getMenus().remove(m);
+            });
+
+            mainMenuBar.getMenus().addAll(getFileStateController(newValue).getMenus());
+        });
+        tabPane.getTabs().addListener((ListChangeListener<Tab>) (change) -> {
+            List<Tab> toBeAdded = new ArrayList<>();
+
+            while (change.next()) {
+                for (Tab selectedTab : change.getRemoved()) {
+                    final FileStateController controller = getFileStateController(selectedTab);
+                    if (controller.isDirty()) {
+                        final Optional<ButtonType> saveConfirm = new Alert(AlertType.CONFIRMATION, "There are unsaved changes, do you want to save them?",
+                                ButtonType.YES, ButtonType.NO, ButtonType.CANCEL).showAndWait();
+                        if (saveConfirm.isPresent() && saveConfirm.get() == ButtonType.YES && !controller.save()
+                                || saveConfirm.isPresent() && saveConfirm.get() == ButtonType.CANCEL
+                                || !saveConfirm.isPresent()) {
+                            toBeAdded.add(selectedTab);
+                            continue;
+                        }
+                    }
+
+                    fileStateControllers.remove(selectedTab);
+                }
+            }
+
+            if (!toBeAdded.isEmpty()) {
+                tabPane.getTabs().addAll(toBeAdded);
             }
         });
 
@@ -111,6 +144,15 @@ public class ApplicationPaneController implements ApplicationStateController {
 
     }
 
+    private FileStateController getCurrentFileStateController() {
+        return getFileStateController(tabPane.getSelectionModel().getSelectedItem());
+    }
+
+    private FileStateController getFileStateController(Tab selectedTab) {
+        FileStateController controller = fileStateControllers.get(selectedTab);
+        return controller == null ? FileStateController.empty() : controller;
+    }
+
     @Override
     public void setStatus(final String status) {
         statusBarLabel.setText(status);
@@ -132,241 +174,64 @@ public class ApplicationPaneController implements ApplicationStateController {
 
     public void openFile(final File selectedFile) {
         try {
-            final FXMLLoader loader = new FXMLLoader(MainFX.class
-                    .getResource("FilePane.fxml"));
-            final Parent root = loader.load();
+            final FXMLLoader loader = new FXMLLoader(MainFX.class.getResource("FilePane.fxml"));
+            final Parent filePane = loader.load();
+
             final FilePaneController controller = loader.getController();
-            final Tab tab = new Tab(selectedFile != null ? selectedFile.getName() : "New Document", root);
+            controller.initialize(this, selectedFile);
 
-            tab.setClosable(
-                    true);
+            final Tab selectedTab = new Tab(selectedFile != null ? selectedFile.getName() : "New Document", filePane);
+            fileStateControllers.put(selectedTab, controller);
+            
+            selectedTab.setClosable(true);
+            tabPane.getTabs().add(selectedTab);
+            updateTabTitle(selectedTab);
 
-            controller.setMainController(
-                    this);
-            controller.setFile(selectedFile);
-
-            controller.setTab(tab);
-
-            fileStateControllers.put(tab, controller);
-
-            tabPane.getTabs()
-                    .add(tab);
-            tabPane.getSelectionModel()
-                    .select(tab);
+            tabPane.getSelectionModel().select(selectedTab);
         } catch (IOException ex) {
             setStatus("Open: Failed to open file; " + ex.getMessage());
         }
     }
 
+    @FXML
     public void saveClicked() {
-        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-        if (selectedTab != null) {
-            fileStateControllers.get(selectedTab).save();
-        }
+        getCurrentFileStateController().save();
+        updateTabTitle(tabPane.getSelectionModel().getSelectedItem());
+
     }
 
     @FXML
-    public void saveAsClicked(ActionEvent event) {
-        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-        if (selectedTab != null) {
-            fileStateControllers.get(selectedTab).saveAs();
-        }
+    public void saveAsClicked() {
+        getCurrentFileStateController().saveAs();
+        updateTabTitle(tabPane.getSelectionModel().getSelectedItem());
     }
 
-    @FXML
-    public void reduceToSelectionClicked() {
-        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-        if (selectedTab != null) {
-            fileStateControllers.get(selectedTab).reduceToSelection();
-        }
+    private void updateTabTitle(Tab selectedTab) {
+        FileStateController fileStateController = getFileStateController(selectedTab);
+        File file = fileStateController.getFile();
+        selectedTab.setText((file != null ? file.getName() : "New Document") + (fileStateController.isDirty() ? " *" : ""));
     }
 
     @FXML
     public void closeClicked() {
-        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-        if (selectedTab != null) {
-            closeTab(selectedTab);
-        }
-    }
-
-    private boolean closeTab(final Tab selectedTab) {
-        final FilePaneController controller = fileStateControllers.get(selectedTab);
-        if (controller.isDirty()) {
-            final Optional<ButtonType> saveConfirm = new Alert(AlertType.CONFIRMATION, "There are unsaved changes, do you want to save them?", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL).showAndWait();
-            if (saveConfirm.isPresent() && saveConfirm.get() == ButtonType.YES) {
-                if (!controller.save()) {
-                    return false;
-                }
-            } else if (saveConfirm.isPresent() && saveConfirm.get() == ButtonType.CANCEL) {
-                return false;
-            } else if (!saveConfirm.isPresent()) {
-                return false;
-            }
-        }
-        tabPane.getTabs().remove(selectedTab);
-        fileStateControllers.remove(selectedTab);
-        return true;
+        tabPane.getTabs().remove(tabPane.getSelectionModel().getSelectedItem());
     }
 
     @FXML
     public void exitClicked() {
-        for (final Tab tab : fileStateControllers.keySet()) {
-            if (!closeTab(tab)) {
-                return;
-            }
+        for (final Tab tab : new ArrayList<>(fileStateControllers.keySet())) {
+            tabPane.getTabs().remove(tab);
         }
+
+        if (!tabPane.getTabs().isEmpty()) {
+            return;
+        }
+
         Platform.exit();
     }
 
     @FXML
-    public void addColumnClicked() {
-        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-        if (selectedTab != null) {
-            fileStateControllers.get(selectedTab).addColumn();
-        }
-    }
-
-    @FXML
-    public void swapObjectHeadingAndTextClicked() {
-        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-        if (selectedTab != null) {
-            fileStateControllers.get(selectedTab).swapObjectHeadingAndText();
-        }
-    }
-
-    @FXML
-    public void deleteObjectClicked() {
-        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-        if (selectedTab != null) {
-            fileStateControllers.get(selectedTab).deleteObject();
-        }
-    }
-
-    @FXML
-    public void unwrapChildrenClicked() {
-        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-        if (selectedTab != null) {
-            fileStateControllers.get(selectedTab).unwrapChildren();
-        }
-    }
-
-    @FXML
-    public void newObjectAfterClicked() {
-        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-        if (selectedTab != null) {
-            fileStateControllers.get(selectedTab).newObjectAfter();
-        }
-    }
-
-    @FXML
-    public void newObjectBelowClicked() {
-        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-        if (selectedTab != null) {
-            fileStateControllers.get(selectedTab).newObjectBelow();
-        }
-    }
-
-    @FXML
-    public void promoteObjectClicked() {
-        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-        if (selectedTab != null) {
-            fileStateControllers.get(selectedTab).promoteObject();
-        }
-    }
-
-    @FXML
-    public void demoteObjectClicked() {
-        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-        if (selectedTab != null) {
-            fileStateControllers.get(selectedTab).demoteObject();
-        }
-    }
-
-    @FXML
-    public void undoClicked() {
-        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-        if (selectedTab != null) {
-            fileStateControllers.get(selectedTab).undo();
-        }
-    }
-
-    @FXML
-    public void redoClicked() {
-        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-        if (selectedTab != null) {
-            fileStateControllers.get(selectedTab).redo();
-        }
-    }
-
-    @FXML
-    public void columnsClicked() {
-        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-        if (selectedTab != null) {
-            fileStateControllers.get(selectedTab).setupColumns();
-        }
-    }
-
-    @FXML
-    public void cutClicked() {
-        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-        if (selectedTab != null) {
-            fileStateControllers.get(selectedTab).cut();
-        }
-    }
-
-    @FXML
-    public void copyClicked() {
-        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-        if (selectedTab != null) {
-            fileStateControllers.get(selectedTab).copy();
-        }
-    }
-
-    @FXML
-    public void pasteAfterClicked() {
-        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-        if (selectedTab != null) {
-            fileStateControllers.get(selectedTab).pasteAfter();
-        }
-    }
-
-    @FXML
-    public void pasteBelowClicked() {
-        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-        if (selectedTab != null) {
-            fileStateControllers.get(selectedTab).pasteBelow();
-        }
-    }
-
-    @FXML
-    public void flattenClicked() {
-        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-        if (selectedTab != null) {
-            fileStateControllers.get(selectedTab).flatten();
-        }
-    }
-
-    @FXML
     public void filterExpressionToggleButtonClicked() {
-        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-        if (selectedTab != null) {
-            fileStateControllers.get(selectedTab).updateFilter(filterTextField.getText(), includeParentsCheckbox.isSelected(), includeChildrenCheckbox.isSelected(), filterExpressionToggleButton.isSelected());
-        }
-    }
-
-    @FXML
-    public void splitLinesClicked() {
-        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-        if (selectedTab != null) {
-            fileStateControllers.get(selectedTab).splitLines();
-        }
-    }
-
-    @FXML
-    public void analyzeObjectTypeClicked() {
-        final Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-        if (selectedTab != null) {
-            fileStateControllers.get(selectedTab).analyzeObjectType();
-        }
+        getCurrentFileStateController().updateFilter(filterTextField.getText(), includeParentsCheckbox.isSelected(), includeChildrenCheckbox.isSelected(), filterExpressionToggleButton.isSelected());
     }
 }
