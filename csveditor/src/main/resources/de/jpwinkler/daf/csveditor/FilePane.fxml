@@ -1,29 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.CheckMenuItem?>
+<?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.VBox?>
 
 
-  <SplitPane dividerPositions="0.46690734055354993" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.jpwinkler.daf.csveditor.FilePaneController">
+  <SplitPane dividerPositions="0.46690734055354993" prefHeight="616.0" prefWidth="1225.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.jpwinkler.daf.csveditor.FilePaneController">
       <items>
-          <TreeView fx:id="outlineTreeView" prefWidth="150.0" />
+          <TreeView fx:id="outlineTreeView" prefHeight="2520.0" prefWidth="559.0" />
       <VBox>
          <children>
                 <ToolBar maxHeight="1.7976931348623157E308" nodeOrientation="RIGHT_TO_LEFT">
                     <items>
-                        <CheckBox fx:id="includeChildrenCheckbox" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" text="Include children" />
-                        <CheckBox fx:id="includeParentsCheckbox" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" text="Include parents" />
+                  <MenuButton mnemonicParsing="false" text="Options">
+                    <items>
+                        <CheckMenuItem fx:id="filterExpressionCheckBox" mnemonicParsing="false" text="Filter expression" />
+                        <CheckMenuItem fx:id="includeChildrenCheckbox" mnemonicParsing="false" text="Include children" />
+                        <CheckMenuItem fx:id="includeParentsCheckbox" mnemonicParsing="false" text="Include parents" />
+                    </items>
+                  </MenuButton>
                         <TextField fx:id="filterTextField" nodeOrientation="LEFT_TO_RIGHT" prefWidth="250.0" promptText="Quick Filter" />
-                        <ToggleButton fx:id="filterExpressionToggleButton" mnemonicParsing="false" onAction="#filterExpressionToggleButtonClicked" text="e^x" />
                     </items>
                 </ToolBar>
-                <TableView fx:id="contentTableView" editable="true" VBox.vgrow="ALWAYS" />
+                <TableView fx:id="contentTableView" editable="true" prefWidth="403.0" VBox.vgrow="ALWAYS" />
          </children>
       </VBox>
       </items>

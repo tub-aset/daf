@@ -57,7 +57,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.CheckBox;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Menu;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
@@ -65,7 +65,6 @@ import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.TextFieldTableCell;
@@ -97,16 +96,16 @@ public class FilePaneController implements FileStateController {
     private TableView<DoorsObject> contentTableView;
 
     @FXML
-    private ToggleButton filterExpressionToggleButton;
-
-    @FXML
     private TextField filterTextField;
 
     @FXML
-    private CheckBox includeChildrenCheckbox;
+    private CheckMenuItem filterExpressionCheckBox;
 
     @FXML
-    private CheckBox includeParentsCheckbox;
+    private CheckMenuItem includeChildrenCheckbox;
+
+    @FXML
+    private CheckMenuItem includeParentsCheckbox;
 
     @FXML
     public void initialize() {
@@ -116,13 +115,16 @@ public class FilePaneController implements FileStateController {
         });
 
         filterTextField.textProperty().addListener((ChangeListener<String>) (observable, oldValue, newValue) -> {
-            this.updateFilter(newValue, includeParentsCheckbox.isSelected(), includeChildrenCheckbox.isSelected(), filterExpressionToggleButton.isSelected());
+            this.updateFilter(newValue, includeParentsCheckbox.isSelected(), includeChildrenCheckbox.isSelected(), filterExpressionCheckBox.isSelected());
+        });
+        filterExpressionCheckBox.selectedProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
+            this.updateFilter(filterTextField.getText(), includeParentsCheckbox.isSelected(), includeChildrenCheckbox.isSelected(), newValue);
         });
         includeChildrenCheckbox.selectedProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
-            this.updateFilter(filterTextField.getText(), includeParentsCheckbox.isSelected(), newValue, filterExpressionToggleButton.isSelected());
+            this.updateFilter(filterTextField.getText(), includeParentsCheckbox.isSelected(), newValue, filterExpressionCheckBox.isSelected());
         });
         includeParentsCheckbox.selectedProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
-            this.updateFilter(filterTextField.getText(), newValue, includeChildrenCheckbox.isSelected(), filterExpressionToggleButton.isSelected());
+            this.updateFilter(filterTextField.getText(), newValue, includeChildrenCheckbox.isSelected(), filterExpressionCheckBox.isSelected());
         });
 
     }
@@ -170,8 +172,7 @@ public class FilePaneController implements FileStateController {
 
         populateContentTableView();
         populateOutlineTreeView(module);
-        
-        
+
         traverseTreeItem(outlineTreeView.getRoot(), ti -> ti.setExpanded(true));
 
         try {
@@ -581,10 +582,5 @@ public class FilePaneController implements FileStateController {
                 outlineTreeView.getSelectionModel().select(item);
             }
         });
-    }
-
-    @FXML
-    public void filterExpressionToggleButtonClicked() {
-        this.updateFilter(filterTextField.getText(), includeParentsCheckbox.isSelected(), includeChildrenCheckbox.isSelected(), filterExpressionToggleButton.isSelected());
     }
 }
