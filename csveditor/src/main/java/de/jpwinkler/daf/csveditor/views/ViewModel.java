@@ -42,4 +42,9 @@ public class ViewModel {
         this.displayRemainingColumns = displayRemainingColumns;
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
 }

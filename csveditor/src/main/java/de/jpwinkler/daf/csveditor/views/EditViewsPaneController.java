@@ -22,6 +22,7 @@ public class EditViewsPaneController {
             var dialog = new Dialog();
             dialog.initModality(Modality.APPLICATION_MODAL);
             dialog.initOwner(owner);
+            dialog.setResizable(true);
 
             final FXMLLoader loader = new FXMLLoader(MainFX.class.getResource("EditViewsPane.fxml"));
             dialog.getDialogPane().setContent(loader.load());
@@ -30,7 +31,7 @@ public class EditViewsPaneController {
 
             final EditViewsPaneController editViewsController = loader.getController();
             editViewsController.initialize(initialValue);
-            dialog.setResultConverter(bt -> bt == ButtonType.OK ? editViewsController.listView.getItems() : null);
+            dialog.setResultConverter(bt -> bt == ButtonType.OK ? editViewsController.viewModelsListView.getItems() : null);
             return dialog;
         } catch (final IOException ex) {
             throw new RuntimeException(ex);
@@ -38,58 +39,71 @@ public class EditViewsPaneController {
     }
 
     @FXML
-    private ListView<ColumnDefinition> listView;
-    private final Map<ColumnDefinition, Boolean> newVisibilities = new HashMap<>();
+    private ListView<ViewModel> viewModelsListView;
+
+    @FXML
+    private ListView<ColumnDefinition> viewColumnsListView;
 
     @FXML
     public void initialize() {
-        listView.setCellFactory(CheckBoxListCell.forListView(param -> {
-            final SimpleBooleanProperty p = new SimpleBooleanProperty(newVisibilities.containsKey(param) ? newVisibilities.get(param) : param.isVisible());
-            p.addListener((observable, oldValue, newValue) -> newVisibilities.put(param, newValue));
-            return p;
-        }));
     }
 
     public void initialize(List<ViewModel> initialValue) {
+        initialValue.forEach(c -> viewModelsListView.getItems().add(c));
     }
 
     @FXML
     public void topClicked() {
-        final int selectedIndex = listView.getSelectionModel().getSelectedIndex();
+        final int selectedIndex = viewColumnsListView.getSelectionModel().getSelectedIndex();
         if (selectedIndex > 0) {
-            final ColumnDefinition cd = listView.getItems().remove(selectedIndex);
-            listView.getItems().add(0, cd);
-            listView.getSelectionModel().select(cd);
+            final ColumnDefinition cd = viewColumnsListView.getItems().remove(selectedIndex);
+            viewColumnsListView.getItems().add(0, cd);
+            viewColumnsListView.getSelectionModel().select(cd);
         }
     }
 
     @FXML
     public void upClicked() {
-        final int selectedIndex = listView.getSelectionModel().getSelectedIndex();
+        final int selectedIndex = viewColumnsListView.getSelectionModel().getSelectedIndex();
         if (selectedIndex > 0) {
-            final ColumnDefinition cd = listView.getItems().remove(selectedIndex);
-            listView.getItems().add(selectedIndex - 1, cd);
-            listView.getSelectionModel().select(cd);
+            final ColumnDefinition cd = viewColumnsListView.getItems().remove(selectedIndex);
+            viewColumnsListView.getItems().add(selectedIndex - 1, cd);
+            viewColumnsListView.getSelectionModel().select(cd);
         }
     }
 
     @FXML
     public void downClicked() {
-        final int selectedIndex = listView.getSelectionModel().getSelectedIndex();
-        if (selectedIndex < listView.getItems().size() - 1) {
-            final ColumnDefinition cd = listView.getItems().remove(selectedIndex);
-            listView.getItems().add(selectedIndex + 1, cd);
-            listView.getSelectionModel().select(cd);
+        final int selectedIndex = viewColumnsListView.getSelectionModel().getSelectedIndex();
+        if (selectedIndex < viewColumnsListView.getItems().size() - 1) {
+            final ColumnDefinition cd = viewColumnsListView.getItems().remove(selectedIndex);
+            viewColumnsListView.getItems().add(selectedIndex + 1, cd);
+            viewColumnsListView.getSelectionModel().select(cd);
         }
     }
 
     @FXML
     public void botClicked() {
-        final int selectedIndex = listView.getSelectionModel().getSelectedIndex();
-        if (selectedIndex < listView.getItems().size() - 1) {
-            final ColumnDefinition cd = listView.getItems().remove(selectedIndex);
-            listView.getItems().add(cd);
-            listView.getSelectionModel().select(cd);
+        final int selectedIndex = viewColumnsListView.getSelectionModel().getSelectedIndex();
+        if (selectedIndex < viewColumnsListView.getItems().size() - 1) {
+            final ColumnDefinition cd = viewColumnsListView.getItems().remove(selectedIndex);
+            viewColumnsListView.getItems().add(cd);
+            viewColumnsListView.getSelectionModel().select(cd);
+        }
+    }
+
+    @FXML
+    public void addViewModelClicked() {
+        ViewModel vm = new ViewModel("New view model");
+        this.viewModelsListView.getItems().add(vm);
+        this.viewModelsListView.getSelectionModel().select(vm);
+    }
+
+    @FXML
+    public void deleteViewModelClicked() {
+        ViewModel vm = this.viewModelsListView.getSelectionModel().getSelectedItem();
+        if(vm != null) {
+            this.viewModelsListView.getItems().remove(vm);
         }
     }
 }
