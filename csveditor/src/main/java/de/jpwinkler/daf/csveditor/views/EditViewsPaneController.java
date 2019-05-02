@@ -1,25 +1,44 @@
 package de.jpwinkler.daf.csveditor.views;
 
-import de.jpwinkler.daf.csveditor.FilePaneController;
+import de.jpwinkler.daf.csveditor.MainFX;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
-
-import de.jpwinkler.daf.csveditor.commands.module.UpdateAction;
+import java.util.List;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.ListView;
 import javafx.scene.control.cell.CheckBoxListCell;
-import javafx.stage.Stage;
+import javafx.stage.Modality;
+import javafx.stage.Window;
 
 public class EditViewsPaneController {
 
+    public static Dialog<List<ViewModel>> asDialog(Window owner, List<ViewModel> initialValue) {
+        try {
+            var dialog = new Dialog();
+            dialog.initModality(Modality.APPLICATION_MODAL);
+            dialog.initOwner(owner);
+
+            final FXMLLoader loader = new FXMLLoader(MainFX.class.getResource("EditViewsPane.fxml"));
+            dialog.getDialogPane().setContent(loader.load());
+            dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+            dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
+
+            final EditViewsPaneController editViewsController = loader.getController();
+            editViewsController.initialize(initialValue);
+            dialog.setResultConverter(bt -> bt == ButtonType.OK ? editViewsController.listView.getItems() : null);
+            return dialog;
+        } catch (final IOException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
     @FXML
     private ListView<ColumnDefinition> listView;
-
-    private FilePaneController tabController;
-    private Stage dialogStage;
-
     private final Map<ColumnDefinition, Boolean> newVisibilities = new HashMap<>();
 
     @FXML
@@ -31,25 +50,7 @@ public class EditViewsPaneController {
         }));
     }
 
-    public void setTabController(final FilePaneController tabController) {
-        this.tabController = tabController;
-        listView.getItems().addAll(tabController.getViewModel().getDisplayedColumns());
-    }
-
-    @FXML
-    public void okClicked() {
-        tabController.getViewModel().getDisplayedColumns().clear();
-        tabController.getViewModel().getDisplayedColumns().addAll(listView.getItems());
-        for (final Entry<ColumnDefinition, Boolean> e : newVisibilities.entrySet()) {
-            e.getKey().setVisible(e.getValue());
-        }
-        tabController.updateGui(UpdateAction.UPDATE_COLUMNS);
-        dialogStage.close();
-    }
-
-    @FXML
-    public void cancelClicked() {
-        dialogStage.close();
+    public void initialize(List<ViewModel> initialValue) {
     }
 
     @FXML
@@ -90,9 +91,5 @@ public class EditViewsPaneController {
             listView.getItems().add(cd);
             listView.getSelectionModel().select(cd);
         }
-    }
-
-    public void setDialogStage(final Stage dialogStage) {
-        this.dialogStage = dialogStage;
     }
 }

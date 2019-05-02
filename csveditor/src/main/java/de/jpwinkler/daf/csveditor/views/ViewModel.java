@@ -9,16 +9,37 @@ import de.jpwinkler.daf.doorscsv.model.DoorsObject;
 
 public class ViewModel {
 
-    private final List<ColumnDefinition> displayedColumns = new ArrayList<>();
+    public ViewModel(String name) {
+        this.name = name;
+    }
 
+    private String name;
+    private final List<ColumnDefinition> displayedColumns = new ArrayList<>();
     private final Set<DoorsObject> visibleObjects = new HashSet<>();
+    private boolean displayRemainingColumns;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<ColumnDefinition> getDisplayedColumns() {
+        return displayedColumns;
+    }
 
     public Set<DoorsObject> getFilteredObjects() {
         return visibleObjects;
     }
 
-    public List<ColumnDefinition> getDisplayedColumns() {
-        return displayedColumns;
+    public boolean isDisplayRemainingColumns() {
+        return displayRemainingColumns;
+    }
+
+    public void setDisplayRemainingColumns(boolean displayRemainingColumns) {
+        this.displayRemainingColumns = displayRemainingColumns;
     }
 
 }

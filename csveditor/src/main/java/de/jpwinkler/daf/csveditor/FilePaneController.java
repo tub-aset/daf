@@ -1,13 +1,11 @@
 package de.jpwinkler.daf.csveditor;
 
 import de.jpwinkler.daf.csveditor.views.EditViewsPaneController;
-import de.jpwinkler.daf.csveditor.views.ViewConfiguration;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,8 +51,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
@@ -70,8 +66,6 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.FileChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import javafx.util.converter.DefaultStringConverter;
 
 public class FilePaneController implements FileStateController {
@@ -80,17 +74,37 @@ public class FilePaneController implements FileStateController {
     private static final String WARNING_COLUMN = "Warnings";
 
     private static final List<String> WANTED_ATTRIBUTES = Arrays.asList("SourceID", MAIN_COLUMN, "Object Type", WARNING_COLUMN);
+    private static final ViewModel STANDARD_VIEW = new ViewModel("Standard");
+
+    static {
+        ColumnDefinition columnDefinition = new ColumnDefinition();
+        columnDefinition.setColumnType(ColumnType.OBJECT_TEXT_HEADING_COLUMN);
+        columnDefinition.setColumnTitle(MAIN_COLUMN);
+        columnDefinition.setWidth(700);
+        columnDefinition.setVisible(true);
+        STANDARD_VIEW.getDisplayedColumns().add(columnDefinition);
+
+        columnDefinition = new ColumnDefinition();
+        columnDefinition.setColumnType(ColumnType.WARNING_COLUMN);
+        columnDefinition.setColumnTitle(WARNING_COLUMN);
+        columnDefinition.setWidth(100);
+        columnDefinition.setVisible(true);
+        STANDARD_VIEW.getDisplayedColumns().add(columnDefinition);
+
+        STANDARD_VIEW.setDisplayRemainingColumns(true);
+    }
 
     private final CommandStack<AbstractCommand> commandStack = new CommandStack<>();
     private final List<DoorsObject> clipboard = new ArrayList<>();
-    private final ViewModel viewModel = new ViewModel();
-    private final List<ViewConfiguration> viewConfigurations = new ArrayList<>();
+    private final List<ViewModel> viewModels = new ArrayList<>();
+    private final Map<DoorsTreeNode, Boolean> expanded = new WeakHashMap<>();
 
     private ApplicationStateController applicationStateController;
 
     private File file;
     private DoorsModule module;
     private List<Menu> menus;
+    private ViewModel currentViewModel;
 
     @FXML
     private TreeView<OutlineTreeItem> outlineTreeView;
@@ -114,7 +128,20 @@ public class FilePaneController implements FileStateController {
     public void initialize() {
         contentTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         contentTableView.getSelectionModel().selectedItemProperty().addListener((ChangeListener<DoorsObject>) (observable, oldValue, newValue) -> {
-            this.objectSelected(newValue);
+            traverseTreeItem(outlineTreeView.getRoot(), item -> {
+                if (item.getValue().treeNode.equals(newValue)) {
+                    outlineTreeView.getSelectionModel().select(item);
+                }
+            });
+        });
+
+        outlineTreeView.getSelectionModel().selectedItemProperty().addListener((ChangeListener<TreeItem<OutlineTreeItem>>) (observable, oldValue, newValue) -> {
+            contentTableView.getItems().forEach(c -> {
+                if (newValue.getValue().treeNode == c) {
+                    contentTableView.scrollTo(c);
+                }
+            });
+
         });
 
         filterTextField.textProperty().addListener((ChangeListener<String>) (observable, oldValue, newValue) -> {
@@ -135,47 +162,12 @@ public class FilePaneController implements FileStateController {
     @Override
     public void initialize(ApplicationStateController applicationStateController, File file) throws IOException {
         this.applicationStateController = applicationStateController;
-        if (file != null) {
-            module = new ModuleCSVParser().parseCSV(file);
-            this.file = file;
-        } else {
-            module = DoorsCSVFactory.eINSTANCE.createDoorsModule();
-            this.file = null;
-        }
 
-        contentTableView.getColumns().clear();
+        this.file = file;
+        this.module = file == null ? DoorsCSVFactory.eINSTANCE.createDoorsModule() : new ModuleCSVParser().parseCSV(file);
 
-        ColumnDefinition columnDefinition = new ColumnDefinition();
-        columnDefinition.setColumnType(ColumnType.OBJECT_TEXT_HEADING_COLUMN);
-        columnDefinition.setColumnTitle(MAIN_COLUMN);
-        columnDefinition.setWidth(700);
-        columnDefinition.setVisible(true);
-        viewModel.getDisplayedColumns().add(columnDefinition);
-
-        columnDefinition = new ColumnDefinition();
-        columnDefinition.setColumnType(ColumnType.WARNING_COLUMN);
-        columnDefinition.setColumnTitle(WARNING_COLUMN);
-        columnDefinition.setWidth(100);
-        columnDefinition.setVisible(true);
-        viewModel.getDisplayedColumns().add(columnDefinition);
-
-        for (final AttributeDefinition attributeDefinition : module.getAttributeDefinitions()) {
-            columnDefinition = new ColumnDefinition();
-            columnDefinition.setColumnType(ColumnType.ATTRIBUTE_COLUMN);
-            columnDefinition.setAttributeName(attributeDefinition.getName());
-            columnDefinition.setColumnTitle(attributeDefinition.getName());
-            columnDefinition.setWidth(100);
-            columnDefinition.setVisible(WANTED_ATTRIBUTES.contains(attributeDefinition.getName()));
-            viewModel.getDisplayedColumns().add(columnDefinition);
-        }
-
-        Collections.sort(viewModel.getDisplayedColumns(), new PredefinedOrderComparator(WANTED_ATTRIBUTES));
-
-        updateView();
-
-        populateContentTableView();
-        populateOutlineTreeView(module);
-
+        this.currentViewModel = STANDARD_VIEW;
+        updateGui(UpdateAction.UPDATE_COLUMNS, UpdateAction.UPDATE_CONTENT_VIEW, UpdateAction.UPDATE_OUTLINE_VIEW);
         traverseTreeItem(outlineTreeView.getRoot(), ti -> ti.setExpanded(true));
 
         try {
@@ -191,54 +183,10 @@ public class FilePaneController implements FileStateController {
         }
     }
 
-    private final Map<DoorsTreeNode, Boolean> expanded = new WeakHashMap<>();
-
-    private void populateOutlineTreeView(final DoorsModule module) {
-        if (outlineTreeView.getRoot() != null) {
-            traverseTreeItem(outlineTreeView.getRoot(), ti -> expanded.put(ti.getValue().treeNode, ti.isExpanded()));
-        }
-
-        if (module != null) {
-
-            final TreeItem<OutlineTreeItem> wrappedModule = wrapModule(module);
-            traverseTreeItem(wrappedModule, ti -> ti.setExpanded(expanded.containsKey(ti.getValue().treeNode) && expanded.get(ti.getValue().treeNode)));
-            outlineTreeView.setRoot(wrappedModule);
-        } else {
-            outlineTreeView.setRoot(null);
-        }
-    }
-
-    private TreeItem<OutlineTreeItem> wrapModule(final DoorsTreeNode doorsTreeNode) {
-        final TreeItem<OutlineTreeItem> treeItem = new TreeItem<>(new OutlineTreeItem(doorsTreeNode));
-
-        for (final DoorsTreeNode childNode : doorsTreeNode.getChildren()) {
-            treeItem.getChildren().add(wrapModule(childNode));
-        }
-        return treeItem;
-    }
-
     private <T> void traverseTreeItem(final TreeItem<T> root, final Consumer<TreeItem<T>> f) {
         f.accept(root);
         for (final TreeItem<T> child : root.getChildren()) {
             traverseTreeItem(child, f);
-        }
-    }
-
-    private void populateContentTableView() {
-        final TablePosition<?, ?> focusedCell = contentTableView.getFocusModel().getFocusedCell();
-        contentTableView.getItems().clear();
-        module.accept(new DoorsTreeNodeVisitor() {
-            @Override
-            public boolean visitPreTraverse(final DoorsObject object) {
-                if (!viewModel.getFilteredObjects().contains(object)) {
-                    contentTableView.getItems().add(object);
-                }
-                return true;
-            }
-
-        });
-        if (focusedCell != null) {
-            contentTableView.getFocusModel().focus(focusedCell);
         }
     }
 
@@ -289,9 +237,108 @@ public class FilePaneController implements FileStateController {
         return commandStack.isDirty();
     }
 
-    private void updateView() {
+    @FXML
+    public void reduceToSelectionClicked() {
+        executeCommand(new ReduceToSelectionCommand(module, getCurrentObject()));
+    }
+
+    @FXML
+    public void addColumnClicked() {
+        final TextInputDialog textInputDialog = new TextInputDialog();
+        final Optional<String> result = textInputDialog.showAndWait();
+        if (result.isPresent()) {
+            if (module.findAttributeDefinition(result.get()) != null) {
+                new Alert(AlertType.ERROR, "Attribute does already exist.", ButtonType.OK).show();
+            } else {
+                executeCommand(new AddColumnCommand(module, currentViewModel, result.get()));
+            }
+        }
+    }
+
+    @FXML
+    public void swapObjectHeadingAndTextClicked() {
+        executeCommand(new SwapObjectHeadingAndTextCommand(module, getCurrentObject()));
+    }
+
+    private void executeCommand(final AbstractCommand command) {
+        if (!command.isApplicable()) {
+            applicationStateController.setStatus(command.getName() + ": Command is not appicable for this selection.");
+        }
+
+        command.apply();
+        commandStack.addCommand(command);
+        updateGui(command.getUpdateActions());
+    }
+
+    private void updateGui(final UpdateAction... updateActions) {
+        for (final UpdateAction action : updateActions) {
+            switch (action) {
+                case FIX_OBJECT_LEVELS:
+                    fixObjectLevel(module, 0);
+                    break;
+                case FIX_OBJECT_NUMBERS:
+                    fixObjectNumbers(module, "");
+                    break;
+                case UPDATE_CONTENT_VIEW:
+                    updateContentView();
+                    break;
+                case UPDATE_OUTLINE_VIEW:
+                    updateOutlineView(module);
+                    break;
+                case UPDATE_COLUMNS:
+                    updateColumns();
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    private void updateOutlineView(final DoorsModule module) {
+        if (outlineTreeView.getRoot() != null) {
+            traverseTreeItem(outlineTreeView.getRoot(), ti -> expanded.put(ti.getValue().treeNode, ti.isExpanded()));
+        }
+
+        if (module != null) {
+
+            final TreeItem<OutlineTreeItem> wrappedModule = wrapModule(module);
+            traverseTreeItem(wrappedModule, ti -> ti.setExpanded(expanded.containsKey(ti.getValue().treeNode) && expanded.get(ti.getValue().treeNode)));
+            outlineTreeView.setRoot(wrappedModule);
+        } else {
+            outlineTreeView.setRoot(null);
+        }
+    }
+
+    private TreeItem<OutlineTreeItem> wrapModule(final DoorsTreeNode doorsTreeNode) {
+        final TreeItem<OutlineTreeItem> treeItem = new TreeItem<>(new OutlineTreeItem(doorsTreeNode));
+
+        for (final DoorsTreeNode childNode : doorsTreeNode.getChildren()) {
+            treeItem.getChildren().add(wrapModule(childNode));
+        }
+        return treeItem;
+    }
+
+    private void updateContentView() {
+        final TablePosition<?, ?> focusedCell = contentTableView.getFocusModel().getFocusedCell();
+        contentTableView.getItems().clear();
+        module.accept(new DoorsTreeNodeVisitor() {
+            @Override
+            public boolean visitPreTraverse(final DoorsObject object) {
+                if (!currentViewModel.getFilteredObjects().contains(object)) {
+                    contentTableView.getItems().add(object);
+                }
+                return true;
+            }
+
+        });
+        if (focusedCell != null) {
+            contentTableView.getFocusModel().focus(focusedCell);
+        }
+    }
+
+    private void updateColumns() {
         contentTableView.getColumns().clear();
-        for (final ColumnDefinition columnDefinition : viewModel.getDisplayedColumns()) {
+        for (final ColumnDefinition columnDefinition : currentViewModel.getDisplayedColumns()) {
             if (!columnDefinition.isVisible()) {
                 continue;
             }
@@ -328,46 +375,16 @@ public class FilePaneController implements FileStateController {
         }
     }
 
-    @FXML
-    public void reduceToSelectionClicked() {
-        executeCommand(new ReduceToSelectionCommand(module, getCurrentObject()));
-    }
+    private void fixObjectLevel(final DoorsTreeNode object, final int level) {
+        if (object instanceof DoorsObject) {
+            ((DoorsObject) object).setObjectLevel(level);
+        }
 
-    private void fixObjectLevel(final DoorsObject object, final int level) {
-        object.setObjectLevel(level);
         for (final DoorsTreeNode child : object.getChildren()) {
             if (child instanceof DoorsObject) {
                 fixObjectLevel((DoorsObject) child, level + 1);
             }
         }
-    }
-
-    @FXML
-    public void addColumnClicked() {
-        final TextInputDialog textInputDialog = new TextInputDialog();
-        final Optional<String> result = textInputDialog.showAndWait();
-        if (result.isPresent()) {
-            if (module.findAttributeDefinition(result.get()) != null) {
-                new Alert(AlertType.ERROR, "Attribute does already exist.", ButtonType.OK).show();
-            } else {
-                executeCommand(new AddColumnCommand(module, viewModel, result.get()));
-            }
-        }
-    }
-
-    @FXML
-    public void swapObjectHeadingAndTextClicked() {
-        executeCommand(new SwapObjectHeadingAndTextCommand(module, getCurrentObject()));
-    }
-
-    private void executeCommand(final AbstractCommand command) {
-        if (!command.isApplicable()) {
-            applicationStateController.setStatus(command.getName() + ": Command is not appicable for this selection.");
-        }
-
-        command.apply();
-        commandStack.addCommand(command);
-        updateGui(command.getUpdateActions());
     }
 
     private void fixObjectNumbers(final DoorsTreeNode object, final String parentObjectNumber) {
@@ -411,14 +428,6 @@ public class FilePaneController implements FileStateController {
         executeCommand(new UnwrapChildrenCommand(module, getCurrentObject()));
     }
 
-    private void fixObjectLevels() {
-        for (final DoorsTreeNode tn : module.getChildren()) {
-            if (tn instanceof DoorsObject) {
-                fixObjectLevel((DoorsObject) tn, 1);
-            }
-        }
-    }
-
     @FXML
     public void demoteObjectClicked() {
         executeCommand(new DemoteObjectCommand(module, getCurrentObject()));
@@ -448,30 +457,6 @@ public class FilePaneController implements FileStateController {
         }
     }
 
-    public void updateGui(final UpdateAction... updateActions) {
-        for (final UpdateAction action : updateActions) {
-            switch (action) {
-                case FIX_OBJECT_LEVELS:
-                    fixObjectLevels();
-                    break;
-                case FIX_OBJECT_NUMBERS:
-                    fixObjectNumbers(module, "");
-                    break;
-                case UPDATE_CONTENT_VIEW:
-                    populateContentTableView();
-                    break;
-                case UPDATE_OUTLINE_VIEW:
-                    populateOutlineTreeView(module);
-                    break;
-                case UPDATE_COLUMNS:
-                    updateView();
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
     @FXML
     public void undoClicked() {
         if (commandStack.getUndoCommand() != null) {
@@ -498,44 +483,34 @@ public class FilePaneController implements FileStateController {
 
         final DoorsObjectFilter filterFinal = filter;
 
-        viewModel.getFilteredObjects().clear();
+        currentViewModel.getFilteredObjects().clear();
         module.accept(new DoorsTreeNodeVisitor() {
             @Override
             public boolean visitPreTraverse(final DoorsObject object) {
                 if (!filterFinal.checkObject(object)) {
-                    viewModel.getFilteredObjects().add(object);
+                    currentViewModel.getFilteredObjects().add(object);
                 }
                 return true;
             }
         });
 
-        populateContentTableView();
+        updateGui(UpdateAction.UPDATE_CONTENT_VIEW);
 
         final int totalObjects = DoorsModuleUtil.countObjects(module);
-        final int visibleObjects = totalObjects - viewModel.getFilteredObjects().size();
+        final int visibleObjects = totalObjects - currentViewModel.getFilteredObjects().size();
 
         applicationStateController.setStatus(visibleObjects < totalObjects ? String.format("Showing %d out of %d objects.", visibleObjects, totalObjects) : "");
     }
 
     @FXML
     public void editViewsClicked() {
-        try {
-            final Stage dialogStage = new Stage();
-            final FXMLLoader loader = new FXMLLoader(MainFX.class.getResource("EditViewsPane.fxml"));
-            final Parent root = loader.load();
-            dialogStage.initModality(Modality.APPLICATION_MODAL);
-            dialogStage.initOwner(outlineTreeView.getScene().getWindow());
-
-            dialogStage.setScene(new Scene(root));
-
-            final EditViewsPaneController editViewsController = loader.getController();
-            editViewsController.setTabController(this);
-            editViewsController.setDialogStage(dialogStage);
-
-            dialogStage.showAndWait();
-        } catch (final IOException ex) {
-            throw new RuntimeException(ex);
-        }
+        EditViewsPaneController.asDialog(outlineTreeView.getScene().getWindow(), this.viewModels)
+                .showAndWait().ifPresent(r -> {
+                    this.viewModels.clear();
+                    this.viewModels.add(STANDARD_VIEW);
+                    this.viewModels.addAll(r);
+                    this.updateGui(UpdateAction.UPDATE_COLUMNS);
+                });
     }
 
     @FXML
@@ -565,10 +540,6 @@ public class FilePaneController implements FileStateController {
         executeCommand(new FlattenCommand(module));
     }
 
-    public ViewModel getViewModel() {
-        return viewModel;
-    }
-
     @FXML
     public void splitLinesClicked() {
         executeCommand(new SplitLinesCommand(module));
@@ -577,14 +548,6 @@ public class FilePaneController implements FileStateController {
     @FXML
     public void analyzeObjectTypeClicked() {
         contentTableView.refresh();
-    }
-
-    private void objectSelected(final DoorsObject newValue) {
-        traverseTreeItem(outlineTreeView.getRoot(), item -> {
-            if (item.getValue().treeNode.equals(newValue)) {
-                outlineTreeView.getSelectionModel().select(item);
-            }
-        });
     }
 
     private class ObjectHeadingAndObjectTextTableCell extends TextFieldTableCell<DoorsObject, String> {
