@@ -1,5 +1,6 @@
-package de.jpwinkler.daf.csveditor.commands;
+package de.jpwinkler.daf.csveditor.commands.module;
 
+import de.jpwinkler.daf.csveditor.AbstractCommand;
 import de.jpwinkler.daf.csveditor.util.ColumnDefinition;
 import de.jpwinkler.daf.csveditor.util.ColumnType;
 import de.jpwinkler.daf.csveditor.util.ViewModel;

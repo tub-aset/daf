@@ -1,5 +1,7 @@
-package de.jpwinkler.daf.csveditor.commands;
+package de.jpwinkler.daf.csveditor.commands.object;
 
+import de.jpwinkler.daf.csveditor.AbstractCommand;
+import de.jpwinkler.daf.csveditor.commands.module.UpdateAction;
 import de.jpwinkler.daf.doorscsv.model.DoorsModule;
 import de.jpwinkler.daf.doorscsv.model.DoorsObject;
 import de.jpwinkler.daf.doorscsv.util.DoorsModuleUtil;

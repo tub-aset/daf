@@ -1,5 +1,7 @@
-package de.jpwinkler.daf.csveditor.commands;
+package de.jpwinkler.daf.csveditor.commands.object;
 
+import de.jpwinkler.daf.csveditor.AbstractCommand;
+import de.jpwinkler.daf.csveditor.commands.module.UpdateAction;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,13 +11,13 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import de.jpwinkler.daf.doorscsv.model.DoorsModule;
 import de.jpwinkler.daf.doorscsv.model.DoorsObject;
 
-public class CopyObjectsBelowCommand extends AbstractCommand {
+public class PasteObjectsAfterCommand extends AbstractCommand {
 
     private final DoorsObject reference;
     private List<DoorsObject> copiedObjects;
     private final List<DoorsObject> objectsToCopy;
 
-    public CopyObjectsBelowCommand(final DoorsModule module, final DoorsObject reference, final List<DoorsObject> objectsToCopy) {
+    public PasteObjectsAfterCommand(final DoorsModule module, final DoorsObject reference, final List<DoorsObject> objectsToCopy) {
         super(module);
         this.reference = reference;
         this.objectsToCopy = new ArrayList<>(objectsToCopy);
@@ -39,12 +41,12 @@ public class CopyObjectsBelowCommand extends AbstractCommand {
 
     @Override
     public void redo() {
-        reference.getChildren().addAll(copiedObjects);
+        reference.getParent().getChildren().addAll(reference.getParent().getChildren().indexOf(reference) + 1, copiedObjects);
     }
 
     @Override
     public void undo() {
-        reference.getChildren().removeAll(copiedObjects);
+        reference.getParent().getChildren().removeAll(copiedObjects);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package de.jpwinkler.daf.csveditor.commands;
+package de.jpwinkler.daf.csveditor.commands.module;
 
 public enum UpdateAction {
 

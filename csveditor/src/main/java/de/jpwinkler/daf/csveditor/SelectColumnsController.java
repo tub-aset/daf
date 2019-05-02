@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import de.jpwinkler.daf.csveditor.commands.UpdateAction;
+import de.jpwinkler.daf.csveditor.commands.module.UpdateAction;
 import de.jpwinkler.daf.csveditor.util.ColumnDefinition;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;

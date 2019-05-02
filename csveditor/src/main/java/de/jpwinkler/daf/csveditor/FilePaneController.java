@@ -9,23 +9,22 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import de.jpwinkler.daf.csveditor.commands.AbstractCommand;
-import de.jpwinkler.daf.csveditor.commands.AddColumnCommand;
-import de.jpwinkler.daf.csveditor.commands.CopyObjectsAfterCommand;
-import de.jpwinkler.daf.csveditor.commands.CopyObjectsBelowCommand;
-import de.jpwinkler.daf.csveditor.commands.DeleteObjectCommand;
-import de.jpwinkler.daf.csveditor.commands.DemoteObjectCommand;
-import de.jpwinkler.daf.csveditor.commands.EditObjectAttributeCommand;
-import de.jpwinkler.daf.csveditor.commands.EditObjectHeadingTextCommand;
-import de.jpwinkler.daf.csveditor.commands.FlattenCommand;
-import de.jpwinkler.daf.csveditor.commands.NewObjectAfterCommand;
-import de.jpwinkler.daf.csveditor.commands.NewObjectBelowCommand;
-import de.jpwinkler.daf.csveditor.commands.PromoteObjectCommand;
-import de.jpwinkler.daf.csveditor.commands.ReduceToSelectionCommand;
-import de.jpwinkler.daf.csveditor.commands.SplitLinesCommand;
-import de.jpwinkler.daf.csveditor.commands.SwapObjectHeadingAndTextCommand;
-import de.jpwinkler.daf.csveditor.commands.UnwrapChildrenCommand;
-import de.jpwinkler.daf.csveditor.commands.UpdateAction;
+import de.jpwinkler.daf.csveditor.commands.module.AddColumnCommand;
+import de.jpwinkler.daf.csveditor.commands.object.PasteObjectsAfterCommand;
+import de.jpwinkler.daf.csveditor.commands.object.PasteObjectsBelowCommand;
+import de.jpwinkler.daf.csveditor.commands.object.DeleteObjectCommand;
+import de.jpwinkler.daf.csveditor.commands.object.DemoteObjectCommand;
+import de.jpwinkler.daf.csveditor.commands.object.EditObjectAttributeCommand;
+import de.jpwinkler.daf.csveditor.commands.object.EditObjectHeadingTextCommand;
+import de.jpwinkler.daf.csveditor.commands.module.FlattenCommand;
+import de.jpwinkler.daf.csveditor.commands.object.NewObjectAfterCommand;
+import de.jpwinkler.daf.csveditor.commands.object.NewObjectBelowCommand;
+import de.jpwinkler.daf.csveditor.commands.object.PromoteObjectCommand;
+import de.jpwinkler.daf.csveditor.commands.module.ReduceToSelectionCommand;
+import de.jpwinkler.daf.csveditor.commands.module.SplitLinesCommand;
+import de.jpwinkler.daf.csveditor.commands.object.SwapObjectHeadingAndTextCommand;
+import de.jpwinkler.daf.csveditor.commands.object.UnwrapChildrenCommand;
+import de.jpwinkler.daf.csveditor.commands.module.UpdateAction;
 import de.jpwinkler.daf.csveditor.filter.CascadingFilter;
 import de.jpwinkler.daf.csveditor.filter.DoorsObjectFilter;
 import de.jpwinkler.daf.csveditor.filter.ObjectTextAndHeadingFilter;
@@ -538,12 +537,12 @@ public class FilePaneController implements FileStateController {
 
     @FXML
     public void pasteBelowClicked() {
-        executeCommand(new CopyObjectsBelowCommand(module, contentTableView.getSelectionModel().getSelectedItem(), clipboard));
+        executeCommand(new PasteObjectsBelowCommand(module, contentTableView.getSelectionModel().getSelectedItem(), clipboard));
     }
 
     @FXML
     public void pasteAfterClicked() {
-        executeCommand(new CopyObjectsAfterCommand(module, contentTableView.getSelectionModel().getSelectedItem(), clipboard));
+        executeCommand(new PasteObjectsAfterCommand(module, contentTableView.getSelectionModel().getSelectedItem(), clipboard));
     }
 
     @FXML

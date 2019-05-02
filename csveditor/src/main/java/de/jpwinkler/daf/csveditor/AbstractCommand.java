@@ -1,5 +1,6 @@
-package de.jpwinkler.daf.csveditor.commands;
+package de.jpwinkler.daf.csveditor;
 
+import de.jpwinkler.daf.csveditor.commands.module.UpdateAction;
 import de.jpwinkler.daf.doorscsv.model.DoorsModule;
 
 public abstract class AbstractCommand {

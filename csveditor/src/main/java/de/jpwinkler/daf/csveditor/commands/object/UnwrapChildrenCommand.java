@@ -1,5 +1,7 @@
-package de.jpwinkler.daf.csveditor.commands;
+package de.jpwinkler.daf.csveditor.commands.object;
 
+import de.jpwinkler.daf.csveditor.AbstractCommand;
+import de.jpwinkler.daf.csveditor.commands.module.UpdateAction;
 import java.util.ArrayList;
 import java.util.List;
 

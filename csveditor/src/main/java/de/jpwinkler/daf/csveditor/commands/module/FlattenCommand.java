@@ -1,5 +1,6 @@
-package de.jpwinkler.daf.csveditor.commands;
+package de.jpwinkler.daf.csveditor.commands.module;
 
+import de.jpwinkler.daf.csveditor.AbstractCommand;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
