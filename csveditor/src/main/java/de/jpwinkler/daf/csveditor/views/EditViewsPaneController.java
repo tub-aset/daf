@@ -2,16 +2,17 @@ package de.jpwinkler.daf.csveditor.views;
 
 import de.jpwinkler.daf.csveditor.MainFX;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.List;
-import javafx.beans.property.SimpleBooleanProperty;
+import java.util.stream.Collectors;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.ListView;
-import javafx.scene.control.cell.CheckBoxListCell;
+import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Window;
 
@@ -45,11 +46,33 @@ public class EditViewsPaneController {
     private ListView<ColumnDefinition> viewColumnsListView;
 
     @FXML
+    private TextField viewTitleTextField;
+
+    @FXML
     public void initialize() {
     }
 
     public void initialize(List<ViewModel> initialValue) {
         initialValue.forEach(c -> viewModelsListView.getItems().add(c));
+
+        viewTitleTextField.textProperty().addListener((ObservableValue<? extends String> obs, String oldValue, String newValue) -> {
+            if (viewModelsListView.getSelectionModel().getSelectedItem() != null) {
+                viewModelsListView.getSelectionModel().getSelectedItem().setName(newValue);
+            }
+        });
+
+        viewModelsListView.getSelectionModel().getSelectedItems().addListener((ListChangeListener.Change<? extends ViewModel> event) -> {
+            ViewModel vm = event.getList().stream().findAny().orElse(null);
+            viewColumnsListView.getItems().clear();
+            if (vm != null) {
+                viewColumnsListView.getItems().addAll(vm.getColumns());
+                viewTitleTextField.setText(vm.getName());
+                viewTitleTextField.setDisable(false);
+            } else {
+                viewTitleTextField.setText("");
+                viewTitleTextField.setDisable(true);
+            }
+        });
     }
 
     @FXML
@@ -102,7 +125,7 @@ public class EditViewsPaneController {
     @FXML
     public void deleteViewModelClicked() {
         ViewModel vm = this.viewModelsListView.getSelectionModel().getSelectedItem();
-        if(vm != null) {
+        if (vm != null) {
             this.viewModelsListView.getItems().remove(vm);
         }
     }
