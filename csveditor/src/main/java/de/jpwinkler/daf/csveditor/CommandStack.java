@@ -1,4 +1,4 @@
-package de.jpwinkler.daf.csveditor.util;
+package de.jpwinkler.daf.csveditor;
 
 public class CommandStack<T> {
 

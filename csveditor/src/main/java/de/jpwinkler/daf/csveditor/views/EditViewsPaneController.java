@@ -1,18 +1,18 @@
-package de.jpwinkler.daf.csveditor;
+package de.jpwinkler.daf.csveditor.views;
 
+import de.jpwinkler.daf.csveditor.FilePaneController;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import de.jpwinkler.daf.csveditor.commands.module.UpdateAction;
-import de.jpwinkler.daf.csveditor.util.ColumnDefinition;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.stage.Stage;
 
-public class SelectColumnsController {
+public class EditViewsPaneController {
 
     @FXML
     private ListView<ColumnDefinition> listView;

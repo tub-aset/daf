@@ -22,9 +22,7 @@
                   <MenuButton mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" text="View options">
                     <items>
                         <SeparatorMenuItem mnemonicParsing="false" />
-                      <MenuItem mnemonicParsing="false" text="Add view" />
-                        <MenuItem mnemonicParsing="false" text="Edit current view" />
-                        <MenuItem mnemonicParsing="false" text="Delete current view" />
+                        <MenuItem mnemonicParsing="false" onAction="#editViewsClicked" text="Edit views" />
                     </items>
                   </MenuButton>
                   <MenuButton mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" text="Filter options">

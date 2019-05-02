@@ -1,4 +1,4 @@
-package de.jpwinkler.daf.csveditor.util;
+package de.jpwinkler.daf.csveditor.views;
 
 import javafx.beans.property.DoubleProperty;
 
@@ -48,10 +48,6 @@ public class ColumnDefinition {
 
     public void setWidth(final double width) {
         this.width = width;
-    }
-
-    public DoubleProperty widthProperty() {
-        return widthProperty();
     }
 
     public ColumnType getColumnType() {

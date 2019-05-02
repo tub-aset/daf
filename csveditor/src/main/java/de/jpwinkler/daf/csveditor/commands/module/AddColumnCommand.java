@@ -1,9 +1,9 @@
 package de.jpwinkler.daf.csveditor.commands.module;
 
 import de.jpwinkler.daf.csveditor.AbstractCommand;
-import de.jpwinkler.daf.csveditor.util.ColumnDefinition;
-import de.jpwinkler.daf.csveditor.util.ColumnType;
-import de.jpwinkler.daf.csveditor.util.ViewModel;
+import de.jpwinkler.daf.csveditor.views.ColumnDefinition;
+import de.jpwinkler.daf.csveditor.views.ColumnType;
+import de.jpwinkler.daf.csveditor.views.ViewModel;
 import de.jpwinkler.daf.doorscsv.model.AttributeDefinition;
 import de.jpwinkler.daf.doorscsv.model.DoorsCSVFactory;
 import de.jpwinkler.daf.doorscsv.model.DoorsModule;

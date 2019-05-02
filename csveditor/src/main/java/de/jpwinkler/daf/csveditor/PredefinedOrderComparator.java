@@ -3,7 +3,7 @@ package de.jpwinkler.daf.csveditor;
 import java.util.Comparator;
 import java.util.List;
 
-import de.jpwinkler.daf.csveditor.util.ColumnDefinition;
+import de.jpwinkler.daf.csveditor.views.ColumnDefinition;
 
 public class PredefinedOrderComparator implements Comparator<ColumnDefinition> {
 

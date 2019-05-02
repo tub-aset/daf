@@ -1,5 +1,7 @@
 package de.jpwinkler.daf.csveditor;
 
+import de.jpwinkler.daf.csveditor.views.EditViewsPaneController;
+import de.jpwinkler.daf.csveditor.views.ViewConfiguration;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -29,10 +31,9 @@ import de.jpwinkler.daf.csveditor.filter.CascadingFilter;
 import de.jpwinkler.daf.csveditor.filter.DoorsObjectFilter;
 import de.jpwinkler.daf.csveditor.filter.ObjectTextAndHeadingFilter;
 import de.jpwinkler.daf.csveditor.filter.ReverseCascadingFilter;
-import de.jpwinkler.daf.csveditor.util.ColumnDefinition;
-import de.jpwinkler.daf.csveditor.util.ColumnType;
-import de.jpwinkler.daf.csveditor.util.CommandStack;
-import de.jpwinkler.daf.csveditor.util.ViewModel;
+import de.jpwinkler.daf.csveditor.views.ColumnDefinition;
+import de.jpwinkler.daf.csveditor.views.ColumnType;
+import de.jpwinkler.daf.csveditor.views.ViewModel;
 import de.jpwinkler.daf.doorscsv.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.doorscsv.ModuleCSVParser;
 import de.jpwinkler.daf.doorscsv.ModuleCSVWriter;
@@ -51,6 +52,7 @@ import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -70,6 +72,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.converter.DefaultStringConverter;
 
 public class FilePaneController implements FileStateController {
 
@@ -82,7 +85,7 @@ public class FilePaneController implements FileStateController {
     private final List<DoorsObject> clipboard = new ArrayList<>();
     private final ViewModel viewModel = new ViewModel();
     private final List<ViewConfiguration> viewConfigurations = new ArrayList<>();
-    
+
     private ApplicationStateController applicationStateController;
 
     private File file;
@@ -192,13 +195,13 @@ public class FilePaneController implements FileStateController {
 
     private void populateOutlineTreeView(final DoorsModule module) {
         if (outlineTreeView.getRoot() != null) {
-            traverseTreeItem(outlineTreeView.getRoot(), ti -> expanded.put(ti.getValue().getTreeNode(), ti.isExpanded()));
+            traverseTreeItem(outlineTreeView.getRoot(), ti -> expanded.put(ti.getValue().treeNode, ti.isExpanded()));
         }
 
         if (module != null) {
 
             final TreeItem<OutlineTreeItem> wrappedModule = wrapModule(module);
-            traverseTreeItem(wrappedModule, ti -> ti.setExpanded(expanded.containsKey(ti.getValue().getTreeNode()) && expanded.get(ti.getValue().getTreeNode())));
+            traverseTreeItem(wrappedModule, ti -> ti.setExpanded(expanded.containsKey(ti.getValue().treeNode) && expanded.get(ti.getValue().treeNode)));
             outlineTreeView.setRoot(wrappedModule);
         } else {
             outlineTreeView.setRoot(null);
@@ -515,19 +518,19 @@ public class FilePaneController implements FileStateController {
     }
 
     @FXML
-    public void columnsClicked() {
+    public void editViewsClicked() {
         try {
             final Stage dialogStage = new Stage();
-            final FXMLLoader loader = new FXMLLoader(MainFX.class.getResource("selectcolumns.fxml"));
+            final FXMLLoader loader = new FXMLLoader(MainFX.class.getResource("EditViewsPane.fxml"));
             final Parent root = loader.load();
             dialogStage.initModality(Modality.APPLICATION_MODAL);
             dialogStage.initOwner(outlineTreeView.getScene().getWindow());
 
             dialogStage.setScene(new Scene(root));
 
-            final SelectColumnsController selectColumnsController = loader.getController();
-            selectColumnsController.setTabController(this);
-            selectColumnsController.setDialogStage(dialogStage);
+            final EditViewsPaneController editViewsController = loader.getController();
+            editViewsController.setTabController(this);
+            editViewsController.setDialogStage(dialogStage);
 
             dialogStage.showAndWait();
         } catch (final IOException ex) {
@@ -578,9 +581,75 @@ public class FilePaneController implements FileStateController {
 
     private void objectSelected(final DoorsObject newValue) {
         traverseTreeItem(outlineTreeView.getRoot(), item -> {
-            if (item.getValue().getTreeNode().equals(newValue)) {
+            if (item.getValue().treeNode.equals(newValue)) {
                 outlineTreeView.getSelectionModel().select(item);
             }
         });
     }
+
+    private class ObjectHeadingAndObjectTextTableCell extends TextFieldTableCell<DoorsObject, String> {
+
+        public ObjectHeadingAndObjectTextTableCell() {
+            super(new DefaultStringConverter());
+        }
+
+        @Override
+        public void updateItem(final String item, final boolean empty) {
+            super.updateItem(item, empty);
+            String style = "";
+            if (!empty && getTableRow() != null) {
+                final DoorsObject o = getTableView().getItems().get(getTableRow().getIndex());
+                if (o.isHeading()) {
+                    setText(o.getObjectNumber() + " " + o.getObjectHeading());
+                    style += "-fx-font-weight: bold;";
+                    if (o.getObjectLevel() <= 2) {
+                        style += "-fx-font-size: 140%;";
+                    } else if (o.getObjectLevel() == 3) {
+                        style += "-fx-font-size: 130%;";
+                    } else if (o.getObjectLevel() == 4) {
+                        style += "-fx-font-size: 120%;";
+                    } else if (o.getObjectLevel() == 5) {
+                        style += "-fx-font-size: 110%;";
+                    }
+                } else {
+                    setText(o.getObjectText());
+                }
+
+                setPadding(new Insets(0, 0, 0, (o.getObjectLevel() - 1) * 10));
+            }
+            setStyle(style);
+        }
+
+    }
+
+    private static class OutlineTreeItem {
+
+        public final DoorsTreeNode treeNode;
+
+        public OutlineTreeItem(final DoorsTreeNode treeNode) {
+            this.treeNode = treeNode;
+        }
+
+        @Override
+        public String toString() {
+            if (treeNode instanceof DoorsModule) {
+                return ((DoorsModule) treeNode).getName();
+            } else if (treeNode instanceof DoorsObject) {
+
+                String truncatedText = ((DoorsObject) treeNode).getText().replace("\n", "");
+                if (truncatedText.length() > 50) {
+                    truncatedText = truncatedText.substring(0, 47) + "...";
+                }
+
+                if (((DoorsObject) treeNode).isHeading()) {
+                    return ((DoorsObject) treeNode).getObjectNumber() + " " + truncatedText;
+                } else {
+                    return truncatedText;
+                }
+            } else {
+                return treeNode.toString();
+            }
+        }
+    }
+
 }

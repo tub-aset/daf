@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.jpwinkler.daf.csveditor;
+package de.jpwinkler.daf.csveditor.views;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,7 +13,7 @@ import java.util.List;
  *
  * @author fwiesweg
  */
-class ViewConfiguration {
+public class ViewConfiguration {
 
     public ViewConfiguration(String name, String... columns) {
         this.name = name;
