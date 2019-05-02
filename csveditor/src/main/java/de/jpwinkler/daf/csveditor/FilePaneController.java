@@ -1,5 +1,6 @@
 package de.jpwinkler.daf.csveditor;
 
+import de.jpwinkler.daf.csveditor.CommandStack.AbstractCommand;
 import de.jpwinkler.daf.csveditor.views.EditViewsPaneController;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -39,6 +40,7 @@ import de.jpwinkler.daf.doorscsv.model.DoorsTreeNode;
 import de.jpwinkler.daf.doorscsv.util.DoorsModuleUtil;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 import java.util.WeakHashMap;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -81,7 +83,7 @@ public class FilePaneController implements FileStateController {
         STANDARD_VIEW.setDisplayRemainingColumns(true);
     }
 
-    private final CommandStack<AbstractCommand> commandStack = new CommandStack<>();
+    private final CommandStack commandStack = new CommandStack();
     private final List<DoorsObject> clipboard = new ArrayList<>();
     private final List<ViewModel> viewModels = new ArrayList<>();
     private final Map<DoorsTreeNode, Boolean> expanded = new WeakHashMap<>();
@@ -119,7 +121,7 @@ public class FilePaneController implements FileStateController {
         contentTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         contentTableView.getSelectionModel().selectedItemProperty().addListener((ChangeListener<DoorsObject>) (observable, oldValue, newValue) -> {
             traverseTreeItem(outlineTreeView.getRoot(), item -> {
-                if (item.getValue().treeNode.equals(newValue)) {
+                if (item != null && item.getValue() != null && Objects.equals(item.getValue().treeNode, newValue)) {
                     outlineTreeView.getSelectionModel().select(item);
                 }
             });
@@ -127,7 +129,7 @@ public class FilePaneController implements FileStateController {
 
         outlineTreeView.getSelectionModel().selectedItemProperty().addListener((ChangeListener<TreeItem<OutlineTreeItem>>) (observable, oldValue, newValue) -> {
             contentTableView.getItems().forEach(c -> {
-                if (newValue.getValue().treeNode == c) {
+                if (newValue != null && newValue.getValue() != null && newValue.getValue().treeNode == c) {
                     contentTableView.scrollTo(c);
                 }
             });
@@ -252,6 +254,7 @@ public class FilePaneController implements FileStateController {
     private void executeCommand(final AbstractCommand command) {
         if (!command.isApplicable()) {
             applicationStateController.setStatus(command.getName() + ": Command is not appicable for this selection.");
+            return;
         }
 
         command.apply();
@@ -492,23 +495,21 @@ public class FilePaneController implements FileStateController {
 
     @FXML
     public void redoClicked() {
-        if (commandStack.getRedoCommand() != null) {
-            final AbstractCommand commandToRedo = commandStack.redo();
-            commandToRedo.redo();
+        final AbstractCommand commandToRedo = commandStack.redo();
+        if (commandToRedo == null) {
+            applicationStateController.setStatus("Cannot redo.");
+        } else {
             updateGui(commandToRedo.getUpdateActions());
         }
     }
 
     @FXML
     public void undoClicked() {
-        if (commandStack.getUndoCommand() != null) {
-            final AbstractCommand commandToUndo = commandStack.undo();
-            if (!commandToUndo.canUndo()) {
-                applicationStateController.setStatus("Undo: Last command cannot be undone, sorry.");
-            } else {
-                commandToUndo.undo();
-                updateGui(commandToUndo.getUpdateActions());
-            }
+        final AbstractCommand commandToUndo = commandStack.undo();
+        if (commandToUndo == null) {
+            applicationStateController.setStatus("Cannot undo.");
+        } else {
+            updateGui(commandToUndo.getUpdateActions());
         }
     }
 

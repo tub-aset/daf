@@ -1,6 +1,6 @@
 package de.jpwinkler.daf.csveditor.commands.module;
 
-import de.jpwinkler.daf.csveditor.AbstractCommand;
+import de.jpwinkler.daf.csveditor.CommandStack.AbstractCommand;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +18,6 @@ public class SplitLinesCommand extends AbstractCommand {
 
     public SplitLinesCommand(final DoorsModule module) {
         super(module);
-        // TODO Auto-generated constructor stub
     }
 
     @Override

@@ -1,6 +1,6 @@
 package de.jpwinkler.daf.csveditor.commands.module;
 
-import de.jpwinkler.daf.csveditor.AbstractCommand;
+import de.jpwinkler.daf.csveditor.CommandStack.AbstractCommand;
 import java.util.ArrayList;
 import java.util.List;
 

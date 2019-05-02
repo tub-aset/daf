@@ -1,65 +1,37 @@
 package de.jpwinkler.daf.csveditor;
 
-public class CommandStack<T> {
+import de.jpwinkler.daf.csveditor.commands.module.UpdateAction;
+import de.jpwinkler.daf.doorscsv.model.DoorsModule;
 
-    private static class CommandStackItem<T> {
+public class CommandStack {
 
-        public T command;
-        public CommandStackItem<T> previous;
-        public CommandStackItem<T> next;
+    private AbstractCommand lastExecuted = INITIAL_COMMAND;
+    private AbstractCommand lastSaved = INITIAL_COMMAND;
 
+    public void addCommand(final AbstractCommand command) {
+        command.previous = lastExecuted;
+        this.lastExecuted.next = command;
+        this.lastExecuted = command;
     }
 
-    private CommandStackItem<T> first;
-
-    private CommandStackItem<T> lastExecuted;
-    private CommandStackItem<T> lastSaved;
-
-    public boolean isEmpty() {
-        return first == null;
-    }
-
-    public void addCommand(final T command) {
-        final CommandStackItem<T> csi = new CommandStackItem<>();
-        csi.command = command;
-        csi.previous = lastExecuted;
-        if (lastExecuted == null) {
-            first = csi;
-        } else {
-            lastExecuted.next = csi;
+    public AbstractCommand undo() {
+        final AbstractCommand commandToUndo = lastExecuted;
+        if (!commandToUndo.canUndo()) {
+            return null;
         }
-        lastExecuted = csi;
 
-    }
-
-    public T getUndoCommand() {
-        return lastExecuted != null ? lastExecuted.command : null;
-    }
-
-    public T getRedoCommand() {
-        if (lastExecuted == null) {
-            return first != null ? first.command : null;
-        } else {
-            return lastExecuted.next != null ? lastExecuted.next.command : null;
-        }
-    }
-
-    public T undo() {
-        final T commandToUndo = lastExecuted.command;
-
-        lastExecuted = lastExecuted.previous;
-
+        this.lastExecuted = lastExecuted.previous;
+        commandToUndo.undo();
         return commandToUndo;
     }
 
-    public T redo() {
-        if (lastExecuted == null) {
-            lastExecuted = first;
-        } else {
-            lastExecuted = lastExecuted.next;
+    public AbstractCommand redo() {
+        AbstractCommand commandToRedo = lastExecuted.next;
+        if (commandToRedo != null) {
+            this.lastExecuted = commandToRedo;
+            commandToRedo.redo();
         }
-
-        return lastExecuted.command;
+        return commandToRedo;
     }
 
     public boolean isDirty() {
@@ -67,6 +39,66 @@ public class CommandStack<T> {
     }
 
     public void setSavePoint() {
-        lastSaved = lastExecuted;
+        this.lastSaved = lastExecuted;
     }
+
+    public static abstract class AbstractCommand {
+
+        private final DoorsModule module;
+
+        public AbstractCommand(final DoorsModule module) {
+            this.module = module;
+        }
+
+        protected DoorsModule getModule() {
+            return module;
+        }
+
+        public boolean isApplicable() {
+            return true;
+        }
+
+        public abstract String getName();
+
+        public abstract void apply();
+
+        public abstract void redo();
+
+        public abstract void undo();
+
+        public UpdateAction[] getUpdateActions() {
+            return new UpdateAction[0];
+        }
+
+        public boolean canUndo() {
+            return true;
+        }
+
+        private AbstractCommand previous;
+        private AbstractCommand next;
+    }
+
+    public static final AbstractCommand INITIAL_COMMAND = new AbstractCommand(null) {
+        @Override
+        public String getName() {
+            return null;
+        }
+
+        @Override
+        public void apply() {
+        }
+
+        @Override
+        public void redo() {
+        }
+
+        @Override
+        public void undo() {
+        }
+
+        @Override
+        public boolean canUndo() {
+            return false;
+        }
+    };
 }

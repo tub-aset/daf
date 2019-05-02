@@ -1,6 +1,6 @@
 package de.jpwinkler.daf.csveditor.commands.object;
 
-import de.jpwinkler.daf.csveditor.AbstractCommand;
+import de.jpwinkler.daf.csveditor.CommandStack.AbstractCommand;
 import de.jpwinkler.daf.csveditor.commands.module.UpdateAction;
 import de.jpwinkler.daf.doorscsv.model.DoorsModule;
 import de.jpwinkler.daf.doorscsv.model.DoorsObject;
@@ -23,17 +23,21 @@ public class EditObjectAttributeCommand extends AbstractCommand {
 
     @Override
     public String getName() {
-        return "Edit Attribute " + attribute;
+        return "Edit Attribute";
     }
 
     @Override
     public boolean isApplicable() {
-        return object != null && attribute != null;
+        return object != null;
     }
 
     @Override
     public void apply() {
-        oldValue = object.getAttributes().get(attribute);
+        if (attribute == null) {
+            oldValue = object.getText();
+        } else {
+            oldValue = object.getAttributes().get(attribute);
+        }
         redo();
     }
 
