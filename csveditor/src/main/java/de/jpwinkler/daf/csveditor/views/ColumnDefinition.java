@@ -1,10 +1,6 @@
 package de.jpwinkler.daf.csveditor.views;
 
-import javafx.beans.property.DoubleProperty;
-
 public class ColumnDefinition {
-
-    private ColumnType columnType;
 
     private String attributeName;
 
@@ -13,18 +9,6 @@ public class ColumnDefinition {
     private double width;
 
     private boolean visible;
-
-    public ColumnDefinition() {
-    }
-
-    public ColumnDefinition(final ColumnType columnType, final String attributeName, final String columnTitle, final double width, final boolean visible) {
-        super();
-        this.columnType = columnType;
-        this.attributeName = attributeName;
-        this.columnTitle = columnTitle;
-        this.width = width;
-        this.visible = visible;
-    }
 
     public String getAttributeName() {
         return attributeName;
@@ -48,14 +32,6 @@ public class ColumnDefinition {
 
     public void setWidth(final double width) {
         this.width = width;
-    }
-
-    public ColumnType getColumnType() {
-        return columnType;
-    }
-
-    public void setColumnType(final ColumnType columnType) {
-        this.columnType = columnType;
     }
 
     public boolean isVisible() {

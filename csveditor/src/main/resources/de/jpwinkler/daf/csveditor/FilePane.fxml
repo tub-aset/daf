@@ -19,7 +19,7 @@
          <children>
                 <ToolBar maxHeight="1.7976931348623157E308" nodeOrientation="RIGHT_TO_LEFT">
                     <items>
-                  <MenuButton mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" text="View options">
+                  <MenuButton fx:id="viewsMenuButton" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" text="View options">
                     <items>
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" onAction="#editViewsClicked" text="Edit views" />

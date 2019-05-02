@@ -11,5 +11,7 @@ public enum UpdateAction {
     UPDATE_OUTLINE_VIEW,
 
     UPDATE_COLUMNS,
+    
+    UPDATE_VIEWS
 
 }

@@ -14,8 +14,8 @@ public class ViewModel {
     }
 
     private String name;
-    private final List<ColumnDefinition> displayedColumns = new ArrayList<>();
-    private final Set<DoorsObject> visibleObjects = new HashSet<>();
+    private final List<ColumnDefinition> columns = new ArrayList<>();
+    private final Set<DoorsObject> filteredObjects = new HashSet<>();
     private boolean displayRemainingColumns;
 
     public String getName() {
@@ -26,12 +26,12 @@ public class ViewModel {
         this.name = name;
     }
 
-    public List<ColumnDefinition> getDisplayedColumns() {
-        return displayedColumns;
+    public List<ColumnDefinition> getColumns() {
+        return columns;
     }
 
     public Set<DoorsObject> getFilteredObjects() {
-        return visibleObjects;
+        return filteredObjects;
     }
 
     public boolean isDisplayRemainingColumns() {

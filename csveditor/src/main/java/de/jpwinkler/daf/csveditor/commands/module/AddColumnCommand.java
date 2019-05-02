@@ -2,7 +2,6 @@ package de.jpwinkler.daf.csveditor.commands.module;
 
 import de.jpwinkler.daf.csveditor.AbstractCommand;
 import de.jpwinkler.daf.csveditor.views.ColumnDefinition;
-import de.jpwinkler.daf.csveditor.views.ColumnType;
 import de.jpwinkler.daf.csveditor.views.ViewModel;
 import de.jpwinkler.daf.doorscsv.model.AttributeDefinition;
 import de.jpwinkler.daf.doorscsv.model.DoorsCSVFactory;
@@ -31,20 +30,25 @@ public class AddColumnCommand extends AbstractCommand {
     public void apply() {
         attributeDefinition = DoorsCSVFactory.eINSTANCE.createAttributeDefinition();
         attributeDefinition.setName(newColumnName);
-        columnDefinition = new ColumnDefinition(ColumnType.ATTRIBUTE_COLUMN, newColumnName, newColumnName, 50, true);
+
+        columnDefinition = new ColumnDefinition();
+        columnDefinition.setWidth(50);
+        columnDefinition.setColumnTitle(newColumnName);
+        columnDefinition.setAttributeName(newColumnName);
+        columnDefinition.setVisible(true);
         redo();
     }
 
     @Override
     public void undo() {
-        viewModel.getDisplayedColumns().remove(columnDefinition);
+        viewModel.getColumns().remove(columnDefinition);
         getModule().getAttributeDefinitions().remove(attributeDefinition);
     }
 
     @Override
     public void redo() {
         getModule().getAttributeDefinitions().add(attributeDefinition);
-        viewModel.getDisplayedColumns().add(columnDefinition);
+        viewModel.getColumns().add(columnDefinition);
     }
 
     @Override
@@ -54,7 +58,7 @@ public class AddColumnCommand extends AbstractCommand {
 
     @Override
     public UpdateAction[] getUpdateActions() {
-        return new UpdateAction[] { UpdateAction.UPDATE_COLUMNS };
+        return new UpdateAction[]{UpdateAction.UPDATE_COLUMNS};
     }
 
 }

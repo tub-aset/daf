@@ -39,17 +39,25 @@ public class EditObjectAttributeCommand extends AbstractCommand {
 
     @Override
     public void undo() {
-        object.getAttributes().put(attribute, oldValue);
+        if (attribute == null) {
+            object.setText(oldValue);
+        } else {
+            object.getAttributes().put(attribute, oldValue);
+        }
     }
 
     @Override
     public void redo() {
-        object.getAttributes().put(attribute, newValue);
+        if (attribute == null) {
+            object.setText(newValue);
+        } else {
+            object.getAttributes().put(attribute, newValue);
+        }
     }
 
     @Override
     public UpdateAction[] getUpdateActions() {
-        return new UpdateAction[] { UpdateAction.UPDATE_CONTENT_VIEW, UpdateAction.UPDATE_OUTLINE_VIEW };
+        return new UpdateAction[]{UpdateAction.UPDATE_CONTENT_VIEW, UpdateAction.UPDATE_OUTLINE_VIEW};
     }
 
 }
