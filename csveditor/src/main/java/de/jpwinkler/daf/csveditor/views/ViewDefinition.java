@@ -7,9 +7,9 @@ import java.util.Set;
 
 import de.jpwinkler.daf.doorscsv.model.DoorsObject;
 
-public class ViewModel {
+public class ViewDefinition {
 
-    public ViewModel(String name) {
+    public ViewDefinition(String name) {
         this.name = name;
     }
 

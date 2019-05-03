@@ -2,9 +2,13 @@ package de.jpwinkler.daf.csveditor.views;
 
 public class ColumnDefinition {
 
+    public ColumnDefinition(String title) {
+        this.title = title;
+    }
+
     private String attributeName;
 
-    private String columnTitle;
+    private String title;
 
     private double width;
 
@@ -18,12 +22,12 @@ public class ColumnDefinition {
         this.attributeName = attributeName;
     }
 
-    public String getColumnTitle() {
-        return columnTitle;
+    public String getTitle() {
+        return title;
     }
 
-    public void setColumnTitle(final String columnTitle) {
-        this.columnTitle = columnTitle;
+    public void setTitle(final String title) {
+        this.title = title;
     }
 
     public double getWidth() {
@@ -44,7 +48,7 @@ public class ColumnDefinition {
 
     @Override
     public String toString() {
-        return columnTitle;
+        return title;
     }
 
 }

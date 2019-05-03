@@ -2,7 +2,7 @@ package de.jpwinkler.daf.csveditor.commands.module;
 
 import de.jpwinkler.daf.csveditor.CommandStack.AbstractCommand;
 import de.jpwinkler.daf.csveditor.views.ColumnDefinition;
-import de.jpwinkler.daf.csveditor.views.ViewModel;
+import de.jpwinkler.daf.csveditor.views.ViewDefinition;
 import de.jpwinkler.daf.doorscsv.model.AttributeDefinition;
 import de.jpwinkler.daf.doorscsv.model.DoorsCSVFactory;
 import de.jpwinkler.daf.doorscsv.model.DoorsModule;
@@ -10,12 +10,12 @@ import de.jpwinkler.daf.doorscsv.model.DoorsModule;
 public class AddColumnCommand extends AbstractCommand {
 
     private final String newColumnName;
-    private final ViewModel viewModel;
+    private final ViewDefinition viewModel;
 
     private AttributeDefinition attributeDefinition;
     private ColumnDefinition columnDefinition;
 
-    public AddColumnCommand(final DoorsModule module, final ViewModel viewModel, final String newColumnName) {
+    public AddColumnCommand(final DoorsModule module, final ViewDefinition viewModel, final String newColumnName) {
         super(module);
         this.viewModel = viewModel;
         this.newColumnName = newColumnName;
@@ -31,9 +31,8 @@ public class AddColumnCommand extends AbstractCommand {
         attributeDefinition = DoorsCSVFactory.eINSTANCE.createAttributeDefinition();
         attributeDefinition.setName(newColumnName);
 
-        columnDefinition = new ColumnDefinition();
+        columnDefinition = new ColumnDefinition(newColumnName);
         columnDefinition.setWidth(50);
-        columnDefinition.setColumnTitle(newColumnName);
         columnDefinition.setAttributeName(newColumnName);
         columnDefinition.setVisible(true);
         redo();

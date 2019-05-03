@@ -29,7 +29,7 @@ import de.jpwinkler.daf.csveditor.filter.DoorsObjectFilter;
 import de.jpwinkler.daf.csveditor.filter.ObjectTextAndHeadingFilter;
 import de.jpwinkler.daf.csveditor.filter.ReverseCascadingFilter;
 import de.jpwinkler.daf.csveditor.views.ColumnDefinition;
-import de.jpwinkler.daf.csveditor.views.ViewModel;
+import de.jpwinkler.daf.csveditor.views.ViewDefinition;
 import de.jpwinkler.daf.doorscsv.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.doorscsv.ModuleCSVParser;
 import de.jpwinkler.daf.doorscsv.ModuleCSVWriter;
@@ -71,11 +71,10 @@ import javafx.util.converter.DefaultStringConverter;
 
 public class FilePaneController implements FileStateController {
 
-    private static final ViewModel STANDARD_VIEW = new ViewModel("Standard");
+    private static final ViewDefinition STANDARD_VIEW = new ViewDefinition("Standard");
 
     static {
-        ColumnDefinition columnDefinition = new ColumnDefinition();
-        columnDefinition.setColumnTitle("Object Heading & Object Text");
+        ColumnDefinition columnDefinition = new ColumnDefinition("Object Heading & Object Text");
         columnDefinition.setWidth(700);
         columnDefinition.setVisible(true);
         STANDARD_VIEW.getColumns().add(columnDefinition);
@@ -85,7 +84,7 @@ public class FilePaneController implements FileStateController {
 
     private final CommandStack commandStack = new CommandStack();
     private final List<DoorsObject> clipboard = new ArrayList<>();
-    private final List<ViewModel> viewModels = new ArrayList<>();
+    private final List<ViewDefinition> views = new ArrayList<>();
     private final Map<DoorsTreeNode, Boolean> expanded = new WeakHashMap<>();
 
     private ApplicationStateController applicationStateController;
@@ -93,7 +92,7 @@ public class FilePaneController implements FileStateController {
     private File file;
     private DoorsModule module;
     private List<Menu> menus;
-    private ViewModel currentViewModel;
+    private ViewDefinition currentViewModel;
 
     @FXML
     private TreeView<OutlineTreeItem> outlineTreeView;
@@ -338,7 +337,7 @@ public class FilePaneController implements FileStateController {
                 continue;
             }
 
-            final TableColumn<DoorsObject, String> c = new TableColumn<>(columnDefinition.getColumnTitle());
+            final TableColumn<DoorsObject, String> c = new TableColumn<>(columnDefinition.getTitle());
             c.setSortable(false);
             c.setPrefWidth(columnDefinition.getWidth());
 
@@ -395,19 +394,19 @@ public class FilePaneController implements FileStateController {
         this.viewsMenuButton.getItems().removeIf(mi -> mi instanceof RadioMenuItem);
         ToggleGroup viewsToggleGroup = new ToggleGroup();
         viewsToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-            this.currentViewModel = (ViewModel) newValue.getUserData();
+            this.currentViewModel = (ViewDefinition) newValue.getUserData();
             updateGui(UpdateAction.UPDATE_COLUMNS);
         });
 
         boolean selected = false;
-        this.viewModels.sort((v1, v2) -> v1.getName().compareTo(v2.getName()));
-        for (ViewModel vm : this.viewModels) {
-            RadioMenuItem rmi = new RadioMenuItem(vm.getName());
-            rmi.setUserData(vm);
+        for (int i = views.size() - 1; i >= 0; i--) {
+            ViewDefinition vd = views.get(i);
+            RadioMenuItem rmi = new RadioMenuItem(vd.getName());
+            rmi.setUserData(vd);
             rmi.setToggleGroup(viewsToggleGroup);
             this.viewsMenuButton.getItems().add(0, rmi);
 
-            if (vm.getName().equals(currentViewModel.getName())) {
+            if (vd.getName().equals(currentViewModel.getName())) {
                 rmi.setSelected(true);
                 selected = true;
             }
@@ -515,10 +514,10 @@ public class FilePaneController implements FileStateController {
 
     @FXML
     public void editViewsClicked() {
-        EditViewsPaneController.asDialog(outlineTreeView.getScene().getWindow(), this.viewModels)
+        EditViewsPaneController.asDialog(outlineTreeView.getScene().getWindow(), this.views, module.getAttributeDefinitions().stream().map(ad -> ad.getName()))
                 .showAndWait().ifPresent(r -> {
-                    this.viewModels.clear();
-                    this.viewModels.addAll(r);
+                    this.views.clear();
+                    this.views.addAll(r);
                     this.updateGui(UpdateAction.UPDATE_VIEWS, UpdateAction.UPDATE_COLUMNS);
                 });
     }
