@@ -48,7 +48,6 @@
     </Menu>
     <Menu mnemonicParsing="false" text="Module">
         <items>
-            <MenuItem mnemonicParsing="false" onAction="#addColumnClicked" text="Add Column..." />
             <MenuItem mnemonicParsing="false" onAction="#reduceToSelectionClicked" text="Reduce to Selection" />
             <MenuItem mnemonicParsing="false" onAction="#flattenClicked" text="Flatten" />
             <MenuItem mnemonicParsing="false" onAction="#splitLinesClicked" text="Split lines" />

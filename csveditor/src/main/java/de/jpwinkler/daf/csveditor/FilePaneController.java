@@ -3,13 +3,9 @@ package de.jpwinkler.daf.csveditor;
 import de.jpwinkler.daf.csveditor.CommandStack.AbstractCommand;
 import de.jpwinkler.daf.csveditor.views.EditViewsPaneController;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
-import de.jpwinkler.daf.csveditor.commands.module.AddColumnCommand;
 import de.jpwinkler.daf.csveditor.commands.object.PasteObjectsAfterCommand;
 import de.jpwinkler.daf.csveditor.commands.object.PasteObjectsBelowCommand;
 import de.jpwinkler.daf.csveditor.commands.object.DeleteObjectCommand;
@@ -38,9 +34,12 @@ import de.jpwinkler.daf.doorscsv.model.DoorsModule;
 import de.jpwinkler.daf.doorscsv.model.DoorsObject;
 import de.jpwinkler.daf.doorscsv.model.DoorsTreeNode;
 import de.jpwinkler.daf.doorscsv.util.DoorsModuleUtil;
+import java.io.OutputStream;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -49,9 +48,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuButton;
@@ -61,12 +57,10 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.stage.FileChooser;
 import javafx.util.converter.DefaultStringConverter;
 
 public class FilePaneController implements FileStateController {
@@ -84,7 +78,7 @@ public class FilePaneController implements FileStateController {
 
     private final CommandStack commandStack = new CommandStack();
     private final List<DoorsObject> clipboard = new ArrayList<>();
-    private final List<ViewDefinition> views = new ArrayList<>();
+    private final ArrayList<ViewDefinition> views = ApplicationPreferences.VIEWS.retrieve();
     private final Map<DoorsTreeNode, Boolean> expanded = new WeakHashMap<>();
 
     private ApplicationStateController applicationStateController;
@@ -92,7 +86,9 @@ public class FilePaneController implements FileStateController {
     private File file;
     private DoorsModule module;
     private List<Menu> menus;
-    private ViewDefinition currentViewModel;
+    private ViewDefinition currentView;
+
+    private final Set<DoorsObject> filteredObjects = new HashSet<>();
 
     @FXML
     private TreeView<OutlineTreeItem> outlineTreeView;
@@ -148,6 +144,12 @@ public class FilePaneController implements FileStateController {
             this.updateFilter(filterTextField.getText(), newValue, includeChildrenCheckbox.isSelected(), filterExpressionCheckBox.isSelected());
         });
 
+        int currentViewIdx = ApplicationPreferences.CURRENT_VIEW.retrieve();
+        if (currentViewIdx < 0 || currentViewIdx >= views.size()) {
+            currentView = STANDARD_VIEW;
+        } else {
+            currentView = views.get(currentViewIdx);
+        }
     }
 
     @Override
@@ -186,40 +188,21 @@ public class FilePaneController implements FileStateController {
     }
 
     @Override
-    public File save() {
-        if (file == null) {
-            return saveAs();
-        }
-
-        try ( ModuleCSVWriter writer = new ModuleCSVWriter(new FileOutputStream(file))) {
+    public void save(OutputStream os) throws IOException {
+        try ( ModuleCSVWriter writer = new ModuleCSVWriter(os)) {
             writer.writeModule(module);
             commandStack.setSavePoint();
-            return file;
-        } catch (final IOException ex) {
-            applicationStateController.setStatus("Open: Failed to open file; " + ex.getMessage());
-            return null;
         }
-    }
-
-    @Override
-    public File saveAs() {
-        final FileChooser chooser = new FileChooser();
-        if (file != null) {
-            chooser.setInitialDirectory(file.getParentFile());
-            chooser.setInitialFileName(file.getName());
-        }
-
-        final File newFile = chooser.showSaveDialog(outlineTreeView.getScene().getWindow());
-        if (newFile == null) {
-            return null;
-        }
-        file = newFile;
-        return save();
     }
 
     @Override
     public File getFile() {
-        return file;
+        return this.file;
+    }
+
+    @Override
+    public void setFile(File file) {
+        this.file = file;
     }
 
     @Override
@@ -230,19 +213,6 @@ public class FilePaneController implements FileStateController {
     @FXML
     public void reduceToSelectionClicked() {
         executeCommand(new ReduceToSelectionCommand(module, getCurrentObject()));
-    }
-
-    @FXML
-    public void addColumnClicked() {
-        final TextInputDialog textInputDialog = new TextInputDialog();
-        final Optional<String> result = textInputDialog.showAndWait();
-        if (result.isPresent()) {
-            if (module.findAttributeDefinition(result.get()) != null) {
-                new Alert(AlertType.ERROR, "Attribute does already exist.", ButtonType.OK).show();
-            } else {
-                executeCommand(new AddColumnCommand(module, currentViewModel, result.get()));
-            }
-        }
     }
 
     @FXML
@@ -318,7 +288,7 @@ public class FilePaneController implements FileStateController {
         module.accept(new DoorsTreeNodeVisitor() {
             @Override
             public boolean visitPreTraverse(final DoorsObject object) {
-                if (!currentViewModel.getFilteredObjects().contains(object)) {
+                if (!filteredObjects.contains(object)) {
                     contentTableView.getItems().add(object);
                 }
                 return true;
@@ -332,7 +302,7 @@ public class FilePaneController implements FileStateController {
 
     private void updateColumns() {
         contentTableView.getColumns().clear();
-        for (final ColumnDefinition columnDefinition : currentViewModel.getColumns()) {
+        for (final ColumnDefinition columnDefinition : currentView.getColumns()) {
             if (!columnDefinition.isVisible()) {
                 continue;
             }
@@ -394,7 +364,8 @@ public class FilePaneController implements FileStateController {
         this.viewsMenuButton.getItems().removeIf(mi -> mi instanceof RadioMenuItem);
         ToggleGroup viewsToggleGroup = new ToggleGroup();
         viewsToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-            this.currentViewModel = (ViewDefinition) newValue.getUserData();
+            this.currentView = (ViewDefinition) newValue.getUserData();
+            ApplicationPreferences.CURRENT_VIEW.store(views.indexOf(this.currentView));
             updateGui(UpdateAction.UPDATE_COLUMNS);
         });
 
@@ -406,7 +377,7 @@ public class FilePaneController implements FileStateController {
             rmi.setToggleGroup(viewsToggleGroup);
             this.viewsMenuButton.getItems().add(0, rmi);
 
-            if (vd.getName().equals(currentViewModel.getName())) {
+            if (vd == currentView) {
                 rmi.setSelected(true);
                 selected = true;
             }
@@ -434,12 +405,12 @@ public class FilePaneController implements FileStateController {
 
         final DoorsObjectFilter filterFinal = filter;
 
-        currentViewModel.getFilteredObjects().clear();
+        filteredObjects.clear();
         module.accept(new DoorsTreeNodeVisitor() {
             @Override
             public boolean visitPreTraverse(final DoorsObject object) {
                 if (!filterFinal.checkObject(object)) {
-                    currentViewModel.getFilteredObjects().add(object);
+                    filteredObjects.add(object);
                 }
                 return true;
             }
@@ -448,7 +419,7 @@ public class FilePaneController implements FileStateController {
         updateGui(UpdateAction.UPDATE_CONTENT_VIEW);
 
         final int totalObjects = DoorsModuleUtil.countObjects(module);
-        final int visibleObjects = totalObjects - currentViewModel.getFilteredObjects().size();
+        final int visibleObjects = totalObjects - filteredObjects.size();
 
         applicationStateController.setStatus(visibleObjects < totalObjects
                 ? String.format("Showing %d out of %d objects.", visibleObjects, totalObjects) : "");
@@ -518,6 +489,7 @@ public class FilePaneController implements FileStateController {
                 .showAndWait().ifPresent(r -> {
                     this.views.clear();
                     this.views.addAll(r);
+                    ApplicationPreferences.VIEWS.store(this.views);
                     this.updateGui(UpdateAction.UPDATE_VIEWS, UpdateAction.UPDATE_COLUMNS);
                 });
     }

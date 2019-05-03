@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import de.jpwinkler.daf.csveditor.background.BackgroundTaskStatusListener;
 import de.jpwinkler.daf.csveditor.background.BackgroundTaskStatusMonitor;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,7 +37,8 @@ public class ApplicationPaneController implements ApplicationStateController {
 
     private final Map<Tab, FileStateController> fileStateControllers = new HashMap<>();
 
-    private final FileChooser chooser = new FileChooser();
+    private final FileChooser openFileChooser = new FileChooser();
+    private final FileChooser saveFileChooser = new FileChooser();
 
     private final BackgroundTaskStatusMonitor backgroundTaskStatusMonitor = new BackgroundTaskStatusMonitor();
 
@@ -60,12 +62,17 @@ public class ApplicationPaneController implements ApplicationStateController {
 
     @FXML
     private Menu recentMenu;
-    private TreeMap<Long, File> recentFiles = new TreeMap<>();
+
+    private final TreeMap<Long, File> recentFiles = ApplicationPreferences.RECENT_FILES.retrieve();
     private final int MAX_RECENT_FILES = 10;
 
     @FXML
     public void initialize() {
-        chooser.getExtensionFilters().add(new ExtensionFilter("CSV", "*.csv"));
+        openFileChooser.getExtensionFilters().add(new ExtensionFilter("CSV", "*.csv"));
+        saveFileChooser.getExtensionFilters().add(new ExtensionFilter("CSV", "*.csv"));
+
+        openFileChooser.setInitialDirectory(ApplicationPreferences.OPEN_DIRECTORY.retrieve());
+        saveFileChooser.setInitialDirectory(ApplicationPreferences.SAVE_DIRECTORY.retrieve());
 
         tabPane.getSelectionModel().selectedItemProperty().addListener((ChangeListener<Tab>) (observable, oldValue, newValue) -> {
             getFileStateController(oldValue).getMenus().forEach(m -> {
@@ -83,7 +90,7 @@ public class ApplicationPaneController implements ApplicationStateController {
                     if (controller.isDirty()) {
                         final Optional<ButtonType> saveConfirm = new Alert(AlertType.CONFIRMATION, "There are unsaved changes, do you want to save them?",
                                 ButtonType.YES, ButtonType.NO, ButtonType.CANCEL).showAndWait();
-                        if ((saveConfirm.isPresent() && saveConfirm.get() == ButtonType.YES && controller.save() == null)
+                        if ((saveConfirm.isPresent() && saveConfirm.get() == ButtonType.YES && !this.saveClicked())
                                 || (saveConfirm.isPresent() && saveConfirm.get() == ButtonType.CANCEL)
                                 || !saveConfirm.isPresent()) {
                             toBeAdded.add(selectedTab);
@@ -99,6 +106,7 @@ public class ApplicationPaneController implements ApplicationStateController {
                 tabPane.getTabs().addAll(toBeAdded);
             }
         });
+        addToRecentMenu(null);
 
         backgroundTaskStatusToolBar.setManaged(false);
         backgroundTaskStatusToolBar.setVisible(false);
@@ -147,10 +155,12 @@ public class ApplicationPaneController implements ApplicationStateController {
 
     @FXML
     public void openClicked() {
-        final File selectedFile = chooser.showOpenDialog(tabPane.getScene().getWindow());
-        if (selectedFile != null) {
-            chooser.setInitialDirectory(selectedFile.getParentFile());
-            openFile(selectedFile);
+        final File f = openFileChooser.showOpenDialog(tabPane.getScene().getWindow());
+        if (f != null) {
+            openFileChooser.setInitialDirectory(f.getParentFile());
+            ApplicationPreferences.OPEN_DIRECTORY.store(f.getParentFile().getAbsoluteFile());
+
+            openFile(f);
         }
     }
 
@@ -169,11 +179,17 @@ public class ApplicationPaneController implements ApplicationStateController {
             }
         }
 
+        final FilePaneController controller;
+        final Parent filePane;
         try {
             final FXMLLoader loader = new FXMLLoader(MainFX.class.getResource("FilePane.fxml"));
-            final Parent filePane = loader.load();
+            filePane = loader.load();
+            controller = loader.getController();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
 
-            final FilePaneController controller = loader.getController();
+        try {
             controller.initialize(this, selectedFile);
 
             final Tab selectedTab = new Tab(selectedFile != null ? selectedFile.getName() : "New Document", filePane);
@@ -191,15 +207,15 @@ public class ApplicationPaneController implements ApplicationStateController {
     }
 
     private void addToRecentMenu(File selectedFile) {
-        if (selectedFile == null) {
-            return;
+        if (selectedFile != null) {
+            recentFiles.values().remove(selectedFile);
+            recentFiles.put(new Date().getTime(), selectedFile);
         }
-
-        recentFiles.values().remove(selectedFile);
-        recentFiles.put(new Date().getTime(), selectedFile);
         while (recentFiles.size() > MAX_RECENT_FILES) {
             recentFiles.remove(recentFiles.firstKey());
         }
+        ApplicationPreferences.RECENT_FILES.store(recentFiles);
+        ApplicationPreferences.RECENT_FILES.retrieve();
 
         recentMenu.getItems().clear();
 
@@ -212,16 +228,40 @@ public class ApplicationPaneController implements ApplicationStateController {
     }
 
     @FXML
-    public void saveClicked() {
-        addToRecentMenu(getCurrentFileStateController().save());
-        updateTabTitle(tabPane.getSelectionModel().getSelectedItem());
+    public boolean saveClicked() {
+        File f = getCurrentFileStateController().getFile();
+        if (f == null) {
+            return saveAsClicked();
+        }
 
+        try ( FileOutputStream fos = new FileOutputStream(f)) {
+            getCurrentFileStateController().save(fos);
+        } catch (IOException ex) {
+            this.setStatus("Open: Failed to save file; " + ex.getMessage());
+            return false;
+        }
+
+        addToRecentMenu(f);
+        updateTabTitle(tabPane.getSelectionModel().getSelectedItem());
+        return true;
     }
 
     @FXML
-    public void saveAsClicked() {
-        addToRecentMenu(getCurrentFileStateController().saveAs());
-        updateTabTitle(tabPane.getSelectionModel().getSelectedItem());
+    public boolean saveAsClicked() {
+        File f = getCurrentFileStateController().getFile();
+        if (f != null) {
+            saveFileChooser.setInitialDirectory(f.getParentFile());
+            saveFileChooser.setInitialFileName(f.getName());
+            ApplicationPreferences.SAVE_DIRECTORY.store(f.getParentFile().getAbsoluteFile());
+        }
+
+        f = saveFileChooser.showSaveDialog(tabPane.getScene().getWindow());
+        if (f == null) {
+            return false;
+        }
+
+        getCurrentFileStateController().setFile(f);
+        return this.saveClicked();
     }
 
     private void updateTabTitle(Tab selectedTab) {

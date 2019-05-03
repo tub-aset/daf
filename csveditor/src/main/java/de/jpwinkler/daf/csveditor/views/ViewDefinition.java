@@ -1,13 +1,10 @@
 package de.jpwinkler.daf.csveditor.views;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.io.Serializable;
 
-import de.jpwinkler.daf.doorscsv.model.DoorsObject;
-
-public class ViewDefinition {
+public class ViewDefinition implements Serializable {
 
     public ViewDefinition(String name) {
         this.name = name;
@@ -15,7 +12,6 @@ public class ViewDefinition {
 
     private String name;
     private final List<ColumnDefinition> columns = new ArrayList<>();
-    private final Set<DoorsObject> filteredObjects = new HashSet<>();
     private boolean displayRemainingColumns;
 
     public String getName() {
@@ -28,10 +24,6 @@ public class ViewDefinition {
 
     public List<ColumnDefinition> getColumns() {
         return columns;
-    }
-
-    public Set<DoorsObject> getFilteredObjects() {
-        return filteredObjects;
     }
 
     public boolean isDisplayRemainingColumns() {
