@@ -1,4 +1,4 @@
-package de.jpwinkler.daf.csveditor.views;
+package de.jpwinkler.daf.csveditor;
 
 import java.util.ArrayList;
 import java.util.List;

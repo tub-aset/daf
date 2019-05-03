@@ -12,7 +12,7 @@
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.VBox?>
 
-<SplitPane dividerPositions="0.3" prefHeight="616.0" prefWidth="1225.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.jpwinkler.daf.csveditor.FilePaneController">
+<SplitPane fx:id="mainSplitPane" dividerPositions="0.3" prefHeight="616.0" prefWidth="1225.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.jpwinkler.daf.csveditor.FilePaneController">
       <items>
           <TreeView fx:id="outlineTreeView" prefHeight="2520.0" prefWidth="559.0" />
       <VBox>

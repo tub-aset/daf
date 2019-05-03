@@ -1,4 +1,4 @@
-package de.jpwinkler.daf.csveditor.views;
+package de.jpwinkler.daf.csveditor;
 
 import de.jpwinkler.daf.csveditor.MainFX;
 import java.io.IOException;
@@ -270,7 +270,6 @@ public class EditViewsPaneController {
     @FXML
     public void addColumnClicked() {
         ColumnDefinition cd = new ColumnDefinition("New column " + newCounter++);
-        cd.setVisible(true);
         this.colListView.getItems().add(cd);
         this.colListView.getSelectionModel().select(cd);
     }

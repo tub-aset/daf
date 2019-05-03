@@ -1,7 +1,6 @@
 package de.jpwinkler.daf.csveditor;
 
 import de.jpwinkler.daf.csveditor.CommandStack.AbstractCommand;
-import de.jpwinkler.daf.csveditor.views.EditViewsPaneController;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,8 +23,6 @@ import de.jpwinkler.daf.csveditor.filter.CascadingFilter;
 import de.jpwinkler.daf.csveditor.filter.DoorsObjectFilter;
 import de.jpwinkler.daf.csveditor.filter.ObjectTextAndHeadingFilter;
 import de.jpwinkler.daf.csveditor.filter.ReverseCascadingFilter;
-import de.jpwinkler.daf.csveditor.views.ColumnDefinition;
-import de.jpwinkler.daf.csveditor.views.ViewDefinition;
 import de.jpwinkler.daf.doorscsv.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.doorscsv.ModuleCSVParser;
 import de.jpwinkler.daf.doorscsv.ModuleCSVWriter;
@@ -53,6 +50,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
@@ -68,7 +66,7 @@ public class FilePaneController implements FileStateController {
     private static final ViewDefinition STANDARD_VIEW = new ViewDefinition("Standard");
 
     static {
-        ColumnDefinition columnDefinition = new ColumnDefinition("Object Heading & Object Text");
+        ColumnDefinition columnDefinition = new ColumnDefinition("Object Heading/Text");
         columnDefinition.setWidth(700);
         columnDefinition.setVisible(true);
         STANDARD_VIEW.getColumns().add(columnDefinition);
@@ -78,7 +76,7 @@ public class FilePaneController implements FileStateController {
 
     private final CommandStack commandStack = new CommandStack();
     private final List<DoorsObject> clipboard = new ArrayList<>();
-    private final ArrayList<ViewDefinition> views = ApplicationPreferences.VIEWS.retrieve();
+    private final ArrayList<ViewDefinition> views = ApplicationPreferences.FILE_PANE_VIEWS.retrieve();
     private final Map<DoorsTreeNode, Boolean> expanded = new WeakHashMap<>();
 
     private ApplicationStateController applicationStateController;
@@ -89,6 +87,9 @@ public class FilePaneController implements FileStateController {
     private ViewDefinition currentView;
 
     private final Set<DoorsObject> filteredObjects = new HashSet<>();
+
+    @FXML
+    private SplitPane mainSplitPane;
 
     @FXML
     private TreeView<OutlineTreeItem> outlineTreeView;
@@ -131,6 +132,13 @@ public class FilePaneController implements FileStateController {
 
         });
 
+        mainSplitPane.setDividerPositions((double) ApplicationPreferences.FILE_PANE_SPLITPOS.retrieve());
+        mainSplitPane.getDividers().forEach(d -> {
+            d.positionProperty().addListener((obs, oldValue, newValue) -> {
+                ApplicationPreferences.FILE_PANE_SPLITPOS.store(newValue.doubleValue());
+            });
+        });
+
         filterTextField.textProperty().addListener((ChangeListener<String>) (observable, oldValue, newValue) -> {
             this.updateFilter(newValue, includeParentsCheckbox.isSelected(), includeChildrenCheckbox.isSelected(), filterExpressionCheckBox.isSelected());
         });
@@ -144,7 +152,7 @@ public class FilePaneController implements FileStateController {
             this.updateFilter(filterTextField.getText(), newValue, includeChildrenCheckbox.isSelected(), filterExpressionCheckBox.isSelected());
         });
 
-        int currentViewIdx = ApplicationPreferences.CURRENT_VIEW.retrieve();
+        int currentViewIdx = ApplicationPreferences.FILE_PANE_CURRENT_VIEW.retrieve();
         if (currentViewIdx < 0 || currentViewIdx >= views.size()) {
             currentView = STANDARD_VIEW;
         } else {
@@ -310,6 +318,10 @@ public class FilePaneController implements FileStateController {
             final TableColumn<DoorsObject, String> c = new TableColumn<>(columnDefinition.getTitle());
             c.setSortable(false);
             c.setPrefWidth(columnDefinition.getWidth());
+            c.widthProperty().addListener((obs, oldValue, newValue) -> {
+                columnDefinition.setWidth(newValue.doubleValue());
+                ApplicationPreferences.FILE_PANE_VIEWS.store(this.views);
+            });
 
             c.setCellFactory(param -> new CustomTableCell());
             c.setCellValueFactory(param -> new ReadOnlyStringWrapper(
@@ -365,7 +377,7 @@ public class FilePaneController implements FileStateController {
         ToggleGroup viewsToggleGroup = new ToggleGroup();
         viewsToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
             this.currentView = (ViewDefinition) newValue.getUserData();
-            ApplicationPreferences.CURRENT_VIEW.store(views.indexOf(this.currentView));
+            ApplicationPreferences.FILE_PANE_CURRENT_VIEW.store(views.indexOf(this.currentView));
             updateGui(UpdateAction.UPDATE_COLUMNS);
         });
 
@@ -489,7 +501,7 @@ public class FilePaneController implements FileStateController {
                 .showAndWait().ifPresent(r -> {
                     this.views.clear();
                     this.views.addAll(r);
-                    ApplicationPreferences.VIEWS.store(this.views);
+                    ApplicationPreferences.FILE_PANE_VIEWS.store(this.views);
                     this.updateGui(UpdateAction.UPDATE_VIEWS, UpdateAction.UPDATE_COLUMNS);
                 });
     }

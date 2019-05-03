@@ -16,7 +16,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.TreeMap;
-import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 /**
@@ -27,8 +26,9 @@ public enum ApplicationPreferences {
     RECENT_FILES(TreeMap.class, new TreeMap<>()),
     SAVE_DIRECTORY(File.class, new File(System.getProperty("user.home")).getAbsoluteFile()),
     OPEN_DIRECTORY(File.class, new File(System.getProperty("user.home")).getAbsoluteFile()),
-    VIEWS(ArrayList.class, new ArrayList<>()),
-    CURRENT_VIEW(Integer.class, -1);
+    FILE_PANE_SPLITPOS(Double.class, 0.3),
+    FILE_PANE_VIEWS(ArrayList.class, new ArrayList<>()),
+    FILE_PANE_CURRENT_VIEW(Integer.class, -1);
 
     <T extends Serializable> ApplicationPreferences(Class<T> valueType, T defaultValue) {
         this.valueType = valueType;
@@ -46,8 +46,7 @@ public enum ApplicationPreferences {
             java.io.ObjectOutputStream oos = new ObjectOutputStream(bos);
             oos.writeObject(object);
             prefs.put(this.name(), Base64.getEncoder().encodeToString(bos.toByteArray()));
-            prefs.flush();
-        } catch (IOException | BackingStoreException ex) {
+        } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -59,8 +58,8 @@ public enum ApplicationPreferences {
         }
         try (final java.io.ByteArrayInputStream bis = new ByteArrayInputStream(Base64.getDecoder().decode(data))) {
             ObjectInputStream ois = new ObjectInputStream(bis);
-            return (T) ois.readObject();
-        } catch (ObjectStreamException | ClassNotFoundException ex) {
+            return (T) valueType.cast(ois.readObject());
+        } catch (ObjectStreamException | ClassNotFoundException | ClassCastException ex) {
             prefs.remove(this.name());
             return (T) defaultValue;
         } catch (IOException ex) {

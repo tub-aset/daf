@@ -1,4 +1,4 @@
-package de.jpwinkler.daf.csveditor.views;
+package de.jpwinkler.daf.csveditor;
 
 import java.io.Serializable;
 
@@ -6,6 +6,8 @@ public class ColumnDefinition implements Serializable{
 
     public ColumnDefinition(String title) {
         this.title = title;
+        this.width = 150;
+        this.visible = true;
     }
 
     private String attributeName;
