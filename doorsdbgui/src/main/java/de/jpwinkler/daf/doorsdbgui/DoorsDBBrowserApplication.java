@@ -22,7 +22,6 @@ public class DoorsDBBrowserApplication extends Application {
             final Parent root = loader.load();
 
             browserController = loader.getController();
-            browserController.setStage(primaryStage);
 
             final Scene scene = new Scene(root);
             primaryStage.setScene(scene);

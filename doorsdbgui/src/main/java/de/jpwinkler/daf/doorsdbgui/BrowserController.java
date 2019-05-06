@@ -36,10 +36,6 @@ import javafx.stage.Stage;
 
 public class BrowserController {
 
-    private MainFX csvEditorApplication;
-
-    private Stage primaryStage;
-
     private DoorsApplication app;
 
     private FileDatabaseInterface db;
@@ -78,10 +74,6 @@ public class BrowserController {
     private ListView<DoorsModule> searchResultListView;
 
     private final SimpleObjectProperty<DoorsTreeNode> selectedItem = new SimpleObjectProperty<>();
-
-    public void setStage(final Stage primaryStage) {
-        this.primaryStage = primaryStage;
-    }
 
     @FXML
     public void initialize() throws FileNotFoundException, IOException {
