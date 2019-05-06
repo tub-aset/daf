@@ -17,6 +17,7 @@
             <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Doors.ecore#//DoorsTreeNode/attributes"/>
             <genFeatures createChild="false" ecoreFeature="ecore:EReference Doors.ecore#//DoorsTreeNode/name"/>
             <genFeatures property="Readonly" ecoreFeature="ecore:EReference Doors.ecore#//DoorsTreeNode/fullName"/>
+            <genFeatures property="Readonly" ecoreFeature="ecore:EReference Doors.ecore#//DoorsTreeNode/fullNameSegments"/>
             <genOperations ecoreOperation="Doors.ecore#//DoorsTreeNode/accept">
                 <genParameters ecoreParameter="Doors.ecore#//DoorsTreeNode/accept/visitor"/>
             </genOperations>

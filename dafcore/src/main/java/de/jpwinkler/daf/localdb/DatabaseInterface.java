@@ -20,7 +20,7 @@ import java.util.List;
  */
 public interface DatabaseInterface {
 
-    DoorsModule addModule(final String moduleName);
+    DoorsModule importModule(final DoorsModule module);
 
     void addTag(DoorsModule module, String value);
 
@@ -40,16 +40,9 @@ public interface DatabaseInterface {
 
     Collection<String> getTags();
 
-    DoorsModule importModule(final Path src, final Path dst);
-
     void removeFolder(final DoorsFolder folder);
 
     void removeModule(final DoorsModule module);
 
-    void removeTag(DoorsModule module, String tag);
-
-    List<DoorsModule> updateAllModules();
-
-    boolean updateModule(final DoorsModule module);
-    
+    void removeTag(DoorsModule module, String tag);    
 }

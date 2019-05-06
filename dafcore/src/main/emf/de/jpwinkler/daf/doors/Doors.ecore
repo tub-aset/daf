@@ -114,6 +114,8 @@
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="fullName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
                              changeable="false" volatile="true" transient="true" derived="true"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="fullNameSegments" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+                             changeable="false" volatile="true" transient="true" derived="true" upperBound="-1"/>
         
         <eOperations name="hasTag" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
             <eParameters name="tag" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

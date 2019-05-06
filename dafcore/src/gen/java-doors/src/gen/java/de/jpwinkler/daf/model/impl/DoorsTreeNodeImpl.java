@@ -24,6 +24,7 @@ import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsPackage;
 import de.jpwinkler.daf.model.DoorsTreeNode;
+import org.eclipse.emf.common.util.BasicEList;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '
@@ -37,6 +38,7 @@ import de.jpwinkler.daf.model.DoorsTreeNode;
  *   <li>{@link de.jpwinkler.daf.model.impl.DoorsTreeNodeImpl#getAttributes <em>Attributes</em>}</li>
  *   <li>{@link de.jpwinkler.daf.model.impl.DoorsTreeNodeImpl#getName <em>Name</em>}</li>
  *   <li>{@link de.jpwinkler.daf.model.impl.DoorsTreeNodeImpl#getFullName <em>Full Name</em>}</li>
+ *   <li>{@link de.jpwinkler.daf.model.impl.DoorsTreeNodeImpl#getFullNameSegments <em>Full Name Segments</em>}</li>
  * </ul>
  *
  * @generated
@@ -213,6 +215,22 @@ public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements D
 	}
 
 				/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	@Override
+	public EList<String> getFullNameSegments() {
+		DoorsTreeNode parent = this;
+                EList<String> fullName = new BasicEList<>();
+                while(parent != null) {
+                    fullName.add(0, parent.getName());
+                    parent = parent.getParent();
+                }
+                return fullName;
+	}
+
+				/**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      *
      * @generated NOT
@@ -317,6 +335,8 @@ public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements D
 				return getName();
 			case DoorsPackage.DOORS_TREE_NODE__FULL_NAME:
 				return getFullName();
+			case DoorsPackage.DOORS_TREE_NODE__FULL_NAME_SEGMENTS:
+				return getFullNameSegments();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -386,6 +406,8 @@ public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements D
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 			case DoorsPackage.DOORS_TREE_NODE__FULL_NAME:
 				return FULL_NAME_EDEFAULT == null ? getFullName() != null : !FULL_NAME_EDEFAULT.equals(getFullName());
+			case DoorsPackage.DOORS_TREE_NODE__FULL_NAME_SEGMENTS:
+				return !getFullNameSegments().isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

@@ -114,13 +114,22 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_TREE_NODE__FULL_NAME = 4;
 
 	/**
+	 * The feature id for the '<em><b>Full Name Segments</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TREE_NODE__FULL_NAME_SEGMENTS = 5;
+
+	/**
 	 * The number of structural features of the '<em>Tree Node</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_TREE_NODE_FEATURE_COUNT = 5;
+	int DOORS_TREE_NODE_FEATURE_COUNT = 6;
 
 	/**
 	 * The operation id for the '<em>Accept</em>' operation.
@@ -258,6 +267,15 @@ public interface DoorsPackage extends EPackage {
 	 * @ordered
 	 */
 	int DOORS_FOLDER__FULL_NAME = DOORS_TREE_NODE__FULL_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Full Name Segments</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_FOLDER__FULL_NAME_SEGMENTS = DOORS_TREE_NODE__FULL_NAME_SEGMENTS;
 
 	/**
 	 * The number of structural features of the '<em>Folder</em>' class.
@@ -433,6 +451,15 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_MODULE__FULL_NAME = DOORS_TREE_NODE__FULL_NAME;
 
 	/**
+	 * The feature id for the '<em><b>Full Name Segments</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_MODULE__FULL_NAME_SEGMENTS = DOORS_TREE_NODE__FULL_NAME_SEGMENTS;
+
+	/**
 	 * The feature id for the '<em><b>Path</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -603,6 +630,15 @@ public interface DoorsPackage extends EPackage {
 	 * @ordered
 	 */
 	int DOORS_OBJECT__FULL_NAME = DOORS_TREE_NODE__FULL_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Full Name Segments</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_OBJECT__FULL_NAME_SEGMENTS = DOORS_TREE_NODE__FULL_NAME_SEGMENTS;
 
 	/**
 	 * The feature id for the '<em><b>Object Identifier</b></em>' attribute.
@@ -1064,6 +1100,17 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getDoorsTreeNode_FullName();
+
+	/**
+	 * Returns the meta object for the attribute list '{@link de.jpwinkler.daf.model.DoorsTreeNode#getFullNameSegments <em>Full Name Segments</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute list '<em>Full Name Segments</em>'.
+	 * @see de.jpwinkler.daf.model.DoorsTreeNode#getFullNameSegments()
+	 * @see #getDoorsTreeNode()
+	 * @generated
+	 */
+	EAttribute getDoorsTreeNode_FullNameSegments();
 
 	/**
 	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsTreeNode#accept(de.jpwinkler.daf.model.DoorsTreeNodeVisitor) <em>Accept</em>}' operation.
@@ -1658,6 +1705,14 @@ public interface DoorsPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute DOORS_TREE_NODE__FULL_NAME = eINSTANCE.getDoorsTreeNode_FullName();
+
+		/**
+		 * The meta object literal for the '<em><b>Full Name Segments</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute DOORS_TREE_NODE__FULL_NAME_SEGMENTS = eINSTANCE.getDoorsTreeNode_FullNameSegments();
 
 		/**
 		 * The meta object literal for the '<em><b>Accept</b></em>' operation.

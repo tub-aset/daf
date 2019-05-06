@@ -5,6 +5,7 @@ import de.jpwinkler.daf.bridge.DoorsApplicationFactory;
 import de.jpwinkler.daf.bridge.DoorsItemType;
 import de.jpwinkler.daf.bridge.ItemRef;
 import de.jpwinkler.daf.bridge.ModuleRef;
+import de.jpwinkler.daf.csv.ModuleCSVWriter;
 import de.jpwinkler.daf.csv.ModuleMetaDataParser;
 import de.jpwinkler.daf.model.DoorsCSVFactory;
 import de.jpwinkler.daf.model.DoorsCSVPackage;
@@ -13,10 +14,12 @@ import de.jpwinkler.daf.model.DoorsDatabaseVersion;
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsModuleUtil;
+import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.search.SearchExpression;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -33,6 +36,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -47,8 +52,6 @@ public class FileDatabaseInterface implements DatabaseInterface {
     private final DoorsDB db;
     private final Path databaseFile;
     private final Path databaseRoot;
-
-    private final DoorsApplication app = DoorsApplicationFactory.getDoorsApplication();
 
     public static FileDatabaseInterface createOrOpenDB() throws IOException {
         return createOrOpenDB(DatabaseInterfaceUtils.getDefaultDatabaseDirectory(FileDatabaseInterface.class).resolve("db.doorsdbmodel"));
@@ -82,97 +85,30 @@ public class FileDatabaseInterface implements DatabaseInterface {
         this.db = db;
     }
 
-    private Path getCSVLocation(final DoorsDatabaseVersion v) {
-        return Paths.get(databaseRoot.toString(), v.getModule().getParent().getFullName(), v.getModule().getName() + "_" + new SimpleDateFormat("yyyyMMdd").format(v.getDate()) + ".csv");
-    }
-
-    private Path getMMDLocation(final DoorsDatabaseVersion v) {
-        return Paths.get(getCSVLocation(v).toString() + ".mmd");
-    }
-
     @Override
-    public DoorsModule addModule(final String moduleName) {
-        final ItemRef i = app.getItem(moduleName);
+    public DoorsModule importModule(DoorsModule newModule) {
+        DoorsFolder folder = this.ensureDatabasePath(newModule.getParent());
+        DoorsModule dbModule = folder.getModule(newModule.getName());
 
-        if (!i.exists()) {
-            throw new RuntimeException(moduleName + " does not exist.");
+        if (dbModule == null) {
+            dbModule = DoorsCSVFactory.eINSTANCE.createDoorsModule();
+            dbModule.setParent(folder);
+            dbModule.setName(newModule.getName());
         }
 
-        if (!(i.getType() == DoorsItemType.FORMAL)) {
-            throw new RuntimeException(moduleName + " is not a formal module.");
-        }
+        DoorsDatabaseVersion currentVersion = newModule.getLatestVersion();
 
-        final DoorsFolder folder = this.mkdirs(i.getParent());
+        Path csvPath = ensureCsvFilesystemPath(currentVersion);
+        try ( ModuleCSVWriter writer = new ModuleCSVWriter(new FileOutputStream(csvPath.toFile()))) {
+            writer.writeModule(newModule);
 
-        DoorsModule module = folder.getModule(i.getItemName().getName());
-        if (module == null) {
-            module = DoorsCSVFactory.eINSTANCE.createDoorsModule();
-            module.setParent(folder);
-            module.setName(i.getItemName().getName());
-        }
-        updateModule(module);
-        return module;
-    }
-
-    @Override
-    public boolean updateModule(final DoorsModule module) {
-        try {
-            final ItemRef i = app.getItem(module.getFullName());
-            final ModuleRef modRef = i.open();
-
-            final Map<String, String> metaData = modRef.getModuleAttributes();
-            Date lastChangedOn = DoorsModuleUtil.parseDate(metaData.get("Last Modified On"));
-
-            boolean result = false;
-
-            if (module.getLatestVersion() == null || module.getLatestVersion().getDate().before(lastChangedOn)) {
-                final DoorsDatabaseVersion version = DoorsCSVFactory.eINSTANCE.createDoorsDatabaseVersion();
-                version.setDate(lastChangedOn);
-                version.setModule(module);
-
-                Files.createDirectories(getCSVLocation(version).getParent());
-                modRef.exportToCSV(getCSVLocation(version).toFile());
-
-                final Map<String, String> attributes = new ModuleMetaDataParser().parseModuleMetaData(getMMDLocation(version).toFile());
-                for (final Entry<String, String> e : attributes.entrySet()) {
-                    version.getAttributes().put(e.getKey(), e.getValue());
-                }
-                Files.delete(getMMDLocation(version));
-                result = true;
-                flush();
-
-            }
-            modRef.close();
-            return result;
+            Path mmdPath = ensureMmdFilesystemPath(currentVersion);
+            ModuleMetaDataParser.writeModuleMetaData(mmdPath.toFile(), newModule.getAttributes().map());
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
-    }
-
-    @Override
-    public List<DoorsModule> updateAllModules() {
-        final List<DoorsModule> updatedModules = new ArrayList<>();
-        final Calendar c = Calendar.getInstance();
-        c.add(Calendar.YEAR, -1);
-        final Date cutoff = c.getTime();
-
-        db.accept(new DoorsTreeNodeVisitor() {
-
-            @Override
-            public void visitPostTraverse(final DoorsModule module) {
-                if (module.hasTag("sys:keepversion") || (module.getLatestVersion() != null && module.getLatestVersion().getDate().before(cutoff))) {
-                    System.out.println("skipping " + module.getFullName());
-                    return;
-                }
-                System.out.print("updating " + module.getFullName() + "... ");
-                if (updateModule(module)) {
-                    System.out.println("added new version.");
-                } else {
-                    System.out.println("up to date.");
-                }
-            }
-        });
-        return updatedModules;
+        
+        return dbModule;
     }
 
     @Override
@@ -195,8 +131,8 @@ public class FileDatabaseInterface implements DatabaseInterface {
         module.setParent(null);
         module.getVersions().forEach(v -> {
             try {
-                Files.deleteIfExists(getCSVLocation(v));
-                Files.deleteIfExists(getMMDLocation(v));
+                Files.deleteIfExists(ensureCsvFilesystemPath(v));
+                Files.deleteIfExists(ensureMmdFilesystemPath(v));
             } catch (final IOException e) {
                 throw new RuntimeException(e);
             }
@@ -273,66 +209,31 @@ public class FileDatabaseInterface implements DatabaseInterface {
         return current.getModule(pathSegments.get(pathSegments.size() - 1));
     }
 
-    @Override
-    public DoorsModule importModule(final Path src, final Path dst) {
-        final DoorsFolder folder = this.mkdirs(dst);
-
-        final String moduleName = FilenameUtils.removeExtension(src.getFileName().toString());
-        DoorsModule module = folder.getModule(moduleName);
-        if (module != null) {
-            System.out.println("Skipping " + src + ", already exists");
-            return module;
-        }
-
-        Date lastChangedOn;
-        Map<String, String> attributes;
+    private Path ensureCsvFilesystemPath(final DoorsDatabaseVersion v) {
         try {
-            attributes = new ModuleMetaDataParser().parseModuleMetaData(new File(src + ".mmd"));
-            lastChangedOn = DoorsModuleUtil.parseDate(attributes.get("Last Modified On"));
-        } catch (final FileNotFoundException e) {
-            lastChangedOn = new Date();
-            attributes = Collections.emptyMap();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            Path p = Paths.get(databaseRoot.toString(), v.getModule().getParent().getFullName(), v.getModule().getName() + "_" + new SimpleDateFormat("yyyyMMdd").format(v.getDate()) + ".csv");
+            Files.createDirectories(ensureCsvFilesystemPath(v).getParent());
+            return p;
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
+    }
 
-        module = DoorsCSVFactory.eINSTANCE.createDoorsModule();
-        module.setParent(folder);
-        module.setName(moduleName);
-
-        final DoorsDatabaseVersion version = DoorsCSVFactory.eINSTANCE.createDoorsDatabaseVersion();
-        version.setDate(lastChangedOn);
-        version.setModule(module);
-
+    private Path ensureMmdFilesystemPath(final DoorsDatabaseVersion version) {
         try {
-            Files.createDirectories(getCSVLocation(version).getParent());
-            FileUtils.copyFile(src.toFile(), getCSVLocation(version).toFile());
-
-            for (final Entry<String, String> e : attributes.entrySet()) {
-                version.getAttributes().put(e.getKey(), e.getValue());
-            }
-
-            return module;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            Path p = Paths.get(ensureCsvFilesystemPath(version).toString() + ".mmd");
+            Files.createDirectories(ensureCsvFilesystemPath(version).getParent());
+            return p;
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
     }
 
-    private DoorsFolder mkdirs(final ItemRef path) {
-        return ensurePath(db.getRoot(), path.getItemName().getPathSegments());
+    private DoorsFolder ensureDatabasePath(final DoorsTreeNode path) {
+        return ensureDatabasePath(db.getRoot(), path.getFullNameSegments());
     }
 
-    private DoorsFolder mkdirs(final Path path) {
-        System.out.println(path);
-        final List<String> segments = new ArrayList<>();
-        final Iterator<Path> iterator = path.iterator();
-        while (iterator.hasNext()) {
-            segments.add(iterator.next().toString());
-        }
-        return ensurePath(db.getRoot(), segments);
-    }
-
-    private static DoorsFolder ensurePath(final DoorsFolder parent, final List<String> path) {
+    private static DoorsFolder ensureDatabasePath(final DoorsFolder parent, final List<String> path) {
         if (path.size() > 0) {
             DoorsFolder folder = parent.getFolder(path.get(0));
             if (folder == null) {
@@ -341,7 +242,7 @@ public class FileDatabaseInterface implements DatabaseInterface {
                 parent.getChildren().add(folder);
             }
             if (path.size() > 1) {
-                return ensurePath(parent.getFolder(path.get(0)), path.subList(1, path.size()));
+                return ensureDatabasePath(parent.getFolder(path.get(0)), path.subList(1, path.size()));
             } else {
                 return folder;
             }

@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link de.jpwinkler.daf.model.DoorsTreeNode#getAttributes <em>Attributes</em>}</li>
  *   <li>{@link de.jpwinkler.daf.model.DoorsTreeNode#getName <em>Name</em>}</li>
  *   <li>{@link de.jpwinkler.daf.model.DoorsTreeNode#getFullName <em>Full Name</em>}</li>
+ *   <li>{@link de.jpwinkler.daf.model.DoorsTreeNode#getFullNameSegments <em>Full Name Segments</em>}</li>
  * </ul>
  *
  * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsTreeNode()
@@ -112,6 +113,18 @@ public interface DoorsTreeNode extends EObject {
 	 * @generated
 	 */
 	String getFullName();
+
+	/**
+	 * Returns the value of the '<em><b>Full Name Segments</b></em>' attribute list.
+	 * The list contents are of type {@link java.lang.String}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Full Name Segments</em>' attribute list.
+	 * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsTreeNode_FullNameSegments()
+	 * @model transient="true" changeable="false" volatile="true" derived="true"
+	 * @generated
+	 */
+	EList<String> getFullNameSegments();
 
 	/**
 	 * <!-- begin-user-doc -->
