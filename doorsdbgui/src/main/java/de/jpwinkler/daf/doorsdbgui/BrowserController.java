@@ -1,5 +1,18 @@
 package de.jpwinkler.daf.doorsdbgui;
 
+import de.jpwinkler.daf.bridge.DoorsApplication;
+import de.jpwinkler.daf.bridge.DoorsApplicationFactory;
+import de.jpwinkler.daf.bridge.DoorsException;
+import de.jpwinkler.daf.bridge.DoorsItemType;
+import de.jpwinkler.daf.bridge.ItemRef;
+import de.jpwinkler.daf.csv.CSVParseException;
+import de.jpwinkler.daf.csveditor.MainFX;
+import de.jpwinkler.daf.localdb.DoorsDBInterface;
+import de.jpwinkler.daf.model.DoorsDatabaseVersion;
+import de.jpwinkler.daf.model.DoorsFolder;
+import de.jpwinkler.daf.model.DoorsModule;
+import de.jpwinkler.daf.model.DoorsTreeNode;
+import de.jpwinkler.daf.search.SearchExpression;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
@@ -8,21 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.function.Consumer;
-
-import de.jpwinkler.daf.csveditor.MainFX;
-import de.jpwinkler.daf.doorscsv.util.CSVParseException;
-import de.jpwinkler.daf.doorsdb.DoorsDBInterface;
-import de.jpwinkler.daf.doorsdb.model.DBFolder;
-import de.jpwinkler.daf.doorsdb.model.DBItem;
-import de.jpwinkler.daf.doorsdb.model.DBModule;
-import de.jpwinkler.daf.doorsdb.model.DBTag;
-import de.jpwinkler.daf.doorsdb.model.DBVersion;
-import de.jpwinkler.daf.doorsdb.search.DBSearchExpression;
-import de.jpwinkler.daf.doorsdb.bridge.DoorsApplication;
-import de.jpwinkler.daf.doorsdb.bridge.DoorsApplicationFactory;
-import de.jpwinkler.daf.doorsdb.bridge.DoorsException;
-import de.jpwinkler.daf.doorsdb.bridge.DoorsItemType;
-import de.jpwinkler.daf.doorsdb.bridge.ItemRef;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -53,13 +51,13 @@ public class BrowserController {
     private TreeView<ItemRef> remoteTreeView;
 
     @FXML
-    private TreeView<DBItem> localTreeView;
+    private TreeView<DoorsTreeNode> localTreeView;
 
     @FXML
     private ListView<String> downloadQueueListView;
 
     @FXML
-    private ListView<DBVersion> versionsListView;
+    private ListView<DoorsDatabaseVersion> versionsListView;
 
     @FXML
     private ListView<String> tagsListView;
@@ -80,9 +78,9 @@ public class BrowserController {
     private TextField searchTextField;
 
     @FXML
-    private ListView<DBModule> searchResultListView;
+    private ListView<DoorsModule> searchResultListView;
 
-    private final SimpleObjectProperty<DBItem> selectedItem = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<DoorsTreeNode> selectedItem = new SimpleObjectProperty<>();
 
     public void setStage(final Stage primaryStage) {
         this.primaryStage = primaryStage;
@@ -109,8 +107,8 @@ public class BrowserController {
         remoteTreeView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         localTreeView.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 2 && localTreeView.getSelectionModel().getSelectedItem() != null && localTreeView.getSelectionModel().getSelectedItem().getValue() instanceof DBModule) {
-                final DBModule item = (DBModule) localTreeView.getSelectionModel().getSelectedItem().getValue();
+            if (event.getClickCount() == 2 && localTreeView.getSelectionModel().getSelectedItem() != null && localTreeView.getSelectionModel().getSelectedItem().getValue() instanceof DoorsModule) {
+                final DoorsModule item = (DoorsModule) localTreeView.getSelectionModel().getSelectedItem().getValue();
                 openInCSVBrowser(item.getLatestVersion());
             }
         });
@@ -128,8 +126,8 @@ public class BrowserController {
         searchResultListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> selectedItem.set(newValue));
 
         searchResultListView.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 2 && searchResultListView.getSelectionModel().getSelectedItem() != null && searchResultListView.getSelectionModel().getSelectedItem() instanceof DBModule) {
-                final DBModule item = searchResultListView.getSelectionModel().getSelectedItem();
+            if (event.getClickCount() == 2 && searchResultListView.getSelectionModel().getSelectedItem() != null && searchResultListView.getSelectionModel().getSelectedItem() instanceof DoorsModule) {
+                final DoorsModule item = searchResultListView.getSelectionModel().getSelectedItem();
                 openInCSVBrowser(item.getLatestVersion());
 
             }
@@ -145,7 +143,7 @@ public class BrowserController {
         });
     }
 
-    private void openInCSVBrowser(final DBVersion dbVersion) {
+    private void openInCSVBrowser(final DoorsDatabaseVersion dbVersion) {
         try {
             if (csvEditorApplication == null || !csvEditorApplication.getPrimaryStage().isShowing()) {
                 csvEditorApplication = new MainFX();
@@ -153,8 +151,7 @@ public class BrowserController {
             }
             csvEditorApplication.openFile(db.getCSVLocation(dbVersion).toFile());
         } catch (final Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -166,16 +163,15 @@ public class BrowserController {
             }
             downloadQueueListView.getItems().clear();
         } catch (DoorsException | IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         updateLocalTree();
     }
 
     @FXML
     public void addTagPressed() throws IOException {
-        if (selectedItem.get() instanceof DBModule) {
-            final DBModule module = (DBModule) selectedItem.get();
+        if (selectedItem.get() instanceof DoorsModule) {
+            final DoorsModule module = (DoorsModule) selectedItem.get();
             db.addTag(module, newTagComboBox.getValue());
             db.saveDB();
             updateTagsListView();
@@ -185,8 +181,8 @@ public class BrowserController {
 
     @FXML
     public void removeTagsPressed() throws IOException {
-        if (selectedItem.get() instanceof DBModule) {
-            final DBModule module = (DBModule) selectedItem.get();
+        if (selectedItem.get() instanceof DoorsModule) {
+            final DoorsModule module = (DoorsModule) selectedItem.get();
             for (final String tag : tagsListView.getSelectionModel().getSelectedItems()) {
                 db.removeTag(module, tag);
             }
@@ -197,12 +193,12 @@ public class BrowserController {
 
     @FXML
     public void localDeletePressed() throws IOException {
-        if (selectedItem.getValue() instanceof DBModule) {
-            db.removeModule((DBModule) selectedItem.get());
+        if (selectedItem.getValue() instanceof DoorsModule) {
+            db.removeModule((DoorsModule) selectedItem.get());
             updateLocalTree();
             db.saveDB();
-        } else if (selectedItem.getValue() instanceof DBFolder) {
-            db.removeFolder((DBFolder) selectedItem.get());
+        } else if (selectedItem.getValue() instanceof DoorsFolder) {
+            db.removeFolder((DoorsFolder) selectedItem.get());
             updateLocalTree();
             db.saveDB();
         }
@@ -210,8 +206,8 @@ public class BrowserController {
 
     @FXML
     public void localUpdatePressed() throws IOException, DoorsException, ParseException {
-        if (selectedItem.getValue() instanceof DBModule) {
-            final DBModule module = (DBModule) selectedItem.getValue();
+        if (selectedItem.getValue() instanceof DoorsModule) {
+            final DoorsModule module = (DoorsModule) selectedItem.getValue();
             db.updateModule(module);
             db.saveDB();
             updateVersionsListView();
@@ -245,7 +241,7 @@ public class BrowserController {
         for (final TreeItem<ItemRef> selectedItem : remoteTreeView.getSelectionModel().getSelectedItems()) {
             if (selectedItem.getValue().getType() == DoorsItemType.FORMAL) {
                 final ItemRef item = selectedItem.getValue();
-                final DBModule module = db.addModule(item.getItemName().getFullName());
+                final DoorsModule module = db.addModule(item.getItemName().getFullName());
                 openInCSVBrowser(module.getLatestVersion());
                 updateLocalTree();
             }
@@ -267,16 +263,16 @@ public class BrowserController {
         }
         searchResultListView.setVisible(true);
         localTreeView.setVisible(false);
-        final DBSearchExpression searchExpression = DBSearchExpression.compile(search);
+        final SearchExpression searchExpression = SearchExpression.compile(search);
         if (searchExpression != null) {
-            final List<DBModule> findModules = db.findModules(searchExpression);
+            final List<DoorsModule> findModules = db.findModules(searchExpression);
             searchResultListView.getItems().clear();
             searchResultListView.getItems().addAll(findModules);
         }
     }
 
     private void updateLocalTree() {
-        final HashMap<DBItem, Boolean> expanded = new HashMap<>();
+        final HashMap<DoorsTreeNode, Boolean> expanded = new HashMap<>();
         if (localTreeView.getRoot() != null) {
             traverseTreeItem(localTreeView.getRoot(), i -> expanded.put(i.getValue(), i.isExpanded()));
         }
@@ -287,8 +283,8 @@ public class BrowserController {
     private void updateNewTagComboBox() {
         final String oldValue = newTagComboBox.getValue();
         newTagComboBox.getItems().clear();
-        for (final DBTag tag : db.getDB().getTags()) {
-            newTagComboBox.getItems().add(tag.getName());
+        for (final String tag : db.getTags()) {
+            newTagComboBox.getItems().add(tag);
             Collections.sort(newTagComboBox.getItems());
         }
         newTagComboBox.setValue(oldValue);
@@ -296,22 +292,22 @@ public class BrowserController {
 
     private void updateTagsListView() {
         tagsListView.getItems().clear();
-        if (selectedItem.get() instanceof DBModule) {
-            tagsListView.getItems().addAll(db.getTags((DBModule) selectedItem.get()));
+        if (selectedItem.get() instanceof DoorsModule) {
+            tagsListView.getItems().addAll(db.getTags((DoorsModule) selectedItem.get()));
         }
     }
 
     private void updateVersionsListView() {
         versionsListView.getItems().clear();
-        if (selectedItem.get() instanceof DBModule) {
-            versionsListView.getItems().addAll(((DBModule) selectedItem.get()).getVersions());
+        if (selectedItem.get() instanceof DoorsModule) {
+            versionsListView.getItems().addAll(((DoorsModule) selectedItem.get()).getVersions());
         }
     }
 
     private void updateAttributesView() {
         attributesTableView.getItems().clear();
-        if (selectedItem.get() instanceof DBModule) {
-            final DBVersion latestVersion = ((DBModule) selectedItem.get()).getLatestVersion();
+        if (selectedItem.get() instanceof DoorsModule) {
+            final DoorsDatabaseVersion latestVersion = ((DoorsModule) selectedItem.get()).getLatestVersion();
             if (latestVersion != null) {
                 attributesTableView.setItems(FXCollections.observableArrayList(latestVersion.getAttributes().entrySet()));
             }

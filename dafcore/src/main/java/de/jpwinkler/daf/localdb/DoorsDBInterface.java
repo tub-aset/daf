@@ -326,4 +326,20 @@ public class DoorsDBInterface {
         return createOrOpenDB(path.resolve("db.doorsdbmodel"));
     }
 
+    public void removeTag(DoorsModule module, String tag) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void addTag(DoorsModule module, String value) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public Iterable<String> getTags(DoorsModule doorsModule) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public Iterable<String> getTags() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

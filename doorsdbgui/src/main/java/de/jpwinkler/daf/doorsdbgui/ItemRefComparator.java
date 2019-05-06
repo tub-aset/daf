@@ -1,9 +1,8 @@
 package de.jpwinkler.daf.doorsdbgui;
 
+import de.jpwinkler.daf.bridge.DoorsException;
+import de.jpwinkler.daf.bridge.ItemRef;
 import java.util.Comparator;
-
-import de.jpwinkler.daf.doorsdb.bridge.DoorsException;
-import de.jpwinkler.daf.doorsdb.bridge.ItemRef;
 import javafx.scene.control.TreeItem;
 
 public class ItemRefComparator implements Comparator<TreeItem<ItemRef>> {
@@ -17,8 +16,7 @@ public class ItemRefComparator implements Comparator<TreeItem<ItemRef>> {
                 return o1.getValue().getItemName().compareTo(o2.getValue().getItemName());
             }
         } catch (final DoorsException e) {
-            e.printStackTrace();
-            return 0;
+            throw new RuntimeException(e);
         }
 
     }

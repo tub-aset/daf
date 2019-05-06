@@ -1,11 +1,10 @@
 package de.jpwinkler.daf.doorsdbgui;
 
-import org.apache.lucene.document.Document;
-
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import org.apache.lucene.document.Document;
 
 public class MyListCell extends ListCell<Document> {
 
