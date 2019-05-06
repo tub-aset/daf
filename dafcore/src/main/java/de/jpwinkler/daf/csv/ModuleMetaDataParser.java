@@ -22,7 +22,6 @@ public class ModuleMetaDataParser {
     public Map<String, String> parseModuleMetaData(final File metaDataFile) throws IOException {
 
         final CSVParser parser = CSVParser.parse(metaDataFile, Charset.forName("UTF-8"), FORMAT);
-
         final Map<String, String> metadata = new HashMap<>();
 
         for (final CSVRecord record : parser.getRecords()) {

@@ -1,10 +1,8 @@
 package de.jpwinkler.daf.localdb.tasks;
 
-import de.jpwinkler.daf.localdb.DoorsDBInterface;
+import de.jpwinkler.daf.localdb.FileDatabaseInterface;
 import de.jpwinkler.daf.search.AndSearchExpression;
 import de.jpwinkler.daf.search.SearchExpression;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,14 +12,10 @@ public class ModuleTaskBuilder {
     private final List<ModuleSource> sources = new ArrayList<>();
     private final List<SearchExpression> filters = new ArrayList<>();
 
-    private final DoorsDBInterface databaseInterface;
+    private final FileDatabaseInterface databaseInterface;
     private boolean parallel = false;
 
-    public ModuleTaskBuilder() throws FileNotFoundException, IOException {
-        this(DoorsDBInterface.getDefaultDatabase());
-    }
-
-    public ModuleTaskBuilder(final DoorsDBInterface databaseInterface) {
+    public ModuleTaskBuilder(final FileDatabaseInterface databaseInterface) {
         super();
         this.databaseInterface = databaseInterface;
     }

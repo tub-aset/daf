@@ -158,5 +158,17 @@
             <artifactId>jacob</artifactId>
             <version>1.18</version>
         </dependency>
+        
+        <!--<dependency>
+            <groupId>org.neo4j</groupId>
+            <artifactId>neo4j</artifactId>
+            <version>3.5.5</version>
+        </dependency>-->
+        <dependency>
+            <groupId>net.harawata</groupId>
+            <artifactId>appdirs</artifactId>
+            <version>1.0.3</version>
+        </dependency>
+
     </dependencies>
 </project>

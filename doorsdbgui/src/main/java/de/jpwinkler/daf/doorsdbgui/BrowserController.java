@@ -7,7 +7,7 @@ import de.jpwinkler.daf.bridge.DoorsItemType;
 import de.jpwinkler.daf.bridge.ItemRef;
 import de.jpwinkler.daf.csv.CSVParseException;
 import de.jpwinkler.daf.csveditor.MainFX;
-import de.jpwinkler.daf.localdb.DoorsDBInterface;
+import de.jpwinkler.daf.localdb.FileDatabaseInterface;
 import de.jpwinkler.daf.model.DoorsDatabaseVersion;
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
@@ -45,7 +45,7 @@ public class BrowserController {
 
     private DoorsApplication app;
 
-    private DoorsDBInterface db;
+    private FileDatabaseInterface db;
 
     @FXML
     private TreeView<ItemRef> remoteTreeView;
@@ -89,7 +89,7 @@ public class BrowserController {
     @FXML
     public void initialize() throws FileNotFoundException, IOException {
         app = DoorsApplicationFactory.getDoorsApplication();
-        db = DoorsDBInterface.getDefaultDatabase();
+        db = FileDatabaseInterface.createOrOpenDB();
         updateLocalTree();
         updateNewTagComboBox();
         remoteTreeView.setRoot(new RemoteTreeItem(app.getRoot(), new ImageView(new Image(getClass().getResourceAsStream("/icons/doors_db.png")))));
@@ -144,7 +144,7 @@ public class BrowserController {
     }
 
     private void openInCSVBrowser(final DoorsDatabaseVersion dbVersion) {
-        try {
+        /*try {
             if (csvEditorApplication == null || !csvEditorApplication.getPrimaryStage().isShowing()) {
                 csvEditorApplication = new MainFX();
                 csvEditorApplication.start(new Stage());
@@ -152,7 +152,8 @@ public class BrowserController {
             csvEditorApplication.openFile(db.getCSVLocation(dbVersion).toFile());
         } catch (final Exception e) {
             throw new RuntimeException(e);
-        }
+        }*/
+        throw new UnsupportedOperationException();
     }
 
     @FXML
@@ -162,7 +163,7 @@ public class BrowserController {
                 db.addModule(item);
             }
             downloadQueueListView.getItems().clear();
-        } catch (DoorsException | IOException e) {
+        } catch (DoorsException e) {
             throw new RuntimeException(e);
         }
         updateLocalTree();
@@ -173,7 +174,7 @@ public class BrowserController {
         if (selectedItem.get() instanceof DoorsModule) {
             final DoorsModule module = (DoorsModule) selectedItem.get();
             db.addTag(module, newTagComboBox.getValue());
-            db.saveDB();
+            db.flush();
             updateTagsListView();
             updateNewTagComboBox();
         }
@@ -187,7 +188,7 @@ public class BrowserController {
                 db.removeTag(module, tag);
             }
             updateTagsListView();
-            db.saveDB();
+            db.flush();
         }
     }
 
@@ -196,11 +197,11 @@ public class BrowserController {
         if (selectedItem.getValue() instanceof DoorsModule) {
             db.removeModule((DoorsModule) selectedItem.get());
             updateLocalTree();
-            db.saveDB();
+            db.flush();
         } else if (selectedItem.getValue() instanceof DoorsFolder) {
             db.removeFolder((DoorsFolder) selectedItem.get());
             updateLocalTree();
-            db.saveDB();
+            db.flush();
         }
     }
 
@@ -209,7 +210,7 @@ public class BrowserController {
         if (selectedItem.getValue() instanceof DoorsModule) {
             final DoorsModule module = (DoorsModule) selectedItem.getValue();
             db.updateModule(module);
-            db.saveDB();
+            db.flush();
             updateVersionsListView();
         }
 
@@ -276,7 +277,7 @@ public class BrowserController {
         if (localTreeView.getRoot() != null) {
             traverseTreeItem(localTreeView.getRoot(), i -> expanded.put(i.getValue(), i.isExpanded()));
         }
-        localTreeView.setRoot(new LocalTreeItem(db.getDB().getRoot(), new ImageView(Images.IMAGE_DB)));
+        localTreeView.setRoot(new LocalTreeItem(db.getDatabaseObject().getRoot(), new ImageView(Images.IMAGE_DB)));
         traverseTreeItem(localTreeView.getRoot(), i -> i.setExpanded(expanded.containsKey(i.getValue()) && expanded.get(i.getValue())));
     }
 

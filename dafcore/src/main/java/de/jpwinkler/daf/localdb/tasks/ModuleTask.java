@@ -1,6 +1,6 @@
 package de.jpwinkler.daf.localdb.tasks;
 
-import de.jpwinkler.daf.localdb.DoorsDBInterface;
+import de.jpwinkler.daf.localdb.FileDatabaseInterface;
 import de.jpwinkler.daf.search.SearchExpression;
 import java.io.IOException;
 import java.util.List;
@@ -21,7 +21,7 @@ public class ModuleTask extends DoorsDBTask {
 
     private final List<ModuleSource> sources;
 
-    public ModuleTask(final DoorsDBInterface databaseInterface, final List<ModulePass> passes, final List<ModuleSource> sources, final SearchExpression filter, final boolean parallel) {
+    public ModuleTask(final FileDatabaseInterface databaseInterface, final List<ModulePass> passes, final List<ModuleSource> sources, final SearchExpression filter, final boolean parallel) {
         super(databaseInterface);
         this.sources = sources;
         this.passes = passes;
@@ -50,10 +50,9 @@ public class ModuleTask extends DoorsDBTask {
         postprocess();
         if (saveDatabase) {
             try {
-                getDatabaseInterface().saveDB();
+                getDatabaseInterface().flush();
             } catch (final IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
     }
@@ -79,8 +78,7 @@ public class ModuleTask extends DoorsDBTask {
         try {
             threadPool.awaitTermination(1, TimeUnit.DAYS);
         } catch (final InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 

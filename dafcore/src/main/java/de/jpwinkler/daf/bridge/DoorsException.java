@@ -26,7 +26,7 @@ package de.jpwinkler.daf.bridge;
  * @author jonwink
  *
  */
-public class DoorsException extends Exception {
+public class DoorsException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 

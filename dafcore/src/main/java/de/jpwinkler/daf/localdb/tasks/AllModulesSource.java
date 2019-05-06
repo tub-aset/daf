@@ -1,6 +1,6 @@
 package de.jpwinkler.daf.localdb.tasks;
 
-import de.jpwinkler.daf.localdb.DoorsDBInterface;
+import de.jpwinkler.daf.localdb.FileDatabaseInterface;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import java.util.function.Consumer;
@@ -12,8 +12,8 @@ public class AllModulesSource implements ModuleSource {
     }
 
     @Override
-    public void run(final DoorsDBInterface databaseInterface, final Consumer<DoorsModule> consumer) {
-        databaseInterface.getDB().accept(new DoorsTreeNodeVisitor() {
+    public void run(final FileDatabaseInterface databaseInterface, final Consumer<DoorsModule> consumer) {
+        databaseInterface.getDatabaseObject().accept(new DoorsTreeNodeVisitor() {
 
             @Override
             public void visitPostTraverse(final DoorsModule module) {

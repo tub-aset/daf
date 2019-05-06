@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DoorsModuleUtil {
 
@@ -44,8 +46,12 @@ public class DoorsModuleUtil {
 
     }
 
-    public static Date parseDate(final String doorsDateString) throws ParseException {
-        return new SimpleDateFormat("d MMMM yyyy", Locale.ENGLISH).parse(doorsDateString);
+    public static Date parseDate(final String doorsDateString) {
+        try {
+            return new SimpleDateFormat("d MMMM yyyy", Locale.ENGLISH).parse(doorsDateString);
+        } catch (ParseException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     public static void compareModules(final DoorsModule left, final DoorsModule right) {

@@ -2,7 +2,6 @@ package de.jpwinkler.daf.localdb;
 
 import de.jpwinkler.daf.bridge.DoorsApplication;
 import de.jpwinkler.daf.bridge.DoorsApplicationFactory;
-import de.jpwinkler.daf.bridge.DoorsException;
 import de.jpwinkler.daf.bridge.DoorsItemType;
 import de.jpwinkler.daf.bridge.ItemRef;
 import de.jpwinkler.daf.bridge.ModuleRef;
@@ -22,14 +21,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -42,7 +42,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
-public class DoorsDBInterface {
+public class FileDatabaseInterface implements DatabaseInterface {
 
     private final DoorsDB db;
     private final Path databaseFile;
@@ -50,44 +50,39 @@ public class DoorsDBInterface {
 
     private final DoorsApplication app = DoorsApplicationFactory.getDoorsApplication();
 
-    public static DoorsDBInterface createDB(final Path databaseFile) throws IOException {
-        final DoorsDB db = DoorsCSVFactory.eINSTANCE.createDoorsDB();
-        db.setRoot(DoorsCSVFactory.eINSTANCE.createDoorsFolder());
-        final DoorsDBInterface doorsDBInterface = new DoorsDBInterface(databaseFile, db);
-        doorsDBInterface.saveDB();
-        return doorsDBInterface;
+    public static FileDatabaseInterface createOrOpenDB() throws IOException {
+        return createOrOpenDB(DatabaseInterfaceUtils.getDefaultDatabaseDirectory(FileDatabaseInterface.class).resolve("db.doorsdbmodel"));
     }
 
-    public static DoorsDBInterface openDB(final Path databaseFile) throws IOException {
+    public static FileDatabaseInterface createOrOpenDB(Path databaseFile) throws IOException {
+        DoorsDB db;
 
-        DoorsCSVPackage.eINSTANCE.eClass();
-
-        final Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
-        reg.getExtensionToFactoryMap().put("doorsdbmodel", new XMIResourceFactoryImpl());
-
-        final ResourceSet resourceSet = new ResourceSetImpl();
-
-        // TODO verify
-        final Resource resource = resourceSet.getResource(URI.createFileURI(databaseFile.toString()), true);
-        final DoorsDB db = (DoorsDB) resource.getContents().get(0);
-        return new DoorsDBInterface(databaseFile, db);
-    }
-
-    public static DoorsDBInterface createOrOpenDB(final Path databaseFile) throws FileNotFoundException, IOException {
+        databaseFile = databaseFile.toAbsolutePath();
         if (Files.exists(databaseFile)) {
-            return openDB(databaseFile);
+            DoorsCSVPackage.eINSTANCE.eClass();
+
+            final Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
+            reg.getExtensionToFactoryMap().put("doorsdbmodel", new XMIResourceFactoryImpl());
+            final ResourceSet resourceSet = new ResourceSetImpl();
+            final Resource resource = resourceSet.getResource(URI.createFileURI(databaseFile.toString()), true);
+            db = (DoorsDB) resource.getContents().get(0);
         } else {
-            return createDB(databaseFile);
+            db = DoorsCSVFactory.eINSTANCE.createDoorsDB();
+            db.setRoot(DoorsCSVFactory.eINSTANCE.createDoorsFolder());
+            final FileDatabaseInterface doorsDBInterface = new FileDatabaseInterface(databaseFile, db);
+            doorsDBInterface.flush();
         }
+
+        return new FileDatabaseInterface(databaseFile, db);
     }
 
-    private DoorsDBInterface(final Path databaseFile, final DoorsDB db) throws IOException {
+    private FileDatabaseInterface(final Path databaseFile, final DoorsDB db) throws IOException {
         this.databaseFile = databaseFile.toAbsolutePath();
         databaseRoot = databaseFile.toAbsolutePath().getParent();
         this.db = db;
     }
 
-    public Path getCSVLocation(final DoorsDatabaseVersion v) {
+    private Path getCSVLocation(final DoorsDatabaseVersion v) {
         return Paths.get(databaseRoot.toString(), v.getModule().getParent().getFullName(), v.getModule().getName() + "_" + new SimpleDateFormat("yyyyMMdd").format(v.getDate()) + ".csv");
     }
 
@@ -95,7 +90,8 @@ public class DoorsDBInterface {
         return Paths.get(getCSVLocation(v).toString() + ".mmd");
     }
 
-    public DoorsModule addModule(final String moduleName) throws DoorsException, IOException {
+    @Override
+    public DoorsModule addModule(final String moduleName) {
         final ItemRef i = app.getItem(moduleName);
 
         if (!i.exists()) {
@@ -106,7 +102,7 @@ public class DoorsDBInterface {
             throw new RuntimeException(moduleName + " is not a formal module.");
         }
 
-        final DoorsFolder folder = DBUtils.mkdirs(db, i.getParent());
+        final DoorsFolder folder = this.mkdirs(i.getParent());
 
         DoorsModule module = folder.getModule(i.getItemName().getName());
         if (module == null) {
@@ -118,40 +114,42 @@ public class DoorsDBInterface {
         return module;
     }
 
-    public boolean updateModule(final DoorsModule module) throws DoorsException, IOException {
-        final ItemRef i = app.getItem(module.getFullName());
-        final ModuleRef modRef = i.open();
-
-        final Map<String, String> metaData = modRef.getModuleAttributes();
-        Date lastChangedOn;
+    @Override
+    public boolean updateModule(final DoorsModule module) {
         try {
-            lastChangedOn = DoorsModuleUtil.parseDate(metaData.get("Last Modified On"));
-        } catch (final ParseException e) {
-            throw new RuntimeException(e);
-        }
+            final ItemRef i = app.getItem(module.getFullName());
+            final ModuleRef modRef = i.open();
 
-        boolean result = false;
+            final Map<String, String> metaData = modRef.getModuleAttributes();
+            Date lastChangedOn = DoorsModuleUtil.parseDate(metaData.get("Last Modified On"));
 
-        if (module.getLatestVersion() == null || module.getLatestVersion().getDate().before(lastChangedOn)) {
-            final DoorsDatabaseVersion version = DoorsCSVFactory.eINSTANCE.createDoorsDatabaseVersion();
-            version.setDate(lastChangedOn);
-            version.setModule(module);
+            boolean result = false;
 
-            Files.createDirectories(getCSVLocation(version).getParent());
-            modRef.exportToCSV(getCSVLocation(version).toFile());
+            if (module.getLatestVersion() == null || module.getLatestVersion().getDate().before(lastChangedOn)) {
+                final DoorsDatabaseVersion version = DoorsCSVFactory.eINSTANCE.createDoorsDatabaseVersion();
+                version.setDate(lastChangedOn);
+                version.setModule(module);
 
-            final Map<String, String> attributes = new ModuleMetaDataParser().parseModuleMetaData(getMMDLocation(version).toFile());
-            for (final Entry<String, String> e : attributes.entrySet()) {
-                version.getAttributes().put(e.getKey(), e.getValue());
+                Files.createDirectories(getCSVLocation(version).getParent());
+                modRef.exportToCSV(getCSVLocation(version).toFile());
+
+                final Map<String, String> attributes = new ModuleMetaDataParser().parseModuleMetaData(getMMDLocation(version).toFile());
+                for (final Entry<String, String> e : attributes.entrySet()) {
+                    version.getAttributes().put(e.getKey(), e.getValue());
+                }
+                Files.delete(getMMDLocation(version));
+                result = true;
+                flush();
+
             }
-            Files.delete(getMMDLocation(version));
-            result = true;
-            saveDB();
+            modRef.close();
+            return result;
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
-        modRef.close();
-        return result;
     }
 
+    @Override
     public List<DoorsModule> updateAllModules() {
         final List<DoorsModule> updatedModules = new ArrayList<>();
         final Calendar c = Calendar.getInstance();
@@ -166,22 +164,19 @@ public class DoorsDBInterface {
                     System.out.println("skipping " + module.getFullName());
                     return;
                 }
-                try {
-                    System.out.print("updating " + module.getFullName() + "... ");
-                    if (updateModule(module)) {
-                        System.out.println("added new version.");
-                    } else {
-                        System.out.println("up to date.");
-                    }
-                } catch (DoorsException | IOException e) {
-                    throw new RuntimeException(e);
+                System.out.print("updating " + module.getFullName() + "... ");
+                if (updateModule(module)) {
+                    System.out.println("added new version.");
+                } else {
+                    System.out.println("up to date.");
                 }
             }
         });
         return updatedModules;
     }
 
-    public void saveDB() throws IOException {
+    @Override
+    public void flush() throws IOException {
         final Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
         reg.getExtensionToFactoryMap().put("doorsdbmodel", new XMIResourceFactoryImpl());
         final ResourceSet resourceSet = new ResourceSetImpl();
@@ -190,10 +185,12 @@ public class DoorsDBInterface {
         resource.save(new HashMap<>());
     }
 
-    public DoorsDB getDB() {
+    @Override
+    public DoorsDB getDatabaseObject() {
         return db;
     }
 
+    @Override
     public void removeModule(final DoorsModule module) {
         module.setParent(null);
         module.getVersions().forEach(v -> {
@@ -201,13 +198,13 @@ public class DoorsDBInterface {
                 Files.deleteIfExists(getCSVLocation(v));
                 Files.deleteIfExists(getMMDLocation(v));
             } catch (final IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         });
         module.getVersions().clear();
     }
 
+    @Override
     public void removeFolder(final DoorsFolder folder) {
         final List<DoorsModule> markedForDeletion = new ArrayList<>();
         folder.accept(new DoorsTreeNodeVisitor() {
@@ -222,6 +219,7 @@ public class DoorsDBInterface {
         folder.setParent(null);
     }
 
+    @Override
     public List<DoorsModule> getAllModules() {
         final List<DoorsModule> result = new ArrayList<>();
         db.getRoot().accept(new DoorsTreeNodeVisitor() {
@@ -234,6 +232,7 @@ public class DoorsDBInterface {
         return result;
     }
 
+    @Override
     public List<DoorsModule> findModules(final SearchExpression e) {
         final List<DoorsModule> result = new ArrayList<>();
         db.getRoot().accept(new DoorsTreeNodeVisitor() {
@@ -248,9 +247,10 @@ public class DoorsDBInterface {
         return result;
     }
 
+    @Override
     public DoorsFolder getFolder(final String path) {
         final List<String> pathSegments = Arrays.asList(path.split("/")).stream().filter(s -> !s.isEmpty()).collect(Collectors.toList());
-        DoorsFolder current = getDB().getRoot();
+        DoorsFolder current = getDatabaseObject().getRoot();
         for (final String segment : pathSegments.subList(0, pathSegments.size())) {
             current = current.getFolder(segment);
             if (current == null) {
@@ -260,9 +260,10 @@ public class DoorsDBInterface {
         return current;
     }
 
+    @Override
     public DoorsModule getModule(final String path) {
         final List<String> pathSegments = Arrays.asList(path.split("/")).stream().filter(s -> !s.isEmpty()).collect(Collectors.toList());
-        DoorsFolder current = getDB().getRoot();
+        DoorsFolder current = getDatabaseObject().getRoot();
         for (final String segment : pathSegments.subList(0, pathSegments.size() - 1)) {
             current = current.getFolder(segment);
             if (current == null) {
@@ -272,73 +273,100 @@ public class DoorsDBInterface {
         return current.getModule(pathSegments.get(pathSegments.size() - 1));
     }
 
-    public DoorsModule importModule(final Path src, final Path dst) throws IOException {
-        final DoorsFolder folder = DBUtils.mkdirs(db, dst);
+    @Override
+    public DoorsModule importModule(final Path src, final Path dst) {
+        final DoorsFolder folder = this.mkdirs(dst);
 
         final String moduleName = FilenameUtils.removeExtension(src.getFileName().toString());
         DoorsModule module = folder.getModule(moduleName);
-        if (module == null) {
-            Date lastChangedOn;
-            Map<String, String> attributes;
-            try {
-                attributes = new ModuleMetaDataParser().parseModuleMetaData(new File(src + ".mmd"));
-                lastChangedOn = DoorsModuleUtil.parseDate(attributes.get("Last Modified On"));
-            } catch (final FileNotFoundException e) {
-                lastChangedOn = new Date();
-                attributes = Collections.emptyMap();
-            } catch (final ParseException e) {
-                throw new RuntimeException(e);
-            }
+        if (module != null) {
+            System.out.println("Skipping " + src + ", already exists");
+            return module;
+        }
 
-            module = DoorsCSVFactory.eINSTANCE.createDoorsModule();
-            module.setParent(folder);
-            module.setName(moduleName);
+        Date lastChangedOn;
+        Map<String, String> attributes;
+        try {
+            attributes = new ModuleMetaDataParser().parseModuleMetaData(new File(src + ".mmd"));
+            lastChangedOn = DoorsModuleUtil.parseDate(attributes.get("Last Modified On"));
+        } catch (final FileNotFoundException e) {
+            lastChangedOn = new Date();
+            attributes = Collections.emptyMap();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
-            final DoorsDatabaseVersion version = DoorsCSVFactory.eINSTANCE.createDoorsDatabaseVersion();
-            version.setDate(lastChangedOn);
-            version.setModule(module);
+        module = DoorsCSVFactory.eINSTANCE.createDoorsModule();
+        module.setParent(folder);
+        module.setName(moduleName);
 
+        final DoorsDatabaseVersion version = DoorsCSVFactory.eINSTANCE.createDoorsDatabaseVersion();
+        version.setDate(lastChangedOn);
+        version.setModule(module);
+
+        try {
             Files.createDirectories(getCSVLocation(version).getParent());
-
             FileUtils.copyFile(src.toFile(), getCSVLocation(version).toFile());
 
             for (final Entry<String, String> e : attributes.entrySet()) {
                 version.getAttributes().put(e.getKey(), e.getValue());
             }
-        } else {
-            System.out.println("Skipping " + src + ", already exists");
-        }
 
-        return module;
+            return module;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public static DoorsDBInterface getDefaultDatabase() throws FileNotFoundException, IOException {
-        final String doorsdb_home = System.getenv("DOORSDB_HOME");
-        Path path;
-        if (doorsdb_home != null) {
-            path = Paths.get(doorsdb_home);
-        } else {
-            path = Paths.get(System.getenv("LOCALAPPDATA"), "DoorsDB");
-        }
-        if (!Files.exists(path)) {
-            Files.createDirectory(path);
-        }
-        return createOrOpenDB(path.resolve("db.doorsdbmodel"));
+    private DoorsFolder mkdirs(final ItemRef path) {
+        return ensurePath(db.getRoot(), path.getItemName().getPathSegments());
     }
 
+    private DoorsFolder mkdirs(final Path path) {
+        System.out.println(path);
+        final List<String> segments = new ArrayList<>();
+        final Iterator<Path> iterator = path.iterator();
+        while (iterator.hasNext()) {
+            segments.add(iterator.next().toString());
+        }
+        return ensurePath(db.getRoot(), segments);
+    }
+
+    private static DoorsFolder ensurePath(final DoorsFolder parent, final List<String> path) {
+        if (path.size() > 0) {
+            DoorsFolder folder = parent.getFolder(path.get(0));
+            if (folder == null) {
+                folder = DoorsCSVFactory.eINSTANCE.createDoorsFolder();
+                folder.setName(path.get(0));
+                parent.getChildren().add(folder);
+            }
+            if (path.size() > 1) {
+                return ensurePath(parent.getFolder(path.get(0)), path.subList(1, path.size()));
+            } else {
+                return folder;
+            }
+        } else {
+            return null;
+        }
+    }
+
+    @Override
     public void removeTag(DoorsModule module, String tag) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
     public void addTag(DoorsModule module, String value) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public Iterable<String> getTags(DoorsModule doorsModule) {
+    @Override
+    public Collection<String> getTags(DoorsModule doorsModule) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public Iterable<String> getTags() {
+    @Override
+    public Collection<String> getTags() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
