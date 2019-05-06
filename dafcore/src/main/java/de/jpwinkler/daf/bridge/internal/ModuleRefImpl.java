@@ -18,7 +18,6 @@
 package de.jpwinkler.daf.bridge.internal;
 
 import de.jpwinkler.daf.bridge.DoorsRuntimeException;
-import de.jpwinkler.daf.bridge.DoorsURL;
 import de.jpwinkler.daf.bridge.ModuleRef;
 import java.io.File;
 import java.io.IOException;
@@ -39,15 +38,9 @@ class ModuleRefImpl implements ModuleRef {
             .withRecordSeparator("\r\n");
 
     private final DoorsApplicationImpl doorsApplicationImpl;
-    private DoorsURL url;
     private String name;
 
     private boolean closed = false;
-
-    public ModuleRefImpl(final DoorsApplicationImpl doorsApplicationImpl, final DoorsURL url) {
-        this.doorsApplicationImpl = doorsApplicationImpl;
-        this.url = url;
-    }
 
     public ModuleRefImpl(final DoorsApplicationImpl doorsApplicationImpl, final String name) {
         this.doorsApplicationImpl = doorsApplicationImpl;
@@ -69,7 +62,7 @@ class ModuleRefImpl implements ModuleRef {
             builder.addLibrary(new InternalDXLScript("lib/export_csv.dxl"));
             builder.addLibrary(new InternalDXLScript("lib/export_mmd.dxl"));
             builder.addScript(new InternalDXLScript("export_csv_single.dxl"));
-            builder.setVariable("url", url != null ? url.getUrl() : null);
+            builder.setVariable("url", null);
             builder.setVariable("name", name);
             builder.setVariable("view", view);
             builder.setVariable("file", file.getAbsolutePath());
@@ -84,7 +77,7 @@ class ModuleRefImpl implements ModuleRef {
         doorsApplicationImpl.buildAndRunCommand(builder -> {
             builder.addLibrary(new InternalDXLScript("lib/utils.dxl"));
             builder.addScript(new InternalDXLScript("goto_object.dxl"));
-            builder.setVariable("url", url != null ? url.getUrl() : null);
+            builder.setVariable("url", null);
             builder.setVariable("name", name);
             builder.setVariable("absoluteNumber", String.valueOf(absoluteNumber));
         });
@@ -99,7 +92,7 @@ class ModuleRefImpl implements ModuleRef {
         doorsApplicationImpl.buildAndRunCommand(builder -> {
             builder.addLibrary(new InternalDXLScript("lib/utils.dxl"));
             builder.addScript(new InternalDXLScript("close_module.dxl"));
-            builder.setVariable("url", url != null ? url.getUrl() : null);
+            builder.setVariable("url", null);
             builder.setVariable("name", name);
         });
         closed = true;
@@ -122,7 +115,7 @@ class ModuleRefImpl implements ModuleRef {
             builder.addLibrary(new InternalDXLScript("lib/utils.dxl"));
             builder.addLibrary(new InternalDXLScript("lib/export_mmd.dxl"));
             builder.addScript(new InternalDXLScript("get_module_attributes.dxl"));
-            builder.setVariable("url", url != null ? url.getUrl() : null);
+            builder.setVariable("url", null);
             builder.setVariable("name", name);
         });
 

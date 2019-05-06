@@ -23,7 +23,6 @@ import de.jpwinkler.daf.bridge.DoorsApplication;
 import de.jpwinkler.daf.bridge.DoorsItemType;
 import de.jpwinkler.daf.bridge.DoorsNotRunningException;
 import de.jpwinkler.daf.bridge.DoorsRuntimeException;
-import de.jpwinkler.daf.bridge.DoorsURL;
 import de.jpwinkler.daf.bridge.ItemRef;
 import de.jpwinkler.daf.bridge.ModuleRef;
 import de.jpwinkler.daf.bridge.user32.Window;
@@ -162,16 +161,6 @@ public class DoorsApplicationImpl implements DoorsApplication {
             builder.addScript(new InternalDXLScript("ack.dxl"));
             builder.setVariable("message", message);
         });
-    }
-
-    @Override
-    public ModuleRef openModule(final DoorsURL url) {
-        buildAndRunCommand(builder -> {
-            builder.addLibrary(new InternalDXLScript("lib/utils.dxl"));
-            builder.addScript(new InternalDXLScript("open_module.dxl"));
-            builder.setVariable("url", url.getUrl());
-        });
-        return new ModuleRefImpl(this, url);
     }
 
     @Override

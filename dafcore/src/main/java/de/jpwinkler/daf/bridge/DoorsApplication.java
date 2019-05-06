@@ -59,17 +59,6 @@ public interface DoorsApplication {
     /**
      * Opens a module for reading.
      *
-     * @param url
-     *            The URL of the module to be opened.
-     * @return An interface used for interacting with the module.
-     * @throws DoorsRuntimeException
-     *             If the module does not exist.
-     */
-    ModuleRef openModule(DoorsURL url);
-
-    /**
-     * Opens a module for reading.
-     *
      * @param name
      *            The path of the module.
      * @return An interface used for interacting with the module.
