@@ -15,7 +15,7 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
-import de.jpwinkler.daf.doorscsv.FindObjectVisitor;
+import de.jpwinkler.daf.csv.FindObjectVisitor;
 import de.jpwinkler.daf.model.AttributeDefinition;
 import de.jpwinkler.daf.model.DoorsDatabaseVersion;
 import de.jpwinkler.daf.model.DoorsModule;
