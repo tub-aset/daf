@@ -4,7 +4,6 @@ import de.jpwinkler.daf.bridge.DoorsApplication;
 import de.jpwinkler.daf.bridge.DoorsApplicationFactory;
 import de.jpwinkler.daf.bridge.DoorsItemType;
 import de.jpwinkler.daf.bridge.ItemRef;
-import de.jpwinkler.daf.csveditor.MainFX;
 import de.jpwinkler.daf.localdb.FileDatabaseInterface;
 import de.jpwinkler.daf.model.DoorsDatabaseVersion;
 import de.jpwinkler.daf.model.DoorsFolder;
@@ -32,7 +31,6 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.stage.Stage;
 
 public class BrowserController {
 

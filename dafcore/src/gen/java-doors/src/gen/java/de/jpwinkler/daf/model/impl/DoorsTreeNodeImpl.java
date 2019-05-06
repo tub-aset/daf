@@ -2,12 +2,16 @@
  */
 package de.jpwinkler.daf.model.impl;
 
+import de.jpwinkler.daf.model.DoorsObject;
+import de.jpwinkler.daf.model.DoorsPackage;
+import de.jpwinkler.daf.model.DoorsTreeNode;
+import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
-
 import java.util.regex.Pattern;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EClass;
@@ -19,12 +23,6 @@ import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EcoreEMap;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
-
-import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
-import de.jpwinkler.daf.model.DoorsObject;
-import de.jpwinkler.daf.model.DoorsPackage;
-import de.jpwinkler.daf.model.DoorsTreeNode;
-import org.eclipse.emf.common.util.BasicEList;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '

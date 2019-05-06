@@ -1,6 +1,5 @@
 package de.jpwinkler.daf.csv;
 
-import de.jpwinkler.daf.model.DoorsModule;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;

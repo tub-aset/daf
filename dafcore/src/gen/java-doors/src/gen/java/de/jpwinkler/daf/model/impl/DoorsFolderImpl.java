@@ -4,13 +4,10 @@ package de.jpwinkler.daf.model.impl;
 
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
-
 import de.jpwinkler.daf.model.DoorsPackage;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.lang.reflect.InvocationTargetException;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 
 /**

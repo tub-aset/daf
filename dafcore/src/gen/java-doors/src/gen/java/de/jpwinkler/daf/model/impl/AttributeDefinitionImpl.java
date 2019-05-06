@@ -5,9 +5,7 @@ package de.jpwinkler.daf.model.impl;
 import de.jpwinkler.daf.model.AttributeDefinition;
 import de.jpwinkler.daf.model.DoorsPackage;
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 

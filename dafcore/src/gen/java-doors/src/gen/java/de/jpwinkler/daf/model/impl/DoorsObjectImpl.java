@@ -2,9 +2,13 @@
  */
 package de.jpwinkler.daf.model.impl;
 
+import de.jpwinkler.daf.model.DoorsModule;
+import de.jpwinkler.daf.model.DoorsObject;
+import de.jpwinkler.daf.model.DoorsPackage;
+import de.jpwinkler.daf.model.Link;
+import de.jpwinkler.daf.model.ResolvedLink;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
@@ -14,11 +18,6 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
-import de.jpwinkler.daf.model.DoorsModule;
-import de.jpwinkler.daf.model.DoorsObject;
-import de.jpwinkler.daf.model.DoorsPackage;
-import de.jpwinkler.daf.model.Link;
-import de.jpwinkler.daf.model.ResolvedLink;
 
 /**
  * <!-- begin-user-doc -->

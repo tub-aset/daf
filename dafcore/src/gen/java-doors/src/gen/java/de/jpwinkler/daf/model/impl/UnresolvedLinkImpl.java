@@ -4,11 +4,8 @@ package de.jpwinkler.daf.model.impl;
 
 import de.jpwinkler.daf.model.DoorsPackage;
 import de.jpwinkler.daf.model.UnresolvedLink;
-
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**

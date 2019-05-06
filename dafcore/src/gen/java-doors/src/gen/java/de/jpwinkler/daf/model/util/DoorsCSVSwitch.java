@@ -3,12 +3,9 @@
 package de.jpwinkler.daf.model.util;
 
 import de.jpwinkler.daf.model.*;
-
 import java.util.Map;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.util.Switch;
 
 /**

@@ -15,9 +15,7 @@ import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.model.Link;
 import de.jpwinkler.daf.model.ResolvedLink;
 import de.jpwinkler.daf.model.UnresolvedLink;
-
 import java.util.Map;
-
 import java.util.regex.Pattern;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -25,7 +23,6 @@ import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**

@@ -2,19 +2,13 @@
  */
 package de.jpwinkler.daf.model.impl;
 
-import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
-
 import de.jpwinkler.daf.model.*;
-
 import java.util.Map;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 /**
