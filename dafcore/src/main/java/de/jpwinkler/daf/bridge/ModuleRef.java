@@ -54,13 +54,6 @@ public interface ModuleRef {
     void exportToCSV(File file, String view);
 
     /**
-     * Selects the object with the given absolute number.
-     *
-     * @param absoluteNumber
-     */
-    void gotoObject(int absoluteNumber);
-
-    /**
      * Closes the module.
      */
     void close();

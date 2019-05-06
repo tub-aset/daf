@@ -70,20 +70,6 @@ class ModuleRefImpl implements ModuleRef {
     }
 
     @Override
-    public void gotoObject(final int absoluteNumber) {
-        if (closed) {
-            throw new DoorsRuntimeException("Module is closed.");
-        }
-        doorsApplicationImpl.buildAndRunCommand(builder -> {
-            builder.addLibrary(new InternalDXLScript("lib/utils.dxl"));
-            builder.addScript(new InternalDXLScript("goto_object.dxl"));
-            builder.setVariable("url", null);
-            builder.setVariable("name", name);
-            builder.setVariable("absoluteNumber", String.valueOf(absoluteNumber));
-        });
-    }
-
-    @Override
     public void close() {
         if (closed) {
             throw new DoorsRuntimeException("Module is closed.");
