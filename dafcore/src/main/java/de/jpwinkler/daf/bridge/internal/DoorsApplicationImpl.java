@@ -21,7 +21,6 @@ import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.Dispatch;
 import de.jpwinkler.daf.bridge.DoorsApplication;
 import de.jpwinkler.daf.bridge.DoorsItemType;
-import de.jpwinkler.daf.bridge.DoorsNotRunningException;
 import de.jpwinkler.daf.bridge.DoorsRuntimeException;
 import de.jpwinkler.daf.bridge.ItemRef;
 import de.jpwinkler.daf.bridge.ModuleRef;
@@ -142,7 +141,7 @@ public class DoorsApplicationImpl implements DoorsApplication {
 
     synchronized private void runStr(final String dxl) {
         if (!isDoorsRunning()) {
-            throw new DoorsNotRunningException();
+            throw new DoorsRuntimeException("DOORS is not running");
         }
         final ActiveXComponent doorsApplication = getDoorsApplication();
 
