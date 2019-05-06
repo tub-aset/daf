@@ -10,7 +10,6 @@ import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.search.SearchExpression;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 
@@ -20,29 +19,35 @@ import java.util.List;
  */
 public interface DatabaseInterface {
 
-    DoorsModule importModule(final DoorsModule module);
-
-    void addTag(DoorsModule module, String value);
-
-    List<DoorsModule> findModules(final SearchExpression e);
-
     void flush() throws IOException;
 
-    List<DoorsModule> getAllModules();
-
     DoorsDB getDatabaseObject();
-
-    DoorsFolder getFolder(final String path);
+    
+    
 
     DoorsModule getModule(final String path);
-
-    Collection<String> getTags(DoorsModule doorsModule);
-
-    Collection<String> getTags();
-
-    void removeFolder(final DoorsFolder folder);
-
+    
+    List<DoorsModule> getModules();
+    
+    List<DoorsModule> getModules(final SearchExpression e);
+    
+    DoorsModule importModule(final DoorsModule module);
+    
     void removeModule(final DoorsModule module);
+    
+    
+    
+    DoorsFolder getFolder(final String path);
+    
+    void removeFolder(final DoorsFolder folder);
+    
 
+    
+    Collection<String> getTags();
+    
+    Collection<String> getTags(DoorsModule doorsModule);
+    
+    void addTag(DoorsModule module, String value);
+    
     void removeTag(DoorsModule module, String tag);    
 }

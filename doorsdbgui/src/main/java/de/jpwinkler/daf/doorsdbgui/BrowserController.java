@@ -251,7 +251,7 @@ public class BrowserController {
         localTreeView.setVisible(false);
         final SearchExpression searchExpression = SearchExpression.compile(search);
         if (searchExpression != null) {
-            final List<DoorsModule> findModules = db.findModules(searchExpression);
+            final List<DoorsModule> findModules = db.getModules(searchExpression);
             searchResultListView.getItems().clear();
             searchResultListView.getItems().addAll(findModules);
         }

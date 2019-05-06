@@ -156,7 +156,7 @@ public class FileDatabaseInterface implements DatabaseInterface {
     }
 
     @Override
-    public List<DoorsModule> getAllModules() {
+    public List<DoorsModule> getModules() {
         final List<DoorsModule> result = new ArrayList<>();
         db.getRoot().accept(new DoorsTreeNodeVisitor() {
 
@@ -169,7 +169,7 @@ public class FileDatabaseInterface implements DatabaseInterface {
     }
 
     @Override
-    public List<DoorsModule> findModules(final SearchExpression e) {
+    public List<DoorsModule> getModules(final SearchExpression e) {
         final List<DoorsModule> result = new ArrayList<>();
         db.getRoot().accept(new DoorsTreeNodeVisitor() {
 
