@@ -1,15 +1,14 @@
 package de.jpwinkler.daf.csveditor.commands.module;
 
 import de.jpwinkler.daf.csveditor.CommandStack.AbstractCommand;
+import de.jpwinkler.daf.model.DoorsModule;
+import de.jpwinkler.daf.model.DoorsObject;
+import de.jpwinkler.daf.model.DoorsTreeNode;
+import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import de.jpwinkler.daf.doorscsv.DoorsTreeNodeVisitor;
-import de.jpwinkler.daf.doorscsv.model.DoorsModule;
-import de.jpwinkler.daf.doorscsv.model.DoorsObject;
-import de.jpwinkler.daf.doorscsv.model.DoorsTreeNode;
 
 public class FlattenCommand extends AbstractCommand {
 

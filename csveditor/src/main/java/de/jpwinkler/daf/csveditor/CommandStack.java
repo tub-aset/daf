@@ -1,7 +1,7 @@
 package de.jpwinkler.daf.csveditor;
 
 import de.jpwinkler.daf.csveditor.commands.module.UpdateAction;
-import de.jpwinkler.daf.doorscsv.model.DoorsModule;
+import de.jpwinkler.daf.model.DoorsModule;
 
 public class CommandStack {
 

@@ -2,14 +2,12 @@ package de.jpwinkler.daf.csveditor.commands.object;
 
 import de.jpwinkler.daf.csveditor.CommandStack.AbstractCommand;
 import de.jpwinkler.daf.csveditor.commands.module.UpdateAction;
+import de.jpwinkler.daf.model.DoorsModule;
+import de.jpwinkler.daf.model.DoorsObject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.eclipse.emf.ecore.util.EcoreUtil;
-
-import de.jpwinkler.daf.doorscsv.model.DoorsModule;
-import de.jpwinkler.daf.doorscsv.model.DoorsObject;
 
 public class PasteObjectsAfterCommand extends AbstractCommand {
 

@@ -1,10 +1,5 @@
 package de.jpwinkler.daf.csveditor.filter;
 
-import java.util.Deque;
-import java.util.LinkedList;
-
-import org.apache.commons.lang.StringEscapeUtils;
-
 import de.jpwinkler.daf.csveditor.filter.DoorsObjectFilterParser.AndFilterExpressionContext;
 import de.jpwinkler.daf.csveditor.filter.DoorsObjectFilterParser.AttributeIsExpressionContext;
 import de.jpwinkler.daf.csveditor.filter.DoorsObjectFilterParser.AttributeLikeExpressionContext;
@@ -13,6 +8,9 @@ import de.jpwinkler.daf.csveditor.filter.DoorsObjectFilterParser.AttributeRegexp
 import de.jpwinkler.daf.csveditor.filter.DoorsObjectFilterParser.BracketFilterExpressionContext;
 import de.jpwinkler.daf.csveditor.filter.DoorsObjectFilterParser.NotFilterExpressionContext;
 import de.jpwinkler.daf.csveditor.filter.DoorsObjectFilterParser.OrFilterExpressionContext;
+import java.util.Deque;
+import java.util.LinkedList;
+import org.apache.commons.lang.StringEscapeUtils;
 
 public class DoorsObjectFilterListenerImpl extends DoorsObjectFilterBaseListener {
 

@@ -2,8 +2,8 @@ package de.jpwinkler.daf.csveditor.commands.object;
 
 import de.jpwinkler.daf.csveditor.CommandStack.AbstractCommand;
 import de.jpwinkler.daf.csveditor.commands.module.UpdateAction;
-import de.jpwinkler.daf.doorscsv.model.DoorsModule;
-import de.jpwinkler.daf.doorscsv.model.DoorsObject;
+import de.jpwinkler.daf.model.DoorsModule;
+import de.jpwinkler.daf.model.DoorsObject;
 
 public class EditObjectAttributeCommand extends AbstractCommand {
 

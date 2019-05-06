@@ -1,10 +1,9 @@
 package de.jpwinkler.daf.csveditor.filter;
 
+import de.jpwinkler.daf.model.DoorsObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import de.jpwinkler.daf.doorscsv.model.DoorsObject;
 
 public class CompositeAndFilter extends DoorsObjectFilter {
 

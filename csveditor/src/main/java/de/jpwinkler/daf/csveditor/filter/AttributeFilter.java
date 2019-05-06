@@ -1,10 +1,9 @@
 package de.jpwinkler.daf.csveditor.filter;
 
+import de.jpwinkler.daf.model.DoorsObject;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-
-import de.jpwinkler.daf.doorscsv.model.DoorsObject;
 
 public class AttributeFilter extends DoorsObjectFilter {
 

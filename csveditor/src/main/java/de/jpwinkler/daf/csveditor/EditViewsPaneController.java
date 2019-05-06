@@ -1,6 +1,5 @@
 package de.jpwinkler.daf.csveditor;
 
-import de.jpwinkler.daf.csveditor.MainFX;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;

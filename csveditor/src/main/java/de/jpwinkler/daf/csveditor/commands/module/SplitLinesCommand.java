@@ -1,16 +1,15 @@
 package de.jpwinkler.daf.csveditor.commands.module;
 
 import de.jpwinkler.daf.csveditor.CommandStack.AbstractCommand;
+import de.jpwinkler.daf.model.DoorsCSVFactory;
+import de.jpwinkler.daf.model.DoorsModule;
+import de.jpwinkler.daf.model.DoorsObject;
+import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import de.jpwinkler.daf.doorscsv.DoorsTreeNodeVisitor;
-import de.jpwinkler.daf.doorscsv.model.DoorsCSVFactory;
-import de.jpwinkler.daf.doorscsv.model.DoorsModule;
-import de.jpwinkler.daf.doorscsv.model.DoorsObject;
 
 public class SplitLinesCommand extends AbstractCommand {
 

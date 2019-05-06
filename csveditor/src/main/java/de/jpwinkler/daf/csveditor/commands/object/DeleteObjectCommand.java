@@ -2,14 +2,13 @@ package de.jpwinkler.daf.csveditor.commands.object;
 
 import de.jpwinkler.daf.csveditor.CommandStack.AbstractCommand;
 import de.jpwinkler.daf.csveditor.commands.module.UpdateAction;
+import de.jpwinkler.daf.model.DoorsModule;
+import de.jpwinkler.daf.model.DoorsObject;
+import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import de.jpwinkler.daf.doorscsv.model.DoorsModule;
-import de.jpwinkler.daf.doorscsv.model.DoorsObject;
-import de.jpwinkler.daf.doorscsv.model.DoorsTreeNode;
 
 public class DeleteObjectCommand extends AbstractCommand {
 

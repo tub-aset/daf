@@ -1,6 +1,6 @@
 package de.jpwinkler.daf.csveditor.filter;
 
-import de.jpwinkler.daf.doorscsv.model.DoorsObject;
+import de.jpwinkler.daf.model.DoorsObject;
 
 public class CascadingFilter extends DoorsObjectFilter {
 
