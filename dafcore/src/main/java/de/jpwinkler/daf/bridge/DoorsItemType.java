@@ -17,18 +17,34 @@
  */
 package de.jpwinkler.daf.bridge;
 
+import java.util.logging.Logger;
+
 public enum DoorsItemType {
 
-	PROJECT,
+    PROJECT,
+    FOLDER,
+    FORMAL,
+    LINK,
+    DESCRIPTIVE,
+    UNKNOWN;
 
-	FOLDER,
-
-	FORMAL,
-
-	LINK,
-
-	DESCRIPTIVE,
-
-	UNKNOWN
+    private static final Logger LOGGER = Logger.getLogger(DoorsItemType.class.getName());
+    public static DoorsItemType getType(final String type) {
+        switch (type) {
+            case "Folder":
+                return DoorsItemType.FOLDER;
+            case "Formal":
+                return DoorsItemType.FORMAL;
+            case "Link":
+                return DoorsItemType.LINK;
+            case "Project":
+                return DoorsItemType.PROJECT;
+            case "Descriptive":
+                return DoorsItemType.DESCRIPTIVE;
+            default:
+                LOGGER.severe(String.format("Unknown DOORS item type: %s.", type));
+                return DoorsItemType.UNKNOWN;
+        }
+    }
 
 }

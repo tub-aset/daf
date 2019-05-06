@@ -18,7 +18,6 @@
 package de.jpwinkler.daf.bridge.internal;
 
 import de.jpwinkler.daf.bridge.DoorsItemType;
-import de.jpwinkler.daf.bridge.DoorsItemTypeUtil;
 import de.jpwinkler.daf.bridge.DoorsRuntimeException;
 import de.jpwinkler.daf.bridge.ItemName;
 import de.jpwinkler.daf.bridge.ItemRef;
@@ -53,7 +52,7 @@ class ItemRefImpl implements ItemRef {
                 builder.addScript(new InternalDXLScript("get_type.dxl"));
                 builder.setVariable("item", name.getFullName());
             });
-            type = DoorsItemTypeUtil.getType(typeStr);
+            type = DoorsItemType.getType(typeStr);
         }
         return type;
     }
@@ -92,7 +91,7 @@ class ItemRefImpl implements ItemRef {
                 LOGGER.severe(String.format("Invalid result format: %s.", line));
                 continue;
             }
-            final DoorsItemType type = DoorsItemTypeUtil.getType(split[0]);
+            final DoorsItemType type = DoorsItemType.getType(split[0]);
             result.add(new ItemRefImpl(doorsApplicationImpl, new ItemName(name, split[1]), type));
         }
         return result;
