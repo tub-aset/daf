@@ -1,5 +1,6 @@
 package de.jpwinkler.daf.model;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -7,8 +8,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class DoorsModuleUtil {
 
@@ -46,11 +45,11 @@ public class DoorsModuleUtil {
 
     }
 
-    public static Date parseDate(final String doorsDateString) {
+    public static Date parseDate(final String doorsDateString) throws IOException {
         try {
             return new SimpleDateFormat("d MMMM yyyy", Locale.ENGLISH).parse(doorsDateString);
         } catch (ParseException ex) {
-            throw new RuntimeException(ex);
+            throw new IOException("Failed parsing date in module", ex);
         }
     }
 

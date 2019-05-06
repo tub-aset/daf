@@ -31,10 +31,10 @@ public interface ModuleRef {
      *
      * @param file
      *            The file to write the csv records to.
-     * @throws DoorsException
+     * @throws DoorsRuntimeException
      *             If the default view does not exist for some reason.
      */
-    void exportToCSV(File file) throws DoorsException;
+    void exportToCSV(File file);
 
     /**
      * Exports the contents of the module in csv format. Switches to the given
@@ -48,10 +48,10 @@ public interface ModuleRef {
      *            The file to write the csv records to.
      * @param view
      *            ThE view to export.
-     * @throws DoorsException
+     * @throws DoorsRuntimeException
      *             IF the view does not exist.
      */
-    void exportToCSV(File file, String view) throws DoorsException;
+    void exportToCSV(File file, String view);
 
     /**
      * Selects the object with the given absolute number.
@@ -67,6 +67,6 @@ public interface ModuleRef {
 
     boolean isOpen();
 
-    Map<String, String> getModuleAttributes() throws DoorsException;
+    Map<String, String> getModuleAttributes();
 
 }

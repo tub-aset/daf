@@ -21,7 +21,7 @@ import java.util.List;
 
 public interface ItemRef {
 
-    DoorsItemType getType() throws DoorsException;
+    DoorsItemType getType();
 
     ItemName getItemName();
 
@@ -29,8 +29,8 @@ public interface ItemRef {
 
     ItemRef getParent();
 
-    List<ItemRef> getChildren() throws DoorsException;
+    List<ItemRef> getChildren();
 
-    ModuleRef open() throws DoorsException;
+    ModuleRef open();
 
 }

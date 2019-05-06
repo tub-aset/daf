@@ -1,6 +1,5 @@
 package de.jpwinkler.daf.doorsdbgui;
 
-import de.jpwinkler.daf.bridge.DoorsException;
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsTreeNode;
@@ -30,16 +29,12 @@ public class LocalTreeItem extends TreeItem<DoorsTreeNode> {
     public ObservableList<TreeItem<DoorsTreeNode>> getChildren() {
         if (isFirstTimeChildren) {
             isFirstTimeChildren = false;
-            try {
-                super.getChildren().setAll(buildChildren());
-            } catch (final DoorsException e) {
-                throw new RuntimeException(e);
-            }
+            super.getChildren().setAll(buildChildren());
         }
         return super.getChildren();
     }
 
-    private ObservableList<TreeItem<DoorsTreeNode>> buildChildren() throws DoorsException {
+    private ObservableList<TreeItem<DoorsTreeNode>> buildChildren() {
         if (getValue() != null) {
             final ObservableList<TreeItem<DoorsTreeNode>> list = FXCollections.observableArrayList();
             for (final DoorsTreeNode c : getValue().getChildren()) {

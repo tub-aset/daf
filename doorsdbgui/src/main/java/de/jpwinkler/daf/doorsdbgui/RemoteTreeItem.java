@@ -1,6 +1,5 @@
 package de.jpwinkler.daf.doorsdbgui;
 
-import de.jpwinkler.daf.bridge.DoorsException;
 import de.jpwinkler.daf.bridge.DoorsItemType;
 import de.jpwinkler.daf.bridge.ItemRef;
 import javafx.collections.FXCollections;
@@ -29,16 +28,12 @@ public class RemoteTreeItem extends TreeItem<ItemRef> {
     public ObservableList<TreeItem<ItemRef>> getChildren() {
         if (isFirstTimeChildren) {
             isFirstTimeChildren = false;
-            try {
-                super.getChildren().setAll(buildChildren());
-            } catch (final DoorsException e) {
-                throw new RuntimeException(e);
-            }
+            super.getChildren().setAll(buildChildren());
         }
         return super.getChildren();
     }
 
-    private ObservableList<TreeItem<ItemRef>> buildChildren() throws DoorsException {
+    private ObservableList<TreeItem<ItemRef>> buildChildren() {
         if (getValue() != null) {
             final ObservableList<TreeItem<ItemRef>> list = FXCollections.observableArrayList();
             for (final ItemRef c : getValue().getChildren()) {
@@ -53,27 +48,23 @@ public class RemoteTreeItem extends TreeItem<ItemRef> {
 
     private ImageView imageForType(final DoorsItemType type) {
         switch (type) {
-        case FOLDER:
-            return new ImageView(Images.IMAGE_FOLDER);
-        case FORMAL:
-            return new ImageView(Images.IMAGE_FORMAL);
-        case LINK:
-            return new ImageView(Images.IMAGE_LINK);
-        case PROJECT:
-            return new ImageView(Images.IMAGE_PROJECT);
-        default:
-            return new ImageView();
+            case FOLDER:
+                return new ImageView(Images.IMAGE_FOLDER);
+            case FORMAL:
+                return new ImageView(Images.IMAGE_FORMAL);
+            case LINK:
+                return new ImageView(Images.IMAGE_LINK);
+            case PROJECT:
+                return new ImageView(Images.IMAGE_PROJECT);
+            default:
+                return new ImageView();
         }
 
     }
 
     @Override
     public boolean isLeaf() {
-        try {
-            return !(getValue().getType() == DoorsItemType.FOLDER || getValue().getType() == DoorsItemType.PROJECT);
-        } catch (final DoorsException e) {
-            throw new RuntimeException(e);
-        }
+        return !(getValue().getType() == DoorsItemType.FOLDER || getValue().getType() == DoorsItemType.PROJECT);
     }
 
 }

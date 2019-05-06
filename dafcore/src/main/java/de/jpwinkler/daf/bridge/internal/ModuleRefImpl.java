@@ -17,7 +17,6 @@
  */
 package de.jpwinkler.daf.bridge.internal;
 
-import de.jpwinkler.daf.bridge.DoorsException;
 import de.jpwinkler.daf.bridge.DoorsRuntimeException;
 import de.jpwinkler.daf.bridge.DoorsURL;
 import de.jpwinkler.daf.bridge.ModuleRef;
@@ -56,12 +55,12 @@ public class ModuleRefImpl implements ModuleRef {
     }
 
     @Override
-    public void exportToCSV(final File file) throws DoorsException {
+    public void exportToCSV(final File file) {
         exportToCSV(file, STANDARD_VIEW);
     }
 
     @Override
-    public void exportToCSV(final File file, final String view) throws DoorsException {
+    public void exportToCSV(final File file, final String view) {
         if (closed) {
             throw new DoorsRuntimeException("Module is closed.");
         }
@@ -82,18 +81,13 @@ public class ModuleRefImpl implements ModuleRef {
         if (closed) {
             throw new DoorsRuntimeException("Module is closed.");
         }
-        try {
-            doorsApplicationImpl.buildAndRunCommand(builder -> {
-                builder.addLibrary(new InternalDXLScript("lib/utils.dxl"));
-                builder.addScript(new InternalDXLScript("goto_object.dxl"));
-                builder.setVariable("url", url != null ? url.getUrl() : null);
-                builder.setVariable("name", name);
-                builder.setVariable("absoluteNumber", String.valueOf(absoluteNumber));
-            });
-        } catch (final DoorsException e) {
-            // This should never happen, because the script never calls 'throw'.
-            throw new DoorsRuntimeException();
-        }
+        doorsApplicationImpl.buildAndRunCommand(builder -> {
+            builder.addLibrary(new InternalDXLScript("lib/utils.dxl"));
+            builder.addScript(new InternalDXLScript("goto_object.dxl"));
+            builder.setVariable("url", url != null ? url.getUrl() : null);
+            builder.setVariable("name", name);
+            builder.setVariable("absoluteNumber", String.valueOf(absoluteNumber));
+        });
     }
 
     @Override
@@ -101,17 +95,13 @@ public class ModuleRefImpl implements ModuleRef {
         if (closed) {
             throw new DoorsRuntimeException("Module is closed.");
         }
-        try {
-            doorsApplicationImpl.buildAndRunCommand(builder -> {
-                builder.addLibrary(new InternalDXLScript("lib/utils.dxl"));
-                builder.addScript(new InternalDXLScript("close_module.dxl"));
-                builder.setVariable("url", url != null ? url.getUrl() : null);
-                builder.setVariable("name", name);
-            });
-        } catch (final DoorsException e) {
-            // This should never happen, because the script never calls 'throw'.
-            throw new DoorsRuntimeException();
-        }
+
+        doorsApplicationImpl.buildAndRunCommand(builder -> {
+            builder.addLibrary(new InternalDXLScript("lib/utils.dxl"));
+            builder.addScript(new InternalDXLScript("close_module.dxl"));
+            builder.setVariable("url", url != null ? url.getUrl() : null);
+            builder.setVariable("name", name);
+        });
         closed = true;
     }
 
@@ -128,17 +118,13 @@ public class ModuleRefImpl implements ModuleRef {
             throw new DoorsRuntimeException("Module is closed.");
         }
         String result;
-        try {
-            result = doorsApplicationImpl.buildAndRunCommand(builder -> {
-                builder.addLibrary(new InternalDXLScript("lib/utils.dxl"));
-                builder.addLibrary(new InternalDXLScript("lib/export_mmd.dxl"));
-                builder.addScript(new InternalDXLScript("get_module_attributes.dxl"));
-                builder.setVariable("url", url != null ? url.getUrl() : null);
-                builder.setVariable("name", name);
-            });
-        } catch (final DoorsException e) {
-            throw new DoorsRuntimeException(e);
-        }
+        result = doorsApplicationImpl.buildAndRunCommand(builder -> {
+            builder.addLibrary(new InternalDXLScript("lib/utils.dxl"));
+            builder.addLibrary(new InternalDXLScript("lib/export_mmd.dxl"));
+            builder.addScript(new InternalDXLScript("get_module_attributes.dxl"));
+            builder.setVariable("url", url != null ? url.getUrl() : null);
+            builder.setVariable("name", name);
+        });
 
         try {
             final CSVParser parser = CSVParser.parse(result, FORMAT);

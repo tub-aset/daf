@@ -35,10 +35,10 @@ public interface DoorsApplication {
     /**
      * Exit batch mode and execute all stored commands.
      *
-     * @throws DoorsException
+     * @throws DoorsRuntimeException
      *             If the script executes the 'throw()' function.
      */
-    void endBatchMode() throws DoorsException;
+    void endBatchMode();
 
     /**
      * Shows a message dialog in DOORS.
@@ -62,10 +62,10 @@ public interface DoorsApplication {
      * @param url
      *            The URL of the module to be opened.
      * @return An interface used for interacting with the module.
-     * @throws DoorsException
+     * @throws DoorsRuntimeException
      *             If the module does not exist.
      */
-    ModuleRef openModule(DoorsURL url) throws DoorsException;
+    ModuleRef openModule(DoorsURL url);
 
     /**
      * Opens a module for reading.
@@ -73,10 +73,10 @@ public interface DoorsApplication {
      * @param name
      *            The path of the module.
      * @return An interface used for interacting with the module.
-     * @throws DoorsException
+     * @throws DoorsRuntimeException
      *             If the module does not exist.
      */
-    ModuleRef openModule(String name) throws DoorsException;
+    ModuleRef openModule(String name);
 
     ItemRef getRoot();
 
@@ -87,20 +87,20 @@ public interface DoorsApplication {
      *
      * @param scriptFile
      *            The file containing the DXL code to be executed.
-     * @throws DoorsException
+     * @throws DoorsRuntimeException
      *             If the script executes the 'throw()' function.
      */
-    void runScript(File scriptFile) throws DoorsException;
+    void runScript(File scriptFile);
 
     /**
      * Runs a DXL script.
      *
      * @param dxlCode
      *            the DXL script to be executed.
-     * @throws DoorsException
+     * @throws DoorsRuntimeException
      *             If the script executes the 'throw()' function.
      */
-    void runScript(String dxlCode) throws DoorsException;
+    void runScript(String dxlCode);
 
     /**
      * Checks whether DOORS is running or not by testing if the DOORS Database

@@ -17,7 +17,6 @@
  */
 package de.jpwinkler.daf.bridge.internal;
 
-import de.jpwinkler.daf.bridge.DoorsException;
 import de.jpwinkler.daf.bridge.DoorsItemType;
 import de.jpwinkler.daf.bridge.DoorsItemTypeUtil;
 import de.jpwinkler.daf.bridge.DoorsRuntimeException;
@@ -48,7 +47,7 @@ public class ItemRefImpl implements ItemRef {
     }
 
     @Override
-    public DoorsItemType getType() throws DoorsException {
+    public DoorsItemType getType() {
         if (type == null) {
             final String typeStr = doorsApplicationImpl.buildAndRunCommand(builder -> {
                 builder.addScript(new InternalDXLScript("get_type.dxl"));
@@ -69,7 +68,7 @@ public class ItemRefImpl implements ItemRef {
     }
 
     @Override
-    public List<ItemRef> getChildren() throws DoorsException {
+    public List<ItemRef> getChildren() {
         if (doorsApplicationImpl.isBatchMode()) {
             throw new UnsupportedOperationException("Operation not supported in batch mode.");
         }
@@ -100,7 +99,7 @@ public class ItemRefImpl implements ItemRef {
     }
 
     @Override
-    public ModuleRef open() throws DoorsException {
+    public ModuleRef open() {
         if (getType() == DoorsItemType.FORMAL) {
             return doorsApplicationImpl.openModule(name.getFullName());
         } else {
@@ -110,16 +109,11 @@ public class ItemRefImpl implements ItemRef {
 
     @Override
     public boolean exists() {
-        try {
-            final String result = doorsApplicationImpl.buildAndRunCommand(builder -> {
-                builder.addScript(new InternalDXLScript("exists.dxl"));
-                builder.setVariable("item", name.getFullName());
-            });
-            return result.equals("true");
-        } catch (final DoorsException e) {
-            // Should never throw this exception
-            throw new DoorsRuntimeException();
-        }
+        final String result = doorsApplicationImpl.buildAndRunCommand(builder -> {
+            builder.addScript(new InternalDXLScript("exists.dxl"));
+            builder.setVariable("item", name.getFullName());
+        });
+        return result.equals("true");
     }
 
     @Override
@@ -132,4 +126,3 @@ public class ItemRefImpl implements ItemRef {
         return name;
     }
 }
-
