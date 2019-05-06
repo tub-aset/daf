@@ -27,7 +27,7 @@ import de.jpwinkler.daf.doorsdb.bridge.DoorsRuntimeException;
 import de.jpwinkler.daf.doorsdb.bridge.ItemName;
 import de.jpwinkler.daf.doorsdb.bridge.ItemRef;
 import de.jpwinkler.daf.doorsdb.bridge.ModuleRef;
-import de.jpwinkler.daf.doorsdb.bridge.utils.DoorsItemTypeUtil;
+import de.jpwinkler.daf.doorsdb.bridge.DoorsItemTypeUtil;
 
 public class ItemRefImpl implements ItemRef {
 
