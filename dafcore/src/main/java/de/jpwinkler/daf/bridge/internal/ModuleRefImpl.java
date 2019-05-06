@@ -28,7 +28,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
-public class ModuleRefImpl implements ModuleRef {
+class ModuleRefImpl implements ModuleRef {
 
     private static final String STANDARD_VIEW = "Standard view";
 

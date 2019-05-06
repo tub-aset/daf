@@ -31,6 +31,7 @@ import de.jpwinkler.daf.bridge.user32.WindowManager;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.RandomAccessFile;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
@@ -215,7 +216,7 @@ public class DoorsApplicationImpl implements DoorsApplication {
         return new ItemRefImpl(this, path, null);
     }
 
-    public String buildAndRunCommand(final Consumer<DoorsScriptBuilder> prepareScriptBuilder) {
+    String buildAndRunCommand(final Consumer<DoorsScriptBuilder> prepareScriptBuilder) {
         if (!batchMode) {
             scriptBuilder = new DoorsScriptBuilder();
         }
@@ -252,7 +253,7 @@ public class DoorsApplicationImpl implements DoorsApplication {
             scriptBuilder.addPreamble(new InternalDXLScript("pre/redirect_output.dxl"));
         }
 
-        MyTailer t = null;
+        FileForwarder t = null;
         if (redirectOutput) {
             scriptBuilder.addScript(new InternalDXLScript("lib/redirect_output_post.dxl"));
 
@@ -261,7 +262,7 @@ public class DoorsApplicationImpl implements DoorsApplication {
             if (!outputFile.exists()) {
                 outputFile.createNewFile();
             }
-            t = MyTailer.create(outputFile, outputStream);
+            t = FileForwarder.create(outputFile, outputStream);
         }
 
         final String dxl = scriptBuilder.build();
@@ -313,5 +314,64 @@ public class DoorsApplicationImpl implements DoorsApplication {
         } catch (final InterruptedException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
+    }
+
+    private static class FileForwarder implements Runnable {
+
+        private final OutputStream out;
+        private final File file;
+        private boolean run = true;
+
+        public FileForwarder(final File file, final OutputStream out) {
+            this.file = file;
+            this.out = out;
+        }
+
+        @Override
+        public void run() {
+            try (final RandomAccessFile raf = new RandomAccessFile(file, "r")) {
+                long position = raf.length();
+                raf.seek(position);
+
+                long length = raf.length();
+                while (position < length || run) {
+
+                    while (position < length) {
+
+                        final byte[] b = new byte[1000];
+                        final int numRead = raf.read(b);
+
+                        out.write(b, 0, numRead);
+                        out.flush();
+                        position = raf.getFilePointer();
+
+                    }
+
+                    try {
+                        Thread.sleep(100);
+                    } catch (final InterruptedException e) {
+                    }
+                    length = raf.length();
+
+                }
+            } catch (final IOException e) {
+                Logger.getLogger(FileForwarder.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+            }
+        }
+
+        public void stop() {
+            run = false;
+        }
+
+        public static FileForwarder create(final File file, final OutputStream os) {
+            final FileForwarder myTailer = new FileForwarder(file, os);
+
+            final Thread t = new Thread(myTailer);
+            t.setDaemon(true);
+            t.start();
+
+            return myTailer;
+        }
+
     }
 }

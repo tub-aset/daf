@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-public class DoorsScriptBuilder {
+class DoorsScriptBuilder {
 
     private final List<DXLScript> preamble = new ArrayList<>();
     private final Set<DXLScript> libraries = new LinkedHashSet<>();

@@ -19,7 +19,7 @@ package de.jpwinkler.daf.bridge.internal;
 
 import java.io.IOException;
 
-public class DXLScriptScope implements DXLScript {
+class DXLScriptScope implements DXLScript {
 
     private final DoorsScriptBuilder builder = new DoorsScriptBuilder();
 

@@ -19,7 +19,7 @@ package de.jpwinkler.daf.bridge.internal;
 
 import java.io.IOException;
 
-public class InMemoryDXLScript implements DXLScript {
+class InMemoryDXLScript implements DXLScript {
 
     private final String dxl;
 

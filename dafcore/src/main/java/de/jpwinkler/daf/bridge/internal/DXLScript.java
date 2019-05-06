@@ -19,7 +19,7 @@ package de.jpwinkler.daf.bridge.internal;
 
 import java.io.IOException;
 
-public interface DXLScript {
+interface DXLScript {
 
     String getDXL() throws IOException;
 

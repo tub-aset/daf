@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class ItemRefImpl implements ItemRef {
+class ItemRefImpl implements ItemRef {
 
     private static final Logger LOGGER = Logger.getLogger(ItemRefImpl.class.getName());
 
