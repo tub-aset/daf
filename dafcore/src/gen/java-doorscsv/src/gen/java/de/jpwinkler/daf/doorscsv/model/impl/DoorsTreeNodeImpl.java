@@ -35,6 +35,7 @@ import de.jpwinkler.daf.doorscsv.model.DoorsTreeNode;
  *   <li>{@link de.jpwinkler.daf.doorscsv.model.impl.DoorsTreeNodeImpl#getChildren <em>Children</em>}</li>
  *   <li>{@link de.jpwinkler.daf.doorscsv.model.impl.DoorsTreeNodeImpl#getParent <em>Parent</em>}</li>
  *   <li>{@link de.jpwinkler.daf.doorscsv.model.impl.DoorsTreeNodeImpl#getAttributes <em>Attributes</em>}</li>
+ *   <li>{@link de.jpwinkler.daf.doorscsv.model.impl.DoorsTreeNodeImpl#getFullName <em>Full Name</em>}</li>
  * </ul>
  *
  * @generated
@@ -60,6 +61,16 @@ public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements D
     protected EMap<String, String> attributes;
 
     /**
+	 * The default value of the '{@link #getFullName() <em>Full Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getFullName()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String FULL_NAME_EDEFAULT = null;
+
+				/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
@@ -142,6 +153,18 @@ public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements D
 	}
 
     /**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getFullName() {
+		// TODO: implement this method to return the 'Full Name' attribute
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
+	}
+
+				/**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      *
      * @generated NOT
@@ -227,6 +250,8 @@ public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements D
 			case DoorsCSVPackage.DOORS_TREE_NODE__ATTRIBUTES:
 				if (coreType) return getAttributes();
 				else return getAttributes().map();
+			case DoorsCSVPackage.DOORS_TREE_NODE__FULL_NAME:
+				return getFullName();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -286,6 +311,8 @@ public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements D
 				return getParent() != null;
 			case DoorsCSVPackage.DOORS_TREE_NODE__ATTRIBUTES:
 				return attributes != null && !attributes.isEmpty();
+			case DoorsCSVPackage.DOORS_TREE_NODE__FULL_NAME:
+				return FULL_NAME_EDEFAULT == null ? getFullName() != null : !FULL_NAME_EDEFAULT.equals(getFullName());
 		}
 		return super.eIsSet(featureID);
 	}

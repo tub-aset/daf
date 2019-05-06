@@ -12,11 +12,13 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import de.jpwinkler.daf.doorscsv.FindObjectVisitor;
 import de.jpwinkler.daf.doorscsv.model.AttributeDefinition;
 import de.jpwinkler.daf.doorscsv.model.DoorsCSVPackage;
+import de.jpwinkler.daf.doorscsv.model.DoorsDatabaseVersion;
 import de.jpwinkler.daf.doorscsv.model.DoorsModule;
 import de.jpwinkler.daf.doorscsv.model.DoorsObject;
 
@@ -33,6 +35,7 @@ import de.jpwinkler.daf.doorscsv.model.DoorsObject;
  *   <li>{@link de.jpwinkler.daf.doorscsv.model.impl.DoorsModuleImpl#getUrl <em>Url</em>}</li>
  *   <li>{@link de.jpwinkler.daf.doorscsv.model.impl.DoorsModuleImpl#getAttributeDefinitions <em>Attribute Definitions</em>}</li>
  *   <li>{@link de.jpwinkler.daf.doorscsv.model.impl.DoorsModuleImpl#getView <em>View</em>}</li>
+ *   <li>{@link de.jpwinkler.daf.doorscsv.model.impl.DoorsModuleImpl#getVersions <em>Versions</em>}</li>
  * </ul>
  *
  * @generated
@@ -129,6 +132,16 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
     protected String view = VIEW_EDEFAULT;
 
     /**
+	 * The cached value of the '{@link #getVersions() <em>Versions</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getVersions()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<DoorsDatabaseVersion> versions;
+
+				/**
 	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
 	 * @generated
@@ -253,6 +266,19 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
 	}
 
     /**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EList<DoorsDatabaseVersion> getVersions() {
+		if (versions == null) {
+			versions = new EObjectContainmentWithInverseEList<DoorsDatabaseVersion>(DoorsDatabaseVersion.class, this, DoorsCSVPackage.DOORS_MODULE__VERSIONS, DoorsCSVPackage.DOORS_DATABASE_VERSION__MODULE);
+		}
+		return versions;
+	}
+
+				/**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      *
      * @generated NOT
@@ -281,6 +307,33 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
 
     /**
 	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public DoorsDatabaseVersion getLatestVersion() {
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
+	}
+
+				/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case DoorsCSVPackage.DOORS_MODULE__VERSIONS:
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getVersions()).basicAdd(otherEnd, msgs);
+		}
+		return super.eInverseAdd(otherEnd, featureID, msgs);
+	}
+
+				/**
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
 	 * @generated
 	 */
@@ -289,6 +342,8 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
 		switch (featureID) {
 			case DoorsCSVPackage.DOORS_MODULE__ATTRIBUTE_DEFINITIONS:
 				return ((InternalEList<?>)getAttributeDefinitions()).basicRemove(otherEnd, msgs);
+			case DoorsCSVPackage.DOORS_MODULE__VERSIONS:
+				return ((InternalEList<?>)getVersions()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -311,6 +366,8 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
 				return getAttributeDefinitions();
 			case DoorsCSVPackage.DOORS_MODULE__VIEW:
 				return getView();
+			case DoorsCSVPackage.DOORS_MODULE__VERSIONS:
+				return getVersions();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -340,6 +397,10 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
 			case DoorsCSVPackage.DOORS_MODULE__VIEW:
 				setView((String)newValue);
 				return;
+			case DoorsCSVPackage.DOORS_MODULE__VERSIONS:
+				getVersions().clear();
+				getVersions().addAll((Collection<? extends DoorsDatabaseVersion>)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -367,6 +428,9 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
 			case DoorsCSVPackage.DOORS_MODULE__VIEW:
 				setView(VIEW_EDEFAULT);
 				return;
+			case DoorsCSVPackage.DOORS_MODULE__VERSIONS:
+				getVersions().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -389,6 +453,8 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
 				return attributeDefinitions != null && !attributeDefinitions.isEmpty();
 			case DoorsCSVPackage.DOORS_MODULE__VIEW:
 				return VIEW_EDEFAULT == null ? view != null : !VIEW_EDEFAULT.equals(view);
+			case DoorsCSVPackage.DOORS_MODULE__VERSIONS:
+				return versions != null && !versions.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
@@ -405,6 +471,8 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
 				return findAttributeDefinition((String)arguments.get(0));
 			case DoorsCSVPackage.DOORS_MODULE___FIND_OBJECT__STRING:
 				return findObject((String)arguments.get(0));
+			case DoorsCSVPackage.DOORS_MODULE___GET_LATEST_VERSION:
+				return getLatestVersion();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

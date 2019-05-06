@@ -38,7 +38,6 @@
                         </goals>
                         <configuration>
                             <sources>
-                                <source>${project.basedir}/src/gen/java-doorsdb/src/gen/java</source>
                                 <source>${project.basedir}/src/gen/java-doorscsv/src/gen/java</source>
                             </sources>
                         </configuration>
@@ -74,16 +73,6 @@
                         <phase>generate-sources</phase>
                         <configuration>
                             <appArgLine>-data target/workspace -application org.eclipse.emf.codegen.ecore.Generator -model ${project.basedir}/src/main/emf/de/jpwinkler/daf/doorscsv/DoorsCSV.genmodel ${project.basedir}/src/gen/java-doorscsv</appArgLine>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>DoorsDB</id>
-                        <goals>
-                            <goal>eclipse-run</goal>
-                        </goals>
-                        <phase>generate-sources</phase>
-                        <configuration>
-                            <appArgLine>-data target/workspace -application org.eclipse.emf.codegen.ecore.Generator -model ${project.basedir}/src/main/emf/de/jpwinkler/daf/doorsdb/DoorsDB.genmodel ${project.basedir}/src/gen/java-doorsdb</appArgLine>
                         </configuration>
                     </execution>
                 </executions>

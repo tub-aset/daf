@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link de.jpwinkler.daf.doorscsv.model.DoorsTreeNode#getChildren <em>Children</em>}</li>
  *   <li>{@link de.jpwinkler.daf.doorscsv.model.DoorsTreeNode#getParent <em>Parent</em>}</li>
  *   <li>{@link de.jpwinkler.daf.doorscsv.model.DoorsTreeNode#getAttributes <em>Attributes</em>}</li>
+ *   <li>{@link de.jpwinkler.daf.doorscsv.model.DoorsTreeNode#getFullName <em>Full Name</em>}</li>
  * </ul>
  *
  * @see de.jpwinkler.daf.doorscsv.model.DoorsCSVPackage#getDoorsTreeNode()
@@ -78,6 +79,17 @@ public interface DoorsTreeNode extends EObject {
 	 * @generated
 	 */
 	EMap<String, String> getAttributes();
+
+	/**
+	 * Returns the value of the '<em><b>Full Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Full Name</em>' attribute.
+	 * @see de.jpwinkler.daf.doorscsv.model.DoorsCSVPackage#getDoorsTreeNode_FullName()
+	 * @model transient="true" changeable="false" volatile="true" derived="true"
+	 * @generated
+	 */
+	String getFullName();
 
 	/**
 	 * <!-- begin-user-doc -->

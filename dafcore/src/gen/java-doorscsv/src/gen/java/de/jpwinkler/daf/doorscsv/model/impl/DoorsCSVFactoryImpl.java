@@ -61,12 +61,15 @@ public class DoorsCSVFactoryImpl extends EFactoryImpl implements DoorsCSVFactory
 	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
+			case DoorsCSVPackage.DOORS_TREE_NODE: return createDoorsTreeNode();
+			case DoorsCSVPackage.DOORS_DB: return createDoorsDB();
+			case DoorsCSVPackage.DOORS_FOLDER: return createDoorsFolder();
+			case DoorsCSVPackage.DOORS_DATABASE_VERSION: return createDoorsDatabaseVersion();
 			case DoorsCSVPackage.DOORS_MODULE: return createDoorsModule();
 			case DoorsCSVPackage.DOORS_OBJECT: return createDoorsObject();
 			case DoorsCSVPackage.STRING_TO_STRING_MAP: return (EObject)createStringToStringMap();
 			case DoorsCSVPackage.RESOLVED_LINK: return createResolvedLink();
 			case DoorsCSVPackage.UNRESOLVED_LINK: return createUnresolvedLink();
-			case DoorsCSVPackage.DOORS_TREE_NODE: return createDoorsTreeNode();
 			case DoorsCSVPackage.ATTRIBUTE_DEFINITION: return createAttributeDefinition();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
@@ -166,6 +169,39 @@ public class DoorsCSVFactoryImpl extends EFactoryImpl implements DoorsCSVFactory
 	public DoorsTreeNode createDoorsTreeNode() {
 		DoorsTreeNodeImpl doorsTreeNode = new DoorsTreeNodeImpl();
 		return doorsTreeNode;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public DoorsDB createDoorsDB() {
+		DoorsDBImpl doorsDB = new DoorsDBImpl();
+		return doorsDB;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public DoorsFolder createDoorsFolder() {
+		DoorsFolderImpl doorsFolder = new DoorsFolderImpl();
+		return doorsFolder;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public DoorsDatabaseVersion createDoorsDatabaseVersion() {
+		DoorsDatabaseVersionImpl doorsDatabaseVersion = new DoorsDatabaseVersionImpl();
+		return doorsDatabaseVersion;
 	}
 
 	/**

@@ -18,6 +18,7 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link de.jpwinkler.daf.doorscsv.model.DoorsModule#getUrl <em>Url</em>}</li>
  *   <li>{@link de.jpwinkler.daf.doorscsv.model.DoorsModule#getAttributeDefinitions <em>Attribute Definitions</em>}</li>
  *   <li>{@link de.jpwinkler.daf.doorscsv.model.DoorsModule#getView <em>View</em>}</li>
+ *   <li>{@link de.jpwinkler.daf.doorscsv.model.DoorsModule#getVersions <em>Versions</em>}</li>
  * </ul>
  *
  * @see de.jpwinkler.daf.doorscsv.model.DoorsCSVPackage#getDoorsModule()
@@ -126,6 +127,20 @@ public interface DoorsModule extends DoorsTreeNode {
 	void setView(String value);
 
 	/**
+	 * Returns the value of the '<em><b>Versions</b></em>' containment reference list.
+	 * The list contents are of type {@link de.jpwinkler.daf.doorscsv.model.DoorsDatabaseVersion}.
+	 * It is bidirectional and its opposite is '{@link de.jpwinkler.daf.doorscsv.model.DoorsDatabaseVersion#getModule <em>Module</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Versions</em>' containment reference list.
+	 * @see de.jpwinkler.daf.doorscsv.model.DoorsCSVPackage#getDoorsModule_Versions()
+	 * @see de.jpwinkler.daf.doorscsv.model.DoorsDatabaseVersion#getModule
+	 * @model opposite="module" containment="true"
+	 * @generated
+	 */
+	EList<DoorsDatabaseVersion> getVersions();
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model
@@ -140,5 +155,13 @@ public interface DoorsModule extends DoorsTreeNode {
 	 * @generated
 	 */
 	DoorsObject findObject(String objectIdentifier);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation"
+	 * @generated
+	 */
+	DoorsDatabaseVersion getLatestVersion();
 
 } // DoorsModule

@@ -67,6 +67,33 @@ public interface DoorsCSVFactory extends EFactory {
 	DoorsTreeNode createDoorsTreeNode();
 
 	/**
+	 * Returns a new object of class '<em>Doors DB</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Doors DB</em>'.
+	 * @generated
+	 */
+	DoorsDB createDoorsDB();
+
+	/**
+	 * Returns a new object of class '<em>Doors Folder</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Doors Folder</em>'.
+	 * @generated
+	 */
+	DoorsFolder createDoorsFolder();
+
+	/**
+	 * Returns a new object of class '<em>Doors Database Version</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Doors Database Version</em>'.
+	 * @generated
+	 */
+	DoorsDatabaseVersion createDoorsDatabaseVersion();
+
+	/**
 	 * Returns a new object of class '<em>Attribute Definition</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

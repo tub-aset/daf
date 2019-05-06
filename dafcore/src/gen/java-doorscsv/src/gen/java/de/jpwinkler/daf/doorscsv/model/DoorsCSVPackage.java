@@ -66,7 +66,7 @@ public interface DoorsCSVPackage extends EPackage {
 	 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsCSVPackageImpl#getDoorsTreeNode()
 	 * @generated
 	 */
-	int DOORS_TREE_NODE = 6;
+	int DOORS_TREE_NODE = 0;
 
 	/**
 	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
@@ -96,13 +96,22 @@ public interface DoorsCSVPackage extends EPackage {
 	int DOORS_TREE_NODE__ATTRIBUTES = 2;
 
 	/**
+	 * The feature id for the '<em><b>Full Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TREE_NODE__FULL_NAME = 3;
+
+	/**
 	 * The number of structural features of the '<em>Doors Tree Node</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_TREE_NODE_FEATURE_COUNT = 3;
+	int DOORS_TREE_NODE_FEATURE_COUNT = 4;
 
 	/**
 	 * The operation id for the '<em>Accept</em>' operation.
@@ -123,6 +132,198 @@ public interface DoorsCSVPackage extends EPackage {
 	int DOORS_TREE_NODE_OPERATION_COUNT = 1;
 
 	/**
+	 * The meta object id for the '{@link de.jpwinkler.daf.doorscsv.model.impl.DoorsDBImpl <em>Doors DB</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsDBImpl
+	 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsCSVPackageImpl#getDoorsDB()
+	 * @generated
+	 */
+	int DOORS_DB = 1;
+
+	/**
+	 * The feature id for the '<em><b>Root</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_DB__ROOT = 0;
+
+	/**
+	 * The number of structural features of the '<em>Doors DB</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_DB_FEATURE_COUNT = 1;
+
+	/**
+	 * The operation id for the '<em>Accept</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_DB___ACCEPT__DOORSTREENODEVISITOR = 0;
+
+	/**
+	 * The number of operations of the '<em>Doors DB</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_DB_OPERATION_COUNT = 1;
+
+	/**
+	 * The meta object id for the '{@link de.jpwinkler.daf.doorscsv.model.impl.DoorsFolderImpl <em>Doors Folder</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsFolderImpl
+	 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsCSVPackageImpl#getDoorsFolder()
+	 * @generated
+	 */
+	int DOORS_FOLDER = 2;
+
+	/**
+	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_FOLDER__CHILDREN = DOORS_TREE_NODE__CHILDREN;
+
+	/**
+	 * The feature id for the '<em><b>Parent</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_FOLDER__PARENT = DOORS_TREE_NODE__PARENT;
+
+	/**
+	 * The feature id for the '<em><b>Attributes</b></em>' map.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_FOLDER__ATTRIBUTES = DOORS_TREE_NODE__ATTRIBUTES;
+
+	/**
+	 * The feature id for the '<em><b>Full Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_FOLDER__FULL_NAME = DOORS_TREE_NODE__FULL_NAME;
+
+	/**
+	 * The number of structural features of the '<em>Doors Folder</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_FOLDER_FEATURE_COUNT = DOORS_TREE_NODE_FEATURE_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Accept</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_FOLDER___ACCEPT__DOORSTREENODEVISITOR = DOORS_TREE_NODE___ACCEPT__DOORSTREENODEVISITOR;
+
+	/**
+	 * The operation id for the '<em>Get Folder</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_FOLDER___GET_FOLDER__STRING = DOORS_TREE_NODE_OPERATION_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Get Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_FOLDER___GET_MODULE__STRING = DOORS_TREE_NODE_OPERATION_COUNT + 1;
+
+	/**
+	 * The number of operations of the '<em>Doors Folder</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_FOLDER_OPERATION_COUNT = DOORS_TREE_NODE_OPERATION_COUNT + 2;
+
+	/**
+	 * The meta object id for the '{@link de.jpwinkler.daf.doorscsv.model.impl.DoorsDatabaseVersionImpl <em>Doors Database Version</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsDatabaseVersionImpl
+	 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsCSVPackageImpl#getDoorsDatabaseVersion()
+	 * @generated
+	 */
+	int DOORS_DATABASE_VERSION = 3;
+
+	/**
+	 * The feature id for the '<em><b>Module</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_DATABASE_VERSION__MODULE = 0;
+
+	/**
+	 * The feature id for the '<em><b>Date</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_DATABASE_VERSION__DATE = 1;
+
+	/**
+	 * The feature id for the '<em><b>Attributes</b></em>' map.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_DATABASE_VERSION__ATTRIBUTES = 2;
+
+	/**
+	 * The number of structural features of the '<em>Doors Database Version</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_DATABASE_VERSION_FEATURE_COUNT = 3;
+
+	/**
+	 * The number of operations of the '<em>Doors Database Version</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_DATABASE_VERSION_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '{@link de.jpwinkler.daf.doorscsv.model.impl.DoorsModuleImpl <em>Doors Module</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -130,7 +331,7 @@ public interface DoorsCSVPackage extends EPackage {
 	 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsCSVPackageImpl#getDoorsModule()
 	 * @generated
 	 */
-	int DOORS_MODULE = 0;
+	int DOORS_MODULE = 4;
 
 	/**
 	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
@@ -158,6 +359,15 @@ public interface DoorsCSVPackage extends EPackage {
 	 * @ordered
 	 */
 	int DOORS_MODULE__ATTRIBUTES = DOORS_TREE_NODE__ATTRIBUTES;
+
+	/**
+	 * The feature id for the '<em><b>Full Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_MODULE__FULL_NAME = DOORS_TREE_NODE__FULL_NAME;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -205,13 +415,22 @@ public interface DoorsCSVPackage extends EPackage {
 	int DOORS_MODULE__VIEW = DOORS_TREE_NODE_FEATURE_COUNT + 4;
 
 	/**
+	 * The feature id for the '<em><b>Versions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_MODULE__VERSIONS = DOORS_TREE_NODE_FEATURE_COUNT + 5;
+
+	/**
 	 * The number of structural features of the '<em>Doors Module</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_MODULE_FEATURE_COUNT = DOORS_TREE_NODE_FEATURE_COUNT + 5;
+	int DOORS_MODULE_FEATURE_COUNT = DOORS_TREE_NODE_FEATURE_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Accept</em>' operation.
@@ -241,13 +460,22 @@ public interface DoorsCSVPackage extends EPackage {
 	int DOORS_MODULE___FIND_OBJECT__STRING = DOORS_TREE_NODE_OPERATION_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>Get Latest Version</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_MODULE___GET_LATEST_VERSION = DOORS_TREE_NODE_OPERATION_COUNT + 2;
+
+	/**
 	 * The number of operations of the '<em>Doors Module</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_MODULE_OPERATION_COUNT = DOORS_TREE_NODE_OPERATION_COUNT + 2;
+	int DOORS_MODULE_OPERATION_COUNT = DOORS_TREE_NODE_OPERATION_COUNT + 3;
 
 	/**
 	 * The meta object id for the '{@link de.jpwinkler.daf.doorscsv.model.impl.DoorsObjectImpl <em>Doors Object</em>}' class.
@@ -257,7 +485,7 @@ public interface DoorsCSVPackage extends EPackage {
 	 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsCSVPackageImpl#getDoorsObject()
 	 * @generated
 	 */
-	int DOORS_OBJECT = 1;
+	int DOORS_OBJECT = 5;
 
 	/**
 	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
@@ -285,6 +513,15 @@ public interface DoorsCSVPackage extends EPackage {
 	 * @ordered
 	 */
 	int DOORS_OBJECT__ATTRIBUTES = DOORS_TREE_NODE__ATTRIBUTES;
+
+	/**
+	 * The feature id for the '<em><b>Full Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_OBJECT__FULL_NAME = DOORS_TREE_NODE__FULL_NAME;
 
 	/**
 	 * The feature id for the '<em><b>Object Identifier</b></em>' attribute.
@@ -429,7 +666,7 @@ public interface DoorsCSVPackage extends EPackage {
 	 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsCSVPackageImpl#getStringToStringMap()
 	 * @generated
 	 */
-	int STRING_TO_STRING_MAP = 2;
+	int STRING_TO_STRING_MAP = 6;
 
 	/**
 	 * The feature id for the '<em><b>Key</b></em>' attribute.
@@ -475,7 +712,7 @@ public interface DoorsCSVPackage extends EPackage {
 	 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsCSVPackageImpl#getLink()
 	 * @generated
 	 */
-	int LINK = 3;
+	int LINK = 7;
 
 	/**
 	 * The feature id for the '<em><b>Source</b></em>' container reference.
@@ -512,7 +749,7 @@ public interface DoorsCSVPackage extends EPackage {
 	 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsCSVPackageImpl#getResolvedLink()
 	 * @generated
 	 */
-	int RESOLVED_LINK = 4;
+	int RESOLVED_LINK = 8;
 
 	/**
 	 * The feature id for the '<em><b>Source</b></em>' container reference.
@@ -558,7 +795,7 @@ public interface DoorsCSVPackage extends EPackage {
 	 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsCSVPackageImpl#getUnresolvedLink()
 	 * @generated
 	 */
-	int UNRESOLVED_LINK = 5;
+	int UNRESOLVED_LINK = 9;
 
 	/**
 	 * The feature id for the '<em><b>Source</b></em>' container reference.
@@ -613,7 +850,7 @@ public interface DoorsCSVPackage extends EPackage {
 	 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsCSVPackageImpl#getAttributeDefinition()
 	 * @generated
 	 */
-	int ATTRIBUTE_DEFINITION = 7;
+	int ATTRIBUTE_DEFINITION = 10;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -650,7 +887,7 @@ public interface DoorsCSVPackage extends EPackage {
 	 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsCSVPackageImpl#getDoorsTreeNodeVisitor()
 	 * @generated
 	 */
-	int DOORS_TREE_NODE_VISITOR = 8;
+	int DOORS_TREE_NODE_VISITOR = 11;
 
 
 	/**
@@ -719,6 +956,17 @@ public interface DoorsCSVPackage extends EPackage {
 	EAttribute getDoorsModule_View();
 
 	/**
+	 * Returns the meta object for the containment reference list '{@link de.jpwinkler.daf.doorscsv.model.DoorsModule#getVersions <em>Versions</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Versions</em>'.
+	 * @see de.jpwinkler.daf.doorscsv.model.DoorsModule#getVersions()
+	 * @see #getDoorsModule()
+	 * @generated
+	 */
+	EReference getDoorsModule_Versions();
+
+	/**
 	 * Returns the meta object for the '{@link de.jpwinkler.daf.doorscsv.model.DoorsModule#findAttributeDefinition(java.lang.String) <em>Find Attribute Definition</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -737,6 +985,16 @@ public interface DoorsCSVPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getDoorsModule__FindObject__String();
+
+	/**
+	 * Returns the meta object for the '{@link de.jpwinkler.daf.doorscsv.model.DoorsModule#getLatestVersion() <em>Get Latest Version</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Latest Version</em>' operation.
+	 * @see de.jpwinkler.daf.doorscsv.model.DoorsModule#getLatestVersion()
+	 * @generated
+	 */
+	EOperation getDoorsModule__GetLatestVersion();
 
 	/**
 	 * Returns the meta object for class '{@link de.jpwinkler.daf.doorscsv.model.DoorsObject <em>Doors Object</em>}'.
@@ -1031,6 +1289,17 @@ public interface DoorsCSVPackage extends EPackage {
 	EReference getDoorsTreeNode_Attributes();
 
 	/**
+	 * Returns the meta object for the attribute '{@link de.jpwinkler.daf.doorscsv.model.DoorsTreeNode#getFullName <em>Full Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Full Name</em>'.
+	 * @see de.jpwinkler.daf.doorscsv.model.DoorsTreeNode#getFullName()
+	 * @see #getDoorsTreeNode()
+	 * @generated
+	 */
+	EAttribute getDoorsTreeNode_FullName();
+
+	/**
 	 * Returns the meta object for the '{@link de.jpwinkler.daf.doorscsv.model.DoorsTreeNode#accept(de.jpwinkler.daf.doorscsv.DoorsTreeNodeVisitor) <em>Accept</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1039,6 +1308,110 @@ public interface DoorsCSVPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getDoorsTreeNode__Accept__DoorsTreeNodeVisitor();
+
+	/**
+	 * Returns the meta object for class '{@link de.jpwinkler.daf.doorscsv.model.DoorsDB <em>Doors DB</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Doors DB</em>'.
+	 * @see de.jpwinkler.daf.doorscsv.model.DoorsDB
+	 * @generated
+	 */
+	EClass getDoorsDB();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link de.jpwinkler.daf.doorscsv.model.DoorsDB#getRoot <em>Root</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Root</em>'.
+	 * @see de.jpwinkler.daf.doorscsv.model.DoorsDB#getRoot()
+	 * @see #getDoorsDB()
+	 * @generated
+	 */
+	EReference getDoorsDB_Root();
+
+	/**
+	 * Returns the meta object for the '{@link de.jpwinkler.daf.doorscsv.model.DoorsDB#accept(de.jpwinkler.daf.doorscsv.DoorsTreeNodeVisitor) <em>Accept</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Accept</em>' operation.
+	 * @see de.jpwinkler.daf.doorscsv.model.DoorsDB#accept(de.jpwinkler.daf.doorscsv.DoorsTreeNodeVisitor)
+	 * @generated
+	 */
+	EOperation getDoorsDB__Accept__DoorsTreeNodeVisitor();
+
+	/**
+	 * Returns the meta object for class '{@link de.jpwinkler.daf.doorscsv.model.DoorsFolder <em>Doors Folder</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Doors Folder</em>'.
+	 * @see de.jpwinkler.daf.doorscsv.model.DoorsFolder
+	 * @generated
+	 */
+	EClass getDoorsFolder();
+
+	/**
+	 * Returns the meta object for the '{@link de.jpwinkler.daf.doorscsv.model.DoorsFolder#getFolder(java.lang.String) <em>Get Folder</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Folder</em>' operation.
+	 * @see de.jpwinkler.daf.doorscsv.model.DoorsFolder#getFolder(java.lang.String)
+	 * @generated
+	 */
+	EOperation getDoorsFolder__GetFolder__String();
+
+	/**
+	 * Returns the meta object for the '{@link de.jpwinkler.daf.doorscsv.model.DoorsFolder#getModule(java.lang.String) <em>Get Module</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Module</em>' operation.
+	 * @see de.jpwinkler.daf.doorscsv.model.DoorsFolder#getModule(java.lang.String)
+	 * @generated
+	 */
+	EOperation getDoorsFolder__GetModule__String();
+
+	/**
+	 * Returns the meta object for class '{@link de.jpwinkler.daf.doorscsv.model.DoorsDatabaseVersion <em>Doors Database Version</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Doors Database Version</em>'.
+	 * @see de.jpwinkler.daf.doorscsv.model.DoorsDatabaseVersion
+	 * @generated
+	 */
+	EClass getDoorsDatabaseVersion();
+
+	/**
+	 * Returns the meta object for the container reference '{@link de.jpwinkler.daf.doorscsv.model.DoorsDatabaseVersion#getModule <em>Module</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the container reference '<em>Module</em>'.
+	 * @see de.jpwinkler.daf.doorscsv.model.DoorsDatabaseVersion#getModule()
+	 * @see #getDoorsDatabaseVersion()
+	 * @generated
+	 */
+	EReference getDoorsDatabaseVersion_Module();
+
+	/**
+	 * Returns the meta object for the attribute '{@link de.jpwinkler.daf.doorscsv.model.DoorsDatabaseVersion#getDate <em>Date</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Date</em>'.
+	 * @see de.jpwinkler.daf.doorscsv.model.DoorsDatabaseVersion#getDate()
+	 * @see #getDoorsDatabaseVersion()
+	 * @generated
+	 */
+	EAttribute getDoorsDatabaseVersion_Date();
+
+	/**
+	 * Returns the meta object for the map '{@link de.jpwinkler.daf.doorscsv.model.DoorsDatabaseVersion#getAttributes <em>Attributes</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the map '<em>Attributes</em>'.
+	 * @see de.jpwinkler.daf.doorscsv.model.DoorsDatabaseVersion#getAttributes()
+	 * @see #getDoorsDatabaseVersion()
+	 * @generated
+	 */
+	EReference getDoorsDatabaseVersion_Attributes();
 
 	/**
 	 * Returns the meta object for class '{@link de.jpwinkler.daf.doorscsv.model.AttributeDefinition <em>Attribute Definition</em>}'.
@@ -1146,6 +1519,14 @@ public interface DoorsCSVPackage extends EPackage {
 		EAttribute DOORS_MODULE__VIEW = eINSTANCE.getDoorsModule_View();
 
 		/**
+		 * The meta object literal for the '<em><b>Versions</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference DOORS_MODULE__VERSIONS = eINSTANCE.getDoorsModule_Versions();
+
+		/**
 		 * The meta object literal for the '<em><b>Find Attribute Definition</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1160,6 +1541,14 @@ public interface DoorsCSVPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation DOORS_MODULE___FIND_OBJECT__STRING = eINSTANCE.getDoorsModule__FindObject__String();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Latest Version</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation DOORS_MODULE___GET_LATEST_VERSION = eINSTANCE.getDoorsModule__GetLatestVersion();
 
 		/**
 		 * The meta object literal for the '{@link de.jpwinkler.daf.doorscsv.model.impl.DoorsObjectImpl <em>Doors Object</em>}' class.
@@ -1390,12 +1779,106 @@ public interface DoorsCSVPackage extends EPackage {
 		EReference DOORS_TREE_NODE__ATTRIBUTES = eINSTANCE.getDoorsTreeNode_Attributes();
 
 		/**
+		 * The meta object literal for the '<em><b>Full Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute DOORS_TREE_NODE__FULL_NAME = eINSTANCE.getDoorsTreeNode_FullName();
+
+		/**
 		 * The meta object literal for the '<em><b>Accept</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
 		EOperation DOORS_TREE_NODE___ACCEPT__DOORSTREENODEVISITOR = eINSTANCE.getDoorsTreeNode__Accept__DoorsTreeNodeVisitor();
+
+		/**
+		 * The meta object literal for the '{@link de.jpwinkler.daf.doorscsv.model.impl.DoorsDBImpl <em>Doors DB</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsDBImpl
+		 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsCSVPackageImpl#getDoorsDB()
+		 * @generated
+		 */
+		EClass DOORS_DB = eINSTANCE.getDoorsDB();
+
+		/**
+		 * The meta object literal for the '<em><b>Root</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference DOORS_DB__ROOT = eINSTANCE.getDoorsDB_Root();
+
+		/**
+		 * The meta object literal for the '<em><b>Accept</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation DOORS_DB___ACCEPT__DOORSTREENODEVISITOR = eINSTANCE.getDoorsDB__Accept__DoorsTreeNodeVisitor();
+
+		/**
+		 * The meta object literal for the '{@link de.jpwinkler.daf.doorscsv.model.impl.DoorsFolderImpl <em>Doors Folder</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsFolderImpl
+		 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsCSVPackageImpl#getDoorsFolder()
+		 * @generated
+		 */
+		EClass DOORS_FOLDER = eINSTANCE.getDoorsFolder();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Folder</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation DOORS_FOLDER___GET_FOLDER__STRING = eINSTANCE.getDoorsFolder__GetFolder__String();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Module</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation DOORS_FOLDER___GET_MODULE__STRING = eINSTANCE.getDoorsFolder__GetModule__String();
+
+		/**
+		 * The meta object literal for the '{@link de.jpwinkler.daf.doorscsv.model.impl.DoorsDatabaseVersionImpl <em>Doors Database Version</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsDatabaseVersionImpl
+		 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsCSVPackageImpl#getDoorsDatabaseVersion()
+		 * @generated
+		 */
+		EClass DOORS_DATABASE_VERSION = eINSTANCE.getDoorsDatabaseVersion();
+
+		/**
+		 * The meta object literal for the '<em><b>Module</b></em>' container reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference DOORS_DATABASE_VERSION__MODULE = eINSTANCE.getDoorsDatabaseVersion_Module();
+
+		/**
+		 * The meta object literal for the '<em><b>Date</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute DOORS_DATABASE_VERSION__DATE = eINSTANCE.getDoorsDatabaseVersion_Date();
+
+		/**
+		 * The meta object literal for the '<em><b>Attributes</b></em>' map feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference DOORS_DATABASE_VERSION__ATTRIBUTES = eINSTANCE.getDoorsDatabaseVersion_Attributes();
 
 		/**
 		 * The meta object literal for the '{@link de.jpwinkler.daf.doorscsv.model.impl.AttributeDefinitionImpl <em>Attribute Definition</em>}' class.

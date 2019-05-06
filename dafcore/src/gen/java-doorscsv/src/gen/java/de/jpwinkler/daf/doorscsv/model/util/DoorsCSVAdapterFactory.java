@@ -70,6 +70,22 @@ public class DoorsCSVAdapterFactory extends AdapterFactoryImpl {
 	protected DoorsCSVSwitch<Adapter> modelSwitch =
 		new DoorsCSVSwitch<Adapter>() {
 			@Override
+			public Adapter caseDoorsTreeNode(DoorsTreeNode object) {
+				return createDoorsTreeNodeAdapter();
+			}
+			@Override
+			public Adapter caseDoorsDB(DoorsDB object) {
+				return createDoorsDBAdapter();
+			}
+			@Override
+			public Adapter caseDoorsFolder(DoorsFolder object) {
+				return createDoorsFolderAdapter();
+			}
+			@Override
+			public Adapter caseDoorsDatabaseVersion(DoorsDatabaseVersion object) {
+				return createDoorsDatabaseVersionAdapter();
+			}
+			@Override
 			public Adapter caseDoorsModule(DoorsModule object) {
 				return createDoorsModuleAdapter();
 			}
@@ -92,10 +108,6 @@ public class DoorsCSVAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseUnresolvedLink(UnresolvedLink object) {
 				return createUnresolvedLinkAdapter();
-			}
-			@Override
-			public Adapter caseDoorsTreeNode(DoorsTreeNode object) {
-				return createDoorsTreeNodeAdapter();
 			}
 			@Override
 			public Adapter caseAttributeDefinition(AttributeDefinition object) {
@@ -216,6 +228,48 @@ public class DoorsCSVAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createDoorsTreeNodeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.jpwinkler.daf.doorscsv.model.DoorsDB <em>Doors DB</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.jpwinkler.daf.doorscsv.model.DoorsDB
+	 * @generated
+	 */
+	public Adapter createDoorsDBAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.jpwinkler.daf.doorscsv.model.DoorsFolder <em>Doors Folder</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.jpwinkler.daf.doorscsv.model.DoorsFolder
+	 * @generated
+	 */
+	public Adapter createDoorsFolderAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link de.jpwinkler.daf.doorscsv.model.DoorsDatabaseVersion <em>Doors Database Version</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see de.jpwinkler.daf.doorscsv.model.DoorsDatabaseVersion
+	 * @generated
+	 */
+	public Adapter createDoorsDatabaseVersionAdapter() {
 		return null;
 	}
 

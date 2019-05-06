@@ -68,6 +68,31 @@ public class DoorsCSVSwitch<T> extends Switch<T> {
 	@Override
 	protected T doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
+			case DoorsCSVPackage.DOORS_TREE_NODE: {
+				DoorsTreeNode doorsTreeNode = (DoorsTreeNode)theEObject;
+				T result = caseDoorsTreeNode(doorsTreeNode);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case DoorsCSVPackage.DOORS_DB: {
+				DoorsDB doorsDB = (DoorsDB)theEObject;
+				T result = caseDoorsDB(doorsDB);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case DoorsCSVPackage.DOORS_FOLDER: {
+				DoorsFolder doorsFolder = (DoorsFolder)theEObject;
+				T result = caseDoorsFolder(doorsFolder);
+				if (result == null) result = caseDoorsTreeNode(doorsFolder);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case DoorsCSVPackage.DOORS_DATABASE_VERSION: {
+				DoorsDatabaseVersion doorsDatabaseVersion = (DoorsDatabaseVersion)theEObject;
+				T result = caseDoorsDatabaseVersion(doorsDatabaseVersion);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case DoorsCSVPackage.DOORS_MODULE: {
 				DoorsModule doorsModule = (DoorsModule)theEObject;
 				T result = caseDoorsModule(doorsModule);
@@ -105,12 +130,6 @@ public class DoorsCSVSwitch<T> extends Switch<T> {
 				UnresolvedLink unresolvedLink = (UnresolvedLink)theEObject;
 				T result = caseUnresolvedLink(unresolvedLink);
 				if (result == null) result = caseLink(unresolvedLink);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case DoorsCSVPackage.DOORS_TREE_NODE: {
-				DoorsTreeNode doorsTreeNode = (DoorsTreeNode)theEObject;
-				T result = caseDoorsTreeNode(doorsTreeNode);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -226,6 +245,51 @@ public class DoorsCSVSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseDoorsTreeNode(DoorsTreeNode object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Doors DB</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Doors DB</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseDoorsDB(DoorsDB object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Doors Folder</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Doors Folder</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseDoorsFolder(DoorsFolder object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Doors Database Version</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Doors Database Version</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseDoorsDatabaseVersion(DoorsDatabaseVersion object) {
 		return null;
 	}
 
