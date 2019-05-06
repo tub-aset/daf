@@ -1,13 +1,13 @@
 package de.jpwinkler.daf.doorsdb;
 
-import de.jpwinkler.daf.doorscsv.DoorsTreeNodeVisitor;
+import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.doorscsv.ModuleMetaDataParser;
-import de.jpwinkler.daf.doorscsv.model.DoorsCSVFactory;
-import de.jpwinkler.daf.doorscsv.model.DoorsCSVPackage;
-import de.jpwinkler.daf.doorscsv.model.DoorsDB;
-import de.jpwinkler.daf.doorscsv.model.DoorsDatabaseVersion;
-import de.jpwinkler.daf.doorscsv.model.DoorsFolder;
-import de.jpwinkler.daf.doorscsv.model.DoorsModule;
+import de.jpwinkler.daf.model.DoorsCSVFactory;
+import de.jpwinkler.daf.model.DoorsCSVPackage;
+import de.jpwinkler.daf.model.DoorsDB;
+import de.jpwinkler.daf.model.DoorsDatabaseVersion;
+import de.jpwinkler.daf.model.DoorsFolder;
+import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.doorscsv.util.DoorsModuleUtil;
 import de.jpwinkler.daf.doorsdb.bridge.DoorsApplication;
 import de.jpwinkler.daf.doorsdb.bridge.DoorsApplicationFactory;

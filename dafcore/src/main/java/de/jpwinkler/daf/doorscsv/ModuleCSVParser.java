@@ -1,11 +1,11 @@
 package de.jpwinkler.daf.doorscsv;
 
-import de.jpwinkler.daf.doorscsv.model.AttributeDefinition;
-import de.jpwinkler.daf.doorscsv.model.DoorsCSVFactory;
-import de.jpwinkler.daf.doorscsv.model.DoorsCSVPackage;
-import de.jpwinkler.daf.doorscsv.model.DoorsModule;
-import de.jpwinkler.daf.doorscsv.model.DoorsObject;
-import de.jpwinkler.daf.doorscsv.model.DoorsTreeNode;
+import de.jpwinkler.daf.model.AttributeDefinition;
+import de.jpwinkler.daf.model.DoorsCSVFactory;
+import de.jpwinkler.daf.model.DoorsCSVPackage;
+import de.jpwinkler.daf.model.DoorsModule;
+import de.jpwinkler.daf.model.DoorsObject;
+import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.doorscsv.util.CSVParseException;
 import java.io.File;
 import java.io.FileInputStream;

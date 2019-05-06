@@ -1,8 +1,8 @@
 package de.jpwinkler.daf.doorsdb;
 
-import de.jpwinkler.daf.doorscsv.model.DoorsCSVFactory;
-import de.jpwinkler.daf.doorscsv.model.DoorsDB;
-import de.jpwinkler.daf.doorscsv.model.DoorsFolder;
+import de.jpwinkler.daf.model.DoorsCSVFactory;
+import de.jpwinkler.daf.model.DoorsDB;
+import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.doorsdb.bridge.ItemRef;
 import java.nio.file.Path;
 import java.util.ArrayList;

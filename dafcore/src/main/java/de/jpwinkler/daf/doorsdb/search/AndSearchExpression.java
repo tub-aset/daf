@@ -1,6 +1,6 @@
 package de.jpwinkler.daf.doorsdb.search;
 
-import de.jpwinkler.daf.doorscsv.model.DoorsModule;
+import de.jpwinkler.daf.model.DoorsModule;
 import java.util.ArrayList;
 import java.util.List;
 

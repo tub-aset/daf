@@ -1,6 +1,6 @@
 package de.jpwinkler.daf.doorsdb.tasks;
 
-import de.jpwinkler.daf.doorscsv.model.DoorsModule;
+import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.doorsdb.DoorsDBInterface;
 import java.util.List;
 import java.util.function.Consumer;

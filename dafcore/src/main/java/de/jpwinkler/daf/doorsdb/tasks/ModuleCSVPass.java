@@ -2,7 +2,7 @@ package de.jpwinkler.daf.doorsdb.tasks;
 
 import de.jpwinkler.daf.doorscsv.ModuleCSVParser;
 import de.jpwinkler.daf.doorscsv.ModuleCSVWriter;
-import de.jpwinkler.daf.doorscsv.model.DoorsModule;
+import de.jpwinkler.daf.model.DoorsModule;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;

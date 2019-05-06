@@ -1,6 +1,6 @@
 package de.jpwinkler.daf.doorscsv;
 
-import de.jpwinkler.daf.doorscsv.model.DoorsModule;
+import de.jpwinkler.daf.model.DoorsModule;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;

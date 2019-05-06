@@ -1,8 +1,8 @@
 package de.jpwinkler.daf.doorsdb.tasks;
 
-import de.jpwinkler.daf.doorscsv.DoorsTreeNodeVisitor;
-import de.jpwinkler.daf.doorscsv.model.DoorsFolder;
-import de.jpwinkler.daf.doorscsv.model.DoorsModule;
+import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
+import de.jpwinkler.daf.model.DoorsFolder;
+import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.doorsdb.DoorsDBInterface;
 import java.util.function.Consumer;
 

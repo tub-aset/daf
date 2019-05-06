@@ -1,6 +1,6 @@
 package de.jpwinkler.daf.doorsdb.search;
 
-import de.jpwinkler.daf.doorscsv.model.DoorsModule;
+import de.jpwinkler.daf.model.DoorsModule;
 
 public class NotSearchExpression extends DBSearchExpression {
 

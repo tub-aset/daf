@@ -28,4 +28,11 @@
             class="de.jpwinkler.daf.doorscsv.model.DoorsPackage"/>
    </extension>
 
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated Doors -->
+      <package
+            uri="de.jpwinkler.daf.model"
+            class="de.jpwinkler.daf.model.DoorsPackage"/>
+   </extension>
+
 </plugin>

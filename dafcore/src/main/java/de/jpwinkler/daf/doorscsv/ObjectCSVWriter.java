@@ -1,6 +1,6 @@
 package de.jpwinkler.daf.doorscsv;
 
-import de.jpwinkler.daf.doorscsv.model.DoorsObject;
+import de.jpwinkler.daf.model.DoorsObject;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
