@@ -35,7 +35,6 @@
             <eParameters name="objectIdentifier" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         </eOperations>
         <eOperations name="getLatestVersion" eType="#//DoorsDatabaseVersion"/>
-        <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="path" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="url" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         <eStructuralFeatures xsi:type="ecore:EReference" name="attributeDefinitions" upperBound="-1"
@@ -43,7 +42,6 @@
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="view" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         <eStructuralFeatures xsi:type="ecore:EReference" name="versions" upperBound="-1"
                              eType="#//DoorsDatabaseVersion" containment="true" eOpposite="#//DoorsDatabaseVersion/module"/>
-        <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eClassifiers>
   
     <eClassifiers xsi:type="ecore:EClass" name="DoorsObject" eSuperTypes="#//DoorsTreeNode">
@@ -111,6 +109,7 @@
                              eOpposite="#//DoorsTreeNode/children"/>
         <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" ordered="false"
                              upperBound="-1" eType="#//StringToStringMap" containment="true" resolveProxies="false"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="fullName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
                              changeable="false" volatile="true" transient="true" derived="true"/>
     </eClassifiers>

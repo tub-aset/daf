@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link de.jpwinkler.daf.doorscsv.model.DoorsTreeNode#getChildren <em>Children</em>}</li>
  *   <li>{@link de.jpwinkler.daf.doorscsv.model.DoorsTreeNode#getParent <em>Parent</em>}</li>
  *   <li>{@link de.jpwinkler.daf.doorscsv.model.DoorsTreeNode#getAttributes <em>Attributes</em>}</li>
+ *   <li>{@link de.jpwinkler.daf.doorscsv.model.DoorsTreeNode#getName <em>Name</em>}</li>
  *   <li>{@link de.jpwinkler.daf.doorscsv.model.DoorsTreeNode#getFullName <em>Full Name</em>}</li>
  * </ul>
  *
@@ -79,6 +80,28 @@ public interface DoorsTreeNode extends EObject {
 	 * @generated
 	 */
 	EMap<String, String> getAttributes();
+
+	/**
+	 * Returns the value of the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Name</em>' attribute.
+	 * @see #setName(String)
+	 * @see de.jpwinkler.daf.doorscsv.model.DoorsPackage#getDoorsTreeNode_Name()
+	 * @model
+	 * @generated
+	 */
+	String getName();
+
+	/**
+	 * Sets the value of the '{@link de.jpwinkler.daf.doorscsv.model.DoorsTreeNode#getName <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Name</em>' attribute.
+	 * @see #getName()
+	 * @generated
+	 */
+	void setName(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Full Name</b></em>' attribute.

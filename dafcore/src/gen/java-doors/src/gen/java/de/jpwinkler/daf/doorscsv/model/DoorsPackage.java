@@ -56,14 +56,14 @@ public interface DoorsPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	DoorsPackage eINSTANCE = de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsPackageImpl.init();
+	DoorsPackage eINSTANCE = de.jpwinkler.daf.doorscsv.model.impl.DoorsPackageImpl.init();
 
 	/**
-	 * The meta object id for the '{@link de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsTreeNodeImpl <em>Tree Node</em>}' class.
+	 * The meta object id for the '{@link de.jpwinkler.daf.doorscsv.model.impl.DoorsTreeNodeImpl <em>Tree Node</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsTreeNodeImpl
-	 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsPackageImpl#getDoorsTreeNode()
+	 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsTreeNodeImpl
+	 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsPackageImpl#getDoorsTreeNode()
 	 * @generated
 	 */
 	int DOORS_TREE_NODE = 0;
@@ -96,13 +96,22 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_TREE_NODE__ATTRIBUTES = 2;
 
 	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TREE_NODE__NAME = 3;
+
+	/**
 	 * The feature id for the '<em><b>Full Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_TREE_NODE__FULL_NAME = 3;
+	int DOORS_TREE_NODE__FULL_NAME = 4;
 
 	/**
 	 * The number of structural features of the '<em>Tree Node</em>' class.
@@ -111,7 +120,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_TREE_NODE_FEATURE_COUNT = 4;
+	int DOORS_TREE_NODE_FEATURE_COUNT = 5;
 
 	/**
 	 * The operation id for the '<em>Accept</em>' operation.
@@ -132,11 +141,11 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_TREE_NODE_OPERATION_COUNT = 1;
 
 	/**
-	 * The meta object id for the '{@link de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsDBImpl <em>DB</em>}' class.
+	 * The meta object id for the '{@link de.jpwinkler.daf.doorscsv.model.impl.DoorsDBImpl <em>DB</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsDBImpl
-	 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsPackageImpl#getDoorsDB()
+	 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsDBImpl
+	 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsPackageImpl#getDoorsDB()
 	 * @generated
 	 */
 	int DOORS_DB = 1;
@@ -178,11 +187,11 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_DB_OPERATION_COUNT = 1;
 
 	/**
-	 * The meta object id for the '{@link de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsFolderImpl <em>Folder</em>}' class.
+	 * The meta object id for the '{@link de.jpwinkler.daf.doorscsv.model.impl.DoorsFolderImpl <em>Folder</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsFolderImpl
-	 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsPackageImpl#getDoorsFolder()
+	 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsFolderImpl
+	 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsPackageImpl#getDoorsFolder()
 	 * @generated
 	 */
 	int DOORS_FOLDER = 2;
@@ -213,6 +222,15 @@ public interface DoorsPackage extends EPackage {
 	 * @ordered
 	 */
 	int DOORS_FOLDER__ATTRIBUTES = DOORS_TREE_NODE__ATTRIBUTES;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_FOLDER__NAME = DOORS_TREE_NODE__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Full Name</b></em>' attribute.
@@ -269,11 +287,11 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_FOLDER_OPERATION_COUNT = DOORS_TREE_NODE_OPERATION_COUNT + 2;
 
 	/**
-	 * The meta object id for the '{@link de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsDatabaseVersionImpl <em>Database Version</em>}' class.
+	 * The meta object id for the '{@link de.jpwinkler.daf.doorscsv.model.impl.DoorsDatabaseVersionImpl <em>Database Version</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsDatabaseVersionImpl
-	 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsPackageImpl#getDoorsDatabaseVersion()
+	 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsDatabaseVersionImpl
+	 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsPackageImpl#getDoorsDatabaseVersion()
 	 * @generated
 	 */
 	int DOORS_DATABASE_VERSION = 3;
@@ -324,11 +342,11 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_DATABASE_VERSION_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsModuleImpl <em>Module</em>}' class.
+	 * The meta object id for the '{@link de.jpwinkler.daf.doorscsv.model.impl.DoorsModuleImpl <em>Module</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsModuleImpl
-	 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsPackageImpl#getDoorsModule()
+	 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsModuleImpl
+	 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsPackageImpl#getDoorsModule()
 	 * @generated
 	 */
 	int DOORS_MODULE = 4;
@@ -361,6 +379,15 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_MODULE__ATTRIBUTES = DOORS_TREE_NODE__ATTRIBUTES;
 
 	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_MODULE__NAME = DOORS_TREE_NODE__NAME;
+
+	/**
 	 * The feature id for the '<em><b>Full Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -370,22 +397,13 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_MODULE__FULL_NAME = DOORS_TREE_NODE__FULL_NAME;
 
 	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DOORS_MODULE__NAME = DOORS_TREE_NODE_FEATURE_COUNT + 0;
-
-	/**
 	 * The feature id for the '<em><b>Path</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_MODULE__PATH = DOORS_TREE_NODE_FEATURE_COUNT + 1;
+	int DOORS_MODULE__PATH = DOORS_TREE_NODE_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Url</b></em>' attribute.
@@ -394,7 +412,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_MODULE__URL = DOORS_TREE_NODE_FEATURE_COUNT + 2;
+	int DOORS_MODULE__URL = DOORS_TREE_NODE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Attribute Definitions</b></em>' containment reference list.
@@ -403,7 +421,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_MODULE__ATTRIBUTE_DEFINITIONS = DOORS_TREE_NODE_FEATURE_COUNT + 3;
+	int DOORS_MODULE__ATTRIBUTE_DEFINITIONS = DOORS_TREE_NODE_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>View</b></em>' attribute.
@@ -412,7 +430,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_MODULE__VIEW = DOORS_TREE_NODE_FEATURE_COUNT + 4;
+	int DOORS_MODULE__VIEW = DOORS_TREE_NODE_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Versions</b></em>' containment reference list.
@@ -421,7 +439,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_MODULE__VERSIONS = DOORS_TREE_NODE_FEATURE_COUNT + 5;
+	int DOORS_MODULE__VERSIONS = DOORS_TREE_NODE_FEATURE_COUNT + 4;
 
 	/**
 	 * The number of structural features of the '<em>Module</em>' class.
@@ -430,7 +448,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_MODULE_FEATURE_COUNT = DOORS_TREE_NODE_FEATURE_COUNT + 6;
+	int DOORS_MODULE_FEATURE_COUNT = DOORS_TREE_NODE_FEATURE_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Accept</em>' operation.
@@ -478,11 +496,11 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_MODULE_OPERATION_COUNT = DOORS_TREE_NODE_OPERATION_COUNT + 3;
 
 	/**
-	 * The meta object id for the '{@link de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsObjectImpl <em>Object</em>}' class.
+	 * The meta object id for the '{@link de.jpwinkler.daf.doorscsv.model.impl.DoorsObjectImpl <em>Object</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsObjectImpl
-	 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsPackageImpl#getDoorsObject()
+	 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsObjectImpl
+	 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsPackageImpl#getDoorsObject()
 	 * @generated
 	 */
 	int DOORS_OBJECT = 5;
@@ -513,6 +531,15 @@ public interface DoorsPackage extends EPackage {
 	 * @ordered
 	 */
 	int DOORS_OBJECT__ATTRIBUTES = DOORS_TREE_NODE__ATTRIBUTES;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_OBJECT__NAME = DOORS_TREE_NODE__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Full Name</b></em>' attribute.
@@ -659,11 +686,11 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_OBJECT_OPERATION_COUNT = DOORS_TREE_NODE_OPERATION_COUNT + 1;
 
 	/**
-	 * The meta object id for the '{@link de.jpwinkler.daf.doorscsv.model.dbimpl.StringToStringMapImpl <em>String To String Map</em>}' class.
+	 * The meta object id for the '{@link de.jpwinkler.daf.doorscsv.model.impl.StringToStringMapImpl <em>String To String Map</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.StringToStringMapImpl
-	 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsPackageImpl#getStringToStringMap()
+	 * @see de.jpwinkler.daf.doorscsv.model.impl.StringToStringMapImpl
+	 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsPackageImpl#getStringToStringMap()
 	 * @generated
 	 */
 	int STRING_TO_STRING_MAP = 6;
@@ -705,11 +732,11 @@ public interface DoorsPackage extends EPackage {
 	int STRING_TO_STRING_MAP_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link de.jpwinkler.daf.doorscsv.model.dbimpl.LinkImpl <em>Link</em>}' class.
+	 * The meta object id for the '{@link de.jpwinkler.daf.doorscsv.model.impl.LinkImpl <em>Link</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.LinkImpl
-	 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsPackageImpl#getLink()
+	 * @see de.jpwinkler.daf.doorscsv.model.impl.LinkImpl
+	 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsPackageImpl#getLink()
 	 * @generated
 	 */
 	int LINK = 7;
@@ -742,11 +769,11 @@ public interface DoorsPackage extends EPackage {
 	int LINK_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link de.jpwinkler.daf.doorscsv.model.dbimpl.ResolvedLinkImpl <em>Resolved Link</em>}' class.
+	 * The meta object id for the '{@link de.jpwinkler.daf.doorscsv.model.impl.ResolvedLinkImpl <em>Resolved Link</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.ResolvedLinkImpl
-	 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsPackageImpl#getResolvedLink()
+	 * @see de.jpwinkler.daf.doorscsv.model.impl.ResolvedLinkImpl
+	 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsPackageImpl#getResolvedLink()
 	 * @generated
 	 */
 	int RESOLVED_LINK = 8;
@@ -788,11 +815,11 @@ public interface DoorsPackage extends EPackage {
 	int RESOLVED_LINK_OPERATION_COUNT = LINK_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link de.jpwinkler.daf.doorscsv.model.dbimpl.UnresolvedLinkImpl <em>Unresolved Link</em>}' class.
+	 * The meta object id for the '{@link de.jpwinkler.daf.doorscsv.model.impl.UnresolvedLinkImpl <em>Unresolved Link</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.UnresolvedLinkImpl
-	 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsPackageImpl#getUnresolvedLink()
+	 * @see de.jpwinkler.daf.doorscsv.model.impl.UnresolvedLinkImpl
+	 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsPackageImpl#getUnresolvedLink()
 	 * @generated
 	 */
 	int UNRESOLVED_LINK = 9;
@@ -843,11 +870,11 @@ public interface DoorsPackage extends EPackage {
 	int UNRESOLVED_LINK_OPERATION_COUNT = LINK_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link de.jpwinkler.daf.doorscsv.model.dbimpl.AttributeDefinitionImpl <em>Attribute Definition</em>}' class.
+	 * The meta object id for the '{@link de.jpwinkler.daf.doorscsv.model.impl.AttributeDefinitionImpl <em>Attribute Definition</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.AttributeDefinitionImpl
-	 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsPackageImpl#getAttributeDefinition()
+	 * @see de.jpwinkler.daf.doorscsv.model.impl.AttributeDefinitionImpl
+	 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsPackageImpl#getAttributeDefinition()
 	 * @generated
 	 */
 	int ATTRIBUTE_DEFINITION = 10;
@@ -884,7 +911,7 @@ public interface DoorsPackage extends EPackage {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see de.jpwinkler.daf.doorscsv.DoorsTreeNodeVisitor
-	 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsPackageImpl#getDoorsTreeNodeVisitor()
+	 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsPackageImpl#getDoorsTreeNodeVisitor()
 	 * @generated
 	 */
 	int DOORS_TREE_NODE_VISITOR = 11;
@@ -932,6 +959,17 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getDoorsTreeNode_Attributes();
+
+	/**
+	 * Returns the meta object for the attribute '{@link de.jpwinkler.daf.doorscsv.model.DoorsTreeNode#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see de.jpwinkler.daf.doorscsv.model.DoorsTreeNode#getName()
+	 * @see #getDoorsTreeNode()
+	 * @generated
+	 */
+	EAttribute getDoorsTreeNode_Name();
 
 	/**
 	 * Returns the meta object for the attribute '{@link de.jpwinkler.daf.doorscsv.model.DoorsTreeNode#getFullName <em>Full Name</em>}'.
@@ -1067,17 +1105,6 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getDoorsModule();
-
-	/**
-	 * Returns the meta object for the attribute '{@link de.jpwinkler.daf.doorscsv.model.DoorsModule#getName <em>Name</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see de.jpwinkler.daf.doorscsv.model.DoorsModule#getName()
-	 * @see #getDoorsModule()
-	 * @generated
-	 */
-	EAttribute getDoorsModule_Name();
 
 	/**
 	 * Returns the meta object for the attribute '{@link de.jpwinkler.daf.doorscsv.model.DoorsModule#getPath <em>Path</em>}'.
@@ -1469,11 +1496,11 @@ public interface DoorsPackage extends EPackage {
 	 */
 	interface Literals {
 		/**
-		 * The meta object literal for the '{@link de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsTreeNodeImpl <em>Tree Node</em>}' class.
+		 * The meta object literal for the '{@link de.jpwinkler.daf.doorscsv.model.impl.DoorsTreeNodeImpl <em>Tree Node</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsTreeNodeImpl
-		 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsPackageImpl#getDoorsTreeNode()
+		 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsTreeNodeImpl
+		 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsPackageImpl#getDoorsTreeNode()
 		 * @generated
 		 */
 		EClass DOORS_TREE_NODE = eINSTANCE.getDoorsTreeNode();
@@ -1503,6 +1530,14 @@ public interface DoorsPackage extends EPackage {
 		EReference DOORS_TREE_NODE__ATTRIBUTES = eINSTANCE.getDoorsTreeNode_Attributes();
 
 		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute DOORS_TREE_NODE__NAME = eINSTANCE.getDoorsTreeNode_Name();
+
+		/**
 		 * The meta object literal for the '<em><b>Full Name</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1519,11 +1554,11 @@ public interface DoorsPackage extends EPackage {
 		EOperation DOORS_TREE_NODE___ACCEPT__DOORSTREENODEVISITOR = eINSTANCE.getDoorsTreeNode__Accept__DoorsTreeNodeVisitor();
 
 		/**
-		 * The meta object literal for the '{@link de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsDBImpl <em>DB</em>}' class.
+		 * The meta object literal for the '{@link de.jpwinkler.daf.doorscsv.model.impl.DoorsDBImpl <em>DB</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsDBImpl
-		 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsPackageImpl#getDoorsDB()
+		 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsDBImpl
+		 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsPackageImpl#getDoorsDB()
 		 * @generated
 		 */
 		EClass DOORS_DB = eINSTANCE.getDoorsDB();
@@ -1545,11 +1580,11 @@ public interface DoorsPackage extends EPackage {
 		EOperation DOORS_DB___ACCEPT__DOORSTREENODEVISITOR = eINSTANCE.getDoorsDB__Accept__DoorsTreeNodeVisitor();
 
 		/**
-		 * The meta object literal for the '{@link de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsFolderImpl <em>Folder</em>}' class.
+		 * The meta object literal for the '{@link de.jpwinkler.daf.doorscsv.model.impl.DoorsFolderImpl <em>Folder</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsFolderImpl
-		 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsPackageImpl#getDoorsFolder()
+		 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsFolderImpl
+		 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsPackageImpl#getDoorsFolder()
 		 * @generated
 		 */
 		EClass DOORS_FOLDER = eINSTANCE.getDoorsFolder();
@@ -1571,11 +1606,11 @@ public interface DoorsPackage extends EPackage {
 		EOperation DOORS_FOLDER___GET_MODULE__STRING = eINSTANCE.getDoorsFolder__GetModule__String();
 
 		/**
-		 * The meta object literal for the '{@link de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsDatabaseVersionImpl <em>Database Version</em>}' class.
+		 * The meta object literal for the '{@link de.jpwinkler.daf.doorscsv.model.impl.DoorsDatabaseVersionImpl <em>Database Version</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsDatabaseVersionImpl
-		 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsPackageImpl#getDoorsDatabaseVersion()
+		 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsDatabaseVersionImpl
+		 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsPackageImpl#getDoorsDatabaseVersion()
 		 * @generated
 		 */
 		EClass DOORS_DATABASE_VERSION = eINSTANCE.getDoorsDatabaseVersion();
@@ -1605,22 +1640,14 @@ public interface DoorsPackage extends EPackage {
 		EReference DOORS_DATABASE_VERSION__ATTRIBUTES = eINSTANCE.getDoorsDatabaseVersion_Attributes();
 
 		/**
-		 * The meta object literal for the '{@link de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsModuleImpl <em>Module</em>}' class.
+		 * The meta object literal for the '{@link de.jpwinkler.daf.doorscsv.model.impl.DoorsModuleImpl <em>Module</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsModuleImpl
-		 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsPackageImpl#getDoorsModule()
+		 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsModuleImpl
+		 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsPackageImpl#getDoorsModule()
 		 * @generated
 		 */
 		EClass DOORS_MODULE = eINSTANCE.getDoorsModule();
-
-		/**
-		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute DOORS_MODULE__NAME = eINSTANCE.getDoorsModule_Name();
 
 		/**
 		 * The meta object literal for the '<em><b>Path</b></em>' attribute feature.
@@ -1687,11 +1714,11 @@ public interface DoorsPackage extends EPackage {
 		EOperation DOORS_MODULE___GET_LATEST_VERSION = eINSTANCE.getDoorsModule__GetLatestVersion();
 
 		/**
-		 * The meta object literal for the '{@link de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsObjectImpl <em>Object</em>}' class.
+		 * The meta object literal for the '{@link de.jpwinkler.daf.doorscsv.model.impl.DoorsObjectImpl <em>Object</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsObjectImpl
-		 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsPackageImpl#getDoorsObject()
+		 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsObjectImpl
+		 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsPackageImpl#getDoorsObject()
 		 * @generated
 		 */
 		EClass DOORS_OBJECT = eINSTANCE.getDoorsObject();
@@ -1793,11 +1820,11 @@ public interface DoorsPackage extends EPackage {
 		EOperation DOORS_OBJECT___IS_HEADING = eINSTANCE.getDoorsObject__IsHeading();
 
 		/**
-		 * The meta object literal for the '{@link de.jpwinkler.daf.doorscsv.model.dbimpl.StringToStringMapImpl <em>String To String Map</em>}' class.
+		 * The meta object literal for the '{@link de.jpwinkler.daf.doorscsv.model.impl.StringToStringMapImpl <em>String To String Map</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.StringToStringMapImpl
-		 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsPackageImpl#getStringToStringMap()
+		 * @see de.jpwinkler.daf.doorscsv.model.impl.StringToStringMapImpl
+		 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsPackageImpl#getStringToStringMap()
 		 * @generated
 		 */
 		EClass STRING_TO_STRING_MAP = eINSTANCE.getStringToStringMap();
@@ -1819,11 +1846,11 @@ public interface DoorsPackage extends EPackage {
 		EAttribute STRING_TO_STRING_MAP__VALUE = eINSTANCE.getStringToStringMap_Value();
 
 		/**
-		 * The meta object literal for the '{@link de.jpwinkler.daf.doorscsv.model.dbimpl.LinkImpl <em>Link</em>}' class.
+		 * The meta object literal for the '{@link de.jpwinkler.daf.doorscsv.model.impl.LinkImpl <em>Link</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.LinkImpl
-		 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsPackageImpl#getLink()
+		 * @see de.jpwinkler.daf.doorscsv.model.impl.LinkImpl
+		 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsPackageImpl#getLink()
 		 * @generated
 		 */
 		EClass LINK = eINSTANCE.getLink();
@@ -1837,11 +1864,11 @@ public interface DoorsPackage extends EPackage {
 		EReference LINK__SOURCE = eINSTANCE.getLink_Source();
 
 		/**
-		 * The meta object literal for the '{@link de.jpwinkler.daf.doorscsv.model.dbimpl.ResolvedLinkImpl <em>Resolved Link</em>}' class.
+		 * The meta object literal for the '{@link de.jpwinkler.daf.doorscsv.model.impl.ResolvedLinkImpl <em>Resolved Link</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.ResolvedLinkImpl
-		 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsPackageImpl#getResolvedLink()
+		 * @see de.jpwinkler.daf.doorscsv.model.impl.ResolvedLinkImpl
+		 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsPackageImpl#getResolvedLink()
 		 * @generated
 		 */
 		EClass RESOLVED_LINK = eINSTANCE.getResolvedLink();
@@ -1855,11 +1882,11 @@ public interface DoorsPackage extends EPackage {
 		EReference RESOLVED_LINK__TARGET = eINSTANCE.getResolvedLink_Target();
 
 		/**
-		 * The meta object literal for the '{@link de.jpwinkler.daf.doorscsv.model.dbimpl.UnresolvedLinkImpl <em>Unresolved Link</em>}' class.
+		 * The meta object literal for the '{@link de.jpwinkler.daf.doorscsv.model.impl.UnresolvedLinkImpl <em>Unresolved Link</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.UnresolvedLinkImpl
-		 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsPackageImpl#getUnresolvedLink()
+		 * @see de.jpwinkler.daf.doorscsv.model.impl.UnresolvedLinkImpl
+		 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsPackageImpl#getUnresolvedLink()
 		 * @generated
 		 */
 		EClass UNRESOLVED_LINK = eINSTANCE.getUnresolvedLink();
@@ -1881,11 +1908,11 @@ public interface DoorsPackage extends EPackage {
 		EAttribute UNRESOLVED_LINK__TARGET_OBJECT = eINSTANCE.getUnresolvedLink_TargetObject();
 
 		/**
-		 * The meta object literal for the '{@link de.jpwinkler.daf.doorscsv.model.dbimpl.AttributeDefinitionImpl <em>Attribute Definition</em>}' class.
+		 * The meta object literal for the '{@link de.jpwinkler.daf.doorscsv.model.impl.AttributeDefinitionImpl <em>Attribute Definition</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.AttributeDefinitionImpl
-		 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsPackageImpl#getAttributeDefinition()
+		 * @see de.jpwinkler.daf.doorscsv.model.impl.AttributeDefinitionImpl
+		 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsPackageImpl#getAttributeDefinition()
 		 * @generated
 		 */
 		EClass ATTRIBUTE_DEFINITION = eINSTANCE.getAttributeDefinition();
@@ -1903,7 +1930,7 @@ public interface DoorsPackage extends EPackage {
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @see de.jpwinkler.daf.doorscsv.DoorsTreeNodeVisitor
-		 * @see de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsPackageImpl#getDoorsTreeNodeVisitor()
+		 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsPackageImpl#getDoorsTreeNodeVisitor()
 		 * @generated
 		 */
 		EDataType DOORS_TREE_NODE_VISITOR = eINSTANCE.getDoorsTreeNodeVisitor();

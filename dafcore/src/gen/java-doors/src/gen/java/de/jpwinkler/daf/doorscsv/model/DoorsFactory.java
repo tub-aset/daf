@@ -19,7 +19,7 @@ public interface DoorsFactory extends EFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	DoorsFactory eINSTANCE = de.jpwinkler.daf.doorscsv.model.dbimpl.DoorsFactoryImpl.init();
+	DoorsFactory eINSTANCE = de.jpwinkler.daf.doorscsv.model.impl.DoorsFactoryImpl.init();
 
 	/**
 	 * Returns a new object of class '<em>Tree Node</em>'.

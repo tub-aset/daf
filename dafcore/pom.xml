@@ -66,23 +66,13 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <id>DoorsCSV</id>
+                        <id>Doors</id>
                         <goals>
                             <goal>eclipse-run</goal>
                         </goals>
                         <phase>generate-sources</phase>
                         <configuration>
-                            <appArgLine>-data target/workspace -application org.eclipse.emf.codegen.ecore.Generator -model ${project.basedir}/src/main/emf/de/jpwinkler/daf/doors/DoorsCSV.genmodel ${project.basedir}/src/gen/java-doors</appArgLine>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>DoorsDB</id>
-                        <goals>
-                            <goal>eclipse-run</goal>
-                        </goals>
-                        <phase>generate-sources</phase>
-                        <configuration>
-                            <appArgLine>-data target/workspace -application org.eclipse.emf.codegen.ecore.Generator -model ${project.basedir}/src/main/emf/de/jpwinkler/daf/doors/DoorsDB.genmodel ${project.basedir}/src/gen/java-doors</appArgLine>
+                            <appArgLine>-data target/workspace -application org.eclipse.emf.codegen.ecore.Generator -model ${project.basedir}/src/main/emf/de/jpwinkler/daf/doors/Doors.genmodel ${project.basedir}/src/gen/java-doors</appArgLine>
                         </configuration>
                     </execution>
                 </executions>
