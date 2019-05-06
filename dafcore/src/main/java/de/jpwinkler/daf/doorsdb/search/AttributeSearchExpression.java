@@ -1,6 +1,6 @@
 package de.jpwinkler.daf.doorsdb.search;
 
-import de.jpwinkler.daf.doorsdb.model.DBModule;
+import de.jpwinkler.daf.doorscsv.model.DoorsModule;
 
 public class AttributeSearchExpression extends DBSearchExpression {
 
@@ -14,7 +14,7 @@ public class AttributeSearchExpression extends DBSearchExpression {
     }
 
     @Override
-    public boolean matches(final DBModule module) {
+    public boolean matches(final DoorsModule module) {
         return module.getLatestVersion() != null && module.getLatestVersion().getAttributes().containsKey(attributeName) && module.getLatestVersion().getAttributes().get(attributeName).contains(attributeValue);
     }
 

@@ -8,6 +8,7 @@ import de.jpwinkler.daf.doorscsv.model.*;
 
 import java.util.Map;
 
+import java.util.regex.Pattern;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
@@ -86,6 +87,8 @@ public class DoorsFactoryImpl extends EFactoryImpl implements DoorsFactory {
 		switch (eDataType.getClassifierID()) {
 			case DoorsPackage.DOORS_TREE_NODE_VISITOR:
 				return createDoorsTreeNodeVisitorFromString(eDataType, initialValue);
+			case DoorsPackage.PATTERN:
+				return createPatternFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -101,6 +104,8 @@ public class DoorsFactoryImpl extends EFactoryImpl implements DoorsFactory {
 		switch (eDataType.getClassifierID()) {
 			case DoorsPackage.DOORS_TREE_NODE_VISITOR:
 				return convertDoorsTreeNodeVisitorToString(eDataType, instanceValue);
+			case DoorsPackage.PATTERN:
+				return convertPatternToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -230,6 +235,24 @@ public class DoorsFactoryImpl extends EFactoryImpl implements DoorsFactory {
 	 * @generated
 	 */
 	public String convertDoorsTreeNodeVisitorToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Pattern createPatternFromString(EDataType eDataType, String initialValue) {
+		return (Pattern)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertPatternToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(eDataType, instanceValue);
 	}
 

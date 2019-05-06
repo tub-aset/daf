@@ -1,9 +1,8 @@
 package de.jpwinkler.daf.doorsdb.search;
 
+import de.jpwinkler.daf.doorscsv.model.DoorsModule;
 import java.util.Arrays;
 import java.util.List;
-
-import de.jpwinkler.daf.doorsdb.model.DBModule;
 
 public class HasTagsSearchExpression extends DBSearchExpression {
 
@@ -14,7 +13,7 @@ public class HasTagsSearchExpression extends DBSearchExpression {
     }
 
     @Override
-    public boolean matches(final DBModule module) {
+    public boolean matches(final DoorsModule module) {
         return tags.stream().allMatch(tag -> module.hasTag(tag));
     }
 

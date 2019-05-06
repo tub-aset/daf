@@ -1,9 +1,8 @@
 package de.jpwinkler.daf.doorsdb.search;
 
+import de.jpwinkler.daf.doorscsv.model.DoorsModule;
 import java.util.ArrayList;
 import java.util.List;
-
-import de.jpwinkler.daf.doorsdb.model.DBModule;
 
 public class AndSearchExpression extends DBSearchExpression {
 
@@ -22,7 +21,7 @@ public class AndSearchExpression extends DBSearchExpression {
     }
 
     @Override
-    public boolean matches(final DBModule module) {
+    public boolean matches(final DoorsModule module) {
         return expressions.stream().allMatch(e -> e.matches(module));
     }
 

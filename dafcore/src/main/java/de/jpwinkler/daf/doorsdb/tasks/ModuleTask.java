@@ -1,13 +1,12 @@
 package de.jpwinkler.daf.doorsdb.tasks;
 
+import de.jpwinkler.daf.doorsdb.DoorsDBInterface;
+import de.jpwinkler.daf.doorsdb.search.DBSearchExpression;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-
-import de.jpwinkler.daf.doorsdb.DoorsDBInterface;
-import de.jpwinkler.daf.doorsdb.search.DBSearchExpression;
 
 public class ModuleTask extends DoorsDBTask {
 

@@ -1,17 +1,15 @@
 package de.jpwinkler.daf.doorscsv;
 
+import de.jpwinkler.daf.doorscsv.model.DoorsModule;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
-
-import de.jpwinkler.daf.doorscsv.model.DoorsModule;
 
 public class ModuleMetaDataParser {
 

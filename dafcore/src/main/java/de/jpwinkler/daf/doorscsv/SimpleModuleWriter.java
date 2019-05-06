@@ -1,5 +1,7 @@
 package de.jpwinkler.daf.doorscsv;
 
+import de.jpwinkler.daf.doorscsv.model.DoorsModule;
+import de.jpwinkler.daf.doorscsv.model.DoorsObject;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
@@ -8,9 +10,6 @@ import java.nio.charset.CharsetEncoder;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import de.jpwinkler.daf.doorscsv.model.DoorsModule;
-import de.jpwinkler.daf.doorscsv.model.DoorsObject;
 
 public class SimpleModuleWriter extends ModuleWriter {
 

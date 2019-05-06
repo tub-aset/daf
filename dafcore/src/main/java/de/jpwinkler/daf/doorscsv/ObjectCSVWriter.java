@@ -1,16 +1,14 @@
 package de.jpwinkler.daf.doorscsv;
 
+import de.jpwinkler.daf.doorscsv.model.DoorsObject;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
-
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.QuoteMode;
-
-import de.jpwinkler.daf.doorscsv.model.DoorsObject;
 
 public class ObjectCSVWriter extends OutputStreamWriter {
 

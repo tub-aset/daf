@@ -1,11 +1,9 @@
 package de.jpwinkler.daf.doorsdb.tasks;
 
-import java.util.function.Consumer;
-
+import de.jpwinkler.daf.doorscsv.DoorsTreeNodeVisitor;
+import de.jpwinkler.daf.doorscsv.model.DoorsModule;
 import de.jpwinkler.daf.doorsdb.DoorsDBInterface;
-import de.jpwinkler.daf.doorsdb.model.DBFolder;
-import de.jpwinkler.daf.doorsdb.model.DBModule;
-import de.jpwinkler.daf.doorsdb.DoorsDBVisitor;
+import java.util.function.Consumer;
 
 public class AllModulesSource implements ModuleSource {
 
@@ -14,17 +12,14 @@ public class AllModulesSource implements ModuleSource {
     }
 
     @Override
-    public void run(final DoorsDBInterface databaseInterface, final Consumer<DBModule> consumer) {
-        databaseInterface.getDB().accept(new DoorsDBVisitor() {
+    public void run(final DoorsDBInterface databaseInterface, final Consumer<DoorsModule> consumer) {
+        databaseInterface.getDB().accept(new DoorsTreeNodeVisitor() {
 
             @Override
-            public void visit(final DBModule module) {
+            public void visitPostTraverse(final DoorsModule module) {
                 consumer.accept(module);
             }
 
-            @Override
-            public void visit(final DBFolder folder) {
-            }
         });
     }
 

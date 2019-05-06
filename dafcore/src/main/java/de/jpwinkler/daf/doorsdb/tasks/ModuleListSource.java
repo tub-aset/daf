@@ -1,10 +1,9 @@
 package de.jpwinkler.daf.doorsdb.tasks;
 
+import de.jpwinkler.daf.doorscsv.model.DoorsModule;
+import de.jpwinkler.daf.doorsdb.DoorsDBInterface;
 import java.util.List;
 import java.util.function.Consumer;
-
-import de.jpwinkler.daf.doorsdb.DoorsDBInterface;
-import de.jpwinkler.daf.doorsdb.model.DBModule;
 
 public class ModuleListSource implements ModuleSource {
 
@@ -16,9 +15,9 @@ public class ModuleListSource implements ModuleSource {
     }
 
     @Override
-    public void run(final DoorsDBInterface databaseInterface, final Consumer<DBModule> consumer) {
+    public void run(final DoorsDBInterface databaseInterface, final Consumer<DoorsModule> consumer) {
         moduleNames.forEach(m -> {
-            final DBModule module = databaseInterface.getModule(m);
+            final DoorsModule module = databaseInterface.getModule(m);
             if (module != null) {
                 consumer.accept(module);
             } else {

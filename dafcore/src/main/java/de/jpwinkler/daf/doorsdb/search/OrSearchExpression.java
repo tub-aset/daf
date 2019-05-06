@@ -1,6 +1,6 @@
 package de.jpwinkler.daf.doorsdb.search;
 
-import de.jpwinkler.daf.doorsdb.model.DBModule;
+import de.jpwinkler.daf.doorscsv.model.DoorsModule;
 
 public class OrSearchExpression extends DBSearchExpression {
 
@@ -14,7 +14,7 @@ public class OrSearchExpression extends DBSearchExpression {
     }
 
     @Override
-    public boolean matches(final DBModule module) {
+    public boolean matches(final DoorsModule module) {
         return e1.matches(module) || e2.matches(module);
     }
 

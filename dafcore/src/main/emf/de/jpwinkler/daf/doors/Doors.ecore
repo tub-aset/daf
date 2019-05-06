@@ -34,6 +34,7 @@
         <eOperations name="findObject" eType="#//DoorsObject">
             <eParameters name="objectIdentifier" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         </eOperations>
+        
         <eOperations name="getLatestVersion" eType="#//DoorsDatabaseVersion"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="path" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="url" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -85,6 +86,7 @@
     </eClassifiers>
   
     <eClassifiers xsi:type="ecore:EDataType" name="DoorsTreeNodeVisitor" instanceClassName="de.jpwinkler.daf.doorscsv.DoorsTreeNodeVisitor"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Pattern" instanceClassName="java.util.regex.Pattern"/>
     
     <eClassifiers xsi:type="ecore:EClass" name="Link" abstract="true">
         <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="#//DoorsObject"
@@ -112,6 +114,14 @@
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="fullName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
                              changeable="false" volatile="true" transient="true" derived="true"/>
+        
+        <eOperations name="hasTag" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+            <eParameters name="tag" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </eOperations>
+        
+        <eOperations name="hasTag" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+            <eParameters name="pattern" eType="#//Pattern"/>
+        </eOperations>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="AttributeDefinition">
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

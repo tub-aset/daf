@@ -132,13 +132,31 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_TREE_NODE___ACCEPT__DOORSTREENODEVISITOR = 0;
 
 	/**
+	 * The operation id for the '<em>Has Tag</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TREE_NODE___HAS_TAG__STRING = 1;
+
+	/**
+	 * The operation id for the '<em>Has Tag</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TREE_NODE___HAS_TAG__PATTERN = 2;
+
+	/**
 	 * The number of operations of the '<em>Tree Node</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_TREE_NODE_OPERATION_COUNT = 1;
+	int DOORS_TREE_NODE_OPERATION_COUNT = 3;
 
 	/**
 	 * The meta object id for the '{@link de.jpwinkler.daf.doorscsv.model.impl.DoorsDBImpl <em>DB</em>}' class.
@@ -258,6 +276,24 @@ public interface DoorsPackage extends EPackage {
 	 * @ordered
 	 */
 	int DOORS_FOLDER___ACCEPT__DOORSTREENODEVISITOR = DOORS_TREE_NODE___ACCEPT__DOORSTREENODEVISITOR;
+
+	/**
+	 * The operation id for the '<em>Has Tag</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_FOLDER___HAS_TAG__STRING = DOORS_TREE_NODE___HAS_TAG__STRING;
+
+	/**
+	 * The operation id for the '<em>Has Tag</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_FOLDER___HAS_TAG__PATTERN = DOORS_TREE_NODE___HAS_TAG__PATTERN;
 
 	/**
 	 * The operation id for the '<em>Get Folder</em>' operation.
@@ -458,6 +494,24 @@ public interface DoorsPackage extends EPackage {
 	 * @ordered
 	 */
 	int DOORS_MODULE___ACCEPT__DOORSTREENODEVISITOR = DOORS_TREE_NODE___ACCEPT__DOORSTREENODEVISITOR;
+
+	/**
+	 * The operation id for the '<em>Has Tag</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_MODULE___HAS_TAG__STRING = DOORS_TREE_NODE___HAS_TAG__STRING;
+
+	/**
+	 * The operation id for the '<em>Has Tag</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_MODULE___HAS_TAG__PATTERN = DOORS_TREE_NODE___HAS_TAG__PATTERN;
 
 	/**
 	 * The operation id for the '<em>Find Attribute Definition</em>' operation.
@@ -666,6 +720,24 @@ public interface DoorsPackage extends EPackage {
 	 * @ordered
 	 */
 	int DOORS_OBJECT___ACCEPT__DOORSTREENODEVISITOR = DOORS_TREE_NODE___ACCEPT__DOORSTREENODEVISITOR;
+
+	/**
+	 * The operation id for the '<em>Has Tag</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_OBJECT___HAS_TAG__STRING = DOORS_TREE_NODE___HAS_TAG__STRING;
+
+	/**
+	 * The operation id for the '<em>Has Tag</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_OBJECT___HAS_TAG__PATTERN = DOORS_TREE_NODE___HAS_TAG__PATTERN;
 
 	/**
 	 * The operation id for the '<em>Is Heading</em>' operation.
@@ -918,6 +990,17 @@ public interface DoorsPackage extends EPackage {
 
 
 	/**
+	 * The meta object id for the '<em>Pattern</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see java.util.regex.Pattern
+	 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsPackageImpl#getPattern()
+	 * @generated
+	 */
+	int PATTERN = 12;
+
+
+	/**
 	 * Returns the meta object for class '{@link de.jpwinkler.daf.doorscsv.model.DoorsTreeNode <em>Tree Node</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -991,6 +1074,26 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getDoorsTreeNode__Accept__DoorsTreeNodeVisitor();
+
+	/**
+	 * Returns the meta object for the '{@link de.jpwinkler.daf.doorscsv.model.DoorsTreeNode#hasTag(java.lang.String) <em>Has Tag</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Has Tag</em>' operation.
+	 * @see de.jpwinkler.daf.doorscsv.model.DoorsTreeNode#hasTag(java.lang.String)
+	 * @generated
+	 */
+	EOperation getDoorsTreeNode__HasTag__String();
+
+	/**
+	 * Returns the meta object for the '{@link de.jpwinkler.daf.doorscsv.model.DoorsTreeNode#hasTag(java.util.regex.Pattern) <em>Has Tag</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Has Tag</em>' operation.
+	 * @see de.jpwinkler.daf.doorscsv.model.DoorsTreeNode#hasTag(java.util.regex.Pattern)
+	 * @generated
+	 */
+	EOperation getDoorsTreeNode__HasTag__Pattern();
 
 	/**
 	 * Returns the meta object for class '{@link de.jpwinkler.daf.doorscsv.model.DoorsDB <em>DB</em>}'.
@@ -1473,6 +1576,17 @@ public interface DoorsPackage extends EPackage {
 	EDataType getDoorsTreeNodeVisitor();
 
 	/**
+	 * Returns the meta object for data type '{@link java.util.regex.Pattern <em>Pattern</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Pattern</em>'.
+	 * @see java.util.regex.Pattern
+	 * @model instanceClass="java.util.regex.Pattern"
+	 * @generated
+	 */
+	EDataType getPattern();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1552,6 +1666,22 @@ public interface DoorsPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation DOORS_TREE_NODE___ACCEPT__DOORSTREENODEVISITOR = eINSTANCE.getDoorsTreeNode__Accept__DoorsTreeNodeVisitor();
+
+		/**
+		 * The meta object literal for the '<em><b>Has Tag</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation DOORS_TREE_NODE___HAS_TAG__STRING = eINSTANCE.getDoorsTreeNode__HasTag__String();
+
+		/**
+		 * The meta object literal for the '<em><b>Has Tag</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation DOORS_TREE_NODE___HAS_TAG__PATTERN = eINSTANCE.getDoorsTreeNode__HasTag__Pattern();
 
 		/**
 		 * The meta object literal for the '{@link de.jpwinkler.daf.doorscsv.model.impl.DoorsDBImpl <em>DB</em>}' class.
@@ -1934,6 +2064,16 @@ public interface DoorsPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType DOORS_TREE_NODE_VISITOR = eINSTANCE.getDoorsTreeNodeVisitor();
+
+		/**
+		 * The meta object literal for the '<em>Pattern</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see java.util.regex.Pattern
+		 * @see de.jpwinkler.daf.doorscsv.model.impl.DoorsPackageImpl#getPattern()
+		 * @generated
+		 */
+		EDataType PATTERN = eINSTANCE.getPattern();
 
 	}
 

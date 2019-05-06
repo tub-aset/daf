@@ -17,17 +17,16 @@
  */
 package de.jpwinkler.daf.doorsdb.bridge.internal;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
-
 import de.jpwinkler.daf.doorsdb.bridge.DoorsException;
 import de.jpwinkler.daf.doorsdb.bridge.DoorsItemType;
+import de.jpwinkler.daf.doorsdb.bridge.DoorsItemTypeUtil;
 import de.jpwinkler.daf.doorsdb.bridge.DoorsRuntimeException;
 import de.jpwinkler.daf.doorsdb.bridge.ItemName;
 import de.jpwinkler.daf.doorsdb.bridge.ItemRef;
 import de.jpwinkler.daf.doorsdb.bridge.ModuleRef;
-import de.jpwinkler.daf.doorsdb.bridge.DoorsItemTypeUtil;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
 
 public class ItemRefImpl implements ItemRef {
 

@@ -17,21 +17,8 @@
  */
 package de.jpwinkler.daf.doorsdb.bridge.internal;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Consumer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.apache.commons.io.FileUtils;
-
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.Dispatch;
-
 import de.jpwinkler.daf.doorsdb.bridge.DoorsApplication;
 import de.jpwinkler.daf.doorsdb.bridge.DoorsException;
 import de.jpwinkler.daf.doorsdb.bridge.DoorsItemType;
@@ -42,6 +29,16 @@ import de.jpwinkler.daf.doorsdb.bridge.ItemRef;
 import de.jpwinkler.daf.doorsdb.bridge.ModuleRef;
 import de.jpwinkler.daf.doorsdb.bridge.user32.Window;
 import de.jpwinkler.daf.doorsdb.bridge.user32.WindowManager;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.apache.commons.io.FileUtils;
 
 public class DoorsApplicationImpl implements DoorsApplication {
 

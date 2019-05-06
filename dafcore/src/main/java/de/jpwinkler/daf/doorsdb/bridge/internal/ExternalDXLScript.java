@@ -19,7 +19,6 @@ package de.jpwinkler.daf.doorsdb.bridge.internal;
 
 import java.io.File;
 import java.io.IOException;
-
 import org.apache.commons.io.FileUtils;
 
 public class ExternalDXLScript implements DXLScript {

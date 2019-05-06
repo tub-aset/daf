@@ -1,26 +1,24 @@
 package de.jpwinkler.daf.doorscsv;
 
+import de.jpwinkler.daf.doorscsv.model.AttributeDefinition;
+import de.jpwinkler.daf.doorscsv.model.DoorsCSVFactory;
+import de.jpwinkler.daf.doorscsv.model.DoorsCSVPackage;
+import de.jpwinkler.daf.doorscsv.model.DoorsModule;
+import de.jpwinkler.daf.doorscsv.model.DoorsObject;
+import de.jpwinkler.daf.doorscsv.model.DoorsTreeNode;
+import de.jpwinkler.daf.doorscsv.util.CSVParseException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Map.Entry;
-
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.BOMInputStream;
-
-import de.jpwinkler.daf.doorscsv.model.AttributeDefinition;
-import de.jpwinkler.daf.doorscsv.model.DoorsCSVPackage;
-import de.jpwinkler.daf.doorscsv.model.DoorsCSVFactory;
-import de.jpwinkler.daf.doorscsv.model.DoorsModule;
-import de.jpwinkler.daf.doorscsv.model.DoorsObject;
-import de.jpwinkler.daf.doorscsv.model.DoorsTreeNode;
-import de.jpwinkler.daf.doorscsv.util.CSVParseException;
 
 public class ModuleCSVParser {
 

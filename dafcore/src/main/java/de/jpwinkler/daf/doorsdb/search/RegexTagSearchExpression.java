@@ -1,8 +1,7 @@
 package de.jpwinkler.daf.doorsdb.search;
 
+import de.jpwinkler.daf.doorscsv.model.DoorsModule;
 import java.util.regex.Pattern;
-
-import de.jpwinkler.daf.doorsdb.model.DBModule;
 
 public class RegexTagSearchExpression extends DBSearchExpression {
 
@@ -13,8 +12,8 @@ public class RegexTagSearchExpression extends DBSearchExpression {
     }
 
     @Override
-    public boolean matches(final DBModule module) {
-        return module.getTags().stream().map(t -> t.getName()).anyMatch(s -> pattern.matcher(s).find());
+    public boolean matches(final DoorsModule module) {
+        return module.hasTag(pattern);
     }
 
 }

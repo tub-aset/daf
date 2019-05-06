@@ -1,13 +1,12 @@
 package de.jpwinkler.daf.doorscsv;
 
+import de.jpwinkler.daf.doorscsv.model.DoorsModule;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
-
-import de.jpwinkler.daf.doorscsv.model.DoorsModule;
 
 public abstract class ModuleWriter extends OutputStreamWriter {
 

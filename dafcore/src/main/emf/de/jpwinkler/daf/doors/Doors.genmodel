@@ -9,15 +9,23 @@
     <genPackages prefix="Doors" basePackage="de.jpwinkler.daf.doorscsv" disposableProviderFactory="true"
                  ecorePackage="Doors.ecore#/" classPackageSuffix="impl">
         <genDataTypes ecoreDataType="Doors.ecore#//DoorsTreeNodeVisitor"/>
+        <genDataTypes ecoreDataType="Doors.ecore#//Pattern"/>
         
         <genClasses ecoreClass="Doors.ecore#//DoorsTreeNode" abstract="true">
             <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Doors.ecore#//DoorsTreeNode/children"/>
             <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Doors.ecore#//DoorsTreeNode/parent"/>
             <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Doors.ecore#//DoorsTreeNode/attributes"/>
-            <genFeatures property="Readonly" children="false" createChild="false" ecoreFeature="ecore:EReference Doors.ecore#//DoorsTreeNode/name"/>
-            <genFeatures property="Readonly" children="false" createChild="false" ecoreFeature="ecore:EReference Doors.ecore#//DoorsTreeNode/fullName"/>
+            <genFeatures createChild="false" ecoreFeature="ecore:EReference Doors.ecore#//DoorsTreeNode/name"/>
+            <genFeatures property="Readonly" ecoreFeature="ecore:EReference Doors.ecore#//DoorsTreeNode/fullName"/>
             <genOperations ecoreOperation="Doors.ecore#//DoorsTreeNode/accept">
                 <genParameters ecoreParameter="Doors.ecore#//DoorsTreeNode/accept/visitor"/>
+            </genOperations>
+            
+            <genOperations ecoreOperation="Doors.ecore#//DoorsTreeNode/hasTag">
+                <genParameters ecoreParameter="Doors.ecore#//DoorsTreeNode/hasTag/tag"/>
+            </genOperations>
+            -<genOperations ecoreOperation="Doors.ecore#//DoorsTreeNode/hasTag">
+                <genParameters ecoreParameter="Doors.ecore#//DoorsTreeNode/hasTag.1/pattern"/>
             </genOperations>
         </genClasses>
         

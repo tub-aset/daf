@@ -1,5 +1,11 @@
 package de.jpwinkler.daf.doorscsv.util;
 
+import de.jpwinkler.daf.doorscsv.DoorsTreeNodeVisitor;
+import de.jpwinkler.daf.doorscsv.model.AttributeDefinition;
+import de.jpwinkler.daf.doorscsv.model.DoorsCSVFactory;
+import de.jpwinkler.daf.doorscsv.model.DoorsModule;
+import de.jpwinkler.daf.doorscsv.model.DoorsObject;
+import de.jpwinkler.daf.doorscsv.model.DoorsTreeNode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -7,13 +13,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import de.jpwinkler.daf.doorscsv.DoorsTreeNodeVisitor;
-import de.jpwinkler.daf.doorscsv.model.AttributeDefinition;
-import de.jpwinkler.daf.doorscsv.model.DoorsCSVFactory;
-import de.jpwinkler.daf.doorscsv.model.DoorsModule;
-import de.jpwinkler.daf.doorscsv.model.DoorsObject;
-import de.jpwinkler.daf.doorscsv.model.DoorsTreeNode;
 
 public class DoorsModuleUtil {
 

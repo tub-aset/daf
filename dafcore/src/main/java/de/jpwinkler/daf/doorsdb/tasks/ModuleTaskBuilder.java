@@ -1,13 +1,12 @@
 package de.jpwinkler.daf.doorsdb.tasks;
 
+import de.jpwinkler.daf.doorsdb.DoorsDBInterface;
+import de.jpwinkler.daf.doorsdb.search.AndSearchExpression;
+import de.jpwinkler.daf.doorsdb.search.DBSearchExpression;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import de.jpwinkler.daf.doorsdb.DoorsDBInterface;
-import de.jpwinkler.daf.doorsdb.search.AndSearchExpression;
-import de.jpwinkler.daf.doorsdb.search.DBSearchExpression;
 
 public class ModuleTaskBuilder {
 

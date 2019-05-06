@@ -1,7 +1,7 @@
 package de.jpwinkler.daf.doorsdb.tasks;
 
+import de.jpwinkler.daf.doorscsv.model.DoorsModule;
 import de.jpwinkler.daf.doorsdb.DoorsDBInterface;
-import de.jpwinkler.daf.doorsdb.model.DBModule;
 
 public abstract class ModulePass {
 
@@ -12,12 +12,12 @@ public abstract class ModulePass {
     public void preprocess() {
     }
 
-    public void preprocessModule(final DBModule module) {
+    public void preprocessModule(final DoorsModule module) {
     }
 
-    protected abstract void processModule(DBModule module);
+    protected abstract void processModule(DoorsModule module);
 
-    public void postprocessModule(final DBModule module) {
+    public void postprocessModule(final DoorsModule module) {
     }
 
     public void postprocess() {

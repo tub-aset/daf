@@ -4,6 +4,7 @@ package de.jpwinkler.daf.doorscsv.model;
 
 import de.jpwinkler.daf.doorscsv.DoorsTreeNodeVisitor;
 
+import java.util.regex.Pattern;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
 
@@ -121,5 +122,21 @@ public interface DoorsTreeNode extends EObject {
 	 * @generated
 	 */
 	void accept(DoorsTreeNodeVisitor visitor);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated
+	 */
+	boolean hasTag(String tag);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model patternDataType="de.jpwinkler.daf.doorscsv.model.Pattern"
+	 * @generated
+	 */
+	boolean hasTag(Pattern pattern);
 
 } // DoorsTreeNode

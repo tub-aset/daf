@@ -1,17 +1,15 @@
 package de.jpwinkler.daf.doorsdb.search;
 
+import de.jpwinkler.daf.doorscsv.model.DoorsModule;
+import de.jpwinkler.daf.doorsdb.DBSearchLexer;
+import de.jpwinkler.daf.doorsdb.DBSearchParser;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
-
-import de.jpwinkler.daf.doorsdb.DBSearchLexer;
-import de.jpwinkler.daf.doorsdb.DBSearchParser;
-import de.jpwinkler.daf.doorsdb.model.DBModule;
 
 public abstract class DBSearchExpression {
 
@@ -29,7 +27,7 @@ public abstract class DBSearchExpression {
         }
     }
 
-    public abstract boolean matches(DBModule module);
+    public abstract boolean matches(DoorsModule module);
 
     public static DBSearchExpression compile(final String filter) {
 

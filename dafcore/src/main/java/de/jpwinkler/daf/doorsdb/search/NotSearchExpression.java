@@ -1,6 +1,6 @@
 package de.jpwinkler.daf.doorsdb.search;
 
-import de.jpwinkler.daf.doorsdb.model.DBModule;
+import de.jpwinkler.daf.doorscsv.model.DoorsModule;
 
 public class NotSearchExpression extends DBSearchExpression {
 
@@ -12,7 +12,7 @@ public class NotSearchExpression extends DBSearchExpression {
     }
 
     @Override
-    public boolean matches(final DBModule module) {
+    public boolean matches(final DoorsModule module) {
         return !nestedExpression.matches(module);
     }
 

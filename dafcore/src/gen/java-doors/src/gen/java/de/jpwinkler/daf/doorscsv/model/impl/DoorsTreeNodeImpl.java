@@ -5,6 +5,7 @@ package de.jpwinkler.daf.doorscsv.model.impl;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 
+import java.util.regex.Pattern;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
@@ -227,6 +228,30 @@ public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements D
     }
 
     /**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean hasTag(String tag) {
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
+	}
+
+				/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean hasTag(Pattern pattern) {
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
+	}
+
+				/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
@@ -375,6 +400,10 @@ public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements D
 			case DoorsPackage.DOORS_TREE_NODE___ACCEPT__DOORSTREENODEVISITOR:
 				accept((DoorsTreeNodeVisitor)arguments.get(0));
 				return null;
+			case DoorsPackage.DOORS_TREE_NODE___HAS_TAG__STRING:
+				return hasTag((String)arguments.get(0));
+			case DoorsPackage.DOORS_TREE_NODE___HAS_TAG__PATTERN:
+				return hasTag((Pattern)arguments.get(0));
 		}
 		return super.eInvoke(operationID, arguments);
 	}

@@ -17,19 +17,17 @@
  */
 package de.jpwinkler.daf.doorsdb.bridge.internal;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
-
 import de.jpwinkler.daf.doorsdb.bridge.DoorsException;
 import de.jpwinkler.daf.doorsdb.bridge.DoorsRuntimeException;
 import de.jpwinkler.daf.doorsdb.bridge.DoorsURL;
 import de.jpwinkler.daf.doorsdb.bridge.ModuleRef;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 
 public class ModuleRefImpl implements ModuleRef {
 
