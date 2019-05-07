@@ -22,6 +22,15 @@ public interface DoorsFactory extends EFactory {
 	DoorsFactory eINSTANCE = de.jpwinkler.daf.model.impl.DoorsFactoryImpl.init();
 
 	/**
+	 * Returns a new object of class '<em>Tree Node</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Tree Node</em>'.
+	 * @generated
+	 */
+	DoorsTreeNode createDoorsTreeNode();
+
+	/**
 	 * Returns a new object of class '<em>Database</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -29,15 +38,6 @@ public interface DoorsFactory extends EFactory {
 	 * @generated
 	 */
 	DoorsDatabase createDoorsDatabase();
-
-	/**
-	 * Returns a new object of class '<em>Folder</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Folder</em>'.
-	 * @generated
-	 */
-	DoorsFolder createDoorsFolder();
 
 	/**
 	 * Returns a new object of class '<em>Module Version</em>'.

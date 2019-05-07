@@ -165,4 +165,9 @@ class DoorsTreeNodeRefImpl implements DoorsTreeNodeRef {
     public DoorsTreeNode copyFrom(DoorsTreeNode node, DoorsTreeNode newParent) {
         throw new UnsupportedOperationException("Not supported");
     }
+    
+    @Override
+    public DoorsTreeNode getChild(String name) {
+        return this.getChildren().stream().filter(c -> name.equals(c.getName())).findFirst().orElse(null);
+    }
 }

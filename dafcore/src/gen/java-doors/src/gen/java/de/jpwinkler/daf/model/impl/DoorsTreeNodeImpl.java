@@ -46,7 +46,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public abstract class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements DoorsTreeNode {
+public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements DoorsTreeNode {
     /**
 	 * The cached value of the '{@link #getChildren() <em>Children</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -286,7 +286,23 @@ public abstract class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container imp
 	 * @generated NOT
 	 */
 	@Override
-	public abstract DoorsTreeNode copyFrom(DoorsTreeNode node, DoorsTreeNode newParent);
+	public DoorsTreeNode copyFrom(DoorsTreeNode node, DoorsTreeNode newParent) {
+            if(!this.canCopyFrom(node)) {
+                throw new IllegalArgumentException();
+            }
+            
+            throw new UnsupportedOperationException();
+        }
+
+				/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	@Override
+	public DoorsTreeNode getChild(String name) {
+		return this.getChildren().stream().filter(c -> name.equals(c.getName())).findAny().orElse(null);
+	}
 
 				/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -449,6 +465,8 @@ public abstract class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container imp
 				return canCopyFrom((DoorsTreeNode)arguments.get(0));
 			case DoorsPackage.DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE_DOORSTREENODE:
 				return copyFrom((DoorsTreeNode)arguments.get(0), (DoorsTreeNode)arguments.get(1));
+			case DoorsPackage.DOORS_TREE_NODE___GET_CHILD__STRING:
+				return getChild((String)arguments.get(0));
 		}
 		return super.eInvoke(operationID, arguments);
 	}

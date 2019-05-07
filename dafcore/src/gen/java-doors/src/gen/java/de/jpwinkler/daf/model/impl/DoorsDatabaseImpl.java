@@ -3,13 +3,10 @@
 package de.jpwinkler.daf.model.impl;
 
 import de.jpwinkler.daf.model.DoorsDatabase;
-import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsPackage;
-import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
-import java.lang.reflect.InvocationTargetException;
+import de.jpwinkler.daf.model.DoorsTreeNode;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -37,7 +34,7 @@ public class DoorsDatabaseImpl extends MinimalEObjectImpl.Container implements D
 	 * @generated
 	 * @ordered
 	 */
-	protected DoorsFolder root;
+	protected DoorsTreeNode root;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -64,7 +61,7 @@ public class DoorsDatabaseImpl extends MinimalEObjectImpl.Container implements D
 	 * @generated
 	 */
 	@Override
-	public DoorsFolder getRoot() {
+	public DoorsTreeNode getRoot() {
 		return root;
 	}
 
@@ -73,8 +70,8 @@ public class DoorsDatabaseImpl extends MinimalEObjectImpl.Container implements D
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetRoot(DoorsFolder newRoot, NotificationChain msgs) {
-		DoorsFolder oldRoot = root;
+	public NotificationChain basicSetRoot(DoorsTreeNode newRoot, NotificationChain msgs) {
+		DoorsTreeNode oldRoot = root;
 		root = newRoot;
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, DoorsPackage.DOORS_DATABASE__ROOT, oldRoot, newRoot);
@@ -89,7 +86,7 @@ public class DoorsDatabaseImpl extends MinimalEObjectImpl.Container implements D
 	 * @generated
 	 */
 	@Override
-	public void setRoot(DoorsFolder newRoot) {
+	public void setRoot(DoorsTreeNode newRoot) {
 		if (newRoot != root) {
 			NotificationChain msgs = null;
 			if (root != null)
@@ -101,16 +98,6 @@ public class DoorsDatabaseImpl extends MinimalEObjectImpl.Container implements D
 		}
 		else if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, DoorsPackage.DOORS_DATABASE__ROOT, newRoot, newRoot));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated NOT
-	 */
-	@Override
-	public void accept(DoorsTreeNodeVisitor visitor) {
-		this.root.accept(visitor);
 	}
 
 	/**
@@ -150,7 +137,7 @@ public class DoorsDatabaseImpl extends MinimalEObjectImpl.Container implements D
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case DoorsPackage.DOORS_DATABASE__ROOT:
-				setRoot((DoorsFolder)newValue);
+				setRoot((DoorsTreeNode)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -165,7 +152,7 @@ public class DoorsDatabaseImpl extends MinimalEObjectImpl.Container implements D
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case DoorsPackage.DOORS_DATABASE__ROOT:
-				setRoot((DoorsFolder)null);
+				setRoot((DoorsTreeNode)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -183,21 +170,6 @@ public class DoorsDatabaseImpl extends MinimalEObjectImpl.Container implements D
 				return root != null;
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
-		switch (operationID) {
-			case DoorsPackage.DOORS_DATABASE___ACCEPT__DOORSTREENODEVISITOR:
-				accept((DoorsTreeNodeVisitor)arguments.get(0));
-				return null;
-		}
-		return super.eInvoke(operationID, arguments);
 	}
 
 } //DoorsDatabaseImpl

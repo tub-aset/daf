@@ -17,6 +17,7 @@
  */
 package de.jpwinkler.daf.bridge;
 
+import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.io.File;
 import java.io.OutputStream;
 
@@ -56,7 +57,7 @@ public interface DoorsApplication {
      */
     void print(String message);
 
-    DoorsTreeNodeRef getRoot();
+    DoorsTreeNode getRoot();
 
     /**
      * Runs a DXL script stored in a file.

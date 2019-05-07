@@ -177,13 +177,22 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE_DOORSTREENODE = 4;
 
 	/**
+	 * The operation id for the '<em>Get Child</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TREE_NODE___GET_CHILD__STRING = 5;
+
+	/**
 	 * The number of operations of the '<em>Tree Node</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_TREE_NODE_OPERATION_COUNT = 5;
+	int DOORS_TREE_NODE_OPERATION_COUNT = 6;
 
 	/**
 	 * The meta object id for the '{@link de.jpwinkler.daf.model.impl.DoorsDatabaseImpl <em>Database</em>}' class.
@@ -214,167 +223,13 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_DATABASE_FEATURE_COUNT = 1;
 
 	/**
-	 * The operation id for the '<em>Accept</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DOORS_DATABASE___ACCEPT__DOORSTREENODEVISITOR = 0;
-
-	/**
 	 * The number of operations of the '<em>Database</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_DATABASE_OPERATION_COUNT = 1;
-
-	/**
-	 * The meta object id for the '{@link de.jpwinkler.daf.model.impl.DoorsFolderImpl <em>Folder</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see de.jpwinkler.daf.model.impl.DoorsFolderImpl
-	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getDoorsFolder()
-	 * @generated
-	 */
-	int DOORS_FOLDER = 2;
-
-	/**
-	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DOORS_FOLDER__CHILDREN = DOORS_TREE_NODE__CHILDREN;
-
-	/**
-	 * The feature id for the '<em><b>Parent</b></em>' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DOORS_FOLDER__PARENT = DOORS_TREE_NODE__PARENT;
-
-	/**
-	 * The feature id for the '<em><b>Attributes</b></em>' map.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DOORS_FOLDER__ATTRIBUTES = DOORS_TREE_NODE__ATTRIBUTES;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DOORS_FOLDER__NAME = DOORS_TREE_NODE__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Full Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DOORS_FOLDER__FULL_NAME = DOORS_TREE_NODE__FULL_NAME;
-
-	/**
-	 * The feature id for the '<em><b>Full Name Segments</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DOORS_FOLDER__FULL_NAME_SEGMENTS = DOORS_TREE_NODE__FULL_NAME_SEGMENTS;
-
-	/**
-	 * The number of structural features of the '<em>Folder</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DOORS_FOLDER_FEATURE_COUNT = DOORS_TREE_NODE_FEATURE_COUNT + 0;
-
-	/**
-	 * The operation id for the '<em>Accept</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DOORS_FOLDER___ACCEPT__DOORSTREENODEVISITOR = DOORS_TREE_NODE___ACCEPT__DOORSTREENODEVISITOR;
-
-	/**
-	 * The operation id for the '<em>Has Tag</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DOORS_FOLDER___HAS_TAG__STRING = DOORS_TREE_NODE___HAS_TAG__STRING;
-
-	/**
-	 * The operation id for the '<em>Has Tag</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DOORS_FOLDER___HAS_TAG__PATTERN = DOORS_TREE_NODE___HAS_TAG__PATTERN;
-
-	/**
-	 * The operation id for the '<em>Can Copy From</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DOORS_FOLDER___CAN_COPY_FROM__DOORSTREENODE = DOORS_TREE_NODE___CAN_COPY_FROM__DOORSTREENODE;
-
-	/**
-	 * The operation id for the '<em>Copy From</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DOORS_FOLDER___COPY_FROM__DOORSTREENODE_DOORSTREENODE = DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE_DOORSTREENODE;
-
-	/**
-	 * The operation id for the '<em>Get Folder</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DOORS_FOLDER___GET_FOLDER__STRING = DOORS_TREE_NODE_OPERATION_COUNT + 0;
-
-	/**
-	 * The operation id for the '<em>Get Module</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DOORS_FOLDER___GET_MODULE__STRING = DOORS_TREE_NODE_OPERATION_COUNT + 1;
-
-	/**
-	 * The number of operations of the '<em>Folder</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DOORS_FOLDER_OPERATION_COUNT = DOORS_TREE_NODE_OPERATION_COUNT + 2;
+	int DOORS_DATABASE_OPERATION_COUNT = 0;
 
 	/**
 	 * The meta object id for the '{@link de.jpwinkler.daf.model.impl.DoorsModuleVersionImpl <em>Module Version</em>}' class.
@@ -384,7 +239,7 @@ public interface DoorsPackage extends EPackage {
 	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getDoorsModuleVersion()
 	 * @generated
 	 */
-	int DOORS_MODULE_VERSION = 3;
+	int DOORS_MODULE_VERSION = 2;
 
 	/**
 	 * The feature id for the '<em><b>Module</b></em>' container reference.
@@ -414,13 +269,22 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_MODULE_VERSION__ATTRIBUTES = 2;
 
 	/**
+	 * The feature id for the '<em><b>Full Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_MODULE_VERSION__FULL_NAME = 3;
+
+	/**
 	 * The number of structural features of the '<em>Module Version</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_MODULE_VERSION_FEATURE_COUNT = 3;
+	int DOORS_MODULE_VERSION_FEATURE_COUNT = 4;
 
 	/**
 	 * The number of operations of the '<em>Module Version</em>' class.
@@ -439,7 +303,7 @@ public interface DoorsPackage extends EPackage {
 	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getDoorsModule()
 	 * @generated
 	 */
-	int DOORS_MODULE = 4;
+	int DOORS_MODULE = 3;
 
 	/**
 	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
@@ -568,6 +432,15 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_MODULE___COPY_FROM__DOORSTREENODE_DOORSTREENODE = DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE_DOORSTREENODE;
 
 	/**
+	 * The operation id for the '<em>Get Child</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_MODULE___GET_CHILD__STRING = DOORS_TREE_NODE___GET_CHILD__STRING;
+
+	/**
 	 * The operation id for the '<em>Find Object</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -620,7 +493,7 @@ public interface DoorsPackage extends EPackage {
 	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getDoorsObject()
 	 * @generated
 	 */
-	int DOORS_OBJECT = 5;
+	int DOORS_OBJECT = 4;
 
 	/**
 	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
@@ -830,6 +703,15 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_OBJECT___COPY_FROM__DOORSTREENODE_DOORSTREENODE = DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE_DOORSTREENODE;
 
 	/**
+	 * The operation id for the '<em>Get Child</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_OBJECT___GET_CHILD__STRING = DOORS_TREE_NODE___GET_CHILD__STRING;
+
+	/**
 	 * The operation id for the '<em>Is Heading</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -855,7 +737,7 @@ public interface DoorsPackage extends EPackage {
 	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getAttributeMap()
 	 * @generated
 	 */
-	int ATTRIBUTE_MAP = 6;
+	int ATTRIBUTE_MAP = 5;
 
 	/**
 	 * The feature id for the '<em><b>Key</b></em>' attribute.
@@ -901,7 +783,7 @@ public interface DoorsPackage extends EPackage {
 	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getLink()
 	 * @generated
 	 */
-	int LINK = 7;
+	int LINK = 6;
 
 	/**
 	 * The feature id for the '<em><b>Source</b></em>' container reference.
@@ -938,7 +820,7 @@ public interface DoorsPackage extends EPackage {
 	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getResolvedLink()
 	 * @generated
 	 */
-	int RESOLVED_LINK = 8;
+	int RESOLVED_LINK = 7;
 
 	/**
 	 * The feature id for the '<em><b>Source</b></em>' container reference.
@@ -984,7 +866,7 @@ public interface DoorsPackage extends EPackage {
 	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getUnresolvedLink()
 	 * @generated
 	 */
-	int UNRESOLVED_LINK = 9;
+	int UNRESOLVED_LINK = 8;
 
 	/**
 	 * The feature id for the '<em><b>Source</b></em>' container reference.
@@ -1039,7 +921,7 @@ public interface DoorsPackage extends EPackage {
 	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getDoorsTreeNodeVisitor()
 	 * @generated
 	 */
-	int DOORS_TREE_NODE_VISITOR = 10;
+	int DOORS_TREE_NODE_VISITOR = 9;
 
 
 	/**
@@ -1050,7 +932,7 @@ public interface DoorsPackage extends EPackage {
 	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getPattern()
 	 * @generated
 	 */
-	int PATTERN = 11;
+	int PATTERN = 10;
 
 
 	/**
@@ -1061,7 +943,7 @@ public interface DoorsPackage extends EPackage {
 	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getCollection()
 	 * @generated
 	 */
-	int COLLECTION = 12;
+	int COLLECTION = 11;
 
 
 	/**
@@ -1191,6 +1073,16 @@ public interface DoorsPackage extends EPackage {
 	EOperation getDoorsTreeNode__CopyFrom__DoorsTreeNode_DoorsTreeNode();
 
 	/**
+	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsTreeNode#getChild(java.lang.String) <em>Get Child</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Child</em>' operation.
+	 * @see de.jpwinkler.daf.model.DoorsTreeNode#getChild(java.lang.String)
+	 * @generated
+	 */
+	EOperation getDoorsTreeNode__GetChild__String();
+
+	/**
 	 * Returns the meta object for class '{@link de.jpwinkler.daf.model.DoorsDatabase <em>Database</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1210,46 +1102,6 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getDoorsDatabase_Root();
-
-	/**
-	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsDatabase#accept(de.jpwinkler.daf.model.DoorsTreeNodeVisitor) <em>Accept</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Accept</em>' operation.
-	 * @see de.jpwinkler.daf.model.DoorsDatabase#accept(de.jpwinkler.daf.model.DoorsTreeNodeVisitor)
-	 * @generated
-	 */
-	EOperation getDoorsDatabase__Accept__DoorsTreeNodeVisitor();
-
-	/**
-	 * Returns the meta object for class '{@link de.jpwinkler.daf.model.DoorsFolder <em>Folder</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Folder</em>'.
-	 * @see de.jpwinkler.daf.model.DoorsFolder
-	 * @generated
-	 */
-	EClass getDoorsFolder();
-
-	/**
-	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsFolder#getFolder(java.lang.String) <em>Get Folder</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Folder</em>' operation.
-	 * @see de.jpwinkler.daf.model.DoorsFolder#getFolder(java.lang.String)
-	 * @generated
-	 */
-	EOperation getDoorsFolder__GetFolder__String();
-
-	/**
-	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsFolder#getModule(java.lang.String) <em>Get Module</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Module</em>' operation.
-	 * @see de.jpwinkler.daf.model.DoorsFolder#getModule(java.lang.String)
-	 * @generated
-	 */
-	EOperation getDoorsFolder__GetModule__String();
 
 	/**
 	 * Returns the meta object for class '{@link de.jpwinkler.daf.model.DoorsModuleVersion <em>Module Version</em>}'.
@@ -1293,6 +1145,17 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getDoorsModuleVersion_Attributes();
+
+	/**
+	 * Returns the meta object for the attribute '{@link de.jpwinkler.daf.model.DoorsModuleVersion#getFullName <em>Full Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Full Name</em>'.
+	 * @see de.jpwinkler.daf.model.DoorsModuleVersion#getFullName()
+	 * @see #getDoorsModuleVersion()
+	 * @generated
+	 */
+	EAttribute getDoorsModuleVersion_FullName();
 
 	/**
 	 * Returns the meta object for class '{@link de.jpwinkler.daf.model.DoorsModule <em>Module</em>}'.
@@ -1770,6 +1633,14 @@ public interface DoorsPackage extends EPackage {
 		EOperation DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE_DOORSTREENODE = eINSTANCE.getDoorsTreeNode__CopyFrom__DoorsTreeNode_DoorsTreeNode();
 
 		/**
+		 * The meta object literal for the '<em><b>Get Child</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation DOORS_TREE_NODE___GET_CHILD__STRING = eINSTANCE.getDoorsTreeNode__GetChild__String();
+
+		/**
 		 * The meta object literal for the '{@link de.jpwinkler.daf.model.impl.DoorsDatabaseImpl <em>Database</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1786,40 +1657,6 @@ public interface DoorsPackage extends EPackage {
 		 * @generated
 		 */
 		EReference DOORS_DATABASE__ROOT = eINSTANCE.getDoorsDatabase_Root();
-
-		/**
-		 * The meta object literal for the '<em><b>Accept</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation DOORS_DATABASE___ACCEPT__DOORSTREENODEVISITOR = eINSTANCE.getDoorsDatabase__Accept__DoorsTreeNodeVisitor();
-
-		/**
-		 * The meta object literal for the '{@link de.jpwinkler.daf.model.impl.DoorsFolderImpl <em>Folder</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see de.jpwinkler.daf.model.impl.DoorsFolderImpl
-		 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getDoorsFolder()
-		 * @generated
-		 */
-		EClass DOORS_FOLDER = eINSTANCE.getDoorsFolder();
-
-		/**
-		 * The meta object literal for the '<em><b>Get Folder</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation DOORS_FOLDER___GET_FOLDER__STRING = eINSTANCE.getDoorsFolder__GetFolder__String();
-
-		/**
-		 * The meta object literal for the '<em><b>Get Module</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation DOORS_FOLDER___GET_MODULE__STRING = eINSTANCE.getDoorsFolder__GetModule__String();
 
 		/**
 		 * The meta object literal for the '{@link de.jpwinkler.daf.model.impl.DoorsModuleVersionImpl <em>Module Version</em>}' class.
@@ -1854,6 +1691,14 @@ public interface DoorsPackage extends EPackage {
 		 * @generated
 		 */
 		EReference DOORS_MODULE_VERSION__ATTRIBUTES = eINSTANCE.getDoorsModuleVersion_Attributes();
+
+		/**
+		 * The meta object literal for the '<em><b>Full Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute DOORS_MODULE_VERSION__FULL_NAME = eINSTANCE.getDoorsModuleVersion_FullName();
 
 		/**
 		 * The meta object literal for the '{@link de.jpwinkler.daf.model.impl.DoorsModuleImpl <em>Module</em>}' class.

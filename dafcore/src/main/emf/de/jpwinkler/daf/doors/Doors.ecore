@@ -2,10 +2,7 @@
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="model" nsURI="de.jpwinkler.daf.model" nsPrefix="Doors">
     <eClassifiers xsi:type="ecore:EClass" name="DoorsDatabase">
-        <eOperations name="accept">
-            <eParameters name="visitor" eType="#//DoorsTreeNodeVisitor"/>
-        </eOperations>
-        <eStructuralFeatures xsi:type="ecore:EReference" name="root" eType="#//DoorsFolder"
+        <eStructuralFeatures xsi:type="ecore:EReference" name="root" eType="#//DoorsTreeNode"
                              containment="true"/>
     </eClassifiers>
   
@@ -15,17 +12,8 @@
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
         <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" upperBound="-1"
                              eType="#//AttributeMap" containment="true"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="fullName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eClassifiers>
-  
-    <eClassifiers xsi:type="ecore:EClass" name="DoorsFolder" eSuperTypes="#//DoorsTreeNode">
-        <eOperations name="getFolder" eType="#//DoorsFolder">
-            <eParameters name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-        </eOperations>
-        <eOperations name="getModule" eType="#//DoorsModule">
-            <eParameters name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-        </eOperations>
-    </eClassifiers>
-    
     
     <eClassifiers xsi:type="ecore:EClass" name="DoorsModule" eSuperTypes="#//DoorsTreeNode">
         <eOperations name="findObject" eType="#//DoorsObject">
@@ -37,7 +25,6 @@
         </eOperations>
         
         <eOperations name="getLatestVersion" eType="#//DoorsModuleVersion"/>
-        <eStructuralFeatures xsi:type="ecore:EAttribute" name="path" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="view" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         <eStructuralFeatures xsi:type="ecore:EReference" name="versions" upperBound="-1"
                              eType="#//DoorsModuleVersion" containment="true" eOpposite="#//DoorsModuleVersion/module"/>
@@ -100,7 +87,7 @@
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="targetObject" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eClassifiers>
   
-    <eClassifiers xsi:type="ecore:EClass" name="DoorsTreeNode" abstract="true">
+    <eClassifiers xsi:type="ecore:EClass" name="DoorsTreeNode">
         <eOperations name="accept">
             <eParameters name="visitor" eType="#//DoorsTreeNodeVisitor"/>
         </eOperations>
@@ -115,6 +102,10 @@
                              changeable="false" volatile="true" transient="true" derived="true"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="fullNameSegments" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
                              changeable="false" volatile="true" transient="true" derived="true" upperBound="-1"/>
+        
+        <eOperations name="getChild" eType="#//DoorsTreeNode">
+            <eParameters name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </eOperations>
         
         <eOperations name="hasTag" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
             <eParameters name="tag" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

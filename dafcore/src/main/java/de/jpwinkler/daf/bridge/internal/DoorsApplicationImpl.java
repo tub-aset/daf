@@ -35,7 +35,7 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
-import de.jpwinkler.daf.bridge.DoorsTreeNodeRef;
+import de.jpwinkler.daf.model.DoorsTreeNode;
 
 public class DoorsApplicationImpl implements DoorsApplication {
 
@@ -184,7 +184,7 @@ public class DoorsApplicationImpl implements DoorsApplication {
     }
 
     @Override
-    public DoorsTreeNodeRef getRoot() {
+    public DoorsTreeNode getRoot() {
         return new DoorsTreeNodeRefImpl(this, DoorsItemType.FOLDER, null, "/");
     }
  

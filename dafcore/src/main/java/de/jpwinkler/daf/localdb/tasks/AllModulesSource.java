@@ -13,7 +13,7 @@ public class AllModulesSource implements ModuleSource {
 
     @Override
     public void run(final DatabaseInterface databaseInterface, final Consumer<DoorsModule> consumer) {
-        databaseInterface.getDatabaseObject().accept(new DoorsTreeNodeVisitor() {
+        databaseInterface.getDatabaseObject().getRoot().accept(new DoorsTreeNodeVisitor() {
 
             @Override
             public void visitPostTraverse(final DoorsModule module) {

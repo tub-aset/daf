@@ -27,12 +27,12 @@ public interface DoorsDatabase {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Root</em>' containment reference.
-	 * @see #setRoot(DoorsFolder)
+	 * @see #setRoot(DoorsTreeNode)
 	 * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsDatabase_Root()
 	 * @model containment="true"
 	 * @generated
 	 */
-	DoorsFolder getRoot();
+	DoorsTreeNode getRoot();
 
 	/**
 	 * Sets the value of the '{@link de.jpwinkler.daf.model.DoorsDatabase#getRoot <em>Root</em>}' containment reference.
@@ -42,14 +42,6 @@ public interface DoorsDatabase {
 	 * @see #getRoot()
 	 * @generated
 	 */
-	void setRoot(DoorsFolder value);
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model visitorDataType="de.jpwinkler.daf.model.DoorsTreeNodeVisitor"
-	 * @generated
-	 */
-	void accept(DoorsTreeNodeVisitor visitor);
+	void setRoot(DoorsTreeNode value);
 
 } // DoorsDatabase

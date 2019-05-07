@@ -1,7 +1,7 @@
 package de.jpwinkler.daf.localdb.tasks;
 
+import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.localdb.DatabaseInterface;
-import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import java.util.function.Consumer;
@@ -16,8 +16,8 @@ public class FolderSource implements ModuleSource {
 
     @Override
     public void run(final DatabaseInterface databaseInterface, final Consumer<DoorsModule> consumer) {
-        final DoorsFolder f = databaseInterface.getFolder(folder);
-        if (folder == null) {
+        final DoorsTreeNode f = databaseInterface.getNode(folder);
+        if (f == null || f instanceof DoorsModule) {
             throw new IllegalArgumentException(folder + " does not exist.");
         }
         f.accept(new DoorsTreeNodeVisitor() {

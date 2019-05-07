@@ -5,7 +5,6 @@ package de.jpwinkler.daf.model.impl;
 import de.jpwinkler.daf.model.DoorsDatabase;
 import de.jpwinkler.daf.model.DoorsModuleVersion;
 import de.jpwinkler.daf.model.DoorsFactory;
-import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsPackage;
@@ -45,13 +44,6 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	private EClass doorsDatabaseEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass doorsFolderEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -271,7 +263,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 */
 	@Override
 	public EOperation getDoorsTreeNode__HasTag__String() {
-		return doorsTreeNodeEClass.getEOperations().get(1);
+		return doorsTreeNodeEClass.getEOperations().get(2);
 	}
 
 	/**
@@ -281,7 +273,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 */
 	@Override
 	public EOperation getDoorsTreeNode__HasTag__Pattern() {
-		return doorsTreeNodeEClass.getEOperations().get(1);
+		return doorsTreeNodeEClass.getEOperations().get(2);
 	}
 
 	/**
@@ -291,7 +283,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 */
 	@Override
 	public EOperation getDoorsTreeNode__CanCopyFrom__DoorsTreeNode() {
-		return doorsTreeNodeEClass.getEOperations().get(3);
+		return doorsTreeNodeEClass.getEOperations().get(4);
 	}
 
 	/**
@@ -301,7 +293,17 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 */
 	@Override
 	public EOperation getDoorsTreeNode__CopyFrom__DoorsTreeNode_DoorsTreeNode() {
-		return doorsTreeNodeEClass.getEOperations().get(4);
+		return doorsTreeNodeEClass.getEOperations().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getDoorsTreeNode__GetChild__String() {
+		return doorsTreeNodeEClass.getEOperations().get(1);
 	}
 
 	/**
@@ -322,46 +324,6 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	@Override
 	public EReference getDoorsDatabase_Root() {
 		return (EReference)doorsDatabaseEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getDoorsDatabase__Accept__DoorsTreeNodeVisitor() {
-		return doorsDatabaseEClass.getEOperations().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EClass getDoorsFolder() {
-		return doorsFolderEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getDoorsFolder__GetFolder__String() {
-		return doorsFolderEClass.getEOperations().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getDoorsFolder__GetModule__String() {
-		return doorsFolderEClass.getEOperations().get(1);
 	}
 
 	/**
@@ -410,6 +372,16 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
+	public EAttribute getDoorsModuleVersion_FullName() {
+		return (EAttribute)doorsModuleVersionEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getDoorsModule() {
 		return doorsModuleEClass;
 	}
@@ -421,7 +393,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 */
 	@Override
 	public EAttribute getDoorsModule_View() {
-		return (EAttribute)doorsModuleEClass.getEStructuralFeatures().get(1);
+		return (EAttribute)doorsModuleEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -431,7 +403,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 */
 	@Override
 	public EReference getDoorsModule_Versions() {
-		return (EReference)doorsModuleEClass.getEStructuralFeatures().get(2);
+		return (EReference)doorsModuleEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -775,19 +747,16 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___HAS_TAG__PATTERN);
 		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___CAN_COPY_FROM__DOORSTREENODE);
 		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE_DOORSTREENODE);
+		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___GET_CHILD__STRING);
 
 		doorsDatabaseEClass = createEClass(DOORS_DATABASE);
 		createEReference(doorsDatabaseEClass, DOORS_DATABASE__ROOT);
-		createEOperation(doorsDatabaseEClass, DOORS_DATABASE___ACCEPT__DOORSTREENODEVISITOR);
-
-		doorsFolderEClass = createEClass(DOORS_FOLDER);
-		createEOperation(doorsFolderEClass, DOORS_FOLDER___GET_FOLDER__STRING);
-		createEOperation(doorsFolderEClass, DOORS_FOLDER___GET_MODULE__STRING);
 
 		doorsModuleVersionEClass = createEClass(DOORS_MODULE_VERSION);
 		createEReference(doorsModuleVersionEClass, DOORS_MODULE_VERSION__MODULE);
 		createEAttribute(doorsModuleVersionEClass, DOORS_MODULE_VERSION__DATE);
 		createEReference(doorsModuleVersionEClass, DOORS_MODULE_VERSION__ATTRIBUTES);
+		createEAttribute(doorsModuleVersionEClass, DOORS_MODULE_VERSION__FULL_NAME);
 
 		doorsModuleEClass = createEClass(DOORS_MODULE);
 		createEAttribute(doorsModuleEClass, DOORS_MODULE__VIEW);
@@ -859,14 +828,13 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		// Set bounds for type parameters
 
 		// Add supertypes to classes
-		doorsFolderEClass.getESuperTypes().add(this.getDoorsTreeNode());
 		doorsModuleEClass.getESuperTypes().add(this.getDoorsTreeNode());
 		doorsObjectEClass.getESuperTypes().add(this.getDoorsTreeNode());
 		resolvedLinkEClass.getESuperTypes().add(this.getLink());
 		unresolvedLinkEClass.getESuperTypes().add(this.getLink());
 
 		// Initialize classes, features, and operations; add parameters
-		initEClass(doorsTreeNodeEClass, DoorsTreeNode.class, "DoorsTreeNode", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(doorsTreeNodeEClass, DoorsTreeNode.class, "DoorsTreeNode", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getDoorsTreeNode_Children(), this.getDoorsTreeNode(), this.getDoorsTreeNode_Parent(), "children", null, 0, -1, DoorsTreeNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getDoorsTreeNode_Parent(), this.getDoorsTreeNode(), this.getDoorsTreeNode_Children(), "parent", null, 0, 1, DoorsTreeNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getDoorsTreeNode_Attributes(), this.getAttributeMap(), null, "attributes", null, 0, -1, DoorsTreeNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
@@ -890,24 +858,17 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		addEParameter(op, this.getDoorsTreeNode(), "node", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getDoorsTreeNode(), "newParent", 0, 1, IS_UNIQUE, IS_ORDERED);
 
+		op = initEOperation(getDoorsTreeNode__GetChild__String(), this.getDoorsTreeNode(), "getChild", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEString(), "name", 0, 1, IS_UNIQUE, IS_ORDERED);
+
 		initEClass(doorsDatabaseEClass, DoorsDatabase.class, "DoorsDatabase", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getDoorsDatabase_Root(), this.getDoorsFolder(), null, "root", null, 0, 1, DoorsDatabase.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		op = initEOperation(getDoorsDatabase__Accept__DoorsTreeNodeVisitor(), null, "accept", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, this.getDoorsTreeNodeVisitor(), "visitor", 0, 1, IS_UNIQUE, IS_ORDERED);
-
-		initEClass(doorsFolderEClass, DoorsFolder.class, "DoorsFolder", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-		op = initEOperation(getDoorsFolder__GetFolder__String(), this.getDoorsFolder(), "getFolder", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, ecorePackage.getEString(), "name", 0, 1, IS_UNIQUE, IS_ORDERED);
-
-		op = initEOperation(getDoorsFolder__GetModule__String(), this.getDoorsModule(), "getModule", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, ecorePackage.getEString(), "name", 0, 1, IS_UNIQUE, IS_ORDERED);
+		initEReference(getDoorsDatabase_Root(), this.getDoorsTreeNode(), null, "root", null, 0, 1, DoorsDatabase.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(doorsModuleVersionEClass, DoorsModuleVersion.class, "DoorsModuleVersion", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getDoorsModuleVersion_Module(), this.getDoorsModule(), this.getDoorsModule_Versions(), "module", null, 0, 1, DoorsModuleVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getDoorsModuleVersion_Date(), ecorePackage.getEDate(), "date", null, 0, 1, DoorsModuleVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getDoorsModuleVersion_Attributes(), this.getAttributeMap(), null, "attributes", null, 0, -1, DoorsModuleVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getDoorsModuleVersion_FullName(), ecorePackage.getEString(), "fullName", null, 0, 1, DoorsModuleVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(doorsModuleEClass, DoorsModule.class, "DoorsModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getDoorsModule_View(), ecorePackage.getEString(), "view", null, 0, 1, DoorsModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

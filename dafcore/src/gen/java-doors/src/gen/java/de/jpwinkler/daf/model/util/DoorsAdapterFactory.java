@@ -74,10 +74,6 @@ public class DoorsAdapterFactory extends AdapterFactoryImpl {
 				return createDoorsDatabaseAdapter();
 			}
 			@Override
-			public Adapter caseDoorsFolder(DoorsFolder object) {
-				return createDoorsFolderAdapter();
-			}
-			@Override
 			public Adapter caseDoorsModuleVersion(DoorsModuleVersion object) {
 				return createDoorsModuleVersionAdapter();
 			}
@@ -150,20 +146,6 @@ public class DoorsAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createDoorsDatabaseAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link de.jpwinkler.daf.model.DoorsFolder <em>Folder</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see de.jpwinkler.daf.model.DoorsFolder
-	 * @generated
-	 */
-	public Adapter createDoorsFolderAdapter() {
 		return null;
 	}
 

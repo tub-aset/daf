@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
  * </ul>
  *
  * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsTreeNode()
- * @model abstract="true"
+ * @model
  * @generated
  */
 public interface DoorsTreeNode {
@@ -163,5 +163,13 @@ public interface DoorsTreeNode {
 	 * @generated
 	 */
 	DoorsTreeNode copyFrom(DoorsTreeNode node, DoorsTreeNode newParent);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated
+	 */
+	DoorsTreeNode getChild(String name);
 
 } // DoorsTreeNode

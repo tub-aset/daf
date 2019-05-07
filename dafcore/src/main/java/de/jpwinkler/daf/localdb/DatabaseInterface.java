@@ -5,9 +5,9 @@
  */
 package de.jpwinkler.daf.localdb;
 
+import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsDatabase;
 import de.jpwinkler.daf.model.DoorsFactory;
-import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsPackage;
 import de.jpwinkler.daf.search.SearchExpression;
@@ -34,17 +34,13 @@ public interface DatabaseInterface {
 
     DoorsDatabase getDatabaseObject();
 
-    DoorsModule getModule(final String path);
-
     List<DoorsModule> getModules(final SearchExpression e);
 
     DoorsModule importModule(final DoorsModule module);
 
-    void removeModule(final DoorsModule module);
-
-    DoorsFolder getFolder(final String path);
-
-    void removeFolder(final DoorsFolder folder);
+    DoorsTreeNode getNode(final String path);
+    
+    void removeNode(DoorsTreeNode node);
 
     public static DatabaseInterface openFileDatabase() throws IOException {
         return openFileDatabase(getDefaultDatabaseDirectory(FileDatabaseInterface.class).resolve("db.DoorsDatabasemodel"));
@@ -64,7 +60,7 @@ public interface DatabaseInterface {
             db = (DoorsDatabase) resource.getContents().get(0);
         } else {
             db = DoorsFactory.eINSTANCE.createDoorsDatabase();
-            db.setRoot(DoorsFactory.eINSTANCE.createDoorsFolder());
+            db.setRoot(DoorsFactory.eINSTANCE.createDoorsTreeNode());
             final FileDatabaseInterface DoorsDatabaseInterface = new FileDatabaseInterface(databaseFile, db);
             DoorsDatabaseInterface.flush();
         }
