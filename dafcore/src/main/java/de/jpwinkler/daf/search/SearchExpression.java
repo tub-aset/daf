@@ -13,20 +13,6 @@ import org.antlr.v4.runtime.Recognizer;
 
 public abstract class SearchExpression {
 
-    private static class MyErrorListener extends BaseErrorListener {
-
-        private final List<String> errors = new ArrayList<>();
-
-        @Override
-        public void syntaxError(final Recognizer<?, ?> recognizer, final Object offendingSymbol, final int line, final int charPositionInLine, final String msg, final RecognitionException e) {
-            errors.add("line " + line + ":" + charPositionInLine + " " + msg);
-        }
-
-        public List<String> getErrors() {
-            return errors;
-        }
-    }
-
     public abstract boolean matches(DoorsModule module);
 
     public static SearchExpression compile(final String filter) {
@@ -36,15 +22,16 @@ public abstract class SearchExpression {
         final SearchListenerImpl listener = new SearchListenerImpl();
 
         parser.addParseListener(listener);
-        final MyErrorListener errorListener = new MyErrorListener();
+
+        final List<String> errors = new ArrayList<>();
+        final BaseErrorListener errorListener = new BaseErrorListener() {
+            public void syntaxError(final Recognizer<?, ?> recognizer, final Object offendingSymbol, final int line, final int charPositionInLine, final String msg, final RecognitionException e) {
+                errors.add("line " + line + ":" + charPositionInLine + " " + msg);
+            }
+        };
         parser.addErrorListener(errorListener);
         parser.searchExpression();
-        if (errorListener.getErrors().isEmpty()) {
-            return listener.getSearchExpression();
-        } else {
-            return null;
-        }
-
+        return errors.isEmpty() ? listener.getSearchExpression() : null;
     }
 
 }
