@@ -19,12 +19,12 @@ import net.harawata.appdirs.AppDirsFactory;
 class DatabaseInterfaceUtils {
     
     static Path getDefaultDatabaseDirectory(Class<? extends DatabaseInterface> implCls) throws FileNotFoundException, IOException {
-        String doorsdbPath = System.getenv("DOORSDB_HOME");
-        if(doorsdbPath == null) {
-            doorsdbPath = AppDirsFactory.getInstance().getUserDataDir("dafcore", implCls.getSimpleName(), null);
+        String DoorsDatabasePath = System.getenv("DoorsDatabase_HOME");
+        if(DoorsDatabasePath == null) {
+            DoorsDatabasePath = AppDirsFactory.getInstance().getUserDataDir("dafcore", implCls.getSimpleName(), null);
         }
         
-        Path path = Paths.get(doorsdbPath);
+        Path path = Paths.get(DoorsDatabasePath);
         if (!Files.exists(path)) {
             Files.createDirectory(path);
         }

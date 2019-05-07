@@ -30,10 +30,10 @@
             </genOperations>
         </genClasses>
         
-        <genClasses ecoreClass="Doors.ecore#//DoorsDB">
-            <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Doors.ecore#//DoorsDB/root"/>
-            <genOperations ecoreOperation="Doors.ecore#//DoorsDB/accept">
-                <genParameters ecoreParameter="Doors.ecore#//DoorsDB/accept/visitor"/>
+        <genClasses ecoreClass="Doors.ecore#//DoorsDatabase">
+            <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Doors.ecore#//DoorsDatabase/root"/>
+            <genOperations ecoreOperation="Doors.ecore#//DoorsDatabase/accept">
+                <genParameters ecoreParameter="Doors.ecore#//DoorsDatabase/accept/visitor"/>
             </genOperations>
         </genClasses>
         

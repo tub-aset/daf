@@ -168,14 +168,14 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_TREE_NODE_OPERATION_COUNT = 3;
 
 	/**
-	 * The meta object id for the '{@link de.jpwinkler.daf.model.impl.DoorsDBImpl <em>DB</em>}' class.
+	 * The meta object id for the '{@link de.jpwinkler.daf.model.impl.DoorsDatabaseImpl <em>Database</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see de.jpwinkler.daf.model.impl.DoorsDBImpl
-	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getDoorsDB()
+	 * @see de.jpwinkler.daf.model.impl.DoorsDatabaseImpl
+	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getDoorsDatabase()
 	 * @generated
 	 */
-	int DOORS_DB = 1;
+	int DOORS_DATABASE = 1;
 
 	/**
 	 * The feature id for the '<em><b>Root</b></em>' containment reference.
@@ -184,16 +184,16 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_DB__ROOT = 0;
+	int DOORS_DATABASE__ROOT = 0;
 
 	/**
-	 * The number of structural features of the '<em>DB</em>' class.
+	 * The number of structural features of the '<em>Database</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_DB_FEATURE_COUNT = 1;
+	int DOORS_DATABASE_FEATURE_COUNT = 1;
 
 	/**
 	 * The operation id for the '<em>Accept</em>' operation.
@@ -202,16 +202,16 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_DB___ACCEPT__DOORSTREENODEVISITOR = 0;
+	int DOORS_DATABASE___ACCEPT__DOORSTREENODEVISITOR = 0;
 
 	/**
-	 * The number of operations of the '<em>DB</em>' class.
+	 * The number of operations of the '<em>Database</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_DB_OPERATION_COUNT = 1;
+	int DOORS_DATABASE_OPERATION_COUNT = 1;
 
 	/**
 	 * The meta object id for the '{@link de.jpwinkler.daf.model.impl.DoorsFolderImpl <em>Folder</em>}' class.
@@ -1143,35 +1143,35 @@ public interface DoorsPackage extends EPackage {
 	EOperation getDoorsTreeNode__HasTag__Pattern();
 
 	/**
-	 * Returns the meta object for class '{@link de.jpwinkler.daf.model.DoorsDB <em>DB</em>}'.
+	 * Returns the meta object for class '{@link de.jpwinkler.daf.model.DoorsDatabase <em>Database</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>DB</em>'.
-	 * @see de.jpwinkler.daf.model.DoorsDB
+	 * @return the meta object for class '<em>Database</em>'.
+	 * @see de.jpwinkler.daf.model.DoorsDatabase
 	 * @generated
 	 */
-	EClass getDoorsDB();
+	EClass getDoorsDatabase();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link de.jpwinkler.daf.model.DoorsDB#getRoot <em>Root</em>}'.
+	 * Returns the meta object for the containment reference '{@link de.jpwinkler.daf.model.DoorsDatabase#getRoot <em>Root</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference '<em>Root</em>'.
-	 * @see de.jpwinkler.daf.model.DoorsDB#getRoot()
-	 * @see #getDoorsDB()
+	 * @see de.jpwinkler.daf.model.DoorsDatabase#getRoot()
+	 * @see #getDoorsDatabase()
 	 * @generated
 	 */
-	EReference getDoorsDB_Root();
+	EReference getDoorsDatabase_Root();
 
 	/**
-	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsDB#accept(de.jpwinkler.daf.model.DoorsTreeNodeVisitor) <em>Accept</em>}' operation.
+	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsDatabase#accept(de.jpwinkler.daf.model.DoorsTreeNodeVisitor) <em>Accept</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>Accept</em>' operation.
-	 * @see de.jpwinkler.daf.model.DoorsDB#accept(de.jpwinkler.daf.model.DoorsTreeNodeVisitor)
+	 * @see de.jpwinkler.daf.model.DoorsDatabase#accept(de.jpwinkler.daf.model.DoorsTreeNodeVisitor)
 	 * @generated
 	 */
-	EOperation getDoorsDB__Accept__DoorsTreeNodeVisitor();
+	EOperation getDoorsDatabase__Accept__DoorsTreeNodeVisitor();
 
 	/**
 	 * Returns the meta object for class '{@link de.jpwinkler.daf.model.DoorsFolder <em>Folder</em>}'.
@@ -1739,14 +1739,14 @@ public interface DoorsPackage extends EPackage {
 		EOperation DOORS_TREE_NODE___HAS_TAG__PATTERN = eINSTANCE.getDoorsTreeNode__HasTag__Pattern();
 
 		/**
-		 * The meta object literal for the '{@link de.jpwinkler.daf.model.impl.DoorsDBImpl <em>DB</em>}' class.
+		 * The meta object literal for the '{@link de.jpwinkler.daf.model.impl.DoorsDatabaseImpl <em>Database</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see de.jpwinkler.daf.model.impl.DoorsDBImpl
-		 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getDoorsDB()
+		 * @see de.jpwinkler.daf.model.impl.DoorsDatabaseImpl
+		 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getDoorsDatabase()
 		 * @generated
 		 */
-		EClass DOORS_DB = eINSTANCE.getDoorsDB();
+		EClass DOORS_DATABASE = eINSTANCE.getDoorsDatabase();
 
 		/**
 		 * The meta object literal for the '<em><b>Root</b></em>' containment reference feature.
@@ -1754,7 +1754,7 @@ public interface DoorsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference DOORS_DB__ROOT = eINSTANCE.getDoorsDB_Root();
+		EReference DOORS_DATABASE__ROOT = eINSTANCE.getDoorsDatabase_Root();
 
 		/**
 		 * The meta object literal for the '<em><b>Accept</b></em>' operation.
@@ -1762,7 +1762,7 @@ public interface DoorsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation DOORS_DB___ACCEPT__DOORSTREENODEVISITOR = eINSTANCE.getDoorsDB__Accept__DoorsTreeNodeVisitor();
+		EOperation DOORS_DATABASE___ACCEPT__DOORSTREENODEVISITOR = eINSTANCE.getDoorsDatabase__Accept__DoorsTreeNodeVisitor();
 
 		/**
 		 * The meta object literal for the '{@link de.jpwinkler.daf.model.impl.DoorsFolderImpl <em>Folder</em>}' class.

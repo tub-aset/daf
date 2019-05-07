@@ -4,13 +4,13 @@ import de.jpwinkler.daf.csv.ModuleCSVWriter;
 import de.jpwinkler.daf.csv.ModuleMetaDataParser;
 import de.jpwinkler.daf.model.DoorsFactory;
 import de.jpwinkler.daf.model.DoorsPackage;
-import de.jpwinkler.daf.model.DoorsDB;
+import de.jpwinkler.daf.model.DoorsDatabase;
 import de.jpwinkler.daf.model.DoorsModuleVersion;
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
-import de.jpwinkler.daf.model.impl.DoorsDBImpl;
+import de.jpwinkler.daf.model.impl.DoorsDatabaseImpl;
 import de.jpwinkler.daf.search.SearchExpression;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -32,37 +32,37 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 public class FileDatabaseInterface implements DatabaseInterface {
 
-    private final DoorsDB db;
+    private final DoorsDatabase db;
     private final Path databaseFile;
     private final Path databaseRoot;
 
     public static FileDatabaseInterface createOrOpenDB() throws IOException {
-        return createOrOpenDB(DatabaseInterfaceUtils.getDefaultDatabaseDirectory(FileDatabaseInterface.class).resolve("db.doorsdbmodel"));
+        return createOrOpenDB(DatabaseInterfaceUtils.getDefaultDatabaseDirectory(FileDatabaseInterface.class).resolve("db.DoorsDatabasemodel"));
     }
 
     public static FileDatabaseInterface createOrOpenDB(Path databaseFile) throws IOException {
-        DoorsDB db;
+        DoorsDatabase db;
 
         databaseFile = databaseFile.toAbsolutePath();
         if (Files.exists(databaseFile)) {
             DoorsPackage.eINSTANCE.eClass();
 
             final Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
-            reg.getExtensionToFactoryMap().put("doorsdbmodel", new XMIResourceFactoryImpl());
+            reg.getExtensionToFactoryMap().put("DoorsDatabasemodel", new XMIResourceFactoryImpl());
             final ResourceSet resourceSet = new ResourceSetImpl();
             final Resource resource = resourceSet.getResource(URI.createFileURI(databaseFile.toString()), true);
-            db = (DoorsDB) resource.getContents().get(0);
+            db = (DoorsDatabase) resource.getContents().get(0);
         } else {
-            db = DoorsFactory.eINSTANCE.createDoorsDB();
+            db = DoorsFactory.eINSTANCE.createDoorsDatabase();
             db.setRoot(DoorsFactory.eINSTANCE.createDoorsFolder());
-            final FileDatabaseInterface doorsDBInterface = new FileDatabaseInterface(databaseFile, db);
-            doorsDBInterface.flush();
+            final FileDatabaseInterface DoorsDatabaseInterface = new FileDatabaseInterface(databaseFile, db);
+            DoorsDatabaseInterface.flush();
         }
 
         return new FileDatabaseInterface(databaseFile, db);
     }
 
-    private FileDatabaseInterface(final Path databaseFile, final DoorsDB db) throws IOException {
+    private FileDatabaseInterface(final Path databaseFile, final DoorsDatabase db) throws IOException {
         this.databaseFile = databaseFile.toAbsolutePath();
         databaseRoot = databaseFile.toAbsolutePath().getParent();
         this.db = db;
@@ -97,15 +97,15 @@ public class FileDatabaseInterface implements DatabaseInterface {
     @Override
     public void flush() throws IOException {
         final Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
-        reg.getExtensionToFactoryMap().put("doorsdbmodel", new XMIResourceFactoryImpl());
+        reg.getExtensionToFactoryMap().put("DoorsDatabasemodel", new XMIResourceFactoryImpl());
         final ResourceSet resourceSet = new ResourceSetImpl();
         final Resource resource = resourceSet.createResource(URI.createFileURI(databaseFile.toString()));
-        resource.getContents().add((DoorsDBImpl) db);
+        resource.getContents().add((DoorsDatabaseImpl) db);
         resource.save(new HashMap<>());
     }
 
     @Override
-    public DoorsDB getDatabaseObject() {
+    public DoorsDatabase getDatabaseObject() {
         return db;
     }
 

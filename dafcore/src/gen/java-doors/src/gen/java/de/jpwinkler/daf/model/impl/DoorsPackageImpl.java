@@ -3,7 +3,7 @@
 package de.jpwinkler.daf.model.impl;
 
 import de.jpwinkler.daf.model.AttributeDefinition;
-import de.jpwinkler.daf.model.DoorsDB;
+import de.jpwinkler.daf.model.DoorsDatabase;
 import de.jpwinkler.daf.model.DoorsModuleVersion;
 import de.jpwinkler.daf.model.DoorsFactory;
 import de.jpwinkler.daf.model.DoorsFolder;
@@ -44,7 +44,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass doorsDBEClass = null;
+	private EClass doorsDatabaseEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -290,8 +290,8 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
-	public EClass getDoorsDB() {
-		return doorsDBEClass;
+	public EClass getDoorsDatabase() {
+		return doorsDatabaseEClass;
 	}
 
 	/**
@@ -300,8 +300,8 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getDoorsDB_Root() {
-		return (EReference)doorsDBEClass.getEStructuralFeatures().get(0);
+	public EReference getDoorsDatabase_Root() {
+		return (EReference)doorsDatabaseEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -310,8 +310,8 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getDoorsDB__Accept__DoorsTreeNodeVisitor() {
-		return doorsDBEClass.getEOperations().get(0);
+	public EOperation getDoorsDatabase__Accept__DoorsTreeNodeVisitor() {
+		return doorsDatabaseEClass.getEOperations().get(0);
 	}
 
 	/**
@@ -784,9 +784,9 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___HAS_TAG__STRING);
 		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___HAS_TAG__PATTERN);
 
-		doorsDBEClass = createEClass(DOORS_DB);
-		createEReference(doorsDBEClass, DOORS_DB__ROOT);
-		createEOperation(doorsDBEClass, DOORS_DB___ACCEPT__DOORSTREENODEVISITOR);
+		doorsDatabaseEClass = createEClass(DOORS_DATABASE);
+		createEReference(doorsDatabaseEClass, DOORS_DATABASE__ROOT);
+		createEOperation(doorsDatabaseEClass, DOORS_DATABASE___ACCEPT__DOORSTREENODEVISITOR);
 
 		doorsFolderEClass = createEClass(DOORS_FOLDER);
 		createEOperation(doorsFolderEClass, DOORS_FOLDER___GET_FOLDER__STRING);
@@ -895,10 +895,10 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		op = initEOperation(getDoorsTreeNode__HasTag__Pattern(), ecorePackage.getEBoolean(), "hasTag", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getPattern(), "pattern", 0, 1, IS_UNIQUE, IS_ORDERED);
 
-		initEClass(doorsDBEClass, DoorsDB.class, "DoorsDB", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getDoorsDB_Root(), this.getDoorsFolder(), null, "root", null, 0, 1, DoorsDB.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(doorsDatabaseEClass, DoorsDatabase.class, "DoorsDatabase", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getDoorsDatabase_Root(), this.getDoorsFolder(), null, "root", null, 0, 1, DoorsDatabase.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		op = initEOperation(getDoorsDB__Accept__DoorsTreeNodeVisitor(), null, "accept", 0, 1, IS_UNIQUE, IS_ORDERED);
+		op = initEOperation(getDoorsDatabase__Accept__DoorsTreeNodeVisitor(), null, "accept", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getDoorsTreeNodeVisitor(), "visitor", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(doorsFolderEClass, DoorsFolder.class, "DoorsFolder", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

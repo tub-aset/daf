@@ -2,7 +2,7 @@
  */
 package de.jpwinkler.daf.model.impl;
 
-import de.jpwinkler.daf.model.DoorsDB;
+import de.jpwinkler.daf.model.DoorsDatabase;
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsPackage;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
@@ -23,12 +23,12 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link de.jpwinkler.daf.model.impl.DoorsDBImpl#getRoot <em>Root</em>}</li>
+ *   <li>{@link de.jpwinkler.daf.model.impl.DoorsDatabaseImpl#getRoot <em>Root</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class DoorsDBImpl extends MinimalEObjectImpl.Container implements DoorsDB {
+public class DoorsDatabaseImpl extends MinimalEObjectImpl.Container implements DoorsDatabase {
 	/**
 	 * The cached value of the '{@link #getRoot() <em>Root</em>}' containment reference.
 	 * <!-- begin-user-doc -->
@@ -44,7 +44,7 @@ public class DoorsDBImpl extends MinimalEObjectImpl.Container implements DoorsDB
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected DoorsDBImpl() {
+	protected DoorsDatabaseImpl() {
 		super();
 	}
 
@@ -55,7 +55,7 @@ public class DoorsDBImpl extends MinimalEObjectImpl.Container implements DoorsDB
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return DoorsPackage.Literals.DOORS_DB;
+		return DoorsPackage.Literals.DOORS_DATABASE;
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class DoorsDBImpl extends MinimalEObjectImpl.Container implements DoorsDB
 		DoorsFolder oldRoot = root;
 		root = newRoot;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, DoorsPackage.DOORS_DB__ROOT, oldRoot, newRoot);
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, DoorsPackage.DOORS_DATABASE__ROOT, oldRoot, newRoot);
 			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
 		return msgs;
@@ -93,14 +93,14 @@ public class DoorsDBImpl extends MinimalEObjectImpl.Container implements DoorsDB
 		if (newRoot != root) {
 			NotificationChain msgs = null;
 			if (root != null)
-				msgs = ((InternalEObject)root).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - DoorsPackage.DOORS_DB__ROOT, null, msgs);
+				msgs = ((InternalEObject)root).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - DoorsPackage.DOORS_DATABASE__ROOT, null, msgs);
 			if (newRoot != null)
-				msgs = ((InternalEObject)newRoot).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - DoorsPackage.DOORS_DB__ROOT, null, msgs);
+				msgs = ((InternalEObject)newRoot).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - DoorsPackage.DOORS_DATABASE__ROOT, null, msgs);
 			msgs = basicSetRoot(newRoot, msgs);
 			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DoorsPackage.DOORS_DB__ROOT, newRoot, newRoot));
+			eNotify(new ENotificationImpl(this, Notification.SET, DoorsPackage.DOORS_DATABASE__ROOT, newRoot, newRoot));
 	}
 
 	/**
@@ -121,7 +121,7 @@ public class DoorsDBImpl extends MinimalEObjectImpl.Container implements DoorsDB
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case DoorsPackage.DOORS_DB__ROOT:
+			case DoorsPackage.DOORS_DATABASE__ROOT:
 				return basicSetRoot(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
@@ -135,7 +135,7 @@ public class DoorsDBImpl extends MinimalEObjectImpl.Container implements DoorsDB
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case DoorsPackage.DOORS_DB__ROOT:
+			case DoorsPackage.DOORS_DATABASE__ROOT:
 				return getRoot();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -149,7 +149,7 @@ public class DoorsDBImpl extends MinimalEObjectImpl.Container implements DoorsDB
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case DoorsPackage.DOORS_DB__ROOT:
+			case DoorsPackage.DOORS_DATABASE__ROOT:
 				setRoot((DoorsFolder)newValue);
 				return;
 		}
@@ -164,7 +164,7 @@ public class DoorsDBImpl extends MinimalEObjectImpl.Container implements DoorsDB
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case DoorsPackage.DOORS_DB__ROOT:
+			case DoorsPackage.DOORS_DATABASE__ROOT:
 				setRoot((DoorsFolder)null);
 				return;
 		}
@@ -179,7 +179,7 @@ public class DoorsDBImpl extends MinimalEObjectImpl.Container implements DoorsDB
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case DoorsPackage.DOORS_DB__ROOT:
+			case DoorsPackage.DOORS_DATABASE__ROOT:
 				return root != null;
 		}
 		return super.eIsSet(featureID);
@@ -193,11 +193,11 @@ public class DoorsDBImpl extends MinimalEObjectImpl.Container implements DoorsDB
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
-			case DoorsPackage.DOORS_DB___ACCEPT__DOORSTREENODEVISITOR:
+			case DoorsPackage.DOORS_DATABASE___ACCEPT__DOORSTREENODEVISITOR:
 				accept((DoorsTreeNodeVisitor)arguments.get(0));
 				return null;
 		}
 		return super.eInvoke(operationID, arguments);
 	}
 
-} //DoorsDBImpl
+} //DoorsDatabaseImpl

@@ -31,13 +31,13 @@ public interface DoorsFactory extends EFactory {
 	DoorsTreeNode createDoorsTreeNode();
 
 	/**
-	 * Returns a new object of class '<em>DB</em>'.
+	 * Returns a new object of class '<em>Database</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>DB</em>'.
+	 * @return a new object of class '<em>Database</em>'.
 	 * @generated
 	 */
-	DoorsDB createDoorsDB();
+	DoorsDatabase createDoorsDatabase();
 
 	/**
 	 * Returns a new object of class '<em>Folder</em>'.

@@ -14,28 +14,28 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link de.jpwinkler.daf.model.DoorsDB#getRoot <em>Root</em>}</li>
+ *   <li>{@link de.jpwinkler.daf.model.DoorsDatabase#getRoot <em>Root</em>}</li>
  * </ul>
  *
- * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsDB()
+ * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsDatabase()
  * @model
  * @generated
  */
-public interface DoorsDB {
+public interface DoorsDatabase {
 	/**
 	 * Returns the value of the '<em><b>Root</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Root</em>' containment reference.
 	 * @see #setRoot(DoorsFolder)
-	 * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsDB_Root()
+	 * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsDatabase_Root()
 	 * @model containment="true"
 	 * @generated
 	 */
 	DoorsFolder getRoot();
 
 	/**
-	 * Sets the value of the '{@link de.jpwinkler.daf.model.DoorsDB#getRoot <em>Root</em>}' containment reference.
+	 * Sets the value of the '{@link de.jpwinkler.daf.model.DoorsDatabase#getRoot <em>Root</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Root</em>' containment reference.
@@ -52,4 +52,4 @@ public interface DoorsDB {
 	 */
 	void accept(DoorsTreeNodeVisitor visitor);
 
-} // DoorsDB
+} // DoorsDatabase

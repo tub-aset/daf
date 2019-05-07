@@ -5,7 +5,7 @@
  */
 package de.jpwinkler.daf.localdb;
 
-import de.jpwinkler.daf.model.DoorsDB;
+import de.jpwinkler.daf.model.DoorsDatabase;
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.search.SearchExpression;
@@ -21,7 +21,7 @@ public interface DatabaseInterface {
 
     void flush() throws IOException;
 
-    DoorsDB getDatabaseObject();
+    DoorsDatabase getDatabaseObject();
     
     
 
