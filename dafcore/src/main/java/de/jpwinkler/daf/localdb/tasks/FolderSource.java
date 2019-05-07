@@ -16,7 +16,7 @@ public class FolderSource implements ModuleSource {
 
     @Override
     public void run(final DatabaseInterface databaseInterface, final Consumer<DoorsModule> consumer) {
-        final DoorsTreeNode f = databaseInterface.getNode(folder);
+        final DoorsTreeNode f = databaseInterface.getDatabaseObject().getRoot().getChild(folder);
         if (f == null || f instanceof DoorsModule) {
             throw new IllegalArgumentException(folder + " does not exist.");
         }

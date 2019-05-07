@@ -37,8 +37,6 @@ public interface DatabaseInterface {
     List<DoorsModule> getModules(final SearchExpression e);
 
     DoorsModule importModule(final DoorsModule module);
-
-    DoorsTreeNode getNode(final String path);
     
     void removeNode(DoorsTreeNode node);
 

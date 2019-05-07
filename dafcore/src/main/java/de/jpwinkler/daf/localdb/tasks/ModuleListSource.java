@@ -18,7 +18,7 @@ public class ModuleListSource implements ModuleSource {
     @Override
     public void run(final DatabaseInterface databaseInterface, final Consumer<DoorsModule> consumer) {
         moduleNames.forEach(m -> {
-            final DoorsTreeNode module = databaseInterface.getNode(m);
+            final DoorsTreeNode module = databaseInterface.getDatabaseObject().getRoot().getChild(m);
             if (module != null && (module instanceof DoorsModule)) {
                 consumer.accept((DoorsModule) module);
             } else {

@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.BasicEList;
@@ -47,6 +48,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * @generated
  */
 public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements DoorsTreeNode {
+
     /**
 	 * The cached value of the '{@link #getChildren() <em>Children</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -69,55 +71,52 @@ public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements D
     /**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @see #getName()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String NAME_EDEFAULT = null;
+    protected static final String NAME_EDEFAULT = null;
 
-				/**
+    /**
 	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @see #getName()
 	 * @generated
 	 * @ordered
 	 */
-	protected String name = NAME_EDEFAULT;
+    protected String name = NAME_EDEFAULT;
 
-				/**
+    /**
 	 * The default value of the '{@link #getFullName() <em>Full Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @see #getFullName()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String FULL_NAME_EDEFAULT = null;
+    protected static final String FULL_NAME_EDEFAULT = null;
 
-				/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc --> @generated
+     */
     protected DoorsTreeNodeImpl() {
 		super();
 	}
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc --> @generated
+     */
     @Override
     protected EClass eStaticClass() {
 		return DoorsPackage.Literals.DOORS_TREE_NODE;
 	}
 
     /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated
+     */
     @Override
     public List<DoorsTreeNode> getChildren() {
 		if (children == null) {
@@ -127,9 +126,8 @@ public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements D
 	}
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc --> @generated
+     */
     @Override
     public DoorsTreeNode getParent() {
 		if (eContainerFeatureID() != DoorsPackage.DOORS_TREE_NODE__PARENT) return null;
@@ -137,18 +135,16 @@ public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements D
 	}
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc --> @generated
+     */
     public NotificationChain basicSetParent(DoorsTreeNode newParent, NotificationChain msgs) {
 		msgs = eBasicSetContainer((InternalEObject)newParent, DoorsPackage.DOORS_TREE_NODE__PARENT, msgs);
 		return msgs;
 	}
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc --> @generated
+     */
     @Override
     public void setParent(DoorsTreeNode newParent) {
 		if (newParent != eInternalContainer() || (eContainerFeatureID() != DoorsPackage.DOORS_TREE_NODE__PARENT && newParent != null)) {
@@ -167,9 +163,8 @@ public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements D
 	}
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc --> @generated
+     */
     @Override
     public Map<String, String> getAttributes() {
 		if (attributes == null) {
@@ -179,135 +174,134 @@ public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements D
 	}
 
     /**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String getName() {
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated
+     */
+    @Override
+    public String getName() {
 		return name;
 	}
 
-				/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setName(String newName) {
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated
+     */
+    @Override
+    public void setName(String newName) {
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, DoorsPackage.DOORS_TREE_NODE__NAME, oldName, name));
 	}
 
-				/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated NOT
-	 */
-	@Override
-	public String getFullName() {
-                DoorsTreeNode parent = this;
-                String fullName = "";
-                while(parent != null) {
-                    fullName += "/" + parent.getName();
-                    parent = parent.getParent();
-                }
-                return fullName;
-	}
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated NOT
+     */
+    @Override
+    public String getFullName() {
+        DoorsTreeNode parent = this;
+        String fullName = "";
+        while (parent != null) {
+            fullName += "/" + parent.getName();
+            parent = parent.getParent();
+        }
+        return fullName;
+    }
 
-				/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated NOT
-	 */
-	@Override
-	public EList<String> getFullNameSegments() {
-		DoorsTreeNode parent = this;
-                EList<String> fullName = new BasicEList<>();
-                while(parent != null) {
-                    fullName.add(0, parent.getName());
-                    parent = parent.getParent();
-                }
-                return fullName;
-	}
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated NOT
+     */
+    @Override
+    public EList<String> getFullNameSegments() {
+        DoorsTreeNode parent = this;
+        EList<String> fullName = new BasicEList<>();
+        while (parent != null) {
+            fullName.add(0, parent.getName());
+            parent = parent.getParent();
+        }
+        return fullName;
+    }
 
-				/**
+    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      *
      * @generated NOT
      */
     @Override
     public void accept(final DoorsTreeNodeVisitor visitor) {
-            if (visitor.visitPreTraverse((DoorsObject) this)) {
-                for (final DoorsTreeNode child : getChildren()) {
-                    child.accept(visitor);
-                }
+        if (visitor.visitPreTraverse((DoorsObject) this)) {
+            for (final DoorsTreeNode child : getChildren()) {
+                child.accept(visitor);
             }
-            visitor.visitPostTraverse((DoorsObject) this);
+        }
+        visitor.visitPostTraverse((DoorsObject) this);
     }
 
     /**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated NOT
-	 */
-	@Override
-	public boolean hasTag(String tag) {
-		return DoorsSystemAttributes.TAGS.getValue(Collection.class, attributes).contains(tag);
-	}
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated NOT
+     */
+    @Override
+    public boolean hasTag(String tag) {
+        return DoorsSystemAttributes.TAGS.getValue(Collection.class, attributes).contains(tag);
+    }
 
-				/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated NOT
-	 */
-	@Override
-	public boolean hasTag(Pattern pattern) {
-		return DoorsSystemAttributes.TAGS.getValue(Collection.class, attributes).stream().anyMatch(pattern.asMatchPredicate());
-	}
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated NOT
+     */
+    @Override
+    public boolean hasTag(Pattern pattern) {
+        return DoorsSystemAttributes.TAGS.getValue(Collection.class, attributes).stream().anyMatch(pattern.asMatchPredicate());
+    }
 
-				/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated NOT
-	 */
-	@Override
-	public boolean canCopyFrom(DoorsTreeNode node) {
-		return Arrays.stream(this.getClass().getInterfaces())
-                    .filter(i -> DoorsTreeNode.class.isAssignableFrom(i))
-                    .filter(i -> !i.isAssignableFrom(node.getClass()))
-                    .findAny().isEmpty();
-	}
-				/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated NOT
-	 */
-	@Override
-	public DoorsTreeNode copyFrom(DoorsTreeNode node, DoorsTreeNode newParent) {
-            if(!this.canCopyFrom(node)) {
-                throw new IllegalArgumentException();
-            }
-            
-            throw new UnsupportedOperationException();
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated NOT
+     */
+    @Override
+    public boolean canCopyFrom(DoorsTreeNode node) {
+        return Arrays.stream(this.getClass().getInterfaces())
+                .filter(i -> DoorsTreeNode.class.isAssignableFrom(i))
+                .filter(i -> !i.isAssignableFrom(node.getClass()))
+                .findAny().isEmpty();
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated NOT
+     */
+    @Override
+    public DoorsTreeNode copyFrom(DoorsTreeNode node, DoorsTreeNode newParent) {
+        if (!this.canCopyFrom(node)) {
+            throw new IllegalArgumentException();
         }
 
-				/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated NOT
-	 */
-	@Override
-	public DoorsTreeNode getChild(String name) {
-		return this.getChildren().stream().filter(c -> name.equals(c.getName())).findAny().orElse(null);
-	}
+        throw new UnsupportedOperationException();
+    }
 
-				/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated NOT
+     */
+    @Override
+    public DoorsTreeNode getChild(String name) {
+        final List<String> pathSegments = Arrays.asList(name.split("/")).stream().filter(s -> !s.isEmpty()).collect(Collectors.toList());
+        DoorsTreeNode current = this;
+        for (final String segment : pathSegments.subList(0, pathSegments.size())) {
+            current = current.getChild(segment);
+            if (current == null) {
+                return null;
+            }
+        }
+        return current;
+    }
+
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc --> @generated
+     */
     @SuppressWarnings("unchecked")
     @Override
     public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
@@ -323,9 +317,8 @@ public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements D
 	}
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc --> @generated
+     */
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -340,9 +333,8 @@ public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements D
 	}
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc --> @generated
+     */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
 		switch (eContainerFeatureID()) {
@@ -353,9 +345,8 @@ public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements D
 	}
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc --> @generated
+     */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -377,9 +368,8 @@ public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements D
 	}
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc --> @generated
+     */
     @SuppressWarnings("unchecked")
     @Override
     public void eSet(int featureID, Object newValue) {
@@ -402,9 +392,8 @@ public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements D
 	}
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc --> @generated
+     */
     @Override
     public void eUnset(int featureID) {
 		switch (featureID) {
@@ -425,9 +414,8 @@ public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements D
 	}
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc --> @generated
+     */
     @Override
     public boolean eIsSet(int featureID) {
 		switch (featureID) {
@@ -448,9 +436,8 @@ public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements D
 	}
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc --> @generated
+     */
     @Override
     public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
@@ -471,13 +458,12 @@ public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements D
 		return super.eInvoke(operationID, arguments);
 	}
 
-				/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString() {
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated
+     */
+    @Override
+    public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

@@ -25,6 +25,7 @@ import de.jpwinkler.daf.bridge.DoorsTreeNodeRef;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -168,6 +169,14 @@ class DoorsTreeNodeRefImpl implements DoorsTreeNodeRef {
     
     @Override
     public DoorsTreeNode getChild(String name) {
-        return this.getChildren().stream().filter(c -> name.equals(c.getName())).findFirst().orElse(null);
+        final List<String> pathSegments = Arrays.asList(name.split("/")).stream().filter(s -> !s.isEmpty()).collect(Collectors.toList());
+        DoorsTreeNode current = this;
+        for (final String segment : pathSegments.subList(0, pathSegments.size())) {
+            current = current.getChild(segment);
+            if (current == null) {
+                return null;
+            }
+        }
+        return current;
     }
 }

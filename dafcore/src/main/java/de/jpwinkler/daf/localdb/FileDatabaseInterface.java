@@ -123,19 +123,6 @@ class FileDatabaseInterface implements DatabaseInterface {
         return result;
     }
 
-    @Override
-    public DoorsTreeNode getNode(final String path) {
-        final List<String> pathSegments = Arrays.asList(path.split("/")).stream().filter(s -> !s.isEmpty()).collect(Collectors.toList());
-        DoorsTreeNode current = getDatabaseObject().getRoot();
-        for (final String segment : pathSegments.subList(0, pathSegments.size())) {
-            current = current.getChild(segment);
-            if (current == null) {
-                return null;
-            }
-        }
-        return current;
-    }
-
     private Path ensureCsvFilesystemPath(final DoorsModuleVersion v) {
         try {
             Path p = Paths.get(databaseRoot.toString(), v.getModule().getParent().getFullName(), v.getModule().getName() + "_" + new SimpleDateFormat("yyyyMMdd").format(v.getDate()) + ".csv");
