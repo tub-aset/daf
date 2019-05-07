@@ -8,6 +8,7 @@ import de.jpwinkler.daf.model.DoorsSystemAttributes;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -270,14 +271,22 @@ public abstract class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container imp
 				/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
-	public DoorsTreeNode copyFrom(DoorsTreeNode node) {
-		// TODO: implement this method
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
+	public boolean canCopyFrom(DoorsTreeNode node) {
+		return Arrays.stream(this.getClass().getInterfaces())
+                    .filter(i -> DoorsTreeNode.class.isAssignableFrom(i))
+                    .filter(i -> !i.isAssignableFrom(node.getClass()))
+                    .findAny().isEmpty();
 	}
+				/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	@Override
+	public abstract DoorsTreeNode copyFrom(DoorsTreeNode node);
 
 				/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -436,6 +445,8 @@ public abstract class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container imp
 				return hasTag((String)arguments.get(0));
 			case DoorsPackage.DOORS_TREE_NODE___HAS_TAG__PATTERN:
 				return hasTag((Pattern)arguments.get(0));
+			case DoorsPackage.DOORS_TREE_NODE___CAN_COPY_FROM__DOORSTREENODE:
+				return canCopyFrom((DoorsTreeNode)arguments.get(0));
 			case DoorsPackage.DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE:
 				return copyFrom((DoorsTreeNode)arguments.get(0));
 		}

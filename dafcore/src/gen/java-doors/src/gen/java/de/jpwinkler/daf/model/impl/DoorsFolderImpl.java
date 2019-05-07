@@ -4,6 +4,7 @@ package de.jpwinkler.daf.model.impl;
 
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
+import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsPackage;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.lang.reflect.InvocationTargetException;
@@ -50,6 +51,19 @@ public class DoorsFolderImpl extends DoorsTreeNodeImpl implements DoorsFolder {
             }
         }
         return null;
+    }
+    
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated NOT
+     */
+    @Override
+    public DoorsObject copyFrom(DoorsTreeNode newModule) {
+        if (!super.canCopyFrom(newModule)) {
+            throw new IllegalArgumentException();
+        }
+
+        throw new UnsupportedOperationException();
     }
 
     /**

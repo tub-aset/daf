@@ -125,6 +125,10 @@
             <eParameters name="pattern" eType="#//Pattern"/>
         </eOperations>
         
+        <eOperations name="canCopyFrom" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+            <eParameters name="node" eType="#//DoorsTreeNode"/>
+        </eOperations>
+        
         <eOperations name="copyFrom" eType="#//DoorsTreeNode">
             <eParameters name="node" eType="#//DoorsTreeNode"/>
         </eOperations>

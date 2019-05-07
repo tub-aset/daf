@@ -8,6 +8,7 @@ import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsPackage;
 import de.jpwinkler.daf.model.DoorsSystemAttributes;
+import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.List;
@@ -247,6 +248,19 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
             }
         }
         return latest;
+    }
+    
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated NOT
+     */
+    @Override
+    public DoorsObject copyFrom(DoorsTreeNode newModule) {
+        if (!super.canCopyFrom(newModule)) {
+            throw new IllegalArgumentException();
+        }
+
+        throw new UnsupportedOperationException();
     }
 
     /**

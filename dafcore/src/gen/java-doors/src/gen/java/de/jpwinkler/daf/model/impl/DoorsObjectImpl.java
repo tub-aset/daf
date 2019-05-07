@@ -2,6 +2,8 @@
  */
 package de.jpwinkler.daf.model.impl;
 
+import de.jpwinkler.daf.model.DoorsFactory;
+import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsPackage;
@@ -19,6 +21,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
@@ -45,6 +48,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * @generated
  */
 public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
+
     /**
 	 * The default value of the '{@link #getObjectIdentifier() <em>Object Identifier</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -156,24 +160,21 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
     protected DoorsModule module;
 
     /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated
+     */
     protected DoorsObjectImpl() {
 		super();
 	}
 
     /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated
+     */
     @Override
     protected EClass eStaticClass() {
 		return DoorsPackage.Literals.DOORS_OBJECT;
 	}
-
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -344,10 +345,9 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
     }
 
     /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated
+     */
     @Override
     public List<Link> getOutgoingLinks() {
 		if (outgoingLinks == null) {
@@ -357,10 +357,9 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 	}
 
     /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated
+     */
     @Override
     public List<ResolvedLink> getIncomingLinks() {
 		if (incomingLinks == null) {
@@ -370,10 +369,9 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 	}
 
     /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated
+     */
     @Override
     public DoorsModule getModule() {
 		if (module != null && ((EObject)module).eIsProxy()) {
@@ -388,19 +386,17 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 	}
 
     /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated
+     */
     public DoorsModule basicGetModule() {
 		return module;
 	}
 
     /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated
+     */
     @Override
     public void setModule(DoorsModule newModule) {
 		DoorsModule oldModule = module;
@@ -410,20 +406,43 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 	}
 
     /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated NOT
+     */
+    @Override
+    public DoorsObject copyFrom(DoorsTreeNode newModule) {
+        if (!super.canCopyFrom(newModule)) {
+            throw new IllegalArgumentException();
+        }
+        
+        this.attributes.clear();
+        this.children.clear();
+        
+        this.attributes.putAll(newModule.getAttributes());
+        newModule.getChildren().stream()
+                .map(c -> DoorsFactory.eINSTANCE.createDoorsObject().copyFrom(c))
+                .forEach(c -> this.children.add(c));
+        
+        // TODO: handle links
+        this.incomingLinks.clear();
+        this.outgoingLinks.clear();
+
+        return this;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated
+     */
     @Override
     public boolean isHeading() {
 		return getObjectHeading() != null && !getObjectHeading().isEmpty();
 	}
 
     /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated
+     */
     @SuppressWarnings("unchecked")
     @Override
     public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
@@ -437,10 +456,9 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 	}
 
     /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated
+     */
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -453,10 +471,9 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 	}
 
     /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated
+     */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -488,10 +505,9 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 	}
 
     /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated
+     */
     @SuppressWarnings("unchecked")
     @Override
     public void eSet(int featureID, Object newValue) {
@@ -536,10 +552,9 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 	}
 
     /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated
+     */
     @Override
     public void eUnset(int featureID) {
 		switch (featureID) {
@@ -581,10 +596,9 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 	}
 
     /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated
+     */
     @Override
     public boolean eIsSet(int featureID) {
 		switch (featureID) {
@@ -615,9 +629,8 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 	}
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc --> @generated
+     */
     @Override
     public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {

@@ -290,8 +290,18 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getDoorsTreeNode__CopyFrom__DoorsTreeNode() {
+	public EOperation getDoorsTreeNode__CanCopyFrom__DoorsTreeNode() {
 		return doorsTreeNodeEClass.getEOperations().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getDoorsTreeNode__CopyFrom__DoorsTreeNode() {
+		return doorsTreeNodeEClass.getEOperations().get(4);
 	}
 
 	/**
@@ -783,6 +793,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___ACCEPT__DOORSTREENODEVISITOR);
 		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___HAS_TAG__STRING);
 		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___HAS_TAG__PATTERN);
+		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___CAN_COPY_FROM__DOORSTREENODE);
 		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE);
 
 		doorsDatabaseEClass = createEClass(DOORS_DATABASE);
@@ -893,6 +904,9 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 
 		op = initEOperation(getDoorsTreeNode__HasTag__Pattern(), ecorePackage.getEBoolean(), "hasTag", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getPattern(), "pattern", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = initEOperation(getDoorsTreeNode__CanCopyFrom__DoorsTreeNode(), ecorePackage.getEBoolean(), "canCopyFrom", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getDoorsTreeNode(), "node", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		op = initEOperation(getDoorsTreeNode__CopyFrom__DoorsTreeNode(), this.getDoorsTreeNode(), "copyFrom", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getDoorsTreeNode(), "node", 0, 1, IS_UNIQUE, IS_ORDERED);

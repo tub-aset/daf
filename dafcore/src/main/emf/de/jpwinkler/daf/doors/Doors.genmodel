@@ -29,6 +29,9 @@
             -<genOperations ecoreOperation="Doors.ecore#//DoorsTreeNode/hasTag">
                 <genParameters ecoreParameter="Doors.ecore#//DoorsTreeNode/hasTag.1/pattern"/>
             </genOperations>
+            -<genOperations ecoreOperation="Doors.ecore#//DoorsTreeNode/canCopyFrom">
+                <genParameters ecoreParameter="Doors.ecore#//DoorsTreeNode/copyFrom/node"/>
+            </genOperations>
             -<genOperations ecoreOperation="Doors.ecore#//DoorsTreeNode/copyFrom">
                 <genParameters ecoreParameter="Doors.ecore#//DoorsTreeNode/copyFrom/node"/>
             </genOperations>

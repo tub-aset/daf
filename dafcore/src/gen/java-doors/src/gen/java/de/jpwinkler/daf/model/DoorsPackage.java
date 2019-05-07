@@ -159,13 +159,22 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_TREE_NODE___HAS_TAG__PATTERN = 2;
 
 	/**
+	 * The operation id for the '<em>Can Copy From</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TREE_NODE___CAN_COPY_FROM__DOORSTREENODE = 3;
+
+	/**
 	 * The operation id for the '<em>Copy From</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE = 3;
+	int DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE = 4;
 
 	/**
 	 * The number of operations of the '<em>Tree Node</em>' class.
@@ -174,7 +183,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_TREE_NODE_OPERATION_COUNT = 4;
+	int DOORS_TREE_NODE_OPERATION_COUNT = 5;
 
 	/**
 	 * The meta object id for the '{@link de.jpwinkler.daf.model.impl.DoorsDatabaseImpl <em>Database</em>}' class.
@@ -321,6 +330,15 @@ public interface DoorsPackage extends EPackage {
 	 * @ordered
 	 */
 	int DOORS_FOLDER___HAS_TAG__PATTERN = DOORS_TREE_NODE___HAS_TAG__PATTERN;
+
+	/**
+	 * The operation id for the '<em>Can Copy From</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_FOLDER___CAN_COPY_FROM__DOORSTREENODE = DOORS_TREE_NODE___CAN_COPY_FROM__DOORSTREENODE;
 
 	/**
 	 * The operation id for the '<em>Copy From</em>' operation.
@@ -548,6 +566,15 @@ public interface DoorsPackage extends EPackage {
 	 * @ordered
 	 */
 	int DOORS_MODULE___HAS_TAG__PATTERN = DOORS_TREE_NODE___HAS_TAG__PATTERN;
+
+	/**
+	 * The operation id for the '<em>Can Copy From</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_MODULE___CAN_COPY_FROM__DOORSTREENODE = DOORS_TREE_NODE___CAN_COPY_FROM__DOORSTREENODE;
 
 	/**
 	 * The operation id for the '<em>Copy From</em>' operation.
@@ -801,6 +828,15 @@ public interface DoorsPackage extends EPackage {
 	 * @ordered
 	 */
 	int DOORS_OBJECT___HAS_TAG__PATTERN = DOORS_TREE_NODE___HAS_TAG__PATTERN;
+
+	/**
+	 * The operation id for the '<em>Can Copy From</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_OBJECT___CAN_COPY_FROM__DOORSTREENODE = DOORS_TREE_NODE___CAN_COPY_FROM__DOORSTREENODE;
 
 	/**
 	 * The operation id for the '<em>Copy From</em>' operation.
@@ -1151,6 +1187,16 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getDoorsTreeNode__HasTag__Pattern();
+
+	/**
+	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsTreeNode#canCopyFrom(de.jpwinkler.daf.model.DoorsTreeNode) <em>Can Copy From</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Can Copy From</em>' operation.
+	 * @see de.jpwinkler.daf.model.DoorsTreeNode#canCopyFrom(de.jpwinkler.daf.model.DoorsTreeNode)
+	 * @generated
+	 */
+	EOperation getDoorsTreeNode__CanCopyFrom__DoorsTreeNode();
 
 	/**
 	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsTreeNode#copyFrom(de.jpwinkler.daf.model.DoorsTreeNode) <em>Copy From</em>}' operation.
@@ -1746,6 +1792,14 @@ public interface DoorsPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation DOORS_TREE_NODE___HAS_TAG__PATTERN = eINSTANCE.getDoorsTreeNode__HasTag__Pattern();
+
+		/**
+		 * The meta object literal for the '<em><b>Can Copy From</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation DOORS_TREE_NODE___CAN_COPY_FROM__DOORSTREENODE = eINSTANCE.getDoorsTreeNode__CanCopyFrom__DoorsTreeNode();
 
 		/**
 		 * The meta object literal for the '<em><b>Copy From</b></em>' operation.

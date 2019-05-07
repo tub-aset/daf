@@ -154,6 +154,14 @@ public interface DoorsTreeNode {
 	 * @model
 	 * @generated
 	 */
+	boolean canCopyFrom(DoorsTreeNode node);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated
+	 */
 	DoorsTreeNode copyFrom(DoorsTreeNode node);
 
 } // DoorsTreeNode
