@@ -4,7 +4,7 @@ package de.jpwinkler.daf.model.impl;
 
 import de.jpwinkler.daf.csv.FindObjectVisitor;
 import de.jpwinkler.daf.model.AttributeDefinition;
-import de.jpwinkler.daf.model.DoorsDatabaseVersion;
+import de.jpwinkler.daf.model.DoorsModuleVersion;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsPackage;
@@ -117,7 +117,7 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
 	 * @generated
 	 * @ordered
 	 */
-    protected EList<DoorsDatabaseVersion> versions;
+    protected EList<DoorsModuleVersion> versions;
 
     /**
      * <!-- begin-user-doc -->
@@ -216,9 +216,9 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
      * <!-- end-user-doc --> @generated
      */
     @Override
-    public EList<DoorsDatabaseVersion> getVersions() {
+    public EList<DoorsModuleVersion> getVersions() {
 		if (versions == null) {
-			versions = new EObjectContainmentWithInverseEList<DoorsDatabaseVersion>(DoorsDatabaseVersion.class, this, DoorsPackage.DOORS_MODULE__VERSIONS, DoorsPackage.DOORS_DATABASE_VERSION__MODULE);
+			versions = new EObjectContainmentWithInverseEList<DoorsModuleVersion>(DoorsModuleVersion.class, this, DoorsPackage.DOORS_MODULE__VERSIONS, DoorsPackage.DOORS_MODULE_VERSION__MODULE);
 		}
 		return versions;
 	}
@@ -255,9 +255,9 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
      * <!-- end-user-doc --> @generated NOT
      */
     @Override
-    public DoorsDatabaseVersion getLatestVersion() {
-        DoorsDatabaseVersion latest = null;
-        for (final DoorsDatabaseVersion version : getVersions()) {
+    public DoorsModuleVersion getLatestVersion() {
+        DoorsModuleVersion latest = null;
+        for (final DoorsModuleVersion version : getVersions()) {
             if (latest == null || latest.getDate().before(version.getDate())) {
                 latest = version;
             }
@@ -338,7 +338,7 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
 				return;
 			case DoorsPackage.DOORS_MODULE__VERSIONS:
 				getVersions().clear();
-				getVersions().addAll((Collection<? extends DoorsDatabaseVersion>)newValue);
+				getVersions().addAll((Collection<? extends DoorsModuleVersion>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);

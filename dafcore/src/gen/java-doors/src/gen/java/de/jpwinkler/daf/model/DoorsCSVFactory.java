@@ -91,7 +91,7 @@ public interface DoorsCSVFactory extends EFactory {
 	 * @return a new object of class '<em>Doors Database Version</em>'.
 	 * @generated
 	 */
-	DoorsDatabaseVersion createDoorsDatabaseVersion();
+	DoorsModuleVersion createDoorsModuleVersion();
 
 	/**
 	 * Returns a new object of class '<em>Attribute Definition</em>'.

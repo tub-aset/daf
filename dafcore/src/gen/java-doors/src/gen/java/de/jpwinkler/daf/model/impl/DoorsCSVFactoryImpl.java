@@ -58,7 +58,7 @@ public class DoorsCSVFactoryImpl extends EFactoryImpl implements DoorsCSVFactory
 			case DoorsCSVPackage.DOORS_TREE_NODE: return createDoorsTreeNode();
 			case DoorsCSVPackage.DOORS_DB: return createDoorsDB();
 			case DoorsCSVPackage.DOORS_FOLDER: return createDoorsFolder();
-			case DoorsCSVPackage.DOORS_DATABASE_VERSION: return createDoorsDatabaseVersion();
+			case DoorsCSVPackage.DOORS_DATABASE_VERSION: return createDoorsModuleVersion();
 			case DoorsCSVPackage.DOORS_MODULE: return createDoorsModule();
 			case DoorsCSVPackage.DOORS_OBJECT: return createDoorsObject();
 			case DoorsCSVPackage.STRING_TO_STRING_MAP: return (EObject)createStringToStringMap();
@@ -193,9 +193,9 @@ public class DoorsCSVFactoryImpl extends EFactoryImpl implements DoorsCSVFactory
 	 * @generated
 	 */
 	@Override
-	public DoorsDatabaseVersion createDoorsDatabaseVersion() {
-		DoorsDatabaseVersionImpl doorsDatabaseVersion = new DoorsDatabaseVersionImpl();
-		return doorsDatabaseVersion;
+	public DoorsModuleVersion createDoorsModuleVersion() {
+		DoorsModuleVersionImpl DoorsModuleVersion = new DoorsModuleVersionImpl();
+		return DoorsModuleVersion;
 	}
 
 	/**

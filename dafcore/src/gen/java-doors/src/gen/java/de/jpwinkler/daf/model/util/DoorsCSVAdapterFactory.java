@@ -78,8 +78,8 @@ public class DoorsCSVAdapterFactory extends AdapterFactoryImpl {
 				return createDoorsFolderAdapter();
 			}
 			@Override
-			public Adapter caseDoorsDatabaseVersion(DoorsDatabaseVersion object) {
-				return createDoorsDatabaseVersionAdapter();
+			public Adapter caseDoorsModuleVersion(DoorsModuleVersion object) {
+				return createDoorsModuleVersionAdapter();
 			}
 			@Override
 			public Adapter caseDoorsModule(DoorsModule object) {
@@ -256,16 +256,16 @@ public class DoorsCSVAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link de.jpwinkler.daf.model.DoorsDatabaseVersion <em>Doors Database Version</em>}'.
+	 * Creates a new adapter for an object of class '{@link de.jpwinkler.daf.model.DoorsModuleVersion <em>Doors Database Version</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see de.jpwinkler.daf.model.DoorsDatabaseVersion
+	 * @see de.jpwinkler.daf.model.DoorsModuleVersion
 	 * @generated
 	 */
-	public Adapter createDoorsDatabaseVersionAdapter() {
+	public Adapter createDoorsModuleVersionAdapter() {
 		return null;
 	}
 

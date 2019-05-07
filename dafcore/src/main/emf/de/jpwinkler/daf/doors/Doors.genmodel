@@ -46,10 +46,10 @@
             </genOperations>
         </genClasses>
         
-        <genClasses ecoreClass="Doors.ecore#//DoorsDatabaseVersion">
-            <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Doors.ecore#//DoorsDatabaseVersion/module"/>
-            <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//DoorsDatabaseVersion/date"/>
-            <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Doors.ecore#//DoorsDatabaseVersion/attributes"/>
+        <genClasses ecoreClass="Doors.ecore#//DoorsModuleVersion">
+            <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Doors.ecore#//DoorsModuleVersion/module"/>
+            <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//DoorsModuleVersion/date"/>
+            <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Doors.ecore#//DoorsModuleVersion/attributes"/>
         </genClasses>
         
         <genClasses ecoreClass="Doors.ecore#//DoorsModule">

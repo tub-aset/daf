@@ -84,9 +84,9 @@ public class DoorsSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case DoorsPackage.DOORS_DATABASE_VERSION: {
-				DoorsDatabaseVersion doorsDatabaseVersion = (DoorsDatabaseVersion)theEObject;
-				T result = caseDoorsDatabaseVersion(doorsDatabaseVersion);
+			case DoorsPackage.DOORS_MODULE_VERSION: {
+				DoorsModuleVersion doorsModuleVersion = (DoorsModuleVersion)theEObject;
+				T result = caseDoorsModuleVersion(doorsModuleVersion);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -186,17 +186,17 @@ public class DoorsSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Database Version</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Module Version</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Database Version</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Module Version</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseDoorsDatabaseVersion(DoorsDatabaseVersion object) {
+	public T caseDoorsModuleVersion(DoorsModuleVersion object) {
 		return null;
 	}
 

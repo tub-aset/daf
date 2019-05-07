@@ -8,23 +8,23 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Doors Database Version</b></em>'.
+ * A representation of the model object '<em><b>Module Version</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link de.jpwinkler.daf.model.DoorsDatabaseVersion#getModule <em>Module</em>}</li>
- *   <li>{@link de.jpwinkler.daf.model.DoorsDatabaseVersion#getDate <em>Date</em>}</li>
- *   <li>{@link de.jpwinkler.daf.model.DoorsDatabaseVersion#getAttributes <em>Attributes</em>}</li>
+ *   <li>{@link de.jpwinkler.daf.model.DoorsModuleVersion#getModule <em>Module</em>}</li>
+ *   <li>{@link de.jpwinkler.daf.model.DoorsModuleVersion#getDate <em>Date</em>}</li>
+ *   <li>{@link de.jpwinkler.daf.model.DoorsModuleVersion#getAttributes <em>Attributes</em>}</li>
  * </ul>
  *
- * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsDatabaseVersion()
+ * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsModuleVersion()
  * @model
  * @generated
  */
-public interface DoorsDatabaseVersion extends EObject {
+public interface DoorsModuleVersion extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Module</b></em>' container reference.
 	 * It is bidirectional and its opposite is '{@link de.jpwinkler.daf.model.DoorsModule#getVersions <em>Versions</em>}'.
@@ -32,7 +32,7 @@ public interface DoorsDatabaseVersion extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Module</em>' container reference.
 	 * @see #setModule(DoorsModule)
-	 * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsDatabaseVersion_Module()
+	 * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsModuleVersion_Module()
 	 * @see de.jpwinkler.daf.model.DoorsModule#getVersions
 	 * @model opposite="versions" transient="false"
 	 * @generated
@@ -40,7 +40,7 @@ public interface DoorsDatabaseVersion extends EObject {
 	DoorsModule getModule();
 
 	/**
-	 * Sets the value of the '{@link de.jpwinkler.daf.model.DoorsDatabaseVersion#getModule <em>Module</em>}' container reference.
+	 * Sets the value of the '{@link de.jpwinkler.daf.model.DoorsModuleVersion#getModule <em>Module</em>}' container reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Module</em>' container reference.
@@ -55,14 +55,14 @@ public interface DoorsDatabaseVersion extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Date</em>' attribute.
 	 * @see #setDate(Date)
-	 * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsDatabaseVersion_Date()
+	 * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsModuleVersion_Date()
 	 * @model
 	 * @generated
 	 */
 	Date getDate();
 
 	/**
-	 * Sets the value of the '{@link de.jpwinkler.daf.model.DoorsDatabaseVersion#getDate <em>Date</em>}' attribute.
+	 * Sets the value of the '{@link de.jpwinkler.daf.model.DoorsModuleVersion#getDate <em>Date</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Date</em>' attribute.
@@ -78,10 +78,10 @@ public interface DoorsDatabaseVersion extends EObject {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Attributes</em>' map.
-	 * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsDatabaseVersion_Attributes()
+	 * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsModuleVersion_Attributes()
 	 * @model mapType="de.jpwinkler.daf.model.StringToStringMap&lt;org.eclipse.emf.ecore.EString, org.eclipse.emf.ecore.EString&gt;"
 	 * @generated
 	 */
 	EMap<String, String> getAttributes();
 
-} // DoorsDatabaseVersion
+} // DoorsModuleVersion

@@ -4,7 +4,7 @@ package de.jpwinkler.daf.model.impl;
 
 import de.jpwinkler.daf.model.AttributeDefinition;
 import de.jpwinkler.daf.model.DoorsDB;
-import de.jpwinkler.daf.model.DoorsDatabaseVersion;
+import de.jpwinkler.daf.model.DoorsModuleVersion;
 import de.jpwinkler.daf.model.DoorsFactory;
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
@@ -58,7 +58,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass doorsDatabaseVersionEClass = null;
+	private EClass doorsModuleVersionEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -350,8 +350,8 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
-	public EClass getDoorsDatabaseVersion() {
-		return doorsDatabaseVersionEClass;
+	public EClass getDoorsModuleVersion() {
+		return doorsModuleVersionEClass;
 	}
 
 	/**
@@ -360,8 +360,8 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getDoorsDatabaseVersion_Module() {
-		return (EReference)doorsDatabaseVersionEClass.getEStructuralFeatures().get(0);
+	public EReference getDoorsModuleVersion_Module() {
+		return (EReference)doorsModuleVersionEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -370,8 +370,8 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getDoorsDatabaseVersion_Date() {
-		return (EAttribute)doorsDatabaseVersionEClass.getEStructuralFeatures().get(1);
+	public EAttribute getDoorsModuleVersion_Date() {
+		return (EAttribute)doorsModuleVersionEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -380,8 +380,8 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getDoorsDatabaseVersion_Attributes() {
-		return (EReference)doorsDatabaseVersionEClass.getEStructuralFeatures().get(2);
+	public EReference getDoorsModuleVersion_Attributes() {
+		return (EReference)doorsModuleVersionEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -792,10 +792,10 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		createEOperation(doorsFolderEClass, DOORS_FOLDER___GET_FOLDER__STRING);
 		createEOperation(doorsFolderEClass, DOORS_FOLDER___GET_MODULE__STRING);
 
-		doorsDatabaseVersionEClass = createEClass(DOORS_DATABASE_VERSION);
-		createEReference(doorsDatabaseVersionEClass, DOORS_DATABASE_VERSION__MODULE);
-		createEAttribute(doorsDatabaseVersionEClass, DOORS_DATABASE_VERSION__DATE);
-		createEReference(doorsDatabaseVersionEClass, DOORS_DATABASE_VERSION__ATTRIBUTES);
+		doorsModuleVersionEClass = createEClass(DOORS_MODULE_VERSION);
+		createEReference(doorsModuleVersionEClass, DOORS_MODULE_VERSION__MODULE);
+		createEAttribute(doorsModuleVersionEClass, DOORS_MODULE_VERSION__DATE);
+		createEReference(doorsModuleVersionEClass, DOORS_MODULE_VERSION__ATTRIBUTES);
 
 		doorsModuleEClass = createEClass(DOORS_MODULE);
 		createEAttribute(doorsModuleEClass, DOORS_MODULE__PATH);
@@ -909,17 +909,17 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		op = initEOperation(getDoorsFolder__GetModule__String(), this.getDoorsModule(), "getModule", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEString(), "name", 0, 1, IS_UNIQUE, IS_ORDERED);
 
-		initEClass(doorsDatabaseVersionEClass, DoorsDatabaseVersion.class, "DoorsDatabaseVersion", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getDoorsDatabaseVersion_Module(), this.getDoorsModule(), this.getDoorsModule_Versions(), "module", null, 0, 1, DoorsDatabaseVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getDoorsDatabaseVersion_Date(), ecorePackage.getEDate(), "date", null, 0, 1, DoorsDatabaseVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getDoorsDatabaseVersion_Attributes(), this.getStringToStringMap(), null, "attributes", null, 0, -1, DoorsDatabaseVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(doorsModuleVersionEClass, DoorsModuleVersion.class, "DoorsModuleVersion", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getDoorsModuleVersion_Module(), this.getDoorsModule(), this.getDoorsModule_Versions(), "module", null, 0, 1, DoorsModuleVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getDoorsModuleVersion_Date(), ecorePackage.getEDate(), "date", null, 0, 1, DoorsModuleVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getDoorsModuleVersion_Attributes(), this.getStringToStringMap(), null, "attributes", null, 0, -1, DoorsModuleVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(doorsModuleEClass, DoorsModule.class, "DoorsModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getDoorsModule_Path(), ecorePackage.getEString(), "path", null, 0, 1, DoorsModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getDoorsModule_Url(), ecorePackage.getEString(), "url", null, 0, 1, DoorsModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getDoorsModule_AttributeDefinitions(), this.getAttributeDefinition(), null, "attributeDefinitions", null, 0, -1, DoorsModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getDoorsModule_View(), ecorePackage.getEString(), "view", null, 0, 1, DoorsModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getDoorsModule_Versions(), this.getDoorsDatabaseVersion(), this.getDoorsDatabaseVersion_Module(), "versions", null, 0, -1, DoorsModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getDoorsModule_Versions(), this.getDoorsModuleVersion(), this.getDoorsModuleVersion_Module(), "versions", null, 0, -1, DoorsModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		op = initEOperation(getDoorsModule__FindAttributeDefinition__String(), this.getAttributeDefinition(), "findAttributeDefinition", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEString(), "name", 0, 1, IS_UNIQUE, IS_ORDERED);
@@ -927,7 +927,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		op = initEOperation(getDoorsModule__FindObject__String(), this.getDoorsObject(), "findObject", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEString(), "objectIdentifier", 0, 1, IS_UNIQUE, IS_ORDERED);
 
-		initEOperation(getDoorsModule__GetLatestVersion(), this.getDoorsDatabaseVersion(), "getLatestVersion", 0, 1, IS_UNIQUE, IS_ORDERED);
+		initEOperation(getDoorsModule__GetLatestVersion(), this.getDoorsModuleVersion(), "getLatestVersion", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(doorsObjectEClass, DoorsObject.class, "DoorsObject", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getDoorsObject_ObjectIdentifier(), ecorePackage.getEString(), "objectIdentifier", "", 0, 1, DoorsObject.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);

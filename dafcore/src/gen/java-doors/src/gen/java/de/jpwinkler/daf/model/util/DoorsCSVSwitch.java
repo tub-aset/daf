@@ -85,8 +85,8 @@ public class DoorsCSVSwitch<T> extends Switch<T> {
 				return result;
 			}
 			case DoorsCSVPackage.DOORS_DATABASE_VERSION: {
-				DoorsDatabaseVersion doorsDatabaseVersion = (DoorsDatabaseVersion)theEObject;
-				T result = caseDoorsDatabaseVersion(doorsDatabaseVersion);
+				DoorsModuleVersion DoorsModuleVersion = (DoorsModuleVersion)theEObject;
+				T result = caseDoorsModuleVersion(DoorsModuleVersion);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -286,7 +286,7 @@ public class DoorsCSVSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseDoorsDatabaseVersion(DoorsDatabaseVersion object) {
+	public T caseDoorsModuleVersion(DoorsModuleVersion object) {
 		return null;
 	}
 

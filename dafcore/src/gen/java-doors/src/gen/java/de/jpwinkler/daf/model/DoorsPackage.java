@@ -341,14 +341,14 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_FOLDER_OPERATION_COUNT = DOORS_TREE_NODE_OPERATION_COUNT + 2;
 
 	/**
-	 * The meta object id for the '{@link de.jpwinkler.daf.model.impl.DoorsDatabaseVersionImpl <em>Database Version</em>}' class.
+	 * The meta object id for the '{@link de.jpwinkler.daf.model.impl.DoorsModuleVersionImpl <em>Module Version</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see de.jpwinkler.daf.model.impl.DoorsDatabaseVersionImpl
-	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getDoorsDatabaseVersion()
+	 * @see de.jpwinkler.daf.model.impl.DoorsModuleVersionImpl
+	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getDoorsModuleVersion()
 	 * @generated
 	 */
-	int DOORS_DATABASE_VERSION = 3;
+	int DOORS_MODULE_VERSION = 3;
 
 	/**
 	 * The feature id for the '<em><b>Module</b></em>' container reference.
@@ -357,7 +357,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_DATABASE_VERSION__MODULE = 0;
+	int DOORS_MODULE_VERSION__MODULE = 0;
 
 	/**
 	 * The feature id for the '<em><b>Date</b></em>' attribute.
@@ -366,7 +366,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_DATABASE_VERSION__DATE = 1;
+	int DOORS_MODULE_VERSION__DATE = 1;
 
 	/**
 	 * The feature id for the '<em><b>Attributes</b></em>' map.
@@ -375,25 +375,25 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_DATABASE_VERSION__ATTRIBUTES = 2;
+	int DOORS_MODULE_VERSION__ATTRIBUTES = 2;
 
 	/**
-	 * The number of structural features of the '<em>Database Version</em>' class.
+	 * The number of structural features of the '<em>Module Version</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_DATABASE_VERSION_FEATURE_COUNT = 3;
+	int DOORS_MODULE_VERSION_FEATURE_COUNT = 3;
 
 	/**
-	 * The number of operations of the '<em>Database Version</em>' class.
+	 * The number of operations of the '<em>Module Version</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_DATABASE_VERSION_OPERATION_COUNT = 0;
+	int DOORS_MODULE_VERSION_OPERATION_COUNT = 0;
 
 	/**
 	 * The meta object id for the '{@link de.jpwinkler.daf.model.impl.DoorsModuleImpl <em>Module</em>}' class.
@@ -1204,47 +1204,47 @@ public interface DoorsPackage extends EPackage {
 	EOperation getDoorsFolder__GetModule__String();
 
 	/**
-	 * Returns the meta object for class '{@link de.jpwinkler.daf.model.DoorsDatabaseVersion <em>Database Version</em>}'.
+	 * Returns the meta object for class '{@link de.jpwinkler.daf.model.DoorsModuleVersion <em>Module Version</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Database Version</em>'.
-	 * @see de.jpwinkler.daf.model.DoorsDatabaseVersion
+	 * @return the meta object for class '<em>Module Version</em>'.
+	 * @see de.jpwinkler.daf.model.DoorsModuleVersion
 	 * @generated
 	 */
-	EClass getDoorsDatabaseVersion();
+	EClass getDoorsModuleVersion();
 
 	/**
-	 * Returns the meta object for the container reference '{@link de.jpwinkler.daf.model.DoorsDatabaseVersion#getModule <em>Module</em>}'.
+	 * Returns the meta object for the container reference '{@link de.jpwinkler.daf.model.DoorsModuleVersion#getModule <em>Module</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the container reference '<em>Module</em>'.
-	 * @see de.jpwinkler.daf.model.DoorsDatabaseVersion#getModule()
-	 * @see #getDoorsDatabaseVersion()
+	 * @see de.jpwinkler.daf.model.DoorsModuleVersion#getModule()
+	 * @see #getDoorsModuleVersion()
 	 * @generated
 	 */
-	EReference getDoorsDatabaseVersion_Module();
+	EReference getDoorsModuleVersion_Module();
 
 	/**
-	 * Returns the meta object for the attribute '{@link de.jpwinkler.daf.model.DoorsDatabaseVersion#getDate <em>Date</em>}'.
+	 * Returns the meta object for the attribute '{@link de.jpwinkler.daf.model.DoorsModuleVersion#getDate <em>Date</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Date</em>'.
-	 * @see de.jpwinkler.daf.model.DoorsDatabaseVersion#getDate()
-	 * @see #getDoorsDatabaseVersion()
+	 * @see de.jpwinkler.daf.model.DoorsModuleVersion#getDate()
+	 * @see #getDoorsModuleVersion()
 	 * @generated
 	 */
-	EAttribute getDoorsDatabaseVersion_Date();
+	EAttribute getDoorsModuleVersion_Date();
 
 	/**
-	 * Returns the meta object for the map '{@link de.jpwinkler.daf.model.DoorsDatabaseVersion#getAttributes <em>Attributes</em>}'.
+	 * Returns the meta object for the map '{@link de.jpwinkler.daf.model.DoorsModuleVersion#getAttributes <em>Attributes</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the map '<em>Attributes</em>'.
-	 * @see de.jpwinkler.daf.model.DoorsDatabaseVersion#getAttributes()
-	 * @see #getDoorsDatabaseVersion()
+	 * @see de.jpwinkler.daf.model.DoorsModuleVersion#getAttributes()
+	 * @see #getDoorsModuleVersion()
 	 * @generated
 	 */
-	EReference getDoorsDatabaseVersion_Attributes();
+	EReference getDoorsModuleVersion_Attributes();
 
 	/**
 	 * Returns the meta object for class '{@link de.jpwinkler.daf.model.DoorsModule <em>Module</em>}'.
@@ -1791,14 +1791,14 @@ public interface DoorsPackage extends EPackage {
 		EOperation DOORS_FOLDER___GET_MODULE__STRING = eINSTANCE.getDoorsFolder__GetModule__String();
 
 		/**
-		 * The meta object literal for the '{@link de.jpwinkler.daf.model.impl.DoorsDatabaseVersionImpl <em>Database Version</em>}' class.
+		 * The meta object literal for the '{@link de.jpwinkler.daf.model.impl.DoorsModuleVersionImpl <em>Module Version</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see de.jpwinkler.daf.model.impl.DoorsDatabaseVersionImpl
-		 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getDoorsDatabaseVersion()
+		 * @see de.jpwinkler.daf.model.impl.DoorsModuleVersionImpl
+		 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getDoorsModuleVersion()
 		 * @generated
 		 */
-		EClass DOORS_DATABASE_VERSION = eINSTANCE.getDoorsDatabaseVersion();
+		EClass DOORS_MODULE_VERSION = eINSTANCE.getDoorsModuleVersion();
 
 		/**
 		 * The meta object literal for the '<em><b>Module</b></em>' container reference feature.
@@ -1806,7 +1806,7 @@ public interface DoorsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference DOORS_DATABASE_VERSION__MODULE = eINSTANCE.getDoorsDatabaseVersion_Module();
+		EReference DOORS_MODULE_VERSION__MODULE = eINSTANCE.getDoorsModuleVersion_Module();
 
 		/**
 		 * The meta object literal for the '<em><b>Date</b></em>' attribute feature.
@@ -1814,7 +1814,7 @@ public interface DoorsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute DOORS_DATABASE_VERSION__DATE = eINSTANCE.getDoorsDatabaseVersion_Date();
+		EAttribute DOORS_MODULE_VERSION__DATE = eINSTANCE.getDoorsModuleVersion_Date();
 
 		/**
 		 * The meta object literal for the '<em><b>Attributes</b></em>' map feature.
@@ -1822,7 +1822,7 @@ public interface DoorsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference DOORS_DATABASE_VERSION__ATTRIBUTES = eINSTANCE.getDoorsDatabaseVersion_Attributes();
+		EReference DOORS_MODULE_VERSION__ATTRIBUTES = eINSTANCE.getDoorsModuleVersion_Attributes();
 
 		/**
 		 * The meta object literal for the '{@link de.jpwinkler.daf.model.impl.DoorsModuleImpl <em>Module</em>}' class.

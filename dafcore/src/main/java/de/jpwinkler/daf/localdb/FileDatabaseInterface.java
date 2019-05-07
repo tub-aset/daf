@@ -5,7 +5,7 @@ import de.jpwinkler.daf.csv.ModuleMetaDataParser;
 import de.jpwinkler.daf.model.DoorsCSVFactory;
 import de.jpwinkler.daf.model.DoorsCSVPackage;
 import de.jpwinkler.daf.model.DoorsDB;
-import de.jpwinkler.daf.model.DoorsDatabaseVersion;
+import de.jpwinkler.daf.model.DoorsModuleVersion;
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsTreeNode;
@@ -78,7 +78,7 @@ public class FileDatabaseInterface implements DatabaseInterface {
             dbModule.setName(newModule.getName());
         }
 
-        DoorsDatabaseVersion currentVersion = newModule.getLatestVersion();
+        DoorsModuleVersion currentVersion = newModule.getLatestVersion();
 
         Path csvPath = ensureCsvFilesystemPath(currentVersion);
         try ( ModuleCSVWriter writer = new ModuleCSVWriter(new FileOutputStream(csvPath.toFile()))) {
@@ -191,7 +191,7 @@ public class FileDatabaseInterface implements DatabaseInterface {
         return current.getModule(pathSegments.get(pathSegments.size() - 1));
     }
 
-    private Path ensureCsvFilesystemPath(final DoorsDatabaseVersion v) {
+    private Path ensureCsvFilesystemPath(final DoorsModuleVersion v) {
         try {
             Path p = Paths.get(databaseRoot.toString(), v.getModule().getParent().getFullName(), v.getModule().getName() + "_" + new SimpleDateFormat("yyyyMMdd").format(v.getDate()) + ".csv");
             Files.createDirectories(ensureCsvFilesystemPath(v).getParent());
@@ -201,7 +201,7 @@ public class FileDatabaseInterface implements DatabaseInterface {
         }
     }
 
-    private Path ensureMmdFilesystemPath(final DoorsDatabaseVersion version) {
+    private Path ensureMmdFilesystemPath(final DoorsModuleVersion version) {
         try {
             Path p = Paths.get(ensureCsvFilesystemPath(version).toString() + ".mmd");
             Files.createDirectories(ensureCsvFilesystemPath(version).getParent());

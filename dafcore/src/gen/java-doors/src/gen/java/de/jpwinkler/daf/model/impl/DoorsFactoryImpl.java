@@ -59,7 +59,7 @@ public class DoorsFactoryImpl extends EFactoryImpl implements DoorsFactory {
 			case DoorsPackage.DOORS_TREE_NODE: return createDoorsTreeNode();
 			case DoorsPackage.DOORS_DB: return createDoorsDB();
 			case DoorsPackage.DOORS_FOLDER: return createDoorsFolder();
-			case DoorsPackage.DOORS_DATABASE_VERSION: return createDoorsDatabaseVersion();
+			case DoorsPackage.DOORS_MODULE_VERSION: return createDoorsModuleVersion();
 			case DoorsPackage.DOORS_MODULE: return createDoorsModule();
 			case DoorsPackage.DOORS_OBJECT: return createDoorsObject();
 			case DoorsPackage.STRING_TO_STRING_MAP: return (EObject)createStringToStringMap();
@@ -144,9 +144,9 @@ public class DoorsFactoryImpl extends EFactoryImpl implements DoorsFactory {
 	 * @generated
 	 */
 	@Override
-	public DoorsDatabaseVersion createDoorsDatabaseVersion() {
-		DoorsDatabaseVersionImpl doorsDatabaseVersion = new DoorsDatabaseVersionImpl();
-		return doorsDatabaseVersion;
+	public DoorsModuleVersion createDoorsModuleVersion() {
+		DoorsModuleVersionImpl doorsModuleVersion = new DoorsModuleVersionImpl();
+		return doorsModuleVersion;
 	}
 
 	/**

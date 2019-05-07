@@ -2,7 +2,7 @@
  */
 package de.jpwinkler.daf.model.impl;
 
-import de.jpwinkler.daf.model.DoorsDatabaseVersion;
+import de.jpwinkler.daf.model.DoorsModuleVersion;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsPackage;
 import java.util.Date;
@@ -26,14 +26,14 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link de.jpwinkler.daf.model.impl.DoorsDatabaseVersionImpl#getModule <em>Module</em>}</li>
- *   <li>{@link de.jpwinkler.daf.model.impl.DoorsDatabaseVersionImpl#getDate <em>Date</em>}</li>
- *   <li>{@link de.jpwinkler.daf.model.impl.DoorsDatabaseVersionImpl#getAttributes <em>Attributes</em>}</li>
+ *   <li>{@link de.jpwinkler.daf.model.impl.DoorsModuleVersionImpl#getModule <em>Module</em>}</li>
+ *   <li>{@link de.jpwinkler.daf.model.impl.DoorsModuleVersionImpl#getDate <em>Date</em>}</li>
+ *   <li>{@link de.jpwinkler.daf.model.impl.DoorsModuleVersionImpl#getAttributes <em>Attributes</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class DoorsDatabaseVersionImpl extends MinimalEObjectImpl.Container implements DoorsDatabaseVersion {
+public class DoorsModuleVersionImpl extends MinimalEObjectImpl.Container implements DoorsModuleVersion {
 	/**
 	 * The default value of the '{@link #getDate() <em>Date</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -69,7 +69,7 @@ public class DoorsDatabaseVersionImpl extends MinimalEObjectImpl.Container imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected DoorsDatabaseVersionImpl() {
+	protected DoorsModuleVersionImpl() {
 		super();
 	}
 
@@ -80,7 +80,7 @@ public class DoorsDatabaseVersionImpl extends MinimalEObjectImpl.Container imple
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return DoorsPackage.Literals.DOORS_DATABASE_VERSION;
+		return DoorsPackage.Literals.DOORS_MODULE_VERSION;
 	}
 
 	/**
@@ -90,7 +90,7 @@ public class DoorsDatabaseVersionImpl extends MinimalEObjectImpl.Container imple
 	 */
 	@Override
 	public DoorsModule getModule() {
-		if (eContainerFeatureID() != DoorsPackage.DOORS_DATABASE_VERSION__MODULE) return null;
+		if (eContainerFeatureID() != DoorsPackage.DOORS_MODULE_VERSION__MODULE) return null;
 		return (DoorsModule)eInternalContainer();
 	}
 
@@ -100,7 +100,7 @@ public class DoorsDatabaseVersionImpl extends MinimalEObjectImpl.Container imple
 	 * @generated
 	 */
 	public NotificationChain basicSetModule(DoorsModule newModule, NotificationChain msgs) {
-		msgs = eBasicSetContainer((InternalEObject)newModule, DoorsPackage.DOORS_DATABASE_VERSION__MODULE, msgs);
+		msgs = eBasicSetContainer((InternalEObject)newModule, DoorsPackage.DOORS_MODULE_VERSION__MODULE, msgs);
 		return msgs;
 	}
 
@@ -111,7 +111,7 @@ public class DoorsDatabaseVersionImpl extends MinimalEObjectImpl.Container imple
 	 */
 	@Override
 	public void setModule(DoorsModule newModule) {
-		if (newModule != eInternalContainer() || (eContainerFeatureID() != DoorsPackage.DOORS_DATABASE_VERSION__MODULE && newModule != null)) {
+		if (newModule != eInternalContainer() || (eContainerFeatureID() != DoorsPackage.DOORS_MODULE_VERSION__MODULE && newModule != null)) {
 			if (EcoreUtil.isAncestor(this, newModule))
 				throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
 			NotificationChain msgs = null;
@@ -123,7 +123,7 @@ public class DoorsDatabaseVersionImpl extends MinimalEObjectImpl.Container imple
 			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DoorsPackage.DOORS_DATABASE_VERSION__MODULE, newModule, newModule));
+			eNotify(new ENotificationImpl(this, Notification.SET, DoorsPackage.DOORS_MODULE_VERSION__MODULE, newModule, newModule));
 	}
 
 	/**
@@ -146,7 +146,7 @@ public class DoorsDatabaseVersionImpl extends MinimalEObjectImpl.Container imple
 		Date oldDate = date;
 		date = newDate;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DoorsPackage.DOORS_DATABASE_VERSION__DATE, oldDate, date));
+			eNotify(new ENotificationImpl(this, Notification.SET, DoorsPackage.DOORS_MODULE_VERSION__DATE, oldDate, date));
 	}
 
 	/**
@@ -157,7 +157,7 @@ public class DoorsDatabaseVersionImpl extends MinimalEObjectImpl.Container imple
 	@Override
 	public EMap<String, String> getAttributes() {
 		if (attributes == null) {
-			attributes = new EcoreEMap<String,String>(DoorsPackage.Literals.STRING_TO_STRING_MAP, StringToStringMapImpl.class, this, DoorsPackage.DOORS_DATABASE_VERSION__ATTRIBUTES);
+			attributes = new EcoreEMap<String,String>(DoorsPackage.Literals.STRING_TO_STRING_MAP, StringToStringMapImpl.class, this, DoorsPackage.DOORS_MODULE_VERSION__ATTRIBUTES);
 		}
 		return attributes;
 	}
@@ -170,7 +170,7 @@ public class DoorsDatabaseVersionImpl extends MinimalEObjectImpl.Container imple
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case DoorsPackage.DOORS_DATABASE_VERSION__MODULE:
+			case DoorsPackage.DOORS_MODULE_VERSION__MODULE:
 				if (eInternalContainer() != null)
 					msgs = eBasicRemoveFromContainer(msgs);
 				return basicSetModule((DoorsModule)otherEnd, msgs);
@@ -186,9 +186,9 @@ public class DoorsDatabaseVersionImpl extends MinimalEObjectImpl.Container imple
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case DoorsPackage.DOORS_DATABASE_VERSION__MODULE:
+			case DoorsPackage.DOORS_MODULE_VERSION__MODULE:
 				return basicSetModule(null, msgs);
-			case DoorsPackage.DOORS_DATABASE_VERSION__ATTRIBUTES:
+			case DoorsPackage.DOORS_MODULE_VERSION__ATTRIBUTES:
 				return ((InternalEList<?>)getAttributes()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
@@ -202,7 +202,7 @@ public class DoorsDatabaseVersionImpl extends MinimalEObjectImpl.Container imple
 	@Override
 	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
 		switch (eContainerFeatureID()) {
-			case DoorsPackage.DOORS_DATABASE_VERSION__MODULE:
+			case DoorsPackage.DOORS_MODULE_VERSION__MODULE:
 				return eInternalContainer().eInverseRemove(this, DoorsPackage.DOORS_MODULE__VERSIONS, DoorsModule.class, msgs);
 		}
 		return super.eBasicRemoveFromContainerFeature(msgs);
@@ -216,11 +216,11 @@ public class DoorsDatabaseVersionImpl extends MinimalEObjectImpl.Container imple
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case DoorsPackage.DOORS_DATABASE_VERSION__MODULE:
+			case DoorsPackage.DOORS_MODULE_VERSION__MODULE:
 				return getModule();
-			case DoorsPackage.DOORS_DATABASE_VERSION__DATE:
+			case DoorsPackage.DOORS_MODULE_VERSION__DATE:
 				return getDate();
-			case DoorsPackage.DOORS_DATABASE_VERSION__ATTRIBUTES:
+			case DoorsPackage.DOORS_MODULE_VERSION__ATTRIBUTES:
 				if (coreType) return getAttributes();
 				else return getAttributes().map();
 		}
@@ -235,13 +235,13 @@ public class DoorsDatabaseVersionImpl extends MinimalEObjectImpl.Container imple
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case DoorsPackage.DOORS_DATABASE_VERSION__MODULE:
+			case DoorsPackage.DOORS_MODULE_VERSION__MODULE:
 				setModule((DoorsModule)newValue);
 				return;
-			case DoorsPackage.DOORS_DATABASE_VERSION__DATE:
+			case DoorsPackage.DOORS_MODULE_VERSION__DATE:
 				setDate((Date)newValue);
 				return;
-			case DoorsPackage.DOORS_DATABASE_VERSION__ATTRIBUTES:
+			case DoorsPackage.DOORS_MODULE_VERSION__ATTRIBUTES:
 				((EStructuralFeature.Setting)getAttributes()).set(newValue);
 				return;
 		}
@@ -256,13 +256,13 @@ public class DoorsDatabaseVersionImpl extends MinimalEObjectImpl.Container imple
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case DoorsPackage.DOORS_DATABASE_VERSION__MODULE:
+			case DoorsPackage.DOORS_MODULE_VERSION__MODULE:
 				setModule((DoorsModule)null);
 				return;
-			case DoorsPackage.DOORS_DATABASE_VERSION__DATE:
+			case DoorsPackage.DOORS_MODULE_VERSION__DATE:
 				setDate(DATE_EDEFAULT);
 				return;
-			case DoorsPackage.DOORS_DATABASE_VERSION__ATTRIBUTES:
+			case DoorsPackage.DOORS_MODULE_VERSION__ATTRIBUTES:
 				getAttributes().clear();
 				return;
 		}
@@ -277,11 +277,11 @@ public class DoorsDatabaseVersionImpl extends MinimalEObjectImpl.Container imple
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case DoorsPackage.DOORS_DATABASE_VERSION__MODULE:
+			case DoorsPackage.DOORS_MODULE_VERSION__MODULE:
 				return getModule() != null;
-			case DoorsPackage.DOORS_DATABASE_VERSION__DATE:
+			case DoorsPackage.DOORS_MODULE_VERSION__DATE:
 				return DATE_EDEFAULT == null ? date != null : !DATE_EDEFAULT.equals(date);
-			case DoorsPackage.DOORS_DATABASE_VERSION__ATTRIBUTES:
+			case DoorsPackage.DOORS_MODULE_VERSION__ATTRIBUTES:
 				return attributes != null && !attributes.isEmpty();
 		}
 		return super.eIsSet(featureID);
@@ -303,4 +303,4 @@ public class DoorsDatabaseVersionImpl extends MinimalEObjectImpl.Container imple
 		return result.toString();
 	}
 
-} //DoorsDatabaseVersionImpl
+} //DoorsModuleVersionImpl

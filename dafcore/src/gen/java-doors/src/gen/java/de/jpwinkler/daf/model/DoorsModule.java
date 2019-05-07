@@ -105,17 +105,17 @@ public interface DoorsModule extends DoorsTreeNode {
 
 	/**
 	 * Returns the value of the '<em><b>Versions</b></em>' containment reference list.
-	 * The list contents are of type {@link de.jpwinkler.daf.model.DoorsDatabaseVersion}.
-	 * It is bidirectional and its opposite is '{@link de.jpwinkler.daf.model.DoorsDatabaseVersion#getModule <em>Module</em>}'.
+	 * The list contents are of type {@link de.jpwinkler.daf.model.DoorsModuleVersion}.
+	 * It is bidirectional and its opposite is '{@link de.jpwinkler.daf.model.DoorsModuleVersion#getModule <em>Module</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Versions</em>' containment reference list.
 	 * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsModule_Versions()
-	 * @see de.jpwinkler.daf.model.DoorsDatabaseVersion#getModule
+	 * @see de.jpwinkler.daf.model.DoorsModuleVersion#getModule
 	 * @model opposite="module" containment="true"
 	 * @generated
 	 */
-	EList<DoorsDatabaseVersion> getVersions();
+	EList<DoorsModuleVersion> getVersions();
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -139,6 +139,6 @@ public interface DoorsModule extends DoorsTreeNode {
 	 * @model kind="operation"
 	 * @generated
 	 */
-	DoorsDatabaseVersion getLatestVersion();
+	DoorsModuleVersion getLatestVersion();
 
 } // DoorsModule
