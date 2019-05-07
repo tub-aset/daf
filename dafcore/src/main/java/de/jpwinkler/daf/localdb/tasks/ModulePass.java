@@ -1,13 +1,13 @@
 package de.jpwinkler.daf.localdb.tasks;
 
-import de.jpwinkler.daf.localdb.FileDatabaseInterface;
+import de.jpwinkler.daf.localdb.DatabaseInterface;
 import de.jpwinkler.daf.model.DoorsModule;
 
 public abstract class ModulePass {
 
     private boolean saveDatabase;
 
-    private FileDatabaseInterface databaseInterface;
+    private DatabaseInterface databaseInterface;
 
     public void preprocess() {
     }
@@ -31,11 +31,11 @@ public abstract class ModulePass {
         saveDatabase = true;
     }
 
-    public FileDatabaseInterface getDatabaseInterface() {
+    public DatabaseInterface getDatabaseInterface() {
         return databaseInterface;
     }
 
-    public void setDatabaseInterface(final FileDatabaseInterface databaseInterface) {
+    public void setDatabaseInterface(final DatabaseInterface databaseInterface) {
         this.databaseInterface = databaseInterface;
     }
 

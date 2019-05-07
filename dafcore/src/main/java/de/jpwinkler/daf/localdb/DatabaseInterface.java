@@ -6,12 +6,24 @@
 package de.jpwinkler.daf.localdb;
 
 import de.jpwinkler.daf.model.DoorsDatabase;
+import de.jpwinkler.daf.model.DoorsFactory;
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
+import de.jpwinkler.daf.model.DoorsPackage;
 import de.jpwinkler.daf.search.SearchExpression;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.List;
+import net.harawata.appdirs.AppDirsFactory;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 /**
  *
@@ -22,32 +34,65 @@ public interface DatabaseInterface {
     void flush() throws IOException;
 
     DoorsDatabase getDatabaseObject();
-    
-    
 
     DoorsModule getModule(final String path);
-    
-    List<DoorsModule> getModules();
-    
-    List<DoorsModule> getModules(final SearchExpression e);
-    
-    DoorsModule importModule(final DoorsModule module);
-    
-    void removeModule(final DoorsModule module);
-    
-    
-    
-    DoorsFolder getFolder(final String path);
-    
-    void removeFolder(final DoorsFolder folder);
-    
 
-    
+    List<DoorsModule> getModules();
+
+    List<DoorsModule> getModules(final SearchExpression e);
+
+    DoorsModule importModule(final DoorsModule module);
+
+    void removeModule(final DoorsModule module);
+
+    DoorsFolder getFolder(final String path);
+
+    void removeFolder(final DoorsFolder folder);
+
     Collection<String> getTags();
-    
+
     Collection<String> getTags(DoorsModule doorsModule);
-    
+
     void addTag(DoorsModule module, String value);
+
+    void removeTag(DoorsModule module, String tag);
+
+    public static DatabaseInterface openFileDatabase() throws IOException {
+        return openFileDatabase(getDefaultDatabaseDirectory(FileDatabaseInterface.class).resolve("db.DoorsDatabasemodel"));
+    }
+
+    public static DatabaseInterface openFileDatabase(Path databaseFile) throws IOException {
+        DoorsDatabase db;
+
+        databaseFile = databaseFile.toAbsolutePath();
+        if (Files.exists(databaseFile)) {
+            DoorsPackage.eINSTANCE.eClass();
+
+            final Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
+            reg.getExtensionToFactoryMap().put("DoorsDatabasemodel", new XMIResourceFactoryImpl());
+            final ResourceSet resourceSet = new ResourceSetImpl();
+            final Resource resource = resourceSet.getResource(URI.createFileURI(databaseFile.toString()), true);
+            db = (DoorsDatabase) resource.getContents().get(0);
+        } else {
+            db = DoorsFactory.eINSTANCE.createDoorsDatabase();
+            db.setRoot(DoorsFactory.eINSTANCE.createDoorsFolder());
+            final FileDatabaseInterface DoorsDatabaseInterface = new FileDatabaseInterface(databaseFile, db);
+            DoorsDatabaseInterface.flush();
+        }
+
+        return new FileDatabaseInterface(databaseFile, db);
+    }
     
-    void removeTag(DoorsModule module, String tag);    
+    private static Path getDefaultDatabaseDirectory(Class<? extends DatabaseInterface> implCls) throws FileNotFoundException, IOException {
+        String DoorsDatabasePath = System.getenv("DoorsDatabase_HOME");
+        if(DoorsDatabasePath == null) {
+            DoorsDatabasePath = AppDirsFactory.getInstance().getUserDataDir("dafcore", implCls.getSimpleName(), null);
+        }
+        
+        Path path = Paths.get(DoorsDatabasePath);
+        if (!Files.exists(path)) {
+            Files.createDirectory(path);
+        }
+        return path;
+    }
 }

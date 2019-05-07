@@ -1,6 +1,6 @@
 package de.jpwinkler.daf.localdb.tasks;
 
-import de.jpwinkler.daf.localdb.FileDatabaseInterface;
+import de.jpwinkler.daf.localdb.DatabaseInterface;
 import de.jpwinkler.daf.search.SearchExpression;
 import java.io.IOException;
 import java.util.List;
@@ -21,7 +21,7 @@ public class ModuleTask extends DoorsDatabaseTask {
 
     private final List<ModuleSource> sources;
 
-    public ModuleTask(final FileDatabaseInterface databaseInterface, final List<ModulePass> passes, final List<ModuleSource> sources, final SearchExpression filter, final boolean parallel) {
+    public ModuleTask(final DatabaseInterface databaseInterface, final List<ModulePass> passes, final List<ModuleSource> sources, final SearchExpression filter, final boolean parallel) {
         super(databaseInterface);
         this.sources = sources;
         this.passes = passes;

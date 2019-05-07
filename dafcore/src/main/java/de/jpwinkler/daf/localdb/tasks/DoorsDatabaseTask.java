@@ -1,17 +1,17 @@
 package de.jpwinkler.daf.localdb.tasks;
 
-import de.jpwinkler.daf.localdb.FileDatabaseInterface;
+import de.jpwinkler.daf.localdb.DatabaseInterface;
 
 public abstract class DoorsDatabaseTask {
 
-    private final FileDatabaseInterface databaseInterface;
+    private final DatabaseInterface databaseInterface;
 
-    public DoorsDatabaseTask(final FileDatabaseInterface databaseInterface) {
+    public DoorsDatabaseTask(final DatabaseInterface databaseInterface) {
         super();
         this.databaseInterface = databaseInterface;
     }
 
-    public FileDatabaseInterface getDatabaseInterface() {
+    public DatabaseInterface getDatabaseInterface() {
         return databaseInterface;
     }
 

@@ -30,39 +30,13 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
-public class FileDatabaseInterface implements DatabaseInterface {
+class FileDatabaseInterface implements DatabaseInterface {
 
     private final DoorsDatabase db;
     private final Path databaseFile;
     private final Path databaseRoot;
 
-    public static FileDatabaseInterface createOrOpenDB() throws IOException {
-        return createOrOpenDB(DatabaseInterfaceUtils.getDefaultDatabaseDirectory(FileDatabaseInterface.class).resolve("db.DoorsDatabasemodel"));
-    }
-
-    public static FileDatabaseInterface createOrOpenDB(Path databaseFile) throws IOException {
-        DoorsDatabase db;
-
-        databaseFile = databaseFile.toAbsolutePath();
-        if (Files.exists(databaseFile)) {
-            DoorsPackage.eINSTANCE.eClass();
-
-            final Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
-            reg.getExtensionToFactoryMap().put("DoorsDatabasemodel", new XMIResourceFactoryImpl());
-            final ResourceSet resourceSet = new ResourceSetImpl();
-            final Resource resource = resourceSet.getResource(URI.createFileURI(databaseFile.toString()), true);
-            db = (DoorsDatabase) resource.getContents().get(0);
-        } else {
-            db = DoorsFactory.eINSTANCE.createDoorsDatabase();
-            db.setRoot(DoorsFactory.eINSTANCE.createDoorsFolder());
-            final FileDatabaseInterface DoorsDatabaseInterface = new FileDatabaseInterface(databaseFile, db);
-            DoorsDatabaseInterface.flush();
-        }
-
-        return new FileDatabaseInterface(databaseFile, db);
-    }
-
-    private FileDatabaseInterface(final Path databaseFile, final DoorsDatabase db) throws IOException {
+    FileDatabaseInterface(final Path databaseFile, final DoorsDatabase db) throws IOException {
         this.databaseFile = databaseFile.toAbsolutePath();
         databaseRoot = databaseFile.toAbsolutePath().getParent();
         this.db = db;

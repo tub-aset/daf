@@ -1,6 +1,6 @@
 package de.jpwinkler.daf.localdb.tasks;
 
-import de.jpwinkler.daf.localdb.FileDatabaseInterface;
+import de.jpwinkler.daf.localdb.DatabaseInterface;
 import de.jpwinkler.daf.search.AndSearchExpression;
 import de.jpwinkler.daf.search.SearchExpression;
 import java.util.ArrayList;
@@ -12,10 +12,10 @@ public class ModuleTaskBuilder {
     private final List<ModuleSource> sources = new ArrayList<>();
     private final List<SearchExpression> filters = new ArrayList<>();
 
-    private final FileDatabaseInterface databaseInterface;
+    private final DatabaseInterface databaseInterface;
     private boolean parallel = false;
 
-    public ModuleTaskBuilder(final FileDatabaseInterface databaseInterface) {
+    public ModuleTaskBuilder(final DatabaseInterface databaseInterface) {
         super();
         this.databaseInterface = databaseInterface;
     }
