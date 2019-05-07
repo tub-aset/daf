@@ -125,7 +125,7 @@
             <eParameters name="pattern" eType="#//Pattern"/>
         </eOperations>
         
-        <eOperations name="copyFrom">
+        <eOperations name="copyFrom" eType="#//DoorsTreeNode">
             <eParameters name="node" eType="#//DoorsTreeNode"/>
         </eOperations>
     </eClassifiers>

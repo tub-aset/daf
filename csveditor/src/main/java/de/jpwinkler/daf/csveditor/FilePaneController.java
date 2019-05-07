@@ -497,7 +497,7 @@ public class FilePaneController implements FileStateController {
 
     @FXML
     public void editViewsClicked() {
-        EditViewsPaneController.asDialog(outlineTreeView.getScene().getWindow(), this.views, module.getAttributeDefinitions().stream().map(ad -> ad.getName()))
+        EditViewsPaneController.asDialog(outlineTreeView.getScene().getWindow(), this.views, module.getObjectAttributes().stream())
                 .showAndWait().ifPresent(r -> {
                     this.views.clear();
                     this.views.addAll(r);

@@ -273,7 +273,7 @@ public abstract class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 */
 	@Override
-	public void copyFrom(DoorsTreeNode node) {
+	public DoorsTreeNode copyFrom(DoorsTreeNode node) {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT
 		throw new UnsupportedOperationException();
@@ -437,8 +437,7 @@ public abstract class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container imp
 			case DoorsPackage.DOORS_TREE_NODE___HAS_TAG__PATTERN:
 				return hasTag((Pattern)arguments.get(0));
 			case DoorsPackage.DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE:
-				copyFrom((DoorsTreeNode)arguments.get(0));
-				return null;
+				return copyFrom((DoorsTreeNode)arguments.get(0));
 		}
 		return super.eInvoke(operationID, arguments);
 	}

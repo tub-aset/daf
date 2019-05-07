@@ -894,7 +894,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		op = initEOperation(getDoorsTreeNode__HasTag__Pattern(), ecorePackage.getEBoolean(), "hasTag", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getPattern(), "pattern", 0, 1, IS_UNIQUE, IS_ORDERED);
 
-		op = initEOperation(getDoorsTreeNode__CopyFrom__DoorsTreeNode(), null, "copyFrom", 0, 1, IS_UNIQUE, IS_ORDERED);
+		op = initEOperation(getDoorsTreeNode__CopyFrom__DoorsTreeNode(), this.getDoorsTreeNode(), "copyFrom", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getDoorsTreeNode(), "node", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(doorsDatabaseEClass, DoorsDatabase.class, "DoorsDatabase", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

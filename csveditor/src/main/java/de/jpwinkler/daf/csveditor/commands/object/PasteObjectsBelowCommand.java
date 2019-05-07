@@ -2,6 +2,7 @@ package de.jpwinkler.daf.csveditor.commands.object;
 
 import de.jpwinkler.daf.csveditor.CommandStack.AbstractCommand;
 import de.jpwinkler.daf.csveditor.commands.module.UpdateAction;
+import de.jpwinkler.daf.model.DoorsFactory;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import java.util.ArrayList;
@@ -33,7 +34,9 @@ public class PasteObjectsBelowCommand extends AbstractCommand {
 
     @Override
     public void apply() {
-        copiedObjects = objectsToCopy.stream().map(o -> EcoreUtil.copy(o)).collect(Collectors.toList());
+        copiedObjects = objectsToCopy.stream()
+                .map(o -> (DoorsObject) DoorsFactory.eINSTANCE.createDoorsObject().copyFrom(o))
+                .collect(Collectors.toList());
         redo();
     }
 
