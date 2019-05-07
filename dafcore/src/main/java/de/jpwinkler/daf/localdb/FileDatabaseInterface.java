@@ -113,19 +113,6 @@ class FileDatabaseInterface implements DatabaseInterface {
     }
 
     @Override
-    public List<DoorsModule> getModules() {
-        final List<DoorsModule> result = new ArrayList<>();
-        db.getRoot().accept(new DoorsTreeNodeVisitor() {
-
-            @Override
-            public void visitPostTraverse(final DoorsModule module) {
-                result.add(module);
-            }
-        });
-        return result;
-    }
-
-    @Override
     public List<DoorsModule> getModules(final SearchExpression e) {
         final List<DoorsModule> result = new ArrayList<>();
         db.getRoot().accept(new DoorsTreeNodeVisitor() {
@@ -207,25 +194,4 @@ class FileDatabaseInterface implements DatabaseInterface {
             return null;
         }
     }
-
-    @Override
-    public void removeTag(DoorsModule module, String tag) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void addTag(DoorsModule module, String value) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Collection<String> getTags(DoorsModule doorsModule) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Collection<String> getTags() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
 }

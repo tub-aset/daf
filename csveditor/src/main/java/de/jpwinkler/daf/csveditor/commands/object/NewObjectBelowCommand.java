@@ -2,7 +2,7 @@ package de.jpwinkler.daf.csveditor.commands.object;
 
 import de.jpwinkler.daf.csveditor.CommandStack.AbstractCommand;
 import de.jpwinkler.daf.csveditor.commands.module.UpdateAction;
-import de.jpwinkler.daf.model.DoorsCSVFactory;
+import de.jpwinkler.daf.model.DoorsFactory;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 
@@ -28,7 +28,7 @@ public class NewObjectBelowCommand extends AbstractCommand {
 
     @Override
     public void apply() {
-        newObject = DoorsCSVFactory.eINSTANCE.createDoorsObject();
+        newObject = DoorsFactory.eINSTANCE.createDoorsObject();
         newObject.setObjectText("");
         newObject.setObjectHeading("");
         newObject.setObjectLevel(object.getObjectLevel() + 1);

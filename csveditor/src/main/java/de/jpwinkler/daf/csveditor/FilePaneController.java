@@ -21,7 +21,7 @@ import de.jpwinkler.daf.csveditor.filter.CascadingFilter;
 import de.jpwinkler.daf.csveditor.filter.DoorsObjectFilter;
 import de.jpwinkler.daf.csveditor.filter.ObjectTextAndHeadingFilter;
 import de.jpwinkler.daf.csveditor.filter.ReverseCascadingFilter;
-import de.jpwinkler.daf.model.DoorsCSVFactory;
+import de.jpwinkler.daf.model.DoorsFactory;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsModuleUtil;
 import de.jpwinkler.daf.model.DoorsObject;
@@ -165,7 +165,7 @@ public class FilePaneController implements FileStateController {
         this.applicationStateController = applicationStateController;
 
         this.file = file;
-        this.module = file == null ? DoorsCSVFactory.eINSTANCE.createDoorsModule() : new ModuleCSVParser().parseCSV(file);
+        this.module = file == null ? DoorsFactory.eINSTANCE.createDoorsModule() : new ModuleCSVParser().parseCSV(file);
 
         updateGui(UpdateAction.UPDATE_VIEWS, UpdateAction.UPDATE_COLUMNS, UpdateAction.UPDATE_CONTENT_VIEW, UpdateAction.UPDATE_OUTLINE_VIEW);
         traverseTreeItem(outlineTreeView.getRoot(), ti -> ti.setExpanded(true));

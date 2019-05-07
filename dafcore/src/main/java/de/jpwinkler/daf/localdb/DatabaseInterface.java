@@ -37,8 +37,6 @@ public interface DatabaseInterface {
 
     DoorsModule getModule(final String path);
 
-    List<DoorsModule> getModules();
-
     List<DoorsModule> getModules(final SearchExpression e);
 
     DoorsModule importModule(final DoorsModule module);
@@ -48,14 +46,6 @@ public interface DatabaseInterface {
     DoorsFolder getFolder(final String path);
 
     void removeFolder(final DoorsFolder folder);
-
-    Collection<String> getTags();
-
-    Collection<String> getTags(DoorsModule doorsModule);
-
-    void addTag(DoorsModule module, String value);
-
-    void removeTag(DoorsModule module, String tag);
 
     public static DatabaseInterface openFileDatabase() throws IOException {
         return openFileDatabase(getDefaultDatabaseDirectory(FileDatabaseInterface.class).resolve("db.DoorsDatabasemodel"));

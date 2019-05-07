@@ -56,7 +56,6 @@ public class DoorsFactoryImpl extends EFactoryImpl implements DoorsFactory {
 	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
-			case DoorsPackage.DOORS_TREE_NODE: return (EObject)createDoorsTreeNode();
 			case DoorsPackage.DOORS_DATABASE: return (EObject)createDoorsDatabase();
 			case DoorsPackage.DOORS_FOLDER: return (EObject)createDoorsFolder();
 			case DoorsPackage.DOORS_MODULE_VERSION: return (EObject)createDoorsModuleVersion();
@@ -103,17 +102,6 @@ public class DoorsFactoryImpl extends EFactoryImpl implements DoorsFactory {
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public DoorsTreeNode createDoorsTreeNode() {
-		DoorsTreeNodeImpl doorsTreeNode = new DoorsTreeNodeImpl();
-		return doorsTreeNode;
 	}
 
 	/**

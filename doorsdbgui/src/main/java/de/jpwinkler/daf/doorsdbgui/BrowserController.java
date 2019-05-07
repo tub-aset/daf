@@ -4,8 +4,8 @@ import de.jpwinkler.daf.bridge.DoorsApplication;
 import de.jpwinkler.daf.bridge.DoorsApplicationFactory;
 import de.jpwinkler.daf.bridge.DoorsItemType;
 import de.jpwinkler.daf.bridge.ItemRef;
-import de.jpwinkler.daf.localdb.FileDatabaseInterface;
-import de.jpwinkler.daf.model.DoorsDatabaseVersion;
+import de.jpwinkler.daf.localdb.DatabaseInterface;
+import de.jpwinkler.daf.model.DoorsModuleVersion;
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsTreeNode;
@@ -36,7 +36,7 @@ public class BrowserController {
 
     private DoorsApplication app;
 
-    private FileDatabaseInterface db;
+    private DatabaseInterface db;
 
     @FXML
     private TreeView<ItemRef> remoteTreeView;
@@ -48,7 +48,7 @@ public class BrowserController {
     private ListView<String> downloadQueueListView;
 
     @FXML
-    private ListView<DoorsDatabaseVersion> versionsListView;
+    private ListView<DoorsModuleVersion> versionsListView;
 
     @FXML
     private ListView<String> tagsListView;
@@ -76,7 +76,7 @@ public class BrowserController {
     @FXML
     public void initialize() throws FileNotFoundException, IOException {
         app = DoorsApplicationFactory.getDoorsApplication();
-        db = FileDatabaseInterface.createOrOpenDB();
+        db = DatabaseInterface.openFileDatabase();
         updateLocalTree();
         updateNewTagComboBox();
         remoteTreeView.setRoot(new RemoteTreeItem(app.getRoot(), new ImageView(new Image(getClass().getResourceAsStream("/icons/doors_db.png")))));
@@ -130,7 +130,7 @@ public class BrowserController {
         });
     }
 
-    private void openInCSVBrowser(final DoorsDatabaseVersion dbVersion) {
+    private void openInCSVBrowser(final DoorsModuleVersion dbVersion) {
         /*try {
             if (csvEditorApplication == null || !csvEditorApplication.getPrimaryStage().isShowing()) {
                 csvEditorApplication = new MainFX();
@@ -291,7 +291,7 @@ public class BrowserController {
     private void updateAttributesView() {
         attributesTableView.getItems().clear();
         if (selectedItem.get() instanceof DoorsModule) {
-            final DoorsDatabaseVersion latestVersion = ((DoorsModule) selectedItem.get()).getLatestVersion();
+            final DoorsModuleVersion latestVersion = ((DoorsModule) selectedItem.get()).getLatestVersion();
             if (latestVersion != null) {
                 attributesTableView.setItems(FXCollections.observableArrayList(latestVersion.getAttributes().entrySet()));
             }

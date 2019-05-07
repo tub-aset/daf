@@ -1,7 +1,7 @@
 package de.jpwinkler.daf.csveditor.commands.module;
 
 import de.jpwinkler.daf.csveditor.CommandStack.AbstractCommand;
-import de.jpwinkler.daf.model.DoorsCSVFactory;
+import de.jpwinkler.daf.model.DoorsFactory;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
@@ -59,7 +59,7 @@ public class SplitLinesCommand extends AbstractCommand {
     }
 
     private void newObjectAfter(final DoorsObject object, final int i, final String string) {
-        final DoorsObject newObject = DoorsCSVFactory.eINSTANCE.createDoorsObject();
+        final DoorsObject newObject = DoorsFactory.eINSTANCE.createDoorsObject();
         for (final Entry<String, String> attribute : object.getAttributes().entrySet()) {
             newObject.getAttributes().put(attribute.getKey(), attribute.getValue());
         }

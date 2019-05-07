@@ -101,7 +101,7 @@
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="targetObject" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eClassifiers>
   
-    <eClassifiers xsi:type="ecore:EClass" name="DoorsTreeNode">
+    <eClassifiers xsi:type="ecore:EClass" name="DoorsTreeNode" abstract="true">
         <eOperations name="accept">
             <eParameters name="visitor" eType="#//DoorsTreeNodeVisitor"/>
         </eOperations>
@@ -124,6 +124,7 @@
         <eOperations name="hasTag" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
             <eParameters name="pattern" eType="#//Pattern"/>
         </eOperations>
+        
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="AttributeDefinition">
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
