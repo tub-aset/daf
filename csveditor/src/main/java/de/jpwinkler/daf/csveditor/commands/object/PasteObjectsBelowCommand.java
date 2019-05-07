@@ -35,7 +35,7 @@ public class PasteObjectsBelowCommand extends AbstractCommand {
     @Override
     public void apply() {
         copiedObjects = objectsToCopy.stream()
-                .map(o -> (DoorsObject) DoorsFactory.eINSTANCE.createDoorsObject().copyFrom(o))
+                .map(o -> (DoorsObject) DoorsFactory.eINSTANCE.createDoorsObject().copyFrom(o, reference))
                 .collect(Collectors.toList());
         redo();
     }

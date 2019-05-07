@@ -17,20 +17,12 @@
  */
 package de.jpwinkler.daf.bridge;
 
-import java.util.List;
+import de.jpwinkler.daf.model.DoorsTreeNode;
 
-public interface ItemRef {
+public interface DoorsTreeNodeRef extends DoorsTreeNode {
 
     DoorsItemType getType();
 
-    ItemName getItemName();
-
     boolean exists();
-
-    ItemRef getParent();
-
-    List<ItemRef> getChildren();
-
-    ModuleRef open();
 
 }

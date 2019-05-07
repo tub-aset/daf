@@ -1,19 +1,17 @@
 package de.jpwinkler.daf.doorsdbgui;
 
-import de.jpwinkler.daf.bridge.ItemRef;
 import java.util.Comparator;
 import javafx.scene.control.TreeItem;
+import de.jpwinkler.daf.bridge.DoorsTreeNodeRef;
 
-public class ItemRefComparator implements Comparator<TreeItem<ItemRef>> {
+public class ItemRefComparator implements Comparator<TreeItem<DoorsTreeNodeRef>> {
 
     @Override
-    public int compare(final TreeItem<ItemRef> o1, final TreeItem<ItemRef> o2) {
+    public int compare(final TreeItem<DoorsTreeNodeRef> o1, final TreeItem<DoorsTreeNodeRef> o2) {
         if (o1.getValue().getType() != o2.getValue().getType()) {
             return Integer.compare(o1.getValue().getType().ordinal(), o2.getValue().getType().ordinal());
         } else {
-            return o1.getValue().getItemName().compareTo(o2.getValue().getItemName());
+            return o1.getValue().getFullName().compareTo(o2.getValue().getFullName());
         }
-
     }
-
 }

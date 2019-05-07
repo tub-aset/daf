@@ -162,6 +162,6 @@ public interface DoorsTreeNode {
 	 * @model
 	 * @generated
 	 */
-	DoorsTreeNode copyFrom(DoorsTreeNode node);
+	DoorsTreeNode copyFrom(DoorsTreeNode node, DoorsTreeNode newParent);
 
 } // DoorsTreeNode

@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collection;
 import java.util.List;
 import net.harawata.appdirs.AppDirsFactory;
 import org.eclipse.emf.common.util.URI;

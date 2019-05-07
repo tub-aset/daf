@@ -56,20 +56,7 @@ public interface DoorsApplication {
      */
     void print(String message);
 
-    /**
-     * Opens a module for reading.
-     *
-     * @param name
-     *            The path of the module.
-     * @return An interface used for interacting with the module.
-     * @throws DoorsRuntimeException
-     *             If the module does not exist.
-     */
-    ModuleRef openModule(String name);
-
-    ItemRef getRoot();
-
-    ItemRef getItem(String path);
+    DoorsTreeNodeRef getRoot();
 
     /**
      * Runs a DXL script stored in a file.

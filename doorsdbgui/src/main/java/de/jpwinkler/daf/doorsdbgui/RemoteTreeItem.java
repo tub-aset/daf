@@ -1,14 +1,15 @@
 package de.jpwinkler.daf.doorsdbgui;
 
 import de.jpwinkler.daf.bridge.DoorsItemType;
-import de.jpwinkler.daf.bridge.ItemRef;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.ImageView;
+import de.jpwinkler.daf.bridge.DoorsTreeNodeRef;
+import de.jpwinkler.daf.model.DoorsTreeNode;
 
-public class RemoteTreeItem extends TreeItem<ItemRef> {
+public class RemoteTreeItem extends TreeItem<DoorsTreeNodeRef> {
 
     private boolean isFirstTimeChildren = true;
 
@@ -16,16 +17,16 @@ public class RemoteTreeItem extends TreeItem<ItemRef> {
         super();
     }
 
-    public RemoteTreeItem(final ItemRef value, final Node graphic) {
+    public RemoteTreeItem(final DoorsTreeNodeRef value, final Node graphic) {
         super(value, graphic);
     }
 
-    public RemoteTreeItem(final ItemRef value) {
+    public RemoteTreeItem(final DoorsTreeNodeRef value) {
         super(value);
     }
 
     @Override
-    public ObservableList<TreeItem<ItemRef>> getChildren() {
+    public ObservableList<TreeItem<DoorsTreeNodeRef>> getChildren() {
         if (isFirstTimeChildren) {
             isFirstTimeChildren = false;
             super.getChildren().setAll(buildChildren());
@@ -33,11 +34,11 @@ public class RemoteTreeItem extends TreeItem<ItemRef> {
         return super.getChildren();
     }
 
-    private ObservableList<TreeItem<ItemRef>> buildChildren() {
+    private ObservableList<TreeItem<DoorsTreeNodeRef>> buildChildren() {
         if (getValue() != null) {
-            final ObservableList<TreeItem<ItemRef>> list = FXCollections.observableArrayList();
-            for (final ItemRef c : getValue().getChildren()) {
-                list.add(new RemoteTreeItem(c, imageForType(c.getType())));
+            final ObservableList<TreeItem<DoorsTreeNodeRef>> list = FXCollections.observableArrayList();
+            for (final DoorsTreeNode c : getValue().getChildren()) {
+                list.add(new RemoteTreeItem((DoorsTreeNodeRef) c, imageForType(((DoorsTreeNodeRef) c).getType())));
             }
             list.sort(new ItemRefComparator());
             return list;

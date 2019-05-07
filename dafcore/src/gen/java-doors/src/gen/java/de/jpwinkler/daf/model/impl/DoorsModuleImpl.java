@@ -29,8 +29,6 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link de.jpwinkler.daf.model.impl.DoorsModuleImpl#getPath <em>Path</em>}</li>
- *   <li>{@link de.jpwinkler.daf.model.impl.DoorsModuleImpl#getUrl <em>Url</em>}</li>
  *   <li>{@link de.jpwinkler.daf.model.impl.DoorsModuleImpl#getView <em>View</em>}</li>
  *   <li>{@link de.jpwinkler.daf.model.impl.DoorsModuleImpl#getVersions <em>Versions</em>}</li>
  * </ul>
@@ -38,46 +36,6 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * @generated
  */
 public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
-
-    /**
-	 * The default value of the '{@link #getPath() <em>Path</em>}' attribute.
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @see #getPath()
-	 * @generated
-	 * @ordered
-	 */
-    protected static final String PATH_EDEFAULT = null;
-
-    /**
-	 * The cached value of the '{@link #getPath() <em>Path</em>}' attribute.
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @see #getPath()
-	 * @generated
-	 * @ordered
-	 */
-    protected String path = PATH_EDEFAULT;
-
-    /**
-	 * The default value of the '{@link #getUrl() <em>Url</em>}' attribute.
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @see #getUrl()
-	 * @generated
-	 * @ordered
-	 */
-    protected static final String URL_EDEFAULT = null;
-
-    /**
-	 * The cached value of the '{@link #getUrl() <em>Url</em>}' attribute.
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @see #getUrl()
-	 * @generated
-	 * @ordered
-	 */
-    protected String url = URL_EDEFAULT;
 
     /**
 	 * The default value of the '{@link #getView() <em>View</em>}' attribute.
@@ -124,48 +82,6 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
     @Override
     protected EClass eStaticClass() {
 		return DoorsPackage.Literals.DOORS_MODULE;
-	}
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc --> @generated
-     */
-    @Override
-    public String getPath() {
-		return path;
-	}
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc --> @generated
-     */
-    @Override
-    public void setPath(String newPath) {
-		String oldPath = path;
-		path = newPath;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DoorsPackage.DOORS_MODULE__PATH, oldPath, path));
-	}
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc --> @generated
-     */
-    @Override
-    public String getUrl() {
-		return url;
-	}
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc --> @generated
-     */
-    @Override
-    public void setUrl(String newUrl) {
-		String oldUrl = url;
-		url = newUrl;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DoorsPackage.DOORS_MODULE__URL, oldUrl, url));
 	}
 
     /**
@@ -255,7 +171,7 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
      * <!-- end-user-doc --> @generated NOT
      */
     @Override
-    public DoorsObject copyFrom(DoorsTreeNode newModule) {
+    public DoorsObject copyFrom(DoorsTreeNode newModule, DoorsTreeNode newParent) {
         if (!super.canCopyFrom(newModule)) {
             throw new IllegalArgumentException();
         }
@@ -297,10 +213,6 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case DoorsPackage.DOORS_MODULE__PATH:
-				return getPath();
-			case DoorsPackage.DOORS_MODULE__URL:
-				return getUrl();
 			case DoorsPackage.DOORS_MODULE__VIEW:
 				return getView();
 			case DoorsPackage.DOORS_MODULE__VERSIONS:
@@ -317,12 +229,6 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
     @Override
     public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case DoorsPackage.DOORS_MODULE__PATH:
-				setPath((String)newValue);
-				return;
-			case DoorsPackage.DOORS_MODULE__URL:
-				setUrl((String)newValue);
-				return;
 			case DoorsPackage.DOORS_MODULE__VIEW:
 				setView((String)newValue);
 				return;
@@ -341,12 +247,6 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
     @Override
     public void eUnset(int featureID) {
 		switch (featureID) {
-			case DoorsPackage.DOORS_MODULE__PATH:
-				setPath(PATH_EDEFAULT);
-				return;
-			case DoorsPackage.DOORS_MODULE__URL:
-				setUrl(URL_EDEFAULT);
-				return;
 			case DoorsPackage.DOORS_MODULE__VIEW:
 				setView(VIEW_EDEFAULT);
 				return;
@@ -364,10 +264,6 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
     @Override
     public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case DoorsPackage.DOORS_MODULE__PATH:
-				return PATH_EDEFAULT == null ? path != null : !PATH_EDEFAULT.equals(path);
-			case DoorsPackage.DOORS_MODULE__URL:
-				return URL_EDEFAULT == null ? url != null : !URL_EDEFAULT.equals(url);
 			case DoorsPackage.DOORS_MODULE__VIEW:
 				return VIEW_EDEFAULT == null ? view != null : !VIEW_EDEFAULT.equals(view);
 			case DoorsPackage.DOORS_MODULE__VERSIONS:

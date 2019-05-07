@@ -38,7 +38,6 @@
         
         <eOperations name="getLatestVersion" eType="#//DoorsModuleVersion"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="path" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-        <eStructuralFeatures xsi:type="ecore:EAttribute" name="url" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="view" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         <eStructuralFeatures xsi:type="ecore:EReference" name="versions" upperBound="-1"
                              eType="#//DoorsModuleVersion" containment="true" eOpposite="#//DoorsModuleVersion/module"/>
@@ -131,6 +130,7 @@
         
         <eOperations name="copyFrom" eType="#//DoorsTreeNode">
             <eParameters name="node" eType="#//DoorsTreeNode"/>
+            <eParameters name="newParent" eType="#//DoorsTreeNode"/>
         </eOperations>
     </eClassifiers>
 </ecore:EPackage>

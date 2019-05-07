@@ -58,7 +58,7 @@ public class DoorsFolderImpl extends DoorsTreeNodeImpl implements DoorsFolder {
      * <!-- end-user-doc --> @generated NOT
      */
     @Override
-    public DoorsObject copyFrom(DoorsTreeNode newModule) {
+    public DoorsObject copyFrom(DoorsTreeNode newModule, DoorsTreeNode newParent) {
         if (!super.canCopyFrom(newModule)) {
             throw new IllegalArgumentException();
         }

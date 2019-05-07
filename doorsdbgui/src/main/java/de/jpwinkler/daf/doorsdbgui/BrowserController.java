@@ -3,7 +3,6 @@ package de.jpwinkler.daf.doorsdbgui;
 import de.jpwinkler.daf.bridge.DoorsApplication;
 import de.jpwinkler.daf.bridge.DoorsApplicationFactory;
 import de.jpwinkler.daf.bridge.DoorsItemType;
-import de.jpwinkler.daf.bridge.ItemRef;
 import de.jpwinkler.daf.localdb.DatabaseInterface;
 import de.jpwinkler.daf.model.DoorsModuleVersion;
 import de.jpwinkler.daf.model.DoorsFolder;
@@ -31,6 +30,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import de.jpwinkler.daf.bridge.DoorsTreeNodeRef;
 
 public class BrowserController {
 
@@ -39,7 +39,7 @@ public class BrowserController {
     private DatabaseInterface db;
 
     @FXML
-    private TreeView<ItemRef> remoteTreeView;
+    private TreeView<DoorsTreeNodeRef> remoteTreeView;
 
     @FXML
     private TreeView<DoorsTreeNode> localTreeView;
@@ -201,9 +201,9 @@ public class BrowserController {
 
     @FXML
     public void remoteAddToQueuePressed() {
-        for (final TreeItem<ItemRef> selectedItem : remoteTreeView.getSelectionModel().getSelectedItems()) {
+        for (final TreeItem<DoorsTreeNodeRef> selectedItem : remoteTreeView.getSelectionModel().getSelectedItems()) {
             if (selectedItem.getValue().getType() == DoorsItemType.FORMAL) {
-                final ItemRef item = selectedItem.getValue();
+                final DoorsTreeNodeRef item = selectedItem.getValue();
                 downloadQueueListView.getItems().add(item.getItemName().getFullName());
             }
         }
@@ -211,9 +211,9 @@ public class BrowserController {
 
     @FXML
     public void remoteDownloadPressed() throws IOException {
-        for (final TreeItem<ItemRef> selectedItem : remoteTreeView.getSelectionModel().getSelectedItems()) {
+        for (final TreeItem<DoorsTreeNodeRef> selectedItem : remoteTreeView.getSelectionModel().getSelectedItems()) {
             if (selectedItem.getValue().getType() == DoorsItemType.FORMAL) {
-                final ItemRef item = selectedItem.getValue();
+                final DoorsTreeNodeRef item = selectedItem.getValue();
                 db.addModule(item.getItemName().getFullName());
                 updateLocalTree();
             }
@@ -222,9 +222,9 @@ public class BrowserController {
 
     @FXML
     public void remoteDownloadOpenPressed() throws IOException {
-        for (final TreeItem<ItemRef> selectedItem : remoteTreeView.getSelectionModel().getSelectedItems()) {
+        for (final TreeItem<DoorsTreeNodeRef> selectedItem : remoteTreeView.getSelectionModel().getSelectedItems()) {
             if (selectedItem.getValue().getType() == DoorsItemType.FORMAL) {
-                final ItemRef item = selectedItem.getValue();
+                final DoorsTreeNodeRef item = selectedItem.getValue();
                 final DoorsModule module = db.addModule(item.getItemName().getFullName());
                 openInCSVBrowser(module.getLatestVersion());
                 updateLocalTree();

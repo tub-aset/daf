@@ -21,7 +21,6 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
@@ -410,7 +409,7 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
      * <!-- end-user-doc --> @generated NOT
      */
     @Override
-    public DoorsObject copyFrom(DoorsTreeNode newModule) {
+    public DoorsObject copyFrom(DoorsTreeNode newModule, DoorsTreeNode newParent) {
         if (!super.canCopyFrom(newModule)) {
             throw new IllegalArgumentException();
         }
@@ -420,8 +419,9 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
         
         this.attributes.putAll(newModule.getAttributes());
         newModule.getChildren().stream()
-                .map(c -> DoorsFactory.eINSTANCE.createDoorsObject().copyFrom(c))
+                .map(c -> DoorsFactory.eINSTANCE.createDoorsObject().copyFrom(c, this))
                 .forEach(c -> this.children.add(c));
+        this.module = (DoorsModule) newParent;
         
         // TODO: handle links
         this.incomingLinks.clear();

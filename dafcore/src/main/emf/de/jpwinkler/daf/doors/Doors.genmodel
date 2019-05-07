@@ -34,6 +34,7 @@
             </genOperations>
             -<genOperations ecoreOperation="Doors.ecore#//DoorsTreeNode/copyFrom">
                 <genParameters ecoreParameter="Doors.ecore#//DoorsTreeNode/copyFrom/node"/>
+                <genParameters ecoreParameter="Doors.ecore#//DoorsTreeNode/copyFrom/newParent"/>
             </genOperations>
         </genClasses>
         
@@ -57,11 +58,10 @@
             <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Doors.ecore#//DoorsModuleVersion/module"/>
             <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//DoorsModuleVersion/date"/>
             <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Doors.ecore#//DoorsModuleVersion/attributes"/>
+            <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//DoorsModuleVersion/path"/>
         </genClasses>
         
         <genClasses ecoreClass="Doors.ecore#//DoorsModule">
-            <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//DoorsModule/path"/>
-            <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//DoorsModule/url"/>
             <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//DoorsModule/view"/>
             <genOperations ecoreOperation="Doors.ecore#//DoorsModule/findObject">
                 <genParameters ecoreParameter="Doors.ecore#//DoorsModule/findObject/objectIdentifier"/>

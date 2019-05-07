@@ -286,7 +286,7 @@ public abstract class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container imp
 	 * @generated NOT
 	 */
 	@Override
-	public abstract DoorsTreeNode copyFrom(DoorsTreeNode node);
+	public abstract DoorsTreeNode copyFrom(DoorsTreeNode node, DoorsTreeNode newParent);
 
 				/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -447,8 +447,8 @@ public abstract class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container imp
 				return hasTag((Pattern)arguments.get(0));
 			case DoorsPackage.DOORS_TREE_NODE___CAN_COPY_FROM__DOORSTREENODE:
 				return canCopyFrom((DoorsTreeNode)arguments.get(0));
-			case DoorsPackage.DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE:
-				return copyFrom((DoorsTreeNode)arguments.get(0));
+			case DoorsPackage.DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE_DOORSTREENODE:
+				return copyFrom((DoorsTreeNode)arguments.get(0), (DoorsTreeNode)arguments.get(1));
 		}
 		return super.eInvoke(operationID, arguments);
 	}

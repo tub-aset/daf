@@ -14,8 +14,6 @@ import java.util.List;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link de.jpwinkler.daf.model.DoorsModule#getPath <em>Path</em>}</li>
- *   <li>{@link de.jpwinkler.daf.model.DoorsModule#getUrl <em>Url</em>}</li>
  *   <li>{@link de.jpwinkler.daf.model.DoorsModule#getView <em>View</em>}</li>
  *   <li>{@link de.jpwinkler.daf.model.DoorsModule#getVersions <em>Versions</em>}</li>
  * </ul>
@@ -25,50 +23,6 @@ import java.util.List;
  * @generated
  */
 public interface DoorsModule extends DoorsTreeNode {
-	/**
-	 * Returns the value of the '<em><b>Path</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Path</em>' attribute.
-	 * @see #setPath(String)
-	 * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsModule_Path()
-	 * @model
-	 * @generated
-	 */
-	String getPath();
-
-	/**
-	 * Sets the value of the '{@link de.jpwinkler.daf.model.DoorsModule#getPath <em>Path</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Path</em>' attribute.
-	 * @see #getPath()
-	 * @generated
-	 */
-	void setPath(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Url</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Url</em>' attribute.
-	 * @see #setUrl(String)
-	 * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsModule_Url()
-	 * @model
-	 * @generated
-	 */
-	String getUrl();
-
-	/**
-	 * Sets the value of the '{@link de.jpwinkler.daf.model.DoorsModule#getUrl <em>Url</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Url</em>' attribute.
-	 * @see #getUrl()
-	 * @generated
-	 */
-	void setUrl(String value);
-
 	/**
 	 * Returns the value of the '<em><b>View</b></em>' attribute.
 	 * <!-- begin-user-doc -->

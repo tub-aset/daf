@@ -22,8 +22,6 @@ import com.jacob.com.Dispatch;
 import de.jpwinkler.daf.bridge.DoorsApplication;
 import de.jpwinkler.daf.bridge.DoorsItemType;
 import de.jpwinkler.daf.bridge.DoorsRuntimeException;
-import de.jpwinkler.daf.bridge.ItemRef;
-import de.jpwinkler.daf.bridge.ModuleRef;
 import de.jpwinkler.daf.bridge.user32.Window;
 import de.jpwinkler.daf.bridge.user32.WindowManager;
 import java.io.File;
@@ -37,6 +35,7 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
+import de.jpwinkler.daf.bridge.DoorsTreeNodeRef;
 
 public class DoorsApplicationImpl implements DoorsApplication {
 
@@ -163,16 +162,6 @@ public class DoorsApplicationImpl implements DoorsApplication {
     }
 
     @Override
-    public ModuleRef openModule(final String name) {
-        buildAndRunCommand(builder -> {
-            builder.addLibrary(new InternalDXLScript("lib/utils.dxl"));
-            builder.addScript(new InternalDXLScript("open_module.dxl"));
-            builder.setVariable("name", name);
-        });
-        return new ModuleRefImpl(this, name);
-    }
-
-    @Override
     public void runScript(final File scriptFile) {
         buildAndRunCommand(builder -> {
             builder.addScript(new ExternalDXLScript(scriptFile));
@@ -195,14 +184,10 @@ public class DoorsApplicationImpl implements DoorsApplication {
     }
 
     @Override
-    public ItemRef getRoot() {
-        return new ItemRefImpl(this, "/", DoorsItemType.FOLDER);
+    public DoorsTreeNodeRef getRoot() {
+        return new DoorsTreeNodeRefImpl(this, DoorsItemType.FOLDER, null, "/");
     }
-
-    @Override
-    public ItemRef getItem(final String path) {
-        return new ItemRefImpl(this, path, null);
-    }
+ 
 
     String buildAndRunCommand(final Consumer<DoorsScriptBuilder> prepareScriptBuilder) {
         if (!batchMode) {

@@ -174,7 +174,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE = 4;
+	int DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE_DOORSTREENODE = 4;
 
 	/**
 	 * The number of operations of the '<em>Tree Node</em>' class.
@@ -347,7 +347,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_FOLDER___COPY_FROM__DOORSTREENODE = DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE;
+	int DOORS_FOLDER___COPY_FROM__DOORSTREENODE_DOORSTREENODE = DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE_DOORSTREENODE;
 
 	/**
 	 * The operation id for the '<em>Get Folder</em>' operation.
@@ -496,31 +496,13 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_MODULE__FULL_NAME_SEGMENTS = DOORS_TREE_NODE__FULL_NAME_SEGMENTS;
 
 	/**
-	 * The feature id for the '<em><b>Path</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DOORS_MODULE__PATH = DOORS_TREE_NODE_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Url</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DOORS_MODULE__URL = DOORS_TREE_NODE_FEATURE_COUNT + 1;
-
-	/**
 	 * The feature id for the '<em><b>View</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_MODULE__VIEW = DOORS_TREE_NODE_FEATURE_COUNT + 2;
+	int DOORS_MODULE__VIEW = DOORS_TREE_NODE_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Versions</b></em>' containment reference list.
@@ -529,7 +511,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_MODULE__VERSIONS = DOORS_TREE_NODE_FEATURE_COUNT + 3;
+	int DOORS_MODULE__VERSIONS = DOORS_TREE_NODE_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Module</em>' class.
@@ -538,7 +520,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_MODULE_FEATURE_COUNT = DOORS_TREE_NODE_FEATURE_COUNT + 4;
+	int DOORS_MODULE_FEATURE_COUNT = DOORS_TREE_NODE_FEATURE_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Accept</em>' operation.
@@ -583,7 +565,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_MODULE___COPY_FROM__DOORSTREENODE = DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE;
+	int DOORS_MODULE___COPY_FROM__DOORSTREENODE_DOORSTREENODE = DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE_DOORSTREENODE;
 
 	/**
 	 * The operation id for the '<em>Find Object</em>' operation.
@@ -845,7 +827,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_OBJECT___COPY_FROM__DOORSTREENODE = DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE;
+	int DOORS_OBJECT___COPY_FROM__DOORSTREENODE_DOORSTREENODE = DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE_DOORSTREENODE;
 
 	/**
 	 * The operation id for the '<em>Is Heading</em>' operation.
@@ -1199,14 +1181,14 @@ public interface DoorsPackage extends EPackage {
 	EOperation getDoorsTreeNode__CanCopyFrom__DoorsTreeNode();
 
 	/**
-	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsTreeNode#copyFrom(de.jpwinkler.daf.model.DoorsTreeNode) <em>Copy From</em>}' operation.
+	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsTreeNode#copyFrom(de.jpwinkler.daf.model.DoorsTreeNode, de.jpwinkler.daf.model.DoorsTreeNode) <em>Copy From</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>Copy From</em>' operation.
-	 * @see de.jpwinkler.daf.model.DoorsTreeNode#copyFrom(de.jpwinkler.daf.model.DoorsTreeNode)
+	 * @see de.jpwinkler.daf.model.DoorsTreeNode#copyFrom(de.jpwinkler.daf.model.DoorsTreeNode, de.jpwinkler.daf.model.DoorsTreeNode)
 	 * @generated
 	 */
-	EOperation getDoorsTreeNode__CopyFrom__DoorsTreeNode();
+	EOperation getDoorsTreeNode__CopyFrom__DoorsTreeNode_DoorsTreeNode();
 
 	/**
 	 * Returns the meta object for class '{@link de.jpwinkler.daf.model.DoorsDatabase <em>Database</em>}'.
@@ -1321,28 +1303,6 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getDoorsModule();
-
-	/**
-	 * Returns the meta object for the attribute '{@link de.jpwinkler.daf.model.DoorsModule#getPath <em>Path</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Path</em>'.
-	 * @see de.jpwinkler.daf.model.DoorsModule#getPath()
-	 * @see #getDoorsModule()
-	 * @generated
-	 */
-	EAttribute getDoorsModule_Path();
-
-	/**
-	 * Returns the meta object for the attribute '{@link de.jpwinkler.daf.model.DoorsModule#getUrl <em>Url</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Url</em>'.
-	 * @see de.jpwinkler.daf.model.DoorsModule#getUrl()
-	 * @see #getDoorsModule()
-	 * @generated
-	 */
-	EAttribute getDoorsModule_Url();
 
 	/**
 	 * Returns the meta object for the attribute '{@link de.jpwinkler.daf.model.DoorsModule#getView <em>View</em>}'.
@@ -1807,7 +1767,7 @@ public interface DoorsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE = eINSTANCE.getDoorsTreeNode__CopyFrom__DoorsTreeNode();
+		EOperation DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE_DOORSTREENODE = eINSTANCE.getDoorsTreeNode__CopyFrom__DoorsTreeNode_DoorsTreeNode();
 
 		/**
 		 * The meta object literal for the '{@link de.jpwinkler.daf.model.impl.DoorsDatabaseImpl <em>Database</em>}' class.
@@ -1904,22 +1864,6 @@ public interface DoorsPackage extends EPackage {
 		 * @generated
 		 */
 		EClass DOORS_MODULE = eINSTANCE.getDoorsModule();
-
-		/**
-		 * The meta object literal for the '<em><b>Path</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute DOORS_MODULE__PATH = eINSTANCE.getDoorsModule_Path();
-
-		/**
-		 * The meta object literal for the '<em><b>Url</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute DOORS_MODULE__URL = eINSTANCE.getDoorsModule_Url();
 
 		/**
 		 * The meta object literal for the '<em><b>View</b></em>' attribute feature.
