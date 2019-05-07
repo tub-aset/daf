@@ -8,6 +8,8 @@ import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -15,6 +17,7 @@ import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -114,7 +117,7 @@ public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements D
 	 * @generated
 	 */
     @Override
-    public EList<DoorsTreeNode> getChildren() {
+    public List<DoorsTreeNode> getChildren() {
 		if (children == null) {
 			children = new EObjectContainmentWithInverseEList<DoorsTreeNode>(DoorsTreeNode.class, this, DoorsPackage.DOORS_TREE_NODE__CHILDREN, DoorsPackage.DOORS_TREE_NODE__PARENT);
 		}
@@ -147,7 +150,7 @@ public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements D
     @Override
     public void setParent(DoorsTreeNode newParent) {
 		if (newParent != eInternalContainer() || (eContainerFeatureID() != DoorsPackage.DOORS_TREE_NODE__PARENT && newParent != null)) {
-			if (EcoreUtil.isAncestor(this, newParent))
+			if (EcoreUtil.isAncestor(this, (EObject)newParent))
 				throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
 			NotificationChain msgs = null;
 			if (eInternalContainer() != null)
@@ -166,11 +169,11 @@ public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements D
 	 * @generated
 	 */
     @Override
-    public EMap<String, String> getAttributes() {
+    public Map<String, String> getAttributes() {
 		if (attributes == null) {
 			attributes = new EcoreEMap<String,String>(DoorsPackage.Literals.STRING_TO_STRING_MAP, StringToStringMapImpl.class, this, DoorsPackage.DOORS_TREE_NODE__ATTRIBUTES);
 		}
-		return attributes;
+		return attributes.map();
 	}
 
     /**
@@ -297,7 +300,7 @@ public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements D
 			case DoorsPackage.DOORS_TREE_NODE__PARENT:
 				return basicSetParent(null, msgs);
 			case DoorsPackage.DOORS_TREE_NODE__ATTRIBUTES:
-				return ((InternalEList<?>)getAttributes()).basicRemove(otherEnd, msgs);
+				return ((InternalEList<?>)((EMap.InternalMapView<String, String>)getAttributes()).eMap()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -327,8 +330,8 @@ public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements D
 			case DoorsPackage.DOORS_TREE_NODE__PARENT:
 				return getParent();
 			case DoorsPackage.DOORS_TREE_NODE__ATTRIBUTES:
-				if (coreType) return getAttributes();
-				else return getAttributes().map();
+				if (coreType) return ((EMap.InternalMapView<String, String>)getAttributes()).eMap();
+				else return getAttributes();
 			case DoorsPackage.DOORS_TREE_NODE__NAME:
 				return getName();
 			case DoorsPackage.DOORS_TREE_NODE__FULL_NAME:
@@ -355,7 +358,7 @@ public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements D
 				setParent((DoorsTreeNode)newValue);
 				return;
 			case DoorsPackage.DOORS_TREE_NODE__ATTRIBUTES:
-				((EStructuralFeature.Setting)getAttributes()).set(newValue);
+				((EStructuralFeature.Setting)((EMap.InternalMapView<String, String>)getAttributes()).eMap()).set(newValue);
 				return;
 			case DoorsPackage.DOORS_TREE_NODE__NAME:
 				setName((String)newValue);

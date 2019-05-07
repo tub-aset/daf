@@ -2,10 +2,9 @@
  */
 package de.jpwinkler.daf.model;
 
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.EMap;
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
@@ -28,7 +27,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface DoorsTreeNode extends EObject {
+public interface DoorsTreeNode {
 	/**
 	 * Returns the value of the '<em><b>Children</b></em>' containment reference list.
 	 * The list contents are of type {@link de.jpwinkler.daf.model.DoorsTreeNode}.
@@ -41,7 +40,7 @@ public interface DoorsTreeNode extends EObject {
 	 * @model opposite="parent" containment="true"
 	 * @generated
 	 */
-	EList<DoorsTreeNode> getChildren();
+	List<DoorsTreeNode> getChildren();
 
 	/**
 	 * Returns the value of the '<em><b>Parent</b></em>' container reference.
@@ -78,7 +77,7 @@ public interface DoorsTreeNode extends EObject {
 	 * @model mapType="de.jpwinkler.daf.model.StringToStringMap&lt;org.eclipse.emf.ecore.EString, org.eclipse.emf.ecore.EString&gt;" ordered="false"
 	 * @generated
 	 */
-	EMap<String, String> getAttributes();
+	Map<String, String> getAttributes();
 
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.
@@ -123,7 +122,7 @@ public interface DoorsTreeNode extends EObject {
 	 * @model transient="true" changeable="false" volatile="true" derived="true"
 	 * @generated
 	 */
-	EList<String> getFullNameSegments();
+	List<String> getFullNameSegments();
 
 	/**
 	 * <!-- begin-user-doc -->

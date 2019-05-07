@@ -10,6 +10,7 @@ import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsPackage;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
+import java.util.List;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
@@ -183,7 +184,7 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
      * <!-- end-user-doc --> @generated
      */
     @Override
-    public EList<AttributeDefinition> getAttributeDefinitions() {
+    public List<AttributeDefinition> getAttributeDefinitions() {
 		if (attributeDefinitions == null) {
 			attributeDefinitions = new EObjectContainmentEList<AttributeDefinition>(AttributeDefinition.class, this, DoorsPackage.DOORS_MODULE__ATTRIBUTE_DEFINITIONS);
 		}
@@ -216,7 +217,7 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
      * <!-- end-user-doc --> @generated
      */
     @Override
-    public EList<DoorsModuleVersion> getVersions() {
+    public List<DoorsModuleVersion> getVersions() {
 		if (versions == null) {
 			versions = new EObjectContainmentWithInverseEList<DoorsModuleVersion>(DoorsModuleVersion.class, this, DoorsPackage.DOORS_MODULE__VERSIONS, DoorsPackage.DOORS_MODULE_VERSION__MODULE);
 		}

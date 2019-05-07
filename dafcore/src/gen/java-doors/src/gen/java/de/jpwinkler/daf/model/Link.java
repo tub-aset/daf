@@ -20,7 +20,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model abstract="true"
  * @generated
  */
-public interface Link extends EObject {
+public interface Link {
 	/**
 	 * Returns the value of the '<em><b>Source</b></em>' container reference.
 	 * It is bidirectional and its opposite is '{@link de.jpwinkler.daf.model.DoorsObject#getOutgoingLinks <em>Outgoing Links</em>}'.

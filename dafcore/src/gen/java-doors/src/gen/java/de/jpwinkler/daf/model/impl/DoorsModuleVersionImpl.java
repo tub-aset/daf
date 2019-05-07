@@ -6,10 +6,12 @@ import de.jpwinkler.daf.model.DoorsModuleVersion;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsPackage;
 import java.util.Date;
+import java.util.Map;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -112,7 +114,7 @@ public class DoorsModuleVersionImpl extends MinimalEObjectImpl.Container impleme
 	@Override
 	public void setModule(DoorsModule newModule) {
 		if (newModule != eInternalContainer() || (eContainerFeatureID() != DoorsPackage.DOORS_MODULE_VERSION__MODULE && newModule != null)) {
-			if (EcoreUtil.isAncestor(this, newModule))
+			if (EcoreUtil.isAncestor(this, (EObject)newModule))
 				throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
 			NotificationChain msgs = null;
 			if (eInternalContainer() != null)
@@ -155,11 +157,11 @@ public class DoorsModuleVersionImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public EMap<String, String> getAttributes() {
+	public Map<String, String> getAttributes() {
 		if (attributes == null) {
 			attributes = new EcoreEMap<String,String>(DoorsPackage.Literals.STRING_TO_STRING_MAP, StringToStringMapImpl.class, this, DoorsPackage.DOORS_MODULE_VERSION__ATTRIBUTES);
 		}
-		return attributes;
+		return attributes.map();
 	}
 
 	/**
@@ -189,7 +191,7 @@ public class DoorsModuleVersionImpl extends MinimalEObjectImpl.Container impleme
 			case DoorsPackage.DOORS_MODULE_VERSION__MODULE:
 				return basicSetModule(null, msgs);
 			case DoorsPackage.DOORS_MODULE_VERSION__ATTRIBUTES:
-				return ((InternalEList<?>)getAttributes()).basicRemove(otherEnd, msgs);
+				return ((InternalEList<?>)((EMap.InternalMapView<String, String>)getAttributes()).eMap()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -221,8 +223,8 @@ public class DoorsModuleVersionImpl extends MinimalEObjectImpl.Container impleme
 			case DoorsPackage.DOORS_MODULE_VERSION__DATE:
 				return getDate();
 			case DoorsPackage.DOORS_MODULE_VERSION__ATTRIBUTES:
-				if (coreType) return getAttributes();
-				else return getAttributes().map();
+				if (coreType) return ((EMap.InternalMapView<String, String>)getAttributes()).eMap();
+				else return getAttributes();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -242,7 +244,7 @@ public class DoorsModuleVersionImpl extends MinimalEObjectImpl.Container impleme
 				setDate((Date)newValue);
 				return;
 			case DoorsPackage.DOORS_MODULE_VERSION__ATTRIBUTES:
-				((EStructuralFeature.Setting)getAttributes()).set(newValue);
+				((EStructuralFeature.Setting)((EMap.InternalMapView<String, String>)getAttributes()).eMap()).set(newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);

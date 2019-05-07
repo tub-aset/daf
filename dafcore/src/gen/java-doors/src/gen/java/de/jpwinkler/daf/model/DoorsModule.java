@@ -2,7 +2,7 @@
  */
 package de.jpwinkler.daf.model;
 
-import org.eclipse.emf.common.util.EList;
+import java.util.List;
 
 /**
  * <!-- begin-user-doc -->
@@ -79,7 +79,7 @@ public interface DoorsModule extends DoorsTreeNode {
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<AttributeDefinition> getAttributeDefinitions();
+	List<AttributeDefinition> getAttributeDefinitions();
 
 	/**
 	 * Returns the value of the '<em><b>View</b></em>' attribute.
@@ -115,7 +115,7 @@ public interface DoorsModule extends DoorsTreeNode {
 	 * @model opposite="module" containment="true"
 	 * @generated
 	 */
-	EList<DoorsModuleVersion> getVersions();
+	List<DoorsModuleVersion> getVersions();
 
 	/**
 	 * <!-- begin-user-doc -->

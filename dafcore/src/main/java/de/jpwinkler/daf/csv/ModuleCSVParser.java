@@ -1,8 +1,8 @@
 package de.jpwinkler.daf.csv;
 
 import de.jpwinkler.daf.model.AttributeDefinition;
-import de.jpwinkler.daf.model.DoorsCSVFactory;
-import de.jpwinkler.daf.model.DoorsCSVPackage;
+import de.jpwinkler.daf.model.DoorsFactory;
+import de.jpwinkler.daf.model.DoorsPackage;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
@@ -29,7 +29,7 @@ public class ModuleCSVParser {
             .withRecordSeparator("\r\n");
 
     private DoorsModule buildModuleModel(final CSVParser csvParser) throws CSVParseException, NumberFormatException, IOException {
-        final DoorsCSVFactory factory = DoorsCSVPackage.eINSTANCE.getDoorsCSVFactory();
+        final DoorsFactory factory = DoorsPackage.eINSTANCE.getDoorsFactory();
 
         final DoorsModule module = factory.createDoorsModule();
 
@@ -68,7 +68,7 @@ public class ModuleCSVParser {
         }
 
         for (final String header : csvParser.getHeaderMap().keySet()) {
-            final AttributeDefinition attributeDefinition = DoorsCSVFactory.eINSTANCE.createAttributeDefinition();
+            final AttributeDefinition attributeDefinition = DoorsFactory.eINSTANCE.createAttributeDefinition();
             attributeDefinition.setName(header);
             module.getAttributeDefinitions().add(attributeDefinition);
         }

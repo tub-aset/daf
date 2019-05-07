@@ -21,7 +21,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface DoorsDB extends EObject {
+public interface DoorsDB {
 	/**
 	 * Returns the value of the '<em><b>Root</b></em>' containment reference.
 	 * <!-- begin-user-doc -->

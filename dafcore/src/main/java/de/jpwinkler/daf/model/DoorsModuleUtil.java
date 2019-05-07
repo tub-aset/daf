@@ -29,7 +29,7 @@ public class DoorsModuleUtil {
 
     public static void ensureAttributeDefinition(final DoorsModule module, final String attributeName) {
         if (module.findAttributeDefinition(attributeName) == null) {
-            final AttributeDefinition ad = DoorsCSVFactory.eINSTANCE.createAttributeDefinition();
+            final AttributeDefinition ad = DoorsFactory.eINSTANCE.createAttributeDefinition();
             ad.setName(attributeName);
             module.getAttributeDefinitions().add(ad);
         }

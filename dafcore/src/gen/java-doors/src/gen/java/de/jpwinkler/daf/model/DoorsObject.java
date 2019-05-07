@@ -2,7 +2,7 @@
  */
 package de.jpwinkler.daf.model;
 
-import org.eclipse.emf.common.util.EList;
+import java.util.List;
 
 /**
  * <!-- begin-user-doc -->
@@ -221,7 +221,7 @@ public interface DoorsObject extends DoorsTreeNode {
 	 * @model opposite="source" containment="true"
 	 * @generated
 	 */
-	EList<Link> getOutgoingLinks();
+	List<Link> getOutgoingLinks();
 
 	/**
 	 * Returns the value of the '<em><b>Incoming Links</b></em>' reference list.
@@ -235,7 +235,7 @@ public interface DoorsObject extends DoorsTreeNode {
 	 * @model opposite="target"
 	 * @generated
 	 */
-	EList<ResolvedLink> getIncomingLinks();
+	List<ResolvedLink> getIncomingLinks();
 
 	/**
 	 * Returns the value of the '<em><b>Module</b></em>' reference.

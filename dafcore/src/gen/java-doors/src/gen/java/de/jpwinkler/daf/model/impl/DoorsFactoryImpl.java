@@ -56,16 +56,16 @@ public class DoorsFactoryImpl extends EFactoryImpl implements DoorsFactory {
 	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
-			case DoorsPackage.DOORS_TREE_NODE: return createDoorsTreeNode();
-			case DoorsPackage.DOORS_DB: return createDoorsDB();
-			case DoorsPackage.DOORS_FOLDER: return createDoorsFolder();
-			case DoorsPackage.DOORS_MODULE_VERSION: return createDoorsModuleVersion();
-			case DoorsPackage.DOORS_MODULE: return createDoorsModule();
-			case DoorsPackage.DOORS_OBJECT: return createDoorsObject();
+			case DoorsPackage.DOORS_TREE_NODE: return (EObject)createDoorsTreeNode();
+			case DoorsPackage.DOORS_DB: return (EObject)createDoorsDB();
+			case DoorsPackage.DOORS_FOLDER: return (EObject)createDoorsFolder();
+			case DoorsPackage.DOORS_MODULE_VERSION: return (EObject)createDoorsModuleVersion();
+			case DoorsPackage.DOORS_MODULE: return (EObject)createDoorsModule();
+			case DoorsPackage.DOORS_OBJECT: return (EObject)createDoorsObject();
 			case DoorsPackage.STRING_TO_STRING_MAP: return (EObject)createStringToStringMap();
-			case DoorsPackage.RESOLVED_LINK: return createResolvedLink();
-			case DoorsPackage.UNRESOLVED_LINK: return createUnresolvedLink();
-			case DoorsPackage.ATTRIBUTE_DEFINITION: return createAttributeDefinition();
+			case DoorsPackage.RESOLVED_LINK: return (EObject)createResolvedLink();
+			case DoorsPackage.UNRESOLVED_LINK: return (EObject)createUnresolvedLink();
+			case DoorsPackage.ATTRIBUTE_DEFINITION: return (EObject)createAttributeDefinition();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}

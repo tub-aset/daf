@@ -2,14 +2,15 @@ package de.jpwinkler.daf.localdb;
 
 import de.jpwinkler.daf.csv.ModuleCSVWriter;
 import de.jpwinkler.daf.csv.ModuleMetaDataParser;
-import de.jpwinkler.daf.model.DoorsCSVFactory;
-import de.jpwinkler.daf.model.DoorsCSVPackage;
+import de.jpwinkler.daf.model.DoorsFactory;
+import de.jpwinkler.daf.model.DoorsPackage;
 import de.jpwinkler.daf.model.DoorsDB;
 import de.jpwinkler.daf.model.DoorsModuleVersion;
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
+import de.jpwinkler.daf.model.impl.DoorsDBImpl;
 import de.jpwinkler.daf.search.SearchExpression;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -44,7 +45,7 @@ public class FileDatabaseInterface implements DatabaseInterface {
 
         databaseFile = databaseFile.toAbsolutePath();
         if (Files.exists(databaseFile)) {
-            DoorsCSVPackage.eINSTANCE.eClass();
+            DoorsPackage.eINSTANCE.eClass();
 
             final Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
             reg.getExtensionToFactoryMap().put("doorsdbmodel", new XMIResourceFactoryImpl());
@@ -52,8 +53,8 @@ public class FileDatabaseInterface implements DatabaseInterface {
             final Resource resource = resourceSet.getResource(URI.createFileURI(databaseFile.toString()), true);
             db = (DoorsDB) resource.getContents().get(0);
         } else {
-            db = DoorsCSVFactory.eINSTANCE.createDoorsDB();
-            db.setRoot(DoorsCSVFactory.eINSTANCE.createDoorsFolder());
+            db = DoorsFactory.eINSTANCE.createDoorsDB();
+            db.setRoot(DoorsFactory.eINSTANCE.createDoorsFolder());
             final FileDatabaseInterface doorsDBInterface = new FileDatabaseInterface(databaseFile, db);
             doorsDBInterface.flush();
         }
@@ -73,7 +74,7 @@ public class FileDatabaseInterface implements DatabaseInterface {
         DoorsModule dbModule = folder.getModule(newModule.getName());
 
         if (dbModule == null) {
-            dbModule = DoorsCSVFactory.eINSTANCE.createDoorsModule();
+            dbModule = DoorsFactory.eINSTANCE.createDoorsModule();
             dbModule.setParent(folder);
             dbModule.setName(newModule.getName());
         }
@@ -85,11 +86,11 @@ public class FileDatabaseInterface implements DatabaseInterface {
             writer.writeModule(newModule);
 
             Path mmdPath = ensureMmdFilesystemPath(currentVersion);
-            ModuleMetaDataParser.writeModuleMetaData(mmdPath.toFile(), newModule.getAttributes().map());
+            ModuleMetaDataParser.writeModuleMetaData(mmdPath.toFile(), newModule.getAttributes());
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
-        
+
         return dbModule;
     }
 
@@ -99,7 +100,7 @@ public class FileDatabaseInterface implements DatabaseInterface {
         reg.getExtensionToFactoryMap().put("doorsdbmodel", new XMIResourceFactoryImpl());
         final ResourceSet resourceSet = new ResourceSetImpl();
         final Resource resource = resourceSet.createResource(URI.createFileURI(databaseFile.toString()));
-        resource.getContents().add(db);
+        resource.getContents().add((DoorsDBImpl) db);
         resource.save(new HashMap<>());
     }
 
@@ -219,7 +220,7 @@ public class FileDatabaseInterface implements DatabaseInterface {
         if (path.size() > 0) {
             DoorsFolder folder = parent.getFolder(path.get(0));
             if (folder == null) {
-                folder = DoorsCSVFactory.eINSTANCE.createDoorsFolder();
+                folder = DoorsFactory.eINSTANCE.createDoorsFolder();
                 folder.setName(path.get(0));
                 parent.getChildren().add(folder);
             }

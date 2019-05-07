@@ -3,8 +3,7 @@
 package de.jpwinkler.daf.model;
 
 import java.util.Date;
-import org.eclipse.emf.common.util.EMap;
-import org.eclipse.emf.ecore.EObject;
+import java.util.Map;
 
 /**
  * <!-- begin-user-doc -->
@@ -24,7 +23,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface DoorsModuleVersion extends EObject {
+public interface DoorsModuleVersion {
 	/**
 	 * Returns the value of the '<em><b>Module</b></em>' container reference.
 	 * It is bidirectional and its opposite is '{@link de.jpwinkler.daf.model.DoorsModule#getVersions <em>Versions</em>}'.
@@ -82,6 +81,6 @@ public interface DoorsModuleVersion extends EObject {
 	 * @model mapType="de.jpwinkler.daf.model.StringToStringMap&lt;org.eclipse.emf.ecore.EString, org.eclipse.emf.ecore.EString&gt;"
 	 * @generated
 	 */
-	EMap<String, String> getAttributes();
+	Map<String, String> getAttributes();
 
 } // DoorsModuleVersion

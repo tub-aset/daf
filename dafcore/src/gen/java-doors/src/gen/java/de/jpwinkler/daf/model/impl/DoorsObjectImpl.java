@@ -9,10 +9,12 @@ import de.jpwinkler.daf.model.Link;
 import de.jpwinkler.daf.model.ResolvedLink;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
+import java.util.List;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
@@ -347,7 +349,7 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 	 * @generated
 	 */
     @Override
-    public EList<Link> getOutgoingLinks() {
+    public List<Link> getOutgoingLinks() {
 		if (outgoingLinks == null) {
 			outgoingLinks = new EObjectContainmentWithInverseEList<Link>(Link.class, this, DoorsPackage.DOORS_OBJECT__OUTGOING_LINKS, DoorsPackage.LINK__SOURCE);
 		}
@@ -360,7 +362,7 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 	 * @generated
 	 */
     @Override
-    public EList<ResolvedLink> getIncomingLinks() {
+    public List<ResolvedLink> getIncomingLinks() {
 		if (incomingLinks == null) {
 			incomingLinks = new EObjectWithInverseResolvingEList<ResolvedLink>(ResolvedLink.class, this, DoorsPackage.DOORS_OBJECT__INCOMING_LINKS, DoorsPackage.RESOLVED_LINK__TARGET);
 		}
@@ -374,7 +376,7 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 	 */
     @Override
     public DoorsModule getModule() {
-		if (module != null && module.eIsProxy()) {
+		if (module != null && ((EObject)module).eIsProxy()) {
 			InternalEObject oldModule = (InternalEObject)module;
 			module = (DoorsModule)eResolveProxy(oldModule);
 			if (module != oldModule) {
