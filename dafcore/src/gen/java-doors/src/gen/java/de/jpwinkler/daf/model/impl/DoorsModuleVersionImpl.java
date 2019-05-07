@@ -159,7 +159,7 @@ public class DoorsModuleVersionImpl extends MinimalEObjectImpl.Container impleme
 	@Override
 	public Map<String, String> getAttributes() {
 		if (attributes == null) {
-			attributes = new EcoreEMap<String,String>(DoorsPackage.Literals.STRING_TO_STRING_MAP, StringToStringMapImpl.class, this, DoorsPackage.DOORS_MODULE_VERSION__ATTRIBUTES);
+			attributes = new EcoreEMap<String,String>(DoorsPackage.Literals.ATTRIBUTE_MAP, AttributeMapImpl.class, this, DoorsPackage.DOORS_MODULE_VERSION__ATTRIBUTES);
 		}
 		return attributes.map();
 	}

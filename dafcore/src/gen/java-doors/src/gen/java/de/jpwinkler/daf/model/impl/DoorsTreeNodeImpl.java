@@ -4,6 +4,7 @@ package de.jpwinkler.daf.model.impl;
 
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsPackage;
+import de.jpwinkler.daf.model.DoorsSystemAttributes;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import java.lang.reflect.InvocationTargetException;
@@ -171,7 +172,7 @@ public abstract class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container imp
     @Override
     public Map<String, String> getAttributes() {
 		if (attributes == null) {
-			attributes = new EcoreEMap<String,String>(DoorsPackage.Literals.STRING_TO_STRING_MAP, StringToStringMapImpl.class, this, DoorsPackage.DOORS_TREE_NODE__ATTRIBUTES);
+			attributes = new EcoreEMap<String,String>(DoorsPackage.Literals.ATTRIBUTE_MAP, AttributeMapImpl.class, this, DoorsPackage.DOORS_TREE_NODE__ATTRIBUTES);
 		}
 		return attributes.map();
 	}
@@ -249,13 +250,21 @@ public abstract class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container imp
     /**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public boolean hasTag(String tag) {
-		// TODO: implement this method
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
+		return DoorsSystemAttributes.TAGS.getValue(Collection.class, attributes).contains(tag);
+	}
+
+				/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	@Override
+	public boolean hasTag(Pattern pattern) {
+		return DoorsSystemAttributes.TAGS.getValue(Collection.class, attributes).stream().anyMatch(pattern.asMatchPredicate());
 	}
 
 				/**
@@ -264,7 +273,7 @@ public abstract class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 */
 	@Override
-	public boolean hasTag(Pattern pattern) {
+	public void copyFrom(DoorsTreeNode node) {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT
 		throw new UnsupportedOperationException();
@@ -427,6 +436,9 @@ public abstract class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container imp
 				return hasTag((String)arguments.get(0));
 			case DoorsPackage.DOORS_TREE_NODE___HAS_TAG__PATTERN:
 				return hasTag((Pattern)arguments.get(0));
+			case DoorsPackage.DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE:
+				copyFrom((DoorsTreeNode)arguments.get(0));
+				return null;
 		}
 		return super.eInvoke(operationID, arguments);
 	}

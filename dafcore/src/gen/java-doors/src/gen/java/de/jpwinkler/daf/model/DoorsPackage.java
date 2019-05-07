@@ -159,13 +159,22 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_TREE_NODE___HAS_TAG__PATTERN = 2;
 
 	/**
+	 * The operation id for the '<em>Copy From</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE = 3;
+
+	/**
 	 * The number of operations of the '<em>Tree Node</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_TREE_NODE_OPERATION_COUNT = 3;
+	int DOORS_TREE_NODE_OPERATION_COUNT = 4;
 
 	/**
 	 * The meta object id for the '{@link de.jpwinkler.daf.model.impl.DoorsDatabaseImpl <em>Database</em>}' class.
@@ -312,6 +321,15 @@ public interface DoorsPackage extends EPackage {
 	 * @ordered
 	 */
 	int DOORS_FOLDER___HAS_TAG__PATTERN = DOORS_TREE_NODE___HAS_TAG__PATTERN;
+
+	/**
+	 * The operation id for the '<em>Copy From</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_FOLDER___COPY_FROM__DOORSTREENODE = DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE;
 
 	/**
 	 * The operation id for the '<em>Get Folder</em>' operation.
@@ -478,22 +496,13 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_MODULE__URL = DOORS_TREE_NODE_FEATURE_COUNT + 1;
 
 	/**
-	 * The feature id for the '<em><b>Attribute Definitions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DOORS_MODULE__ATTRIBUTE_DEFINITIONS = DOORS_TREE_NODE_FEATURE_COUNT + 2;
-
-	/**
 	 * The feature id for the '<em><b>View</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_MODULE__VIEW = DOORS_TREE_NODE_FEATURE_COUNT + 3;
+	int DOORS_MODULE__VIEW = DOORS_TREE_NODE_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Versions</b></em>' containment reference list.
@@ -502,7 +511,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_MODULE__VERSIONS = DOORS_TREE_NODE_FEATURE_COUNT + 4;
+	int DOORS_MODULE__VERSIONS = DOORS_TREE_NODE_FEATURE_COUNT + 3;
 
 	/**
 	 * The number of structural features of the '<em>Module</em>' class.
@@ -511,7 +520,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_MODULE_FEATURE_COUNT = DOORS_TREE_NODE_FEATURE_COUNT + 5;
+	int DOORS_MODULE_FEATURE_COUNT = DOORS_TREE_NODE_FEATURE_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Accept</em>' operation.
@@ -541,13 +550,13 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_MODULE___HAS_TAG__PATTERN = DOORS_TREE_NODE___HAS_TAG__PATTERN;
 
 	/**
-	 * The operation id for the '<em>Find Attribute Definition</em>' operation.
+	 * The operation id for the '<em>Copy From</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_MODULE___FIND_ATTRIBUTE_DEFINITION__STRING = DOORS_TREE_NODE_OPERATION_COUNT + 0;
+	int DOORS_MODULE___COPY_FROM__DOORSTREENODE = DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE;
 
 	/**
 	 * The operation id for the '<em>Find Object</em>' operation.
@@ -556,7 +565,25 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_MODULE___FIND_OBJECT__STRING = DOORS_TREE_NODE_OPERATION_COUNT + 1;
+	int DOORS_MODULE___FIND_OBJECT__STRING = DOORS_TREE_NODE_OPERATION_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Get Object Attributes</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_MODULE___GET_OBJECT_ATTRIBUTES = DOORS_TREE_NODE_OPERATION_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Set Object Attributes</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_MODULE___SET_OBJECT_ATTRIBUTES__COLLECTION = DOORS_TREE_NODE_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get Latest Version</em>' operation.
@@ -565,7 +592,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_MODULE___GET_LATEST_VERSION = DOORS_TREE_NODE_OPERATION_COUNT + 2;
+	int DOORS_MODULE___GET_LATEST_VERSION = DOORS_TREE_NODE_OPERATION_COUNT + 3;
 
 	/**
 	 * The number of operations of the '<em>Module</em>' class.
@@ -574,7 +601,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_MODULE_OPERATION_COUNT = DOORS_TREE_NODE_OPERATION_COUNT + 3;
+	int DOORS_MODULE_OPERATION_COUNT = DOORS_TREE_NODE_OPERATION_COUNT + 4;
 
 	/**
 	 * The meta object id for the '{@link de.jpwinkler.daf.model.impl.DoorsObjectImpl <em>Object</em>}' class.
@@ -776,6 +803,15 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_OBJECT___HAS_TAG__PATTERN = DOORS_TREE_NODE___HAS_TAG__PATTERN;
 
 	/**
+	 * The operation id for the '<em>Copy From</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_OBJECT___COPY_FROM__DOORSTREENODE = DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE;
+
+	/**
 	 * The operation id for the '<em>Is Heading</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -794,14 +830,14 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_OBJECT_OPERATION_COUNT = DOORS_TREE_NODE_OPERATION_COUNT + 1;
 
 	/**
-	 * The meta object id for the '{@link de.jpwinkler.daf.model.impl.StringToStringMapImpl <em>String To String Map</em>}' class.
+	 * The meta object id for the '{@link de.jpwinkler.daf.model.impl.AttributeMapImpl <em>Attribute Map</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see de.jpwinkler.daf.model.impl.StringToStringMapImpl
-	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getStringToStringMap()
+	 * @see de.jpwinkler.daf.model.impl.AttributeMapImpl
+	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getAttributeMap()
 	 * @generated
 	 */
-	int STRING_TO_STRING_MAP = 6;
+	int ATTRIBUTE_MAP = 6;
 
 	/**
 	 * The feature id for the '<em><b>Key</b></em>' attribute.
@@ -810,7 +846,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STRING_TO_STRING_MAP__KEY = 0;
+	int ATTRIBUTE_MAP__KEY = 0;
 
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -819,25 +855,25 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STRING_TO_STRING_MAP__VALUE = 1;
+	int ATTRIBUTE_MAP__VALUE = 1;
 
 	/**
-	 * The number of structural features of the '<em>String To String Map</em>' class.
+	 * The number of structural features of the '<em>Attribute Map</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int STRING_TO_STRING_MAP_FEATURE_COUNT = 2;
+	int ATTRIBUTE_MAP_FEATURE_COUNT = 2;
 
 	/**
-	 * The number of operations of the '<em>String To String Map</em>' class.
+	 * The number of operations of the '<em>Attribute Map</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int STRING_TO_STRING_MAP_OPERATION_COUNT = 0;
+	int ATTRIBUTE_MAP_OPERATION_COUNT = 0;
 
 	/**
 	 * The meta object id for the '{@link de.jpwinkler.daf.model.impl.LinkImpl <em>Link</em>}' class.
@@ -978,43 +1014,6 @@ public interface DoorsPackage extends EPackage {
 	int UNRESOLVED_LINK_OPERATION_COUNT = LINK_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link de.jpwinkler.daf.model.impl.AttributeDefinitionImpl <em>Attribute Definition</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see de.jpwinkler.daf.model.impl.AttributeDefinitionImpl
-	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getAttributeDefinition()
-	 * @generated
-	 */
-	int ATTRIBUTE_DEFINITION = 10;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ATTRIBUTE_DEFINITION__NAME = 0;
-
-	/**
-	 * The number of structural features of the '<em>Attribute Definition</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ATTRIBUTE_DEFINITION_FEATURE_COUNT = 1;
-
-	/**
-	 * The number of operations of the '<em>Attribute Definition</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ATTRIBUTE_DEFINITION_OPERATION_COUNT = 0;
-
-	/**
 	 * The meta object id for the '<em>Tree Node Visitor</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1022,7 +1021,7 @@ public interface DoorsPackage extends EPackage {
 	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getDoorsTreeNodeVisitor()
 	 * @generated
 	 */
-	int DOORS_TREE_NODE_VISITOR = 11;
+	int DOORS_TREE_NODE_VISITOR = 10;
 
 
 	/**
@@ -1033,7 +1032,18 @@ public interface DoorsPackage extends EPackage {
 	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getPattern()
 	 * @generated
 	 */
-	int PATTERN = 12;
+	int PATTERN = 11;
+
+
+	/**
+	 * The meta object id for the '<em>Collection</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see java.util.Collection
+	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getCollection()
+	 * @generated
+	 */
+	int COLLECTION = 12;
 
 
 	/**
@@ -1141,6 +1151,16 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getDoorsTreeNode__HasTag__Pattern();
+
+	/**
+	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsTreeNode#copyFrom(de.jpwinkler.daf.model.DoorsTreeNode) <em>Copy From</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Copy From</em>' operation.
+	 * @see de.jpwinkler.daf.model.DoorsTreeNode#copyFrom(de.jpwinkler.daf.model.DoorsTreeNode)
+	 * @generated
+	 */
+	EOperation getDoorsTreeNode__CopyFrom__DoorsTreeNode();
 
 	/**
 	 * Returns the meta object for class '{@link de.jpwinkler.daf.model.DoorsDatabase <em>Database</em>}'.
@@ -1279,17 +1299,6 @@ public interface DoorsPackage extends EPackage {
 	EAttribute getDoorsModule_Url();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link de.jpwinkler.daf.model.DoorsModule#getAttributeDefinitions <em>Attribute Definitions</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Attribute Definitions</em>'.
-	 * @see de.jpwinkler.daf.model.DoorsModule#getAttributeDefinitions()
-	 * @see #getDoorsModule()
-	 * @generated
-	 */
-	EReference getDoorsModule_AttributeDefinitions();
-
-	/**
 	 * Returns the meta object for the attribute '{@link de.jpwinkler.daf.model.DoorsModule#getView <em>View</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1312,16 +1321,6 @@ public interface DoorsPackage extends EPackage {
 	EReference getDoorsModule_Versions();
 
 	/**
-	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsModule#findAttributeDefinition(java.lang.String) <em>Find Attribute Definition</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Find Attribute Definition</em>' operation.
-	 * @see de.jpwinkler.daf.model.DoorsModule#findAttributeDefinition(java.lang.String)
-	 * @generated
-	 */
-	EOperation getDoorsModule__FindAttributeDefinition__String();
-
-	/**
 	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsModule#findObject(java.lang.String) <em>Find Object</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1330,6 +1329,26 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getDoorsModule__FindObject__String();
+
+	/**
+	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsModule#getObjectAttributes() <em>Get Object Attributes</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Object Attributes</em>' operation.
+	 * @see de.jpwinkler.daf.model.DoorsModule#getObjectAttributes()
+	 * @generated
+	 */
+	EOperation getDoorsModule__GetObjectAttributes();
+
+	/**
+	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsModule#setObjectAttributes(java.util.Collection) <em>Set Object Attributes</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Set Object Attributes</em>' operation.
+	 * @see de.jpwinkler.daf.model.DoorsModule#setObjectAttributes(java.util.Collection)
+	 * @generated
+	 */
+	EOperation getDoorsModule__SetObjectAttributes__Collection();
 
 	/**
 	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsModule#getLatestVersion() <em>Get Latest Version</em>}' operation.
@@ -1483,16 +1502,16 @@ public interface DoorsPackage extends EPackage {
 	EOperation getDoorsObject__IsHeading();
 
 	/**
-	 * Returns the meta object for class '{@link java.util.Map.Entry <em>String To String Map</em>}'.
+	 * Returns the meta object for class '{@link java.util.Map.Entry <em>Attribute Map</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>String To String Map</em>'.
+	 * @return the meta object for class '<em>Attribute Map</em>'.
 	 * @see java.util.Map.Entry
 	 * @model keyUnique="false" keyDataType="org.eclipse.emf.ecore.EString"
 	 *        valueUnique="false" valueDataType="org.eclipse.emf.ecore.EString"
 	 * @generated
 	 */
-	EClass getStringToStringMap();
+	EClass getAttributeMap();
 
 	/**
 	 * Returns the meta object for the attribute '{@link java.util.Map.Entry <em>Key</em>}'.
@@ -1500,10 +1519,10 @@ public interface DoorsPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Key</em>'.
 	 * @see java.util.Map.Entry
-	 * @see #getStringToStringMap()
+	 * @see #getAttributeMap()
 	 * @generated
 	 */
-	EAttribute getStringToStringMap_Key();
+	EAttribute getAttributeMap_Key();
 
 	/**
 	 * Returns the meta object for the attribute '{@link java.util.Map.Entry <em>Value</em>}'.
@@ -1511,10 +1530,10 @@ public interface DoorsPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Value</em>'.
 	 * @see java.util.Map.Entry
-	 * @see #getStringToStringMap()
+	 * @see #getAttributeMap()
 	 * @generated
 	 */
-	EAttribute getStringToStringMap_Value();
+	EAttribute getAttributeMap_Value();
 
 	/**
 	 * Returns the meta object for class '{@link de.jpwinkler.daf.model.Link <em>Link</em>}'.
@@ -1591,27 +1610,6 @@ public interface DoorsPackage extends EPackage {
 	EAttribute getUnresolvedLink_TargetObject();
 
 	/**
-	 * Returns the meta object for class '{@link de.jpwinkler.daf.model.AttributeDefinition <em>Attribute Definition</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Attribute Definition</em>'.
-	 * @see de.jpwinkler.daf.model.AttributeDefinition
-	 * @generated
-	 */
-	EClass getAttributeDefinition();
-
-	/**
-	 * Returns the meta object for the attribute '{@link de.jpwinkler.daf.model.AttributeDefinition#getName <em>Name</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see de.jpwinkler.daf.model.AttributeDefinition#getName()
-	 * @see #getAttributeDefinition()
-	 * @generated
-	 */
-	EAttribute getAttributeDefinition_Name();
-
-	/**
 	 * Returns the meta object for data type '{@link de.jpwinkler.daf.model.DoorsTreeNodeVisitor <em>Tree Node Visitor</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1632,6 +1630,17 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 */
 	EDataType getPattern();
+
+	/**
+	 * Returns the meta object for data type '{@link java.util.Collection <em>Collection</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Collection</em>'.
+	 * @see java.util.Collection
+	 * @model instanceClass="java.util.Collection"
+	 * @generated
+	 */
+	EDataType getCollection();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -1737,6 +1746,14 @@ public interface DoorsPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation DOORS_TREE_NODE___HAS_TAG__PATTERN = eINSTANCE.getDoorsTreeNode__HasTag__Pattern();
+
+		/**
+		 * The meta object literal for the '<em><b>Copy From</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE = eINSTANCE.getDoorsTreeNode__CopyFrom__DoorsTreeNode();
 
 		/**
 		 * The meta object literal for the '{@link de.jpwinkler.daf.model.impl.DoorsDatabaseImpl <em>Database</em>}' class.
@@ -1851,14 +1868,6 @@ public interface DoorsPackage extends EPackage {
 		EAttribute DOORS_MODULE__URL = eINSTANCE.getDoorsModule_Url();
 
 		/**
-		 * The meta object literal for the '<em><b>Attribute Definitions</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference DOORS_MODULE__ATTRIBUTE_DEFINITIONS = eINSTANCE.getDoorsModule_AttributeDefinitions();
-
-		/**
 		 * The meta object literal for the '<em><b>View</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1875,20 +1884,28 @@ public interface DoorsPackage extends EPackage {
 		EReference DOORS_MODULE__VERSIONS = eINSTANCE.getDoorsModule_Versions();
 
 		/**
-		 * The meta object literal for the '<em><b>Find Attribute Definition</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation DOORS_MODULE___FIND_ATTRIBUTE_DEFINITION__STRING = eINSTANCE.getDoorsModule__FindAttributeDefinition__String();
-
-		/**
 		 * The meta object literal for the '<em><b>Find Object</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
 		EOperation DOORS_MODULE___FIND_OBJECT__STRING = eINSTANCE.getDoorsModule__FindObject__String();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Object Attributes</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation DOORS_MODULE___GET_OBJECT_ATTRIBUTES = eINSTANCE.getDoorsModule__GetObjectAttributes();
+
+		/**
+		 * The meta object literal for the '<em><b>Set Object Attributes</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation DOORS_MODULE___SET_OBJECT_ATTRIBUTES__COLLECTION = eINSTANCE.getDoorsModule__SetObjectAttributes__Collection();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Latest Version</b></em>' operation.
@@ -2005,14 +2022,14 @@ public interface DoorsPackage extends EPackage {
 		EOperation DOORS_OBJECT___IS_HEADING = eINSTANCE.getDoorsObject__IsHeading();
 
 		/**
-		 * The meta object literal for the '{@link de.jpwinkler.daf.model.impl.StringToStringMapImpl <em>String To String Map</em>}' class.
+		 * The meta object literal for the '{@link de.jpwinkler.daf.model.impl.AttributeMapImpl <em>Attribute Map</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see de.jpwinkler.daf.model.impl.StringToStringMapImpl
-		 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getStringToStringMap()
+		 * @see de.jpwinkler.daf.model.impl.AttributeMapImpl
+		 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getAttributeMap()
 		 * @generated
 		 */
-		EClass STRING_TO_STRING_MAP = eINSTANCE.getStringToStringMap();
+		EClass ATTRIBUTE_MAP = eINSTANCE.getAttributeMap();
 
 		/**
 		 * The meta object literal for the '<em><b>Key</b></em>' attribute feature.
@@ -2020,7 +2037,7 @@ public interface DoorsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute STRING_TO_STRING_MAP__KEY = eINSTANCE.getStringToStringMap_Key();
+		EAttribute ATTRIBUTE_MAP__KEY = eINSTANCE.getAttributeMap_Key();
 
 		/**
 		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
@@ -2028,7 +2045,7 @@ public interface DoorsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute STRING_TO_STRING_MAP__VALUE = eINSTANCE.getStringToStringMap_Value();
+		EAttribute ATTRIBUTE_MAP__VALUE = eINSTANCE.getAttributeMap_Value();
 
 		/**
 		 * The meta object literal for the '{@link de.jpwinkler.daf.model.impl.LinkImpl <em>Link</em>}' class.
@@ -2093,24 +2110,6 @@ public interface DoorsPackage extends EPackage {
 		EAttribute UNRESOLVED_LINK__TARGET_OBJECT = eINSTANCE.getUnresolvedLink_TargetObject();
 
 		/**
-		 * The meta object literal for the '{@link de.jpwinkler.daf.model.impl.AttributeDefinitionImpl <em>Attribute Definition</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see de.jpwinkler.daf.model.impl.AttributeDefinitionImpl
-		 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getAttributeDefinition()
-		 * @generated
-		 */
-		EClass ATTRIBUTE_DEFINITION = eINSTANCE.getAttributeDefinition();
-
-		/**
-		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute ATTRIBUTE_DEFINITION__NAME = eINSTANCE.getAttributeDefinition_Name();
-
-		/**
 		 * The meta object literal for the '<em>Tree Node Visitor</em>' data type.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2129,6 +2128,16 @@ public interface DoorsPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType PATTERN = eINSTANCE.getPattern();
+
+		/**
+		 * The meta object literal for the '<em>Collection</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see java.util.Collection
+		 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getCollection()
+		 * @generated
+		 */
+		EDataType COLLECTION = eINSTANCE.getCollection();
 
 	}
 

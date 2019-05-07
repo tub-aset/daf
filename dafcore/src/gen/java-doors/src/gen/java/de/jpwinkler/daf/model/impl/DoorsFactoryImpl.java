@@ -3,6 +3,7 @@
 package de.jpwinkler.daf.model.impl;
 
 import de.jpwinkler.daf.model.*;
+import java.util.Collection;
 import java.util.Map;
 import java.util.regex.Pattern;
 import org.eclipse.emf.ecore.EClass;
@@ -61,10 +62,9 @@ public class DoorsFactoryImpl extends EFactoryImpl implements DoorsFactory {
 			case DoorsPackage.DOORS_MODULE_VERSION: return (EObject)createDoorsModuleVersion();
 			case DoorsPackage.DOORS_MODULE: return (EObject)createDoorsModule();
 			case DoorsPackage.DOORS_OBJECT: return (EObject)createDoorsObject();
-			case DoorsPackage.STRING_TO_STRING_MAP: return (EObject)createStringToStringMap();
+			case DoorsPackage.ATTRIBUTE_MAP: return (EObject)createAttributeMap();
 			case DoorsPackage.RESOLVED_LINK: return (EObject)createResolvedLink();
 			case DoorsPackage.UNRESOLVED_LINK: return (EObject)createUnresolvedLink();
-			case DoorsPackage.ATTRIBUTE_DEFINITION: return (EObject)createAttributeDefinition();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -82,6 +82,8 @@ public class DoorsFactoryImpl extends EFactoryImpl implements DoorsFactory {
 				return createDoorsTreeNodeVisitorFromString(eDataType, initialValue);
 			case DoorsPackage.PATTERN:
 				return createPatternFromString(eDataType, initialValue);
+			case DoorsPackage.COLLECTION:
+				return createCollectionFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -99,6 +101,8 @@ public class DoorsFactoryImpl extends EFactoryImpl implements DoorsFactory {
 				return convertDoorsTreeNodeVisitorToString(eDataType, instanceValue);
 			case DoorsPackage.PATTERN:
 				return convertPatternToString(eDataType, instanceValue);
+			case DoorsPackage.COLLECTION:
+				return convertCollectionToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -164,9 +168,9 @@ public class DoorsFactoryImpl extends EFactoryImpl implements DoorsFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Map.Entry<String, String> createStringToStringMap() {
-		StringToStringMapImpl stringToStringMap = new StringToStringMapImpl();
-		return stringToStringMap;
+	public Map.Entry<String, String> createAttributeMap() {
+		AttributeMapImpl attributeMap = new AttributeMapImpl();
+		return attributeMap;
 	}
 
 	/**
@@ -189,17 +193,6 @@ public class DoorsFactoryImpl extends EFactoryImpl implements DoorsFactory {
 	public UnresolvedLink createUnresolvedLink() {
 		UnresolvedLinkImpl unresolvedLink = new UnresolvedLinkImpl();
 		return unresolvedLink;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public AttributeDefinition createAttributeDefinition() {
-		AttributeDefinitionImpl attributeDefinition = new AttributeDefinitionImpl();
-		return attributeDefinition;
 	}
 
 	/**
@@ -235,6 +228,24 @@ public class DoorsFactoryImpl extends EFactoryImpl implements DoorsFactory {
 	 * @generated
 	 */
 	public String convertPatternToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Collection createCollectionFromString(EDataType eDataType, String initialValue) {
+		return (Collection)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertCollectionToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(eDataType, instanceValue);
 	}
 

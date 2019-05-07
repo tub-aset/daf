@@ -1,6 +1,5 @@
 package de.jpwinkler.daf.csv;
 
-import de.jpwinkler.daf.model.AttributeDefinition;
 import de.jpwinkler.daf.model.DoorsFactory;
 import de.jpwinkler.daf.model.DoorsPackage;
 import de.jpwinkler.daf.model.DoorsModule;
@@ -67,11 +66,7 @@ public class ModuleCSVParser {
             current.getChildren().add(newObject);
         }
 
-        for (final String header : csvParser.getHeaderMap().keySet()) {
-            final AttributeDefinition attributeDefinition = DoorsFactory.eINSTANCE.createAttributeDefinition();
-            attributeDefinition.setName(header);
-            module.getAttributeDefinitions().add(attributeDefinition);
-        }
+        module.setObjectAttributes(csvParser.getHeaderMap().keySet());
 
         return module;
     }

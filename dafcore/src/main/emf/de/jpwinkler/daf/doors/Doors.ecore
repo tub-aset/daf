@@ -14,7 +14,7 @@
                              eOpposite="#//DoorsModule/versions"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
         <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" upperBound="-1"
-                             eType="#//StringToStringMap" containment="true"/>
+                             eType="#//AttributeMap" containment="true"/>
     </eClassifiers>
   
     <eClassifiers xsi:type="ecore:EClass" name="DoorsFolder" eSuperTypes="#//DoorsTreeNode">
@@ -28,18 +28,17 @@
     
     
     <eClassifiers xsi:type="ecore:EClass" name="DoorsModule" eSuperTypes="#//DoorsTreeNode">
-        <eOperations name="findAttributeDefinition" eType="#//AttributeDefinition">
-            <eParameters name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-        </eOperations>
         <eOperations name="findObject" eType="#//DoorsObject">
             <eParameters name="objectIdentifier" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </eOperations>
+        <eOperations name="getObjectAttributes" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
+        <eOperations name="setObjectAttributes">
+            <eParameters name="attrs" eType="#//Collection"/>
         </eOperations>
         
         <eOperations name="getLatestVersion" eType="#//DoorsModuleVersion"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="path" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="url" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-        <eStructuralFeatures xsi:type="ecore:EReference" name="attributeDefinitions" upperBound="-1"
-                             eType="#//AttributeDefinition" containment="true"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="view" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         <eStructuralFeatures xsi:type="ecore:EReference" name="versions" upperBound="-1"
                              eType="#//DoorsModuleVersion" containment="true" eOpposite="#//DoorsModuleVersion/module"/>
@@ -80,13 +79,14 @@
         <eStructuralFeatures xsi:type="ecore:EReference" name="module" eType="#//DoorsModule"/>
     </eClassifiers>
   
-    <eClassifiers xsi:type="ecore:EClass" name="StringToStringMap" instanceClassName="java.util.Map$Entry">
+    <eClassifiers xsi:type="ecore:EClass" name="AttributeMap" instanceClassName="java.util.Map$Entry">
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" unique="false" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" unique="false" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eClassifiers>
   
     <eClassifiers xsi:type="ecore:EDataType" name="DoorsTreeNodeVisitor" instanceClassName="de.jpwinkler.daf.model.DoorsTreeNodeVisitor"/>
     <eClassifiers xsi:type="ecore:EDataType" name="Pattern" instanceClassName="java.util.regex.Pattern"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Collection" instanceClassName="java.util.Collection"/>
     
     <eClassifiers xsi:type="ecore:EClass" name="Link" abstract="true">
         <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="#//DoorsObject"
@@ -110,7 +110,7 @@
         <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//DoorsTreeNode"
                              eOpposite="#//DoorsTreeNode/children"/>
         <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" ordered="false"
-                             upperBound="-1" eType="#//StringToStringMap" containment="true" resolveProxies="false"/>
+                             upperBound="-1" eType="#//AttributeMap" containment="true" resolveProxies="false"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="fullName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
                              changeable="false" volatile="true" transient="true" derived="true"/>
@@ -125,8 +125,8 @@
             <eParameters name="pattern" eType="#//Pattern"/>
         </eOperations>
         
-    </eClassifiers>
-    <eClassifiers xsi:type="ecore:EClass" name="AttributeDefinition">
-        <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        <eOperations name="copyFrom">
+            <eParameters name="node" eType="#//DoorsTreeNode"/>
+        </eOperations>
     </eClassifiers>
 </ecore:EPackage>

@@ -10,6 +10,7 @@
                  ecorePackage="Doors.ecore#/" classPackageSuffix="impl">
         <genDataTypes ecoreDataType="Doors.ecore#//DoorsTreeNodeVisitor"/>
         <genDataTypes ecoreDataType="Doors.ecore#//Pattern"/>
+        <genDataTypes ecoreDataType="Doors.ecore#//Collection"/>
         
         <genClasses ecoreClass="Doors.ecore#//DoorsTreeNode" abstract="true">
             <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Doors.ecore#//DoorsTreeNode/children"/>
@@ -27,6 +28,9 @@
             </genOperations>
             -<genOperations ecoreOperation="Doors.ecore#//DoorsTreeNode/hasTag">
                 <genParameters ecoreParameter="Doors.ecore#//DoorsTreeNode/hasTag.1/pattern"/>
+            </genOperations>
+            -<genOperations ecoreOperation="Doors.ecore#//DoorsTreeNode/copyFrom">
+                <genParameters ecoreParameter="Doors.ecore#//DoorsTreeNode/copyFrom/node"/>
             </genOperations>
         </genClasses>
         
@@ -55,13 +59,13 @@
         <genClasses ecoreClass="Doors.ecore#//DoorsModule">
             <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//DoorsModule/path"/>
             <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//DoorsModule/url"/>
-            <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Doors.ecore#//DoorsModule/attributeDefinitions"/>
             <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//DoorsModule/view"/>
-            <genOperations ecoreOperation="Doors.ecore#//DoorsModule/findAttributeDefinition">
-                <genParameters ecoreParameter="Doors.ecore#//DoorsModule/findAttributeDefinition/name"/>
-            </genOperations>
             <genOperations ecoreOperation="Doors.ecore#//DoorsModule/findObject">
                 <genParameters ecoreParameter="Doors.ecore#//DoorsModule/findObject/objectIdentifier"/>
+            </genOperations>
+            <genOperations ecoreOperation="Doors.ecore#//DoorsModule/getObjectAttributes"/>
+            <genOperations ecoreOperation="Doors.ecore#//DoorsModule/setObjectAttributes">
+                <genParameters ecoreParameter="Doors.ecore#//DoorsModule/setObjectAttributes/attrs"/>
             </genOperations>
             <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Doors.ecore#//DoorsModule/versions"/>
             <genOperations ecoreOperation="Doors.ecore#//DoorsModule/getLatestVersion"/>
@@ -82,9 +86,9 @@
             <genOperations ecoreOperation="Doors.ecore#//DoorsObject/isHeading"/>
         </genClasses>
         
-        <genClasses ecoreClass="Doors.ecore#//StringToStringMap">
-            <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//StringToStringMap/key"/>
-            <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//StringToStringMap/value"/>
+        <genClasses ecoreClass="Doors.ecore#//AttributeMap">
+            <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//AttributeMap/key"/>
+            <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//AttributeMap/value"/>
         </genClasses>
         
         <genClasses image="false" ecoreClass="Doors.ecore#//Link">
@@ -96,10 +100,6 @@
         <genClasses ecoreClass="Doors.ecore#//UnresolvedLink">
             <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//UnresolvedLink/targetModule"/>
             <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//UnresolvedLink/targetObject"/>
-        </genClasses>
-        
-        <genClasses ecoreClass="Doors.ecore#//AttributeDefinition">
-            <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//AttributeDefinition/name"/>
         </genClasses>
     </genPackages>
 </genmodel:GenModel>

@@ -104,9 +104,9 @@ public class DoorsSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case DoorsPackage.STRING_TO_STRING_MAP: {
-				@SuppressWarnings("unchecked") Map.Entry<String, String> stringToStringMap = (Map.Entry<String, String>)theEObject;
-				T result = caseStringToStringMap(stringToStringMap);
+			case DoorsPackage.ATTRIBUTE_MAP: {
+				@SuppressWarnings("unchecked") Map.Entry<String, String> attributeMap = (Map.Entry<String, String>)theEObject;
+				T result = caseAttributeMap(attributeMap);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -127,12 +127,6 @@ public class DoorsSwitch<T> extends Switch<T> {
 				UnresolvedLink unresolvedLink = (UnresolvedLink)theEObject;
 				T result = caseUnresolvedLink(unresolvedLink);
 				if (result == null) result = caseLink(unresolvedLink);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case DoorsPackage.ATTRIBUTE_DEFINITION: {
-				AttributeDefinition attributeDefinition = (AttributeDefinition)theEObject;
-				T result = caseAttributeDefinition(attributeDefinition);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -231,17 +225,17 @@ public class DoorsSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>String To String Map</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Attribute Map</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>String To String Map</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Attribute Map</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseStringToStringMap(Map.Entry<String, String> object) {
+	public T caseAttributeMap(Map.Entry<String, String> object) {
 		return null;
 	}
 
@@ -287,21 +281,6 @@ public class DoorsSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseUnresolvedLink(UnresolvedLink object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Attribute Definition</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Attribute Definition</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseAttributeDefinition(AttributeDefinition object) {
 		return null;
 	}
 

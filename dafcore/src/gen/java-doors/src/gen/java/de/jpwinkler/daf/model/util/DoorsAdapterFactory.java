@@ -90,8 +90,8 @@ public class DoorsAdapterFactory extends AdapterFactoryImpl {
 				return createDoorsObjectAdapter();
 			}
 			@Override
-			public Adapter caseStringToStringMap(Map.Entry<String, String> object) {
-				return createStringToStringMapAdapter();
+			public Adapter caseAttributeMap(Map.Entry<String, String> object) {
+				return createAttributeMapAdapter();
 			}
 			@Override
 			public Adapter caseLink(Link object) {
@@ -104,10 +104,6 @@ public class DoorsAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseUnresolvedLink(UnresolvedLink object) {
 				return createUnresolvedLinkAdapter();
-			}
-			@Override
-			public Adapter caseAttributeDefinition(AttributeDefinition object) {
-				return createAttributeDefinitionAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -214,7 +210,7 @@ public class DoorsAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link java.util.Map.Entry <em>String To String Map</em>}'.
+	 * Creates a new adapter for an object of class '{@link java.util.Map.Entry <em>Attribute Map</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
@@ -223,7 +219,7 @@ public class DoorsAdapterFactory extends AdapterFactoryImpl {
 	 * @see java.util.Map.Entry
 	 * @generated
 	 */
-	public Adapter createStringToStringMapAdapter() {
+	public Adapter createAttributeMapAdapter() {
 		return null;
 	}
 
@@ -266,20 +262,6 @@ public class DoorsAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createUnresolvedLinkAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link de.jpwinkler.daf.model.AttributeDefinition <em>Attribute Definition</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see de.jpwinkler.daf.model.AttributeDefinition
-	 * @generated
-	 */
-	public Adapter createAttributeDefinitionAdapter() {
 		return null;
 	}
 

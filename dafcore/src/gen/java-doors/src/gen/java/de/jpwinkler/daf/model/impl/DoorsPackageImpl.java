@@ -2,7 +2,6 @@
  */
 package de.jpwinkler.daf.model.impl;
 
-import de.jpwinkler.daf.model.AttributeDefinition;
 import de.jpwinkler.daf.model.DoorsDatabase;
 import de.jpwinkler.daf.model.DoorsModuleVersion;
 import de.jpwinkler.daf.model.DoorsFactory;
@@ -15,6 +14,7 @@ import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.model.Link;
 import de.jpwinkler.daf.model.ResolvedLink;
 import de.jpwinkler.daf.model.UnresolvedLink;
+import java.util.Collection;
 import java.util.Map;
 import java.util.regex.Pattern;
 import org.eclipse.emf.ecore.EAttribute;
@@ -79,7 +79,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass stringToStringMapEClass = null;
+	private EClass attributeMapEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -107,13 +107,6 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass attributeDefinitionEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	private EDataType doorsTreeNodeVisitorEDataType = null;
 
 	/**
@@ -122,6 +115,13 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	private EDataType patternEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType collectionEDataType = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -290,6 +290,16 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
+	public EOperation getDoorsTreeNode__CopyFrom__DoorsTreeNode() {
+		return doorsTreeNodeEClass.getEOperations().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getDoorsDatabase() {
 		return doorsDatabaseEClass;
 	}
@@ -420,18 +430,8 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getDoorsModule_AttributeDefinitions() {
-		return (EReference)doorsModuleEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EAttribute getDoorsModule_View() {
-		return (EAttribute)doorsModuleEClass.getEStructuralFeatures().get(3);
+		return (EAttribute)doorsModuleEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -441,17 +441,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 */
 	@Override
 	public EReference getDoorsModule_Versions() {
-		return (EReference)doorsModuleEClass.getEStructuralFeatures().get(4);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getDoorsModule__FindAttributeDefinition__String() {
-		return doorsModuleEClass.getEOperations().get(0);
+		return (EReference)doorsModuleEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -461,6 +451,16 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 */
 	@Override
 	public EOperation getDoorsModule__FindObject__String() {
+		return doorsModuleEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getDoorsModule__GetObjectAttributes() {
 		return doorsModuleEClass.getEOperations().get(1);
 	}
 
@@ -470,8 +470,18 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getDoorsModule__GetLatestVersion() {
+	public EOperation getDoorsModule__SetObjectAttributes__Collection() {
 		return doorsModuleEClass.getEOperations().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getDoorsModule__GetLatestVersion() {
+		return doorsModuleEClass.getEOperations().get(3);
 	}
 
 	/**
@@ -610,8 +620,8 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
-	public EClass getStringToStringMap() {
-		return stringToStringMapEClass;
+	public EClass getAttributeMap() {
+		return attributeMapEClass;
 	}
 
 	/**
@@ -620,8 +630,8 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getStringToStringMap_Key() {
-		return (EAttribute)stringToStringMapEClass.getEStructuralFeatures().get(0);
+	public EAttribute getAttributeMap_Key() {
+		return (EAttribute)attributeMapEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -630,8 +640,8 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getStringToStringMap_Value() {
-		return (EAttribute)stringToStringMapEClass.getEStructuralFeatures().get(1);
+	public EAttribute getAttributeMap_Value() {
+		return (EAttribute)attributeMapEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -710,26 +720,6 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
-	public EClass getAttributeDefinition() {
-		return attributeDefinitionEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EAttribute getAttributeDefinition_Name() {
-		return (EAttribute)attributeDefinitionEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EDataType getDoorsTreeNodeVisitor() {
 		return doorsTreeNodeVisitorEDataType;
 	}
@@ -742,6 +732,16 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	@Override
 	public EDataType getPattern() {
 		return patternEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EDataType getCollection() {
+		return collectionEDataType;
 	}
 
 	/**
@@ -783,6 +783,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___ACCEPT__DOORSTREENODEVISITOR);
 		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___HAS_TAG__STRING);
 		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___HAS_TAG__PATTERN);
+		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE);
 
 		doorsDatabaseEClass = createEClass(DOORS_DATABASE);
 		createEReference(doorsDatabaseEClass, DOORS_DATABASE__ROOT);
@@ -800,11 +801,11 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		doorsModuleEClass = createEClass(DOORS_MODULE);
 		createEAttribute(doorsModuleEClass, DOORS_MODULE__PATH);
 		createEAttribute(doorsModuleEClass, DOORS_MODULE__URL);
-		createEReference(doorsModuleEClass, DOORS_MODULE__ATTRIBUTE_DEFINITIONS);
 		createEAttribute(doorsModuleEClass, DOORS_MODULE__VIEW);
 		createEReference(doorsModuleEClass, DOORS_MODULE__VERSIONS);
-		createEOperation(doorsModuleEClass, DOORS_MODULE___FIND_ATTRIBUTE_DEFINITION__STRING);
 		createEOperation(doorsModuleEClass, DOORS_MODULE___FIND_OBJECT__STRING);
+		createEOperation(doorsModuleEClass, DOORS_MODULE___GET_OBJECT_ATTRIBUTES);
+		createEOperation(doorsModuleEClass, DOORS_MODULE___SET_OBJECT_ATTRIBUTES__COLLECTION);
 		createEOperation(doorsModuleEClass, DOORS_MODULE___GET_LATEST_VERSION);
 
 		doorsObjectEClass = createEClass(DOORS_OBJECT);
@@ -821,9 +822,9 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		createEReference(doorsObjectEClass, DOORS_OBJECT__MODULE);
 		createEOperation(doorsObjectEClass, DOORS_OBJECT___IS_HEADING);
 
-		stringToStringMapEClass = createEClass(STRING_TO_STRING_MAP);
-		createEAttribute(stringToStringMapEClass, STRING_TO_STRING_MAP__KEY);
-		createEAttribute(stringToStringMapEClass, STRING_TO_STRING_MAP__VALUE);
+		attributeMapEClass = createEClass(ATTRIBUTE_MAP);
+		createEAttribute(attributeMapEClass, ATTRIBUTE_MAP__KEY);
+		createEAttribute(attributeMapEClass, ATTRIBUTE_MAP__VALUE);
 
 		linkEClass = createEClass(LINK);
 		createEReference(linkEClass, LINK__SOURCE);
@@ -835,12 +836,10 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		createEAttribute(unresolvedLinkEClass, UNRESOLVED_LINK__TARGET_MODULE);
 		createEAttribute(unresolvedLinkEClass, UNRESOLVED_LINK__TARGET_OBJECT);
 
-		attributeDefinitionEClass = createEClass(ATTRIBUTE_DEFINITION);
-		createEAttribute(attributeDefinitionEClass, ATTRIBUTE_DEFINITION__NAME);
-
 		// Create data types
 		doorsTreeNodeVisitorEDataType = createEDataType(DOORS_TREE_NODE_VISITOR);
 		patternEDataType = createEDataType(PATTERN);
+		collectionEDataType = createEDataType(COLLECTION);
 	}
 
 	/**
@@ -881,7 +880,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		initEClass(doorsTreeNodeEClass, DoorsTreeNode.class, "DoorsTreeNode", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getDoorsTreeNode_Children(), this.getDoorsTreeNode(), this.getDoorsTreeNode_Parent(), "children", null, 0, -1, DoorsTreeNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getDoorsTreeNode_Parent(), this.getDoorsTreeNode(), this.getDoorsTreeNode_Children(), "parent", null, 0, 1, DoorsTreeNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getDoorsTreeNode_Attributes(), this.getStringToStringMap(), null, "attributes", null, 0, -1, DoorsTreeNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
+		initEReference(getDoorsTreeNode_Attributes(), this.getAttributeMap(), null, "attributes", null, 0, -1, DoorsTreeNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
 		initEAttribute(getDoorsTreeNode_Name(), ecorePackage.getEString(), "name", null, 0, 1, DoorsTreeNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getDoorsTreeNode_FullName(), ecorePackage.getEString(), "fullName", null, 0, 1, DoorsTreeNode.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		initEAttribute(getDoorsTreeNode_FullNameSegments(), ecorePackage.getEString(), "fullNameSegments", null, 0, -1, DoorsTreeNode.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
@@ -894,6 +893,9 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 
 		op = initEOperation(getDoorsTreeNode__HasTag__Pattern(), ecorePackage.getEBoolean(), "hasTag", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getPattern(), "pattern", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = initEOperation(getDoorsTreeNode__CopyFrom__DoorsTreeNode(), null, "copyFrom", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getDoorsTreeNode(), "node", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(doorsDatabaseEClass, DoorsDatabase.class, "DoorsDatabase", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getDoorsDatabase_Root(), this.getDoorsFolder(), null, "root", null, 0, 1, DoorsDatabase.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -912,20 +914,21 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		initEClass(doorsModuleVersionEClass, DoorsModuleVersion.class, "DoorsModuleVersion", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getDoorsModuleVersion_Module(), this.getDoorsModule(), this.getDoorsModule_Versions(), "module", null, 0, 1, DoorsModuleVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getDoorsModuleVersion_Date(), ecorePackage.getEDate(), "date", null, 0, 1, DoorsModuleVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getDoorsModuleVersion_Attributes(), this.getStringToStringMap(), null, "attributes", null, 0, -1, DoorsModuleVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getDoorsModuleVersion_Attributes(), this.getAttributeMap(), null, "attributes", null, 0, -1, DoorsModuleVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(doorsModuleEClass, DoorsModule.class, "DoorsModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getDoorsModule_Path(), ecorePackage.getEString(), "path", null, 0, 1, DoorsModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getDoorsModule_Url(), ecorePackage.getEString(), "url", null, 0, 1, DoorsModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getDoorsModule_AttributeDefinitions(), this.getAttributeDefinition(), null, "attributeDefinitions", null, 0, -1, DoorsModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getDoorsModule_View(), ecorePackage.getEString(), "view", null, 0, 1, DoorsModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getDoorsModule_Versions(), this.getDoorsModuleVersion(), this.getDoorsModuleVersion_Module(), "versions", null, 0, -1, DoorsModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		op = initEOperation(getDoorsModule__FindAttributeDefinition__String(), this.getAttributeDefinition(), "findAttributeDefinition", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, ecorePackage.getEString(), "name", 0, 1, IS_UNIQUE, IS_ORDERED);
-
 		op = initEOperation(getDoorsModule__FindObject__String(), this.getDoorsObject(), "findObject", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEString(), "objectIdentifier", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getDoorsModule__GetObjectAttributes(), ecorePackage.getEString(), "getObjectAttributes", 0, -1, IS_UNIQUE, IS_ORDERED);
+
+		op = initEOperation(getDoorsModule__SetObjectAttributes__Collection(), null, "setObjectAttributes", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getCollection(), "attrs", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getDoorsModule__GetLatestVersion(), this.getDoorsModuleVersion(), "getLatestVersion", 0, 1, IS_UNIQUE, IS_ORDERED);
 
@@ -944,9 +947,9 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 
 		initEOperation(getDoorsObject__IsHeading(), ecorePackage.getEBoolean(), "isHeading", 0, 1, IS_UNIQUE, IS_ORDERED);
 
-		initEClass(stringToStringMapEClass, Map.Entry.class, "StringToStringMap", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getStringToStringMap_Key(), ecorePackage.getEString(), "key", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getStringToStringMap_Value(), ecorePackage.getEString(), "value", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(attributeMapEClass, Map.Entry.class, "AttributeMap", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getAttributeMap_Key(), ecorePackage.getEString(), "key", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getAttributeMap_Value(), ecorePackage.getEString(), "value", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(linkEClass, Link.class, "Link", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getLink_Source(), this.getDoorsObject(), this.getDoorsObject_OutgoingLinks(), "source", null, 0, 1, Link.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -958,12 +961,10 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		initEAttribute(getUnresolvedLink_TargetModule(), ecorePackage.getEString(), "targetModule", null, 0, 1, UnresolvedLink.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getUnresolvedLink_TargetObject(), ecorePackage.getEString(), "targetObject", null, 0, 1, UnresolvedLink.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(attributeDefinitionEClass, AttributeDefinition.class, "AttributeDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getAttributeDefinition_Name(), ecorePackage.getEString(), "name", null, 0, 1, AttributeDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
 		// Initialize data types
 		initEDataType(doorsTreeNodeVisitorEDataType, DoorsTreeNodeVisitor.class, "DoorsTreeNodeVisitor", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(patternEDataType, Pattern.class, "Pattern", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(collectionEDataType, Collection.class, "Collection", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

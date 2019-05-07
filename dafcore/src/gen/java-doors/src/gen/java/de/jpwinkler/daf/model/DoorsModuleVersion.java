@@ -78,7 +78,7 @@ public interface DoorsModuleVersion {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Attributes</em>' map.
 	 * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsModuleVersion_Attributes()
-	 * @model mapType="de.jpwinkler.daf.model.StringToStringMap&lt;org.eclipse.emf.ecore.EString, org.eclipse.emf.ecore.EString&gt;"
+	 * @model mapType="de.jpwinkler.daf.model.AttributeMap&lt;org.eclipse.emf.ecore.EString, org.eclipse.emf.ecore.EString&gt;"
 	 * @generated
 	 */
 	Map<String, String> getAttributes();

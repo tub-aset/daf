@@ -74,7 +74,7 @@ public interface DoorsTreeNode {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Attributes</em>' map.
 	 * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsTreeNode_Attributes()
-	 * @model mapType="de.jpwinkler.daf.model.StringToStringMap&lt;org.eclipse.emf.ecore.EString, org.eclipse.emf.ecore.EString&gt;" ordered="false"
+	 * @model mapType="de.jpwinkler.daf.model.AttributeMap&lt;org.eclipse.emf.ecore.EString, org.eclipse.emf.ecore.EString&gt;" ordered="false"
 	 * @generated
 	 */
 	Map<String, String> getAttributes();
@@ -147,5 +147,13 @@ public interface DoorsTreeNode {
 	 * @generated
 	 */
 	boolean hasTag(Pattern pattern);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated
+	 */
+	void copyFrom(DoorsTreeNode node);
 
 } // DoorsTreeNode

@@ -2,6 +2,7 @@
  */
 package de.jpwinkler.daf.model;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -15,7 +16,6 @@ import java.util.List;
  * <ul>
  *   <li>{@link de.jpwinkler.daf.model.DoorsModule#getPath <em>Path</em>}</li>
  *   <li>{@link de.jpwinkler.daf.model.DoorsModule#getUrl <em>Url</em>}</li>
- *   <li>{@link de.jpwinkler.daf.model.DoorsModule#getAttributeDefinitions <em>Attribute Definitions</em>}</li>
  *   <li>{@link de.jpwinkler.daf.model.DoorsModule#getView <em>View</em>}</li>
  *   <li>{@link de.jpwinkler.daf.model.DoorsModule#getVersions <em>Versions</em>}</li>
  * </ul>
@@ -70,18 +70,6 @@ public interface DoorsModule extends DoorsTreeNode {
 	void setUrl(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Attribute Definitions</b></em>' containment reference list.
-	 * The list contents are of type {@link de.jpwinkler.daf.model.AttributeDefinition}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Attribute Definitions</em>' containment reference list.
-	 * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsModule_AttributeDefinitions()
-	 * @model containment="true"
-	 * @generated
-	 */
-	List<AttributeDefinition> getAttributeDefinitions();
-
-	/**
 	 * Returns the value of the '<em><b>View</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -123,15 +111,23 @@ public interface DoorsModule extends DoorsTreeNode {
 	 * @model
 	 * @generated
 	 */
-	AttributeDefinition findAttributeDefinition(String name);
+	DoorsObject findObject(String objectIdentifier);
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @model
+	 * @model kind="operation"
 	 * @generated
 	 */
-	DoorsObject findObject(String objectIdentifier);
+	List<String> getObjectAttributes();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model attrsDataType="de.jpwinkler.daf.model.Collection"
+	 * @generated
+	 */
+	void setObjectAttributes(Collection attrs);
 
 	/**
 	 * <!-- begin-user-doc -->

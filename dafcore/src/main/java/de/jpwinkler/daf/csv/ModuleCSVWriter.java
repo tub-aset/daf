@@ -44,7 +44,7 @@ public class ModuleCSVWriter extends ModuleWriter {
 
     @Override
     public void writeModule(final DoorsModule module) throws IOException {
-        final String[] header = module.getAttributeDefinitions().stream().map(ad -> ad.getName()).toArray(size -> new String[size]);
+        final String[] header = module.getObjectAttributes().toArray(size -> new String[size]);
         final CSVPrinter printer = new CSVPrinter(this, FORMAT.withHeader(header));
         module.accept(new DoorsTreeNodeVisitor() {
             @Override

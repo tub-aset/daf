@@ -3,11 +3,17 @@ package de.jpwinkler.daf.model;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Function;
 
 public class DoorsModuleUtil {
 
@@ -28,10 +34,11 @@ public class DoorsModuleUtil {
     }
 
     public static void ensureAttributeDefinition(final DoorsModule module, final String attributeName) {
-        if (module.findAttributeDefinition(attributeName) == null) {
-            final AttributeDefinition ad = DoorsFactory.eINSTANCE.createAttributeDefinition();
-            ad.setName(attributeName);
-            module.getAttributeDefinitions().add(ad);
+        Collection<String> attrs = module.getObjectAttributes();
+        if(!attrs.contains(attributeName)) {
+            attrs = new ArrayList<>(attrs);
+            attrs.add(attributeName);
+            module.setObjectAttributes(attrs);
         }
     }
 
@@ -103,6 +110,7 @@ public class DoorsModuleUtil {
         } else {
             return null;
         }
+        
         final String templateVersion = module.getAttributes().get("Template Version");
         if (templateVersion != null) {
             return moduleType + "-" + templateVersion;
@@ -111,4 +119,9 @@ public class DoorsModuleUtil {
         }
 
     }
+    
+    // Defined here to prevent forward references in DoorsSystemAttributes
+    static final Function<String, Collection> listParser = s -> (s == null || s.isEmpty()) ? Collections.emptyList() : Arrays.asList(s.split(","));
+    static final Function<Collection, String> listWriter = s -> (s == null) ? null : (String) s.stream()
+            .filter(s1 -> s1 != null).map(s1 -> s1.toString()).reduce((s1, s2) -> s1 + "," + s2).orElse(null);
 }

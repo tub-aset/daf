@@ -3,11 +3,11 @@
 package de.jpwinkler.daf.model.impl;
 
 import de.jpwinkler.daf.csv.FindObjectVisitor;
-import de.jpwinkler.daf.model.AttributeDefinition;
 import de.jpwinkler.daf.model.DoorsModuleVersion;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsPackage;
+import de.jpwinkler.daf.model.DoorsSystemAttributes;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.List;
@@ -17,7 +17,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -31,7 +30,6 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <ul>
  *   <li>{@link de.jpwinkler.daf.model.impl.DoorsModuleImpl#getPath <em>Path</em>}</li>
  *   <li>{@link de.jpwinkler.daf.model.impl.DoorsModuleImpl#getUrl <em>Url</em>}</li>
- *   <li>{@link de.jpwinkler.daf.model.impl.DoorsModuleImpl#getAttributeDefinitions <em>Attribute Definitions</em>}</li>
  *   <li>{@link de.jpwinkler.daf.model.impl.DoorsModuleImpl#getView <em>View</em>}</li>
  *   <li>{@link de.jpwinkler.daf.model.impl.DoorsModuleImpl#getVersions <em>Versions</em>}</li>
  * </ul>
@@ -79,16 +77,6 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
 	 * @ordered
 	 */
     protected String url = URL_EDEFAULT;
-
-    /**
-	 * The cached value of the '{@link #getAttributeDefinitions() <em>Attribute Definitions</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @see #getAttributeDefinitions()
-	 * @generated
-	 * @ordered
-	 */
-    protected EList<AttributeDefinition> attributeDefinitions;
 
     /**
 	 * The default value of the '{@link #getView() <em>View</em>}' attribute.
@@ -184,18 +172,6 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
      * <!-- end-user-doc --> @generated
      */
     @Override
-    public List<AttributeDefinition> getAttributeDefinitions() {
-		if (attributeDefinitions == null) {
-			attributeDefinitions = new EObjectContainmentEList<AttributeDefinition>(AttributeDefinition.class, this, DoorsPackage.DOORS_MODULE__ATTRIBUTE_DEFINITIONS);
-		}
-		return attributeDefinitions;
-	}
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc --> @generated
-     */
-    @Override
     public String getView() {
 		return view;
 	}
@@ -230,21 +206,6 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
      * @generated NOT
      */
     @Override
-    public AttributeDefinition findAttributeDefinition(final String name) {
-        for (final AttributeDefinition ad : getAttributeDefinitions()) {
-            if (ad.getName().equals(name)) {
-                return ad;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     *
-     * @generated NOT
-     */
-    @Override
     public DoorsObject findObject(final String objectIdentifier) {
         final FindObjectVisitor visitor = new FindObjectVisitor(objectIdentifier);
         accept(visitor);
@@ -252,6 +213,28 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
     }
 
     /**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	@Override
+	public List<String> getObjectAttributes() {
+            return DoorsSystemAttributes.OBJECT_ATTRIBUTES.getValue(List.class, attributes);
+	}
+
+				/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setObjectAttributes(Collection attrs) {
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
+	}
+
+				/**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc --> @generated NOT
      */
@@ -287,8 +270,6 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case DoorsPackage.DOORS_MODULE__ATTRIBUTE_DEFINITIONS:
-				return ((InternalEList<?>)getAttributeDefinitions()).basicRemove(otherEnd, msgs);
 			case DoorsPackage.DOORS_MODULE__VERSIONS:
 				return ((InternalEList<?>)getVersions()).basicRemove(otherEnd, msgs);
 		}
@@ -306,8 +287,6 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
 				return getPath();
 			case DoorsPackage.DOORS_MODULE__URL:
 				return getUrl();
-			case DoorsPackage.DOORS_MODULE__ATTRIBUTE_DEFINITIONS:
-				return getAttributeDefinitions();
 			case DoorsPackage.DOORS_MODULE__VIEW:
 				return getView();
 			case DoorsPackage.DOORS_MODULE__VERSIONS:
@@ -329,10 +308,6 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
 				return;
 			case DoorsPackage.DOORS_MODULE__URL:
 				setUrl((String)newValue);
-				return;
-			case DoorsPackage.DOORS_MODULE__ATTRIBUTE_DEFINITIONS:
-				getAttributeDefinitions().clear();
-				getAttributeDefinitions().addAll((Collection<? extends AttributeDefinition>)newValue);
 				return;
 			case DoorsPackage.DOORS_MODULE__VIEW:
 				setView((String)newValue);
@@ -358,9 +333,6 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
 			case DoorsPackage.DOORS_MODULE__URL:
 				setUrl(URL_EDEFAULT);
 				return;
-			case DoorsPackage.DOORS_MODULE__ATTRIBUTE_DEFINITIONS:
-				getAttributeDefinitions().clear();
-				return;
 			case DoorsPackage.DOORS_MODULE__VIEW:
 				setView(VIEW_EDEFAULT);
 				return;
@@ -382,8 +354,6 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
 				return PATH_EDEFAULT == null ? path != null : !PATH_EDEFAULT.equals(path);
 			case DoorsPackage.DOORS_MODULE__URL:
 				return URL_EDEFAULT == null ? url != null : !URL_EDEFAULT.equals(url);
-			case DoorsPackage.DOORS_MODULE__ATTRIBUTE_DEFINITIONS:
-				return attributeDefinitions != null && !attributeDefinitions.isEmpty();
 			case DoorsPackage.DOORS_MODULE__VIEW:
 				return VIEW_EDEFAULT == null ? view != null : !VIEW_EDEFAULT.equals(view);
 			case DoorsPackage.DOORS_MODULE__VERSIONS:
@@ -397,12 +367,16 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
      * <!-- end-user-doc --> @generated
      */
     @Override
+				@SuppressWarnings("unchecked")
     public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
-			case DoorsPackage.DOORS_MODULE___FIND_ATTRIBUTE_DEFINITION__STRING:
-				return findAttributeDefinition((String)arguments.get(0));
 			case DoorsPackage.DOORS_MODULE___FIND_OBJECT__STRING:
 				return findObject((String)arguments.get(0));
+			case DoorsPackage.DOORS_MODULE___GET_OBJECT_ATTRIBUTES:
+				return getObjectAttributes();
+			case DoorsPackage.DOORS_MODULE___SET_OBJECT_ATTRIBUTES__COLLECTION:
+				setObjectAttributes((Collection)arguments.get(0));
+				return null;
 			case DoorsPackage.DOORS_MODULE___GET_LATEST_VERSION:
 				return getLatestVersion();
 		}
