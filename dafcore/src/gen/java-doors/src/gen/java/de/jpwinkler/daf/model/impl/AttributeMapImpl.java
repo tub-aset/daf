@@ -3,29 +3,33 @@
 package de.jpwinkler.daf.model.impl;
 
 import de.jpwinkler.daf.model.DoorsPackage;
+
 import org.eclipse.emf.common.notify.Notification;
+
 import org.eclipse.emf.common.util.BasicEMap;
 import org.eclipse.emf.common.util.EMap;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>String To String Map</b></em>'.
+ * An implementation of the model object '<em><b>Attribute Map</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link de.jpwinkler.daf.model.impl.StringToStringMapImpl#getTypedKey <em>Key</em>}</li>
- *   <li>{@link de.jpwinkler.daf.model.impl.StringToStringMapImpl#getTypedValue <em>Value</em>}</li>
+ *   <li>{@link de.jpwinkler.daf.model.impl.AttributeMapImpl#getTypedKey <em>Key</em>}</li>
+ *   <li>{@link de.jpwinkler.daf.model.impl.AttributeMapImpl#getTypedValue <em>Value</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class StringToStringMapImpl extends MinimalEObjectImpl.Container implements BasicEMap.Entry<String,String> {
+public class AttributeMapImpl extends MinimalEObjectImpl.Container implements BasicEMap.Entry<String,String> {
 	/**
 	 * The default value of the '{@link #getTypedKey() <em>Key</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -71,7 +75,7 @@ public class StringToStringMapImpl extends MinimalEObjectImpl.Container implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected StringToStringMapImpl() {
+	protected AttributeMapImpl() {
 		super();
 	}
 
@@ -82,7 +86,7 @@ public class StringToStringMapImpl extends MinimalEObjectImpl.Container implemen
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return DoorsPackage.Literals.STRING_TO_STRING_MAP;
+		return DoorsPackage.Literals.ATTRIBUTE_MAP;
 	}
 
 	/**
@@ -103,7 +107,7 @@ public class StringToStringMapImpl extends MinimalEObjectImpl.Container implemen
 		String oldKey = key;
 		key = newKey;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DoorsPackage.STRING_TO_STRING_MAP__KEY, oldKey, key));
+			eNotify(new ENotificationImpl(this, Notification.SET, DoorsPackage.ATTRIBUTE_MAP__KEY, oldKey, key));
 	}
 
 	/**
@@ -124,7 +128,7 @@ public class StringToStringMapImpl extends MinimalEObjectImpl.Container implemen
 		String oldValue = value;
 		value = newValue;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DoorsPackage.STRING_TO_STRING_MAP__VALUE, oldValue, value));
+			eNotify(new ENotificationImpl(this, Notification.SET, DoorsPackage.ATTRIBUTE_MAP__VALUE, oldValue, value));
 	}
 
 	/**
@@ -135,9 +139,9 @@ public class StringToStringMapImpl extends MinimalEObjectImpl.Container implemen
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case DoorsPackage.STRING_TO_STRING_MAP__KEY:
+			case DoorsPackage.ATTRIBUTE_MAP__KEY:
 				return getTypedKey();
-			case DoorsPackage.STRING_TO_STRING_MAP__VALUE:
+			case DoorsPackage.ATTRIBUTE_MAP__VALUE:
 				return getTypedValue();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -151,10 +155,10 @@ public class StringToStringMapImpl extends MinimalEObjectImpl.Container implemen
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case DoorsPackage.STRING_TO_STRING_MAP__KEY:
+			case DoorsPackage.ATTRIBUTE_MAP__KEY:
 				setTypedKey((String)newValue);
 				return;
-			case DoorsPackage.STRING_TO_STRING_MAP__VALUE:
+			case DoorsPackage.ATTRIBUTE_MAP__VALUE:
 				setTypedValue((String)newValue);
 				return;
 		}
@@ -169,10 +173,10 @@ public class StringToStringMapImpl extends MinimalEObjectImpl.Container implemen
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case DoorsPackage.STRING_TO_STRING_MAP__KEY:
+			case DoorsPackage.ATTRIBUTE_MAP__KEY:
 				setTypedKey(KEY_EDEFAULT);
 				return;
-			case DoorsPackage.STRING_TO_STRING_MAP__VALUE:
+			case DoorsPackage.ATTRIBUTE_MAP__VALUE:
 				setTypedValue(VALUE_EDEFAULT);
 				return;
 		}
@@ -187,9 +191,9 @@ public class StringToStringMapImpl extends MinimalEObjectImpl.Container implemen
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case DoorsPackage.STRING_TO_STRING_MAP__KEY:
+			case DoorsPackage.ATTRIBUTE_MAP__KEY:
 				return KEY_EDEFAULT == null ? key != null : !KEY_EDEFAULT.equals(key);
-			case DoorsPackage.STRING_TO_STRING_MAP__VALUE:
+			case DoorsPackage.ATTRIBUTE_MAP__VALUE:
 				return VALUE_EDEFAULT == null ? value != null : !VALUE_EDEFAULT.equals(value);
 		}
 		return super.eIsSet(featureID);
@@ -297,4 +301,4 @@ public class StringToStringMapImpl extends MinimalEObjectImpl.Container implemen
 		return container == null ? null : (EMap<String, String>)container.eGet(eContainmentFeature());
 	}
 
-} //StringToStringMapImpl
+} //AttributeMapImpl
