@@ -432,7 +432,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getDoorsModule__SetObjectAttributes__Collection() {
+	public EOperation getDoorsModule__SetObjectAttributes__List() {
 		return doorsModuleEClass.getEOperations().get(2);
 	}
 
@@ -763,7 +763,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		createEReference(doorsModuleEClass, DOORS_MODULE__VERSIONS);
 		createEOperation(doorsModuleEClass, DOORS_MODULE___FIND_OBJECT__STRING);
 		createEOperation(doorsModuleEClass, DOORS_MODULE___GET_OBJECT_ATTRIBUTES);
-		createEOperation(doorsModuleEClass, DOORS_MODULE___SET_OBJECT_ATTRIBUTES__COLLECTION);
+		createEOperation(doorsModuleEClass, DOORS_MODULE___SET_OBJECT_ATTRIBUTES__LIST);
 		createEOperation(doorsModuleEClass, DOORS_MODULE___GET_LATEST_VERSION);
 
 		doorsObjectEClass = createEClass(DOORS_OBJECT);
@@ -879,8 +879,8 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 
 		initEOperation(getDoorsModule__GetObjectAttributes(), ecorePackage.getEString(), "getObjectAttributes", 0, -1, IS_UNIQUE, IS_ORDERED);
 
-		op = initEOperation(getDoorsModule__SetObjectAttributes__Collection(), null, "setObjectAttributes", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, this.getCollection(), "attrs", 0, 1, IS_UNIQUE, IS_ORDERED);
+		op = initEOperation(getDoorsModule__SetObjectAttributes__List(), null, "setObjectAttributes", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEString(), "attrs", 0, -1, IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getDoorsModule__GetLatestVersion(), this.getDoorsModuleVersion(), "getLatestVersion", 0, 1, IS_UNIQUE, IS_ORDERED);
 

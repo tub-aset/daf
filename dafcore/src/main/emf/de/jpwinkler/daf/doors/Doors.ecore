@@ -21,7 +21,7 @@
         </eOperations>
         <eOperations name="getObjectAttributes" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
         <eOperations name="setObjectAttributes">
-            <eParameters name="attrs" eType="#//Collection"/>
+            <eParameters name="attrs" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
         </eOperations>
         
         <eOperations name="getLatestVersion" eType="#//DoorsModuleVersion"/>

@@ -17,10 +17,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -95,7 +93,7 @@ class FileDatabaseInterface implements DatabaseInterface {
             ((DoorsModule) node).getVersions().clear();
         } else {
             final List<DoorsModule> markedForDeletion = new ArrayList<>();
-            node.accept(new DoorsTreeNodeVisitor() {
+            node.accept(new DoorsTreeNodeVisitor<>(DoorsModule.class) {
 
                 @Override
                 public void visitPostTraverse(final DoorsModule module) {
@@ -111,7 +109,7 @@ class FileDatabaseInterface implements DatabaseInterface {
     @Override
     public List<DoorsModule> getModules(final SearchExpression e) {
         final List<DoorsModule> result = new ArrayList<>();
-        db.getRoot().accept(new DoorsTreeNodeVisitor() {
+        db.getRoot().accept(new DoorsTreeNodeVisitor<>(DoorsModule.class) {
 
             @Override
             public void visitPostTraverse(final DoorsModule module) {

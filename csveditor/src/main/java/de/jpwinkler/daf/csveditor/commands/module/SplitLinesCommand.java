@@ -31,7 +31,7 @@ public class SplitLinesCommand extends AbstractCommand {
 
     @Override
     public void apply() {
-        getModule().accept(new DoorsTreeNodeVisitor() {
+        getModule().accept(new DoorsTreeNodeVisitor<>(DoorsObject.class) {
             @Override
             public boolean visitPreTraverse(final DoorsObject object) {
                 if (object.getText() != null) {
@@ -85,7 +85,7 @@ public class SplitLinesCommand extends AbstractCommand {
 
     @Override
     public UpdateAction[] getUpdateActions() {
-        return new UpdateAction[] { UpdateAction.UPDATE_CONTENT_VIEW, UpdateAction.UPDATE_OUTLINE_VIEW };
+        return new UpdateAction[]{UpdateAction.UPDATE_CONTENT_VIEW, UpdateAction.UPDATE_OUTLINE_VIEW};
     }
 
 }

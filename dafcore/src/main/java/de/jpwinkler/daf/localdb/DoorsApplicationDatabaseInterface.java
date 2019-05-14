@@ -41,7 +41,7 @@ public class DoorsApplicationDatabaseInterface implements DatabaseInterface {
     @Override
     public List<DoorsModule> getModules(SearchExpression e) {
         final List<DoorsModule> result = new ArrayList<>();
-        db.getRoot().accept(new DoorsTreeNodeVisitor() {
+        db.getRoot().accept(new DoorsTreeNodeVisitor<>(DoorsModule.class) {
 
             @Override
             public void visitPostTraverse(final DoorsModule module) {

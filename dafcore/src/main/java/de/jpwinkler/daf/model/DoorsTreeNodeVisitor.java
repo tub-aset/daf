@@ -1,19 +1,33 @@
 package de.jpwinkler.daf.model;
 
-public abstract class DoorsTreeNodeVisitor {
+public abstract class DoorsTreeNodeVisitor<T extends DoorsTreeNode> {
 
-    public boolean visitPreTraverse(final DoorsModule module) {
+    public DoorsTreeNodeVisitor(Class<T> visited) {
+        this.visitedNodeCls = visited;
+    }
+
+    private final Class<T> visitedNodeCls;
+
+    public final void traverse(final DoorsTreeNode node) {
+        boolean classMatch = visitedNodeCls.isAssignableFrom(node.getClass());
+
+        if (!classMatch || visitPreTraverse((T) node)) {
+            for (final DoorsTreeNode child : node.getChildren()) {
+                child.accept(this);
+            }
+        }
+
+        if (classMatch) {
+            visitPostTraverse((T) node);
+        }
+    }
+
+    protected boolean visitPreTraverse(final T object) {
         return true;
     }
 
-    public void visitPostTraverse(final DoorsModule module) {
-    }
-
-    public boolean visitPreTraverse(final DoorsObject object) {
-        return true;
-    }
-
-    public void visitPostTraverse(final DoorsObject object) {
+    protected void visitPostTraverse(final T object) {
 
     }
+
 }

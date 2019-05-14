@@ -144,13 +144,13 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsTreeNodeRe
     }
 
     @Override
-    public void setObjectAttributes(Collection attrs) {
+    public DoorsModuleVersion getLatestVersion() {
         throw new UnsupportedOperationException("Not supported");
     }
 
     @Override
-    public DoorsModuleVersion getLatestVersion() {
-        throw new UnsupportedOperationException("Not supported");
+    public void setObjectAttributes(List<String> attrs) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

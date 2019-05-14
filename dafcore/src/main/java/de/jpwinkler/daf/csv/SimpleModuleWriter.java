@@ -38,7 +38,7 @@ public class SimpleModuleWriter extends ModuleWriter {
     @Override
     public void writeModule(final DoorsModule module) {
 
-        module.accept(new DoorsTreeNodeVisitor() {
+        module.accept(new DoorsTreeNodeVisitor<>(DoorsObject.class) {
             @Override
             public boolean visitPreTraverse(final DoorsObject object) {
                 try {

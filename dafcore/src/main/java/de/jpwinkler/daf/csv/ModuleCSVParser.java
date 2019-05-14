@@ -10,6 +10,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Map.Entry;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -66,7 +67,7 @@ public class ModuleCSVParser {
             current.getChildren().add(newObject);
         }
 
-        module.setObjectAttributes(csvParser.getHeaderMap().keySet());
+        module.setObjectAttributes(new ArrayList<>(csvParser.getHeaderMap().keySet()));
 
         return module;
     }

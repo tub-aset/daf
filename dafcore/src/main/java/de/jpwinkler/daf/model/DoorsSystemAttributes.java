@@ -8,8 +8,8 @@ package de.jpwinkler.daf.model;
 import static de.jpwinkler.daf.model.DoorsModuleUtil.listParser;
 import static de.jpwinkler.daf.model.DoorsModuleUtil.listWriter;
 import java.util.Collection;
+import java.util.Map;
 import java.util.function.Function;
-import org.eclipse.emf.common.util.EMap;
 
 /**
  *
@@ -25,15 +25,15 @@ public enum DoorsSystemAttributes {
         this.writer = (Function<Object, String>) writer;
     }
 
-    private Class<?> type;
-    private Function<String, ?> parser;
-    private Function<Object, String> writer;
+    private final Class<?> type;
+    private final Function<String, ?> parser;
+    private final Function<Object, String> writer;
 
     private String getKey() {
         return "__SYSTEM__" + this.name();
     }
 
-    public <T> T getValue(Class<T> expectedType, EMap<String, String> attributesMap) {
+    public <T> T getValue(Class<T> expectedType, Map<String, String> attributesMap) {
         if (!expectedType.isAssignableFrom(type)) {
             throw new IllegalArgumentException();
         }
@@ -41,7 +41,7 @@ public enum DoorsSystemAttributes {
         return (T) this.parser.apply(attributesMap.get(this.getKey()));
     }
 
-    public <T> void setValue(Class<T> expectedType, EMap<String, String> attributesMap, T value) {
+    public <T> void setValue(Class<T> expectedType, Map<String, String> attributesMap, T value) {
         if (!type.isAssignableFrom(expectedType)) {
             throw new IllegalArgumentException();
         }

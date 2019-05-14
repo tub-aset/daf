@@ -3,14 +3,14 @@ package de.jpwinkler.daf.csv;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 
-public class FindObjectVisitor extends DoorsTreeNodeVisitor {
+public class FindObjectVisitor extends DoorsTreeNodeVisitor<DoorsObject> {
 
     private final String objectIdentifier;
 
     private DoorsObject object;
 
     public FindObjectVisitor(final String objectIdentifier) {
-        super();
+        super(DoorsObject.class);
         this.objectIdentifier = objectIdentifier;
     }
 

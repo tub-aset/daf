@@ -2,7 +2,6 @@
  */
 package de.jpwinkler.daf.model;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -78,10 +77,10 @@ public interface DoorsModule extends DoorsTreeNode {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @model attrsDataType="de.jpwinkler.daf.model.Collection"
+	 * @model attrsMany="true"
 	 * @generated
 	 */
-	void setObjectAttributes(Collection attrs);
+	void setObjectAttributes(List<String> attrs);
 
 	/**
 	 * <!-- begin-user-doc -->

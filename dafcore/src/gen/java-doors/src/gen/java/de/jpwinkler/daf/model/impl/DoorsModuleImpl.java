@@ -136,19 +136,17 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
 	 */
 	@Override
 	public List<String> getObjectAttributes() {
-            return DoorsSystemAttributes.OBJECT_ATTRIBUTES.getValue(List.class, attributes);
+            return DoorsSystemAttributes.OBJECT_ATTRIBUTES.getValue(List.class, getAttributes());
 	}
 
 				/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
-	public void setObjectAttributes(Collection attrs) {
-		// TODO: implement this method
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
+	public void setObjectAttributes(List<String> attrs) {
+		DoorsSystemAttributes.OBJECT_ATTRIBUTES.setValue(List.class, getAttributes(), attrs);
 	}
 
 				/**
@@ -284,8 +282,8 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
 				return findObject((String)arguments.get(0));
 			case DoorsPackage.DOORS_MODULE___GET_OBJECT_ATTRIBUTES:
 				return getObjectAttributes();
-			case DoorsPackage.DOORS_MODULE___SET_OBJECT_ATTRIBUTES__COLLECTION:
-				setObjectAttributes((Collection)arguments.get(0));
+			case DoorsPackage.DOORS_MODULE___SET_OBJECT_ATTRIBUTES__LIST:
+				setObjectAttributes((List<String>)arguments.get(0));
 				return null;
 			case DoorsPackage.DOORS_MODULE___GET_LATEST_VERSION:
 				return getLatestVersion();

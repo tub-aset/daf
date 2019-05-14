@@ -34,7 +34,7 @@ public class DoorsModuleUtil {
     }
 
     public static void ensureAttributeDefinition(final DoorsModule module, final String attributeName) {
-        Collection<String> attrs = module.getObjectAttributes();
+        List<String> attrs = module.getObjectAttributes();
         if(!attrs.contains(attributeName)) {
             attrs = new ArrayList<>(attrs);
             attrs.add(attributeName);
@@ -64,7 +64,7 @@ public class DoorsModuleUtil {
         final Map<String, DoorsObject> leftObjects = new HashMap<>();
         final Map<String, DoorsObject> rightObjects = new HashMap<>();
 
-        left.accept(new DoorsTreeNodeVisitor() {
+        left.accept(new DoorsTreeNodeVisitor<>(DoorsObject.class) {
             @Override
             public boolean visitPreTraverse(final DoorsObject object) {
                 leftObjects.put(object.getObjectIdentifier(), object);
@@ -72,7 +72,7 @@ public class DoorsModuleUtil {
             }
         });
 
-        right.accept(new DoorsTreeNodeVisitor() {
+        right.accept(new DoorsTreeNodeVisitor<>(DoorsObject.class) {
             @Override
             public boolean visitPreTraverse(final DoorsObject object) {
                 rightObjects.put(object.getObjectIdentifier(), object);

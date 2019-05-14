@@ -139,12 +139,7 @@ class DoorsTreeNodeRefImpl implements DoorsTreeNodeRef {
 
     @Override
     public void accept(DoorsTreeNodeVisitor visitor) {
-        if (visitor.visitPreTraverse((DoorsObject) this)) {
-            for (final DoorsTreeNode child : getChildren()) {
-                child.accept(visitor);
-            }
-        }
-        visitor.visitPostTraverse((DoorsObject) this);
+        visitor.traverse(this);
     }
 
     @Override

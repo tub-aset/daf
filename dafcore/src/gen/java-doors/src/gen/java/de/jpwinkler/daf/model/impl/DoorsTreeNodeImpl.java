@@ -2,7 +2,6 @@
  */
 package de.jpwinkler.daf.model.impl;
 
-import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsPackage;
 import de.jpwinkler.daf.model.DoorsSystemAttributes;
 import de.jpwinkler.daf.model.DoorsTreeNode;
@@ -231,12 +230,7 @@ public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements D
      */
     @Override
     public void accept(final DoorsTreeNodeVisitor visitor) {
-        if (visitor.visitPreTraverse((DoorsObject) this)) {
-            for (final DoorsTreeNode child : getChildren()) {
-                child.accept(visitor);
-            }
-        }
-        visitor.visitPostTraverse((DoorsObject) this);
+        visitor.traverse(this);
     }
 
     /**
@@ -245,7 +239,7 @@ public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements D
      */
     @Override
     public boolean hasTag(String tag) {
-        return DoorsSystemAttributes.TAGS.getValue(Collection.class, attributes).contains(tag);
+        return DoorsSystemAttributes.TAGS.getValue(Collection.class, getAttributes()).contains(tag);
     }
 
     /**
@@ -254,7 +248,7 @@ public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements D
      */
     @Override
     public boolean hasTag(Pattern pattern) {
-        return DoorsSystemAttributes.TAGS.getValue(Collection.class, attributes).stream().anyMatch(pattern.asMatchPredicate());
+        return DoorsSystemAttributes.TAGS.getValue(Collection.class, getAttributes()).stream().anyMatch(pattern.asMatchPredicate());
     }
 
     /**

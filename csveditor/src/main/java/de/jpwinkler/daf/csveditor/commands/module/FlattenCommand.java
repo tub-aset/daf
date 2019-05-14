@@ -33,7 +33,7 @@ public class FlattenCommand extends AbstractCommand {
 
     @Override
     public void apply() {
-        getModule().accept(new DoorsTreeNodeVisitor() {
+        getModule().accept(new DoorsTreeNodeVisitor<>(DoorsObject.class) {
             @Override
             public boolean visitPreTraverse(final DoorsObject object) {
                 objectList.add(object);

@@ -465,7 +465,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_MODULE___SET_OBJECT_ATTRIBUTES__COLLECTION = DOORS_TREE_NODE_OPERATION_COUNT + 2;
+	int DOORS_MODULE___SET_OBJECT_ATTRIBUTES__LIST = DOORS_TREE_NODE_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get Latest Version</em>' operation.
@@ -1210,14 +1210,14 @@ public interface DoorsPackage extends EPackage {
 	EOperation getDoorsModule__GetObjectAttributes();
 
 	/**
-	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsModule#setObjectAttributes(java.util.Collection) <em>Set Object Attributes</em>}' operation.
+	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsModule#setObjectAttributes(java.util.List) <em>Set Object Attributes</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>Set Object Attributes</em>' operation.
-	 * @see de.jpwinkler.daf.model.DoorsModule#setObjectAttributes(java.util.Collection)
+	 * @see de.jpwinkler.daf.model.DoorsModule#setObjectAttributes(java.util.List)
 	 * @generated
 	 */
-	EOperation getDoorsModule__SetObjectAttributes__Collection();
+	EOperation getDoorsModule__SetObjectAttributes__List();
 
 	/**
 	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsModule#getLatestVersion() <em>Get Latest Version</em>}' operation.
@@ -1748,7 +1748,7 @@ public interface DoorsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation DOORS_MODULE___SET_OBJECT_ATTRIBUTES__COLLECTION = eINSTANCE.getDoorsModule__SetObjectAttributes__Collection();
+		EOperation DOORS_MODULE___SET_OBJECT_ATTRIBUTES__LIST = eINSTANCE.getDoorsModule__SetObjectAttributes__List();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Latest Version</b></em>' operation.
