@@ -10,6 +10,7 @@ import de.jpwinkler.daf.csveditor.commands.module.UpdateAction;
 import de.jpwinkler.daf.csveditor.commands.object.DeleteObjectCommand;
 import de.jpwinkler.daf.csveditor.commands.object.DemoteObjectCommand;
 import de.jpwinkler.daf.csveditor.commands.object.EditObjectAttributeCommand;
+import de.jpwinkler.daf.csveditor.commands.object.MultiCommand;
 import de.jpwinkler.daf.csveditor.commands.object.NewObjectAfterCommand;
 import de.jpwinkler.daf.csveditor.commands.object.NewObjectBelowCommand;
 import de.jpwinkler.daf.csveditor.commands.object.PasteObjectsAfterCommand;
@@ -225,7 +226,7 @@ public class FilePaneController implements FileStateController {
 
     @FXML
     public void swapObjectHeadingAndTextClicked() {
-        executeCommand(new SwapObjectHeadingAndTextCommand(module, getCurrentObject()));
+        executeCommand(new MultiCommand(getCurrentObjects().stream().map(o -> new SwapObjectHeadingAndTextCommand(module, o)).collect(Collectors.toList())));
     }
 
     private void executeCommand(final AbstractCommand command) {
@@ -457,12 +458,12 @@ public class FilePaneController implements FileStateController {
 
     @FXML
     public void demoteObjectClicked() {
-        executeCommand(new DemoteObjectCommand(module, getCurrentObject()));
+        executeCommand(new MultiCommand(getCurrentObjects().stream().map(o -> new DemoteObjectCommand(module, o)).collect(Collectors.toList())));
     }
 
     @FXML
     public void promoteObjectClicked() {
-        executeCommand(new PromoteObjectCommand(module, getCurrentObject()));
+        executeCommand(new MultiCommand(getCurrentObjects().stream().map(o -> new PromoteObjectCommand(module, o)).collect(Collectors.toList())));
     }
 
     @FXML

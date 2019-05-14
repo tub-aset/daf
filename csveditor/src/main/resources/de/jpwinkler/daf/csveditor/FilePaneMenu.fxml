@@ -58,7 +58,10 @@
             <MenuItem mnemonicParsing="false" onAction="#swapObjectHeadingAndTextClicked" text="Swap Object Heading and Text" />
             <MenuItem mnemonicParsing="false" onAction="#unwrapChildrenClicked" text="Unwrap Children" />
             <MenuItem mnemonicParsing="false" onAction="#newObjectAfterClicked" text="New Object after" />
-            <MenuItem mnemonicParsing="false" onAction="#newObjectBelowClicked" text="New Object below" />
+            <MenuItem mnemonicParsing="false" onAction="#newObjectBelowClicked" text="New Object below">
+            <accelerator>
+               <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+            </accelerator></MenuItem>
             <MenuItem mnemonicParsing="false" onAction="#promoteObjectClicked" text="Promote Object">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="P" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />

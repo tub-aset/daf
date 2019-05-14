@@ -29,7 +29,7 @@ public class NewObjectAfterCommand extends AbstractCommand {
     @Override
     public void apply() {
         newObject = DoorsFactory.eINSTANCE.createDoorsObject();
-        newObject.setObjectText("");
+        newObject.setObjectText("New object");
         newObject.setObjectHeading("");
         newObject.setObjectLevel(object.getObjectLevel());
         redo();

@@ -8,6 +8,7 @@ package de.jpwinkler.daf.model;
 import static de.jpwinkler.daf.model.DoorsModuleUtil.listParser;
 import static de.jpwinkler.daf.model.DoorsModuleUtil.listWriter;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -16,8 +17,8 @@ import java.util.function.Function;
  * @author fwiesweg
  */
 public enum DoorsSystemAttributes {
-    TAGS(Collection.class, listParser, listWriter),
-    OBJECT_ATTRIBUTES(Collection.class, listParser, listWriter);
+    TAGS(List.class, listParser, listWriter),
+    OBJECT_ATTRIBUTES(List.class, listParser, listWriter);
 
     <T> DoorsSystemAttributes(Class<T> type, Function<String, T> parser, Function<T, String> writer) {
         this.type = type;

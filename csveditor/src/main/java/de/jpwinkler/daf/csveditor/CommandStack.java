@@ -46,6 +46,10 @@ public class CommandStack {
 
         private final DoorsModule module;
 
+        public AbstractCommand() {
+            this.module = null;
+        }
+
         public AbstractCommand(final DoorsModule module) {
             this.module = module;
         }

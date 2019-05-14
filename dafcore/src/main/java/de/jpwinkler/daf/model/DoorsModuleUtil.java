@@ -121,7 +121,7 @@ public class DoorsModuleUtil {
     }
     
     // Defined here to prevent forward references in DoorsSystemAttributes
-    static final Function<String, Collection> listParser = s -> (s == null || s.isEmpty()) ? Collections.emptyList() : Arrays.asList(s.split(","));
-    static final Function<Collection, String> listWriter = s -> (s == null) ? null : (String) s.stream()
+    static final Function<String, List> listParser = s -> (s == null || s.isEmpty()) ? Collections.emptyList() : Arrays.asList(s.split(","));
+    static final Function<List, String> listWriter = s -> (s == null) ? null : (String) s.stream()
             .filter(s1 -> s1 != null).map(s1 -> s1.toString()).reduce((s1, s2) -> s1 + "," + s2).orElse(null);
 }
