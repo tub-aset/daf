@@ -4,6 +4,7 @@ import de.jpwinkler.daf.model.DoorsFactory;
 import de.jpwinkler.daf.model.DoorsPackage;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
+import de.jpwinkler.daf.model.DoorsSystemAttributes;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.io.File;
 import java.io.FileInputStream;
@@ -35,9 +36,12 @@ public class ModuleCSVParser {
 
         DoorsTreeNode current = module;
         int currentLevel = 0;
+        if (!csvParser.getHeaderMap().containsKey(DoorsSystemAttributes.OBJECT_LEVEL.getKey())) {
+            throw new CSVParseException("This is no DOORS CSV file: Object Level missing");
+        }
 
         for (final CSVRecord record : csvParser.getRecords()) {
-            final int objectLevel = Integer.parseInt(record.get("Object Level"));
+            final int objectLevel = Integer.parseInt(record.get(DoorsSystemAttributes.OBJECT_LEVEL.getKey()));
 
             while (objectLevel <= currentLevel) {
                 currentLevel--;

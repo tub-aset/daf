@@ -26,6 +26,7 @@ import de.jpwinkler.daf.model.DoorsFactory;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsModuleUtil;
 import de.jpwinkler.daf.model.DoorsObject;
+import de.jpwinkler.daf.model.DoorsSystemAttributes;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import java.io.File;
@@ -166,7 +167,12 @@ public class FilePaneController implements FileStateController {
         this.applicationStateController = applicationStateController;
 
         this.file = file;
-        this.module = file == null ? DoorsFactory.eINSTANCE.createDoorsModule() : new ModuleCSVParser().parseCSV(file);
+        if (file != null) {
+            this.module = new ModuleCSVParser().parseCSV(file);
+        } else {
+            this.module = DoorsFactory.eINSTANCE.createDoorsModule();
+        }
+        mergeObjectAttributes();
 
         updateGui(UpdateAction.UPDATE_VIEWS, UpdateAction.UPDATE_COLUMNS, UpdateAction.UPDATE_CONTENT_VIEW, UpdateAction.UPDATE_OUTLINE_VIEW);
         traverseTreeItem(outlineTreeView.getRoot(), ti -> ti.setExpanded(true));
@@ -373,11 +379,20 @@ public class FilePaneController implements FileStateController {
         }
     }
 
+    private void mergeObjectAttributes() {
+        Set<String> moduleAttrs = new HashSet<>(this.module.getObjectAttributes());
+        moduleAttrs.add(DoorsSystemAttributes.OBJECT_LEVEL.getKey());
+        this.currentView.getColumns().forEach(cd -> moduleAttrs.add(cd.getAttributeName()));
+        this.module.setObjectAttributes(new ArrayList<>(moduleAttrs));
+    }
+
     private void updateViews() {
         this.viewsMenuButton.getItems().removeIf(mi -> mi instanceof RadioMenuItem);
         ToggleGroup viewsToggleGroup = new ToggleGroup();
         viewsToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
             this.currentView = (ViewDefinition) newValue.getUserData();
+            mergeObjectAttributes();
+
             ApplicationPreferences.FILE_PANE_CURRENT_VIEW.store(views.indexOf(this.currentView));
             updateGui(UpdateAction.UPDATE_COLUMNS);
         });

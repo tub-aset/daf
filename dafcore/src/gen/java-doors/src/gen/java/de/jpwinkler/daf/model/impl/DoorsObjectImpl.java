@@ -7,6 +7,7 @@ import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsPackage;
+import de.jpwinkler.daf.model.DoorsSystemAttributes;
 import de.jpwinkler.daf.model.Link;
 import de.jpwinkler.daf.model.ResolvedLink;
 import java.lang.reflect.InvocationTargetException;
@@ -182,7 +183,7 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
      */
     @Override
     public String getObjectIdentifier() {
-        return getAttributes().get("Object Identifier");
+        return DoorsSystemAttributes.OBJECT_IDENTIFIER.getValue(String.class, getAttributes());
     }
 
     /**
@@ -192,7 +193,7 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
      */
     @Override
     public void setObjectIdentifier(final String newObjectIdentifier) {
-        getAttributes().put("Object Identifier", newObjectIdentifier);
+        DoorsSystemAttributes.OBJECT_IDENTIFIER.setValue(String.class, getAttributes(), newObjectIdentifier);
     }
 
     /**
@@ -202,7 +203,7 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
      */
     @Override
     public int getObjectLevel() {
-        return Integer.parseInt(getAttributes().get("Object Level"));
+        return DoorsSystemAttributes.OBJECT_LEVEL.getValue(Integer.class, getAttributes());
     }
 
     /**
@@ -212,7 +213,7 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
      */
     @Override
     public void setObjectLevel(final int newObjectLevel) {
-        getAttributes().put("Object Level", String.valueOf(newObjectLevel));
+        DoorsSystemAttributes.OBJECT_LEVEL.setValue(Integer.class, getAttributes(), newObjectLevel);
     }
 
     /**
@@ -222,7 +223,7 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
      */
     @Override
     public String getObjectNumber() {
-        return getAttributes().get("Object Number");
+        return DoorsSystemAttributes.OBJECT_NUMBER.getValue(String.class, getAttributes());
     }
 
     /**
@@ -232,7 +233,7 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
      */
     @Override
     public void setObjectNumber(final String newObjectNumber) {
-        getAttributes().put("Object Number", newObjectNumber);
+        DoorsSystemAttributes.OBJECT_NUMBER.setValue(String.class, getAttributes(), newObjectNumber);
     }
 
     /**
@@ -242,7 +243,7 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
      */
     @Override
     public int getAbsoluteNumber() {
-        return Integer.parseInt(getAttributes().get("Absolute Number"));
+        return DoorsSystemAttributes.ABSOLUTE_NUMBER.getValue(Integer.class, getAttributes());
     }
 
     /**
@@ -252,7 +253,7 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
      */
     @Override
     public void setAbsoluteNumber(final int newAbsoluteNumber) {
-        getAttributes().put("Absolute Number", String.valueOf(newAbsoluteNumber));
+        DoorsSystemAttributes.ABSOLUTE_NUMBER.setValue(Integer.class, getAttributes(), newAbsoluteNumber);
     }
 
     /**
@@ -262,7 +263,7 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
      */
     @Override
     public String getObjectText() {
-        return getAttributes().get("Object Text");
+        return DoorsSystemAttributes.OBJECT_TEXT.getValue(String.class, getAttributes());
     }
 
     /**
@@ -272,7 +273,7 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
      */
     @Override
     public void setObjectText(final String newObjectText) {
-        getAttributes().put("Object Text", newObjectText);
+        DoorsSystemAttributes.OBJECT_TEXT.setValue(String.class, getAttributes(), newObjectText);
     }
 
     /**
@@ -282,7 +283,7 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
      */
     @Override
     public String getObjectShortText() {
-        return getAttributes().get("Object Short Text");
+        return DoorsSystemAttributes.OBJECT_SHORT_TEXT.getValue(String.class, getAttributes());
     }
 
     /**
@@ -292,7 +293,7 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
      */
     @Override
     public void setObjectShortText(final String newObjectShortText) {
-        getAttributes().put("Object Short Text", newObjectShortText);
+        DoorsSystemAttributes.OBJECT_SHORT_TEXT.setValue(String.class, getAttributes(), newObjectShortText);
     }
 
     /**
@@ -302,7 +303,7 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
      */
     @Override
     public String getObjectHeading() {
-        return getAttributes().get("Object Heading");
+        return DoorsSystemAttributes.OBJECT_HEADING.getValue(String.class, getAttributes());
     }
 
     /**
@@ -312,7 +313,7 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
      */
     @Override
     public void setObjectHeading(final String newObjectHeading) {
-        getAttributes().put("Object Heading", newObjectHeading);
+        DoorsSystemAttributes.OBJECT_HEADING.setValue(String.class, getAttributes(), newObjectHeading);
     }
 
     /**
