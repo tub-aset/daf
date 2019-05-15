@@ -178,12 +178,12 @@ public class ApplicationPaneController implements ApplicationStateController {
 
         try {
             controller.initialize(this, selectedFile);
-            final Tab selectedTab = new Tab(selectedFile != null ? selectedFile.getName() : "New Document", filePane);
+            final Tab selectedTab = new Tab(selectedFile != null ? selectedFile.getName() : FilePaneController.NEW_MODULE, filePane);
             fileStateControllers.put(selectedTab, controller);
 
             controller.getCommandStack().setOnDirty(dirty -> {
                 File file = controller.getFile();
-                selectedTab.setText((file != null ? file.getName() : "New Document") + (dirty ? " *" : ""));
+                selectedTab.setText((file != null ? file.getName() : FilePaneController.NEW_MODULE) + (dirty ? " *" : ""));
             });
 
             selectedTab.setClosable(true);

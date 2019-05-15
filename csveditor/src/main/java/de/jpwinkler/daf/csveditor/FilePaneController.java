@@ -62,10 +62,12 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.DefaultStringConverter;
+import org.apache.commons.io.FilenameUtils;
 
 public class FilePaneController implements FileStateController {
 
     private static final ViewDefinition STANDARD_VIEW = new ViewDefinition("Standard");
+    public static final String NEW_MODULE = "New Module";
 
     static {
         ColumnDefinition columnDefinition = new ColumnDefinition("Object Heading/Text");
@@ -171,6 +173,7 @@ public class FilePaneController implements FileStateController {
             this.module = new ModuleCSVParser().parseCSV(file);
         } else {
             this.module = DoorsFactory.eINSTANCE.createDoorsModule();
+            this.module.setName(NEW_MODULE);
         }
         mergeObjectAttributes();
 
@@ -218,6 +221,8 @@ public class FilePaneController implements FileStateController {
     @Override
     public void setFile(File file) {
         this.file = file;
+        this.module.setName(FilenameUtils.getBaseName(file.getAbsolutePath()));
+        this.updateGui(UpdateAction.UPDATE_OUTLINE_VIEW);
     }
 
     @Override
