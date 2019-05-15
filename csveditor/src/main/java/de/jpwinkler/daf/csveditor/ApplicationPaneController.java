@@ -145,7 +145,7 @@ public class ApplicationPaneController {
     }
 
     @FXML
-    public void openClicked() {
+    public void openModuleClicked() {
         final File f = openFileChooser.showOpenDialog(tabPane.getScene().getWindow());
         if (f != null) {
             openFileChooser.setInitialDirectory(f.getParentFile());

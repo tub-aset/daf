@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 import de.jpwinkler.daf.bridge.DoorsTreeNodeRef;
-import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import java.util.Arrays;
@@ -173,5 +172,25 @@ class DoorsTreeNodeRefImpl implements DoorsTreeNodeRef {
             }
         }
         return current;
+    }
+
+    @Override
+    public void setTag(String tag) {
+        throw new UnsupportedOperationException("Not supported");
+    }
+
+    @Override
+    public void removeTag(String tag) {
+        throw new UnsupportedOperationException("Not supported");
+    }
+
+    @Override
+    public void removeTag(Pattern pattern) {
+        throw new UnsupportedOperationException("Not supported");
+    }
+
+    @Override
+    public List<String> getTags() {
+        return Collections.emptyList();
     }
 }

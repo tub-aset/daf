@@ -1,63 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.layout.*?>
-<?import java.lang.*?>
-<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
-<SplitPane dividerPositions="0.2857142857142857, 0.7199621570482497" prefHeight="729.0" prefWidth="1059.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.jpwinkler.daf.doorsdbgui.BrowserController">
+<SplitPane dividerPositions="0.44938505203405865" prefHeight="729.0" prefWidth="1059.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
          <items>
-            <BorderPane prefHeight="200.0" prefWidth="200.0" SplitPane.resizableWithParent="false">
-               <center>
-                  <TreeView fx:id="remoteTreeView" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent;" BorderPane.alignment="CENTER" />
-               </center>
-               <bottom>
-                  <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
-                     <children>
-                        <ListView fx:id="downloadQueueListView" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent;" />
-                        <Button mnemonicParsing="false" onAction="#downloadAllPressed" text="Download All" />
-                     </children>
-                  </VBox>
-               </bottom>
-               <top>
-                  <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-               <items>
-                  <Button mnemonicParsing="false" onAction="#remoteAddToQueuePressed" text="Add to Queue" />
-                  <Button mnemonicParsing="false" onAction="#remoteDownloadPressed" text="Download" />
-                  <Button mnemonicParsing="false" onAction="#remoteDownloadOpenPressed" text="Download &amp; Open" />
-               </items></ToolBar>
-               </top>
-            </BorderPane>
       <BorderPane>
          <top>
                   <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-                    <items>
-                      <Button mnemonicParsing="false" onAction="#localDeletePressed" text="Delete" />
-                        <Button mnemonicParsing="false" onAction="#localUpdatePressed" text="Update" />
-                    </items>
+               <items>
+                  <Button mnemonicParsing="false" text="Make snapshot" />
+               </items>
                   </ToolBar>
          </top>
-         <bottom>
-            <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-               <items>
-                  <TextField fx:id="searchTextField" prefHeight="25.0" prefWidth="305.0" />
-                  <Button mnemonicParsing="false" onAction="#cancelSearchPressed" text="X" />
-               </items>
-            </ToolBar>
-         </bottom>
          <center>
-            <GridPane BorderPane.alignment="CENTER">
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-               <children>
-                        <TreeView fx:id="localTreeView" style="-fx-background-color: transparent;" />
-                  <ListView fx:id="searchResultListView" style="-fx-background-color: transparent;" visible="false" />
-               </children>
-            </GridPane>
+                  <TreeView fx:id="databaseTreeView" style="-fx-background-color: transparent;" />
          </center>
       </BorderPane>
       <BorderPane prefHeight="200.0" prefWidth="200.0" SplitPane.resizableWithParent="false">
@@ -95,11 +65,6 @@
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </padding>
                               </GridPane>
-                     </content>
-                  </TitledPane>
-                  <TitledPane alignment="CENTER" animated="false" collapsible="false" minHeight="-Infinity" prefHeight="200.0" text="Versions">
-                     <content>
-                              <ListView fx:id="versionsListView" prefHeight="200.0" prefWidth="200.0" />
                      </content>
                   </TitledPane>
                </children>

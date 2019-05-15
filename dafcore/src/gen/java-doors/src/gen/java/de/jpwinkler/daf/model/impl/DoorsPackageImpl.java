@@ -282,7 +282,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getDoorsTreeNode__CanCopyFrom__DoorsTreeNode() {
+	public EOperation getDoorsTreeNode__GetTags() {
 		return doorsTreeNodeEClass.getEOperations().get(4);
 	}
 
@@ -292,8 +292,48 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getDoorsTreeNode__CopyFrom__DoorsTreeNode_DoorsTreeNode() {
+	public EOperation getDoorsTreeNode__SetTag__String() {
 		return doorsTreeNodeEClass.getEOperations().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getDoorsTreeNode__RemoveTag__String() {
+		return doorsTreeNodeEClass.getEOperations().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getDoorsTreeNode__RemoveTag__Pattern() {
+		return doorsTreeNodeEClass.getEOperations().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getDoorsTreeNode__CanCopyFrom__DoorsTreeNode() {
+		return doorsTreeNodeEClass.getEOperations().get(8);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getDoorsTreeNode__CopyFrom__DoorsTreeNode_DoorsTreeNode() {
+		return doorsTreeNodeEClass.getEOperations().get(9);
 	}
 
 	/**
@@ -745,6 +785,10 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___ACCEPT__DOORSTREENODEVISITOR);
 		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___HAS_TAG__STRING);
 		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___HAS_TAG__PATTERN);
+		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___GET_TAGS);
+		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___SET_TAG__STRING);
+		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___REMOVE_TAG__STRING);
+		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___REMOVE_TAG__PATTERN);
 		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___CAN_COPY_FROM__DOORSTREENODE);
 		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE_DOORSTREENODE);
 		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___GET_CHILD__STRING);
@@ -849,6 +893,17 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		addEParameter(op, ecorePackage.getEString(), "tag", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		op = initEOperation(getDoorsTreeNode__HasTag__Pattern(), ecorePackage.getEBoolean(), "hasTag", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getPattern(), "pattern", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getDoorsTreeNode__GetTags(), ecorePackage.getEString(), "getTags", 0, -1, IS_UNIQUE, IS_ORDERED);
+
+		op = initEOperation(getDoorsTreeNode__SetTag__String(), null, "setTag", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEString(), "tag", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = initEOperation(getDoorsTreeNode__RemoveTag__String(), null, "removeTag", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEString(), "tag", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = initEOperation(getDoorsTreeNode__RemoveTag__Pattern(), null, "removeTag", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getPattern(), "pattern", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		op = initEOperation(getDoorsTreeNode__CanCopyFrom__DoorsTreeNode(), ecorePackage.getEBoolean(), "canCopyFrom", 0, 1, IS_UNIQUE, IS_ORDERED);

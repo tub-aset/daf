@@ -11,8 +11,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.BasicEList;
@@ -239,7 +241,7 @@ public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements D
      */
     @Override
     public boolean hasTag(String tag) {
-        return DoorsSystemAttributes.TAGS.getValue(Collection.class, getAttributes()).contains(tag);
+        return DoorsSystemAttributes.TAGS.getValue(List.class, getAttributes()).contains(tag);
     }
 
     /**
@@ -248,10 +250,53 @@ public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements D
      */
     @Override
     public boolean hasTag(Pattern pattern) {
-        return DoorsSystemAttributes.TAGS.getValue(Collection.class, getAttributes()).stream().anyMatch(pattern.asMatchPredicate());
+        return DoorsSystemAttributes.TAGS.getValue(List.class, getAttributes()).stream().anyMatch(pattern.asMatchPredicate());
     }
 
     /**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	@Override
+	public List<String> getTags() {
+		return DoorsSystemAttributes.TAGS.getValue(List.class, getAttributes());
+	}
+
+				/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	@Override
+	public void setTag(String tag) {
+            List<String> l = DoorsSystemAttributes.TAGS.getValue(List.class, getAttributes());
+            DoorsSystemAttributes.TAGS.setValue(List.class, getAttributes(), Stream.concat(Stream.of(tag), l.stream() ).collect(Collectors.toList()));
+	}
+
+				/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	@Override
+	public void removeTag(String tag) {
+            List<String> l = DoorsSystemAttributes.TAGS.getValue(List.class, getAttributes());
+	    DoorsSystemAttributes.TAGS.setValue(List.class, getAttributes(), l.stream().filter(t -> !tag.equals(t)).collect(Collectors.toList()));
+	}
+
+				/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	@Override
+	public void removeTag(Pattern pattern) {
+            List<String> l = DoorsSystemAttributes.TAGS.getValue(List.class, getAttributes());
+	    DoorsSystemAttributes.TAGS.setValue(List.class, getAttributes(), l.stream().filter(Predicate.not(pattern.asMatchPredicate())).collect(Collectors.toList()));
+	}
+
+				/**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc --> @generated NOT
      */
@@ -442,6 +487,17 @@ public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements D
 				return hasTag((String)arguments.get(0));
 			case DoorsPackage.DOORS_TREE_NODE___HAS_TAG__PATTERN:
 				return hasTag((Pattern)arguments.get(0));
+			case DoorsPackage.DOORS_TREE_NODE___GET_TAGS:
+				return getTags();
+			case DoorsPackage.DOORS_TREE_NODE___SET_TAG__STRING:
+				setTag((String)arguments.get(0));
+				return null;
+			case DoorsPackage.DOORS_TREE_NODE___REMOVE_TAG__STRING:
+				removeTag((String)arguments.get(0));
+				return null;
+			case DoorsPackage.DOORS_TREE_NODE___REMOVE_TAG__PATTERN:
+				removeTag((Pattern)arguments.get(0));
+				return null;
 			case DoorsPackage.DOORS_TREE_NODE___CAN_COPY_FROM__DOORSTREENODE:
 				return canCopyFrom((DoorsTreeNode)arguments.get(0));
 			case DoorsPackage.DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE_DOORSTREENODE:

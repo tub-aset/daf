@@ -159,13 +159,49 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_TREE_NODE___HAS_TAG__PATTERN = 2;
 
 	/**
+	 * The operation id for the '<em>Get Tags</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TREE_NODE___GET_TAGS = 3;
+
+	/**
+	 * The operation id for the '<em>Set Tag</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TREE_NODE___SET_TAG__STRING = 4;
+
+	/**
+	 * The operation id for the '<em>Remove Tag</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TREE_NODE___REMOVE_TAG__STRING = 5;
+
+	/**
+	 * The operation id for the '<em>Remove Tag</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TREE_NODE___REMOVE_TAG__PATTERN = 6;
+
+	/**
 	 * The operation id for the '<em>Can Copy From</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_TREE_NODE___CAN_COPY_FROM__DOORSTREENODE = 3;
+	int DOORS_TREE_NODE___CAN_COPY_FROM__DOORSTREENODE = 7;
 
 	/**
 	 * The operation id for the '<em>Copy From</em>' operation.
@@ -174,7 +210,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE_DOORSTREENODE = 4;
+	int DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE_DOORSTREENODE = 8;
 
 	/**
 	 * The operation id for the '<em>Get Child</em>' operation.
@@ -183,7 +219,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_TREE_NODE___GET_CHILD__STRING = 5;
+	int DOORS_TREE_NODE___GET_CHILD__STRING = 9;
 
 	/**
 	 * The number of operations of the '<em>Tree Node</em>' class.
@@ -192,7 +228,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_TREE_NODE_OPERATION_COUNT = 6;
+	int DOORS_TREE_NODE_OPERATION_COUNT = 10;
 
 	/**
 	 * The meta object id for the '{@link de.jpwinkler.daf.model.impl.DoorsDatabaseImpl <em>Database</em>}' class.
@@ -412,6 +448,42 @@ public interface DoorsPackage extends EPackage {
 	 * @ordered
 	 */
 	int DOORS_MODULE___HAS_TAG__PATTERN = DOORS_TREE_NODE___HAS_TAG__PATTERN;
+
+	/**
+	 * The operation id for the '<em>Get Tags</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_MODULE___GET_TAGS = DOORS_TREE_NODE___GET_TAGS;
+
+	/**
+	 * The operation id for the '<em>Set Tag</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_MODULE___SET_TAG__STRING = DOORS_TREE_NODE___SET_TAG__STRING;
+
+	/**
+	 * The operation id for the '<em>Remove Tag</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_MODULE___REMOVE_TAG__STRING = DOORS_TREE_NODE___REMOVE_TAG__STRING;
+
+	/**
+	 * The operation id for the '<em>Remove Tag</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_MODULE___REMOVE_TAG__PATTERN = DOORS_TREE_NODE___REMOVE_TAG__PATTERN;
 
 	/**
 	 * The operation id for the '<em>Can Copy From</em>' operation.
@@ -683,6 +755,42 @@ public interface DoorsPackage extends EPackage {
 	 * @ordered
 	 */
 	int DOORS_OBJECT___HAS_TAG__PATTERN = DOORS_TREE_NODE___HAS_TAG__PATTERN;
+
+	/**
+	 * The operation id for the '<em>Get Tags</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_OBJECT___GET_TAGS = DOORS_TREE_NODE___GET_TAGS;
+
+	/**
+	 * The operation id for the '<em>Set Tag</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_OBJECT___SET_TAG__STRING = DOORS_TREE_NODE___SET_TAG__STRING;
+
+	/**
+	 * The operation id for the '<em>Remove Tag</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_OBJECT___REMOVE_TAG__STRING = DOORS_TREE_NODE___REMOVE_TAG__STRING;
+
+	/**
+	 * The operation id for the '<em>Remove Tag</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_OBJECT___REMOVE_TAG__PATTERN = DOORS_TREE_NODE___REMOVE_TAG__PATTERN;
 
 	/**
 	 * The operation id for the '<em>Can Copy From</em>' operation.
@@ -1051,6 +1159,46 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getDoorsTreeNode__HasTag__Pattern();
+
+	/**
+	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsTreeNode#getTags() <em>Get Tags</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Tags</em>' operation.
+	 * @see de.jpwinkler.daf.model.DoorsTreeNode#getTags()
+	 * @generated
+	 */
+	EOperation getDoorsTreeNode__GetTags();
+
+	/**
+	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsTreeNode#setTag(java.lang.String) <em>Set Tag</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Set Tag</em>' operation.
+	 * @see de.jpwinkler.daf.model.DoorsTreeNode#setTag(java.lang.String)
+	 * @generated
+	 */
+	EOperation getDoorsTreeNode__SetTag__String();
+
+	/**
+	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsTreeNode#removeTag(java.lang.String) <em>Remove Tag</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Remove Tag</em>' operation.
+	 * @see de.jpwinkler.daf.model.DoorsTreeNode#removeTag(java.lang.String)
+	 * @generated
+	 */
+	EOperation getDoorsTreeNode__RemoveTag__String();
+
+	/**
+	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsTreeNode#removeTag(java.util.regex.Pattern) <em>Remove Tag</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Remove Tag</em>' operation.
+	 * @see de.jpwinkler.daf.model.DoorsTreeNode#removeTag(java.util.regex.Pattern)
+	 * @generated
+	 */
+	EOperation getDoorsTreeNode__RemoveTag__Pattern();
 
 	/**
 	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsTreeNode#canCopyFrom(de.jpwinkler.daf.model.DoorsTreeNode) <em>Can Copy From</em>}' operation.
@@ -1615,6 +1763,38 @@ public interface DoorsPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation DOORS_TREE_NODE___HAS_TAG__PATTERN = eINSTANCE.getDoorsTreeNode__HasTag__Pattern();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Tags</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation DOORS_TREE_NODE___GET_TAGS = eINSTANCE.getDoorsTreeNode__GetTags();
+
+		/**
+		 * The meta object literal for the '<em><b>Set Tag</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation DOORS_TREE_NODE___SET_TAG__STRING = eINSTANCE.getDoorsTreeNode__SetTag__String();
+
+		/**
+		 * The meta object literal for the '<em><b>Remove Tag</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation DOORS_TREE_NODE___REMOVE_TAG__STRING = eINSTANCE.getDoorsTreeNode__RemoveTag__String();
+
+		/**
+		 * The meta object literal for the '<em><b>Remove Tag</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation DOORS_TREE_NODE___REMOVE_TAG__PATTERN = eINSTANCE.getDoorsTreeNode__RemoveTag__Pattern();
 
 		/**
 		 * The meta object literal for the '<em><b>Can Copy From</b></em>' operation.

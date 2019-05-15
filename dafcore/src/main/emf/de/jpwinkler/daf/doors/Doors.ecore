@@ -115,6 +115,20 @@
             <eParameters name="pattern" eType="#//Pattern"/>
         </eOperations>
         
+        <eOperations name="getTags" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
+        
+        <eOperations name="setTag">
+            <eParameters name="tag" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </eOperations>
+        
+        <eOperations name="removeTag">
+            <eParameters name="tag" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </eOperations>
+        
+        <eOperations name="removeTag">
+            <eParameters name="pattern" eType="#//Pattern"/>
+        </eOperations>
+        
         <eOperations name="canCopyFrom" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
             <eParameters name="node" eType="#//DoorsTreeNode"/>
         </eOperations>

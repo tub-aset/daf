@@ -6,12 +6,14 @@ import de.jpwinkler.daf.model.DoorsFactory;
 import de.jpwinkler.daf.model.DoorsDatabase;
 import de.jpwinkler.daf.model.DoorsModuleVersion;
 import de.jpwinkler.daf.model.DoorsModule;
+import de.jpwinkler.daf.model.DoorsPackage;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.model.impl.DoorsDatabaseImpl;
 import de.jpwinkler.daf.search.SearchExpression;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -19,7 +21,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -31,10 +32,24 @@ class FileDatabaseInterface implements DatabaseInterface {
     private final Path databaseFile;
     private final Path databaseRoot;
 
-    FileDatabaseInterface(final Path databaseFile, final DoorsDatabase db) throws IOException {
+    FileDatabaseInterface(final Path databaseFile) throws IOException {
         this.databaseFile = databaseFile.toAbsolutePath();
-        databaseRoot = databaseFile.toAbsolutePath().getParent();
-        this.db = db;
+        this.databaseRoot = databaseFile.toAbsolutePath().getParent();
+
+        if (Files.exists(databaseFile)) {
+            DoorsPackage.eINSTANCE.eClass();
+
+            final Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
+            reg.getExtensionToFactoryMap().put("DoorsDatabasemodel", new XMIResourceFactoryImpl());
+            final ResourceSet resourceSet = new ResourceSetImpl();
+            final Resource resource = resourceSet.getResource(
+                    org.eclipse.emf.common.util.URI.createFileURI(databaseFile.toString()), true);
+            this.db = (DoorsDatabase) resource.getContents().get(0);
+        } else {
+            this.db = DoorsFactory.eINSTANCE.createDoorsDatabase();
+            this.db.setRoot(DoorsFactory.eINSTANCE.createDoorsTreeNode());
+            this.flush();
+        }
     }
 
     @Override
@@ -64,11 +79,12 @@ class FileDatabaseInterface implements DatabaseInterface {
     }
 
     @Override
-    public void flush() throws IOException {
+    public final void flush() throws IOException {
         final Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
         reg.getExtensionToFactoryMap().put("DoorsDatabasemodel", new XMIResourceFactoryImpl());
         final ResourceSet resourceSet = new ResourceSetImpl();
-        final Resource resource = resourceSet.createResource(URI.createFileURI(databaseFile.toString()));
+        final Resource resource = resourceSet.createResource(
+                org.eclipse.emf.common.util.URI.createFileURI(databaseFile.toString()));
         resource.getContents().add((DoorsDatabaseImpl) db);
         resource.save(new HashMap<>());
     }
@@ -161,5 +177,10 @@ class FileDatabaseInterface implements DatabaseInterface {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public URI getURI() {
+        return this.databaseFile.toUri();
     }
 }

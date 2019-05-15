@@ -6,6 +6,7 @@
 package de.jpwinkler.daf.localdb;
 
 import de.jpwinkler.daf.bridge.DoorsApplication;
+import de.jpwinkler.daf.bridge.DoorsApplicationFactory;
 import de.jpwinkler.daf.model.DoorsDatabase;
 import de.jpwinkler.daf.model.DoorsFactory;
 import de.jpwinkler.daf.model.DoorsModule;
@@ -13,6 +14,7 @@ import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.search.SearchExpression;
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,9 +24,10 @@ import java.util.List;
  */
 public class DoorsApplicationDatabaseInterface implements DatabaseInterface {
     
+    private final DoorsApplication doorsApplication = DoorsApplicationFactory.getDoorsApplication();
     private final DoorsDatabase db;
     
-    private DoorsApplicationDatabaseInterface(DoorsApplication doorsApplication) {
+    DoorsApplicationDatabaseInterface() {
         this.db = DoorsFactory.eINSTANCE.createDoorsDatabase();
         this.db.setRoot(doorsApplication.getRoot());
     }
@@ -63,5 +66,8 @@ public class DoorsApplicationDatabaseInterface implements DatabaseInterface {
         throw new UnsupportedOperationException("Not supported");
     }
 
-
+    @Override
+    public URI getURI() {
+        return URI.create("doors:///");
+    }
 }

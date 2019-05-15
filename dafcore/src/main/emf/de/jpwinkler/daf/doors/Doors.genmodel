@@ -29,6 +29,17 @@
             -<genOperations ecoreOperation="Doors.ecore#//DoorsTreeNode/hasTag">
                 <genParameters ecoreParameter="Doors.ecore#//DoorsTreeNode/hasTag.1/pattern"/>
             </genOperations>
+            -<genOperations ecoreOperation="Doors.ecore#//DoorsTreeNode/getTags"/>
+            -<genOperations ecoreOperation="Doors.ecore#//DoorsTreeNode/setTag">
+                <genParameters ecoreParameter="Doors.ecore#//DoorsTreeNode/setTag/tag"/>
+            </genOperations>
+            -<genOperations ecoreOperation="Doors.ecore#//DoorsTreeNode/removeTag">
+                <genParameters ecoreParameter="Doors.ecore#//DoorsTreeNode/removeTag/tag"/>
+            </genOperations>
+            -<genOperations ecoreOperation="Doors.ecore#//DoorsTreeNode/removeTag">
+                <genParameters ecoreParameter="Doors.ecore#//DoorsTreeNode/removeTag.1/pattern"/>
+            </genOperations>
+            
             -<genOperations ecoreOperation="Doors.ecore#//DoorsTreeNode/canCopyFrom">
                 <genParameters ecoreParameter="Doors.ecore#//DoorsTreeNode/copyFrom/node"/>
             </genOperations>
