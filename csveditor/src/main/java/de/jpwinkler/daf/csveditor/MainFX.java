@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.input.TransferMode;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class MainFX extends Application {
 
@@ -28,6 +29,12 @@ public class MainFX extends Application {
                     applicationPaneController.openFile(file);
                 }
                 event.setDropCompleted(true);
+            }
+        });
+
+        primaryStage.setOnCloseRequest((WindowEvent event) -> {
+            if (!applicationPaneController.closeClicked()) {
+                event.consume();
             }
         });
         primaryStage.setScene(applicationScene);

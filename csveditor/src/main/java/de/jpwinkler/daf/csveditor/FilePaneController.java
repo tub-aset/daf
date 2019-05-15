@@ -30,8 +30,8 @@ import de.jpwinkler.daf.model.DoorsSystemAttributes;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -203,8 +203,8 @@ public class FilePaneController implements FileStateController {
     }
 
     @Override
-    public void save(OutputStream os) throws IOException {
-        try ( ModuleCSVWriter writer = new ModuleCSVWriter(os)) {
+    public void save(File file) throws IOException {
+        try ( ModuleCSVWriter writer = new ModuleCSVWriter(new FileOutputStream(file))) {
             writer.writeModule(module);
             commandStack.setSavePoint();
         }
@@ -221,8 +221,8 @@ public class FilePaneController implements FileStateController {
     }
 
     @Override
-    public boolean isDirty() {
-        return commandStack.isDirty();
+    public CommandStack getCommandStack() {
+        return commandStack;
     }
 
     @FXML

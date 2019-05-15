@@ -3,14 +3,14 @@ package de.jpwinkler.daf.csveditor;
 import de.jpwinkler.daf.csveditor.background.BackgroundTaskStatusListener;
 import de.jpwinkler.daf.csveditor.background.BackgroundTaskStatusMonitor;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
-import java.util.Optional;
+import java.util.Set;
 import java.util.TreeMap;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -29,6 +29,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.ToolBar;
+import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
@@ -81,30 +82,17 @@ public class ApplicationPaneController implements ApplicationStateController {
             mainMenuBar.getMenus().addAll(getFileStateController(newValue).getMenus());
         });
         tabPane.getTabs().addListener((ListChangeListener<Tab>) (change) -> {
-            List<Tab> toBeAdded = new ArrayList<>();
+            Set<Tab> closedTabs = new HashSet<>();
 
             while (change.next()) {
                 for (Tab selectedTab : change.getRemoved()) {
-                    final FileStateController controller = getFileStateController(selectedTab);
-                    if (controller.isDirty()) {
-                        final Optional<ButtonType> saveConfirm = new Alert(AlertType.CONFIRMATION, "There are unsaved changes, do you want to save them?",
-                                ButtonType.YES, ButtonType.NO, ButtonType.CANCEL).showAndWait();
-                        if ((saveConfirm.isPresent() && saveConfirm.get() == ButtonType.YES && !this.saveClicked())
-                                || (saveConfirm.isPresent() && saveConfirm.get() == ButtonType.CANCEL)
-                                || !saveConfirm.isPresent()) {
-                            toBeAdded.add(selectedTab);
-                            continue;
-                        }
-                    }
-
-                    fileStateControllers.remove(selectedTab);
+                    closedTabs.add(selectedTab);
                 }
             }
 
-            if (!toBeAdded.isEmpty()) {
-                tabPane.getTabs().addAll(toBeAdded);
-            }
-        });
+            closeTabs(closedTabs);
+        }
+        );
         addToRecentMenu(null);
 
         backgroundTaskStatusToolBar.setManaged(false);
@@ -190,13 +178,16 @@ public class ApplicationPaneController implements ApplicationStateController {
 
         try {
             controller.initialize(this, selectedFile);
-
             final Tab selectedTab = new Tab(selectedFile != null ? selectedFile.getName() : "New Document", filePane);
             fileStateControllers.put(selectedTab, controller);
 
+            controller.getCommandStack().setOnDirty(dirty -> {
+                File file = controller.getFile();
+                selectedTab.setText((file != null ? file.getName() : "New Document") + (dirty ? " *" : ""));
+            });
+
             selectedTab.setClosable(true);
             tabPane.getTabs().add(selectedTab);
-            updateTabTitle(selectedTab);
 
             tabPane.getSelectionModel().select(selectedTab);
             addToRecentMenu(selectedFile);
@@ -228,26 +219,35 @@ public class ApplicationPaneController implements ApplicationStateController {
 
     @FXML
     public boolean saveClicked() {
-        File f = getCurrentFileStateController().getFile();
-        if (f == null) {
-            return saveAsClicked();
+        return save(getCurrentFileStateController(), true);
+    }
+
+    private boolean save(FileStateController fsc, boolean allowSaveAs) {
+        File f = fsc.getFile();
+        if (allowSaveAs && f == null) {
+            return saveAs(fsc);
+        } else if (f == null) {
+            throw new IllegalStateException("No file set");
         }
 
-        try ( FileOutputStream fos = new FileOutputStream(f)) {
-            getCurrentFileStateController().save(fos);
+        try {
+            fsc.save(f);
         } catch (IOException ex) {
-            this.setStatus("Open: Failed to save file; " + ex.getMessage());
+            this.setStatus("Save: Failed to save file; " + ex.getMessage());
             return false;
         }
 
         addToRecentMenu(f);
-        updateTabTitle(tabPane.getSelectionModel().getSelectedItem());
         return true;
     }
 
     @FXML
     public boolean saveAsClicked() {
-        File f = getCurrentFileStateController().getFile();
+        return saveAs(getCurrentFileStateController());
+    }
+
+    private boolean saveAs(FileStateController fsc) {
+        File f = fsc.getFile();
         if (f != null) {
             saveFileChooser.setInitialDirectory(f.getParentFile());
             saveFileChooser.setInitialFileName(f.getName());
@@ -259,31 +259,48 @@ public class ApplicationPaneController implements ApplicationStateController {
             return false;
         }
 
-        getCurrentFileStateController().setFile(f);
-        return this.saveClicked();
-    }
-
-    private void updateTabTitle(Tab selectedTab) {
-        FileStateController fileStateController = getFileStateController(selectedTab);
-        File file = fileStateController.getFile();
-        selectedTab.setText((file != null ? file.getName() : "New Document") + (fileStateController.isDirty() ? " *" : ""));
+        fsc.setFile(f);
+        return this.save(fsc, false);
     }
 
     @FXML
-    public void closeClicked() {
-        tabPane.getTabs().remove(tabPane.getSelectionModel().getSelectedItem());
+    public boolean closeClicked() {
+        tabPane.getTabs().clear();
+        return fileStateControllers.isEmpty();
     }
 
     @FXML
     public void exitClicked() {
-        for (final Tab tab : new ArrayList<>(fileStateControllers.keySet())) {
-            tabPane.getTabs().remove(tab);
-        }
-
-        if (!tabPane.getTabs().isEmpty()) {
-            return;
-        }
-
         Platform.exit();
+    }
+
+    private void closeTabs(Collection<Tab> closedTabs) {
+        boolean cancelled = false;
+        for (Tab t : closedTabs) {
+            if (cancelled) {
+                Platform.runLater(() -> tabPane.getTabs().add(t));
+                continue;
+            }
+
+            // non-dirty files can be closed without worries
+            if (!getFileStateController(t).getCommandStack().isDirty()) {
+                fileStateControllers.remove(t);
+                continue;
+            }
+
+            // close if saving is not desired or we saved successfully
+            Alert alert = new Alert(AlertType.CONFIRMATION, "There are unsaved changes in " + t.getText() + ", do you want to save them?",
+                    ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
+            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+            ButtonType response = alert.showAndWait().orElse(ButtonType.NO);
+            if (response == ButtonType.NO || (response == ButtonType.YES && this.save(this.getFileStateController(t), true))) {
+                fileStateControllers.remove(t);
+                continue;
+            }
+            
+            // allow cancellation
+            cancelled = response == ButtonType.CANCEL;
+            Platform.runLater(() -> tabPane.getTabs().add(t));
+        }
     }
 }

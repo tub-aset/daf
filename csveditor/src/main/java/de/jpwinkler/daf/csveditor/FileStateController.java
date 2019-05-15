@@ -7,7 +7,6 @@ package de.jpwinkler.daf.csveditor;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Collections;
 import javafx.scene.control.Menu;
@@ -22,10 +21,9 @@ public interface FileStateController {
     void setFile(File file);
 
     void initialize(ApplicationStateController applicationStateController, File file) throws IOException;
-
-    boolean isDirty();
-
-    void save(OutputStream os) throws IOException;
+    void save(File file) throws IOException;
+    
+    CommandStack getCommandStack();
 
     Collection<Menu> getMenus();
 
@@ -45,17 +43,17 @@ public interface FileStateController {
             }
 
             @Override
-            public boolean isDirty() {
-                return false;
-            }
-
-            @Override
-            public void save(OutputStream os) throws IOException {
+            public void save(File file) throws IOException {
             }
 
             @Override
             public Collection<Menu> getMenus() {
                 return Collections.emptySet();
+            }
+
+            @Override
+            public CommandStack getCommandStack() {
+                return new CommandStack();
             }
         };
     }

@@ -2,16 +2,20 @@ package de.jpwinkler.daf.csveditor;
 
 import de.jpwinkler.daf.csveditor.commands.module.UpdateAction;
 import de.jpwinkler.daf.model.DoorsModule;
+import java.util.function.Consumer;
 
 public class CommandStack {
 
     private AbstractCommand lastExecuted = INITIAL_COMMAND;
     private AbstractCommand lastSaved = INITIAL_COMMAND;
+    private Consumer<Boolean> onDirty = (a) -> {};
 
     public void addCommand(final AbstractCommand command) {
         command.previous = lastExecuted;
         this.lastExecuted.next = command;
         this.lastExecuted = command;
+        
+        onDirty.accept(isDirty());
     }
 
     public AbstractCommand undo() {
@@ -22,6 +26,8 @@ public class CommandStack {
 
         this.lastExecuted = lastExecuted.previous;
         commandToUndo.undo();
+        
+        onDirty.accept(isDirty());
         return commandToUndo;
     }
 
@@ -31,6 +37,8 @@ public class CommandStack {
             this.lastExecuted = commandToRedo;
             commandToRedo.redo();
         }
+        
+        onDirty.accept(isDirty());
         return commandToRedo;
     }
 
@@ -40,6 +48,15 @@ public class CommandStack {
 
     public void setSavePoint() {
         this.lastSaved = lastExecuted;
+        onDirty.accept(isDirty());
+    }
+
+    public Consumer<Boolean> getOnDirty() {
+        return onDirty;
+    }
+
+    public void setOnDirty(Consumer<Boolean> onDirty) {
+        this.onDirty = onDirty;
     }
 
     public static abstract class AbstractCommand {
