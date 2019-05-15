@@ -1,10 +1,12 @@
 package de.jpwinkler.daf.csveditor;
 
+import de.jpwinkler.daf.csv.ModuleCSVParser;
 import de.jpwinkler.daf.csveditor.background.BackgroundTaskStatusListener;
 import de.jpwinkler.daf.csveditor.background.BackgroundTaskStatusMonitor;
+import de.jpwinkler.daf.model.DoorsFactory;
+import de.jpwinkler.daf.model.DoorsModule;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -16,7 +18,6 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -33,9 +34,9 @@ import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
-public class ApplicationPaneController implements ApplicationStateController {
+public class ApplicationPaneController {
 
-    private final Map<Tab, FileStateController> fileStateControllers = new HashMap<>();
+    private final Map<Tab, ApplicationPartController> applicationPartControllers = new HashMap<>();
 
     private final FileChooser openFileChooser = new FileChooser();
     private final FileChooser saveFileChooser = new FileChooser();
@@ -75,11 +76,15 @@ public class ApplicationPaneController implements ApplicationStateController {
         saveFileChooser.setInitialDirectory(ApplicationPreferences.SAVE_DIRECTORY.retrieve());
 
         tabPane.getSelectionModel().selectedItemProperty().addListener((ChangeListener<Tab>) (observable, oldValue, newValue) -> {
-            getFileStateController(oldValue).getMenus().forEach(m -> {
-                mainMenuBar.getMenus().remove(m);
-            });
+            if (getApplicationPartController(oldValue) != null) {
+                getApplicationPartController(oldValue).getMenus().forEach(m -> {
+                    mainMenuBar.getMenus().remove(m);
+                });
+            }
 
-            mainMenuBar.getMenus().addAll(getFileStateController(newValue).getMenus());
+            if (getApplicationPartController(newValue) != null) {
+                mainMenuBar.getMenus().addAll(getApplicationPartController(newValue).getMenus());
+            }
         });
         tabPane.getTabs().addListener((ListChangeListener<Tab>) (change) -> {
             Set<Tab> closedTabs = new HashSet<>();
@@ -121,16 +126,14 @@ public class ApplicationPaneController implements ApplicationStateController {
 
     }
 
-    private FileStateController getCurrentFileStateController() {
-        return getFileStateController(tabPane.getSelectionModel().getSelectedItem());
+    private ApplicationPartController getCurrentFileStateController() {
+        return getApplicationPartController(tabPane.getSelectionModel().getSelectedItem());
     }
 
-    private FileStateController getFileStateController(Tab selectedTab) {
-        FileStateController controller = fileStateControllers.get(selectedTab);
-        return controller == null ? FileStateController.empty() : controller;
+    private ApplicationPartController getApplicationPartController(Tab selectedTab) {
+        return applicationPartControllers.get(selectedTab);
     }
 
-    @Override
     public void setStatus(final String status) {
         statusBarLabel.setText(status);
     }
@@ -155,7 +158,7 @@ public class ApplicationPaneController implements ApplicationStateController {
         if (selectedFile != null) {
             selectedFile = selectedFile.getAbsoluteFile();
             File absFile = selectedFile;
-            Tab fileTab = fileStateControllers.entrySet().stream()
+            Tab fileTab = applicationPartControllers.entrySet().stream()
                     .filter(e -> absFile.equals(e.getValue().getFile()))
                     .findAny().map(e -> e.getKey()).orElse(null);
 
@@ -166,24 +169,24 @@ public class ApplicationPaneController implements ApplicationStateController {
             }
         }
 
-        final FilePaneController controller;
-        final Parent filePane;
         try {
-            final FXMLLoader loader = new FXMLLoader(MainFX.class.getResource("FilePane.fxml"));
-            filePane = loader.load();
-            controller = loader.getController();
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
+            DoorsModule module;
+            if (selectedFile != null) {
+                module = new ModuleCSVParser().parseCSV(selectedFile);
+            } else {
+                module = DoorsFactory.eINSTANCE.createDoorsModule();
+                module.setName(ModulePaneController.NEW_MODULE);
+            }
 
-        try {
-            controller.initialize(this, selectedFile);
-            final Tab selectedTab = new Tab(selectedFile != null ? selectedFile.getName() : FilePaneController.NEW_MODULE, filePane);
-            fileStateControllers.put(selectedTab, controller);
+            final ModulePaneController moduleController = new ModulePaneController(this, module);
+            final Parent moduleParent = moduleController.getNode();
 
-            controller.getCommandStack().setOnDirty(dirty -> {
-                File file = controller.getFile();
-                selectedTab.setText((file != null ? file.getName() : FilePaneController.NEW_MODULE) + (dirty ? " *" : ""));
+            final Tab selectedTab = new Tab(selectedFile != null ? selectedFile.getName() : ModulePaneController.NEW_MODULE, moduleParent);
+            applicationPartControllers.put(selectedTab, moduleController);
+
+            moduleController.getCommandStack().setOnDirty(dirty -> {
+                File file = moduleController.getFile();
+                selectedTab.setText((file != null ? file.getName() : ModulePaneController.NEW_MODULE) + (dirty ? " *" : ""));
             });
 
             selectedTab.setClosable(true);
@@ -222,7 +225,7 @@ public class ApplicationPaneController implements ApplicationStateController {
         return save(getCurrentFileStateController(), true);
     }
 
-    private boolean save(FileStateController fsc, boolean allowSaveAs) {
+    private boolean save(ApplicationPartController fsc, boolean allowSaveAs) {
         File f = fsc.getFile();
         if (allowSaveAs && f == null) {
             return saveAs(fsc);
@@ -231,7 +234,7 @@ public class ApplicationPaneController implements ApplicationStateController {
         }
 
         try {
-            fsc.save(f);
+            fsc.save();
         } catch (IOException ex) {
             this.setStatus("Save: Failed to save file; " + ex.getMessage());
             return false;
@@ -246,7 +249,7 @@ public class ApplicationPaneController implements ApplicationStateController {
         return saveAs(getCurrentFileStateController());
     }
 
-    private boolean saveAs(FileStateController fsc) {
+    private boolean saveAs(ApplicationPartController fsc) {
         File f = fsc.getFile();
         if (f != null) {
             saveFileChooser.setInitialDirectory(f.getParentFile());
@@ -266,7 +269,7 @@ public class ApplicationPaneController implements ApplicationStateController {
     @FXML
     public boolean closeClicked() {
         tabPane.getTabs().clear();
-        return fileStateControllers.isEmpty();
+        return applicationPartControllers.isEmpty();
     }
 
     @FXML
@@ -283,8 +286,8 @@ public class ApplicationPaneController implements ApplicationStateController {
             }
 
             // non-dirty files can be closed without worries
-            if (!getFileStateController(t).getCommandStack().isDirty()) {
-                fileStateControllers.remove(t);
+            if (!getApplicationPartController(t).getCommandStack().isDirty()) {
+                applicationPartControllers.remove(t);
                 continue;
             }
 
@@ -293,11 +296,11 @@ public class ApplicationPaneController implements ApplicationStateController {
                     ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
             alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
             ButtonType response = alert.showAndWait().orElse(ButtonType.NO);
-            if (response == ButtonType.NO || (response == ButtonType.YES && this.save(this.getFileStateController(t), true))) {
-                fileStateControllers.remove(t);
+            if (response == ButtonType.NO || (response == ButtonType.YES && this.save(this.getApplicationPartController(t), true))) {
+                applicationPartControllers.remove(t);
                 continue;
             }
-            
+
             // allow cancellation
             cancelled = response == ButtonType.CANCEL;
             Platform.runLater(() -> tabPane.getTabs().add(t));
