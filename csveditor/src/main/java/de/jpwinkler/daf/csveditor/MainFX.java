@@ -26,7 +26,7 @@ public class MainFX extends Application {
         applicationScene.setOnDragDropped(event -> {
             if (event.getDragboard().hasFiles()) {
                 for (final File file : event.getDragboard().getFiles()) {
-                    applicationPaneController.openFile(file);
+                    applicationPaneController.openFile(file.toURI());
                 }
                 event.setDropCompleted(true);
             }

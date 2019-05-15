@@ -1,7 +1,6 @@
 package de.jpwinkler.daf.csveditor;
 
 import de.jpwinkler.daf.csv.ModuleCSVWriter;
-import de.jpwinkler.daf.csveditor.CommandStack.AbstractCommand;
 import de.jpwinkler.daf.csveditor.commands.module.FlattenCommand;
 import de.jpwinkler.daf.csveditor.commands.module.ReduceToSelectionCommand;
 import de.jpwinkler.daf.csveditor.commands.module.SplitLinesCommand;
@@ -30,8 +29,8 @@ import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -43,10 +42,8 @@ import java.util.stream.Collectors;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.Menu;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.SelectionMode;
@@ -67,7 +64,7 @@ public class ModulePaneController extends ApplicationPartController {
     public ModulePaneController(ApplicationPaneController applicationController, DoorsModule module) {
         super(applicationController);
         this.module = module;
-        
+
         mergeObjectAttributes();
 
         updateGui(UpdateAction.UPDATE_VIEWS, UpdateAction.UPDATE_COLUMNS, UpdateAction.UPDATE_CONTENT_VIEW, UpdateAction.UPDATE_OUTLINE_VIEW);
@@ -89,10 +86,9 @@ public class ModulePaneController extends ApplicationPartController {
     private final List<DoorsObject> clipboard = new ArrayList<>();
     private final ArrayList<ViewDefinition> views = ApplicationPreferences.FILE_PANE_VIEWS.retrieve();
     private final Map<DoorsTreeNode, Boolean> expanded = new WeakHashMap<>();
+    private final DoorsModule module;
 
-    private DoorsModule module;
     private ViewDefinition currentView;
-
     private final Set<DoorsObject> filteredObjects = new HashSet<>();
 
     @FXML
@@ -174,18 +170,26 @@ public class ModulePaneController extends ApplicationPartController {
         }
     }
 
+    public static File toFile(URI uri) {
+        if (uri == null || !"file".equals(uri.getScheme())) {
+            return null;
+        }
+
+        return new File(uri.getPath());
+    }
+
     @Override
     public void save() throws IOException {
-        try ( ModuleCSVWriter writer = new ModuleCSVWriter(new FileOutputStream(getFile()))) {
+        try ( ModuleCSVWriter writer = new ModuleCSVWriter(new FileOutputStream(toFile(getFile())))) {
             writer.writeModule(module);
             getCommandStack().setSavePoint();
         }
     }
 
     @Override
-    public void setFile(File file) {
-        super.setFile(file);
-        this.module.setName(FilenameUtils.getBaseName(file.getAbsolutePath()));
+    public void setFile(URI uri) {
+        super.setFile(uri);
+        this.module.setName(FilenameUtils.getBaseName(toFile(uri).getAbsolutePath()));
         this.updateGui(UpdateAction.UPDATE_OUTLINE_VIEW);
     }
 
