@@ -178,15 +178,25 @@ public class ApplicationPaneController {
             tabPane.getSelectionModel().select(selectedTab);
             addToRecentMenu(controller.getURI());
         } catch (Exception ex) {
-            setStatus("Open: Failed to open file; " + ex.getMessage());
+            setStatus("Open: Failed to open file; " + getMessage(ex));
         }
+    }
+    
+    private String getMessage(Throwable t) {
+        if(t.getMessage() == null && t.getCause() != null) {
+            return getMessage(t.getCause());
+        }
+        
+        return t.getMessage();
+        
     }
 
     private void addToRecentMenu(ApplicationURI selectedUri) {
-        if (selectedUri != null) {
+        if (selectedUri != null && selectedUri.isValid()) {
             recentFiles.values().remove(selectedUri);
             recentFiles.put(new Date().getTime(), selectedUri);
         }
+        
         while (recentFiles.size() > MAX_RECENT_FILES) {
             recentFiles.remove(recentFiles.firstKey());
         }
@@ -209,13 +219,13 @@ public class ApplicationPaneController {
     }
 
     private boolean save(ApplicationPartController fsc, boolean allowSaveAs) {
-        if (allowSaveAs && fsc.isValidFile()) {
+        if (allowSaveAs && fsc.getURI().isValid()) {
             fsc.getURI().getApplicationPart().saveWithSelector(this, tabPane.getScene().getWindow()).forEach(uri -> {
                 fsc.setURI(uri);
             });
         }
 
-        if (fsc.isValidFile()) {
+        if (fsc.getURI().isValid()) {
             return false;
         }
 

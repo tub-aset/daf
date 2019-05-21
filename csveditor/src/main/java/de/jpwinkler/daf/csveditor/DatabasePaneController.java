@@ -152,11 +152,6 @@ public class DatabasePaneController extends ApplicationPartController {
         this.database.flush();
     }
 
-    @Override
-    public boolean isValidFile() {
-        return getURI() != null;
-    }
-
     private static class DoorsTreeItem extends TreeItem<DoorsTreeNode> implements Comparable<DoorsTreeItem> {
 
         private boolean childrenLoaded = false;

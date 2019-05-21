@@ -111,8 +111,6 @@ public abstract class ApplicationPartController {
     public void setURI(ApplicationURI file) {
         this.uri = file;
     }
-    
-    public abstract boolean isValidFile();
 
     public void save() throws IOException {
         throw new UnsupportedOperationException();

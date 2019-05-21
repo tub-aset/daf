@@ -29,6 +29,10 @@ public class ApplicationURI implements Serializable {
     public String getPath() {
         return path;
     }
+    
+    public boolean isValid() {
+        return path == null;
+    }
 
     @Override
     public int hashCode() {

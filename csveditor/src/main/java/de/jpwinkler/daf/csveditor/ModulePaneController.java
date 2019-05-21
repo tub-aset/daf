@@ -63,7 +63,7 @@ public class ModulePaneController extends ApplicationPartController {
 
     public static ModulePaneController open(ApplicationPaneController applicationController, ApplicationURI uri) {
         final DoorsModule module;
-        if (uri.getPath().isEmpty()) {
+        if (uri.isValid()) {
             module = DoorsFactory.eINSTANCE.createDoorsModule();
             module.setName(ModulePaneController.NEW_MODULE);
         } else {
@@ -199,11 +199,6 @@ public class ModulePaneController extends ApplicationPartController {
     public void setURI(ApplicationURI uri) {
         super.setURI(uri);
         this.updateGui(UpdateAction.UPDATE_OUTLINE_VIEW);
-    }
-
-    @Override
-    public boolean isValidFile() {
-        return getURI() != null && !getURI().getPath().isEmpty();
     }
 
     @FXML
