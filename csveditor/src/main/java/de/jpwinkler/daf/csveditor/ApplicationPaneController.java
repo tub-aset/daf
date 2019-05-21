@@ -1,13 +1,9 @@
 package de.jpwinkler.daf.csveditor;
 
-import de.jpwinkler.daf.csv.ModuleCSVParser;
 import de.jpwinkler.daf.csveditor.background.BackgroundTaskStatusListener;
 import de.jpwinkler.daf.csveditor.background.BackgroundTaskStatusMonitor;
-import de.jpwinkler.daf.model.DoorsFactory;
-import de.jpwinkler.daf.model.DoorsModule;
-import java.io.File;
 import java.io.IOException;
-import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -32,16 +28,10 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.Region;
-import javafx.stage.FileChooser;
-import javafx.stage.FileChooser.ExtensionFilter;
 
 public class ApplicationPaneController {
 
     private final Map<Tab, ApplicationPartController> applicationPartControllers = new HashMap<>();
-
-    private final FileChooser openFileChooser = new FileChooser();
-    private final FileChooser saveFileChooser = new FileChooser();
-
     private final BackgroundTaskStatusMonitor backgroundTaskStatusMonitor = new BackgroundTaskStatusMonitor();
 
     @FXML
@@ -65,17 +55,11 @@ public class ApplicationPaneController {
     @FXML
     private Menu recentMenu;
 
-    private final TreeMap<Long, URI> recentFiles = ApplicationPreferences.RECENT_FILES.retrieve();
+    private final TreeMap<Long, ApplicationURI> recentFiles = ApplicationPreferences.RECENT_FILES.retrieve();
     private final int MAX_RECENT_FILES = 10;
 
     @FXML
     public void initialize() {
-        openFileChooser.getExtensionFilters().add(new ExtensionFilter("CSV", "*.csv"));
-        saveFileChooser.getExtensionFilters().add(new ExtensionFilter("CSV", "*.csv"));
-
-        openFileChooser.setInitialDirectory(ApplicationPreferences.OPEN_DIRECTORY.retrieve());
-        saveFileChooser.setInitialDirectory(ApplicationPreferences.SAVE_DIRECTORY.retrieve());
-
         tabPane.getSelectionModel().selectedItemProperty().addListener((ChangeListener<Tab>) (observable, oldValue, newValue) -> {
             if (getApplicationPartController(oldValue) != null) {
                 getApplicationPartController(oldValue).getMenus().forEach(m -> {
@@ -140,63 +124,65 @@ public class ApplicationPaneController {
     }
 
     @FXML
-    public void newClicked() {
-        openFile(null);
+    public void newLocalModuleClicked() throws URISyntaxException {
+        open(ApplicationPart.LOCAL_MODULE.newURI());
+
     }
 
     @FXML
-    public void openModuleClicked() {
-        final File f = openFileChooser.showOpenDialog(tabPane.getScene().getWindow());
-        if (f != null) {
-            openFileChooser.setInitialDirectory(f.getParentFile());
-            ApplicationPreferences.OPEN_DIRECTORY.store(f.getParentFile().getAbsoluteFile());
+    public void newLocalDatabaseClicked() throws URISyntaxException {
+        open(ApplicationPart.LOCAL_DATABASE.newURI());
 
-            openFile(f.toURI());
+    }
+
+    @FXML
+    public void openLocalModuleClicked() throws URISyntaxException {
+        ApplicationPart.LOCAL_MODULE.openWithSelector(this, tabPane.getScene().getWindow());
+    }
+
+    @FXML
+    public void openLocalDatabaseClicked() throws URISyntaxException {
+        ApplicationPart.LOCAL_DATABASE.openWithSelector(this, tabPane.getScene().getWindow());
+    }
+
+    @FXML
+    public void openDoorsDatabaseClicked() throws URISyntaxException {
+        ApplicationPart.DOORS_BRIDGE.openWithSelector(this, tabPane.getScene().getWindow());
+    }
+
+    public void open(ApplicationURI selectedURI) {
+        Tab fileTab = applicationPartControllers.entrySet().stream()
+                .filter(e -> selectedURI.equals(e.getValue().getURI()))
+                .findAny().map(e -> e.getKey()).orElse(null);
+
+        if (fileTab != null) {
+            addToRecentMenu(selectedURI);
+            tabPane.getSelectionModel().select(fileTab);
+            return;
+        }
+
+        try {
+            final ApplicationPartController controller = ApplicationPart.openAny(this, selectedURI);
+            final Parent modulePane = controller.getNode();
+
+            final Tab selectedTab = new Tab(controller.getURI().toString(), modulePane);
+            applicationPartControllers.put(selectedTab, controller);
+
+            controller.getCommandStack().setOnDirty(dirty -> {
+                selectedTab.setText(controller.getURI().toString() + (dirty ? "*" : ""));
+            });
+
+            selectedTab.setClosable(true);
+            tabPane.getTabs().add(selectedTab);
+
+            tabPane.getSelectionModel().select(selectedTab);
+            addToRecentMenu(controller.getURI());
+        } catch (Exception ex) {
+            setStatus("Open: Failed to open file; " + ex.getMessage());
         }
     }
 
-    public void openFile(URI selectedURI) {
-        final DoorsModule module;
-        if (selectedURI != null) {
-            Tab fileTab = applicationPartControllers.entrySet().stream()
-                    .filter(e -> selectedURI.equals(e.getValue().getFile()))
-                    .findAny().map(e -> e.getKey()).orElse(null);
-
-            if (fileTab != null) {
-                addToRecentMenu(selectedURI);
-                tabPane.getSelectionModel().select(fileTab);
-                return;
-            }
-
-            try {
-                module = new ModuleCSVParser().parseCSV(ModulePaneController.toFile(selectedURI));
-            } catch (IOException ex) {
-                setStatus("Open: Failed to open file; " + ex.getMessage());
-                return;
-            }
-        } else {
-            module = DoorsFactory.eINSTANCE.createDoorsModule();
-            module.setName(ModulePaneController.NEW_MODULE);
-        }
-
-        final ModulePaneController moduleController = new ModulePaneController(this, module);
-        final Parent moduleParent = moduleController.getNode();
-
-        final Tab selectedTab = new Tab(module.getName(), moduleParent);
-        applicationPartControllers.put(selectedTab, moduleController);
-
-        moduleController.getCommandStack().setOnDirty(dirty -> {
-            selectedTab.setText(module.getName() + (dirty ? "*" : ""));
-        });
-
-        selectedTab.setClosable(true);
-        tabPane.getTabs().add(selectedTab);
-
-        tabPane.getSelectionModel().select(selectedTab);
-        addToRecentMenu(selectedURI);
-    }
-
-    private void addToRecentMenu(URI selectedUri) {
+    private void addToRecentMenu(ApplicationURI selectedUri) {
         if (selectedUri != null) {
             recentFiles.values().remove(selectedUri);
             recentFiles.put(new Date().getTime(), selectedUri);
@@ -209,25 +195,28 @@ public class ApplicationPaneController {
 
         recentMenu.getItems().clear();
 
-        for (URI recentFile : recentFiles.descendingMap().values()) {
+        for (ApplicationURI recentFile : recentFiles.descendingMap().values()) {
             MenuItem recentMenuItem = new MenuItem(recentFile.getPath().replaceFirst("^.*/", ""));
             recentMenuItem.setUserData(recentFile);
             recentMenu.getItems().add(recentMenuItem);
-            recentMenuItem.setOnAction(ev -> this.openFile((URI) ((MenuItem) ev.getTarget()).getUserData()));
+            recentMenuItem.setOnAction(ev -> this.open((ApplicationURI) ((MenuItem) ev.getTarget()).getUserData()));
         }
     }
 
     @FXML
-    public boolean saveClicked() {
-        return save(getCurrentFileStateController(), true);
+    public void saveClicked() {
+        save(getCurrentFileStateController(), true);
     }
 
     private boolean save(ApplicationPartController fsc, boolean allowSaveAs) {
-        File f = ModulePaneController.toFile(fsc.getFile());
-        if (allowSaveAs && f == null) {
-            return saveAs(fsc);
-        } else if (f == null) {
-            throw new IllegalStateException("No file set");
+        if (allowSaveAs && fsc.isValidFile()) {
+            fsc.getURI().getApplicationPart().saveWithSelector(this, tabPane.getScene().getWindow()).forEach(uri -> {
+                fsc.setURI(uri);
+            });
+        }
+
+        if (fsc.isValidFile()) {
+            return false;
         }
 
         try {
@@ -237,30 +226,20 @@ public class ApplicationPaneController {
             return false;
         }
 
-        addToRecentMenu(f.toURI());
+        addToRecentMenu(fsc.getURI());
         return true;
     }
 
     @FXML
-    public boolean saveAsClicked() {
-        return saveAs(getCurrentFileStateController());
+    public void saveAsClicked() {
+        saveAs(getCurrentFileStateController());
     }
 
-    private boolean saveAs(ApplicationPartController fsc) {
-        File f = ModulePaneController.toFile(fsc.getFile());
-        if (f != null) {
-            saveFileChooser.setInitialDirectory(f.getParentFile());
-            saveFileChooser.setInitialFileName(f.getName());
-            ApplicationPreferences.SAVE_DIRECTORY.store(f.getParentFile().getAbsoluteFile());
-        }
-
-        f = saveFileChooser.showSaveDialog(tabPane.getScene().getWindow());
-        if (f == null) {
-            return false;
-        }
-
-        fsc.setFile(f.toURI());
-        return this.save(fsc, false);
+    private void saveAs(ApplicationPartController fsc) {
+        fsc.getURI().getApplicationPart().saveWithSelector(this, tabPane.getScene().getWindow()).forEach(uri -> {
+            fsc.setURI(uri);
+            this.save(fsc, false);
+        });
     }
 
     @FXML

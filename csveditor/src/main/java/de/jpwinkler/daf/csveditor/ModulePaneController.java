@@ -1,5 +1,6 @@
 package de.jpwinkler.daf.csveditor;
 
+import de.jpwinkler.daf.csv.ModuleCSVParser;
 import de.jpwinkler.daf.csv.ModuleCSVWriter;
 import de.jpwinkler.daf.csveditor.commands.module.FlattenCommand;
 import de.jpwinkler.daf.csveditor.commands.module.ReduceToSelectionCommand;
@@ -20,6 +21,7 @@ import de.jpwinkler.daf.csveditor.filter.CascadingFilter;
 import de.jpwinkler.daf.csveditor.filter.DoorsObjectFilter;
 import de.jpwinkler.daf.csveditor.filter.ObjectTextAndHeadingFilter;
 import de.jpwinkler.daf.csveditor.filter.ReverseCascadingFilter;
+import de.jpwinkler.daf.model.DoorsFactory;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsModuleUtil;
 import de.jpwinkler.daf.model.DoorsObject;
@@ -29,7 +31,6 @@ import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -57,12 +58,28 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.DefaultStringConverter;
-import org.apache.commons.io.FilenameUtils;
 
 public class ModulePaneController extends ApplicationPartController {
 
+    public static ModulePaneController open(ApplicationPaneController applicationController, ApplicationURI uri) {
+        final DoorsModule module;
+        if (uri.getPath().isEmpty()) {
+            module = DoorsFactory.eINSTANCE.createDoorsModule();
+            module.setName(ModulePaneController.NEW_MODULE);
+        } else {
+            try {
+                module = new ModuleCSVParser().parseCSV(new File(uri.getPath()));
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+
+        return new ModulePaneController(applicationController, module);
+    }
+
     public ModulePaneController(ApplicationPaneController applicationController, DoorsModule module) {
         super(applicationController);
+
         this.module = module;
 
         mergeObjectAttributes();
@@ -170,27 +187,23 @@ public class ModulePaneController extends ApplicationPartController {
         }
     }
 
-    public static File toFile(URI uri) {
-        if (uri == null || !"file".equals(uri.getScheme())) {
-            return null;
-        }
-
-        return new File(uri.getPath());
-    }
-
     @Override
     public void save() throws IOException {
-        try ( ModuleCSVWriter writer = new ModuleCSVWriter(new FileOutputStream(toFile(getFile())))) {
+        try ( ModuleCSVWriter writer = new ModuleCSVWriter(new FileOutputStream(new File(getURI().getPath())))) {
             writer.writeModule(module);
             getCommandStack().setSavePoint();
         }
     }
 
     @Override
-    public void setFile(URI uri) {
-        super.setFile(uri);
-        this.module.setName(FilenameUtils.getBaseName(toFile(uri).getAbsolutePath()));
+    public void setURI(ApplicationURI uri) {
+        super.setURI(uri);
         this.updateGui(UpdateAction.UPDATE_OUTLINE_VIEW);
+    }
+
+    @Override
+    public boolean isValidFile() {
+        return getURI() != null && !getURI().getPath().isEmpty();
     }
 
     @FXML

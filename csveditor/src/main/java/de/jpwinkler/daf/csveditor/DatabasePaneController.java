@@ -1,11 +1,11 @@
 package de.jpwinkler.daf.csveditor;
 
-import de.jpwinkler.daf.localdb.DatabaseInterface;
+import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsTreeNode;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URI;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -28,10 +28,25 @@ import javafx.scene.image.ImageView;
 
 public class DatabasePaneController extends ApplicationPartController {
 
+    public static final ApplicationPartController openLocal(ApplicationPaneController applicationController, ApplicationURI uri) {
+        try {
+            return new DatabasePaneController(applicationController, DatabaseInterface.openFileDatabase(new File(uri.getPath()).toPath()));
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    public static final ApplicationPartController openDoors(ApplicationPaneController applicationController, ApplicationURI uri) {
+        try {
+            return new DatabasePaneController(applicationController, DatabaseInterface.openDoorsApplicationDatabase());
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
     public DatabasePaneController(ApplicationPaneController applicationController, DatabaseInterface database) {
         super(applicationController);
         this.database = database;
-        super.setFile(database.getURI());
     }
 
     @FXML
@@ -93,11 +108,11 @@ public class DatabasePaneController extends ApplicationPartController {
 
     private void updateDatabaseTree() {
         final HashMap<DoorsTreeNode, Boolean> expanded = new HashMap<>();
-        
+
         if (databaseTreeView.getRoot() != null) {
             traverseTreeItem(databaseTreeView.getRoot(), i -> expanded.put(i.getValue(), i.isExpanded()));
         }
-        
+
         databaseTreeView.setRoot(new DoorsTreeItem(database.getDatabaseObject().getRoot()));
         traverseTreeItem(databaseTreeView.getRoot(), i -> i.setExpanded(expanded.containsKey(i.getValue()) && expanded.get(i.getValue())));
     }
@@ -138,8 +153,8 @@ public class DatabasePaneController extends ApplicationPartController {
     }
 
     @Override
-    public void setFile(URI file) {
-        throw new UnsupportedOperationException();
+    public boolean isValidFile() {
+        return getURI() != null;
     }
 
     private static class DoorsTreeItem extends TreeItem<DoorsTreeNode> implements Comparable<DoorsTreeItem> {
@@ -153,9 +168,10 @@ public class DatabasePaneController extends ApplicationPartController {
         @Override
         public ObservableList<TreeItem<DoorsTreeNode>> getChildren() {
             if (!(getValue() instanceof DoorsModule)) {
-                if (childrenLoaded) {
+                if (!childrenLoaded) {
                     super.getChildren().setAll(buildChildren());
                 }
+                childrenLoaded = true;
             }
             return super.getChildren();
         }

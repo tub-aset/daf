@@ -1,6 +1,5 @@
 package de.jpwinkler.daf.csveditor;
 
-import java.io.File;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -25,9 +24,9 @@ public class MainFX extends Application {
         });
         applicationScene.setOnDragDropped(event -> {
             if (event.getDragboard().hasFiles()) {
-                for (final File file : event.getDragboard().getFiles()) {
-                    applicationPaneController.openFile(file.toURI());
-                }
+                event.getDragboard().getFiles().stream()
+                        .map(f -> ApplicationPart.LOCAL_MODULE.newURI(f.getAbsolutePath()))
+                        .forEach(applicationPaneController::open);
                 event.setDropCompleted(true);
             }
         });

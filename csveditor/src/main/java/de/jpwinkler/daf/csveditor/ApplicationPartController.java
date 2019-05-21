@@ -7,7 +7,6 @@ package de.jpwinkler.daf.csveditor;
 
 import de.jpwinkler.daf.csveditor.commands.module.UpdateAction;
 import java.io.IOException;
-import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -27,8 +26,9 @@ public abstract class ApplicationPartController {
     private final Parent node;
     private final List<Menu> menus;
     private final CommandStack commandStack = new CommandStack();
+    private ApplicationPart part;
 
-    private URI file;
+    private ApplicationURI uri;
 
     public ApplicationPartController(ApplicationPaneController applicationController) {
         this.applicationController = applicationController;
@@ -104,13 +104,15 @@ public abstract class ApplicationPartController {
         return node;
     }
 
-    public final URI getFile() {
-        return file;
+    public final ApplicationURI getURI() {
+        return uri;
     }
 
-    public void setFile(URI file) {
-        this.file = file;
+    public void setURI(ApplicationURI file) {
+        this.uri = file;
     }
+    
+    public abstract boolean isValidFile();
 
     public void save() throws IOException {
         throw new UnsupportedOperationException();

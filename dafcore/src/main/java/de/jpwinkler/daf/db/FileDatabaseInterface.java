@@ -1,4 +1,4 @@
-package de.jpwinkler.daf.localdb;
+package de.jpwinkler.daf.db;
 
 import de.jpwinkler.daf.csv.ModuleCSVWriter;
 import de.jpwinkler.daf.csv.ModuleMetaDataParser;
