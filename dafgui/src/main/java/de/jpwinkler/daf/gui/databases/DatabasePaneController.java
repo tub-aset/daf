@@ -1,21 +1,31 @@
 package de.jpwinkler.daf.gui.databases;
 
+import de.jpwinkler.daf.gui.databases.commands.PasteCommand;
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.gui.ApplicationPaneController;
 import de.jpwinkler.daf.gui.ApplicationPartController;
 import de.jpwinkler.daf.gui.ApplicationURI;
-import de.jpwinkler.daf.gui.MainFX;
+import de.jpwinkler.daf.gui.UpdateAction;
+import de.jpwinkler.daf.gui.databases.commands.DeleteCommand;
+import de.jpwinkler.daf.gui.databases.commands.NewFolderCommand;
+import de.jpwinkler.daf.gui.databases.commands.NewModuleCommand;
 import de.jpwinkler.daf.model.DoorsModule;
+import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.WeakHashMap;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -26,10 +36,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
-public final class DatabasePaneController extends ApplicationPartController {
+public final class DatabasePaneController extends ApplicationPartController<DatabasePaneController> {
 
     public static final ApplicationPartController openLocal(ApplicationPaneController applicationController, ApplicationURI uri) {
         try {
@@ -56,7 +64,7 @@ public final class DatabasePaneController extends ApplicationPartController {
         super(applicationController);
         this.database = database;
 
-        updateDatabaseTree();
+        databaseTreeView.setRoot(new DoorsTreeItem(database.getDatabaseObject().getRoot()));
         updateNewTagComboBox();
 
         databaseTreeView.setOnMouseClicked(event -> {
@@ -90,6 +98,8 @@ public final class DatabasePaneController extends ApplicationPartController {
     @FXML
     private TableColumn<Entry<String, String>, String> attributeValueColumn;
 
+    private List<DoorsTreeNode> clipboard;
+
     private final HashSet<String> knownTags = new HashSet<>();
     private final DatabaseInterface database;
 
@@ -113,43 +123,37 @@ public final class DatabasePaneController extends ApplicationPartController {
 
     @FXML
     public void newFolderClicked() {
-
+        executeCommand(new NewFolderCommand(getSelectedNode()));
     }
 
     @FXML
     public void newModuleClicked() {
-
+        executeCommand(new NewModuleCommand(getSelectedNode()));
     }
 
     @FXML
     public void cutClicked() {
-
+        copyClicked();
+        deleteClicked();
     }
 
     @FXML
     public void copyClicked() {
-
+        clipboard = databaseTreeView.getSelectionModel().getSelectedItems().stream().map(it -> it.getValue()).collect(Collectors.toList());
     }
 
     @FXML
     public void pasteClicked() {
-
+        executeCommand(new PasteCommand(getSelectedNode(), clipboard));
     }
 
     @FXML
     public void deleteClicked() {
-
+        executeCommand(new DeleteCommand(getSelectedNode()));
     }
 
-    private void updateDatabaseTree() {
-        final HashMap<DoorsTreeNode, Boolean> expanded = new HashMap<>();
-
-        if (databaseTreeView.getRoot() != null) {
-            traverseTreeItem(databaseTreeView.getRoot(), i -> expanded.put(i.getValue(), i.isExpanded()));
-        }
-
-        databaseTreeView.setRoot(new DoorsTreeItem(database.getDatabaseObject().getRoot()));
-        traverseTreeItem(databaseTreeView.getRoot(), i -> i.setExpanded(expanded.containsKey(i.getValue()) && expanded.get(i.getValue())));
+    private DoorsTreeNode getSelectedNode() {
+        return databaseTreeView.getSelectionModel().getSelectedItem().getValue();
     }
 
     private void updateNewTagComboBox() {
@@ -164,14 +168,16 @@ public final class DatabasePaneController extends ApplicationPartController {
 
     private void updateTagsListView() {
         tagsListView.getItems().clear();
-        for (String tag : databaseTreeView.getSelectionModel().getSelectedItem().getValue().getTags()) {
-            tagsListView.getItems().add(tag);
-        }
+        databaseTreeView.getSelectionModel().getSelectedItems().stream()
+                .flatMap(it -> it.getValue().getTags().stream())
+                .forEach(tagsListView.getItems()::add);
     }
 
     private void updateAttributesView() {
         attributesTableView.getItems().clear();
-        attributesTableView.setItems(FXCollections.observableArrayList(databaseTreeView.getSelectionModel().getSelectedItem().getValue().getAttributes().entrySet()));
+        attributesTableView.setItems(databaseTreeView.getSelectionModel().getSelectedItems().stream()
+                .flatMap(it -> it.getValue().getAttributes().entrySet().stream())
+                .collect(Collectors.toCollection(() -> FXCollections.observableArrayList())));
 
     }
 
@@ -187,41 +193,40 @@ public final class DatabasePaneController extends ApplicationPartController {
         this.database.flush();
     }
 
-    private static class DoorsTreeItem extends TreeItem<DoorsTreeNode> implements Comparable<DoorsTreeItem> {
+    private final WeakHashMap<DoorsTreeNode, DoorsTreeItem> treeNodeCache = new WeakHashMap<>();
+
+    private class DoorsTreeItem extends TreeItem<DoorsTreeNode> implements Comparable<DoorsTreeItem> {
 
         private boolean childrenLoaded = false;
 
         public DoorsTreeItem(final DoorsTreeNode value) {
-            super(value, (value instanceof DoorsModule) ? new ImageView(IMAGE_FORMAL) : new ImageView(IMAGE_FOLDER));
+            super(value, (value instanceof DoorsModule) ? DatabasePaneImages.IMAGE_FORMAL.toImageView()
+                    : DatabasePaneImages.IMAGE_FOLDER.toImageView());
+            treeNodeCache.put(value, this);
         }
 
         @Override
         public ObservableList<TreeItem<DoorsTreeNode>> getChildren() {
-            if (!(getValue() instanceof DoorsModule)) {
-                if (!childrenLoaded) {
-                    super.getChildren().setAll(buildChildren());
-                }
-                childrenLoaded = true;
+            if (!isLeaf() && !childrenLoaded) {
+                updateChildren();
+
             }
             return super.getChildren();
         }
 
-        private ObservableList<DoorsTreeItem> buildChildren() {
-            if (getValue() != null) {
-                final ObservableList<DoorsTreeItem> list = FXCollections.observableArrayList();
-                for (final DoorsTreeNode c : getValue().getChildren()) {
-                    list.add(new DoorsTreeItem(c));
-                }
-                list.sort(Comparator.naturalOrder());
-                return list;
-            } else {
-                return FXCollections.emptyObservableList();
+        public void updateChildren() {
+            final ObservableList<DoorsTreeItem> list = FXCollections.observableArrayList();
+            for (final DoorsTreeNode c : getValue().getChildren()) {
+                list.add(new DoorsTreeItem(c));
             }
+            list.sort(Comparator.naturalOrder());
+            super.getChildren().setAll(list);
+            childrenLoaded = true;
         }
 
         @Override
         public boolean isLeaf() {
-            return getValue() instanceof DoorsModule;
+            return getValue() instanceof DoorsModule || getValue() instanceof DoorsObject;
         }
 
         @Override
@@ -235,12 +240,28 @@ public final class DatabasePaneController extends ApplicationPartController {
             }
 
         }
-
-        public static final Image IMAGE_FOLDER = new Image(MainFX.class.getResourceAsStream("icons/doors_folder.png"));
-        public static final Image IMAGE_DB = new Image(MainFX.class.getResourceAsStream("icons/doors_db.png"));
-        public static final Image IMAGE_FORMAL = new Image(MainFX.class.getResourceAsStream("icons/doors_formal.png"));
-        public static final Image IMAGE_LINK = new Image(MainFX.class.getResourceAsStream("icons/doors_link.png"));
-        public static final Image IMAGE_PROJECT = new Image(MainFX.class.getResourceAsStream("icons/doors_project.png"));
     }
 
+    public static class UpdateTreeItem implements UpdateAction<DatabasePaneController> {
+
+        private final DoorsTreeNode node;
+
+        public UpdateTreeItem(DoorsTreeNode node) {
+            this.node = node;
+        }
+
+        @Override
+        public void update(DatabasePaneController ctrl) {
+            DoorsTreeItem parent = ctrl.treeNodeCache.get(node);
+
+            final HashMap<DoorsTreeNode, Boolean> expanded = new HashMap<>();
+            ctrl.traverseTreeItem(parent, i -> expanded.put(i.getValue(), i.isExpanded()));
+
+            parent.updateChildren();
+
+            ctrl.traverseTreeItem(parent, i -> i.setExpanded(expanded.containsKey(i.getValue()) && expanded.get(i.getValue())));
+            parent.setExpanded(true);
+        }
+
+    }
 }

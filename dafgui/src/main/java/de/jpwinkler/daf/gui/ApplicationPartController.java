@@ -62,7 +62,7 @@ public abstract class ApplicationPartController<T extends ApplicationPartControl
 
     protected final void executeCommand(final CommandStack.AbstractCommand command) {
         if (!command.isApplicable()) {
-            this.setStatus(command.getName() + ": Command is not appicable for this selection.");
+            this.setStatus(command.getName() + ": Command is not applicable for this selection.");
             return;
         }
 

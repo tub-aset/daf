@@ -130,26 +130,24 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
     }
 
     /**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated NOT
-	 */
-	@Override
-	public List<String> getObjectAttributes() {
-            return DoorsSystemAttributes.OBJECT_ATTRIBUTES.getValue(List.class, getAttributes());
-	}
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated NOT
+     */
+    @Override
+    public List<String> getObjectAttributes() {
+        return DoorsSystemAttributes.OBJECT_ATTRIBUTES.getValue(List.class, getAttributes());
+    }
 
-				/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated NOT
-	 */
-	@Override
-	public void setObjectAttributes(List<String> attrs) {
-		DoorsSystemAttributes.OBJECT_ATTRIBUTES.setValue(List.class, getAttributes(), attrs);
-	}
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated NOT
+     */
+    @Override
+    public void setObjectAttributes(List<String> attrs) {
+        DoorsSystemAttributes.OBJECT_ATTRIBUTES.setValue(List.class, getAttributes(), attrs);
+    }
 
-				/**
+    /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc --> @generated NOT
      */
@@ -163,18 +161,15 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
         }
         return latest;
     }
-    
+
     /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc --> @generated NOT
      */
     @Override
-    public DoorsObject copyFrom(DoorsTreeNode newModule, DoorsTreeNode newParent) {
-        if (!super.canCopyFrom(newModule)) {
-            throw new IllegalArgumentException();
-        }
-
-        throw new UnsupportedOperationException();
+    public DoorsModule copyFrom(DoorsTreeNode newModule, DoorsTreeNode newParent) {
+        super.copyFrom(newModule, newParent);
+        return this;
     }
 
     /**
@@ -275,7 +270,7 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
      * <!-- end-user-doc --> @generated
      */
     @Override
-				@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
 			case DoorsPackage.DOORS_MODULE___FIND_OBJECT__STRING:

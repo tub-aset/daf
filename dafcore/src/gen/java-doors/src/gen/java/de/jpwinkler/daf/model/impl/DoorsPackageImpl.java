@@ -612,16 +612,6 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getDoorsObject_Module() {
-		return (EReference)doorsObjectEClass.getEStructuralFeatures().get(10);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EOperation getDoorsObject__IsHeading() {
 		return doorsObjectEClass.getEOperations().get(0);
 	}
@@ -674,6 +664,26 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	@Override
 	public EReference getLink_Source() {
 		return (EReference)linkEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getLink__GetTargetModule() {
+		return linkEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getLink__GetTargetObject() {
+		return linkEClass.getEOperations().get(1);
 	}
 
 	/**
@@ -832,7 +842,6 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		createEAttribute(doorsObjectEClass, DOORS_OBJECT__TEXT);
 		createEReference(doorsObjectEClass, DOORS_OBJECT__OUTGOING_LINKS);
 		createEReference(doorsObjectEClass, DOORS_OBJECT__INCOMING_LINKS);
-		createEReference(doorsObjectEClass, DOORS_OBJECT__MODULE);
 		createEOperation(doorsObjectEClass, DOORS_OBJECT___IS_HEADING);
 
 		attributeMapEClass = createEClass(ATTRIBUTE_MAP);
@@ -841,6 +850,8 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 
 		linkEClass = createEClass(LINK);
 		createEReference(linkEClass, LINK__SOURCE);
+		createEOperation(linkEClass, LINK___GET_TARGET_MODULE);
+		createEOperation(linkEClass, LINK___GET_TARGET_OBJECT);
 
 		resolvedLinkEClass = createEClass(RESOLVED_LINK);
 		createEReference(resolvedLinkEClass, RESOLVED_LINK__TARGET);
@@ -963,7 +974,6 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		initEAttribute(getDoorsObject_Text(), ecorePackage.getEString(), "text", "", 0, 1, DoorsObject.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		initEReference(getDoorsObject_OutgoingLinks(), this.getLink(), this.getLink_Source(), "outgoingLinks", null, 0, -1, DoorsObject.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getDoorsObject_IncomingLinks(), this.getResolvedLink(), this.getResolvedLink_Target(), "incomingLinks", null, 0, -1, DoorsObject.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getDoorsObject_Module(), this.getDoorsModule(), null, "module", null, 0, 1, DoorsObject.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getDoorsObject__IsHeading(), ecorePackage.getEBoolean(), "isHeading", 0, 1, IS_UNIQUE, IS_ORDERED);
 
@@ -973,6 +983,10 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 
 		initEClass(linkEClass, Link.class, "Link", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getLink_Source(), this.getDoorsObject(), this.getDoorsObject_OutgoingLinks(), "source", null, 0, 1, Link.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getLink__GetTargetModule(), ecorePackage.getEString(), "getTargetModule", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getLink__GetTargetObject(), ecorePackage.getEString(), "getTargetObject", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(resolvedLinkEClass, ResolvedLink.class, "ResolvedLink", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getResolvedLink_Target(), this.getDoorsObject(), this.getDoorsObject_IncomingLinks(), "target", null, 0, 1, ResolvedLink.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

@@ -23,7 +23,6 @@ import java.util.List;
  *   <li>{@link de.jpwinkler.daf.model.DoorsObject#getText <em>Text</em>}</li>
  *   <li>{@link de.jpwinkler.daf.model.DoorsObject#getOutgoingLinks <em>Outgoing Links</em>}</li>
  *   <li>{@link de.jpwinkler.daf.model.DoorsObject#getIncomingLinks <em>Incoming Links</em>}</li>
- *   <li>{@link de.jpwinkler.daf.model.DoorsObject#getModule <em>Module</em>}</li>
  * </ul>
  *
  * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsObject()
@@ -236,28 +235,6 @@ public interface DoorsObject extends DoorsTreeNode {
 	 * @generated
 	 */
 	List<ResolvedLink> getIncomingLinks();
-
-	/**
-	 * Returns the value of the '<em><b>Module</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Module</em>' reference.
-	 * @see #setModule(DoorsModule)
-	 * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsObject_Module()
-	 * @model
-	 * @generated
-	 */
-	DoorsModule getModule();
-
-	/**
-	 * Sets the value of the '{@link de.jpwinkler.daf.model.DoorsObject#getModule <em>Module</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Module</em>' reference.
-	 * @see #getModule()
-	 * @generated
-	 */
-	void setModule(DoorsModule value);
 
 	/**
 	 * <!-- begin-user-doc -->

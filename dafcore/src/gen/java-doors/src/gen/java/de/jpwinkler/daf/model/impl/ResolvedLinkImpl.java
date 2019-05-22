@@ -206,4 +206,24 @@ public class ResolvedLinkImpl extends LinkImpl implements ResolvedLink {
 		return super.eIsSet(featureID);
 	}
 
+        /**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+    @Override
+    public String getTargetModule() {
+        return target.getParent().getFullName();
+    }
+
+        /**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+    @Override
+    public String getTargetObject() {
+        return target.getName();
+    }
+
 } //ResolvedLinkImpl

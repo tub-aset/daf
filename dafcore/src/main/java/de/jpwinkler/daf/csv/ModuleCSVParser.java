@@ -62,7 +62,7 @@ public class ModuleCSVParser {
 
             final DoorsObject newObject = factory.createDoorsObject();
 
-            newObject.setModule(module);
+            newObject.setParent(module);
 
             for (final Entry<String, String> e : record.toMap().entrySet()) {
                 newObject.getAttributes().put(e.getKey(), e.getValue());

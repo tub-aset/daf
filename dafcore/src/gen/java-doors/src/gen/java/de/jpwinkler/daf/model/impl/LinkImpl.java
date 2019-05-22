@@ -5,8 +5,10 @@ package de.jpwinkler.daf.model.impl;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsPackage;
 import de.jpwinkler.daf.model.Link;
+import java.lang.reflect.InvocationTargetException;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -89,6 +91,22 @@ public abstract class LinkImpl extends MinimalEObjectImpl.Container implements L
 		else if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, DoorsPackage.LINK__SOURCE, newSource, newSource));
 	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	@Override
+	public abstract String getTargetModule();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	@Override
+	public abstract String getTargetObject();
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -190,6 +208,22 @@ public abstract class LinkImpl extends MinimalEObjectImpl.Container implements L
 				return getSource() != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case DoorsPackage.LINK___GET_TARGET_MODULE:
+				return getTargetModule();
+			case DoorsPackage.LINK___GET_TARGET_OBJECT:
+				return getTargetObject();
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 } //LinkImpl

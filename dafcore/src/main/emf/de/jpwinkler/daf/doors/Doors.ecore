@@ -62,7 +62,6 @@
                              eType="#//Link" containment="true" eOpposite="#//Link/source"/>
         <eStructuralFeatures xsi:type="ecore:EReference" name="incomingLinks" upperBound="-1"
                              eType="#//ResolvedLink" eOpposite="#//ResolvedLink/target"/>
-        <eStructuralFeatures xsi:type="ecore:EReference" name="module" eType="#//DoorsModule"/>
     </eClassifiers>
   
     <eClassifiers xsi:type="ecore:EClass" name="AttributeMap" instanceClassName="java.util.Map$Entry">
@@ -77,6 +76,8 @@
     <eClassifiers xsi:type="ecore:EClass" name="Link" abstract="true">
         <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="#//DoorsObject"
                              eOpposite="#//DoorsObject/outgoingLinks"/>
+        <eOperations name="getTargetModule" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" abstract="true"/>
+        <eOperations name="getTargetObject" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" abstract="true"/>
     </eClassifiers>  
     <eClassifiers xsi:type="ecore:EClass" name="ResolvedLink" eSuperTypes="#//Link">
         <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//DoorsObject"

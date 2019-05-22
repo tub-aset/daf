@@ -3,7 +3,7 @@ package de.jpwinkler.daf.gui.modules.commands;
 import de.jpwinkler.daf.gui.CommandStack.AbstractCommand;
 import de.jpwinkler.daf.gui.UpdateAction;
 import de.jpwinkler.daf.gui.modules.ModulePaneController.ModuleUpdateAction;
-import de.jpwinkler.daf.model.DoorsModuleUtil;
+import de.jpwinkler.daf.model.DoorsModelUtil;
 import de.jpwinkler.daf.model.DoorsObject;
 
 public class PromoteObjectCommand extends AbstractCommand {
@@ -21,7 +21,7 @@ public class PromoteObjectCommand extends AbstractCommand {
 
     @Override
     public boolean isApplicable() {
-        return object.getParent() != null && object.getParent().getParent() != null && DoorsModuleUtil.getNextObject(object) == null;
+        return object.getParent() != null && object.getParent().getParent() != null && DoorsModelUtil.getNextObject(object) == null;
     }
 
     @Override
@@ -31,7 +31,7 @@ public class PromoteObjectCommand extends AbstractCommand {
 
     @Override
     public void undo() {
-        DoorsModuleUtil.getPreviousObject(object).getChildren().add(object);
+        DoorsModelUtil.getPreviousObject(object).getChildren().add(object);
     }
 
     @Override

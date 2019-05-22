@@ -2,6 +2,7 @@
  */
 package de.jpwinkler.daf.model.impl;
 
+import de.jpwinkler.daf.model.DoorsModelUtil;
 import de.jpwinkler.daf.model.DoorsPackage;
 import de.jpwinkler.daf.model.DoorsSystemAttributes;
 import de.jpwinkler.daf.model.DoorsTreeNode;
@@ -318,7 +319,17 @@ public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements D
             throw new IllegalArgumentException();
         }
 
-        throw new UnsupportedOperationException();
+        this.setName(node.getName());
+        this.getAttributes().clear();
+        this.getAttributes().putAll(node.getAttributes());
+        
+        this.getChildren().clear();
+        node.getChildren().stream()
+                .map(c -> DoorsModelUtil.createCopy(c, this))
+                .forEach(this.getChildren()::add);
+        
+        this.setParent(newParent);
+        return this;
     }
 
     /**

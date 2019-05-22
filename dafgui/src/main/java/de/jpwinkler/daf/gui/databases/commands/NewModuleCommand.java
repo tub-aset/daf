@@ -17,18 +17,18 @@ import de.jpwinkler.daf.model.DoorsTreeNode;
  *
  * @author fwiesweg
  */
-public class NewFolderCommand extends CommandStack.AbstractCommand {
+public class NewModuleCommand extends CommandStack.AbstractCommand {
 
     private final DoorsTreeNode parent;
-    private DoorsTreeNode newFolder;
+    private DoorsModule newModule;
 
-    public NewFolderCommand(final DoorsTreeNode parent) {
+    public NewModuleCommand(final DoorsTreeNode parent) {
         this.parent = parent;
     }
 
     @Override
     public String getName() {
-        return "New folder";
+        return "New module";
     }
 
     @Override
@@ -38,19 +38,19 @@ public class NewFolderCommand extends CommandStack.AbstractCommand {
 
     @Override
     public void apply() {
-        newFolder = DoorsFactory.eINSTANCE.createDoorsTreeNode();
-        newFolder.setName("New folder");
+        newModule = DoorsFactory.eINSTANCE.createDoorsModule();
+        newModule.setName("New module");
         redo();
     }
 
     @Override
     public void redo() {
-        parent.getChildren().add(parent.getChildren().indexOf(parent) + 1, newFolder);
+        parent.getChildren().add(parent.getChildren().indexOf(parent) + 1, newModule);
     }
 
     @Override
     public void undo() {
-        parent.getParent().getChildren().remove(newFolder);
+        parent.getParent().getChildren().remove(newModule);
     }
 
     @Override

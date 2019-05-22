@@ -17,40 +17,41 @@ import de.jpwinkler.daf.model.DoorsTreeNode;
  *
  * @author fwiesweg
  */
-public class NewFolderCommand extends CommandStack.AbstractCommand {
+public class DeleteCommand extends CommandStack.AbstractCommand {
 
+    private final DoorsTreeNode node;
     private final DoorsTreeNode parent;
-    private DoorsTreeNode newFolder;
+    private int oldPos;
 
-    public NewFolderCommand(final DoorsTreeNode parent) {
-        this.parent = parent;
+    public DeleteCommand(final DoorsTreeNode node) {
+        this.node = node;
+        this.parent = node.getParent();
     }
 
     @Override
     public String getName() {
-        return "New folder";
+        return "Delete";
     }
 
     @Override
     public boolean isApplicable() {
-        return parent != null && !(parent instanceof DoorsModule) && !(parent instanceof DoorsObject);
+        return node != null && node.getParent() != null;
     }
 
     @Override
     public void apply() {
-        newFolder = DoorsFactory.eINSTANCE.createDoorsTreeNode();
-        newFolder.setName("New folder");
         redo();
     }
 
     @Override
     public void redo() {
-        parent.getChildren().add(parent.getChildren().indexOf(parent) + 1, newFolder);
+        oldPos = parent.getChildren().indexOf(node);
+        parent.getChildren().remove(oldPos);
     }
 
     @Override
     public void undo() {
-        parent.getParent().getChildren().remove(newFolder);
+        parent.getChildren().add(oldPos, node);
     }
 
     @Override

@@ -3,7 +3,7 @@ package de.jpwinkler.daf.gui.modules.commands;
 import de.jpwinkler.daf.gui.CommandStack.AbstractCommand;
 import de.jpwinkler.daf.gui.UpdateAction;
 import de.jpwinkler.daf.gui.modules.ModulePaneController.ModuleUpdateAction;
-import de.jpwinkler.daf.model.DoorsModuleUtil;
+import de.jpwinkler.daf.model.DoorsModelUtil;
 import de.jpwinkler.daf.model.DoorsObject;
 
 public class DemoteObjectCommand extends AbstractCommand {
@@ -31,12 +31,12 @@ public class DemoteObjectCommand extends AbstractCommand {
 
     @Override
     public void redo() {
-        DoorsModuleUtil.getPreviousObject(object).getChildren().add(object);
+        DoorsModelUtil.getPreviousObject(object).getChildren().add(object);
     }
 
     @Override
     public boolean isApplicable() {
-        return object != null && DoorsModuleUtil.getPreviousObject(object) != null;
+        return object != null && DoorsModelUtil.getPreviousObject(object) != null;
     }
 
     @Override

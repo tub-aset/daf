@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
 
-public class DoorsModuleUtil {
+public class DoorsModelUtil {
 
     public static DoorsObject getPreviousObject(final DoorsObject o) {
         if (o.getParent() != null && o.getParent().getChildren().indexOf(o) > 0) {
@@ -34,7 +34,7 @@ public class DoorsModuleUtil {
 
     public static void ensureAttributeDefinition(final DoorsModule module, final String attributeName) {
         List<String> attrs = module.getObjectAttributes();
-        if(!attrs.contains(attributeName)) {
+        if (!attrs.contains(attributeName)) {
             attrs = new ArrayList<>(attrs);
             attrs.add(attributeName);
             module.setObjectAttributes(attrs);
@@ -109,7 +109,7 @@ public class DoorsModuleUtil {
         } else {
             return null;
         }
-        
+
         final String templateVersion = module.getAttributes().get("Template Version");
         if (templateVersion != null) {
             return moduleType + "-" + templateVersion;
@@ -118,14 +118,28 @@ public class DoorsModuleUtil {
         }
 
     }
+
+    public static <T extends DoorsTreeNode> T createLike(T source) {
+        if (source instanceof DoorsObject) {
+            return (T) DoorsFactory.eINSTANCE.createDoorsObject();
+        } else if (source instanceof DoorsModule) {
+            return (T) DoorsFactory.eINSTANCE.createDoorsModule();
+        } else {
+            return (T) DoorsFactory.eINSTANCE.createDoorsTreeNode();
+        }
+    }
     
+    public static <T extends DoorsTreeNode> T createCopy(T source, DoorsTreeNode newParent) {
+        return (T) createLike(source).copyFrom(source, newParent);
+    }
+
     // Defined here to prevent forward references in DoorsSystemAttributes
     static final Function<String, List> LIST_PARSER = s -> (s == null || s.isEmpty()) ? Collections.emptyList() : Arrays.asList(s.split(","));
     static final Function<List, String> LIST_WRITER = l -> (l == null) ? null : (String) l.stream()
             .filter(s1 -> s1 != null).map(s1 -> s1.toString()).reduce((s1, s2) -> s1 + "," + s2).orElse(null);
-    
+
     static final Function<String, Integer> INT_PARSER = s -> (s == null || s.isEmpty()) ? 0 : Integer.parseInt(s);
     static final Function<Integer, String> INT_WRITER = i -> (i == null) ? null : Integer.toString(i);
-    
+
     static final Function<String, String> IDENTITY = s -> s;
 }

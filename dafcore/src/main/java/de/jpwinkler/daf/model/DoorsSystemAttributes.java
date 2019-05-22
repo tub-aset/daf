@@ -5,14 +5,14 @@
  */
 package de.jpwinkler.daf.model;
 
-import static de.jpwinkler.daf.model.DoorsModuleUtil.IDENTITY;
+import static de.jpwinkler.daf.model.DoorsModelUtil.IDENTITY;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import static de.jpwinkler.daf.model.DoorsModuleUtil.LIST_PARSER;
-import static de.jpwinkler.daf.model.DoorsModuleUtil.LIST_WRITER;
-import static de.jpwinkler.daf.model.DoorsModuleUtil.INT_PARSER;
-import static de.jpwinkler.daf.model.DoorsModuleUtil.INT_WRITER;
+import static de.jpwinkler.daf.model.DoorsModelUtil.LIST_PARSER;
+import static de.jpwinkler.daf.model.DoorsModelUtil.LIST_WRITER;
+import static de.jpwinkler.daf.model.DoorsModelUtil.INT_PARSER;
+import static de.jpwinkler.daf.model.DoorsModelUtil.INT_WRITER;
 
 /**
  *

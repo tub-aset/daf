@@ -4,22 +4,19 @@ package de.jpwinkler.daf.model.impl;
 
 import de.jpwinkler.daf.model.DoorsFactory;
 import de.jpwinkler.daf.model.DoorsTreeNode;
-import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsPackage;
 import de.jpwinkler.daf.model.DoorsSystemAttributes;
 import de.jpwinkler.daf.model.Link;
 import de.jpwinkler.daf.model.ResolvedLink;
+import de.jpwinkler.daf.model.UnresolvedLink;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.List;
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
@@ -42,7 +39,6 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link de.jpwinkler.daf.model.impl.DoorsObjectImpl#getText <em>Text</em>}</li>
  *   <li>{@link de.jpwinkler.daf.model.impl.DoorsObjectImpl#getOutgoingLinks <em>Outgoing Links</em>}</li>
  *   <li>{@link de.jpwinkler.daf.model.impl.DoorsObjectImpl#getIncomingLinks <em>Incoming Links</em>}</li>
- *   <li>{@link de.jpwinkler.daf.model.impl.DoorsObjectImpl#getModule <em>Module</em>}</li>
  * </ul>
  *
  * @generated
@@ -148,16 +144,6 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 	 * @ordered
 	 */
     protected EList<ResolvedLink> incomingLinks;
-
-    /**
-	 * The cached value of the '{@link #getModule() <em>Module</em>}' reference.
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @see #getModule()
-	 * @generated
-	 * @ordered
-	 */
-    protected DoorsModule module;
 
     /**
      * <!-- begin-user-doc -->
@@ -370,43 +356,6 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 
     /**
      * <!-- begin-user-doc -->
-     * <!-- end-user-doc --> @generated
-     */
-    @Override
-    public DoorsModule getModule() {
-		if (module != null && ((EObject)module).eIsProxy()) {
-			InternalEObject oldModule = (InternalEObject)module;
-			module = (DoorsModule)eResolveProxy(oldModule);
-			if (module != oldModule) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, DoorsPackage.DOORS_OBJECT__MODULE, oldModule, module));
-			}
-		}
-		return module;
-	}
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc --> @generated
-     */
-    public DoorsModule basicGetModule() {
-		return module;
-	}
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc --> @generated
-     */
-    @Override
-    public void setModule(DoorsModule newModule) {
-		DoorsModule oldModule = module;
-		module = newModule;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DoorsPackage.DOORS_OBJECT__MODULE, oldModule, module));
-	}
-
-    /**
-     * <!-- begin-user-doc -->
      * <!-- end-user-doc --> @generated NOT
      */
     @Override
@@ -415,18 +364,18 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
             throw new IllegalArgumentException();
         }
         
-        this.attributes.clear();
-        this.children.clear();
+        super.copyFrom(newModule, newParent);
         
-        this.attributes.putAll(newModule.getAttributes());
-        newModule.getChildren().stream()
-                .map(c -> DoorsFactory.eINSTANCE.createDoorsObject().copyFrom(c, this))
-                .forEach(c -> this.children.add(c));
-        this.module = (DoorsModule) newParent;
-        
-        // TODO: handle links
-        this.incomingLinks.clear();
-        this.outgoingLinks.clear();
+        this.getOutgoingLinks().clear();
+        ((DoorsObject)newModule).getOutgoingLinks().stream()
+                .map(l -> {
+                    UnresolvedLink nl = DoorsFactory.eINSTANCE.createUnresolvedLink();
+                    nl.setSource(this);
+                    nl.setTargetModule(l.getTargetModule());
+                    nl.setTargetObject(l.getTargetObject());
+                    return nl;
+                })
+                .forEach(this.getOutgoingLinks()::add);
 
         return this;
     }
@@ -498,9 +447,6 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 				return getOutgoingLinks();
 			case DoorsPackage.DOORS_OBJECT__INCOMING_LINKS:
 				return getIncomingLinks();
-			case DoorsPackage.DOORS_OBJECT__MODULE:
-				if (resolve) return getModule();
-				return basicGetModule();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -545,9 +491,6 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 				getIncomingLinks().clear();
 				getIncomingLinks().addAll((Collection<? extends ResolvedLink>)newValue);
 				return;
-			case DoorsPackage.DOORS_OBJECT__MODULE:
-				setModule((DoorsModule)newValue);
-				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -589,9 +532,6 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 			case DoorsPackage.DOORS_OBJECT__INCOMING_LINKS:
 				getIncomingLinks().clear();
 				return;
-			case DoorsPackage.DOORS_OBJECT__MODULE:
-				setModule((DoorsModule)null);
-				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -623,8 +563,6 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 				return outgoingLinks != null && !outgoingLinks.isEmpty();
 			case DoorsPackage.DOORS_OBJECT__INCOMING_LINKS:
 				return incomingLinks != null && !incomingLinks.isEmpty();
-			case DoorsPackage.DOORS_OBJECT__MODULE:
-				return module != null;
 		}
 		return super.eIsSet(featureID);
 	}

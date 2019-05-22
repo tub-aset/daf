@@ -51,8 +51,8 @@ public class FlattenCommand extends AbstractCommand {
     @Override
     public void redo() {
         for (final DoorsObject object : objectList) {
-            object.getModule().getChildren().remove(object);
-            object.getModule().getChildren().add(object);
+            object.getParent().getChildren().remove(object);
+            object.getParent().getChildren().add(object);
         }
     }
 

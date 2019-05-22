@@ -28,7 +28,7 @@ import de.jpwinkler.daf.gui.modules.commands.SwapObjectHeadingAndTextCommand;
 import de.jpwinkler.daf.gui.modules.commands.UnwrapChildrenCommand;
 import de.jpwinkler.daf.model.DoorsFactory;
 import de.jpwinkler.daf.model.DoorsModule;
-import de.jpwinkler.daf.model.DoorsModuleUtil;
+import de.jpwinkler.daf.model.DoorsModelUtil;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsSystemAttributes;
 import de.jpwinkler.daf.model.DoorsTreeNode;
@@ -387,7 +387,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
         updateGui(ModuleUpdateAction.UPDATE_CONTENT_VIEW);
 
-        final int totalObjects = DoorsModuleUtil.countObjects(module);
+        final int totalObjects = DoorsModelUtil.countObjects(module);
         final int visibleObjects = totalObjects - filteredObjects.size();
 
         this.setStatus(visibleObjects < totalObjects
@@ -465,7 +465,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
     @FXML
     public void cutClicked() {
         copyClicked();
-        executeCommand(new DeleteObjectCommand(getCurrentObjects()));
+        deleteObjectClicked();
     }
 
     @FXML
