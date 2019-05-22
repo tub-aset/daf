@@ -11,7 +11,6 @@ import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.search.SearchExpression;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -24,40 +23,35 @@ import net.harawata.appdirs.AppDirsFactory;
  */
 public interface DatabaseInterface {
 
-    void flush() throws IOException;
+    default void flush() throws IOException {
+        if (isReadOnly()) {
+            throw new UnsupportedOperationException("Not supported");
+        }
+    }
+
+    default void flushTo(String path) throws IOException {
+        throw new UnsupportedOperationException("Not supported");
+    }
 
     DoorsDatabase getDatabaseObject();
 
     List<DoorsModule> getModules(final SearchExpression e);
 
-    DoorsModule importModule(final DoorsModule module);
-    
-    void removeNode(DoorsTreeNode node);
-    
-    URI getURI();
-
-    public static DatabaseInterface openFileDatabase() throws IOException {
-        return new FileDatabaseInterface(getDefaultDatabaseDirectory(FileDatabaseInterface.class).resolve("db.DoorsDatabasemodel"));
+    default DoorsModule importModule(final DoorsModule module) {
+        throw new UnsupportedOperationException("Not supported");
     }
-    
+
+    default void removeNode(DoorsTreeNode node) {
+        throw new UnsupportedOperationException("Not supported");
+    }
+
+    boolean isReadOnly();
+
     public static DatabaseInterface openFileDatabase(Path path) throws IOException {
         return new FileDatabaseInterface(path);
     }
-    
+
     public static DatabaseInterface openDoorsApplicationDatabase() throws IOException {
         return new DoorsApplicationDatabaseInterface();
-    }
-    
-    private static Path getDefaultDatabaseDirectory(Class<? extends DatabaseInterface> implCls) throws FileNotFoundException, IOException {
-        String DoorsDatabasePath = System.getenv("DoorsDatabase_HOME");
-        if(DoorsDatabasePath == null) {
-            DoorsDatabasePath = AppDirsFactory.getInstance().getUserDataDir("dafcore", implCls.getSimpleName(), null);
-        }
-        
-        Path path = Paths.get(DoorsDatabasePath);
-        if (!Files.exists(path)) {
-            Files.createDirectory(path);
-        }
-        return path;
     }
 }

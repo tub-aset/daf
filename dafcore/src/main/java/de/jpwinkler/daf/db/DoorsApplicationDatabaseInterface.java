@@ -10,11 +10,8 @@ import de.jpwinkler.daf.bridge.DoorsApplicationFactory;
 import de.jpwinkler.daf.model.DoorsDatabase;
 import de.jpwinkler.daf.model.DoorsFactory;
 import de.jpwinkler.daf.model.DoorsModule;
-import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.search.SearchExpression;
-import java.io.IOException;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,17 +20,13 @@ import java.util.List;
  * @author fwiesweg
  */
 public class DoorsApplicationDatabaseInterface implements DatabaseInterface {
-    
+
     private final DoorsApplication doorsApplication = DoorsApplicationFactory.getDoorsApplication();
     private final DoorsDatabase db;
-    
+
     DoorsApplicationDatabaseInterface() {
         this.db = DoorsFactory.eINSTANCE.createDoorsDatabase();
         this.db.setRoot(doorsApplication.getRoot());
-    }
-
-    @Override
-    public void flush() throws IOException {
     }
 
     @Override
@@ -57,17 +50,7 @@ public class DoorsApplicationDatabaseInterface implements DatabaseInterface {
     }
 
     @Override
-    public DoorsModule importModule(DoorsModule module) {
-        throw new UnsupportedOperationException("Not supported");
-    }
-
-    @Override
-    public void removeNode(DoorsTreeNode node) {
-        throw new UnsupportedOperationException("Not supported");
-    }
-
-    @Override
-    public URI getURI() {
-        return URI.create("doors:///");
+    public boolean isReadOnly() {
+        return true;
     }
 }

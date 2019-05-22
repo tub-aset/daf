@@ -7,6 +7,7 @@ package de.jpwinkler.daf.gui;
 
 import de.jpwinkler.daf.gui.commands.module.UpdateAction;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -30,16 +31,21 @@ public abstract class ApplicationPartController<T extends ApplicationPartControl
     public ApplicationPartController(ApplicationPaneController applicationController) {
         this.applicationController = applicationController;
 
-        try {
-            final FXMLLoader menuLoader = new FXMLLoader(MainFX.class.getResource(
-                    this.getClass().getSimpleName().replaceFirst("Controller$", "") + "Menu.fxml"));
-            menuLoader.setController(this);
-            this.menus = ((Menu) menuLoader.load()).getItems().stream()
-                    .filter(m -> m instanceof Menu)
-                    .map(m -> (Menu) m)
-                    .collect(Collectors.toList());
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
+        URL menuUrl = MainFX.class.getResource(
+                this.getClass().getSimpleName().replaceFirst("Controller$", "") + "Menu.fxml");
+        if (menuUrl == null) {
+            this.menus = Collections.emptyList();
+        } else {
+            try {
+                final FXMLLoader menuLoader = new FXMLLoader(menuUrl);
+                menuLoader.setController(this);
+                this.menus = ((Menu) menuLoader.load()).getItems().stream()
+                        .filter(m -> m instanceof Menu)
+                        .map(m -> (Menu) m)
+                        .collect(Collectors.toList());
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         }
 
     }

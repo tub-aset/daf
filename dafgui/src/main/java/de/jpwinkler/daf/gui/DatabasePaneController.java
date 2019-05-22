@@ -29,7 +29,8 @@ public final class DatabasePaneController extends ApplicationPartController {
 
     public static final ApplicationPartController openLocal(ApplicationPaneController applicationController, ApplicationURI uri) {
         try {
-            return new DatabasePaneController(applicationController, DatabaseInterface.openFileDatabase(new File(uri.getPath()).toPath()));
+            return new DatabasePaneController(applicationController, DatabaseInterface.openFileDatabase(
+                    uri.isValid() ? new File(uri.getPath()).toPath() : null));
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
