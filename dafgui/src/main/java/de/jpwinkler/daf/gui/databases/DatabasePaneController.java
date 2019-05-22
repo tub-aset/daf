@@ -3,6 +3,7 @@ package de.jpwinkler.daf.gui.databases;
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.gui.ApplicationPaneController;
 import de.jpwinkler.daf.gui.ApplicationPartController;
+import de.jpwinkler.daf.gui.ApplicationPreferences;
 import de.jpwinkler.daf.gui.ApplicationURI;
 import de.jpwinkler.daf.gui.UpdateAction;
 import de.jpwinkler.daf.gui.databases.commands.AddTagCommand;
@@ -32,6 +33,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
@@ -76,7 +78,27 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         databaseTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             updateGui(UpdateTagsSection, UpdateAttributesView);
         });
+
+        mainSplitPane.setDividerPositions((double) ApplicationPreferences.DATABASE_PANE_SPLITPOS.retrieve());
+        mainSplitPane.getDividers().forEach(d -> {
+            d.positionProperty().addListener((obs, oldValue, newValue) -> {
+                ApplicationPreferences.DATABASE_PANE_SPLITPOS.store(newValue.doubleValue());
+            });
+        });
+
+        attributeNameColumn.setPrefWidth((double) ApplicationPreferences.DATABASE_PANE_ATTRIBUTENAME_WIDTH.retrieve());
+        attributeNameColumn.widthProperty().addListener((obs, oldValue, newValue) -> {
+            ApplicationPreferences.DATABASE_PANE_ATTRIBUTENAME_WIDTH.store(newValue.doubleValue());
+        });
+
+        attributeValueColumn.setPrefWidth((double) ApplicationPreferences.DATABASE_PANE_ATTRIBUTEVALUE_WIDTH.retrieve());
+        attributeValueColumn.widthProperty().addListener((obs, oldValue, newValue) -> {
+            ApplicationPreferences.DATABASE_PANE_ATTRIBUTEVALUE_WIDTH.store(newValue.doubleValue());
+        });
     }
+
+    @FXML
+    private SplitPane mainSplitPane;
 
     @FXML
     private TreeView<DoorsTreeNode> databaseTreeView;
@@ -160,6 +182,12 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     @Override
     public void save() throws IOException {
         this.database.flush();
+    }
+
+    @Override
+    public void setURI(ApplicationURI file) {
+        super.setURI(file);
+        this.database.setPath(file.getPath());
     }
 
     private final WeakHashMap<DoorsTreeNode, DoorsTreeItem> treeNodeCache = new WeakHashMap<>();

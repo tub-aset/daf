@@ -9,13 +9,9 @@ import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsDatabase;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.filter.modules.SearchExpression;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
-import net.harawata.appdirs.AppDirsFactory;
 
 /**
  *
@@ -28,13 +24,13 @@ public interface DatabaseInterface {
             throw new UnsupportedOperationException("Not supported");
         }
     }
-
-    default void flushTo(String path) throws IOException {
-        throw new UnsupportedOperationException("Not supported");
-    }
     
     default String getPath() {
         return null;
+    }
+    
+    default void setPath(String path) {
+        throw new UnsupportedOperationException("Not supported");
     }
 
     DoorsDatabase getDatabaseObject();

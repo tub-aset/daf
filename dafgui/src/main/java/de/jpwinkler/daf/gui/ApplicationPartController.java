@@ -91,7 +91,7 @@ public abstract class ApplicationPartController<T extends ApplicationPartControl
         }
     }
 
-    protected void updateGui(UpdateAction... actions) {
+    protected final void updateGui(UpdateAction... actions) {
         Stream.of(actions).forEach(a -> a.update(this));
     }
 

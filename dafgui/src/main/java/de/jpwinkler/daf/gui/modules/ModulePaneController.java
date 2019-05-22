@@ -98,7 +98,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
         super(applicationController);
 
         this.module = module;
-        int currentViewIdx = ApplicationPreferences.FILE_PANE_CURRENT_VIEW.retrieve();
+        int currentViewIdx = ApplicationPreferences.MODULE_PANE_CURRENT_VIEW.retrieve();
         if (currentViewIdx < 0 || currentViewIdx >= views.size()) {
             currentView = STANDARD_VIEW;
         } else {
@@ -128,10 +128,10 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
         });
 
-        mainSplitPane.setDividerPositions((double) ApplicationPreferences.FILE_PANE_SPLITPOS.retrieve());
+        mainSplitPane.setDividerPositions((double) ApplicationPreferences.MODULE_PANE_SPLITPOS.retrieve());
         mainSplitPane.getDividers().forEach(d -> {
             d.positionProperty().addListener((obs, oldValue, newValue) -> {
-                ApplicationPreferences.FILE_PANE_SPLITPOS.store(newValue.doubleValue());
+                ApplicationPreferences.MODULE_PANE_SPLITPOS.store(newValue.doubleValue());
             });
         });
 
@@ -150,7 +150,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
     }
 
     private final List<DoorsObject> clipboard = new ArrayList<>();
-    private final ArrayList<ViewDefinition> views = ApplicationPreferences.FILE_PANE_VIEWS.retrieve();
+    private final ArrayList<ViewDefinition> views = ApplicationPreferences.MODULE_PANE_VIEWS.retrieve();
     private final Map<DoorsTreeNode, Boolean> expanded = new WeakHashMap<>();
     private final DoorsModule module;
 
@@ -268,7 +268,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
             c.setPrefWidth(columnDefinition.getWidth());
             c.widthProperty().addListener((obs, oldValue, newValue) -> {
                 columnDefinition.setWidth(newValue.doubleValue());
-                ApplicationPreferences.FILE_PANE_VIEWS.store(this.views);
+                ApplicationPreferences.MODULE_PANE_VIEWS.store(this.views);
             });
 
             c.setCellFactory(param -> new CustomTableCell());
@@ -334,7 +334,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
             this.currentView = (ViewDefinition) newValue.getUserData();
             mergeObjectAttributes();
 
-            ApplicationPreferences.FILE_PANE_CURRENT_VIEW.store(views.indexOf(this.currentView));
+            ApplicationPreferences.MODULE_PANE_CURRENT_VIEW.store(views.indexOf(this.currentView));
             updateGui(ModuleUpdateAction.UPDATE_COLUMNS);
         });
 
@@ -441,7 +441,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
                 .ifPresent(r -> {
                     this.views.clear();
                     this.views.addAll(r);
-                    ApplicationPreferences.FILE_PANE_VIEWS.store(this.views);
+                    ApplicationPreferences.MODULE_PANE_VIEWS.store(this.views);
                     this.updateGui(ModuleUpdateAction.UPDATE_VIEWS, ModuleUpdateAction.UPDATE_COLUMNS);
                 });
     }

@@ -26,9 +26,12 @@ public enum ApplicationPreferences {
     RECENT_FILES(TreeMap.class, new TreeMap<>()),
     SAVE_DIRECTORY(File.class, new File(System.getProperty("user.home")).getAbsoluteFile()),
     OPEN_DIRECTORY(File.class, new File(System.getProperty("user.home")).getAbsoluteFile()),
-    FILE_PANE_SPLITPOS(Double.class, 0.3),
-    FILE_PANE_VIEWS(ArrayList.class, new ArrayList<>()),
-    FILE_PANE_CURRENT_VIEW(Integer.class, -1);
+    MODULE_PANE_SPLITPOS(Double.class, 0.3),
+    MODULE_PANE_VIEWS(ArrayList.class, new ArrayList<>()),
+    MODULE_PANE_CURRENT_VIEW(Integer.class, -1),
+    DATABASE_PANE_SPLITPOS(Double.class, 0.3),
+    DATABASE_PANE_ATTRIBUTENAME_WIDTH(Double.class, 100d),
+    DATABASE_PANE_ATTRIBUTEVALUE_WIDTH(Double.class, 300d);
 
     <T extends Serializable> ApplicationPreferences(Class<T> valueType, T defaultValue) {
         this.valueType = valueType;

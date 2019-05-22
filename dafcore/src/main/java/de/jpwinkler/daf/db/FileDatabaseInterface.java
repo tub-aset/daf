@@ -104,9 +104,8 @@ class FileDatabaseInterface implements DatabaseInterface {
     }
 
     @Override
-    public void flushTo(String path) throws IOException {
+    public void setPath(String path) {
         this.databaseRoot = new File(path).toPath();
-        this.flush();
     }
 
     @Override
