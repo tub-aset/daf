@@ -31,7 +31,7 @@ public class ApplicationURI implements Serializable {
     }
     
     public boolean isValid() {
-        return path == null;
+        return path != null;
     }
 
     @Override

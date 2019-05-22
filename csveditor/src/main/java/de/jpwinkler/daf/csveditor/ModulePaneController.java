@@ -64,14 +64,14 @@ public class ModulePaneController extends ApplicationPartController {
     public static ModulePaneController open(ApplicationPaneController applicationController, ApplicationURI uri) {
         final DoorsModule module;
         if (uri.isValid()) {
-            module = DoorsFactory.eINSTANCE.createDoorsModule();
-            module.setName(ModulePaneController.NEW_MODULE);
-        } else {
             try {
                 module = new ModuleCSVParser().parseCSV(new File(uri.getPath()));
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
+        } else {
+            module = DoorsFactory.eINSTANCE.createDoorsModule();
+            module.setName(ModulePaneController.NEW_MODULE);
         }
 
         return new ModulePaneController(applicationController, module);

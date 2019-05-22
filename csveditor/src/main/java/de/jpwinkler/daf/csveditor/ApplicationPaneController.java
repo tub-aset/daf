@@ -185,10 +185,11 @@ public class ApplicationPaneController {
     private String getMessage(Throwable t) {
         if(t.getMessage() == null && t.getCause() != null) {
             return getMessage(t.getCause());
-        }
-        
-        return t.getMessage();
-        
+        } else if(t.getMessage() == null) {
+            return t.toString();
+        } else {
+            return t.getMessage();
+        }        
     }
 
     private void addToRecentMenu(ApplicationURI selectedUri) {
@@ -201,7 +202,6 @@ public class ApplicationPaneController {
             recentFiles.remove(recentFiles.firstKey());
         }
         ApplicationPreferences.RECENT_FILES.store(recentFiles);
-        ApplicationPreferences.RECENT_FILES.retrieve();
 
         recentMenu.getItems().clear();
 
