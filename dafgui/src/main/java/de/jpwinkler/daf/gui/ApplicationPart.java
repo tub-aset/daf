@@ -18,20 +18,27 @@ import javafx.stage.Window;
  * @author fwiesweg
  */
 public enum ApplicationPart {
-    DOORS_BRIDGE("doorsdb", DatabasePaneController::openDoors, defaultSelector("/"), directorySelector(true)),
-    LOCAL_DATABASE("localdb", DatabasePaneController::openLocal, directorySelector(false), directorySelector(true)),
-    LOCAL_MODULE("localmodule", ModulePaneController::open, fileChooserSelector(false, new ExtensionFilter("CSV", "*.csv")), fileChooserSelector(true, new ExtensionFilter("CSV", "*.csv")));
+    DOORS_BRIDGE("doorsdb", null, DatabasePaneController::openDoors, defaultSelector("/"), directorySelector(true)),
+    LOCAL_DATABASE("localdb", "New local database", DatabasePaneController::openLocal, directorySelector(false), directorySelector(true)),
+    LOCAL_MODULE("localmodule", "New local module", ModulePaneController::open, fileChooserSelector(false, new ExtensionFilter("CSV", "*.csv")), fileChooserSelector(true, new ExtensionFilter("CSV", "*.csv")));
 
-    private ApplicationPart(String scheme, BiFunction<ApplicationPaneController, ApplicationURI, ApplicationPartController> opener,
+    private final String unnamedName;
+    private final String scheme;
+    private final BiFunction<ApplicationPaneController, ApplicationURI, ApplicationPartController> opener;
+    private final BiFunction<Window, ApplicationPart, Stream<ApplicationURI>> openSelector;
+    private final BiFunction<Window, ApplicationPart, Stream<ApplicationURI>> saveSelector;
+
+    private ApplicationPart(String scheme, String unnamedName, BiFunction<ApplicationPaneController, ApplicationURI, ApplicationPartController> opener,
             BiFunction<Window, ApplicationPart, Stream<ApplicationURI>> openSelector, BiFunction<Window, ApplicationPart, Stream<ApplicationURI>> saveSelector) {
         this.scheme = scheme;
+        this.unnamedName = unnamedName;
         this.opener = opener;
         this.openSelector = openSelector;
         this.saveSelector = saveSelector;
     }
 
-    public Stream<ApplicationPartController> openWithSelector(ApplicationPaneController parent, Window window) {
-        return openSelector.apply(window, this).map(u -> this.open(parent, u));
+    public Stream<ApplicationURI> openWithSelector(ApplicationPaneController parent, Window window) {
+        return openSelector.apply(window, this);
     }
 
     public Stream<ApplicationURI> saveWithSelector(ApplicationPaneController parent, Window window) {
@@ -43,11 +50,6 @@ public enum ApplicationPart {
         controller.setURI(uri);
         return controller;
     }
-
-    private final String scheme;
-    private final BiFunction<ApplicationPaneController, ApplicationURI, ApplicationPartController> opener;
-    private final BiFunction<Window, ApplicationPart, Stream<ApplicationURI>> openSelector;
-    private final BiFunction<Window, ApplicationPart, Stream<ApplicationURI>> saveSelector;
 
     public final String getScheme() {
         return scheme;
@@ -115,8 +117,12 @@ public enum ApplicationPart {
     public ApplicationURI newURI() {
         return this.newURI(null);
     }
-    
+
     public ApplicationURI newURI(String path) {
         return new ApplicationURI(this, path);
+    }
+
+    public String getUnnamedName() {
+        return unnamedName;
     }
 }

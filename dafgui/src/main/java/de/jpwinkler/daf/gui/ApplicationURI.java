@@ -6,6 +6,9 @@
 package de.jpwinkler.daf.gui;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -29,7 +32,7 @@ public class ApplicationURI implements Serializable {
     public String getPath() {
         return path;
     }
-    
+
     public boolean isValid() {
         return path != null;
     }
@@ -58,6 +61,15 @@ public class ApplicationURI implements Serializable {
             return false;
         }
         return true;
+    }
+
+    public List<String> getPathSegments() {
+        return path == null ? Collections.emptyList() : Arrays.asList(path.split("/"));
+    }
+
+    @Override
+    public String toString() {
+        return this.applicationPart.toString() + ": " + (this.path == null ? applicationPart.getUnnamedName() : this.path.replaceFirst("^.*/", ""));
     }
 
 }

@@ -72,14 +72,13 @@ public final class ModulePaneController extends ApplicationPartController {
             }
         } else {
             module = DoorsFactory.eINSTANCE.createDoorsModule();
-            module.setName(ModulePaneController.NEW_MODULE);
+            module.setName(uri.getApplicationPart().getUnnamedName());
         }
 
         return new ModulePaneController(applicationController, module);
     }
 
     private static final ViewDefinition STANDARD_VIEW = new ViewDefinition("Standard");
-    public static final String NEW_MODULE = "New Module";
 
     static {
         ColumnDefinition columnDefinition = new ColumnDefinition("Object Heading/Text");
@@ -187,6 +186,8 @@ public final class ModulePaneController extends ApplicationPartController {
     @Override
     public void save() throws IOException {
         try ( ModuleCSVWriter writer = new ModuleCSVWriter(new FileOutputStream(new File(getURI().getPath())))) {
+            List<String> pathSegments = getURI().getPathSegments();
+            module.setName(pathSegments.isEmpty() ? module.getName() : pathSegments.get(pathSegments.size() - 1));
             writer.writeModule(module);
             getCommandStack().setSavePoint();
         }
