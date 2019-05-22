@@ -1,4 +1,4 @@
-package de.jpwinkler.daf.search;
+package de.jpwinkler.daf.filter.modules;
 
 import de.jpwinkler.daf.model.DoorsModule;
 import java.util.regex.Pattern;

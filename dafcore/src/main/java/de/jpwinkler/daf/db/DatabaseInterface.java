@@ -8,7 +8,7 @@ package de.jpwinkler.daf.db;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsDatabase;
 import de.jpwinkler.daf.model.DoorsModule;
-import de.jpwinkler.daf.search.SearchExpression;
+import de.jpwinkler.daf.filter.modules.SearchExpression;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;

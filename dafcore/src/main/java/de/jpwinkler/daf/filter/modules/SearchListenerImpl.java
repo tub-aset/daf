@@ -1,18 +1,17 @@
-package de.jpwinkler.daf.search;
+package de.jpwinkler.daf.filter.modules;
 
-import de.jpwinkler.daf.doorsdb.DBSearchBaseListener;
-import de.jpwinkler.daf.doorsdb.DBSearchParser.AndSearchExpressionContext;
-import de.jpwinkler.daf.doorsdb.DBSearchParser.AttributeSearchExpressionContext;
-import de.jpwinkler.daf.doorsdb.DBSearchParser.BracketSearchExpressionContext;
-import de.jpwinkler.daf.doorsdb.DBSearchParser.NameSearchExpressionContext;
-import de.jpwinkler.daf.doorsdb.DBSearchParser.NotSearchExpressionContext;
-import de.jpwinkler.daf.doorsdb.DBSearchParser.OrSearchExpressionContext;
-import de.jpwinkler.daf.doorsdb.DBSearchParser.TagSearchExpressionContext;
+import de.jpwinkler.daf.filter.modules.DoorsModuleFilterParser.AndSearchExpressionContext;
+import de.jpwinkler.daf.filter.modules.DoorsModuleFilterParser.AttributeSearchExpressionContext;
+import de.jpwinkler.daf.filter.modules.DoorsModuleFilterParser.BracketSearchExpressionContext;
+import de.jpwinkler.daf.filter.modules.DoorsModuleFilterParser.NameSearchExpressionContext;
+import de.jpwinkler.daf.filter.modules.DoorsModuleFilterParser.NotSearchExpressionContext;
+import de.jpwinkler.daf.filter.modules.DoorsModuleFilterParser.OrSearchExpressionContext;
+import de.jpwinkler.daf.filter.modules.DoorsModuleFilterParser.TagSearchExpressionContext;
 import java.util.Deque;
 import java.util.LinkedList;
 import org.apache.commons.lang3.StringEscapeUtils;
 
-public class SearchListenerImpl extends DBSearchBaseListener {
+public class SearchListenerImpl extends DoorsModuleFilterBaseListener {
 
     private final Deque<SearchExpression> stack = new LinkedList<>();
 

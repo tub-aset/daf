@@ -1,4 +1,4 @@
-package de.jpwinkler.daf.gui.filter;
+package de.jpwinkler.daf.filter.objects;
 
 import de.jpwinkler.daf.model.DoorsObject;
 import java.util.function.Predicate;

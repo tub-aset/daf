@@ -1,16 +1,16 @@
-package de.jpwinkler.daf.gui.filter;
+package de.jpwinkler.daf.filter.objects;
 
-import de.jpwinkler.daf.gui.filter.DoorsObjectFilterParser.AndFilterExpressionContext;
-import de.jpwinkler.daf.gui.filter.DoorsObjectFilterParser.AttributeIsExpressionContext;
-import de.jpwinkler.daf.gui.filter.DoorsObjectFilterParser.AttributeLikeExpressionContext;
-import de.jpwinkler.daf.gui.filter.DoorsObjectFilterParser.AttributeMissingExpressionContext;
-import de.jpwinkler.daf.gui.filter.DoorsObjectFilterParser.AttributeRegexpExpressionContext;
-import de.jpwinkler.daf.gui.filter.DoorsObjectFilterParser.BracketFilterExpressionContext;
-import de.jpwinkler.daf.gui.filter.DoorsObjectFilterParser.NotFilterExpressionContext;
-import de.jpwinkler.daf.gui.filter.DoorsObjectFilterParser.OrFilterExpressionContext;
+import de.jpwinkler.daf.filter.objects.DoorsObjectFilterParser.AndFilterExpressionContext;
+import de.jpwinkler.daf.filter.objects.DoorsObjectFilterParser.AttributeIsExpressionContext;
+import de.jpwinkler.daf.filter.objects.DoorsObjectFilterParser.AttributeLikeExpressionContext;
+import de.jpwinkler.daf.filter.objects.DoorsObjectFilterParser.AttributeMissingExpressionContext;
+import de.jpwinkler.daf.filter.objects.DoorsObjectFilterParser.AttributeRegexpExpressionContext;
+import de.jpwinkler.daf.filter.objects.DoorsObjectFilterParser.BracketFilterExpressionContext;
+import de.jpwinkler.daf.filter.objects.DoorsObjectFilterParser.NotFilterExpressionContext;
+import de.jpwinkler.daf.filter.objects.DoorsObjectFilterParser.OrFilterExpressionContext;
 import java.util.Deque;
 import java.util.LinkedList;
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 public class DoorsObjectFilterListenerImpl extends DoorsObjectFilterBaseListener {
 

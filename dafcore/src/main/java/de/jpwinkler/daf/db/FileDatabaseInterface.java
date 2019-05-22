@@ -9,7 +9,7 @@ import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.model.impl.DoorsDatabaseImpl;
-import de.jpwinkler.daf.search.SearchExpression;
+import de.jpwinkler.daf.filter.modules.SearchExpression;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;

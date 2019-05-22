@@ -1,4 +1,4 @@
-grammar DBSearch;
+grammar DoorsModuleFilter;
 
 WS: [ \t\r\n] -> skip;
 
