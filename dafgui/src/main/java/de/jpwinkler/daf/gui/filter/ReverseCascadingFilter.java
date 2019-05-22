@@ -7,7 +7,6 @@ public class ReverseCascadingFilter extends DoorsObjectFilter {
     private final DoorsObjectFilter filter;
 
     public ReverseCascadingFilter(final DoorsObjectFilter filter) {
-        super();
         this.filter = filter;
     }
 

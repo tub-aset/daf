@@ -8,7 +8,6 @@ public class PredicateFilter extends DoorsObjectFilter {
     private final Predicate<DoorsObject> p;
 
     public PredicateFilter(final Predicate<DoorsObject> p) {
-        super();
         this.p = p;
     }
 

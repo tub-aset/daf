@@ -15,7 +15,7 @@ public class AttributeFilter extends DoorsObjectFilter {
 
     private final boolean regexp;
 
-    private Pattern pattern;
+    private final Pattern pattern;
 
     public AttributeFilter(final String attribute, final String filter, final boolean exactMatch, final boolean regexp) {
         super();
@@ -26,7 +26,8 @@ public class AttributeFilter extends DoorsObjectFilter {
         try {
             pattern = Pattern.compile(filter, Pattern.CASE_INSENSITIVE);
         } catch (final PatternSyntaxException e) {
-            pattern = null;
+            throw new RuntimeException()
+                    ;
         }
     }
 

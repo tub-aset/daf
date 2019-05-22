@@ -7,7 +7,6 @@ public class NotFilter extends DoorsObjectFilter {
     private final DoorsObjectFilter filter;
 
     public NotFilter(final DoorsObjectFilter filter) {
-        super();
         this.filter = filter;
     }
 
