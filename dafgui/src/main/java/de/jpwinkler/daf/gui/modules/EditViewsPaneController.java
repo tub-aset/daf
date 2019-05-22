@@ -1,5 +1,6 @@
-package de.jpwinkler.daf.gui;
+package de.jpwinkler.daf.gui.modules;
 
+import de.jpwinkler.daf.gui.AutoloadingPaneController;
 import java.util.Collections;
 import java.util.List;
 import java.util.SortedSet;
@@ -21,7 +22,7 @@ public final class EditViewsPaneController extends AutoloadingPaneController<Edi
     private ListView<ViewDefinition> viewListView;
 
     @FXML
-    private ListView<ColumnDefinition> colListView;
+    private ListView<ViewDefinition.ColumnDefinition> colListView;
 
     @FXML
     private TextField viewTitleTextField;
@@ -46,7 +47,7 @@ public final class EditViewsPaneController extends AutoloadingPaneController<Edi
     private Button colAddButton;
 
     private ViewDefinition currentView;
-    private ColumnDefinition currentCol;
+    private ViewDefinition.ColumnDefinition currentCol;
     private int newCounter = 1;
 
     private final SortedSet<String> knownAttributes = new TreeSet<>();
@@ -96,7 +97,7 @@ public final class EditViewsPaneController extends AutoloadingPaneController<Edi
             setViewEnabled(event.getList().stream().findAny().orElse(null));
         });
 
-        colListView.getSelectionModel().getSelectedItems().addListener((ListChangeListener.Change<? extends ColumnDefinition> event) -> {
+        colListView.getSelectionModel().getSelectedItems().addListener((ListChangeListener.Change<? extends ViewDefinition.ColumnDefinition> event) -> {
             setColEnabled(event.getList().stream().findAny().orElse(null));
         });
     }
@@ -128,7 +129,7 @@ public final class EditViewsPaneController extends AutoloadingPaneController<Edi
         }
     }
 
-    private void setColEnabled(ColumnDefinition cd) {
+    private void setColEnabled(ViewDefinition.ColumnDefinition cd) {
         this.currentCol = cd;
         if (cd != null) {
             colTitleTextField.setText(cd.getTitle());
@@ -241,14 +242,14 @@ public final class EditViewsPaneController extends AutoloadingPaneController<Edi
 
     @FXML
     public void addColumnClicked() {
-        ColumnDefinition cd = new ColumnDefinition("New column " + newCounter++);
+        ViewDefinition.ColumnDefinition cd = new ViewDefinition.ColumnDefinition("New column " + newCounter++);
         this.colListView.getItems().add(cd);
         this.colListView.getSelectionModel().select(cd);
     }
 
     @FXML
     public void deleteColumnClicked() {
-        ColumnDefinition cd = this.colListView.getSelectionModel().getSelectedItem();
+        ViewDefinition.ColumnDefinition cd = this.colListView.getSelectionModel().getSelectedItem();
         if (cd != null) {
             this.colListView.getItems().remove(cd);
         }

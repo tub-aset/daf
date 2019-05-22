@@ -1,5 +1,7 @@
-package de.jpwinkler.daf.gui.commands.module;
+package de.jpwinkler.daf.gui.modules.commands;
 
+import de.jpwinkler.daf.gui.modules.ModulePaneController.ModuleUpdateAction;
+import de.jpwinkler.daf.gui.UpdateAction;
 import de.jpwinkler.daf.gui.CommandStack.AbstractCommand;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
@@ -61,7 +63,7 @@ public class FlattenCommand extends AbstractCommand {
 
     @Override
     public UpdateAction[] getUpdateActions() {
-        return new UpdateAction[] { UpdateAction.FIX_OBJECT_NUMBERS, UpdateAction.FIX_OBJECT_LEVELS, UpdateAction.UPDATE_CONTENT_VIEW, UpdateAction.UPDATE_OUTLINE_VIEW };
+        return new UpdateAction[] { ModuleUpdateAction.FIX_OBJECT_NUMBERS, ModuleUpdateAction.FIX_OBJECT_LEVELS, ModuleUpdateAction.UPDATE_CONTENT_VIEW, ModuleUpdateAction.UPDATE_OUTLINE_VIEW };
     }
 
 }

@@ -1,7 +1,8 @@
-package de.jpwinkler.daf.gui.commands.object;
+package de.jpwinkler.daf.gui.modules.commands;
 
+import de.jpwinkler.daf.gui.modules.ModulePaneController.ModuleUpdateAction;
 import de.jpwinkler.daf.gui.CommandStack.AbstractCommand;
-import de.jpwinkler.daf.gui.commands.module.UpdateAction;
+import de.jpwinkler.daf.gui.UpdateAction;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 
@@ -61,7 +62,7 @@ public class EditObjectAttributeCommand extends AbstractCommand {
 
     @Override
     public UpdateAction[] getUpdateActions() {
-        return new UpdateAction[]{UpdateAction.UPDATE_CONTENT_VIEW, UpdateAction.UPDATE_OUTLINE_VIEW};
+        return new UpdateAction[]{ModuleUpdateAction.UPDATE_CONTENT_VIEW, ModuleUpdateAction.UPDATE_OUTLINE_VIEW};
     }
 
 }

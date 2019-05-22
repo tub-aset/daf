@@ -1,6 +1,10 @@
-package de.jpwinkler.daf.gui;
+package de.jpwinkler.daf.gui.databases;
 
 import de.jpwinkler.daf.db.DatabaseInterface;
+import de.jpwinkler.daf.gui.ApplicationPaneController;
+import de.jpwinkler.daf.gui.ApplicationURI;
+import de.jpwinkler.daf.gui.ApplicationPartController;
+import de.jpwinkler.daf.gui.MainFX;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.io.File;
@@ -107,6 +111,36 @@ public final class DatabasePaneController extends ApplicationPartController {
         updateTagsListView();
     }
 
+    @FXML
+    public void newFolderClicked() {
+
+    }
+
+    @FXML
+    public void newModuleClicked() {
+
+    }
+
+    @FXML
+    public void cutClicked() {
+
+    }
+
+    @FXML
+    public void copyClicked() {
+
+    }
+
+    @FXML
+    public void pasteClicked() {
+
+    }
+
+    @FXML
+    public void deleteClicked() {
+
+    }
+
     private void updateDatabaseTree() {
         final HashMap<DoorsTreeNode, Boolean> expanded = new HashMap<>();
 
@@ -202,11 +236,11 @@ public final class DatabasePaneController extends ApplicationPartController {
 
         }
 
-        public static final Image IMAGE_FOLDER = new Image(DatabasePaneController.class.getResourceAsStream("icons/doors_folder.png"));
-        public static final Image IMAGE_DB = new Image(DatabasePaneController.class.getResourceAsStream("icons/doors_db.png"));
-        public static final Image IMAGE_FORMAL = new Image(DatabasePaneController.class.getResourceAsStream("icons/doors_formal.png"));
-        public static final Image IMAGE_LINK = new Image(DatabasePaneController.class.getResourceAsStream("icons/doors_link.png"));
-        public static final Image IMAGE_PROJECT = new Image(DatabasePaneController.class.getResourceAsStream("icons/doors_project.png"));
+        public static final Image IMAGE_FOLDER = new Image(MainFX.class.getResourceAsStream("icons/doors_folder.png"));
+        public static final Image IMAGE_DB = new Image(MainFX.class.getResourceAsStream("icons/doors_db.png"));
+        public static final Image IMAGE_FORMAL = new Image(MainFX.class.getResourceAsStream("icons/doors_formal.png"));
+        public static final Image IMAGE_LINK = new Image(MainFX.class.getResourceAsStream("icons/doors_link.png"));
+        public static final Image IMAGE_PROJECT = new Image(MainFX.class.getResourceAsStream("icons/doors_project.png"));
     }
 
 }

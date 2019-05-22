@@ -1,6 +1,5 @@
 package de.jpwinkler.daf.gui;
 
-import de.jpwinkler.daf.gui.commands.module.UpdateAction;
 import de.jpwinkler.daf.model.DoorsModule;
 import java.util.function.Consumer;
 

@@ -1,26 +1,31 @@
-package de.jpwinkler.daf.gui;
+package de.jpwinkler.daf.gui.modules;
 
 import de.jpwinkler.daf.csv.ModuleCSVParser;
 import de.jpwinkler.daf.csv.ModuleCSVWriter;
-import de.jpwinkler.daf.gui.commands.module.FlattenCommand;
-import de.jpwinkler.daf.gui.commands.module.ReduceToSelectionCommand;
-import de.jpwinkler.daf.gui.commands.module.SplitLinesCommand;
-import de.jpwinkler.daf.gui.commands.module.UpdateAction;
-import de.jpwinkler.daf.gui.commands.object.DeleteObjectCommand;
-import de.jpwinkler.daf.gui.commands.object.DemoteObjectCommand;
-import de.jpwinkler.daf.gui.commands.object.EditObjectAttributeCommand;
-import de.jpwinkler.daf.gui.commands.object.MultiCommand;
-import de.jpwinkler.daf.gui.commands.object.NewObjectAfterCommand;
-import de.jpwinkler.daf.gui.commands.object.NewObjectBelowCommand;
-import de.jpwinkler.daf.gui.commands.object.PasteObjectsAfterCommand;
-import de.jpwinkler.daf.gui.commands.object.PasteObjectsBelowCommand;
-import de.jpwinkler.daf.gui.commands.object.PromoteObjectCommand;
-import de.jpwinkler.daf.gui.commands.object.SwapObjectHeadingAndTextCommand;
-import de.jpwinkler.daf.gui.commands.object.UnwrapChildrenCommand;
 import de.jpwinkler.daf.filter.objects.CascadingFilter;
 import de.jpwinkler.daf.filter.objects.DoorsObjectFilter;
 import de.jpwinkler.daf.filter.objects.ObjectTextAndHeadingFilter;
 import de.jpwinkler.daf.filter.objects.ReverseCascadingFilter;
+import de.jpwinkler.daf.gui.ApplicationPaneController;
+import de.jpwinkler.daf.gui.ApplicationPartController;
+import de.jpwinkler.daf.gui.ApplicationPreferences;
+import de.jpwinkler.daf.gui.ApplicationURI;
+import de.jpwinkler.daf.gui.MultiCommand;
+import de.jpwinkler.daf.gui.UpdateAction;
+import de.jpwinkler.daf.gui.modules.ViewDefinition.ColumnDefinition;
+import de.jpwinkler.daf.gui.modules.commands.DeleteObjectCommand;
+import de.jpwinkler.daf.gui.modules.commands.DemoteObjectCommand;
+import de.jpwinkler.daf.gui.modules.commands.EditObjectAttributeCommand;
+import de.jpwinkler.daf.gui.modules.commands.FlattenCommand;
+import de.jpwinkler.daf.gui.modules.commands.NewObjectAfterCommand;
+import de.jpwinkler.daf.gui.modules.commands.NewObjectBelowCommand;
+import de.jpwinkler.daf.gui.modules.commands.PasteObjectsAfterCommand;
+import de.jpwinkler.daf.gui.modules.commands.PasteObjectsBelowCommand;
+import de.jpwinkler.daf.gui.modules.commands.PromoteObjectCommand;
+import de.jpwinkler.daf.gui.modules.commands.ReduceToSelectionCommand;
+import de.jpwinkler.daf.gui.modules.commands.SplitLinesCommand;
+import de.jpwinkler.daf.gui.modules.commands.SwapObjectHeadingAndTextCommand;
+import de.jpwinkler.daf.gui.modules.commands.UnwrapChildrenCommand;
 import de.jpwinkler.daf.model.DoorsFactory;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsModuleUtil;
@@ -60,7 +65,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.DefaultStringConverter;
 
-public final class ModulePaneController extends ApplicationPartController {
+public final class ModulePaneController extends ApplicationPartController<ModulePaneController> {
 
     public static ModulePaneController open(ApplicationPaneController applicationController, ApplicationURI uri) {
         final DoorsModule module;
@@ -102,7 +107,7 @@ public final class ModulePaneController extends ApplicationPartController {
 
         mergeObjectAttributes();
 
-        updateGui(UpdateAction.UPDATE_VIEWS, UpdateAction.UPDATE_COLUMNS, UpdateAction.UPDATE_CONTENT_VIEW, UpdateAction.UPDATE_OUTLINE_VIEW);
+        updateGui(ModuleUpdateAction.UPDATE_VIEWS, ModuleUpdateAction.UPDATE_COLUMNS, ModuleUpdateAction.UPDATE_CONTENT_VIEW, ModuleUpdateAction.UPDATE_OUTLINE_VIEW);
         traverseTreeItem(outlineTreeView.getRoot(), ti -> ti.setExpanded(true));
 
         contentTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -196,7 +201,7 @@ public final class ModulePaneController extends ApplicationPartController {
     @Override
     public void setURI(ApplicationURI uri) {
         super.setURI(uri);
-        this.updateGui(UpdateAction.UPDATE_OUTLINE_VIEW);
+        this.updateGui(ModuleUpdateAction.UPDATE_OUTLINE_VIEW);
     }
 
     @FXML
@@ -207,34 +212,6 @@ public final class ModulePaneController extends ApplicationPartController {
     @FXML
     public void swapObjectHeadingAndTextClicked() {
         executeCommand(new MultiCommand(getCurrentObjects().stream().map(o -> new SwapObjectHeadingAndTextCommand(module, o)).collect(Collectors.toList())));
-    }
-
-    @Override
-    protected void updateGui(final UpdateAction... updateActions) {
-        for (final UpdateAction action : updateActions) {
-            switch (action) {
-                case FIX_OBJECT_LEVELS:
-                    fixObjectLevel(module, 0);
-                    break;
-                case FIX_OBJECT_NUMBERS:
-                    fixObjectNumbers(module, "");
-                    break;
-                case UPDATE_CONTENT_VIEW:
-                    updateContentView();
-                    break;
-                case UPDATE_OUTLINE_VIEW:
-                    updateOutlineView(module);
-                    break;
-                case UPDATE_COLUMNS:
-                    updateColumns();
-                    break;
-                case UPDATE_VIEWS:
-                    updateViews();
-                    break;
-                default:
-                    break;
-            }
-        }
     }
 
     private void updateOutlineView(final DoorsModule module) {
@@ -358,7 +335,7 @@ public final class ModulePaneController extends ApplicationPartController {
             mergeObjectAttributes();
 
             ApplicationPreferences.FILE_PANE_CURRENT_VIEW.store(views.indexOf(this.currentView));
-            updateGui(UpdateAction.UPDATE_COLUMNS);
+            updateGui(ModuleUpdateAction.UPDATE_COLUMNS);
         });
 
         boolean selected = false;
@@ -408,7 +385,7 @@ public final class ModulePaneController extends ApplicationPartController {
             }
         });
 
-        updateGui(UpdateAction.UPDATE_CONTENT_VIEW);
+        updateGui(ModuleUpdateAction.UPDATE_CONTENT_VIEW);
 
         final int totalObjects = DoorsModuleUtil.countObjects(module);
         final int visibleObjects = totalObjects - filteredObjects.size();
@@ -465,7 +442,7 @@ public final class ModulePaneController extends ApplicationPartController {
                     this.views.clear();
                     this.views.addAll(r);
                     ApplicationPreferences.FILE_PANE_VIEWS.store(this.views);
-                    this.updateGui(UpdateAction.UPDATE_VIEWS, UpdateAction.UPDATE_COLUMNS);
+                    this.updateGui(ModuleUpdateAction.UPDATE_VIEWS, ModuleUpdateAction.UPDATE_COLUMNS);
                 });
     }
 
@@ -504,6 +481,27 @@ public final class ModulePaneController extends ApplicationPartController {
     @FXML
     public void analyzeObjectTypeClicked() {
         contentTableView.refresh();
+    }
+
+    public static enum ModuleUpdateAction implements UpdateAction<ModulePaneController> {
+        FIX_OBJECT_LEVELS(t -> t.fixObjectLevel(t.module, 0)),
+        FIX_OBJECT_NUMBERS(t -> t.fixObjectNumbers(t.module, "")),
+        UPDATE_CONTENT_VIEW(t -> t.updateContentView()),
+        UPDATE_OUTLINE_VIEW(t -> t.updateOutlineView(t.module)),
+        UPDATE_COLUMNS(t -> t.updateColumns()),
+        UPDATE_VIEWS(t -> t.updateViews());
+
+        private final Consumer<ModulePaneController> updateFun;
+
+        ModuleUpdateAction(Consumer<ModulePaneController> updateFun) {
+            this.updateFun = updateFun;
+        }
+
+        @Override
+        public void update(ModulePaneController ctrl) {
+            updateFun.accept(ctrl);
+        }
+
     }
 
     private class CustomTableCell extends TextFieldTableCell<DoorsObject, String> {

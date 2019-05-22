@@ -5,13 +5,13 @@
  */
 package de.jpwinkler.daf.gui;
 
-import de.jpwinkler.daf.gui.commands.module.UpdateAction;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Menu;
@@ -50,7 +50,7 @@ public abstract class ApplicationPartController<T extends ApplicationPartControl
 
     }
 
-    final void setStatus(final String status) {
+    public final void setStatus(final String status) {
         if (applicationController != null) {
             applicationController.setStatus(status);
         }
@@ -91,7 +91,8 @@ public abstract class ApplicationPartController<T extends ApplicationPartControl
         }
     }
 
-    protected void updateGui(UpdateAction[] actions) {
+    protected void updateGui(UpdateAction... actions) {
+        Stream.of(actions).forEach(a -> a.update(this));
     }
 
     public final Collection<Menu> getMenus() {

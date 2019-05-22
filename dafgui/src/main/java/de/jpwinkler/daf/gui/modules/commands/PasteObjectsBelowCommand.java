@@ -1,22 +1,22 @@
-package de.jpwinkler.daf.gui.commands.object;
+package de.jpwinkler.daf.gui.modules.commands;
 
+import de.jpwinkler.daf.gui.modules.ModulePaneController.ModuleUpdateAction;
 import de.jpwinkler.daf.gui.CommandStack.AbstractCommand;
-import de.jpwinkler.daf.gui.commands.module.UpdateAction;
+import de.jpwinkler.daf.gui.UpdateAction;
 import de.jpwinkler.daf.model.DoorsFactory;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 
-public class PasteObjectsAfterCommand extends AbstractCommand {
+public class PasteObjectsBelowCommand extends AbstractCommand {
 
     private final DoorsObject reference;
     private List<DoorsObject> copiedObjects;
     private final List<DoorsObject> objectsToCopy;
 
-    public PasteObjectsAfterCommand(final DoorsModule module, final DoorsObject reference, final List<DoorsObject> objectsToCopy) {
+    public PasteObjectsBelowCommand(final DoorsModule module, final DoorsObject reference, final List<DoorsObject> objectsToCopy) {
         super(module);
         this.reference = reference;
         this.objectsToCopy = new ArrayList<>(objectsToCopy);
@@ -35,24 +35,24 @@ public class PasteObjectsAfterCommand extends AbstractCommand {
     @Override
     public void apply() {
         copiedObjects = objectsToCopy.stream()
-                .map(o -> (DoorsObject) DoorsFactory.eINSTANCE.createDoorsObject().copyFrom(o, reference.getParent()))
+                .map(o -> (DoorsObject) DoorsFactory.eINSTANCE.createDoorsObject().copyFrom(o, reference))
                 .collect(Collectors.toList());
         redo();
     }
 
     @Override
     public void redo() {
-        reference.getParent().getChildren().addAll(reference.getParent().getChildren().indexOf(reference) + 1, copiedObjects);
+        reference.getChildren().addAll(copiedObjects);
     }
 
     @Override
     public void undo() {
-        reference.getParent().getChildren().removeAll(copiedObjects);
+        reference.getChildren().removeAll(copiedObjects);
     }
 
     @Override
     public UpdateAction[] getUpdateActions() {
-        return new UpdateAction[] { UpdateAction.FIX_OBJECT_LEVELS, UpdateAction.FIX_OBJECT_NUMBERS, UpdateAction.UPDATE_CONTENT_VIEW, UpdateAction.UPDATE_OUTLINE_VIEW };
+        return new UpdateAction[] { ModuleUpdateAction.FIX_OBJECT_LEVELS, ModuleUpdateAction.FIX_OBJECT_NUMBERS, ModuleUpdateAction.UPDATE_CONTENT_VIEW, ModuleUpdateAction.UPDATE_OUTLINE_VIEW };
     }
 
 }

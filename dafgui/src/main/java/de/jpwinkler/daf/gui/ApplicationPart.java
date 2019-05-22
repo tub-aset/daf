@@ -5,6 +5,8 @@
  */
 package de.jpwinkler.daf.gui;
 
+import de.jpwinkler.daf.gui.databases.DatabasePaneController;
+import de.jpwinkler.daf.gui.modules.ModulePaneController;
 import java.util.function.BiFunction;
 import java.util.stream.Stream;
 import javafx.scene.control.TextInputDialog;
