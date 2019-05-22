@@ -61,7 +61,6 @@ public class DoorsFactoryImpl extends EFactoryImpl implements DoorsFactory {
 		switch (eClass.getClassifierID()) {
 			case DoorsPackage.DOORS_TREE_NODE: return (EObject)createDoorsTreeNode();
 			case DoorsPackage.DOORS_DATABASE: return (EObject)createDoorsDatabase();
-			case DoorsPackage.DOORS_MODULE_VERSION: return (EObject)createDoorsModuleVersion();
 			case DoorsPackage.DOORS_MODULE: return (EObject)createDoorsModule();
 			case DoorsPackage.DOORS_OBJECT: return (EObject)createDoorsObject();
 			case DoorsPackage.ATTRIBUTE_MAP: return (EObject)createAttributeMap();
@@ -130,17 +129,6 @@ public class DoorsFactoryImpl extends EFactoryImpl implements DoorsFactory {
 	public DoorsDatabase createDoorsDatabase() {
 		DoorsDatabaseImpl doorsDatabase = new DoorsDatabaseImpl();
 		return doorsDatabase;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public DoorsModuleVersion createDoorsModuleVersion() {
-		DoorsModuleVersionImpl doorsModuleVersion = new DoorsModuleVersionImpl();
-		return doorsModuleVersion;
 	}
 
 	/**

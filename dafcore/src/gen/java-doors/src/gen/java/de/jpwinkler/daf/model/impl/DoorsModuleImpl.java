@@ -3,23 +3,17 @@
 package de.jpwinkler.daf.model.impl;
 
 import de.jpwinkler.daf.csv.FindObjectVisitor;
-import de.jpwinkler.daf.model.DoorsModuleVersion;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsPackage;
 import de.jpwinkler.daf.model.DoorsSystemAttributes;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
 import java.util.List;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
-import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -30,7 +24,6 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * </p>
  * <ul>
  *   <li>{@link de.jpwinkler.daf.model.impl.DoorsModuleImpl#getView <em>View</em>}</li>
- *   <li>{@link de.jpwinkler.daf.model.impl.DoorsModuleImpl#getVersions <em>Versions</em>}</li>
  * </ul>
  *
  * @generated
@@ -56,16 +49,6 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
 	 * @ordered
 	 */
     protected String view = VIEW_EDEFAULT;
-
-    /**
-	 * The cached value of the '{@link #getVersions() <em>Versions</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @see #getVersions()
-	 * @generated
-	 * @ordered
-	 */
-    protected EList<DoorsModuleVersion> versions;
 
     /**
      * <!-- begin-user-doc -->
@@ -106,18 +89,6 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
 	}
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc --> @generated
-     */
-    @Override
-    public List<DoorsModuleVersion> getVersions() {
-		if (versions == null) {
-			versions = new EObjectContainmentWithInverseEList<DoorsModuleVersion>(DoorsModuleVersion.class, this, DoorsPackage.DOORS_MODULE__VERSIONS, DoorsPackage.DOORS_MODULE_VERSION__MODULE);
-		}
-		return versions;
-	}
-
-    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      *
      * @generated NOT
@@ -152,52 +123,10 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
      * <!-- end-user-doc --> @generated NOT
      */
     @Override
-    public DoorsModuleVersion getLatestVersion() {
-        DoorsModuleVersion latest = null;
-        for (final DoorsModuleVersion version : getVersions()) {
-            if (latest == null || latest.getDate().before(version.getDate())) {
-                latest = version;
-            }
-        }
-        return latest;
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc --> @generated NOT
-     */
-    @Override
     public DoorsModule copyFrom(DoorsTreeNode newModule, DoorsTreeNode newParent) {
         super.copyFrom(newModule, newParent);
         return this;
     }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc --> @generated
-     */
-    @SuppressWarnings("unchecked")
-    @Override
-    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case DoorsPackage.DOORS_MODULE__VERSIONS:
-				return ((InternalEList<InternalEObject>)(InternalEList<?>)getVersions()).basicAdd(otherEnd, msgs);
-		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
-	}
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc --> @generated
-     */
-    @Override
-    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case DoorsPackage.DOORS_MODULE__VERSIONS:
-				return ((InternalEList<?>)getVersions()).basicRemove(otherEnd, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
 
     /**
      * <!-- begin-user-doc -->
@@ -208,8 +137,6 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
 		switch (featureID) {
 			case DoorsPackage.DOORS_MODULE__VIEW:
 				return getView();
-			case DoorsPackage.DOORS_MODULE__VERSIONS:
-				return getVersions();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -225,10 +152,6 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
 			case DoorsPackage.DOORS_MODULE__VIEW:
 				setView((String)newValue);
 				return;
-			case DoorsPackage.DOORS_MODULE__VERSIONS:
-				getVersions().clear();
-				getVersions().addAll((Collection<? extends DoorsModuleVersion>)newValue);
-				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -243,9 +166,6 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
 			case DoorsPackage.DOORS_MODULE__VIEW:
 				setView(VIEW_EDEFAULT);
 				return;
-			case DoorsPackage.DOORS_MODULE__VERSIONS:
-				getVersions().clear();
-				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -259,8 +179,6 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
 		switch (featureID) {
 			case DoorsPackage.DOORS_MODULE__VIEW:
 				return VIEW_EDEFAULT == null ? view != null : !VIEW_EDEFAULT.equals(view);
-			case DoorsPackage.DOORS_MODULE__VERSIONS:
-				return versions != null && !versions.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
@@ -280,8 +198,6 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
 			case DoorsPackage.DOORS_MODULE___SET_OBJECT_ATTRIBUTES__LIST:
 				setObjectAttributes((List<String>)arguments.get(0));
 				return null;
-			case DoorsPackage.DOORS_MODULE___GET_LATEST_VERSION:
-				return getLatestVersion();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

@@ -4,12 +4,12 @@ import de.jpwinkler.daf.csv.ModuleCSVWriter;
 import de.jpwinkler.daf.csv.ModuleMetaDataParser;
 import de.jpwinkler.daf.model.DoorsFactory;
 import de.jpwinkler.daf.model.DoorsDatabase;
-import de.jpwinkler.daf.model.DoorsModuleVersion;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.model.impl.DoorsDatabaseImpl;
 import de.jpwinkler.daf.filter.modules.SearchExpression;
+import de.jpwinkler.daf.model.DoorsPackage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -18,14 +18,19 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 class FileDatabaseInterface implements DatabaseInterface {
+
+    static {
+        Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("*", new XMIResourceFactoryImpl());
+        DoorsPackage.eINSTANCE.eClass();
+    }
 
     private static final String DATABASE_ITEMNAME = "DoorsDatabasemodel";
     private static final String DATABASE_FILENAME = "db." + DATABASE_ITEMNAME;
@@ -39,12 +44,7 @@ class FileDatabaseInterface implements DatabaseInterface {
         if (databaseRoot != null) {
             Files.createDirectories(databaseRoot);
 
-            //DoorsPackage.eINSTANCE.eClass();
-            final Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
-            reg.getExtensionToFactoryMap().put(DATABASE_ITEMNAME, new XMIResourceFactoryImpl());
-            final ResourceSet resourceSet = new ResourceSetImpl();
-            final Resource resource = resourceSet.getResource(
-                    org.eclipse.emf.common.util.URI.createFileURI(databaseRoot.resolve(DATABASE_FILENAME).toString()), true);
+            final Resource resource = new ResourceSetImpl().getResource(URI.createFileURI(databaseRoot.resolve(DATABASE_FILENAME).toString()), true);
             this.db = (DoorsDatabase) resource.getContents().get(0);
         } else {
             this.db = DoorsFactory.eINSTANCE.createDoorsDatabase();
@@ -72,32 +72,25 @@ class FileDatabaseInterface implements DatabaseInterface {
             throw new IllegalStateException("No databaseRoot set");
         }
 
-        final Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
-        reg.getExtensionToFactoryMap().put(DATABASE_ITEMNAME, new XMIResourceFactoryImpl());
-        final ResourceSet resourceSet = new ResourceSetImpl();
-        final Resource resource = resourceSet.createResource(
-                org.eclipse.emf.common.util.URI.createFileURI(databaseRoot.resolve(databaseRoot).toString()));
+        final Resource resource = new ResourceSetImpl().createResource(URI.createFileURI(databaseRoot.resolve(DATABASE_FILENAME).toString()));
         resource.getContents().add((DoorsDatabaseImpl) db);
-        resource.save(new HashMap<>());
+        resource.save(Collections.emptyMap());
 
         db.getRoot().accept(new DoorsTreeNodeVisitor<>(DoorsModule.class) {
 
             @Override
-            protected boolean visitPreTraverse(DoorsModule module) {
-                if (databaseRoot != null) {
-                    DoorsModuleVersion currentVersion = module.getLatestVersion();
-                    Path csvPath = ensureCsvFilesystemPath(currentVersion);
-                    try ( ModuleCSVWriter writer = new ModuleCSVWriter(new FileOutputStream(csvPath.toFile()))) {
-                        writer.writeModule(module);
+            protected boolean visitPreTraverse(DoorsModule m) {
+                Path csvPath = ensureCsvFilesystemPath(m);
+                try ( ModuleCSVWriter writer = new ModuleCSVWriter(new FileOutputStream(csvPath.toFile()))) {
+                    writer.writeModule(m);
 
-                        Path mmdPath = ensureMmdFilesystemPath(currentVersion);
-                        ModuleMetaDataParser.writeModuleMetaData(mmdPath.toFile(), module.getAttributes());
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
-                    }
+                    Path mmdPath = ensureMmdFilesystemPath(m);
+                    ModuleMetaDataParser.writeModuleMetaData(mmdPath.toFile(), m.getAttributes());
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
                 }
 
-                return super.visitPreTraverse(module);
+                return super.visitPreTraverse(m);
             }
 
         });
@@ -122,18 +115,12 @@ class FileDatabaseInterface implements DatabaseInterface {
     public void removeNode(final DoorsTreeNode node) {
         if (node instanceof DoorsModule) {
             ((DoorsModule) node).setParent(null);
-
-            if (databaseRoot != null) {
-                ((DoorsModule) node).getVersions().forEach(v -> {
-                    try {
-                        Files.deleteIfExists(ensureCsvFilesystemPath(v));
-                        Files.deleteIfExists(ensureMmdFilesystemPath(v));
-                    } catch (final IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
+            try {
+                Files.deleteIfExists(ensureCsvFilesystemPath(((DoorsModule) node)));
+                Files.deleteIfExists(ensureMmdFilesystemPath(((DoorsModule) node)));
+            } catch (final IOException e) {
+                throw new RuntimeException(e);
             }
-            ((DoorsModule) node).getVersions().clear();
         } else {
             final List<DoorsModule> markedForDeletion = new ArrayList<>();
             node.accept(new DoorsTreeNodeVisitor<>(DoorsModule.class) {
@@ -164,20 +151,20 @@ class FileDatabaseInterface implements DatabaseInterface {
         return result;
     }
 
-    private Path ensureCsvFilesystemPath(final DoorsModuleVersion v) {
+    private Path ensureCsvFilesystemPath(final DoorsModule m) {
         try {
-            Path p = Paths.get(databaseRoot.toString(), v.getModule().getParent().getFullName(), v.getModule().getName() + "_" + new SimpleDateFormat("yyyyMMdd").format(v.getDate()) + ".csv");
-            Files.createDirectories(ensureCsvFilesystemPath(v).getParent());
+            Path p = Paths.get(databaseRoot.toString(), m.getFullName() + ".csv");
+            Files.createDirectories(p.getParent());
             return p;
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
     }
 
-    private Path ensureMmdFilesystemPath(final DoorsModuleVersion version) {
+    private Path ensureMmdFilesystemPath(final DoorsModule m) {
         try {
-            Path p = Paths.get(ensureCsvFilesystemPath(version).toString() + ".mmd");
-            Files.createDirectories(ensureCsvFilesystemPath(version).getParent());
+            Path p = Paths.get(ensureCsvFilesystemPath(m).toString() + ".mmd");
+            Files.createDirectories(p.getParent());
             return p;
         } catch (IOException ex) {
             throw new RuntimeException(ex);

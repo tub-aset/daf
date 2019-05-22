@@ -28,7 +28,6 @@ import de.jpwinkler.daf.csv.FindObjectVisitor;
 import de.jpwinkler.daf.csv.ModuleCSVParser;
 import de.jpwinkler.daf.model.DoorsFactory;
 import de.jpwinkler.daf.model.DoorsModule;
-import de.jpwinkler.daf.model.DoorsModuleVersion;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.nio.file.Files;
@@ -126,11 +125,6 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsTreeNodeRe
     }
 
     @Override
-    public List<DoorsModuleVersion> getVersions() {
-        throw new UnsupportedOperationException("Not supported");
-    }
-
-    @Override
     public DoorsObject findObject(String objectIdentifier) {
         final FindObjectVisitor visitor = new FindObjectVisitor(objectIdentifier);
         accept(visitor);
@@ -140,11 +134,6 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsTreeNodeRe
     @Override
     public List<String> getObjectAttributes() {
         return objectAttributes;
-    }
-
-    @Override
-    public DoorsModuleVersion getLatestVersion() {
-        throw new UnsupportedOperationException("Not supported");
     }
 
     @Override

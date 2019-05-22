@@ -14,7 +14,6 @@ import java.util.List;
  * </p>
  * <ul>
  *   <li>{@link de.jpwinkler.daf.model.DoorsModule#getView <em>View</em>}</li>
- *   <li>{@link de.jpwinkler.daf.model.DoorsModule#getVersions <em>Versions</em>}</li>
  * </ul>
  *
  * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsModule()
@@ -45,20 +44,6 @@ public interface DoorsModule extends DoorsTreeNode {
 	void setView(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Versions</b></em>' containment reference list.
-	 * The list contents are of type {@link de.jpwinkler.daf.model.DoorsModuleVersion}.
-	 * It is bidirectional and its opposite is '{@link de.jpwinkler.daf.model.DoorsModuleVersion#getModule <em>Module</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Versions</em>' containment reference list.
-	 * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsModule_Versions()
-	 * @see de.jpwinkler.daf.model.DoorsModuleVersion#getModule
-	 * @model opposite="module" containment="true"
-	 * @generated
-	 */
-	List<DoorsModuleVersion> getVersions();
-
-	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model
@@ -81,13 +66,5 @@ public interface DoorsModule extends DoorsTreeNode {
 	 * @generated
 	 */
 	void setObjectAttributes(List<String> attrs);
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model kind="operation"
-	 * @generated
-	 */
-	DoorsModuleVersion getLatestVersion();
 
 } // DoorsModule

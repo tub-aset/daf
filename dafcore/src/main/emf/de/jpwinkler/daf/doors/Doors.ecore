@@ -5,16 +5,7 @@
         <eStructuralFeatures xsi:type="ecore:EReference" name="root" eType="#//DoorsTreeNode"
                              containment="true"/>
     </eClassifiers>
-  
-    <eClassifiers xsi:type="ecore:EClass" name="DoorsModuleVersion">
-        <eStructuralFeatures xsi:type="ecore:EReference" name="module" eType="#//DoorsModule"
-                             eOpposite="#//DoorsModule/versions"/>
-        <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
-        <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" upperBound="-1"
-                             eType="#//AttributeMap" containment="true"/>
-        <eStructuralFeatures xsi:type="ecore:EAttribute" name="fullName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eClassifiers>
-    
+      
     <eClassifiers xsi:type="ecore:EClass" name="DoorsModule" eSuperTypes="#//DoorsTreeNode">
         <eOperations name="findObject" eType="#//DoorsObject">
             <eParameters name="objectIdentifier" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -24,10 +15,7 @@
             <eParameters name="attrs" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
         </eOperations>
         
-        <eOperations name="getLatestVersion" eType="#//DoorsModuleVersion"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="view" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-        <eStructuralFeatures xsi:type="ecore:EReference" name="versions" upperBound="-1"
-                             eType="#//DoorsModuleVersion" containment="true" eOpposite="#//DoorsModuleVersion/module"/>
     </eClassifiers>
   
     <eClassifiers xsi:type="ecore:EClass" name="DoorsObject" eSuperTypes="#//DoorsTreeNode">

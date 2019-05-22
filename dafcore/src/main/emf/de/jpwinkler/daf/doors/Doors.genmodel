@@ -58,13 +58,6 @@
         <genClasses ecoreClass="Doors.ecore#//DoorsDatabase">
             <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Doors.ecore#//DoorsDatabase/root"/>
         </genClasses>
-                
-        <genClasses ecoreClass="Doors.ecore#//DoorsModuleVersion">
-            <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Doors.ecore#//DoorsModuleVersion/module"/>
-            <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//DoorsModuleVersion/date"/>
-            <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Doors.ecore#//DoorsModuleVersion/attributes"/>
-            <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//DoorsModuleVersion/fullName"/>
-        </genClasses>
         
         <genClasses ecoreClass="Doors.ecore#//DoorsModule">
             <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//DoorsModule/view"/>
@@ -75,8 +68,6 @@
             <genOperations ecoreOperation="Doors.ecore#//DoorsModule/setObjectAttributes">
                 <genParameters ecoreParameter="Doors.ecore#//DoorsModule/setObjectAttributes/attrs"/>
             </genOperations>
-            <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Doors.ecore#//DoorsModule/versions"/>
-            <genOperations ecoreOperation="Doors.ecore#//DoorsModule/getLatestVersion"/>
         </genClasses>
         
         <genClasses ecoreClass="Doors.ecore#//DoorsObject">

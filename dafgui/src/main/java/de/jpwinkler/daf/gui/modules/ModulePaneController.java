@@ -194,8 +194,8 @@ public final class ModulePaneController extends ApplicationPartController<Module
             List<String> pathSegments = getURI().getPathSegments();
             module.setName(pathSegments.isEmpty() ? module.getName() : pathSegments.get(pathSegments.size() - 1));
             writer.writeModule(module);
-            getCommandStack().setSavePoint();
         }
+        super.save();
     }
 
     @Override

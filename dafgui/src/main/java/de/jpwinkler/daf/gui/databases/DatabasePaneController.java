@@ -169,7 +169,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     @FXML
     public void deleteClicked() {
         databaseTreeView.getSelectionModel().getSelectedItems().stream()
-                .forEach(it -> new DeleteCommand(it.getValue()));
+                .forEach(it -> executeCommand(new DeleteCommand(it.getValue())));
     }
 
     private <T> void traverseTreeItem(final TreeItem<T> root, final Consumer<TreeItem<T>> f) {
@@ -182,12 +182,15 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     @Override
     public void save() throws IOException {
         this.database.flush();
+        super.save();
     }
 
     @Override
     public void setURI(ApplicationURI file) {
         super.setURI(file);
-        this.database.setPath(file.getPath());
+        if (file.isValid()) {
+            this.database.setPath(file.getPath());
+        }
     }
 
     private final WeakHashMap<DoorsTreeNode, DoorsTreeItem> treeNodeCache = new WeakHashMap<>();
@@ -206,16 +209,19 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     private class DoorsTreeItem extends TreeItem<DoorsTreeNode> implements Comparable<DoorsTreeItem> {
 
         private boolean childrenLoaded = false;
+        private final Class<? extends DoorsTreeNode> valueCls;
 
         public DoorsTreeItem(final DoorsTreeNode value) {
             super(value, getImage(value).toImageView());
+            this.valueCls = value.getClass();
+
             treeNodeCache.put(value, this);
             knownTags.addAll(value.getTags());
         }
 
         @Override
         public ObservableList<TreeItem<DoorsTreeNode>> getChildren() {
-            if (!isLeaf() && !childrenLoaded) {
+            if (isFolder() && !childrenLoaded) {
                 updateChildren();
 
             }
@@ -234,7 +240,11 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
         @Override
         public boolean isLeaf() {
-            return getValue() instanceof DoorsModule || getValue() instanceof DoorsObject;
+            return !isFolder() || (childrenLoaded && getChildren().isEmpty());
+        }
+
+        private boolean isFolder() {
+            return !DoorsModule.class.isAssignableFrom(valueCls) && !DoorsObject.class.isAssignableFrom(valueCls);
         }
 
         @Override

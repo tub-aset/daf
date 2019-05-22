@@ -108,6 +108,6 @@ public abstract class ApplicationPartController<T extends ApplicationPartControl
     }
 
     public void save() throws IOException {
-        throw new UnsupportedOperationException();
+        getCommandStack().setSavePoint();
     }
 }
