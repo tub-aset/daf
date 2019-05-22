@@ -211,7 +211,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
     @FXML
     public void swapObjectHeadingAndTextClicked() {
-        executeCommand(new MultiCommand(getCurrentObjects().stream().map(o -> new SwapObjectHeadingAndTextCommand(module, o)).collect(Collectors.toList())));
+        executeCommand(new MultiCommand(getCurrentObjects().stream().map(o -> new SwapObjectHeadingAndTextCommand(o)).collect(Collectors.toList())));
     }
 
     private void updateOutlineView(final DoorsModule module) {
@@ -276,7 +276,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
                     columnDefinition.getAttributeName() == null ? param.getValue().getText()
                     : param.getValue().getAttributes().get(columnDefinition.getAttributeName())));
             c.setOnEditCommit(event -> {
-                executeCommand(new EditObjectAttributeCommand(module, event.getRowValue(), columnDefinition.getAttributeName(), event.getNewValue()));
+                executeCommand(new EditObjectAttributeCommand(event.getRowValue(), columnDefinition.getAttributeName(), event.getNewValue()));
                 contentTableView.requestFocus();
                 contentTableView.getFocusModel().focusNext();
             });
@@ -404,32 +404,32 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
     @FXML
     public void deleteObjectClicked() {
-        executeCommand(new DeleteObjectCommand(module, getCurrentObjects()));
+        executeCommand(new DeleteObjectCommand(getCurrentObjects()));
     }
 
     @FXML
     public void unwrapChildrenClicked() {
-        executeCommand(new UnwrapChildrenCommand(module, getCurrentObject()));
+        executeCommand(new UnwrapChildrenCommand(getCurrentObject()));
     }
 
     @FXML
     public void demoteObjectClicked() {
-        executeCommand(new MultiCommand(getCurrentObjects().stream().map(o -> new DemoteObjectCommand(module, o)).collect(Collectors.toList())));
+        executeCommand(new MultiCommand(getCurrentObjects().stream().map(o -> new DemoteObjectCommand(o)).collect(Collectors.toList())));
     }
 
     @FXML
     public void promoteObjectClicked() {
-        executeCommand(new MultiCommand(getCurrentObjects().stream().map(o -> new PromoteObjectCommand(module, o)).collect(Collectors.toList())));
+        executeCommand(new MultiCommand(getCurrentObjects().stream().map(o -> new PromoteObjectCommand(o)).collect(Collectors.toList())));
     }
 
     @FXML
     public void newObjectBelowClicked() {
-        executeCommand(new NewObjectBelowCommand(module, getCurrentObject()));
+        executeCommand(new NewObjectBelowCommand(getCurrentObject() != null ? this.getCurrentObject() : this.module));
     }
 
     @FXML
     public void newObjectAfterClicked() {
-        executeCommand(new NewObjectAfterCommand(module, getCurrentObject()));
+        executeCommand(new NewObjectAfterCommand(getCurrentObject()));
     }
 
     @FXML
@@ -448,12 +448,12 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
     @FXML
     public void pasteBelowClicked() {
-        executeCommand(new PasteObjectsBelowCommand(module, contentTableView.getSelectionModel().getSelectedItem(), clipboard));
+        executeCommand(new PasteObjectsBelowCommand(contentTableView.getSelectionModel().getSelectedItem(), clipboard));
     }
 
     @FXML
     public void pasteAfterClicked() {
-        executeCommand(new PasteObjectsAfterCommand(module, contentTableView.getSelectionModel().getSelectedItem(), clipboard));
+        executeCommand(new PasteObjectsAfterCommand(contentTableView.getSelectionModel().getSelectedItem(), clipboard));
     }
 
     @FXML
@@ -465,7 +465,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
     @FXML
     public void cutClicked() {
         copyClicked();
-        executeCommand(new DeleteObjectCommand(module, getCurrentObjects()));
+        executeCommand(new DeleteObjectCommand(getCurrentObjects()));
     }
 
     @FXML

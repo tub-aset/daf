@@ -2,8 +2,8 @@ package de.jpwinkler.daf.gui.databases;
 
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.gui.ApplicationPaneController;
-import de.jpwinkler.daf.gui.ApplicationURI;
 import de.jpwinkler.daf.gui.ApplicationPartController;
+import de.jpwinkler.daf.gui.ApplicationURI;
 import de.jpwinkler.daf.gui.MainFX;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsTreeNode;
@@ -12,10 +12,13 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.function.Consumer;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
@@ -24,9 +27,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
-import java.util.HashSet;
-import java.util.Objects;
-import javafx.collections.ObservableList;
 import javafx.scene.image.ImageView;
 
 public final class DatabasePaneController extends ApplicationPartController {

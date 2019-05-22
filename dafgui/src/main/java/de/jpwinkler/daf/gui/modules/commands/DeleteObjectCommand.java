@@ -1,9 +1,8 @@
 package de.jpwinkler.daf.gui.modules.commands;
 
-import de.jpwinkler.daf.gui.modules.ModulePaneController.ModuleUpdateAction;
 import de.jpwinkler.daf.gui.CommandStack.AbstractCommand;
 import de.jpwinkler.daf.gui.UpdateAction;
-import de.jpwinkler.daf.model.DoorsModule;
+import de.jpwinkler.daf.gui.modules.ModulePaneController.ModuleUpdateAction;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.util.ArrayList;
@@ -17,8 +16,7 @@ public class DeleteObjectCommand extends AbstractCommand {
     private final Map<DoorsObject, DoorsTreeNode> parents = new HashMap<>();
     private final Map<DoorsObject, Integer> objectIndices = new HashMap<>();
 
-    public DeleteObjectCommand(final DoorsModule module, final List<DoorsObject> objects) {
-        super(module);
+    public DeleteObjectCommand(final List<DoorsObject> objects) {
         this.objects = new ArrayList<>(objects);
     }
 

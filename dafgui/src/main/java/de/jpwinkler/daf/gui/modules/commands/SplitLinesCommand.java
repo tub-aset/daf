@@ -1,8 +1,8 @@
 package de.jpwinkler.daf.gui.modules.commands;
 
-import de.jpwinkler.daf.gui.modules.ModulePaneController.ModuleUpdateAction;
-import de.jpwinkler.daf.gui.UpdateAction;
 import de.jpwinkler.daf.gui.CommandStack.AbstractCommand;
+import de.jpwinkler.daf.gui.UpdateAction;
+import de.jpwinkler.daf.gui.modules.ModulePaneController.ModuleUpdateAction;
 import de.jpwinkler.daf.model.DoorsFactory;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
@@ -16,9 +16,10 @@ import java.util.Map.Entry;
 public class SplitLinesCommand extends AbstractCommand {
 
     private final Map<DoorsObject, List<DoorsObject>> newObjects = new HashMap<>();
+    private final DoorsModule module;
 
     public SplitLinesCommand(final DoorsModule module) {
-        super(module);
+        this.module = module;
     }
 
     @Override
@@ -33,7 +34,7 @@ public class SplitLinesCommand extends AbstractCommand {
 
     @Override
     public void apply() {
-        getModule().accept(new DoorsTreeNodeVisitor<>(DoorsObject.class) {
+        module.accept(new DoorsTreeNodeVisitor<>(DoorsObject.class) {
             @Override
             public boolean visitPreTraverse(final DoorsObject object) {
                 if (object.getText() != null) {

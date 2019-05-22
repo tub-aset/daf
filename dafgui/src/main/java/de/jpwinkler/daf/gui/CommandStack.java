@@ -1,6 +1,6 @@
 package de.jpwinkler.daf.gui;
 
-import de.jpwinkler.daf.model.DoorsModule;
+import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.util.function.Consumer;
 
 public class CommandStack {
@@ -58,20 +58,9 @@ public class CommandStack {
         this.onDirty = onDirty;
     }
 
-    public static abstract class AbstractCommand {
-
-        private final DoorsModule module;
+    public static abstract class AbstractCommand<T extends DoorsTreeNode> {
 
         public AbstractCommand() {
-            this.module = null;
-        }
-
-        public AbstractCommand(final DoorsModule module) {
-            this.module = module;
-        }
-
-        protected DoorsModule getModule() {
-            return module;
         }
 
         public boolean isApplicable() {
@@ -98,7 +87,7 @@ public class CommandStack {
         private AbstractCommand next;
     }
 
-    public static final AbstractCommand INITIAL_COMMAND = new AbstractCommand(null) {
+    public static final AbstractCommand INITIAL_COMMAND = new AbstractCommand() {
         @Override
         public String getName() {
             return null;

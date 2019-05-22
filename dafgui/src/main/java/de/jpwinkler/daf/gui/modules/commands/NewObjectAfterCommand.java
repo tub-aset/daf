@@ -1,10 +1,9 @@
 package de.jpwinkler.daf.gui.modules.commands;
 
-import de.jpwinkler.daf.gui.modules.ModulePaneController.ModuleUpdateAction;
 import de.jpwinkler.daf.gui.CommandStack.AbstractCommand;
 import de.jpwinkler.daf.gui.UpdateAction;
+import de.jpwinkler.daf.gui.modules.ModulePaneController.ModuleUpdateAction;
 import de.jpwinkler.daf.model.DoorsFactory;
-import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 
 public class NewObjectAfterCommand extends AbstractCommand {
@@ -12,8 +11,7 @@ public class NewObjectAfterCommand extends AbstractCommand {
     private final DoorsObject object;
     private DoorsObject newObject;
 
-    public NewObjectAfterCommand(final DoorsModule module, final DoorsObject object) {
-        super(module);
+    public NewObjectAfterCommand(final DoorsObject object) {
         this.object = object;
     }
 

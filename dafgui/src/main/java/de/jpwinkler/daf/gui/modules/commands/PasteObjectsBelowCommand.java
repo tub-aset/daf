@@ -1,10 +1,9 @@
 package de.jpwinkler.daf.gui.modules.commands;
 
-import de.jpwinkler.daf.gui.modules.ModulePaneController.ModuleUpdateAction;
 import de.jpwinkler.daf.gui.CommandStack.AbstractCommand;
 import de.jpwinkler.daf.gui.UpdateAction;
+import de.jpwinkler.daf.gui.modules.ModulePaneController.ModuleUpdateAction;
 import de.jpwinkler.daf.model.DoorsFactory;
-import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +15,7 @@ public class PasteObjectsBelowCommand extends AbstractCommand {
     private List<DoorsObject> copiedObjects;
     private final List<DoorsObject> objectsToCopy;
 
-    public PasteObjectsBelowCommand(final DoorsModule module, final DoorsObject reference, final List<DoorsObject> objectsToCopy) {
-        super(module);
+    public PasteObjectsBelowCommand(final DoorsObject reference, final List<DoorsObject> objectsToCopy) {
         this.reference = reference;
         this.objectsToCopy = new ArrayList<>(objectsToCopy);
     }

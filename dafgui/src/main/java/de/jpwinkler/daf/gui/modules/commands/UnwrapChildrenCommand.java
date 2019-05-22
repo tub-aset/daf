@@ -1,9 +1,8 @@
 package de.jpwinkler.daf.gui.modules.commands;
 
-import de.jpwinkler.daf.gui.modules.ModulePaneController.ModuleUpdateAction;
 import de.jpwinkler.daf.gui.CommandStack.AbstractCommand;
 import de.jpwinkler.daf.gui.UpdateAction;
-import de.jpwinkler.daf.model.DoorsModule;
+import de.jpwinkler.daf.gui.modules.ModulePaneController.ModuleUpdateAction;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.util.ArrayList;
@@ -16,8 +15,7 @@ public class UnwrapChildrenCommand extends AbstractCommand {
     private final List<DoorsTreeNode> children = new ArrayList<>();
     private DoorsTreeNode parent;
 
-    public UnwrapChildrenCommand(final DoorsModule module, final DoorsObject object) {
-        super(module);
+    public UnwrapChildrenCommand(final DoorsObject object) {
         this.object = object;
     }
 

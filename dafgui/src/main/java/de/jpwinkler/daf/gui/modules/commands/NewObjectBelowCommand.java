@@ -1,10 +1,9 @@
 package de.jpwinkler.daf.gui.modules.commands;
 
-import de.jpwinkler.daf.gui.modules.ModulePaneController.ModuleUpdateAction;
 import de.jpwinkler.daf.gui.CommandStack.AbstractCommand;
 import de.jpwinkler.daf.gui.UpdateAction;
+import de.jpwinkler.daf.gui.modules.ModulePaneController.ModuleUpdateAction;
 import de.jpwinkler.daf.model.DoorsFactory;
-import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 
@@ -13,9 +12,8 @@ public class NewObjectBelowCommand extends AbstractCommand {
     private final DoorsTreeNode parent;
     private DoorsObject newObject;
 
-    public NewObjectBelowCommand(final DoorsModule module, final DoorsTreeNode parent) {
-        super(module);
-        this.parent = parent == null ? module : (DoorsObject) parent;
+    public NewObjectBelowCommand(final DoorsTreeNode parent) {
+        this.parent = parent;
     }
 
     @Override

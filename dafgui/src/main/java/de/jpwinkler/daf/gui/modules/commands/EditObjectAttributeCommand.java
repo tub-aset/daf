@@ -1,9 +1,8 @@
 package de.jpwinkler.daf.gui.modules.commands;
 
-import de.jpwinkler.daf.gui.modules.ModulePaneController.ModuleUpdateAction;
 import de.jpwinkler.daf.gui.CommandStack.AbstractCommand;
 import de.jpwinkler.daf.gui.UpdateAction;
-import de.jpwinkler.daf.model.DoorsModule;
+import de.jpwinkler.daf.gui.modules.ModulePaneController.ModuleUpdateAction;
 import de.jpwinkler.daf.model.DoorsObject;
 
 public class EditObjectAttributeCommand extends AbstractCommand {
@@ -14,8 +13,7 @@ public class EditObjectAttributeCommand extends AbstractCommand {
     private final String newValue;
     private String oldValue;
 
-    public EditObjectAttributeCommand(final DoorsModule module, final DoorsObject object, final String attribute, final String newValue) {
-        super(module);
+    public EditObjectAttributeCommand(final DoorsObject object, final String attribute, final String newValue) {
         this.object = object;
         this.attribute = attribute;
         this.newValue = newValue;
