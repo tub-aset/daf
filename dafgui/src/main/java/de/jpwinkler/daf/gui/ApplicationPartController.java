@@ -13,20 +13,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.control.Menu;
 
 /**
  *
  * @author fwiesweg
  */
-public abstract class ApplicationPartController {
+public abstract class ApplicationPartController<T extends ApplicationPartController> extends AutoloadingPaneController<T> {
 
     private ApplicationPaneController applicationController;
-    private final Parent node;
     private final List<Menu> menus;
     private final CommandStack commandStack = new CommandStack();
-    private ApplicationPart part;
 
     private ApplicationURI uri;
 
@@ -34,11 +31,6 @@ public abstract class ApplicationPartController {
         this.applicationController = applicationController;
 
         try {
-            final FXMLLoader paneLoader = new FXMLLoader(MainFX.class.getResource(
-                    this.getClass().getSimpleName().replaceFirst("Controller$", "") + ".fxml"));
-            paneLoader.setController(this);
-            this.node = paneLoader.load();
-
             final FXMLLoader menuLoader = new FXMLLoader(MainFX.class.getResource(
                     this.getClass().getSimpleName().replaceFirst("Controller$", "") + "Menu.fxml"));
             menuLoader.setController(this);
@@ -98,10 +90,6 @@ public abstract class ApplicationPartController {
 
     public final Collection<Menu> getMenus() {
         return this.menus == null ? Collections.emptySet() : menus;
-    }
-
-    public Parent getNode() {
-        return node;
     }
 
     public final ApplicationURI getURI() {

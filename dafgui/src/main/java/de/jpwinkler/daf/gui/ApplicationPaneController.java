@@ -29,7 +29,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.Region;
 
-public class ApplicationPaneController {
+public final class ApplicationPaneController extends AutoloadingPaneController<ApplicationPaneController> {
 
     private final Map<Tab, ApplicationPartController> applicationPartControllers = new HashMap<>();
     private final BackgroundTaskStatusMonitor backgroundTaskStatusMonitor = new BackgroundTaskStatusMonitor();
@@ -58,8 +58,7 @@ public class ApplicationPaneController {
     private final TreeMap<Long, ApplicationURI> recentFiles = ApplicationPreferences.RECENT_FILES.retrieve();
     private final int MAX_RECENT_FILES = 10;
 
-    @FXML
-    public void initialize() {
+    public ApplicationPaneController() {
         tabPane.getSelectionModel().selectedItemProperty().addListener((ChangeListener<Tab>) (observable, oldValue, newValue) -> {
             if (getApplicationPartController(oldValue) != null) {
                 getApplicationPartController(oldValue).getMenus().forEach(m -> {
@@ -108,14 +107,13 @@ public class ApplicationPaneController {
             }
 
         });
-
     }
 
-    private ApplicationPartController getCurrentFileStateController() {
+    private ApplicationPartController<?> getCurrentFileStateController() {
         return getApplicationPartController(tabPane.getSelectionModel().getSelectedItem());
     }
 
-    private ApplicationPartController getApplicationPartController(Tab selectedTab) {
+    private ApplicationPartController<?> getApplicationPartController(Tab selectedTab) {
         return applicationPartControllers.get(selectedTab);
     }
 
@@ -181,15 +179,15 @@ public class ApplicationPaneController {
             setStatus("Open: Failed to open file; " + getMessage(ex));
         }
     }
-    
+
     private String getMessage(Throwable t) {
-        if(t.getMessage() == null && t.getCause() != null) {
+        if (t.getMessage() == null && t.getCause() != null) {
             return getMessage(t.getCause());
-        } else if(t.getMessage() == null) {
+        } else if (t.getMessage() == null) {
             return t.toString();
         } else {
             return t.getMessage();
-        }        
+        }
     }
 
     private void addToRecentMenu(ApplicationURI selectedUri) {
@@ -197,7 +195,7 @@ public class ApplicationPaneController {
             recentFiles.values().remove(selectedUri);
             recentFiles.put(new Date().getTime(), selectedUri);
         }
-        
+
         while (recentFiles.size() > MAX_RECENT_FILES) {
             recentFiles.remove(recentFiles.firstKey());
         }

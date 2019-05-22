@@ -44,6 +44,7 @@ import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.RadioMenuItem;
@@ -59,7 +60,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.DefaultStringConverter;
 
-public class ModulePaneController extends ApplicationPartController {
+public final class ModulePaneController extends ApplicationPartController {
 
     public static ModulePaneController open(ApplicationPaneController applicationController, ApplicationURI uri) {
         final DoorsModule module;
@@ -77,17 +78,6 @@ public class ModulePaneController extends ApplicationPartController {
         return new ModulePaneController(applicationController, module);
     }
 
-    public ModulePaneController(ApplicationPaneController applicationController, DoorsModule module) {
-        super(applicationController);
-
-        this.module = module;
-
-        mergeObjectAttributes();
-
-        updateGui(UpdateAction.UPDATE_VIEWS, UpdateAction.UPDATE_COLUMNS, UpdateAction.UPDATE_CONTENT_VIEW, UpdateAction.UPDATE_OUTLINE_VIEW);
-        traverseTreeItem(outlineTreeView.getRoot(), ti -> ti.setExpanded(true));
-    }
-
     private static final ViewDefinition STANDARD_VIEW = new ViewDefinition("Standard");
     public static final String NEW_MODULE = "New Module";
 
@@ -100,40 +90,22 @@ public class ModulePaneController extends ApplicationPartController {
         STANDARD_VIEW.setDisplayRemainingColumns(true);
     }
 
-    private final List<DoorsObject> clipboard = new ArrayList<>();
-    private final ArrayList<ViewDefinition> views = ApplicationPreferences.FILE_PANE_VIEWS.retrieve();
-    private final Map<DoorsTreeNode, Boolean> expanded = new WeakHashMap<>();
-    private final DoorsModule module;
+    public ModulePaneController(ApplicationPaneController applicationController, DoorsModule module) {
+        super(applicationController);
 
-    private ViewDefinition currentView;
-    private final Set<DoorsObject> filteredObjects = new HashSet<>();
+        this.module = module;
+        int currentViewIdx = ApplicationPreferences.FILE_PANE_CURRENT_VIEW.retrieve();
+        if (currentViewIdx < 0 || currentViewIdx >= views.size()) {
+            currentView = STANDARD_VIEW;
+        } else {
+            currentView = views.get(currentViewIdx);
+        }
 
-    @FXML
-    private SplitPane mainSplitPane;
+        mergeObjectAttributes();
 
-    @FXML
-    private TreeView<OutlineTreeItem> outlineTreeView;
+        updateGui(UpdateAction.UPDATE_VIEWS, UpdateAction.UPDATE_COLUMNS, UpdateAction.UPDATE_CONTENT_VIEW, UpdateAction.UPDATE_OUTLINE_VIEW);
+        traverseTreeItem(outlineTreeView.getRoot(), ti -> ti.setExpanded(true));
 
-    @FXML
-    private TableView<DoorsObject> contentTableView;
-
-    @FXML
-    private TextField filterTextField;
-
-    @FXML
-    private CheckBox filterExpressionCheckBox;
-
-    @FXML
-    private CheckBox includeChildrenCheckbox;
-
-    @FXML
-    private CheckBox includeParentsCheckbox;
-
-    @FXML
-    private MenuButton viewsMenuButton;
-
-    @FXML
-    public void initialize() {
         contentTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         contentTableView.getSelectionModel().selectedItemProperty().addListener((ChangeListener<DoorsObject>) (observable, oldValue, newValue) -> {
             traverseTreeItem(outlineTreeView.getRoot(), item -> {
@@ -171,14 +143,39 @@ public class ModulePaneController extends ApplicationPartController {
         includeParentsCheckbox.selectedProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
             this.updateFilter(filterTextField.getText(), newValue, includeChildrenCheckbox.isSelected(), filterExpressionCheckBox.isSelected());
         });
-
-        int currentViewIdx = ApplicationPreferences.FILE_PANE_CURRENT_VIEW.retrieve();
-        if (currentViewIdx < 0 || currentViewIdx >= views.size()) {
-            currentView = STANDARD_VIEW;
-        } else {
-            currentView = views.get(currentViewIdx);
-        }
     }
+
+    private final List<DoorsObject> clipboard = new ArrayList<>();
+    private final ArrayList<ViewDefinition> views = ApplicationPreferences.FILE_PANE_VIEWS.retrieve();
+    private final Map<DoorsTreeNode, Boolean> expanded = new WeakHashMap<>();
+    private final DoorsModule module;
+
+    private ViewDefinition currentView;
+    private final Set<DoorsObject> filteredObjects = new HashSet<>();
+
+    @FXML
+    private SplitPane mainSplitPane;
+
+    @FXML
+    private TreeView<OutlineTreeItem> outlineTreeView;
+
+    @FXML
+    private TableView<DoorsObject> contentTableView;
+
+    @FXML
+    private TextField filterTextField;
+
+    @FXML
+    private CheckBox filterExpressionCheckBox;
+
+    @FXML
+    private CheckBox includeChildrenCheckbox;
+
+    @FXML
+    private CheckBox includeParentsCheckbox;
+
+    @FXML
+    private MenuButton viewsMenuButton;
 
     private <T> void traverseTreeItem(final TreeItem<T> root, final Consumer<TreeItem<T>> f) {
         f.accept(root);
@@ -459,8 +456,11 @@ public class ModulePaneController extends ApplicationPartController {
 
     @FXML
     public void editViewsClicked() {
-        EditViewsPaneController.asDialog(outlineTreeView.getScene().getWindow(), this.views, module.getObjectAttributes().stream())
-                .showAndWait().ifPresent(r -> {
+        new EditViewsPaneController(this.views, module.getObjectAttributes().stream())
+                .asDialog(outlineTreeView.getScene().getWindow(), ButtonType.CANCEL, ButtonType.OK)
+                .filter(r -> r.buttonType == ButtonType.OK)
+                .map(r -> r.result.getViews())
+                .ifPresent(r -> {
                     this.views.clear();
                     this.views.addAll(r);
                     ApplicationPreferences.FILE_PANE_VIEWS.store(this.views);

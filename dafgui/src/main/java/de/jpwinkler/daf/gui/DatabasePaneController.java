@@ -4,7 +4,6 @@ import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
@@ -26,7 +25,7 @@ import java.util.Objects;
 import javafx.collections.ObservableList;
 import javafx.scene.image.ImageView;
 
-public class DatabasePaneController extends ApplicationPartController {
+public final class DatabasePaneController extends ApplicationPartController {
 
     public static final ApplicationPartController openLocal(ApplicationPaneController applicationController, ApplicationURI uri) {
         try {
@@ -47,6 +46,21 @@ public class DatabasePaneController extends ApplicationPartController {
     public DatabasePaneController(ApplicationPaneController applicationController, DatabaseInterface database) {
         super(applicationController);
         this.database = database;
+
+        updateDatabaseTree();
+        updateNewTagComboBox();
+
+        databaseTreeView.setOnMouseClicked(event -> {
+            // TODO: open preview
+        });
+
+        attributeNameColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getKey()));
+        attributeValueColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getValue()));
+
+        databaseTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            updateTagsListView();
+            updateAttributesView();
+        });
     }
 
     @FXML
@@ -69,24 +83,6 @@ public class DatabasePaneController extends ApplicationPartController {
 
     private final HashSet<String> knownTags = new HashSet<>();
     private final DatabaseInterface database;
-
-    @FXML
-    public void initialize() throws FileNotFoundException, IOException {
-        updateDatabaseTree();
-        updateNewTagComboBox();
-
-        databaseTreeView.setOnMouseClicked(event -> {
-            // TODO: open preview
-        });
-
-        attributeNameColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getKey()));
-        attributeValueColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getValue()));
-
-        databaseTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            updateTagsListView();
-            updateAttributesView();
-        });
-    }
 
     @FXML
     public void addTagPressed() {

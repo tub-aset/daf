@@ -1,6 +1,5 @@
 package de.jpwinkler.daf.gui;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.SortedSet;
@@ -9,40 +8,14 @@ import java.util.stream.Stream;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
-import javafx.stage.Modality;
-import javafx.stage.Window;
 
-public class EditViewsPaneController {
-
-    public static Dialog<List<ViewDefinition>> asDialog(Window owner, List<ViewDefinition> initialValue, Stream<String> knownAttributes) {
-        try {
-            var dialog = new Dialog();
-            dialog.initModality(Modality.APPLICATION_MODAL);
-            dialog.initOwner(owner);
-            dialog.setResizable(true);
-
-            final FXMLLoader loader = new FXMLLoader(MainFX.class.getResource("EditViewsPane.fxml"));
-            dialog.getDialogPane().setContent(loader.load());
-            dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
-            dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
-
-            final EditViewsPaneController editViewsController = loader.getController();
-            editViewsController.initialize(initialValue, knownAttributes);
-            dialog.setResultConverter(bt -> bt == ButtonType.OK ? editViewsController.viewListView.getItems() : null);
-            return dialog;
-        } catch (final IOException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
+public final class EditViewsPaneController extends AutoloadingPaneController<EditViewsPaneController> {
 
     @FXML
     private ListView<ViewDefinition> viewListView;
@@ -78,11 +51,7 @@ public class EditViewsPaneController {
 
     private final SortedSet<String> knownAttributes = new TreeSet<>();
 
-    @FXML
-    public void initialize() {
-    }
-
-    public void initialize(List<ViewDefinition> initialValue, Stream<String> knownAttributes) {
+    public EditViewsPaneController(List<ViewDefinition> initialValue, Stream<String> knownAttributes) {
         initialValue.forEach(vd -> viewListView.getItems().add(vd));
         Stream.concat(knownAttributes, initialValue.stream()
                 .flatMap(vd -> vd.getColumns().stream())
@@ -166,7 +135,7 @@ public class EditViewsPaneController {
             colTitleTextField.setDisable(false);
 
             colAttributeComboBox.setDisable(false);
-            
+
             String attributeName = cd.getAttributeName();
             colAttributeComboBox.setItems(FXCollections.observableArrayList(knownAttributes));
             colAttributeComboBox.getSelectionModel().select(attributeName);
@@ -189,6 +158,10 @@ public class EditViewsPaneController {
 
             colDeleteButton.setDisable(true);
         }
+    }
+
+    public List<ViewDefinition> getViews() {
+        return viewListView.getItems();
     }
 
     @FXML

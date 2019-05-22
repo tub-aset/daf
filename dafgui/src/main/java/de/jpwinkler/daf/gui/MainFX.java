@@ -1,7 +1,6 @@
 package de.jpwinkler.daf.gui;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.input.TransferMode;
 import javafx.stage.Stage;
@@ -11,9 +10,8 @@ public class MainFX extends Application {
 
     @Override
     public void start(final Stage primaryStage) throws Exception {
-        final FXMLLoader loader = new FXMLLoader(MainFX.class.getResource("ApplicationPane.fxml"));
-        final Scene applicationScene = new Scene(loader.load());
-        final ApplicationPaneController applicationPaneController = loader.getController();
+        final ApplicationPaneController applicationPaneController = new ApplicationPaneController();
+        final Scene applicationScene = new Scene(applicationPaneController.getNode());
 
         applicationScene.setOnDragOver(event -> {
             if (event.getDragboard().hasFiles()) {
