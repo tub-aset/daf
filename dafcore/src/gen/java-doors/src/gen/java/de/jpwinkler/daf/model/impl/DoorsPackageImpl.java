@@ -352,6 +352,16 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
+	public EOperation getDoorsTreeNode__ToString() {
+		return doorsTreeNodeEClass.getEOperations().get(10);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getDoorsDatabase() {
 		return doorsDatabaseEClass;
 	}
@@ -792,6 +802,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___CAN_COPY_FROM__DOORSTREENODE);
 		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE_DOORSTREENODE);
 		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___GET_CHILD__STRING);
+		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___TO_STRING);
 
 		doorsDatabaseEClass = createEClass(DOORS_DATABASE);
 		createEReference(doorsDatabaseEClass, DOORS_DATABASE__ROOT);
@@ -915,6 +926,8 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 
 		op = initEOperation(getDoorsTreeNode__GetChild__String(), this.getDoorsTreeNode(), "getChild", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEString(), "name", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getDoorsTreeNode__ToString(), ecorePackage.getEString(), "toString", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(doorsDatabaseEClass, DoorsDatabase.class, "DoorsDatabase", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getDoorsDatabase_Root(), this.getDoorsTreeNode(), null, "root", null, 0, 1, DoorsDatabase.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

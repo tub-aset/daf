@@ -110,6 +110,11 @@ class FileDatabaseInterface implements DatabaseInterface {
     }
 
     @Override
+    public String getPath() {
+        return this.databaseRoot == null ? null : this.databaseRoot.toAbsolutePath().toString();
+    }
+
+    @Override
     public DoorsDatabase getDatabaseObject() {
         return db;
     }

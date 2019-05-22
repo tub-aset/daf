@@ -137,5 +137,7 @@
             <eParameters name="node" eType="#//DoorsTreeNode"/>
             <eParameters name="newParent" eType="#//DoorsTreeNode"/>
         </eOperations>
+        
+        <eOperations name="toString" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eClassifiers>
 </ecore:EPackage>

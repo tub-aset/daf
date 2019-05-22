@@ -504,23 +504,20 @@ public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements D
 				return copyFrom((DoorsTreeNode)arguments.get(0), (DoorsTreeNode)arguments.get(1));
 			case DoorsPackage.DOORS_TREE_NODE___GET_CHILD__STRING:
 				return getChild((String)arguments.get(0));
+			case DoorsPackage.DOORS_TREE_NODE___TO_STRING:
+				return toString();
 		}
 		return super.eInvoke(operationID, arguments);
 	}
 
     /**
      * <!-- begin-user-doc -->
-     * <!-- end-user-doc --> @generated
+     * <!-- end-user-doc -->
+     * @generated NOT
      */
     @Override
     public String toString() {
-		if (eIsProxy()) return super.toString();
-
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (name: ");
-		result.append(name);
-		result.append(')');
-		return result.toString();
+		return getName();
 	}
 
 } // DoorsTreeNodeImpl

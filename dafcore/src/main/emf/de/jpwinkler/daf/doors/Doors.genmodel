@@ -7,7 +7,7 @@
                    complianceLevel="8.0" copyrightFields="false" operationReflection="true" importOrganizing="true">
     <foreignModel>Doors.ecore</foreignModel>
     <genPackages prefix="Doors" basePackage="de.jpwinkler.daf" disposableProviderFactory="true"
-                 ecorePackage="Doors.ecore#/" classPackageSuffix="impl">
+                 ecorePackage="Doors.ecore#/" classPackageSuffix="impl" adapterFactory="false">
         <genDataTypes ecoreDataType="Doors.ecore#//DoorsTreeNodeVisitor"/>
         <genDataTypes ecoreDataType="Doors.ecore#//Pattern"/>
         <genDataTypes ecoreDataType="Doors.ecore#//Collection"/>
@@ -51,6 +51,8 @@
             <genOperations ecoreOperation="Doors.ecore#//DoorsTreeNode/getChild">
                 <genParameters ecoreParameter="Doors.ecore#//DoorsTreeNode/getChild/name"/>
             </genOperations>
+            
+            <genOperations ecoreOperation="Doors.ecore#//DoorsTreeNode/toString"/>
         </genClasses>
         
         <genClasses ecoreClass="Doors.ecore#//DoorsDatabase">

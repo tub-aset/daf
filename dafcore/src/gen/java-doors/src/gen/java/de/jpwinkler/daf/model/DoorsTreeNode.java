@@ -204,4 +204,12 @@ public interface DoorsTreeNode {
 	 */
 	DoorsTreeNode getChild(String name);
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated
+	 */
+	String toString();
+
 } // DoorsTreeNode

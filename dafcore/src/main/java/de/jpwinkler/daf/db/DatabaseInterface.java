@@ -32,6 +32,10 @@ public interface DatabaseInterface {
     default void flushTo(String path) throws IOException {
         throw new UnsupportedOperationException("Not supported");
     }
+    
+    default String getPath() {
+        return null;
+    }
 
     DoorsDatabase getDatabaseObject();
 

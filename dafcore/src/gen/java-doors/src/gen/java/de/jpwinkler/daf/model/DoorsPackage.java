@@ -222,13 +222,22 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_TREE_NODE___GET_CHILD__STRING = 9;
 
 	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TREE_NODE___TO_STRING = 10;
+
+	/**
 	 * The number of operations of the '<em>Tree Node</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_TREE_NODE_OPERATION_COUNT = 10;
+	int DOORS_TREE_NODE_OPERATION_COUNT = 11;
 
 	/**
 	 * The meta object id for the '{@link de.jpwinkler.daf.model.impl.DoorsDatabaseImpl <em>Database</em>}' class.
@@ -511,6 +520,15 @@ public interface DoorsPackage extends EPackage {
 	 * @ordered
 	 */
 	int DOORS_MODULE___GET_CHILD__STRING = DOORS_TREE_NODE___GET_CHILD__STRING;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_MODULE___TO_STRING = DOORS_TREE_NODE___TO_STRING;
 
 	/**
 	 * The operation id for the '<em>Find Object</em>' operation.
@@ -818,6 +836,15 @@ public interface DoorsPackage extends EPackage {
 	 * @ordered
 	 */
 	int DOORS_OBJECT___GET_CHILD__STRING = DOORS_TREE_NODE___GET_CHILD__STRING;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_OBJECT___TO_STRING = DOORS_TREE_NODE___TO_STRING;
 
 	/**
 	 * The operation id for the '<em>Is Heading</em>' operation.
@@ -1229,6 +1256,16 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getDoorsTreeNode__GetChild__String();
+
+	/**
+	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsTreeNode#toString() <em>To String</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>To String</em>' operation.
+	 * @see de.jpwinkler.daf.model.DoorsTreeNode#toString()
+	 * @generated
+	 */
+	EOperation getDoorsTreeNode__ToString();
 
 	/**
 	 * Returns the meta object for class '{@link de.jpwinkler.daf.model.DoorsDatabase <em>Database</em>}'.
@@ -1819,6 +1856,14 @@ public interface DoorsPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation DOORS_TREE_NODE___GET_CHILD__STRING = eINSTANCE.getDoorsTreeNode__GetChild__String();
+
+		/**
+		 * The meta object literal for the '<em><b>To String</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation DOORS_TREE_NODE___TO_STRING = eINSTANCE.getDoorsTreeNode__ToString();
 
 		/**
 		 * The meta object literal for the '{@link de.jpwinkler.daf.model.impl.DoorsDatabaseImpl <em>Database</em>}' class.
