@@ -50,11 +50,11 @@ public class NewModuleCommand extends CommandStack.AbstractCommand {
 
     @Override
     public void undo() {
-        parent.getParent().getChildren().remove(newModule);
+        parent.getChildren().remove(newModule);
     }
 
     @Override
     public UpdateAction[] getUpdateActions() {
-        return new UpdateAction[]{new DatabasePaneController.UpdateTreeItem(parent)};
+        return new DatabasePaneController.UpdateTreeItem(parent).asArray();
     }
 }

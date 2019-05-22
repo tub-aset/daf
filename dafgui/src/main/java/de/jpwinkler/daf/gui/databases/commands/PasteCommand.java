@@ -3,11 +3,7 @@ package de.jpwinkler.daf.gui.databases.commands;
 import de.jpwinkler.daf.gui.CommandStack.AbstractCommand;
 import de.jpwinkler.daf.gui.UpdateAction;
 import de.jpwinkler.daf.gui.databases.DatabasePaneController;
-import de.jpwinkler.daf.model.DoorsFactory;
-import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsModelUtil;
-import de.jpwinkler.daf.model.DoorsObject;
-import de.jpwinkler.daf.model.DoorsPackage;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +50,7 @@ public class PasteCommand extends AbstractCommand {
 
     @Override
     public UpdateAction[] getUpdateActions() {
-        return new UpdateAction[]{new DatabasePaneController.UpdateTreeItem(parent)};
+        return new DatabasePaneController.UpdateTreeItem(parent).asArray();
     }
 
 }

@@ -1,21 +1,21 @@
 package de.jpwinkler.daf.gui.databases;
 
-import de.jpwinkler.daf.gui.databases.commands.PasteCommand;
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.gui.ApplicationPaneController;
 import de.jpwinkler.daf.gui.ApplicationPartController;
 import de.jpwinkler.daf.gui.ApplicationURI;
 import de.jpwinkler.daf.gui.UpdateAction;
+import de.jpwinkler.daf.gui.databases.commands.AddTagCommand;
 import de.jpwinkler.daf.gui.databases.commands.DeleteCommand;
 import de.jpwinkler.daf.gui.databases.commands.NewFolderCommand;
 import de.jpwinkler.daf.gui.databases.commands.NewModuleCommand;
+import de.jpwinkler.daf.gui.databases.commands.PasteCommand;
+import de.jpwinkler.daf.gui.databases.commands.RemoveTagCommand;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -65,7 +65,6 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         this.database = database;
 
         databaseTreeView.setRoot(new DoorsTreeItem(database.getDatabaseObject().getRoot()));
-        updateNewTagComboBox();
 
         databaseTreeView.setOnMouseClicked(event -> {
             // TODO: open preview
@@ -75,8 +74,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         attributeValueColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getValue()));
 
         databaseTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            updateTagsListView();
-            updateAttributesView();
+            updateGui(UpdateTagsSection, UpdateAttributesView);
         });
     }
 
@@ -105,30 +103,27 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
     @FXML
     public void addTagPressed() {
-        String tag = newTagComboBox.getValue();
-        knownTags.add(tag);
-        databaseTreeView.getSelectionModel().getSelectedItem().getValue().setTag(tag);
-
-        updateTagsListView();
-        updateNewTagComboBox();
+        databaseTreeView.getSelectionModel().getSelectedItems().forEach(it
+                -> executeCommand(new AddTagCommand(it.getValue(), newTagComboBox.getValue(), knownTags)));
     }
 
     @FXML
     public void removeTagsPressed() throws IOException {
-        tagsListView.getSelectionModel().getSelectedItems().forEach(t
-                -> databaseTreeView.getSelectionModel().getSelectedItem().getValue().removeTag(t));
-
-        updateTagsListView();
+        databaseTreeView.getSelectionModel().getSelectedItems().forEach(
+                it -> tagsListView.getSelectionModel().getSelectedItems().forEach(
+                        t -> executeCommand(new RemoveTagCommand(it.getValue(), t))));
     }
 
     @FXML
     public void newFolderClicked() {
-        executeCommand(new NewFolderCommand(getSelectedNode()));
+        databaseTreeView.getSelectionModel().getSelectedItems().stream()
+                .forEach(it -> executeCommand(new NewFolderCommand(it.getValue())));
     }
 
     @FXML
     public void newModuleClicked() {
-        executeCommand(new NewModuleCommand(getSelectedNode()));
+        databaseTreeView.getSelectionModel().getSelectedItems().stream()
+                .forEach(it -> executeCommand(new NewModuleCommand(it.getValue())));
     }
 
     @FXML
@@ -144,41 +139,15 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
     @FXML
     public void pasteClicked() {
-        executeCommand(new PasteCommand(getSelectedNode(), clipboard));
+        databaseTreeView.getSelectionModel().getSelectedItems().stream()
+                .limit(1)
+                .forEach(it -> executeCommand(new PasteCommand(it.getValue(), clipboard)));
     }
 
     @FXML
     public void deleteClicked() {
-        executeCommand(new DeleteCommand(getSelectedNode()));
-    }
-
-    private DoorsTreeNode getSelectedNode() {
-        return databaseTreeView.getSelectionModel().getSelectedItem().getValue();
-    }
-
-    private void updateNewTagComboBox() {
-        final String oldValue = newTagComboBox.getValue();
-        newTagComboBox.getItems().clear();
-        for (final String tag : knownTags) {
-            newTagComboBox.getItems().add(tag);
-            Collections.sort(newTagComboBox.getItems());
-        }
-        newTagComboBox.setValue(oldValue);
-    }
-
-    private void updateTagsListView() {
-        tagsListView.getItems().clear();
         databaseTreeView.getSelectionModel().getSelectedItems().stream()
-                .flatMap(it -> it.getValue().getTags().stream())
-                .forEach(tagsListView.getItems()::add);
-    }
-
-    private void updateAttributesView() {
-        attributesTableView.getItems().clear();
-        attributesTableView.setItems(databaseTreeView.getSelectionModel().getSelectedItems().stream()
-                .flatMap(it -> it.getValue().getAttributes().entrySet().stream())
-                .collect(Collectors.toCollection(() -> FXCollections.observableArrayList())));
-
+                .forEach(it -> new DeleteCommand(it.getValue()));
     }
 
     private <T> void traverseTreeItem(final TreeItem<T> root, final Consumer<TreeItem<T>> f) {
@@ -195,14 +164,25 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
     private final WeakHashMap<DoorsTreeNode, DoorsTreeItem> treeNodeCache = new WeakHashMap<>();
 
+    private static DatabasePaneImages getImage(DoorsTreeNode value) {
+        if (value.getParent() == null) {
+            return DatabasePaneImages.IMAGE_DB;
+        } else if (value instanceof DoorsModule) {
+            return DatabasePaneImages.IMAGE_FORMAL;
+        } else {
+            return DatabasePaneImages.IMAGE_FOLDER;
+
+        }
+    }
+
     private class DoorsTreeItem extends TreeItem<DoorsTreeNode> implements Comparable<DoorsTreeItem> {
 
         private boolean childrenLoaded = false;
 
         public DoorsTreeItem(final DoorsTreeNode value) {
-            super(value, (value instanceof DoorsModule) ? DatabasePaneImages.IMAGE_FORMAL.toImageView()
-                    : DatabasePaneImages.IMAGE_FOLDER.toImageView());
+            super(value, getImage(value).toImageView());
             treeNodeCache.put(value, this);
+            knownTags.addAll(value.getTags());
         }
 
         @Override
@@ -262,6 +242,28 @@ public final class DatabasePaneController extends ApplicationPartController<Data
             ctrl.traverseTreeItem(parent, i -> i.setExpanded(expanded.containsKey(i.getValue()) && expanded.get(i.getValue())));
             parent.setExpanded(true);
         }
-
     }
+
+    public static final UpdateAction<DatabasePaneController> UpdateTagsSection = ctrl -> {
+        final String oldValue = ctrl.newTagComboBox.getValue();
+        ctrl.newTagComboBox.getItems().clear();
+        for (final String tag : ctrl.knownTags) {
+            ctrl.newTagComboBox.getItems().add(tag);
+            Collections.sort(ctrl.newTagComboBox.getItems());
+        }
+        ctrl.newTagComboBox.setValue(oldValue);
+
+        ctrl.tagsListView.getItems().clear();
+        ctrl.databaseTreeView.getSelectionModel().getSelectedItems().stream()
+                .flatMap(it -> it.getValue().getTags().stream())
+                .sorted()
+                .forEach(ctrl.tagsListView.getItems()::add);
+    };
+
+    public static final UpdateAction<DatabasePaneController> UpdateAttributesView = ctrl -> {
+        ctrl.attributesTableView.getItems().clear();
+        ctrl.attributesTableView.setItems(ctrl.databaseTreeView.getSelectionModel().getSelectedItems().stream()
+                .flatMap(it -> it.getValue().getAttributes().entrySet().stream())
+                .collect(Collectors.toCollection(() -> FXCollections.observableArrayList())));
+    };
 }

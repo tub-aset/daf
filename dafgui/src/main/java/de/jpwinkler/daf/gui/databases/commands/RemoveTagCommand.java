@@ -5,7 +5,7 @@
  */
 package de.jpwinkler.daf.gui.databases.commands;
 
-import de.jpwinkler.daf.gui.CommandStack;
+import de.jpwinkler.daf.gui.CommandStack.AbstractCommand;
 import de.jpwinkler.daf.gui.UpdateAction;
 import de.jpwinkler.daf.gui.databases.DatabasePaneController;
 import de.jpwinkler.daf.model.DoorsTreeNode;
@@ -14,45 +14,43 @@ import de.jpwinkler.daf.model.DoorsTreeNode;
  *
  * @author fwiesweg
  */
-public class DeleteCommand extends CommandStack.AbstractCommand {
+public class RemoveTagCommand extends AbstractCommand {
 
     private final DoorsTreeNode node;
-    private final DoorsTreeNode parent;
-    private int oldPos;
+    private final String tag;
 
-    public DeleteCommand(final DoorsTreeNode node) {
+    public RemoveTagCommand(DoorsTreeNode node, String tag) {
         this.node = node;
-        this.parent = node.getParent();
+        this.tag = tag;
     }
 
     @Override
     public String getName() {
-        return "Delete";
-    }
-
-    @Override
-    public boolean isApplicable() {
-        return node != null && node.getParent() != null;
+        return "Remove Tag";
     }
 
     @Override
     public void apply() {
-        redo();
+        this.redo();
+    }
+    
+    @Override
+    public boolean isApplicable() {
+        return node != null;
     }
 
     @Override
     public void redo() {
-        oldPos = parent.getChildren().indexOf(node);
-        parent.getChildren().remove(oldPos);
+        node.removeTag(tag);
     }
 
     @Override
     public void undo() {
-        parent.getChildren().add(oldPos, node);
+        node.setTag(tag);
     }
 
     @Override
     public UpdateAction[] getUpdateActions() {
-        return new DatabasePaneController.UpdateTreeItem(parent).asArray();
+        return UpdateAction.of(DatabasePaneController.UpdateTagsSection, DatabasePaneController.UpdateAttributesView);
     }
 }

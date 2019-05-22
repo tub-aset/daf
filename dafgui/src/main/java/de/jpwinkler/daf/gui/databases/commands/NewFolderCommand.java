@@ -50,11 +50,11 @@ public class NewFolderCommand extends CommandStack.AbstractCommand {
 
     @Override
     public void undo() {
-        parent.getParent().getChildren().remove(newFolder);
+        parent.getChildren().remove(newFolder);
     }
 
     @Override
     public UpdateAction[] getUpdateActions() {
-        return new UpdateAction[]{new DatabasePaneController.UpdateTreeItem(parent)};
+        return new DatabasePaneController.UpdateTreeItem(parent).asArray();
     }
 }
