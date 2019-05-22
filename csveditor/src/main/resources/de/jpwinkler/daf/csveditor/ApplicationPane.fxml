@@ -28,12 +28,12 @@
                         </MenuItem>
                   <MenuItem mnemonicParsing="false" onAction="#newLocalDatabaseClicked" text="New local database">
                      <accelerator>
-                        <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                        <KeyCodeCombination alt="DOWN" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator>
                   </MenuItem>
                   <MenuItem mnemonicParsing="false" onAction="#openLocalDatabaseClicked" text="Open local database">
                      <accelerator>
-                        <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                        <KeyCodeCombination alt="DOWN" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator>
                   </MenuItem>
                   <MenuItem mnemonicParsing="false" onAction="#openDoorsDatabaseClicked" text="Open DOORS database" />

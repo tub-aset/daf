@@ -64,7 +64,7 @@ public enum ApplicationPart {
     public static final BiFunction<Window, ApplicationPart, Stream<ApplicationURI>> fileChooserSelector(boolean save, FileChooser.ExtensionFilter... extensionFilters) {
         return (window, part) -> {
             FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle((save ? "Open a " : "Save a ") + part.toString());
+            fileChooser.setTitle((save ? "Save a " : "Open a ") + part.toString());
             fileChooser.setInitialDirectory(save ? ApplicationPreferences.SAVE_DIRECTORY.retrieve() : ApplicationPreferences.OPEN_DIRECTORY.retrieve());
             fileChooser.getExtensionFilters().addAll(extensionFilters);
 
@@ -84,7 +84,7 @@ public enum ApplicationPart {
     public static final BiFunction<Window, ApplicationPart, Stream<ApplicationURI>> directorySelector(boolean save) {
         return (window, part) -> {
             DirectoryChooser dirChooser = new DirectoryChooser();
-            dirChooser.setTitle((save ? "Open a " : "Save a ") + part.toString());
+            dirChooser.setTitle((save ? "Save a " : "Open a ") + part.toString());
             dirChooser.setInitialDirectory(save ? ApplicationPreferences.SAVE_DIRECTORY.retrieve() : ApplicationPreferences.OPEN_DIRECTORY.retrieve());
 
             return Stream.of(dirChooser.showDialog(window))
@@ -103,7 +103,7 @@ public enum ApplicationPart {
     public static final BiFunction<Window, ApplicationPart, Stream<ApplicationURI>> genericSelector(boolean save) {
         return (window, part) -> {
             TextInputDialog dialog = new TextInputDialog(part.getScheme() + "://");
-            dialog.setTitle((save ? "Open a " : "Save a ") + part.toString());
+            dialog.setTitle((save ? "Save a " : "Open a ") + part.toString());
             dialog.setHeaderText("Please enter a URI to " + (save ? "save." : "open."));
             dialog.setContentText("URI");
 
