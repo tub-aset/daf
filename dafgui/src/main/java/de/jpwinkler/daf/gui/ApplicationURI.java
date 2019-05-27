@@ -17,17 +17,28 @@ import java.util.Objects;
  */
 public class ApplicationURI implements Serializable {
 
-    public ApplicationURI(ApplicationPart applicationPart, String path) {
+    public ApplicationURI(ApplicationURI parentURI, ApplicationPart applicationPart, String path) {
+        this.parentURI = parentURI;
         this.applicationPart = applicationPart;
         this.path = path;
     }
 
+    public ApplicationURI(ApplicationPart applicationPart, String path) {
+        this(null, applicationPart, path);
+    }
+
+    private final ApplicationURI parentURI;
     private final ApplicationPart applicationPart;
     private final String path;
 
     public ApplicationPart getApplicationPart() {
         return applicationPart;
     }
+
+    public ApplicationURI getParentURI() {
+        return parentURI;
+    }
+
 
     public String getPath() {
         return path;

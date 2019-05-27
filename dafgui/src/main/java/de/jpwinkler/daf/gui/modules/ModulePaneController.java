@@ -80,6 +80,10 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
         return new ModulePaneController(applicationController, module);
     }
+    
+    public static ModulePaneController openInDB(ApplicationPaneController applicationController, ApplicationURI uri) {
+        return null;
+    }
 
     private static final ViewDefinition STANDARD_VIEW = new ViewDefinition("Standard");
 

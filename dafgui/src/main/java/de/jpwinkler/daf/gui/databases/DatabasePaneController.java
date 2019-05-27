@@ -2,6 +2,7 @@ package de.jpwinkler.daf.gui.databases;
 
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.gui.ApplicationPaneController;
+import de.jpwinkler.daf.gui.ApplicationPart;
 import de.jpwinkler.daf.gui.ApplicationPartController;
 import de.jpwinkler.daf.gui.ApplicationPreferences;
 import de.jpwinkler.daf.gui.ApplicationURI;
@@ -32,6 +33,7 @@ import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SplitPane;
@@ -40,6 +42,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.TextFieldTreeCell;
+import javafx.scene.input.MouseButton;
 import javafx.util.StringConverter;
 
 public final class DatabasePaneController extends ApplicationPartController<DatabasePaneController> {
@@ -69,24 +72,35 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         super(applicationController);
         this.database = database;
 
-        databaseTreeView.setCellFactory(tv -> new TextFieldTreeCell<>(new StringConverter<>() {
-            private DoorsTreeNode node;
+        databaseTreeView.setCellFactory(tv -> {
+            TextFieldTreeCell<DoorsTreeNode> tc = new TextFieldTreeCell<>(new StringConverter<>() {
+                private DoorsTreeNode node;
 
-            @Override
-            public String toString(DoorsTreeNode node) {
-                this.node = node;
-                return node.getName();
-            }
+                @Override
+                public String toString(DoorsTreeNode node) {
+                    this.node = node;
+                    return node.getName();
+                }
 
-            @Override
-            public DoorsTreeNode fromString(String newName) {
-                DoorsTreeNode node = this.node;
-                this.node = null;
-                executeCommand(new RenameNodeCommand(node, newName));
-                return node;
-            }
+                @Override
+                public DoorsTreeNode fromString(String newName) {
+                    DoorsTreeNode node = this.node;
+                    this.node = null;
+                    executeCommand(new RenameNodeCommand(node, newName));
+                    return node;
+                }
+            });
 
-        }));
+            tc.setOnMouseClicked(me -> {
+                if (me.getClickCount() == 2 && me.getButton() == MouseButton.SECONDARY) {
+                    applicationController.open(new ApplicationURI(this.getURI(), ApplicationPart.DATABASE_MODULE,
+                            getTextFieldTreeCell((Node) me.getTarget()).getTreeItem().getValue().getFullName()));
+                }
+            });
+            return tc;
+
+        });
+
         databaseTreeView.setRoot(new DoorsTreeItem(database.getDatabaseObject().getRoot()));
         databaseTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             updateGui(UpdateTagsSection, UpdateAttributesView);
@@ -111,6 +125,14 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         attributeValueColumn.widthProperty().addListener((obs, oldValue, newValue) -> {
             ApplicationPreferences.DATABASE_PANE_ATTRIBUTEVALUE_WIDTH.store(newValue.doubleValue());
         });
+    }
+
+    private static TextFieldTreeCell<DoorsTreeNode> getTextFieldTreeCell(Node node) {
+        while (!(node instanceof TextFieldTreeCell) && node != null) {
+            node = node.getParent();
+        }
+
+        return (TextFieldTreeCell<DoorsTreeNode>) node;
     }
 
     @FXML

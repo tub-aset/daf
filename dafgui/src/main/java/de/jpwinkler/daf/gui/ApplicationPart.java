@@ -22,7 +22,8 @@ import javafx.stage.Window;
 public enum ApplicationPart {
     DOORS_BRIDGE("doorsdb", null, DatabasePaneController::openDoors, defaultSelector("/"), directorySelector(true)),
     LOCAL_DATABASE("localdb", "New local database", DatabasePaneController::openLocal, directorySelector(false), directorySelector(true)),
-    LOCAL_MODULE("localmodule", "New local module", ModulePaneController::open, fileChooserSelector(false, new ExtensionFilter("CSV", "*.csv")), fileChooserSelector(true, new ExtensionFilter("CSV", "*.csv")));
+    LOCAL_MODULE("localmodule", "New local module", ModulePaneController::open, fileChooserSelector(false, new ExtensionFilter("CSV", "*.csv")), fileChooserSelector(true, new ExtensionFilter("CSV", "*.csv"))),
+    DATABASE_MODULE("databasemodule", null, ModulePaneController::openInDB, null, null);
 
     private final String unnamedName;
     private final String scheme;
