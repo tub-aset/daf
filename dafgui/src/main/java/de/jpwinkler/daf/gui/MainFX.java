@@ -30,7 +30,9 @@ public class MainFX extends Application {
         });
 
         primaryStage.setOnCloseRequest((WindowEvent event) -> {
-            if (!applicationPaneController.closeClicked()) {
+            applicationPaneController.closeAllPanes();
+            
+            if (applicationPaneController.hasOpenPanes()) {
                 event.consume();
             }
         });

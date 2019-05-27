@@ -268,9 +268,20 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     }
 
     @FXML
-    public boolean closeClicked() {
+    public void closeClicked() {
+        if(tabPane.getSelectionModel().isEmpty()) {
+            return;
+        }
+        
+        tabPane.getTabs().remove(tabPane.getSelectionModel().getSelectedItem());
+    }
+    
+    public void closeAllPanes() {
         tabPane.getTabs().clear();
-        return applicationPartControllers.isEmpty();
+    }
+    
+    public boolean hasOpenPanes() {
+        return !applicationPartControllers.isEmpty();
     }
 
     @FXML
