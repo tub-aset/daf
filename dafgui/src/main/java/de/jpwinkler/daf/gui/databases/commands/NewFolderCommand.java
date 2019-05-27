@@ -39,7 +39,7 @@ public class NewFolderCommand extends CommandStack.AbstractCommand {
 
     @Override
     public void apply() {
-        newFolder = DoorsModelUtil.createFolder("New folder");
+        newFolder = DoorsModelUtil.createFolder(null, "New folder");
         redo();
     }
 

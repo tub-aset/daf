@@ -50,7 +50,7 @@ class FileDatabaseInterface implements DatabaseInterface {
             this.db = (DoorsDatabase) resource.getContents().get(0);
         } else {
             this.db = DoorsFactory.eINSTANCE.createDoorsDatabase();
-            this.db.setRoot(DoorsModelUtil.createFolder(null));
+            this.db.setRoot(DoorsModelUtil.createFolder(null, null));
         }
     }
 
@@ -181,8 +181,7 @@ class FileDatabaseInterface implements DatabaseInterface {
         if (path.size() > 0) {
             DoorsTreeNode node = parent.getChild(path.get(0));
             if (node == null) {
-                node = DoorsModelUtil.createFolder(path.get(0));
-                parent.getChildren().add(node);
+                node = DoorsModelUtil.createFolder(parent, path.get(0));
             }
             if (path.size() > 1) {
                 return ensureDatabasePath(parent.getChild(path.get(0)), path.subList(1, path.size()));

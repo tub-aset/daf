@@ -121,32 +121,37 @@ public class DoorsModelUtil {
 
     }
 
-    public static DoorsFolder createFolder(String name) {
-        DoorsFolder doorsFolder = DoorsFactory.eINSTANCE.createDoorsFolder();
-        doorsFolder.setName(name);
-        return doorsFolder;
+    public static DoorsFolder createFolder(DoorsTreeNode parent, String name) {
+        return create(parent, DoorsFactory.eINSTANCE.createDoorsFolder(), name);
     }
 
-    public static DoorsModule createModule(String name) {
-        DoorsModule doorsModule = DoorsFactory.eINSTANCE.createDoorsModule();
-        doorsModule.setName(name);
-        doorsModule.setObjectAttributes(Stream.of(DoorsSystemAttributes.values()).map(a -> a.getKey()).collect(Collectors.toList()));
-        return doorsModule;
+    public static DoorsModule createModule(DoorsTreeNode parent, String name) {
+        DoorsModule module = create(parent, DoorsFactory.eINSTANCE.createDoorsModule(), name);
+        module.setObjectAttributes(DoorsSystemAttributes.valuesFor(DoorsObject.class)
+                .filter(v -> !v.isSystemKey())
+                .map(a -> a.getKey())
+                .collect(Collectors.toList()));
+        return module;
     }
 
     public static DoorsObject createObject(DoorsTreeNode parent, String objectText) {
-        DoorsObject object = DoorsFactory.eINSTANCE.createDoorsObject();
+        DoorsObject object = create(parent, DoorsFactory.eINSTANCE.createDoorsObject(), null);
         if (parent instanceof DoorsModule) {
-            object.setObjectLevel(0);
+            object.setObjectLevel(1);
         } else if (parent instanceof DoorsObject) {
             object.setObjectLevel(((DoorsObject) parent).getObjectLevel() + 1);
         } else if (parent instanceof DoorsFolder) {
             throw new IllegalArgumentException("parent");
         }
 
-        object.setParent(parent);
         object.setObjectText(objectText);
         object.setObjectHeading("");
+        return object;
+    }
+
+    private static <T extends DoorsTreeNode> T create(DoorsTreeNode parent, T object, String name) {
+        object.setName(name);
+        object.setParent(parent);
         return object;
     }
 
@@ -156,7 +161,7 @@ public class DoorsModelUtil {
             copy = (T) DoorsFactory.eINSTANCE.createDoorsObject();
         } else if (source instanceof DoorsModule) {
             copy = (T) DoorsFactory.eINSTANCE.createDoorsModule();
-        } else if(source instanceof DoorsFolder) {
+        } else if (source instanceof DoorsFolder) {
             copy = (T) DoorsFactory.eINSTANCE.createDoorsFolder();
         } else {
             throw new AssertionError();

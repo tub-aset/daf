@@ -30,9 +30,7 @@ public class ModuleCSVParser {
             .withRecordSeparator("\r\n");
 
     private DoorsModule buildModuleModel(final CSVParser csvParser, String moduleName) throws CSVParseException, NumberFormatException, IOException {
-        final DoorsFactory factory = DoorsPackage.eINSTANCE.getDoorsFactory();
-
-        final DoorsModule module = DoorsModelUtil.createModule(moduleName);
+        final DoorsModule module = DoorsModelUtil.createModule(null, moduleName);
 
         DoorsTreeNode current = module;
         int currentLevel = 0;

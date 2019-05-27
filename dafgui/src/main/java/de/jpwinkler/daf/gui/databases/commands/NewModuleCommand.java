@@ -38,7 +38,7 @@ public class NewModuleCommand extends CommandStack.AbstractCommand {
 
     @Override
     public void apply() {
-        newModule = DoorsModelUtil.createModule("New module");
+        newModule = DoorsModelUtil.createModule(null, "New module");
         redo();
     }
 
