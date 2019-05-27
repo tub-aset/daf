@@ -14,9 +14,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class DoorsModelUtil {
+
+    public static final String STANDARD_VIEW = "Standard view";
 
     public static DoorsObject getPreviousObject(final DoorsObject o) {
         if (o.getParent() != null && o.getParent().getChildren().indexOf(o) > 0) {
@@ -131,6 +132,7 @@ public class DoorsModelUtil {
                 .filter(v -> !v.isSystemKey())
                 .map(a -> a.getKey())
                 .collect(Collectors.toList()));
+        module.setView(STANDARD_VIEW);
         return module;
     }
 

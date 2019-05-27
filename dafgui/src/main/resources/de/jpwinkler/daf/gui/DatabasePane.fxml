@@ -27,7 +27,7 @@
                   </ToolBar>
          </top>
          <center>
-                  <TreeView fx:id="databaseTreeView" style="-fx-background-color: transparent;" />
+                  <TreeView fx:id="databaseTreeView" editable="true" style="-fx-background-color: transparent;" />
          </center>
       </BorderPane>
       <BorderPane prefHeight="200.0" prefWidth="200.0" SplitPane.resizableWithParent="false">

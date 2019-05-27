@@ -58,10 +58,7 @@ public class CommandStack {
         this.onDirty = onDirty;
     }
 
-    public static abstract class AbstractCommand<T extends DoorsTreeNode> {
-
-        public AbstractCommand() {
-        }
+    public static abstract class AbstractCommand {
 
         public boolean isApplicable() {
             return true;

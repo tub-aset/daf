@@ -54,6 +54,6 @@ public class NewFolderCommand extends CommandStack.AbstractCommand {
 
     @Override
     public UpdateAction[] getUpdateActions() {
-        return new DatabasePaneController.UpdateTreeItem(parent).asArray();
+        return DatabasePaneController.UpdateTreeItem(parent).asArray();
     }
 }

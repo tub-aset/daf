@@ -22,6 +22,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -80,12 +82,15 @@ class FileDatabaseInterface implements DatabaseInterface {
 
             @Override
             protected boolean visitPreTraverse(DoorsModule m) {
-                Path csvPath = ensureCsvFilesystemPath(m);
-                try ( ModuleCSVWriter writer = new ModuleCSVWriter(new FileOutputStream(csvPath.toFile()))) {
+                Path modulePath = ensureModuleFolderPath(m);
+                try ( ModuleCSVWriter writer = new ModuleCSVWriter(new FileOutputStream(modulePath.resolve(m.getName() + ".csv").toFile()))) {
                     writer.writeModule(m);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
 
-                    Path mmdPath = ensureMmdFilesystemPath(m);
-                    ModuleMetaDataParser.writeModuleMetaData(mmdPath.toFile(), m.getAttributes());
+                try {
+                    ModuleMetaDataParser.writeModuleMetaData(modulePath.resolve(m.getName() + ".mmd").toFile(), m.getAttributes());
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -113,13 +118,14 @@ class FileDatabaseInterface implements DatabaseInterface {
 
     @Override
     public void removeNode(final DoorsTreeNode node) {
-        if(node instanceof DoorsObject) {
+        if (node instanceof DoorsObject) {
             node.getParent().getChildren().remove(node);
         } else if (node instanceof DoorsModule) {
             ((DoorsModule) node).setParent(null);
             try {
-                Files.deleteIfExists(ensureCsvFilesystemPath(((DoorsModule) node)));
-                Files.deleteIfExists(ensureMmdFilesystemPath(((DoorsModule) node)));
+                Path p = ensureModuleFolderPath(((DoorsModule) node));
+                Files.deleteIfExists(p.resolve(node.getName() + ".csv"));
+                Files.deleteIfExists(p.resolve(node.getName() + ".mmd"));
             } catch (final IOException e) {
                 throw new RuntimeException(e);
             }
@@ -153,20 +159,10 @@ class FileDatabaseInterface implements DatabaseInterface {
         return result;
     }
 
-    private Path ensureCsvFilesystemPath(final DoorsModule m) {
+    private Path ensureModuleFolderPath(final DoorsModule m) {
         try {
-            Path p = Paths.get(databaseRoot.toString(), m.getFullName() + ".csv");
-            Files.createDirectories(p.getParent());
-            return p;
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    private Path ensureMmdFilesystemPath(final DoorsModule m) {
-        try {
-            Path p = Paths.get(ensureCsvFilesystemPath(m).toString() + ".mmd");
-            Files.createDirectories(p.getParent());
+            Path p = Paths.get(databaseRoot.toString(), m.getFullNameSegments().toArray(new String[0])).getParent();
+            Files.createDirectories(p);
             return p;
         } catch (IOException ex) {
             throw new RuntimeException(ex);

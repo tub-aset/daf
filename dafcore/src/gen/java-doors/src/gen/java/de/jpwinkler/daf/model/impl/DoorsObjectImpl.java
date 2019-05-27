@@ -579,25 +579,4 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 		return super.eInvoke(operationID, arguments);
 	}
 
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     *
-     * @generated NOT
-     */
-    @Override
-    public String toString() {
-        if (eIsProxy()) {
-            return super.toString();
-        }
-
-        final StringBuffer result = new StringBuffer();
-        result.append(getObjectIdentifier());
-        result.append(" ");
-        if (isHeading()) {
-            result.append(getObjectNumber());
-            result.append(" ");
-        }
-        result.append(getText());
-        return result.toString();
-    }
 } //DoorsObjectImpl

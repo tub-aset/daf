@@ -14,45 +14,46 @@ import de.jpwinkler.daf.model.DoorsTreeNode;
  *
  * @author fwiesweg
  */
-public class DeleteCommand extends CommandStack.AbstractCommand {
-
-    private final DoorsTreeNode node;
-    private final DoorsTreeNode parent;
-    private int oldPos;
-
-    public DeleteCommand(final DoorsTreeNode node) {
+public class RenameNodeCommand extends CommandStack.AbstractCommand {
+    private DoorsTreeNode node;
+    private String oldName;
+    private String newName;
+    
+    public RenameNodeCommand(DoorsTreeNode node, String newName) {
         this.node = node;
-        this.parent = node.getParent();
+        this.newName = newName;
     }
 
     @Override
     public String getName() {
-        return "Delete";
+        return "Rename node";
     }
 
     @Override
     public boolean isApplicable() {
-        return node != null && node.getParent() != null;
+        return node != null;
     }
 
     @Override
     public void apply() {
-        redo();
+        this.oldName = node.getName();
+        this.redo();
     }
 
     @Override
     public void redo() {
-        oldPos = parent.getChildren().indexOf(node);
-        parent.getChildren().remove(oldPos);
+        node.setName(newName);
     }
 
     @Override
     public void undo() {
-        parent.getChildren().add(oldPos, node);
+        node.setName(oldName);
     }
 
     @Override
     public UpdateAction[] getUpdateActions() {
-        return DatabasePaneController.UpdateTreeItem(parent).asArray();
+        return DatabasePaneController.RefreshTreeView.asArray();
     }
+    
+    
 }

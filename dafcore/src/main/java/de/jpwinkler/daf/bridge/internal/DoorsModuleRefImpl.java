@@ -38,8 +38,6 @@ import org.apache.commons.csv.CSVParser;
 
 class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsTreeNodeRef, DoorsModule {
 
-    public static final String STANDARD_VIEW = "Standard view";
-
     private static final CSVFormat FORMAT = CSVFormat.newFormat(',')
             .withQuote('"')
             .withEscape('\\')

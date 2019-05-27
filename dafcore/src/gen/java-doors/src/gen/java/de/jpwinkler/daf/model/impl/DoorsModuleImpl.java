@@ -125,6 +125,7 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
     @Override
     public DoorsModule copyFrom(DoorsTreeNode newModule, DoorsTreeNode newParent) {
         super.copyFrom(newModule, newParent);
+        ((DoorsModule)newModule).setView(((DoorsModule)newParent).getView());
         return this;
     }
 
@@ -205,17 +206,12 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
 				/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
-
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (view: ");
-		result.append(view);
-		result.append(')');
-		return result.toString();
+		return super.toString();
 	}
+
 
 } //DoorsModuleImpl

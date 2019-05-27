@@ -12,6 +12,7 @@ import de.jpwinkler.daf.gui.databases.commands.NewFolderCommand;
 import de.jpwinkler.daf.gui.databases.commands.NewModuleCommand;
 import de.jpwinkler.daf.gui.databases.commands.PasteCommand;
 import de.jpwinkler.daf.gui.databases.commands.RemoveTagCommand;
+import de.jpwinkler.daf.gui.databases.commands.RenameNodeCommand;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
@@ -38,6 +39,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.control.cell.TextFieldTreeCell;
+import javafx.util.StringConverter;
 
 public final class DatabasePaneController extends ApplicationPartController<DatabasePaneController> {
 
@@ -66,15 +69,25 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         super(applicationController);
         this.database = database;
 
+        databaseTreeView.setCellFactory(tv -> new TextFieldTreeCell<>(new StringConverter<>() {
+            private DoorsTreeNode node;
+
+            @Override
+            public String toString(DoorsTreeNode node) {
+                this.node = node;
+                return node.getName();
+            }
+
+            @Override
+            public DoorsTreeNode fromString(String newName) {
+                DoorsTreeNode node = this.node;
+                this.node = null;
+                executeCommand(new RenameNodeCommand(node, newName));
+                return node;
+            }
+
+        }));
         databaseTreeView.setRoot(new DoorsTreeItem(database.getDatabaseObject().getRoot()));
-
-        databaseTreeView.setOnMouseClicked(event -> {
-            // TODO: open preview
-        });
-
-        attributeNameColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getKey()));
-        attributeValueColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getValue()));
-
         databaseTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             updateGui(UpdateTagsSection, UpdateAttributesView);
         });
@@ -85,6 +98,9 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                 ApplicationPreferences.DATABASE_PANE_SPLITPOS.store(newValue.doubleValue());
             });
         });
+
+        attributeNameColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getKey()));
+        attributeValueColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getValue()));
 
         attributeNameColumn.setPrefWidth((double) ApplicationPreferences.DATABASE_PANE_ATTRIBUTENAME_WIDTH.retrieve());
         attributeNameColumn.widthProperty().addListener((obs, oldValue, newValue) -> {
@@ -258,18 +274,12 @@ public final class DatabasePaneController extends ApplicationPartController<Data
             }
 
         }
+
     }
 
-    public static class UpdateTreeItem implements UpdateAction<DatabasePaneController> {
+    public static final UpdateAction<DatabasePaneController> UpdateTreeItem(DoorsTreeNode node) {
+        return (ctrl) -> {
 
-        private final DoorsTreeNode node;
-
-        public UpdateTreeItem(DoorsTreeNode node) {
-            this.node = node;
-        }
-
-        @Override
-        public void update(DatabasePaneController ctrl) {
             DoorsTreeItem parent = ctrl.treeNodeCache.get(node);
 
             final HashMap<DoorsTreeNode, Boolean> expanded = new HashMap<>();
@@ -279,8 +289,12 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
             ctrl.traverseTreeItem(parent, i -> i.setExpanded(expanded.containsKey(i.getValue()) && expanded.get(i.getValue())));
             parent.setExpanded(true);
-        }
+        };
     }
+
+    public static final UpdateAction<DatabasePaneController> RefreshTreeView = ctrl -> {
+        ctrl.databaseTreeView.refresh();
+    };
 
     public static final UpdateAction<DatabasePaneController> UpdateTagsSection = ctrl -> {
         final String oldValue = ctrl.newTagComboBox.getValue();

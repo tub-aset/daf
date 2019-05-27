@@ -50,7 +50,7 @@ public class PasteCommand extends AbstractCommand {
 
     @Override
     public UpdateAction[] getUpdateActions() {
-        return new DatabasePaneController.UpdateTreeItem(parent).asArray();
+        return DatabasePaneController.UpdateTreeItem(parent).asArray();
     }
 
 }
