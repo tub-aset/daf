@@ -120,24 +120,48 @@ public class DoorsModelUtil {
         }
 
     }
-    
+
+    public static DoorsFolder createFolder(String name) {
+        DoorsFolder doorsFolder = DoorsFactory.eINSTANCE.createDoorsFolder();
+        doorsFolder.setName(name);
+        return doorsFolder;
+    }
+
     public static DoorsModule createModule(String name) {
         DoorsModule doorsModule = DoorsFactory.eINSTANCE.createDoorsModule();
         doorsModule.setName(name);
         doorsModule.setObjectAttributes(Stream.of(DoorsSystemAttributes.values()).map(a -> a.getKey()).collect(Collectors.toList()));
         return doorsModule;
     }
-    
+
+    public static DoorsObject createObject(DoorsTreeNode parent, String objectText) {
+        DoorsObject object = DoorsFactory.eINSTANCE.createDoorsObject();
+        if (parent instanceof DoorsModule) {
+            object.setObjectLevel(0);
+        } else if (parent instanceof DoorsObject) {
+            object.setObjectLevel(((DoorsObject) parent).getObjectLevel() + 1);
+        } else if (parent instanceof DoorsFolder) {
+            throw new IllegalArgumentException("parent");
+        }
+
+        object.setParent(parent);
+        object.setObjectText(objectText);
+        object.setObjectHeading("");
+        return object;
+    }
+
     public static <T extends DoorsTreeNode> T createCopy(T source, DoorsTreeNode newParent) {
         T copy;
         if (source instanceof DoorsObject) {
             copy = (T) DoorsFactory.eINSTANCE.createDoorsObject();
         } else if (source instanceof DoorsModule) {
             copy = (T) DoorsFactory.eINSTANCE.createDoorsModule();
+        } else if(source instanceof DoorsFolder) {
+            copy = (T) DoorsFactory.eINSTANCE.createDoorsFolder();
         } else {
-            copy = (T) DoorsFactory.eINSTANCE.createDoorsTreeNode();
+            throw new AssertionError();
         }
-        
+
         return (T) copy.copyFrom(source, newParent);
     }
 

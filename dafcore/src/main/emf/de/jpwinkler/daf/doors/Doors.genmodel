@@ -55,6 +55,9 @@
             <genOperations ecoreOperation="Doors.ecore#//DoorsTreeNode/toString"/>
         </genClasses>
         
+        <genClasses ecoreClass="Doors.ecore#//DoorsFolder">
+        </genClasses>
+        
         <genClasses ecoreClass="Doors.ecore#//DoorsDatabase">
             <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Doors.ecore#//DoorsDatabase/root"/>
         </genClasses>

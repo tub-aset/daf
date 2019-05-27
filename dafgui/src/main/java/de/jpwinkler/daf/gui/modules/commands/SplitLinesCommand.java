@@ -4,6 +4,7 @@ import de.jpwinkler.daf.gui.CommandStack.AbstractCommand;
 import de.jpwinkler.daf.gui.UpdateAction;
 import de.jpwinkler.daf.gui.modules.ModulePaneController.ModuleUpdateAction;
 import de.jpwinkler.daf.model.DoorsFactory;
+import de.jpwinkler.daf.model.DoorsModelUtil;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
@@ -62,10 +63,7 @@ public class SplitLinesCommand extends AbstractCommand {
     }
 
     private void newObjectAfter(final DoorsObject object, final int i, final String string) {
-        final DoorsObject newObject = DoorsFactory.eINSTANCE.createDoorsObject();
-        for (final Entry<String, String> attribute : object.getAttributes().entrySet()) {
-            newObject.getAttributes().put(attribute.getKey(), attribute.getValue());
-        }
+        final DoorsObject newObject = DoorsModelUtil.createCopy(object, object.getParent());
         newObject.setObjectIdentifier(object.getObjectIdentifier() + "-" + i);
         newObject.setText(string);
 

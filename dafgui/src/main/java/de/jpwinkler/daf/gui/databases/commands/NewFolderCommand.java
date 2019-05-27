@@ -9,6 +9,7 @@ import de.jpwinkler.daf.gui.CommandStack;
 import de.jpwinkler.daf.gui.UpdateAction;
 import de.jpwinkler.daf.gui.databases.DatabasePaneController;
 import de.jpwinkler.daf.model.DoorsFactory;
+import de.jpwinkler.daf.model.DoorsModelUtil;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
@@ -38,8 +39,7 @@ public class NewFolderCommand extends CommandStack.AbstractCommand {
 
     @Override
     public void apply() {
-        newFolder = DoorsFactory.eINSTANCE.createDoorsTreeNode();
-        newFolder.setName("New folder");
+        newFolder = DoorsModelUtil.createFolder("New folder");
         redo();
     }
 

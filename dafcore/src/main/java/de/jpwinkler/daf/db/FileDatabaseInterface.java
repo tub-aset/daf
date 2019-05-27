@@ -5,8 +5,10 @@ import de.jpwinkler.daf.csv.ModuleMetaDataParser;
 import de.jpwinkler.daf.filter.modules.SearchExpression;
 import de.jpwinkler.daf.model.DoorsDatabase;
 import de.jpwinkler.daf.model.DoorsFactory;
+import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModelUtil;
 import de.jpwinkler.daf.model.DoorsModule;
+import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsPackage;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
@@ -48,7 +50,7 @@ class FileDatabaseInterface implements DatabaseInterface {
             this.db = (DoorsDatabase) resource.getContents().get(0);
         } else {
             this.db = DoorsFactory.eINSTANCE.createDoorsDatabase();
-            this.db.setRoot(DoorsFactory.eINSTANCE.createDoorsTreeNode());
+            this.db.setRoot(DoorsModelUtil.createFolder(null));
         }
     }
 
@@ -111,7 +113,9 @@ class FileDatabaseInterface implements DatabaseInterface {
 
     @Override
     public void removeNode(final DoorsTreeNode node) {
-        if (node instanceof DoorsModule) {
+        if(node instanceof DoorsObject) {
+            node.getParent().getChildren().remove(node);
+        } else if (node instanceof DoorsModule) {
             ((DoorsModule) node).setParent(null);
             try {
                 Files.deleteIfExists(ensureCsvFilesystemPath(((DoorsModule) node)));
@@ -119,7 +123,7 @@ class FileDatabaseInterface implements DatabaseInterface {
             } catch (final IOException e) {
                 throw new RuntimeException(e);
             }
-        } else {
+        } else if (node instanceof DoorsFolder) {
             final List<DoorsModule> markedForDeletion = new ArrayList<>();
             node.accept(new DoorsTreeNodeVisitor<>(DoorsModule.class) {
 
@@ -175,16 +179,15 @@ class FileDatabaseInterface implements DatabaseInterface {
 
     private static DoorsTreeNode ensureDatabasePath(final DoorsTreeNode parent, final List<String> path) {
         if (path.size() > 0) {
-            DoorsTreeNode folder = parent.getChild(path.get(0));
-            if (folder == null) {
-                folder = DoorsFactory.eINSTANCE.createDoorsTreeNode();
-                folder.setName(path.get(0));
-                parent.getChildren().add(folder);
+            DoorsTreeNode node = parent.getChild(path.get(0));
+            if (node == null) {
+                node = DoorsModelUtil.createFolder(path.get(0));
+                parent.getChildren().add(node);
             }
             if (path.size() > 1) {
                 return ensureDatabasePath(parent.getChild(path.get(0)), path.subList(1, path.size()));
             } else {
-                return folder;
+                return node;
             }
         } else {
             return null;

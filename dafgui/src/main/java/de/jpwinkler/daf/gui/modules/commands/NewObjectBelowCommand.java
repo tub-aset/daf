@@ -4,6 +4,7 @@ import de.jpwinkler.daf.gui.CommandStack.AbstractCommand;
 import de.jpwinkler.daf.gui.UpdateAction;
 import de.jpwinkler.daf.gui.modules.ModulePaneController.ModuleUpdateAction;
 import de.jpwinkler.daf.model.DoorsFactory;
+import de.jpwinkler.daf.model.DoorsModelUtil;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 
@@ -23,10 +24,8 @@ public class NewObjectBelowCommand extends AbstractCommand {
 
     @Override
     public void apply() {
-        newObject = DoorsFactory.eINSTANCE.createDoorsObject();
-        newObject.setObjectText("New object");
-        newObject.setObjectHeading("");
-        newObject.setObjectLevel(((parent instanceof DoorsObject) ? ((DoorsObject) parent).getObjectLevel() : 0) + 1);
+        newObject = DoorsModelUtil.createObject(parent, "New object");
+        newObject.setParent(null);
         redo();
     }
 

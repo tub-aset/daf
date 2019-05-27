@@ -49,7 +49,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements DoorsTreeNode {
+public abstract class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container implements DoorsTreeNode {
 
     /**
 	 * The cached value of the '{@link #getChildren() <em>Children</em>}' containment reference list.

@@ -3,7 +3,8 @@ package de.jpwinkler.daf.gui.modules.commands;
 import de.jpwinkler.daf.gui.CommandStack.AbstractCommand;
 import de.jpwinkler.daf.gui.UpdateAction;
 import de.jpwinkler.daf.gui.modules.ModulePaneController.ModuleUpdateAction;
-import de.jpwinkler.daf.model.DoorsFactory;
+import de.jpwinkler.daf.model.DoorsModelUtil;
+import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 
 public class NewObjectAfterCommand extends AbstractCommand {
@@ -27,10 +28,8 @@ public class NewObjectAfterCommand extends AbstractCommand {
 
     @Override
     public void apply() {
-        newObject = DoorsFactory.eINSTANCE.createDoorsObject();
-        newObject.setObjectText("New object");
-        newObject.setObjectHeading("");
-        newObject.setObjectLevel(object.getObjectLevel());
+        newObject = DoorsModelUtil.createObject((DoorsModule) object.getParent(), "New object");
+        newObject.setParent(null);
         redo();
     }
 
@@ -46,7 +45,7 @@ public class NewObjectAfterCommand extends AbstractCommand {
 
     @Override
     public UpdateAction[] getUpdateActions() {
-        return new UpdateAction[] { ModuleUpdateAction.UPDATE_CONTENT_VIEW, ModuleUpdateAction.UPDATE_OUTLINE_VIEW };
+        return new UpdateAction[]{ModuleUpdateAction.UPDATE_CONTENT_VIEW, ModuleUpdateAction.UPDATE_OUTLINE_VIEW};
     }
 
 }

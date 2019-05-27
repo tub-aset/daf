@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
  * </ul>
  *
  * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsTreeNode()
- * @model
+ * @model abstract="true"
  * @generated
  */
 public interface DoorsTreeNode {

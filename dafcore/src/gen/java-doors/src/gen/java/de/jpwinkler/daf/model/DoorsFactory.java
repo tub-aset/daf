@@ -22,13 +22,13 @@ public interface DoorsFactory extends EFactory {
 	DoorsFactory eINSTANCE = de.jpwinkler.daf.model.impl.DoorsFactoryImpl.init();
 
 	/**
-	 * Returns a new object of class '<em>Tree Node</em>'.
+	 * Returns a new object of class '<em>Folder</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Tree Node</em>'.
+	 * @return a new object of class '<em>Folder</em>'.
 	 * @generated
 	 */
-	DoorsTreeNode createDoorsTreeNode();
+	DoorsFolder createDoorsFolder();
 
 	/**
 	 * Returns a new object of class '<em>Database</em>'.

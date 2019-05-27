@@ -50,17 +50,14 @@ public class ModuleCSVParser {
 
             while (objectLevel > currentLevel + 1) {
                 if (current.getChildren().isEmpty()) {
-                    final DoorsObject createDoorsObject = factory.createDoorsObject();
-                    createDoorsObject.setObjectHeading("");
-                    createDoorsObject.setObjectText("");
-                    createDoorsObject.setObjectLevel(currentLevel + 1);
+                    final DoorsObject createDoorsObject = DoorsModelUtil.createObject(current, "");
                     current.getChildren().add(createDoorsObject);
                 }
                 current = current.getChildren().get(current.getChildren().size() - 1);
                 currentLevel++;
             }
 
-            final DoorsObject newObject = factory.createDoorsObject();
+            final DoorsObject newObject = DoorsModelUtil.createObject(module, "");
 
             newObject.setParent(module);
 

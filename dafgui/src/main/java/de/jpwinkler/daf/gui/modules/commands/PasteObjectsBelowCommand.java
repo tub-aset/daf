@@ -4,6 +4,7 @@ import de.jpwinkler.daf.gui.CommandStack.AbstractCommand;
 import de.jpwinkler.daf.gui.UpdateAction;
 import de.jpwinkler.daf.gui.modules.ModulePaneController.ModuleUpdateAction;
 import de.jpwinkler.daf.model.DoorsFactory;
+import de.jpwinkler.daf.model.DoorsModelUtil;
 import de.jpwinkler.daf.model.DoorsObject;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ public class PasteObjectsBelowCommand extends AbstractCommand {
     @Override
     public void apply() {
         copiedObjects = objectsToCopy.stream()
-                .map(o -> (DoorsObject) DoorsFactory.eINSTANCE.createDoorsObject().copyFrom(o, reference))
+                .map(o -> (DoorsObject) DoorsModelUtil.createCopy(o, reference))
                 .collect(Collectors.toList());
         redo();
     }

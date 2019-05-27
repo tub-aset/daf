@@ -23,6 +23,7 @@ import de.jpwinkler.daf.bridge.DoorsTreeNodeRef;
 import de.jpwinkler.daf.csv.FindObjectVisitor;
 import de.jpwinkler.daf.csv.ModuleCSVParser;
 import de.jpwinkler.daf.model.DoorsFactory;
+import de.jpwinkler.daf.model.DoorsModelUtil;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
@@ -96,7 +97,7 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsTreeNodeRe
 
                 DoorsModule loadedModule = new ModuleCSVParser().parseCSV(tempFile.toFile());
                 this.children = loadedModule.getChildren().stream()
-                        .map(c -> DoorsFactory.eINSTANCE.createDoorsObject().copyFrom(c, this))
+                        .map(c -> DoorsModelUtil.createCopy(c, this))
                         .collect(Collectors.toList());
                 this.objectAttributes = loadedModule.getObjectAttributes();
 

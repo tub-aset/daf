@@ -29,25 +29,27 @@ public enum DoorsSystemAttributes {
     OBJECT_NUMBER("Object Number", String.class, IDENTITY, IDENTITY),
     ABSOLUTE_NUMBER("Absolute Number", Integer.class, INT_PARSER, INT_WRITER);
 
-    <T> DoorsSystemAttributes(Class<T> type, Function<String, T> parser, Function<T, String> writer) {
+    <T> DoorsSystemAttributes(Class<T> type, Function<String, T> parser, Function<T, String> writer, Class<? extends DoorsTreeNode>... appliesTo) {
         this(name -> "__SYSTEM__" + name, type, parser, writer);
     }
 
-    <T> DoorsSystemAttributes(String key, Class<T> type, Function<String, T> parser, Function<T, String> writer) {
+    <T> DoorsSystemAttributes(String key, Class<T> type, Function<String, T> parser, Function<T, String> writer, Class<? extends DoorsTreeNode>... appliesTo) {
         this(name -> key, type, parser, writer);
     }
 
-    <T> DoorsSystemAttributes(Function<String, String> key, Class<T> type, Function<String, T> parser, Function<T, String> writer) {
+    <T> DoorsSystemAttributes(Function<String, String> key, Class<T> type, Function<String, T> parser, Function<T, String> writer, Class<? extends DoorsTreeNode>... appliesTo) {
         this.key = key.apply(this.name());
         this.type = type;
         this.parser = parser;
         this.writer = (Function<Object, String>) writer;
+        this.appliesTo = appliesTo;
     }
 
     private final String key;
     private final Class<?> type;
     private final Function<String, ?> parser;
     private final Function<Object, String> writer;
+    private final Class<? extends DoorsTreeNode>[] appliesTo;
 
     public String getKey() {
         return key;

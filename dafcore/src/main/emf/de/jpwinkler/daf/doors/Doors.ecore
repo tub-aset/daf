@@ -5,6 +5,9 @@
         <eStructuralFeatures xsi:type="ecore:EReference" name="root" eType="#//DoorsTreeNode"
                              containment="true"/>
     </eClassifiers>
+    
+    <eClassifiers xsi:type="ecore:EClass" name="DoorsFolder" eSuperTypes="#//DoorsTreeNode">
+    </eClassifiers>
       
     <eClassifiers xsi:type="ecore:EClass" name="DoorsModule" eSuperTypes="#//DoorsTreeNode">
         <eOperations name="findObject" eType="#//DoorsObject">
@@ -76,7 +79,7 @@
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="targetObject" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eClassifiers>
   
-    <eClassifiers xsi:type="ecore:EClass" name="DoorsTreeNode">
+    <eClassifiers xsi:type="ecore:EClass" name="DoorsTreeNode" abstract="true">
         <eOperations name="accept">
             <eParameters name="visitor" eType="#//DoorsTreeNodeVisitor"/>
         </eOperations>
