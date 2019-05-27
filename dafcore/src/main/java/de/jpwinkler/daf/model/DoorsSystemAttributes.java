@@ -6,13 +6,13 @@
 package de.jpwinkler.daf.model;
 
 import static de.jpwinkler.daf.model.DoorsModelUtil.IDENTITY;
+import static de.jpwinkler.daf.model.DoorsModelUtil.INT_PARSER;
+import static de.jpwinkler.daf.model.DoorsModelUtil.INT_WRITER;
+import static de.jpwinkler.daf.model.DoorsModelUtil.LIST_PARSER;
+import static de.jpwinkler.daf.model.DoorsModelUtil.LIST_WRITER;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import static de.jpwinkler.daf.model.DoorsModelUtil.LIST_PARSER;
-import static de.jpwinkler.daf.model.DoorsModelUtil.LIST_WRITER;
-import static de.jpwinkler.daf.model.DoorsModelUtil.INT_PARSER;
-import static de.jpwinkler.daf.model.DoorsModelUtil.INT_WRITER;
 
 /**
  *
@@ -28,12 +28,11 @@ public enum DoorsSystemAttributes {
     OBJECT_HEADING("Object Heading", String.class, IDENTITY, IDENTITY),
     OBJECT_NUMBER("Object Number", String.class, IDENTITY, IDENTITY),
     ABSOLUTE_NUMBER("Absolute Number", Integer.class, INT_PARSER, INT_WRITER);
-    
 
     <T> DoorsSystemAttributes(Class<T> type, Function<String, T> parser, Function<T, String> writer) {
         this(name -> "__SYSTEM__" + name, type, parser, writer);
     }
-    
+
     <T> DoorsSystemAttributes(String key, Class<T> type, Function<String, T> parser, Function<T, String> writer) {
         this(name -> key, type, parser, writer);
     }

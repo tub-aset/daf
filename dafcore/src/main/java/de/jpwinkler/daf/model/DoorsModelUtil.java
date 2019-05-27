@@ -13,6 +13,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class DoorsModelUtil {
 
@@ -118,19 +120,25 @@ public class DoorsModelUtil {
         }
 
     }
-
-    public static <T extends DoorsTreeNode> T createLike(T source) {
-        if (source instanceof DoorsObject) {
-            return (T) DoorsFactory.eINSTANCE.createDoorsObject();
-        } else if (source instanceof DoorsModule) {
-            return (T) DoorsFactory.eINSTANCE.createDoorsModule();
-        } else {
-            return (T) DoorsFactory.eINSTANCE.createDoorsTreeNode();
-        }
+    
+    public static DoorsModule createModule(String name) {
+        DoorsModule doorsModule = DoorsFactory.eINSTANCE.createDoorsModule();
+        doorsModule.setName(name);
+        doorsModule.setObjectAttributes(Stream.of(DoorsSystemAttributes.values()).map(a -> a.getKey()).collect(Collectors.toList()));
+        return doorsModule;
     }
     
     public static <T extends DoorsTreeNode> T createCopy(T source, DoorsTreeNode newParent) {
-        return (T) createLike(source).copyFrom(source, newParent);
+        T copy;
+        if (source instanceof DoorsObject) {
+            copy = (T) DoorsFactory.eINSTANCE.createDoorsObject();
+        } else if (source instanceof DoorsModule) {
+            copy = (T) DoorsFactory.eINSTANCE.createDoorsModule();
+        } else {
+            copy = (T) DoorsFactory.eINSTANCE.createDoorsTreeNode();
+        }
+        
+        return (T) copy.copyFrom(source, newParent);
     }
 
     // Defined here to prevent forward references in DoorsSystemAttributes

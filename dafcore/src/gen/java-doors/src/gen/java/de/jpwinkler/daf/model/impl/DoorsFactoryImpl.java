@@ -6,8 +6,6 @@ import de.jpwinkler.daf.model.*;
 import java.util.Collection;
 import java.util.Map;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
@@ -134,13 +132,11 @@ public class DoorsFactoryImpl extends EFactoryImpl implements DoorsFactory {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated NOT
+	 * @generated
 	 */
 	@Override
 	public DoorsModule createDoorsModule() {
 		DoorsModuleImpl doorsModule = new DoorsModuleImpl();
-                doorsModule.setObjectAttributes(Stream.of(DoorsSystemAttributes.values()).map(a -> a.getKey()).collect(Collectors.toList()));
-                
 		return doorsModule;
 	}
 

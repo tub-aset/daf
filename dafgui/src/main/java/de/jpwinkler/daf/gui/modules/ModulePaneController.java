@@ -26,7 +26,6 @@ import de.jpwinkler.daf.gui.modules.commands.ReduceToSelectionCommand;
 import de.jpwinkler.daf.gui.modules.commands.SplitLinesCommand;
 import de.jpwinkler.daf.gui.modules.commands.SwapObjectHeadingAndTextCommand;
 import de.jpwinkler.daf.gui.modules.commands.UnwrapChildrenCommand;
-import de.jpwinkler.daf.model.DoorsFactory;
 import de.jpwinkler.daf.model.DoorsModelUtil;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
@@ -76,8 +75,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
                 throw new RuntimeException(ex);
             }
         } else {
-            module = DoorsFactory.eINSTANCE.createDoorsModule();
-            module.setName(uri.getApplicationPart().getUnnamedName());
+            module = DoorsModelUtil.createModule(uri.getApplicationPart().getUnnamedName());
         }
 
         return new ModulePaneController(applicationController, module);

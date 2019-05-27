@@ -19,10 +19,6 @@ package de.jpwinkler.daf.bridge.internal;
 
 import de.jpwinkler.daf.bridge.DoorsItemType;
 import de.jpwinkler.daf.bridge.DoorsRuntimeException;
-import java.io.IOException;
-import java.util.Map;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
 import de.jpwinkler.daf.bridge.DoorsTreeNodeRef;
 import de.jpwinkler.daf.csv.FindObjectVisitor;
 import de.jpwinkler.daf.csv.ModuleCSVParser;
@@ -30,10 +26,14 @@ import de.jpwinkler.daf.model.DoorsFactory;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
 
 class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsTreeNodeRef, DoorsModule {
 

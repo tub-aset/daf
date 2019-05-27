@@ -2,21 +2,21 @@ package de.jpwinkler.daf.db;
 
 import de.jpwinkler.daf.csv.ModuleCSVWriter;
 import de.jpwinkler.daf.csv.ModuleMetaDataParser;
-import de.jpwinkler.daf.model.DoorsFactory;
+import de.jpwinkler.daf.filter.modules.SearchExpression;
 import de.jpwinkler.daf.model.DoorsDatabase;
+import de.jpwinkler.daf.model.DoorsFactory;
+import de.jpwinkler.daf.model.DoorsModelUtil;
 import de.jpwinkler.daf.model.DoorsModule;
+import de.jpwinkler.daf.model.DoorsPackage;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.model.impl.DoorsDatabaseImpl;
-import de.jpwinkler.daf.filter.modules.SearchExpression;
-import de.jpwinkler.daf.model.DoorsPackage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -54,16 +54,14 @@ class FileDatabaseInterface implements DatabaseInterface {
 
     @Override
     public DoorsModule importModule(DoorsModule newModule) {
-        DoorsTreeNode dbNode = this.ensureDatabasePath(newModule.getParent());
-        DoorsModule dbModule = (DoorsModule) dbNode.getChild(newModule.getName());
+        DoorsTreeNode dbParent = this.ensureDatabasePath(newModule.getParent());
+        DoorsModule dbModule = (DoorsModule) dbParent.getChild(newModule.getName());
 
         if (dbModule != null) {
             removeNode(dbModule);
         }
 
-        dbModule = DoorsFactory.eINSTANCE.createDoorsModule();
-        dbModule.copyFrom(newModule, dbNode);
-        return dbModule;
+        return DoorsModelUtil.createCopy(newModule, dbParent.getParent());
     }
 
     @Override

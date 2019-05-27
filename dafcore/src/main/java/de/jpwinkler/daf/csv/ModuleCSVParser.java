@@ -1,15 +1,17 @@
 package de.jpwinkler.daf.csv;
 
 import de.jpwinkler.daf.model.DoorsFactory;
-import de.jpwinkler.daf.model.DoorsPackage;
+import de.jpwinkler.daf.model.DoorsModelUtil;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
+import de.jpwinkler.daf.model.DoorsPackage;
 import de.jpwinkler.daf.model.DoorsSystemAttributes;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Map.Entry;
@@ -17,8 +19,6 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.input.BOMInputStream;
 
 public class ModuleCSVParser {
 
@@ -29,10 +29,10 @@ public class ModuleCSVParser {
             .withIgnoreSurroundingSpaces()
             .withRecordSeparator("\r\n");
 
-    private DoorsModule buildModuleModel(final CSVParser csvParser) throws CSVParseException, NumberFormatException, IOException {
+    private DoorsModule buildModuleModel(final CSVParser csvParser, String moduleName) throws CSVParseException, NumberFormatException, IOException {
         final DoorsFactory factory = DoorsPackage.eINSTANCE.getDoorsFactory();
 
-        final DoorsModule module = factory.createDoorsModule();
+        final DoorsModule module = DoorsModelUtil.createModule(moduleName);
 
         DoorsTreeNode current = module;
         int currentLevel = 0;
@@ -78,16 +78,12 @@ public class ModuleCSVParser {
 
     public DoorsModule parseCSV(final File file) throws IOException {
         try ( InputStream is = new FileInputStream(file)) {
-            final DoorsModule parseCSV = parseCSV(is);
-            parseCSV.setName(FilenameUtils.getBaseName(file.getAbsolutePath()));
-            return parseCSV;
+            return parseCSV(is, FilenameUtils.getBaseName(file.getAbsolutePath()));
         }
     }
 
-    public DoorsModule parseCSV(final InputStream is) throws IOException, CSVParseException {
-        final String csvString = IOUtils.toString(new BOMInputStream(is), Charset.forName("UTF-8"));
-        final DoorsModule parseCSV = buildModuleModel(CSVParser.parse(csvString, FORMAT));
-        return parseCSV;
+    public DoorsModule parseCSV(final InputStream is, String moduleName) throws IOException, CSVParseException {
+        return buildModuleModel(new CSVParser(new InputStreamReader(is, Charset.forName("UTF-8")), FORMAT), moduleName);
     }
 
 }

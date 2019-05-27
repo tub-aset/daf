@@ -24,6 +24,7 @@ import de.jpwinkler.daf.bridge.DoorsItemType;
 import de.jpwinkler.daf.bridge.DoorsRuntimeException;
 import de.jpwinkler.daf.bridge.user32.Window;
 import de.jpwinkler.daf.bridge.user32.WindowManager;
+import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -35,7 +36,6 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
-import de.jpwinkler.daf.model.DoorsTreeNode;
 
 public class DoorsApplicationImpl implements DoorsApplication {
 
