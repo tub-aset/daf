@@ -202,22 +202,20 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
 		return super.eInvoke(operationID, arguments);
 	}
 
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     *
-     * @generated NOT
-     */
-    @Override
-    public String toString() {
-        if (eIsProxy()) {
-            return super.toString();
-        }
+				/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		if (eIsProxy()) return super.toString();
 
-        final StringBuffer result = new StringBuffer();
-        result.append("Doors Module (");
-        result.append(name);
-        result.append(')');
-        return result.toString();
-    }
+		StringBuilder result = new StringBuilder(super.toString());
+		result.append(" (view: ");
+		result.append(view);
+		result.append(')');
+		return result.toString();
+	}
 
 } //DoorsModuleImpl

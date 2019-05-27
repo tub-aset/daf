@@ -92,7 +92,11 @@ class DoorsTreeNodeRefImpl implements DoorsTreeNodeRef {
                 continue;
             }
             final DoorsItemType type = DoorsItemType.getType(split[0]);
-            result.add(new DoorsTreeNodeRefImpl(doorsApplicationImpl, type, this, split[1]));
+            if (type == DoorsItemType.FORMAL) {
+                result.add(new DoorsModuleRefImpl(doorsApplicationImpl, this, split[1], DoorsModuleRefImpl.STANDARD_VIEW));
+            } else {
+                result.add(new DoorsTreeNodeRefImpl(doorsApplicationImpl, type, this, split[1]));
+            }
         }
         return result;
     }
@@ -160,7 +164,7 @@ class DoorsTreeNodeRefImpl implements DoorsTreeNodeRef {
     public DoorsTreeNode copyFrom(DoorsTreeNode node, DoorsTreeNode newParent) {
         throw new UnsupportedOperationException("Not supported");
     }
-    
+
     @Override
     public DoorsTreeNode getChild(String name) {
         final List<String> pathSegments = Arrays.asList(name.split("/")).stream().filter(s -> !s.isEmpty()).collect(Collectors.toList());

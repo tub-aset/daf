@@ -10,7 +10,6 @@ import static de.jpwinkler.daf.model.DoorsModelUtil.INT_PARSER;
 import static de.jpwinkler.daf.model.DoorsModelUtil.INT_WRITER;
 import static de.jpwinkler.daf.model.DoorsModelUtil.LIST_PARSER;
 import static de.jpwinkler.daf.model.DoorsModelUtil.LIST_WRITER;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
