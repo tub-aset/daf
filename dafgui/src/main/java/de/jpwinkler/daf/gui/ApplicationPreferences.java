@@ -5,6 +5,7 @@
  */
 package de.jpwinkler.daf.gui;
 
+import de.jpwinkler.daf.db.DatabasePath;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -15,7 +16,10 @@ import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashSet;
 import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.function.Consumer;
 import java.util.prefs.Preferences;
 
 /**
@@ -23,7 +27,7 @@ import java.util.prefs.Preferences;
  * @author fwiesweg
  */
 public enum ApplicationPreferences {
-    RECENT_FILES(TreeMap.class, new TreeMap<>()),
+    RECENT_FILES(TreeMap.class, new TreeMap<Long, DatabasePath>()),
     SAVE_DIRECTORY(File.class, new File(System.getProperty("user.home")).getAbsoluteFile()),
     OPEN_DIRECTORY(File.class, new File(System.getProperty("user.home")).getAbsoluteFile()),
     MODULE_PANE_SPLITPOS(Double.class, 0.3),
@@ -31,14 +35,17 @@ public enum ApplicationPreferences {
     MODULE_PANE_CURRENT_VIEW(Integer.class, -1),
     DATABASE_PANE_SPLITPOS(Double.class, 0.3),
     DATABASE_PANE_ATTRIBUTENAME_WIDTH(Double.class, 100d),
-    DATABASE_PANE_ATTRIBUTEVALUE_WIDTH(Double.class, 300d);
+    DATABASE_PANE_ATTRIBUTEVALUE_WIDTH(Double.class, 300d),
+    DATABASE_PANE_SNAPSHOT_LISTS(TreeMap.class, new TreeMap<String, TreeSet<String>>());
 
     <T extends Serializable> ApplicationPreferences(Class<T> valueType, T defaultValue) {
         this.valueType = valueType;
         this.defaultValue = defaultValue;
     }
+
     private final Class<?> valueType;
     private final Object defaultValue;
+    private final HashSet<Consumer<Object>> onChangedHandlers = new HashSet<>();
     private static final Preferences prefs = Preferences.userNodeForPackage(ApplicationPreferences.class);
 
     public <T extends Serializable> void store(T object) {
@@ -52,6 +59,8 @@ public enum ApplicationPreferences {
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
+
+        this.onChangedHandlers.forEach(h -> h.accept(object));
     }
 
     public <T extends Serializable> T retrieve() {
@@ -68,6 +77,14 @@ public enum ApplicationPreferences {
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    public void addOnChangedHandler(Consumer<Object> handler) {
+        this.onChangedHandlers.add(handler);
+    }
+
+    public void removeOnChangedHandler(Consumer<Object> handler) {
+        this.onChangedHandlers.remove(handler);
     }
 
 }

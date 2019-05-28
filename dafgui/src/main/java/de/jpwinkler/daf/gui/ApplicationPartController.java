@@ -75,6 +75,10 @@ public abstract class ApplicationPartController<T extends ApplicationPartControl
             applicationController.setStatus(status);
         }
     }
+    
+    public final boolean open(DatabasePath path) {
+        return applicationController.open(path);
+    }
 
     public final CommandStack getCommandStack() {
         return commandStack;

@@ -3,7 +3,12 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -16,18 +21,36 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<SplitPane fx:id="mainSplitPane" dividerPositions="0.44938505203405865" prefHeight="729.0" prefWidth="1059.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<SplitPane fx:id="mainSplitPane" dividerPositions="0.5600756859035004" prefHeight="729.0" prefWidth="1059.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
          <items>
       <BorderPane>
          <top>
                   <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <items>
-                  <Button mnemonicParsing="false" text="Make snapshot" />
+                  <MenuButton mnemonicParsing="false" text="Make snapshot">
+                    <items>
+                      <MenuItem mnemonicParsing="false" text="Of complete database" />
+                        <Menu fx:id="createSnapshotsMenu" mnemonicParsing="false" text="Of snapshot list" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#addSnapshotListClicked" text="Add snapshot list" />
+                        <Menu fx:id="deleteSnapshotListMenu" mnemonicParsing="false" text="Delete snapshot list" />
+                        <Menu fx:id="showSnapshotsMenu" mnemonicParsing="false" text="Show snapshot list" />
+                    </items>
+                  </MenuButton>
                </items>
                   </ToolBar>
          </top>
          <center>
-                  <TreeView fx:id="databaseTreeView" editable="true" style="-fx-background-color: transparent;" />
+                  <TreeView fx:id="databaseTreeView" editable="true" style="-fx-background-color: transparent;">
+               <contextMenu>
+                  <ContextMenu fx:id="treeViewContextMenu">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#openModulesClicked" text="Open modules" />
+                        <Menu fx:id="addToSnapshotListMenu" mnemonicParsing="false" text="Add to snapshot list" />
+                    </items>
+                  </ContextMenu>
+               </contextMenu>
+            </TreeView>
          </center>
       </BorderPane>
       <BorderPane prefHeight="200.0" prefWidth="200.0" SplitPane.resizableWithParent="false">

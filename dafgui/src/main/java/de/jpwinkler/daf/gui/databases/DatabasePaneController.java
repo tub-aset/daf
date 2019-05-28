@@ -16,13 +16,17 @@ import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.WeakHashMap;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -30,16 +34,22 @@ import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.TextFieldTreeCell;
-import javafx.scene.input.MouseButton;
+import javafx.scene.layout.Region;
 import javafx.util.StringConverter;
 
 public final class DatabasePaneController extends ApplicationPartController<DatabasePaneController> {
@@ -66,12 +76,6 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                 }
             });
 
-            tc.setOnMouseClicked(me -> {
-                DoorsTreeNode node = getTextFieldTreeCell((Node) me.getTarget()).getTreeItem().getValue();
-                if (me.getClickCount() == 2 && me.getButton() == MouseButton.SECONDARY && node instanceof DoorsModule)  {
-                    applicationController.open(this.getPath().withPath(node.getFullName()));
-                }
-            });
             return tc;
 
         });
@@ -80,6 +84,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         databaseTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             updateGui(UpdateTagsSection, UpdateAttributesView);
         });
+        databaseTreeView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         mainSplitPane.setDividerPositions((double) ApplicationPreferences.DATABASE_PANE_SPLITPOS.retrieve());
         mainSplitPane.getDividers().forEach(d -> {
@@ -100,14 +105,17 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         attributeValueColumn.widthProperty().addListener((obs, oldValue, newValue) -> {
             ApplicationPreferences.DATABASE_PANE_ATTRIBUTEVALUE_WIDTH.store(newValue.doubleValue());
         });
-    }
 
-    private static TextFieldTreeCell<DoorsTreeNode> getTextFieldTreeCell(Node node) {
-        while (!(node instanceof TextFieldTreeCell) && node != null) {
-            node = node.getParent();
-        }
+        ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.addOnChangedHandler(t -> this.populateSnapshotMenu(((Map<String, ?>) t).keySet(), createSnapshotsMenu, this::createSnapshotFromListCicked));
+        ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.addOnChangedHandler(t -> this.populateSnapshotMenu(((Map<String, ?>) t).keySet(), deleteSnapshotListMenu, this::deleteSnapshotListClicked));
+        ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.addOnChangedHandler(t -> this.populateSnapshotMenu(((Map<String, ?>) t).keySet(), showSnapshotsMenu, this::showSnapshotListClicked));
+        ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.addOnChangedHandler(t -> this.populateSnapshotMenu(((Map<String, ?>) t).keySet(), addToSnapshotListMenu, this::addToSnapshotListClicked));
 
-        return (TextFieldTreeCell<DoorsTreeNode>) node;
+        Map<String, ?> snapshotLists = ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.retrieve();
+        populateSnapshotMenu(snapshotLists.keySet(), createSnapshotsMenu, this::createSnapshotFromListCicked);
+        populateSnapshotMenu(snapshotLists.keySet(), deleteSnapshotListMenu, this::deleteSnapshotListClicked);
+        populateSnapshotMenu(snapshotLists.keySet(), showSnapshotsMenu, this::showSnapshotListClicked);
+        populateSnapshotMenu(snapshotLists.keySet(), addToSnapshotListMenu, this::addToSnapshotListClicked);
     }
 
     @FXML
@@ -130,6 +138,18 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
     @FXML
     private TableColumn<Entry<String, String>, String> attributeValueColumn;
+
+    @FXML
+    private Menu createSnapshotsMenu;
+
+    @FXML
+    private Menu showSnapshotsMenu;
+
+    @FXML
+    private Menu addToSnapshotListMenu;
+
+    @FXML
+    private Menu deleteSnapshotListMenu;
 
     private List<DoorsTreeNode> clipboard;
 
@@ -182,6 +202,66 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     public void deleteClicked() {
         databaseTreeView.getSelectionModel().getSelectedItems().stream()
                 .forEach(it -> executeCommand(new DeleteCommand(it.getValue())));
+    }
+
+    @FXML
+    public void openModulesClicked() {
+        databaseTreeView.getSelectionModel().getSelectedItems().stream()
+                .map(it -> it.getValue())
+                .filter(it -> it instanceof DoorsModule)
+                .map(it -> it.getFullName())
+                .map(this.getPath()::withPath)
+                .forEach(this::open);
+    }
+
+    @FXML
+    public void addSnapshotListClicked() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Add a snapshot list");
+        dialog.setHeaderText("Please enter a name for your list");
+
+        dialog.showAndWait().ifPresent(ln -> {
+            TreeMap<String, TreeSet<String>> snapshotLists = ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.retrieve();
+            snapshotLists.putIfAbsent(ln, new TreeSet<>());
+            ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.store(snapshotLists);
+        });
+    }
+
+    public void deleteSnapshotListClicked(String snapshotList) {
+        TreeMap<String, ?> snapshotLists = ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.retrieve();
+        snapshotLists.remove(snapshotList);
+        ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.store(snapshotLists);
+    }
+
+    private void createSnapshotFromListCicked(String snapshotList) {
+        System.out.println(snapshotList);
+    }
+
+    private void showSnapshotListClicked(String snapshotList) {
+        TreeMap<String, TreeSet<String>> snapshotLists = ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.retrieve();
+
+        Alert alert = new Alert(Alert.AlertType.NONE,
+                snapshotLists.get(snapshotList).isEmpty() ? "This list is empty."
+                : snapshotLists.get(snapshotList).stream().collect(Collectors.joining("\n")), ButtonType.OK);
+        alert.setTitle("Snapshot list " + snapshotList);
+        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+        alert.showAndWait();
+    }
+
+    private void addToSnapshotListClicked(String snapshotList) {
+        TreeMap<String, TreeSet<String>> snapshotLists = ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.retrieve();
+        databaseTreeView.getSelectionModel().getSelectedItems()
+                .stream().map(si -> si.getValue().getFullName()).forEach(snapshotLists.get(snapshotList)::add);
+        ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.store(snapshotLists);
+    }
+
+    private void populateSnapshotMenu(Collection<String> snapshotLists, Menu menu, Consumer<String> action) {
+        menu.getItems().clear();
+        snapshotLists.forEach(ln -> {
+            MenuItem mi = new MenuItem(ln);
+            mi.setOnAction(eh -> action.accept(ln));
+            menu.getItems().add(mi);
+        });
     }
 
     private <T> void traverseTreeItem(final TreeItem<T> root, final Consumer<TreeItem<T>> f) {
