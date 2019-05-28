@@ -37,12 +37,16 @@ public class ModuleCSV {
         String path = autoDetectFile.getAbsolutePath();
         final File csvFile;
         final File mmdFile;
-        if (FilenameUtils.isExtension(path, "csv")) {
+
+        if (FilenameUtils.isExtension(path, (String) null)) {
+            csvFile = new File(path + ".csv");
+            mmdFile = new File(path + ".mmd");
+        } else if (FilenameUtils.isExtension(path, "csv")) {
             csvFile = new File(path);
-            mmdFile = new File(csvFile.getParentFile(), FilenameUtils.removeExtension(path) + ".mmd");
+            mmdFile = new File(FilenameUtils.removeExtension(path) + ".mmd");
         } else if (FilenameUtils.isExtension(path, "mmd")) {
             mmdFile = new File(path);
-            csvFile = new File(mmdFile.getParentFile(), FilenameUtils.removeExtension(path) + ".csv");
+            csvFile = new File(FilenameUtils.removeExtension(path) + ".csv");
         } else {
             throw new IOException("Bad file extension");
         }
@@ -56,7 +60,7 @@ public class ModuleCSV {
     }
 
     public static void writeModule(final File csvFile, final DoorsModule module) throws IOException {
-        try ( OutputStream os = new FileOutputStream(csvFile)) {
+        try (OutputStream os = new FileOutputStream(csvFile)) {
             writeModule(os, module);
         }
     }
@@ -84,7 +88,7 @@ public class ModuleCSV {
     }
 
     public static void writeMetaData(final File mmdFile, Map<String, String> metaData) throws IOException {
-        try ( OutputStream os = new FileOutputStream(mmdFile)) {
+        try (OutputStream os = new FileOutputStream(mmdFile)) {
             writeMetaData(os, metaData);
         }
     }
@@ -100,12 +104,15 @@ public class ModuleCSV {
         String path = autoDetectFile.getAbsolutePath();
         final File csvFile;
         final File mmdFile;
-        if (FilenameUtils.isExtension(path, "csv")) {
+        if (FilenameUtils.isExtension(path, (String) null)) {
+            csvFile = new File(path + ".csv");
+            mmdFile = new File(path + ".mmd");
+        } else if (FilenameUtils.isExtension(path, "csv")) {
             csvFile = new File(path);
-            mmdFile = new File(csvFile.getParentFile(), FilenameUtils.removeExtension(path) + ".mmd");
+            mmdFile = new File(FilenameUtils.removeExtension(path) + ".mmd");
         } else if (FilenameUtils.isExtension(path, "mmd")) {
             mmdFile = new File(path);
-            csvFile = new File(mmdFile.getParentFile(), FilenameUtils.removeExtension(path) + ".csv");
+            csvFile = new File(FilenameUtils.removeExtension(path) + ".csv");
         } else {
             throw new IOException("Bad file extension");
         }
@@ -120,7 +127,7 @@ public class ModuleCSV {
     }
 
     public static DoorsModule readModule(final File csvFile) throws IOException {
-        try ( InputStream csvStream = new FileInputStream(csvFile)) {
+        try (InputStream csvStream = new FileInputStream(csvFile)) {
             return readModule(csvStream, FilenameUtils.getBaseName(csvFile.getAbsolutePath()));
         }
     }
@@ -130,7 +137,7 @@ public class ModuleCSV {
     }
 
     public static Map<String, String> readMetaData(final File mmdFile) throws IOException {
-        try ( InputStream mmdStream = new FileInputStream(mmdFile)) {
+        try (InputStream mmdStream = new FileInputStream(mmdFile)) {
             return readMetaData(mmdStream);
         }
     }

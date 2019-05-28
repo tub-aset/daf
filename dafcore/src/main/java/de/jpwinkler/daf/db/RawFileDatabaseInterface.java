@@ -5,12 +5,12 @@
  */
 package de.jpwinkler.daf.db;
 
-import de.jpwinkler.daf.filter.modules.SearchExpression;
 import de.jpwinkler.daf.model.DoorsDatabase;
+import de.jpwinkler.daf.model.DoorsFactory;
 import de.jpwinkler.daf.model.DoorsModule;
+import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 /**
  *
@@ -18,22 +18,40 @@ import java.util.List;
  */
 public class RawFileDatabaseInterface implements DatabaseInterface {
 
+    private final DoorsDatabase db = DoorsFactory.eINSTANCE.createDoorsDatabase();
+    private String databasePath;
+
+    public RawFileDatabaseInterface(String databasePath) throws IOException {
+        this.databasePath = databasePath;
+        db.setRoot(ModuleCSV.read(new File(databasePath)));
+    }
+
     @Override
-    public DoorsModule getNode(String path) {
-        try {
-            return ModuleCSV.read(new File(path));
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
+    public String getPath() {
+        return databasePath;
+    }
+
+    @Override
+    public void setPath(String path) {
+        this.databasePath = path;
+    }
+
+    @Override
+    public void flush() throws IOException {
+        ModuleCSV.write(new File(databasePath), (DoorsModule) this.db.getRoot());
+    }
+
+    @Override
+    public DoorsTreeNode getNode(String path) {
+        if (path == null || path.isEmpty()) {
+            return getDatabaseObject().getRoot();
         }
+
+        return null;
     }
 
     @Override
     public DoorsDatabase getDatabaseObject() {
-        throw new UnsupportedOperationException("Not supported");
-    }
-
-    @Override
-    public List<DoorsModule> getModules(SearchExpression e) {
-        throw new UnsupportedOperationException("Not supported");
+        return db;
     }
 }

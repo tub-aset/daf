@@ -5,8 +5,15 @@
  */
 package de.jpwinkler.daf.gui;
 
+import de.jpwinkler.daf.db.DatabaseInterface;
+import de.jpwinkler.daf.db.DatabasePath;
+import de.jpwinkler.daf.db.DoorsApplicationDatabaseInterface;
+import de.jpwinkler.daf.db.FileDatabaseInterface;
+import de.jpwinkler.daf.db.RawFileDatabaseInterface;
 import de.jpwinkler.daf.gui.databases.DatabasePaneController;
 import de.jpwinkler.daf.gui.modules.ModulePaneController;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.stream.Stream;
 import javafx.scene.control.TextInputDialog;
@@ -14,59 +21,57 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Window;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  *
  * @author fwiesweg
  */
-public enum ApplicationPart {
-    DOORS_BRIDGE("doorsdb", null, DatabasePaneController::openDoors, defaultSelector("/"), directorySelector(true)),
-    LOCAL_DATABASE("localdb", "New local database", DatabasePaneController::openLocal, directorySelector(false), directorySelector(true)),
-    LOCAL_MODULE("localmodule", "New local module", ModulePaneController::open, fileChooserSelector(false, new ExtensionFilter("CSV", "*.csv")), fileChooserSelector(true, new ExtensionFilter("CSV", "*.csv"))),
-    DATABASE_MODULE("databasemodule", null, ModulePaneController::openInDB, null, null);
+public class ApplicationPart<T extends DatabaseInterface> {
 
+    private static final Map<Class<? extends DatabaseInterface>, ApplicationPart> REGISTRY = new HashMap<>();
+
+    private ApplicationPart register() {
+        REGISTRY.put(this.databaseInterface, this);
+        return this;
+    }
+
+    public static final ApplicationPart<DoorsApplicationDatabaseInterface> DOORS_DATABASE = new ApplicationPart<>(DoorsApplicationDatabaseInterface.class,
+            ApplicationPart::dynamicPartConstructor, defaultSelector("/", null), directorySelector(true), null).register();
+    public static final ApplicationPart<FileDatabaseInterface> LOCAL_DATABASE = new ApplicationPart<>(FileDatabaseInterface.class,
+            ApplicationPart::dynamicPartConstructor, directorySelector(false), directorySelector(true), "New local database").register();
+    public static final ApplicationPart<RawFileDatabaseInterface> LOCAL_MODULE = new ApplicationPart<>(RawFileDatabaseInterface.class,
+            ModulePaneController::new, fileChooserSelector(false, new ExtensionFilter("CSV/MMD", "*.csv", "*.mmd")), fileChooserSelector(true, new ExtensionFilter("CSV/MMD", "*.csv", "*.mmd")), "New local module").register();
+
+    private final Class<T> databaseInterface;
     private final String unnamedName;
-    private final String scheme;
-    private final BiFunction<ApplicationPaneController, ApplicationURI, ApplicationPartController> opener;
-    private final BiFunction<Window, ApplicationPart, Stream<ApplicationURI>> openSelector;
-    private final BiFunction<Window, ApplicationPart, Stream<ApplicationURI>> saveSelector;
+    private final BiFunction<ApplicationPaneController, DatabasePath, ApplicationPartController> partConstructor;
+    private final BiFunction<Window, ApplicationPart, Stream<DatabasePath>> openSelector;
+    private final BiFunction<Window, ApplicationPart, Stream<DatabasePath>> saveSelector;
 
-    private ApplicationPart(String scheme, String unnamedName, BiFunction<ApplicationPaneController, ApplicationURI, ApplicationPartController> opener,
-            BiFunction<Window, ApplicationPart, Stream<ApplicationURI>> openSelector, BiFunction<Window, ApplicationPart, Stream<ApplicationURI>> saveSelector) {
-        this.scheme = scheme;
+    private ApplicationPart(Class<T> databaseInterface, BiFunction<ApplicationPaneController, DatabasePath, ApplicationPartController> partConstructor,
+            BiFunction<Window, ApplicationPart, Stream<DatabasePath>> openSelector, BiFunction<Window, ApplicationPart, Stream<DatabasePath>> saveSelector,
+            String unnamedName) {
+        this.databaseInterface = databaseInterface;
         this.unnamedName = unnamedName;
-        this.opener = opener;
+        this.partConstructor = partConstructor;
         this.openSelector = openSelector;
         this.saveSelector = saveSelector;
     }
 
-    public Stream<ApplicationURI> openWithSelector(ApplicationPaneController parent, Window window) {
-        return openSelector.apply(window, this);
+    private static <T extends DatabaseInterface> ApplicationPartController dynamicPartConstructor(ApplicationPaneController applicationController, DatabasePath<T> path) {
+        if (path.getPath() == null || path.getPath().isEmpty()) {
+            return new DatabasePaneController(applicationController, path);
+        } else {
+            return new ModulePaneController(applicationController, path);
+        }
     }
 
-    public Stream<ApplicationURI> saveWithSelector(ApplicationPaneController parent, Window window) {
-        return saveSelector.apply(window, this);
+    private static BiFunction<Window, ApplicationPart, Stream<DatabasePath>> defaultSelector(String dbPath, String path) {
+        return (window, part) -> Stream.of(new DatabasePath<>(part.getDatabaseInterface(), dbPath, path));
     }
 
-    public ApplicationPartController open(ApplicationPaneController parent, ApplicationURI uri) {
-        ApplicationPartController controller = opener.apply(parent, uri);
-        controller.setURI(uri);
-        return controller;
-    }
-
-    public final String getScheme() {
-        return scheme;
-    }
-
-    public static final ApplicationPartController openAny(ApplicationPaneController parent, ApplicationURI uri) {
-        return uri.getApplicationPart().open(parent, uri);
-    }
-
-    public static final BiFunction<Window, ApplicationPart, Stream<ApplicationURI>> defaultSelector(String path) {
-        return (window, part) -> Stream.of(part.newURI(path));
-    }
-
-    public static final BiFunction<Window, ApplicationPart, Stream<ApplicationURI>> fileChooserSelector(boolean save, FileChooser.ExtensionFilter... extensionFilters) {
+    private static BiFunction<Window, ApplicationPart, Stream<DatabasePath>> fileChooserSelector(boolean save, ExtensionFilter... extensionFilters) {
         return (window, part) -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle((save ? "Save a " : "Open a ") + part.toString());
@@ -82,11 +87,12 @@ public enum ApplicationPart {
                             ApplicationPreferences.SAVE_DIRECTORY.store(f.getParentFile().getAbsoluteFile());
                         }
                     })
-                    .map(f -> part.newURI(f.getAbsolutePath()));
+                    .map(f -> FilenameUtils.removeExtension(f.getAbsolutePath()))
+                    .map(f -> new DatabasePath<>(part.getDatabaseInterface(), f, ""));
         };
     }
 
-    public static final BiFunction<Window, ApplicationPart, Stream<ApplicationURI>> directorySelector(boolean save) {
+    private static BiFunction<Window, ApplicationPart, Stream<DatabasePath>> directorySelector(boolean save) {
         return (window, part) -> {
             DirectoryChooser dirChooser = new DirectoryChooser();
             dirChooser.setTitle((save ? "Save a " : "Open a ") + part.toString());
@@ -101,31 +107,55 @@ public enum ApplicationPart {
                             ApplicationPreferences.SAVE_DIRECTORY.store(f.getParentFile().getAbsoluteFile());
                         }
                     })
-                    .map(f -> part.newURI(f.getAbsolutePath()));
+                    .map(f -> new DatabasePath<>(part.getDatabaseInterface(), f.getAbsolutePath(), ""));
         };
     }
 
-    public static final BiFunction<Window, ApplicationPart, Stream<ApplicationURI>> genericSelector(boolean save) {
+    private static BiFunction<Window, ApplicationPart, Stream<DatabasePath>> genericSelector(boolean save) {
         return (window, part) -> {
-            TextInputDialog dialog = new TextInputDialog(part.getScheme() + "://");
+            TextInputDialog dialog = new TextInputDialog();
             dialog.setTitle((save ? "Save a " : "Open a ") + part.toString());
             dialog.setHeaderText("Please enter a URI to " + (save ? "save." : "open."));
-            dialog.setContentText("URI");
+            dialog.setContentText(part.getDatabaseInterface().getSimpleName() + ":");
 
             return dialog.showAndWait().stream()
-                    .map(part::newURI);
+                    .map(s -> new DatabasePath(part.getDatabaseInterface(), s));
         };
     }
 
-    public ApplicationURI newURI() {
-        return this.newURI(null);
-    }
-
-    public ApplicationURI newURI(String path) {
-        return new ApplicationURI(this, path);
+    public Class<T> getDatabaseInterface() {
+        return databaseInterface;
     }
 
     public String getUnnamedName() {
         return unnamedName;
+    }
+
+    public DatabasePath newPath() {
+        return new DatabasePath(databaseInterface, null, null);
+    }
+
+    public Stream<DatabasePath> openWithSelector(Window window) {
+        return openSelector.apply(window, this);
+    }
+
+    public static Stream<DatabasePath> openWithSelector(DatabasePath path, Window window) {
+        return REGISTRY.get(path.getDatabaseInterface()).openWithSelector(window);
+    }
+
+    public Stream<DatabasePath> saveWithSelector(Window window) {
+        return saveSelector.apply(window, this);
+    }
+
+    public static Stream<DatabasePath> saveWithSelector(DatabasePath path, Window window) {
+        return REGISTRY.get(path.getDatabaseInterface()).saveWithSelector(window);
+    }
+
+    public ApplicationPartController createController(ApplicationPaneController appController, DatabasePath path) {
+        return partConstructor.apply(appController, path);
+    }
+
+    public static ApplicationPartController createControllerForAny(ApplicationPaneController appController, DatabasePath path) {
+        return REGISTRY.get(path.getDatabaseInterface()).createController(appController, path);
     }
 }

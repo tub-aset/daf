@@ -41,15 +41,7 @@ public interface DatabaseInterface {
     }
 
     default DoorsTreeNode getNode(String path) {
-        DoorsTreeNode node = this.getDatabaseObject().getRoot();
-        for (String name : path.split("/")) {
-            node = node.getChild(name);
-            if (node == null) {
-                break;
-            }
-        }
-
-        return node;
+        return this.getDatabaseObject().getRoot().getChild(path);
     }
 
     default List<DoorsModule> getModules(final SearchExpression e) {

@@ -1,11 +1,9 @@
 package de.jpwinkler.daf.gui.databases;
 
-import de.jpwinkler.daf.db.DatabaseInterface;
+import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.gui.ApplicationPaneController;
-import de.jpwinkler.daf.gui.ApplicationPart;
 import de.jpwinkler.daf.gui.ApplicationPartController;
 import de.jpwinkler.daf.gui.ApplicationPreferences;
-import de.jpwinkler.daf.gui.ApplicationURI;
 import de.jpwinkler.daf.gui.UpdateAction;
 import de.jpwinkler.daf.gui.databases.commands.AddTagCommand;
 import de.jpwinkler.daf.gui.databases.commands.DeleteCommand;
@@ -17,7 +15,6 @@ import de.jpwinkler.daf.gui.databases.commands.RenameNodeCommand;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
-import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
@@ -47,30 +44,8 @@ import javafx.util.StringConverter;
 
 public final class DatabasePaneController extends ApplicationPartController<DatabasePaneController> {
 
-    public static final ApplicationPartController openLocal(ApplicationPaneController applicationController, ApplicationURI uri) {
-        try {
-            DatabaseInterface dbInterface = DatabaseInterface.openFileDatabase(uri.isValid() ? new File(uri.getPath()).toPath() : null);
-            if (dbInterface.getPath() == null) {
-                dbInterface.getDatabaseObject().getRoot().setName(uri.getApplicationPart().getUnnamedName());
-            }
-
-            return new DatabasePaneController(applicationController, dbInterface);
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    public static final ApplicationPartController openDoors(ApplicationPaneController applicationController, ApplicationURI uri) {
-        try {
-            return new DatabasePaneController(applicationController, DatabaseInterface.openDoorsApplicationDatabase());
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    public DatabasePaneController(ApplicationPaneController applicationController, DatabaseInterface database) {
-        super(applicationController);
-        this.database = database;
+    public DatabasePaneController(ApplicationPaneController applicationController, DatabasePath path) {
+        super(applicationController, path);
 
         databaseTreeView.setCellFactory(tv -> {
             TextFieldTreeCell<DoorsTreeNode> tc = new TextFieldTreeCell<>(new StringConverter<>() {
@@ -92,16 +67,16 @@ public final class DatabasePaneController extends ApplicationPartController<Data
             });
 
             tc.setOnMouseClicked(me -> {
-                if (me.getClickCount() == 2 && me.getButton() == MouseButton.SECONDARY) {
-                    applicationController.open(new ApplicationURI(this.getURI(), ApplicationPart.DATABASE_MODULE,
-                            getTextFieldTreeCell((Node) me.getTarget()).getTreeItem().getValue().getFullName()));
+                DoorsTreeNode node = getTextFieldTreeCell((Node) me.getTarget()).getTreeItem().getValue();
+                if (me.getClickCount() == 2 && me.getButton() == MouseButton.SECONDARY && node instanceof DoorsModule)  {
+                    applicationController.open(this.getPath().withPath(node.getFullName()));
                 }
             });
             return tc;
 
         });
 
-        databaseTreeView.setRoot(new DoorsTreeItem(database.getDatabaseObject().getRoot()));
+        databaseTreeView.setRoot(new DoorsTreeItem(getDatabaseInterface().getDatabaseObject().getRoot()));
         databaseTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             updateGui(UpdateTagsSection, UpdateAttributesView);
         });
@@ -159,7 +134,6 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     private List<DoorsTreeNode> clipboard;
 
     private final HashSet<String> knownTags = new HashSet<>();
-    private final DatabaseInterface database;
 
     @FXML
     public void addTagPressed() {
@@ -214,20 +188,6 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         f.accept(root);
         for (final TreeItem<T> child : root.getChildren()) {
             traverseTreeItem(child, f);
-        }
-    }
-
-    @Override
-    public void save() throws IOException {
-        this.database.flush();
-        super.save();
-    }
-
-    @Override
-    public void setURI(ApplicationURI file) {
-        super.setURI(file);
-        if (file.isValid()) {
-            this.database.setPath(file.getPath());
         }
     }
 

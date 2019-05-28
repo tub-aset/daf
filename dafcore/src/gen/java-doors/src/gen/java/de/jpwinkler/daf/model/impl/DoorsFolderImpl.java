@@ -4,7 +4,6 @@ package de.jpwinkler.daf.model.impl;
 
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsPackage;
-
 import org.eclipse.emf.ecore.EClass;
 
 /**

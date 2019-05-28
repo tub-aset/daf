@@ -5,7 +5,10 @@
  */
 package de.jpwinkler.daf.gui;
 
+import de.jpwinkler.daf.db.DatabaseInterface;
+import de.jpwinkler.daf.db.DatabasePath;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
@@ -26,10 +29,18 @@ public abstract class ApplicationPartController<T extends ApplicationPartControl
     private final List<Menu> menus;
     private final CommandStack commandStack = new CommandStack();
 
-    private ApplicationURI uri;
+    private DatabasePath path;
+    private final DatabaseInterface databaseInterface;
 
-    public ApplicationPartController(ApplicationPaneController applicationController) {
+    public ApplicationPartController(ApplicationPaneController applicationController, DatabasePath path) {
         this.applicationController = applicationController;
+        this.path = path;
+
+        try {
+            this.databaseInterface = (DatabaseInterface) path.getDatabaseInterface().getConstructor(String.class).newInstance(path.getDatabasePath());
+        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | InvocationTargetException ex) {
+            throw new RuntimeException(ex);
+        }
 
         URL menuUrl = MainFX.class.getResource(
                 this.getClass().getSimpleName().replaceFirst("Controller$", "") + "Menu.fxml");
@@ -99,15 +110,22 @@ public abstract class ApplicationPartController<T extends ApplicationPartControl
         return this.menus == null ? Collections.emptySet() : menus;
     }
 
-    public final ApplicationURI getURI() {
-        return uri;
+    public final DatabasePath getPath() {
+        return path;
     }
 
-    public void setURI(ApplicationURI file) {
-        this.uri = file;
+    public void setPath(DatabasePath path) {
+        this.path = path;
     }
 
     public void save() throws IOException {
+        getDatabaseInterface().setPath(path.getDatabasePath());
+        getDatabaseInterface().flush();
         getCommandStack().setSavePoint();
     }
+
+    protected DatabaseInterface getDatabaseInterface() {
+        return databaseInterface;
+    }
+
 }

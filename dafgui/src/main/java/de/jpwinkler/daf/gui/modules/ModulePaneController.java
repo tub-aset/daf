@@ -1,7 +1,6 @@
 package de.jpwinkler.daf.gui.modules;
 
-import de.jpwinkler.daf.csv.ModuleCSVParser;
-import de.jpwinkler.daf.csv.ModuleCSVWriter;
+import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.filter.objects.CascadingFilter;
 import de.jpwinkler.daf.filter.objects.DoorsObjectFilter;
 import de.jpwinkler.daf.filter.objects.ObjectTextAndHeadingFilter;
@@ -9,7 +8,6 @@ import de.jpwinkler.daf.filter.objects.ReverseCascadingFilter;
 import de.jpwinkler.daf.gui.ApplicationPaneController;
 import de.jpwinkler.daf.gui.ApplicationPartController;
 import de.jpwinkler.daf.gui.ApplicationPreferences;
-import de.jpwinkler.daf.gui.ApplicationURI;
 import de.jpwinkler.daf.gui.MultiCommand;
 import de.jpwinkler.daf.gui.UpdateAction;
 import de.jpwinkler.daf.gui.modules.ViewDefinition.ColumnDefinition;
@@ -32,8 +30,6 @@ import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsSystemAttributes;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -66,25 +62,6 @@ import javafx.util.converter.DefaultStringConverter;
 
 public final class ModulePaneController extends ApplicationPartController<ModulePaneController> {
 
-    public static ModulePaneController open(ApplicationPaneController applicationController, ApplicationURI uri) {
-        final DoorsModule module;
-        if (uri.isValid()) {
-            try {
-                module = new ModuleCSVParser().parseCSV(new File(uri.getPath()));
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-        } else {
-            module = DoorsModelUtil.createModule(null, uri.getApplicationPart().getUnnamedName());
-        }
-
-        return new ModulePaneController(applicationController, module);
-    }
-    
-    public static ModulePaneController openInDB(ApplicationPaneController applicationController, ApplicationURI uri) {
-        return null;
-    }
-
     private static final ViewDefinition STANDARD_VIEW = new ViewDefinition("Standard");
 
     static {
@@ -96,10 +73,14 @@ public final class ModulePaneController extends ApplicationPartController<Module
         STANDARD_VIEW.setDisplayRemainingColumns(true);
     }
 
-    public ModulePaneController(ApplicationPaneController applicationController, DoorsModule module) {
-        super(applicationController);
+    public ModulePaneController(ApplicationPaneController applicationController, DatabasePath path) {
+        super(applicationController, path);
 
-        this.module = module;
+        this.module = (DoorsModule) getDatabaseInterface().getNode(path.getPath());
+        if(this.module == null) {
+            throw new RuntimeException("No such module: " + path.getPath());
+        }
+        
         int currentViewIdx = ApplicationPreferences.MODULE_PANE_CURRENT_VIEW.retrieve();
         if (currentViewIdx < 0 || currentViewIdx >= views.size()) {
             currentView = STANDARD_VIEW;
@@ -191,18 +172,8 @@ public final class ModulePaneController extends ApplicationPartController<Module
     }
 
     @Override
-    public void save() throws IOException {
-        try ( ModuleCSVWriter writer = new ModuleCSVWriter(new FileOutputStream(new File(getURI().getPath())))) {
-            List<String> pathSegments = getURI().getPathSegments();
-            module.setName(pathSegments.isEmpty() ? module.getName() : pathSegments.get(pathSegments.size() - 1));
-            writer.writeModule(module);
-        }
-        super.save();
-    }
-
-    @Override
-    public void setURI(ApplicationURI uri) {
-        super.setURI(uri);
+    public void setPath(DatabasePath path) {
+        super.setPath(path);
         this.updateGui(ModuleUpdateAction.UPDATE_OUTLINE_VIEW);
     }
 

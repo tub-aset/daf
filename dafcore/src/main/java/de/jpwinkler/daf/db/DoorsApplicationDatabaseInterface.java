@@ -19,7 +19,7 @@ public class DoorsApplicationDatabaseInterface implements DatabaseInterface {
     private final DoorsApplication doorsApplication = DoorsApplicationFactory.getDoorsApplication();
     private final DoorsDatabase db;
 
-    DoorsApplicationDatabaseInterface() {
+    public DoorsApplicationDatabaseInterface(String path) {        
         this.db = DoorsFactory.eINSTANCE.createDoorsDatabase();
         this.db.setRoot(doorsApplication.getRoot());
     }

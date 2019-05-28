@@ -185,7 +185,7 @@ public class DoorsApplicationImpl implements DoorsApplication {
 
     @Override
     public DoorsTreeNode getRoot() {
-        return new DoorsTreeNodeRefImpl(this, DoorsItemType.FOLDER, null, "/");
+        return new DoorsFolderRefImpl(this, DoorsItemType.FOLDER, null, "Doors Application");
     }
  
 

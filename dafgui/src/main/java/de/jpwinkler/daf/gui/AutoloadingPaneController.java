@@ -33,10 +33,11 @@ public abstract class AutoloadingPaneController<THIS extends AutoloadingPaneCont
             throw new RuntimeException(ex);
         }
     }
-    
+
     @FXML
     public final void initialize() {
-        
+        //  make sure nobody implements this since that's prone to error in combination
+        // with loading the scene in the constructor
     }
 
     public Parent getNode() {

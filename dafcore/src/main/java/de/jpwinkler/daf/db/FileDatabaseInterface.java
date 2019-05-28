@@ -23,7 +23,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
-class FileDatabaseInterface implements DatabaseInterface {
+public class FileDatabaseInterface implements DatabaseInterface {
 
     static {
         Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("*", new XMIResourceFactoryImpl());
@@ -36,13 +36,13 @@ class FileDatabaseInterface implements DatabaseInterface {
     private final DoorsDatabase db;
     private Path databaseRoot;
 
-    FileDatabaseInterface(final Path databaseRoot) throws IOException {
-        this.databaseRoot = databaseRoot;
+    public FileDatabaseInterface(String databaseRoot) throws IOException {
+        this.databaseRoot = Paths.get(databaseRoot);
 
-        if (databaseRoot != null) {
-            Files.createDirectories(databaseRoot);
+        if (this.databaseRoot != null) {
+            Files.createDirectories(this.databaseRoot);
 
-            final Resource resource = new ResourceSetImpl().getResource(URI.createFileURI(databaseRoot.resolve(DATABASE_FILENAME).toString()), true);
+            final Resource resource = new ResourceSetImpl().getResource(URI.createFileURI(this.databaseRoot.resolve(DATABASE_FILENAME).toString()), true);
             this.db = (DoorsDatabase) resource.getContents().get(0);
         } else {
             this.db = DoorsFactory.eINSTANCE.createDoorsDatabase();

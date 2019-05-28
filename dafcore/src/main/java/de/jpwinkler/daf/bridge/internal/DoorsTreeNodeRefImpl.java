@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 
-class DoorsTreeNodeRefImpl implements DoorsTreeNodeRef {
+abstract class DoorsTreeNodeRefImpl implements DoorsTreeNodeRef {
 
     private static final Logger LOGGER = Logger.getLogger(DoorsTreeNodeRefImpl.class.getName());
 
@@ -47,7 +47,9 @@ class DoorsTreeNodeRefImpl implements DoorsTreeNodeRef {
     public DoorsTreeNodeRefImpl(final DoorsApplicationImpl doorsApplicationImpl, final DoorsItemType type, final DoorsTreeNode parent, String name) {
         this.doorsApplicationImpl = doorsApplicationImpl;
         this.type = type;
-        this.pathSegments = Stream.concat(parent.getFullNameSegments().stream(), Stream.of(name)).collect(Collectors.toList());
+        //  make sure root does not show up in the path
+        this.pathSegments = parent == null ? Collections.emptyList() : Stream.concat(
+                parent.getFullNameSegments().stream(), Stream.of(name)).collect(Collectors.toList());
     }
 
     @Override
@@ -93,10 +95,16 @@ class DoorsTreeNodeRefImpl implements DoorsTreeNodeRef {
                 continue;
             }
             final DoorsItemType type = DoorsItemType.getType(split[0]);
-            if (type == DoorsItemType.FORMAL) {
-                result.add(new DoorsModuleRefImpl(doorsApplicationImpl, this, split[1], STANDARD_VIEW));
-            } else {
-                result.add(new DoorsTreeNodeRefImpl(doorsApplicationImpl, type, this, split[1]));
+            switch (type) {
+                case FORMAL:
+                    result.add(new DoorsModuleRefImpl(doorsApplicationImpl, this, split[1], STANDARD_VIEW));
+                    break;
+                case FOLDER:
+                case PROJECT:
+                    result.add(new DoorsFolderRefImpl(doorsApplicationImpl, type, this, split[1]));
+                    break;
+                default:
+                    throw new UnsupportedOperationException();
             }
         }
         return result;
@@ -118,7 +126,7 @@ class DoorsTreeNodeRefImpl implements DoorsTreeNodeRef {
 
     @Override
     public String getFullName() {
-        return "/" + StringUtils.join(pathSegments, "/");
+        return StringUtils.join(pathSegments, "/");
     }
 
     @Override

@@ -1,5 +1,6 @@
 package de.jpwinkler.daf.gui;
 
+import de.jpwinkler.daf.db.DatabasePath;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.input.TransferMode;
@@ -23,7 +24,7 @@ public class MainFX extends Application {
         applicationScene.setOnDragDropped(event -> {
             if (event.getDragboard().hasFiles()) {
                 event.getDragboard().getFiles().stream()
-                        .map(f -> ApplicationPart.LOCAL_MODULE.newURI(f.getAbsolutePath()))
+                        .map(f -> new DatabasePath(ApplicationPart.LOCAL_MODULE.getDatabaseInterface(), f.getAbsolutePath(), null))
                         .forEach(applicationPaneController::open);
                 event.setDropCompleted(true);
             }

@@ -1,6 +1,5 @@
 package de.jpwinkler.daf.gui;
 
-import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.util.function.Consumer;
 
 public class CommandStack {

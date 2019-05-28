@@ -204,11 +204,12 @@ public abstract class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container imp
     public String getFullName() {
         DoorsTreeNode parent = this;
         String fullName = "";
-        while (parent != null) {
-            fullName += "/" + parent.getName();
+        // make sure root does not show up in path
+        while (parent != null && parent.getParent() != null) {
+            fullName = parent.getName() + "/" + fullName;
             parent = parent.getParent();
         }
-        return fullName;
+        return fullName.replaceAll("/$", "");
     }
 
     /**
@@ -341,7 +342,7 @@ public abstract class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container imp
         final List<String> pathSegments = Arrays.asList(name.split("/")).stream().filter(s -> !s.isEmpty()).collect(Collectors.toList());
         DoorsTreeNode current = this;
         for (final String segment : pathSegments.subList(0, pathSegments.size())) {
-            current = current.getChild(segment);
+            current = current.getChildren().stream().filter(c -> segment.equals(c.getName())).findAny().orElse(null);
             if (current == null) {
                 return null;
             }

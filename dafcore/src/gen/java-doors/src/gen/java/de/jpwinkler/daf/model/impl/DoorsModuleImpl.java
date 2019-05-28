@@ -2,12 +2,12 @@
  */
 package de.jpwinkler.daf.model.impl;
 
-import de.jpwinkler.daf.model.FindObjectVisitor;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsPackage;
 import de.jpwinkler.daf.model.DoorsSystemAttributes;
 import de.jpwinkler.daf.model.DoorsTreeNode;
+import de.jpwinkler.daf.model.FindObjectVisitor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import org.eclipse.emf.common.notify.Notification;

@@ -1,5 +1,6 @@
 package de.jpwinkler.daf.gui;
 
+import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.gui.background.BackgroundTaskStatusListener;
 import de.jpwinkler.daf.gui.background.BackgroundTaskStatusMonitor;
 import java.io.IOException;
@@ -55,7 +56,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     @FXML
     private Menu recentMenu;
 
-    private final TreeMap<Long, ApplicationURI> recentFiles = ApplicationPreferences.RECENT_FILES.retrieve();
+    private final TreeMap<Long, DatabasePath> recentFiles = ApplicationPreferences.RECENT_FILES.retrieve();
     private final int MAX_RECENT_FILES = 10;
 
     public ApplicationPaneController() {
@@ -82,7 +83,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             closeTabs(closedTabs);
         }
         );
-        addToRecentMenu(null);
+        generateRecentMenu();
 
         backgroundTaskStatusToolBar.setManaged(false);
         backgroundTaskStatusToolBar.setVisible(false);
@@ -122,61 +123,74 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     }
 
     @FXML
-    public void newLocalModuleClicked() throws URISyntaxException {
-        open(ApplicationPart.LOCAL_MODULE.newURI());
+    public void newLocalModuleClicked() {
+        open(ApplicationPart.LOCAL_MODULE.newPath(), true);
 
     }
 
     @FXML
-    public void newLocalDatabaseClicked() throws URISyntaxException {
-        open(ApplicationPart.LOCAL_DATABASE.newURI());
+    public void newLocalDatabaseClicked() {
+        open(ApplicationPart.LOCAL_DATABASE.newPath(), true);
 
     }
 
     @FXML
     public void openLocalModuleClicked() throws URISyntaxException {
-        ApplicationPart.LOCAL_MODULE.openWithSelector(this, tabPane.getScene().getWindow()).forEach(this::open);
+        ApplicationPart.LOCAL_MODULE.openWithSelector(tabPane.getScene().getWindow()).forEach(this::open);
     }
 
     @FXML
     public void openLocalDatabaseClicked() throws URISyntaxException {
-        ApplicationPart.LOCAL_DATABASE.openWithSelector(this, tabPane.getScene().getWindow()).forEach(this::open);
+        ApplicationPart.LOCAL_DATABASE.openWithSelector(tabPane.getScene().getWindow()).forEach(this::open);
     }
 
     @FXML
     public void openDoorsDatabaseClicked() throws URISyntaxException {
-        ApplicationPart.DOORS_BRIDGE.openWithSelector(this, tabPane.getScene().getWindow()).forEach(this::open);
+        ApplicationPart.DOORS_DATABASE.openWithSelector(tabPane.getScene().getWindow()).forEach(this::open);
     }
 
-    public boolean open(ApplicationURI selectedURI) {
-        Tab fileTab = applicationPartControllers.entrySet().stream()
-                .filter(e -> selectedURI.equals(e.getValue().getURI()))
-                .findAny().map(e -> e.getKey()).orElse(null);
+    public boolean open(DatabasePath path) {
+        return this.open(path, false);
+    }
 
-        if (fileTab != null) {
-            addToRecentMenu(selectedURI);
-            tabPane.getSelectionModel().select(fileTab);
-            return false;
+    public boolean open(DatabasePath path, boolean newFile) {
+        if (!newFile && applicationPartControllers.entrySet().stream()
+                .filter(e -> path.equals(e.getValue().getPath()))
+                .findAny()
+                .map(e -> {
+                    addToRecentMenu(path);
+                    tabPane.getSelectionModel().select(e.getKey());
+                    return e;
+                }).isPresent()) {
+
+            addToRecentMenu(path);
+            return true;
         }
 
         try {
-            final ApplicationPartController controller = ApplicationPart.openAny(this, selectedURI);
+            final ApplicationPartController controller = ApplicationPart.createControllerForAny(this, path);
             final Parent modulePane = controller.getNode();
 
-            final Tab selectedTab = new Tab(controller.getURI().toString(), modulePane);
+            final Tab selectedTab = new Tab(path.toString(), modulePane);
             applicationPartControllers.put(selectedTab, controller);
 
             controller.getCommandStack().setOnDirty(dirty -> {
-                selectedTab.setText(controller.getURI().toString() + (dirty ? "*" : ""));
+                selectedTab.setText(path.toString() + (dirty ? "*" : ""));
             });
 
             selectedTab.setClosable(true);
             tabPane.getTabs().add(selectedTab);
 
             tabPane.getSelectionModel().select(selectedTab);
-            addToRecentMenu(controller.getURI());
+            if (!newFile) {
+                addToRecentMenu(path);
+            }
             return true;
-        } catch (Exception ex) {
+        } catch (Throwable ex) {
+            while (ex.getCause() != null) {
+                ex = ex.getCause();
+            }
+
             setStatus("Open: Failed to open file; " + getMessage(ex));
             return false;
         }
@@ -192,12 +206,15 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         }
     }
 
-    private void addToRecentMenu(ApplicationURI selectedUri) {
-        if (selectedUri != null && selectedUri.isValid()) {
-            recentFiles.values().remove(selectedUri);
-            recentFiles.put(new Date().getTime(), selectedUri);
+    private void addToRecentMenu(DatabasePath path) {
+        if (path != null && path.isValid()) {
+            recentFiles.values().remove(path);
+            recentFiles.put(new Date().getTime(), path);
         }
+        generateRecentMenu();
+    }
 
+    private void generateRecentMenu() {
         while (recentFiles.size() > MAX_RECENT_FILES) {
             recentFiles.remove(recentFiles.firstKey());
         }
@@ -212,16 +229,16 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             return;
         }
 
-        for (ApplicationURI recentFile : recentFiles.descendingMap().values()) {
+        for (DatabasePath recentFile : recentFiles.descendingMap().values()) {
             MenuItem recentMenuItem = new MenuItem(recentFile.toString());
             recentMenuItem.setUserData(recentFile);
             recentMenu.getItems().add(recentMenuItem);
             recentMenuItem.setOnAction(ev -> {
-                ApplicationURI uri = (ApplicationURI) ((MenuItem) ev.getTarget()).getUserData();
+                DatabasePath uri = (DatabasePath) ((MenuItem) ev.getTarget()).getUserData();
                 if (!this.open(uri)) {
                     recentFiles.entrySet().removeIf(e -> e.getValue().equals(uri));
                     ApplicationPreferences.RECENT_FILES.store(recentFiles);
-                    addToRecentMenu(null);
+                    generateRecentMenu();
                 }
             });
         }
@@ -233,13 +250,13 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     }
 
     private boolean save(ApplicationPartController fsc, boolean allowSaveAs) {
-        if (allowSaveAs && !fsc.getURI().isValid()) {
-            fsc.getURI().getApplicationPart().saveWithSelector(this, tabPane.getScene().getWindow()).forEach(uri -> {
-                fsc.setURI(uri);
+        if (allowSaveAs && !fsc.getPath().isValid()) {
+            ApplicationPart.saveWithSelector(fsc.getPath(), tabPane.getScene().getWindow()).forEach(path -> {
+                fsc.setPath(path);
             });
         }
 
-        if (!fsc.getURI().isValid()) {
+        if (!fsc.getPath().isValid()) {
             this.setStatus("Save: Failed to save file; invalid storage URI");
             return false;
         }
@@ -251,7 +268,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             return false;
         }
 
-        addToRecentMenu(fsc.getURI());
+        addToRecentMenu(fsc.getPath());
         return true;
     }
 
@@ -261,25 +278,25 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     }
 
     private void saveAs(ApplicationPartController fsc) {
-        fsc.getURI().getApplicationPart().saveWithSelector(this, tabPane.getScene().getWindow()).forEach(uri -> {
-            fsc.setURI(uri);
+        ApplicationPart.saveWithSelector(fsc.getPath(), tabPane.getScene().getWindow()).forEach(path -> {
+            fsc.setPath(path);
             this.save(fsc, false);
         });
     }
 
     @FXML
     public void closeClicked() {
-        if(tabPane.getSelectionModel().isEmpty()) {
+        if (tabPane.getSelectionModel().isEmpty()) {
             return;
         }
-        
+
         tabPane.getTabs().remove(tabPane.getSelectionModel().getSelectedItem());
     }
-    
+
     public void closeAllPanes() {
         tabPane.getTabs().clear();
     }
-    
+
     public boolean hasOpenPanes() {
         return !applicationPartControllers.isEmpty();
     }
