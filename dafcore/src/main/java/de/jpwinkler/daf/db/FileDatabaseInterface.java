@@ -1,8 +1,5 @@
 package de.jpwinkler.daf.db;
 
-import de.jpwinkler.daf.csv.ModuleCSVWriter;
-import de.jpwinkler.daf.csv.ModuleMetaDataParser;
-import de.jpwinkler.daf.filter.modules.SearchExpression;
 import de.jpwinkler.daf.model.DoorsDatabase;
 import de.jpwinkler.daf.model.DoorsFactory;
 import de.jpwinkler.daf.model.DoorsFolder;
@@ -14,7 +11,6 @@ import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.model.impl.DoorsDatabaseImpl;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -22,8 +18,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -83,14 +77,10 @@ class FileDatabaseInterface implements DatabaseInterface {
             @Override
             protected boolean visitPreTraverse(DoorsModule m) {
                 Path modulePath = ensureModuleFolderPath(m);
-                try ( ModuleCSVWriter writer = new ModuleCSVWriter(new FileOutputStream(modulePath.resolve(m.getName() + ".csv").toFile()))) {
-                    writer.writeModule(m);
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-
                 try {
-                    ModuleMetaDataParser.writeModuleMetaData(modulePath.resolve(m.getName() + ".mmd").toFile(), m.getAttributes());
+                    ModuleCSV.write(
+                            modulePath.resolve(m.getName() + ".csv").toFile(),
+                            modulePath.resolve(m.getName() + ".mmd").toFile(), m);
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -144,21 +134,6 @@ class FileDatabaseInterface implements DatabaseInterface {
         }
     }
 
-    @Override
-    public List<DoorsModule> getModules(final SearchExpression e) {
-        final List<DoorsModule> result = new ArrayList<>();
-        db.getRoot().accept(new DoorsTreeNodeVisitor<>(DoorsModule.class) {
-
-            @Override
-            public void visitPostTraverse(final DoorsModule module) {
-                if (e.matches(module)) {
-                    result.add(module);
-                }
-            }
-        });
-        return result;
-    }
-
     private Path ensureModuleFolderPath(final DoorsModule m) {
         try {
             Path p = Paths.get(databaseRoot.toString(), m.getFullNameSegments().toArray(new String[0])).getParent();
@@ -187,10 +162,5 @@ class FileDatabaseInterface implements DatabaseInterface {
         } else {
             return null;
         }
-    }
-
-    @Override
-    public boolean isReadOnly() {
-        return false;
     }
 }

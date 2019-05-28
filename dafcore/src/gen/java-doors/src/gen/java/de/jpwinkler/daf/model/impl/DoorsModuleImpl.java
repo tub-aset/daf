@@ -2,7 +2,7 @@
  */
 package de.jpwinkler.daf.model.impl;
 
-import de.jpwinkler.daf.csv.FindObjectVisitor;
+import de.jpwinkler.daf.model.FindObjectVisitor;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsPackage;

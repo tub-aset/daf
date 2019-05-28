@@ -9,8 +9,9 @@ import de.jpwinkler.daf.filter.modules.SearchExpression;
 import de.jpwinkler.daf.model.DoorsDatabase;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsTreeNode;
+import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import java.io.IOException;
-import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,23 +20,17 @@ import java.util.List;
  */
 public interface DatabaseInterface {
 
-    default void flush() throws IOException {
-        if (isReadOnly()) {
-            throw new UnsupportedOperationException("Not supported");
-        }
-    }
-    
     default String getPath() {
         return null;
     }
-    
+
     default void setPath(String path) {
         throw new UnsupportedOperationException("Not supported");
     }
 
-    DoorsDatabase getDatabaseObject();
-
-    List<DoorsModule> getModules(final SearchExpression e);
+    default void flush() throws IOException {
+        throw new UnsupportedOperationException("Not supported");
+    }
 
     default DoorsModule importModule(final DoorsModule module) {
         throw new UnsupportedOperationException("Not supported");
@@ -45,13 +40,31 @@ public interface DatabaseInterface {
         throw new UnsupportedOperationException("Not supported");
     }
 
-    boolean isReadOnly();
+    default DoorsTreeNode getNode(String path) {
+        DoorsTreeNode node = this.getDatabaseObject().getRoot();
+        for (String name : path.split("/")) {
+            node = node.getChild(name);
+            if (node == null) {
+                break;
+            }
+        }
 
-    public static DatabaseInterface openFileDatabase(Path path) throws IOException {
-        return new FileDatabaseInterface(path);
+        return node;
     }
 
-    public static DatabaseInterface openDoorsApplicationDatabase() throws IOException {
-        return new DoorsApplicationDatabaseInterface();
+    default List<DoorsModule> getModules(final SearchExpression e) {
+        final List<DoorsModule> result = new ArrayList<>();
+        getDatabaseObject().getRoot().accept(new DoorsTreeNodeVisitor<>(DoorsModule.class) {
+
+            @Override
+            public void visitPostTraverse(final DoorsModule module) {
+                if (e.matches(module)) {
+                    result.add(module);
+                }
+            }
+        });
+        return result;
     }
+
+    DoorsDatabase getDatabaseObject();
 }

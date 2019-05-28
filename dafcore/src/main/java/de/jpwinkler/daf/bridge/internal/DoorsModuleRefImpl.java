@@ -20,9 +20,8 @@ package de.jpwinkler.daf.bridge.internal;
 import de.jpwinkler.daf.bridge.DoorsItemType;
 import de.jpwinkler.daf.bridge.DoorsRuntimeException;
 import de.jpwinkler.daf.bridge.DoorsTreeNodeRef;
-import de.jpwinkler.daf.csv.FindObjectVisitor;
-import de.jpwinkler.daf.csv.ModuleCSVParser;
-import de.jpwinkler.daf.model.DoorsFactory;
+import de.jpwinkler.daf.model.FindObjectVisitor;
+import de.jpwinkler.daf.db.ModuleCSV;
 import de.jpwinkler.daf.model.DoorsModelUtil;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
@@ -93,7 +92,7 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsTreeNodeRe
                     builder.setVariable("file", tempFile.toAbsolutePath().toString());
                 });
 
-                DoorsModule loadedModule = new ModuleCSVParser().parseCSV(tempFile.toFile());
+                DoorsModule loadedModule = ModuleCSV.readModule(tempFile.toFile());
                 this.children = loadedModule.getChildren().stream()
                         .map(c -> DoorsModelUtil.createCopy(c, this))
                         .collect(Collectors.toList());

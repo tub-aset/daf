@@ -7,13 +7,8 @@ package de.jpwinkler.daf.db;
 
 import de.jpwinkler.daf.bridge.DoorsApplication;
 import de.jpwinkler.daf.bridge.DoorsApplicationFactory;
-import de.jpwinkler.daf.filter.modules.SearchExpression;
 import de.jpwinkler.daf.model.DoorsDatabase;
 import de.jpwinkler.daf.model.DoorsFactory;
-import de.jpwinkler.daf.model.DoorsModule;
-import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
@@ -34,23 +29,4 @@ public class DoorsApplicationDatabaseInterface implements DatabaseInterface {
         return db;
     }
 
-    @Override
-    public List<DoorsModule> getModules(SearchExpression e) {
-        final List<DoorsModule> result = new ArrayList<>();
-        db.getRoot().accept(new DoorsTreeNodeVisitor<>(DoorsModule.class) {
-
-            @Override
-            public void visitPostTraverse(final DoorsModule module) {
-                if (e.matches(module)) {
-                    result.add(module);
-                }
-            }
-        });
-        return result;
-    }
-
-    @Override
-    public boolean isReadOnly() {
-        return true;
-    }
 }

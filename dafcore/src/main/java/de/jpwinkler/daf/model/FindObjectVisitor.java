@@ -1,7 +1,4 @@
-package de.jpwinkler.daf.csv;
-
-import de.jpwinkler.daf.model.DoorsObject;
-import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
+package de.jpwinkler.daf.model;
 
 public class FindObjectVisitor extends DoorsTreeNodeVisitor<DoorsObject> {
 
