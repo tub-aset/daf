@@ -34,10 +34,16 @@ public class FileDatabaseInterface implements DatabaseInterface {
     private static final String DATABASE_FILENAME = "db." + DATABASE_ITEMNAME;
 
     private final DoorsDatabase db;
-    private Path databaseRoot;
+    private DatabasePath<FileDatabaseInterface> databasePath;
+    private final Path databaseRoot;
 
-    public FileDatabaseInterface(String databaseRoot) throws IOException {
-        this.databaseRoot = Paths.get(databaseRoot);
+    public FileDatabaseInterface(DatabasePath<FileDatabaseInterface> databasePath) throws IOException {
+        if(!databasePath.getPath().isEmpty()) {
+            throw new IllegalArgumentException("databasePath must not have a path segment here");
+        }
+        
+        this.databasePath = databasePath;
+        this.databaseRoot = Paths.get(databasePath.getDatabasePath());
 
         if (this.databaseRoot != null) {
             Files.createDirectories(this.databaseRoot);
@@ -92,13 +98,8 @@ public class FileDatabaseInterface implements DatabaseInterface {
     }
 
     @Override
-    public void setPath(String path) {
-        this.databaseRoot = new File(path).toPath();
-    }
-
-    @Override
-    public String getPath() {
-        return this.databaseRoot == null ? null : this.databaseRoot.toAbsolutePath().toString();
+    public DatabasePath<FileDatabaseInterface> getPath() {
+        return databasePath;
     }
 
     @Override

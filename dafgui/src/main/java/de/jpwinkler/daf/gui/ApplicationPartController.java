@@ -13,6 +13,7 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.WeakHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javafx.fxml.FXML;
@@ -32,12 +33,20 @@ public abstract class ApplicationPartController<T extends ApplicationPartControl
     private DatabasePath path;
     private final DatabaseInterface databaseInterface;
 
+    private static final WeakHashMap<DatabasePath, DatabaseInterface> DATABASE_INTERFACES = new WeakHashMap<>();
+
     public ApplicationPartController(ApplicationPaneController applicationController, DatabasePath path) {
         this.applicationController = applicationController;
         this.path = path;
 
         try {
-            this.databaseInterface = (DatabaseInterface) path.getDatabaseInterface().getConstructor(String.class).newInstance(path.getDatabasePath());
+            DatabasePath dbPath = path.withPath("");
+            if (DATABASE_INTERFACES.containsKey(dbPath)) {
+                this.databaseInterface = DATABASE_INTERFACES.get(dbPath);
+            } else {
+                this.databaseInterface = (DatabaseInterface) path.getDatabaseInterface().getConstructor(DatabasePath.class).newInstance(dbPath);
+                DATABASE_INTERFACES.put(dbPath, databaseInterface);
+            }
         } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | InvocationTargetException ex) {
             throw new RuntimeException(ex);
         }
@@ -119,7 +128,6 @@ public abstract class ApplicationPartController<T extends ApplicationPartControl
     }
 
     public void save() throws IOException {
-        getDatabaseInterface().setPath(path.getDatabasePath());
         getDatabaseInterface().flush();
         getCommandStack().setSavePoint();
     }

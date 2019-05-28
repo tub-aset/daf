@@ -20,13 +20,7 @@ import java.util.List;
  */
 public interface DatabaseInterface {
 
-    default String getPath() {
-        return null;
-    }
-
-    default void setPath(String path) {
-        throw new UnsupportedOperationException("Not supported");
-    }
+    DatabasePath getPath();
 
     default void flush() throws IOException {
         throw new UnsupportedOperationException("Not supported");

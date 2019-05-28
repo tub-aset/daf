@@ -19,26 +19,25 @@ import java.io.IOException;
 public class RawFileDatabaseInterface implements DatabaseInterface {
 
     private final DoorsDatabase db = DoorsFactory.eINSTANCE.createDoorsDatabase();
-    private String databasePath;
+    private final DatabasePath<RawFileDatabaseInterface> databasePath;
 
-    public RawFileDatabaseInterface(String databasePath) throws IOException {
+    public RawFileDatabaseInterface(DatabasePath<RawFileDatabaseInterface> databasePath) throws IOException {
+        if (!databasePath.getPath().isEmpty()) {
+            throw new IllegalArgumentException("databasePath must not have a path segment here");
+        }
+
         this.databasePath = databasePath;
-        db.setRoot(ModuleCSV.read(new File(databasePath)));
+        db.setRoot(ModuleCSV.read(new File(databasePath.getDatabasePath())));
     }
 
     @Override
-    public String getPath() {
+    public DatabasePath<RawFileDatabaseInterface> getPath() {
         return databasePath;
     }
 
     @Override
-    public void setPath(String path) {
-        this.databasePath = path;
-    }
-
-    @Override
     public void flush() throws IOException {
-        ModuleCSV.write(new File(databasePath), (DoorsModule) this.db.getRoot());
+        ModuleCSV.write(new File(databasePath.getDatabasePath()), (DoorsModule) this.db.getRoot());
     }
 
     @Override
