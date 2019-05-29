@@ -10,9 +10,12 @@ import static de.jpwinkler.daf.model.DoorsModelUtil.INT_PARSER;
 import static de.jpwinkler.daf.model.DoorsModelUtil.INT_WRITER;
 import static de.jpwinkler.daf.model.DoorsModelUtil.LIST_PARSER;
 import static de.jpwinkler.daf.model.DoorsModelUtil.LIST_WRITER;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -42,6 +45,13 @@ public enum DoorsSystemAttributes {
         this.appliesTo = appliesTo;
     }
 
+    private static final Map<String, DoorsSystemAttributes> inverseMap = Stream.of(DoorsSystemAttributes.values())
+            .collect(Collectors.toMap(v -> v.getKey(), v -> v));
+
+    public static Optional<DoorsSystemAttributes> getForKey(String key) {
+        return inverseMap.containsKey(key) ? Optional.of(inverseMap.get(key)) : Optional.empty();
+    }
+
     private final String key;
     private final Class<?> type;
     private final Function<String, ?> parser;
@@ -51,7 +61,7 @@ public enum DoorsSystemAttributes {
     public String getKey() {
         return key == null ? "__SYSTEM__" + this.name() : key;
     }
-    
+
     public boolean isSystemKey() {
         return key == null;
     }

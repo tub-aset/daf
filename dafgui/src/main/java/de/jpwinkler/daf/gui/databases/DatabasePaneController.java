@@ -14,6 +14,7 @@ import de.jpwinkler.daf.gui.databases.commands.RemoveTagCommand;
 import de.jpwinkler.daf.gui.databases.commands.RenameNodeCommand;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
+import de.jpwinkler.daf.model.DoorsSystemAttributes;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.io.IOException;
 import java.util.Collection;
@@ -378,6 +379,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         ctrl.attributesTableView.getItems().clear();
         ctrl.attributesTableView.setItems(ctrl.databaseTreeView.getSelectionModel().getSelectedItems().stream()
                 .flatMap(it -> it.getValue().getAttributes().entrySet().stream())
+                .filter(it -> DoorsSystemAttributes.getForKey(it.getKey()).map(v -> !v.isSystemKey()).orElse(true))
                 .collect(Collectors.toCollection(() -> FXCollections.observableArrayList())));
     };
 }
