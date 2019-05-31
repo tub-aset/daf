@@ -30,9 +30,12 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.WeakHashMap;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -53,6 +56,8 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.control.cell.TextFieldTreeCell;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import javafx.util.StringConverter;
 
@@ -61,25 +66,11 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     public DatabasePaneController(ApplicationPaneController applicationController, DatabasePath path) {
         super(applicationController, path);
 
-        databaseTreeView.setCellFactory(tv -> {
-            return new TextFieldTreeCell<>(new StringConverter<>() {
-                private DoorsTreeNode node;
-
-                @Override
-                public String toString(DoorsTreeNode node) {
-                    this.node = node;
-                    return node.getName();
-                }
-
-                @Override
-                public DoorsTreeNode fromString(String newName) {
-                    DoorsTreeNode node = this.node;
-                    this.node = null;
-                    executeCommand(new RenameNodeCommand(node, newName));
-                    return node;
-                }
-            });
-        });
+        databaseTreeView.setCellFactory(tv -> new NodeTextFieldTreeCell<>(
+                it -> it.getName(),
+                (it, newName) -> executeCommand(new RenameNodeCommand(it, newName)),
+                it -> {
+                }));
 
         databaseTreeView.setRoot(new DoorsTreeItem(getDatabaseInterface().getDatabaseObject().getRoot()));
         databaseTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -112,15 +103,12 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         });
 
         moduleNameColumn.setEditable(true);
-        moduleNameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        moduleNameColumn.setCellValueFactory(param -> {
-            SimpleObjectProperty<String> prop = new SimpleObjectProperty<>();
-            prop.setValue(param.getValue().getName());
-            prop.addListener((observable, oldValue, newValue) -> {
-                executeCommand(new RenameNodeCommand(param.getValue(), newValue));
-            });
-            return prop;
-        });
+        moduleNameColumn.setCellFactory(tc -> new ModulesTextFieldTableCell<>(
+                it -> it.getName(),
+                (it, newName) -> this.executeCommand(new RenameNodeCommand(it, newName)),
+                it -> this.open(this.getPath().withPath(it.getFullName()))
+        ));
+        moduleNameColumn.setCellValueFactory((it) -> new ReadOnlyObjectWrapper<>(it.getValue()));
 
         moduleDescriptionColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(DoorsSystemAttributes.MODULE_DESCRIPTION.getValue(String.class, param.getValue().getAttributes())));
 
@@ -145,7 +133,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                     }
                 });
                 ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.store(data);
-                
+
                 prop.setValue(getSnapshotLists(param.getValue()));
                 modulesTableView.refresh();
             });
@@ -196,7 +184,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     private TableView<DoorsModule> modulesTableView;
 
     @FXML
-    private TableColumn<DoorsModule, String> moduleNameColumn;
+    private TableColumn<DoorsModule, DoorsModule> moduleNameColumn;
 
     @FXML
     private TableColumn<DoorsModule, String> moduleDescriptionColumn;
@@ -267,16 +255,6 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     }
 
     @FXML
-    public void openModulesClicked() {
-        databaseTreeView.getSelectionModel().getSelectedItems().stream()
-                .map(it -> it.getValue())
-                .filter(it -> it instanceof DoorsModule)
-                .map(it -> it.getFullName())
-                .map(this.getPath()::withPath)
-                .forEach(this::open);
-    }
-
-    @FXML
     public void addSnapshotListClicked() {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Add a snapshot list");
@@ -308,13 +286,6 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         alert.setTitle("Snapshot list " + snapshotList);
         alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         alert.showAndWait();
-    }
-
-    private void addToSnapshotListClicked(String snapshotList) {
-        TreeMap<String, TreeSet<String>> snapshotLists = ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.retrieve();
-        databaseTreeView.getSelectionModel().getSelectedItems()
-                .stream().map(si -> si.getValue().getFullName()).forEach(snapshotLists.get(snapshotList)::add);
-        ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.store(snapshotLists);
     }
 
     private void populateSnapshotMenu(Collection<String> snapshotLists, Menu menu, Consumer<String> action) {
@@ -393,6 +364,88 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                 return Objects.compare(this.getValue().getName(), o2.getValue().getName(), Comparator.naturalOrder());
             }
 
+        }
+
+    }
+
+    private class ModulesTextFieldTableCell<T> extends TextFieldTableCell<T, T> {
+
+        private boolean editAllowed = false;
+
+        public ModulesTextFieldTableCell(Function<T, String> toString, BiConsumer<T, String> editCommand, Consumer<T> opener) {
+            setConverter(new StringConverter<T>() {
+                @Override
+                public String toString(T t) {
+                    return toString.apply(t);
+                }
+
+                @Override
+                public T fromString(String string) {
+                    T it = ModulesTextFieldTableCell.this.getItem();
+                    editCommand.accept(it, string);
+                    return it;
+                }
+            });
+
+            this.addEventFilter(MouseEvent.MOUSE_CLICKED, eh -> {
+                if (!this.isEditing() && eh.getClickCount() >= 2 && eh.getButton() == MouseButton.PRIMARY) {
+                    opener.accept(this.getItem());
+                    eh.consume();
+                } else if (eh.getClickCount() == 1 && eh.getButton() == MouseButton.SECONDARY) {
+                    editAllowed = true;
+                    super.getTableView().edit(this.getTableRow().getIndex(), this.getTableColumn());
+                    editAllowed = false;
+                    eh.consume();
+                }
+            });
+        }
+
+        @Override
+        public void startEdit() {
+            if (editAllowed) {
+                super.startEdit();
+            }
+        }
+
+    }
+
+    private class NodeTextFieldTreeCell<T> extends TextFieldTreeCell<T> {
+
+        private boolean editAllowed = false;
+
+        public NodeTextFieldTreeCell(Function<T, String> toString, BiConsumer<T, String> editCommand, Consumer<T> opener) {
+            this.setConverter(new StringConverter<>() {
+                @Override
+                public String toString(T node) {
+                    return toString.apply(node);
+                }
+
+                @Override
+                public T fromString(String newName) {
+                    T node = NodeTextFieldTreeCell.this.getItem();
+                    editCommand.accept(node, newName);
+                    return node;
+                }
+            });
+
+            this.addEventFilter(MouseEvent.MOUSE_CLICKED, eh -> {
+                if (!this.isEditing() && eh.getClickCount() >= 2 && eh.getButton() == MouseButton.PRIMARY) {
+                    opener.accept(this.getItem());
+                    eh.consume();
+                } else if (eh.getClickCount() == 1 && eh.getButton() == MouseButton.SECONDARY) {
+                    editAllowed = true;
+                    super.getTreeView().edit(this.getTreeItem());
+                    editAllowed = false;
+                    eh.consume();
+                }
+            });
+        }
+
+        @Override
+        public void startEdit() {
+            if (editAllowed) {
+                super.startEdit();
+            }
         }
 
     }

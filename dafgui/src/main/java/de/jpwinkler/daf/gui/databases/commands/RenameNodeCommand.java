@@ -52,7 +52,7 @@ public class RenameNodeCommand extends CommandStack.AbstractCommand {
 
     @Override
     public UpdateAction[] getUpdateActions() {
-        return DatabasePaneController.RefreshTreeView.asArray();
+        return UpdateAction.of(DatabasePaneController.RefreshTreeView, DatabasePaneController.UpdateModulesView);
     }
     
     
