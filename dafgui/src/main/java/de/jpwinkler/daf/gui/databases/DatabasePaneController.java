@@ -6,7 +6,9 @@ import de.jpwinkler.daf.gui.ApplicationPartController;
 import de.jpwinkler.daf.gui.ApplicationPreferences;
 import de.jpwinkler.daf.gui.UpdateAction;
 import de.jpwinkler.daf.gui.databases.commands.AddTagCommand;
+import de.jpwinkler.daf.gui.databases.commands.DeleteAttributesCommand;
 import de.jpwinkler.daf.gui.databases.commands.DeleteCommand;
+import de.jpwinkler.daf.gui.databases.commands.EditAttributesCommand;
 import de.jpwinkler.daf.gui.databases.commands.NewFolderCommand;
 import de.jpwinkler.daf.gui.databases.commands.NewModuleCommand;
 import de.jpwinkler.daf.gui.databases.commands.PasteCommand;
@@ -35,6 +37,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleObjectProperty;
@@ -86,7 +89,16 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         });
 
         attributeNameColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getKey()));
-        attributeValueColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getValue()));
+        attributeValueColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper(param.getValue()));
+        attributeValueColumn.setCellFactory(tc -> new CustomTextFieldTableCell<>(
+                it -> it.getValue(),
+                (it, newValue) -> {
+                    this.modulesTableView.getSelectionModel().getSelectedItems().stream()
+                            .map(module -> new EditAttributesCommand(it.getKey(), newValue, module))
+                            .forEach(this::executeCommand);
+                },
+                it -> {
+                }));
 
         attributeNameColumn.setPrefWidth((double) ApplicationPreferences.DATABASE_PANE_ATTRIBUTENAME_WIDTH.retrieve());
         attributeNameColumn.widthProperty().addListener((obs, oldValue, newValue) -> {
@@ -102,8 +114,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
             updateGui(UpdateTagsView, UpdateAttributesView);
         });
 
-        moduleNameColumn.setEditable(true);
-        moduleNameColumn.setCellFactory(tc -> new ModulesTextFieldTableCell<>(
+        moduleNameColumn.setCellFactory(tc -> new CustomTextFieldTableCell<>(
                 it -> it.getName(),
                 (it, newName) -> this.executeCommand(new RenameNodeCommand(it, newName)),
                 it -> this.open(this.getPath().withPath(it.getFullName()))
@@ -178,7 +189,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     private TableColumn<Entry<String, String>, String> attributeNameColumn;
 
     @FXML
-    private TableColumn<Entry<String, String>, String> attributeValueColumn;
+    private TableColumn<Entry<String, String>, Entry<String, String>> attributeValueColumn;
 
     @FXML
     private TableView<DoorsModule> modulesTableView;
@@ -201,7 +212,8 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     @FXML
     private Menu deleteSnapshotListMenu;
 
-    private List<DoorsTreeNode> clipboard;
+    private List<DoorsTreeNode> nodeClipboard;
+    private List<Entry<String, String>> attributeClipboard;
 
     private final HashSet<String> knownTags = new HashSet<>();
 
@@ -238,20 +250,59 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
     @FXML
     public void copyClicked() {
-        clipboard = databaseTreeView.getSelectionModel().getSelectedItems().stream().map(it -> it.getValue()).collect(Collectors.toList());
+        if (databaseTreeView.isFocused()) {
+            nodeClipboard = databaseTreeView.getSelectionModel().getSelectedItems().stream().map(it -> it.getValue()).collect(Collectors.toList());
+        }
+        if (modulesTableView.isFocused()) {
+            nodeClipboard = modulesTableView.getSelectionModel().getSelectedItems().stream().collect(Collectors.toList());
+        }
+        if (attributesTableView.isFocused()) {
+            attributeClipboard = attributesTableView.getSelectionModel().getSelectedItems().stream().collect(Collectors.toList());
+        }
     }
 
     @FXML
     public void pasteClicked() {
-        databaseTreeView.getSelectionModel().getSelectedItems().stream()
-                .limit(1)
-                .forEach(it -> executeCommand(new PasteCommand(it.getValue(), clipboard)));
+        if (databaseTreeView.isFocused()) {
+            databaseTreeView.getSelectionModel().getSelectedItems().stream()
+                    .limit(1)
+                    .forEach(it -> executeCommand(new PasteCommand(it.getValue(), nodeClipboard)));
+        }
+        if (modulesTableView.isFocused()) {
+            modulesTableView.getSelectionModel().getSelectedItems().stream()
+                    .limit(1)
+                    .forEach(it -> executeCommand(new PasteCommand(it.getParent(), nodeClipboard)));
+        }
+        if (attributesTableView.isFocused()) {
+            modulesTableView.getSelectionModel().getSelectedItems().stream()
+                    .map(it -> new EditAttributesCommand(attributeClipboard, it))
+                    .forEach(this::executeCommand);
+        }
     }
 
     @FXML
     public void deleteClicked() {
-        databaseTreeView.getSelectionModel().getSelectedItems().stream()
-                .forEach(it -> executeCommand(new DeleteCommand(it.getValue())));
+        if (databaseTreeView.isFocused()) {
+            databaseTreeView.getSelectionModel().getSelectedItems().stream()
+                    .map(it -> it.getValue())
+                    .map(it -> new DeleteCommand(it))
+                    .forEach(it -> {
+                        Platform.runLater(() -> this.executeCommand(it));
+                    });
+        }
+        if (modulesTableView.isFocused()) {
+            modulesTableView.getSelectionModel().getSelectedItems().stream()
+                    .map(it -> new DeleteCommand(it))
+                    .forEach(it -> {
+                        Platform.runLater(() -> this.executeCommand(it));
+                    });
+        }
+        if (attributesTableView.isFocused()) {
+            modulesTableView.getSelectionModel().getSelectedItems().stream()
+                    .map(it -> new DeleteAttributesCommand(attributesTableView.getSelectionModel().getSelectedItems()
+                    .stream().collect(Collectors.toList()), it))
+                    .forEach(this::executeCommand);
+        }
     }
 
     @FXML
@@ -368,11 +419,11 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
     }
 
-    private class ModulesTextFieldTableCell<T> extends TextFieldTableCell<T, T> {
+    private class CustomTextFieldTableCell<T> extends TextFieldTableCell<T, T> {
 
         private boolean editAllowed = false;
 
-        public ModulesTextFieldTableCell(Function<T, String> toString, BiConsumer<T, String> editCommand, Consumer<T> opener) {
+        public CustomTextFieldTableCell(Function<T, String> toString, BiConsumer<T, String> editCommand, Consumer<T> opener) {
             setConverter(new StringConverter<T>() {
                 @Override
                 public String toString(T t) {
@@ -381,7 +432,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
                 @Override
                 public T fromString(String string) {
-                    T it = ModulesTextFieldTableCell.this.getItem();
+                    T it = CustomTextFieldTableCell.this.getItem();
                     editCommand.accept(it, string);
                     return it;
                 }
