@@ -10,7 +10,6 @@ import static de.jpwinkler.daf.model.DoorsModelUtil.INT_PARSER;
 import static de.jpwinkler.daf.model.DoorsModelUtil.INT_WRITER;
 import static de.jpwinkler.daf.model.DoorsModelUtil.LIST_PARSER;
 import static de.jpwinkler.daf.model.DoorsModelUtil.LIST_WRITER;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -24,17 +23,22 @@ import java.util.stream.Stream;
  */
 public enum DoorsSystemAttributes {
     TAGS(List.class, LIST_PARSER, LIST_WRITER),
-    OBJECT_ATTRIBUTES(List.class, LIST_PARSER, LIST_WRITER, DoorsModule.class),
+    MODULE_OBJECT_ATTRIBUTES(List.class, LIST_PARSER, LIST_WRITER, DoorsModule.class),
+    MODULE_DESCRIPTION("Description", DoorsModule.class),
     OBJECT_LEVEL("Object Level", Integer.class, INT_PARSER, INT_WRITER, DoorsObject.class),
-    OBJECT_IDENTIFIER("Object Identifier", String.class, IDENTITY, IDENTITY, DoorsObject.class),
-    OBJECT_TEXT("Object Text", String.class, IDENTITY, IDENTITY, DoorsObject.class),
-    OBJECT_SHORT_TEXT("Object Short Text", String.class, IDENTITY, IDENTITY, DoorsObject.class),
-    OBJECT_HEADING("Object Heading", String.class, IDENTITY, IDENTITY, DoorsObject.class),
-    OBJECT_NUMBER("Object Number", String.class, IDENTITY, IDENTITY, DoorsObject.class),
+    OBJECT_IDENTIFIER("Object Identifier", DoorsObject.class),
+    OBJECT_TEXT("Object Text", DoorsObject.class),
+    OBJECT_SHORT_TEXT("Object Short Text", DoorsObject.class),
+    OBJECT_HEADING("Object Heading", DoorsObject.class),
+    OBJECT_NUMBER("Object Number", DoorsObject.class),
     ABSOLUTE_NUMBER("Absolute Number", Integer.class, INT_PARSER, INT_WRITER, DoorsObject.class);
 
     <T> DoorsSystemAttributes(Class<T> type, Function<String, T> parser, Function<T, String> writer, Class<? extends DoorsTreeNode>... appliesTo) {
         this(null, type, parser, writer);
+    }
+
+    <T> DoorsSystemAttributes(String key, Class<? extends DoorsTreeNode>... appliesTo) {
+        this(key, String.class, IDENTITY, IDENTITY, appliesTo);
     }
 
     <T> DoorsSystemAttributes(String key, Class<T> type, Function<String, T> parser, Function<T, String> writer, Class<? extends DoorsTreeNode>... appliesTo) {

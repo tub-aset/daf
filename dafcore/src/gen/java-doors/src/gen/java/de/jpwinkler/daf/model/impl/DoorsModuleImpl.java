@@ -106,7 +106,7 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
      */
     @Override
     public List<String> getObjectAttributes() {
-        return DoorsSystemAttributes.OBJECT_ATTRIBUTES.getValue(List.class, getAttributes());
+        return DoorsSystemAttributes.MODULE_OBJECT_ATTRIBUTES.getValue(List.class, getAttributes());
     }
 
     /**
@@ -115,7 +115,7 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
      */
     @Override
     public void setObjectAttributes(List<String> attrs) {
-        DoorsSystemAttributes.OBJECT_ATTRIBUTES.setValue(List.class, getAttributes(), attrs);
+        DoorsSystemAttributes.MODULE_OBJECT_ATTRIBUTES.setValue(List.class, getAttributes(), attrs);
     }
 
     /**

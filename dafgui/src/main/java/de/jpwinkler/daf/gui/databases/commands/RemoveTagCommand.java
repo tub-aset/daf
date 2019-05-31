@@ -51,6 +51,6 @@ public class RemoveTagCommand extends AbstractCommand {
 
     @Override
     public UpdateAction[] getUpdateActions() {
-        return UpdateAction.of(DatabasePaneController.UpdateTagsSection, DatabasePaneController.UpdateAttributesView);
+        return UpdateAction.of(DatabasePaneController.UpdateTagsView, DatabasePaneController.UpdateAttributesView);
     }
 }
