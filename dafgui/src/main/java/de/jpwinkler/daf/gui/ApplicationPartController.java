@@ -28,12 +28,13 @@ public abstract class ApplicationPartController<T extends ApplicationPartControl
 
     private ApplicationPaneController applicationController;
     private final List<Menu> menus;
-    private final CommandStack commandStack = new CommandStack();
 
     private DatabasePath path;
     private final DatabaseInterface databaseInterface;
+    private final CommandStack commandStack;
 
     private static final WeakHashMap<DatabasePath, DatabaseInterface> DATABASE_INTERFACES = new WeakHashMap<>();
+    private static final WeakHashMap<DatabasePath, CommandStack> DATABASE_COMMANDSTACKS = new WeakHashMap<>();
 
     public ApplicationPartController(ApplicationPaneController applicationController, DatabasePath path) {
         this.applicationController = applicationController;
@@ -47,6 +48,10 @@ public abstract class ApplicationPartController<T extends ApplicationPartControl
                 this.databaseInterface = (DatabaseInterface) path.getDatabaseInterface().getConstructor(DatabasePath.class).newInstance(dbPath);
                 DATABASE_INTERFACES.put(dbPath, databaseInterface);
             }
+            
+            CommandStack cmdStack = new CommandStack();
+            DATABASE_COMMANDSTACKS.putIfAbsent(dbPath, cmdStack);
+            this.commandStack = DATABASE_COMMANDSTACKS.get(dbPath);
         } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | InvocationTargetException ex) {
             throw new RuntimeException(ex);
         }
@@ -67,7 +72,6 @@ public abstract class ApplicationPartController<T extends ApplicationPartControl
                 throw new RuntimeException(ex);
             }
         }
-
     }
 
     public final void setStatus(final String status) {
@@ -91,13 +95,13 @@ public abstract class ApplicationPartController<T extends ApplicationPartControl
         }
 
         command.apply();
-        getCommandStack().addCommand(command);
+        getCommandStack().addCommand(this, command);
         updateGui(command.getUpdateActions());
     }
 
     @FXML
     public final void redoClicked() {
-        final CommandStack.AbstractCommand commandToRedo = getCommandStack().redo();
+        final CommandStack.AbstractCommand commandToRedo = getCommandStack().redo(this);
         if (commandToRedo == null) {
             this.setStatus("Cannot redo.");
         } else {
@@ -107,7 +111,7 @@ public abstract class ApplicationPartController<T extends ApplicationPartControl
 
     @FXML
     public final void undoClicked() {
-        final CommandStack.AbstractCommand commandToUndo = getCommandStack().undo();
+        final CommandStack.AbstractCommand commandToUndo = getCommandStack().undo(this);
         if (commandToUndo == null) {
             this.setStatus("Cannot undo.");
         } else {
@@ -133,7 +137,7 @@ public abstract class ApplicationPartController<T extends ApplicationPartControl
 
     public void save() throws IOException {
         getDatabaseInterface().flush();
-        getCommandStack().setSavePoint();
+        commandStack.setSavePoint();
     }
 
     protected DatabaseInterface getDatabaseInterface() {

@@ -1,42 +1,58 @@
 package de.jpwinkler.daf.gui;
 
+import java.lang.ref.WeakReference;
+import java.util.WeakHashMap;
 import java.util.function.Consumer;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.layout.Region;
 
 public class CommandStack {
 
     private AbstractCommand lastExecuted = INITIAL_COMMAND;
     private AbstractCommand lastSaved = INITIAL_COMMAND;
-    private Consumer<Boolean> onDirty = (a) -> {};
+    private final WeakHashMap<Consumer<Boolean>, Void> onDirty = new WeakHashMap<>();
 
-    public void addCommand(final AbstractCommand command) {
+    public void addCommand(ApplicationPartController originController, final AbstractCommand command) {
+        command.originController = new WeakReference<>(originController);
         command.previous = lastExecuted;
         this.lastExecuted.next = command;
         this.lastExecuted = command;
-        
-        onDirty.accept(isDirty());
+
+        onDirty.keySet().forEach(c -> c.accept(isDirty()));
     }
 
-    public AbstractCommand undo() {
+    public AbstractCommand undo(ApplicationPartController originController) {
         final AbstractCommand commandToUndo = lastExecuted;
         if (!commandToUndo.canUndo()) {
             return null;
         }
 
+        if (commandToUndo.originController.get() != originController) {
+            Alert alert = new Alert(Alert.AlertType.WARNING,
+                    "This action was initiated from another view, still undo from here?", ButtonType.YES, ButtonType.NO);
+            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+
+            if (alert.showAndWait().orElse(ButtonType.NO) != ButtonType.YES) {
+                return null;
+            }
+        }
+
         this.lastExecuted = lastExecuted.previous;
         commandToUndo.undo();
-        
-        onDirty.accept(isDirty());
+
+        onDirty.keySet().forEach(c -> c.accept(isDirty()));
         return commandToUndo;
     }
 
-    public AbstractCommand redo() {
+    public AbstractCommand redo(ApplicationPartController originController) {
         AbstractCommand commandToRedo = lastExecuted.next;
         if (commandToRedo != null) {
             this.lastExecuted = commandToRedo;
             commandToRedo.redo();
         }
-        
-        onDirty.accept(isDirty());
+
+        onDirty.keySet().forEach(c -> c.accept(isDirty()));
         return commandToRedo;
     }
 
@@ -46,15 +62,11 @@ public class CommandStack {
 
     public void setSavePoint() {
         this.lastSaved = lastExecuted;
-        onDirty.accept(isDirty());
+        onDirty.keySet().forEach(c -> c.accept(isDirty()));
     }
 
-    public Consumer<Boolean> getOnDirty() {
-        return onDirty;
-    }
-
-    public void setOnDirty(Consumer<Boolean> onDirty) {
-        this.onDirty = onDirty;
+    public void addOnDirty(Consumer<Boolean> onDirty) {
+        this.onDirty.put(onDirty, null);
     }
 
     public static abstract class AbstractCommand {
@@ -79,6 +91,7 @@ public class CommandStack {
             return true;
         }
 
+        private WeakReference<ApplicationPartController> originController;
         private AbstractCommand previous;
         private AbstractCommand next;
     }

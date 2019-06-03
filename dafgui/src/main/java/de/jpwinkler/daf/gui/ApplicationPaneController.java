@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.function.Consumer;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
@@ -173,10 +174,13 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
             final Tab selectedTab = new Tab(path.toString(), modulePane);
             applicationPartControllers.put(selectedTab, controller);
-
-            controller.getCommandStack().setOnDirty(dirty -> {
+            
+            Consumer<Boolean> onDirty = dirty -> {
                 selectedTab.setText(path.toString() + (dirty ? "*" : ""));
-            });
+            };
+            selectedTab.setUserData(onDirty);
+
+            controller.getCommandStack().addOnDirty(onDirty);
 
             selectedTab.setClosable(true);
             tabPane.getTabs().add(selectedTab);
