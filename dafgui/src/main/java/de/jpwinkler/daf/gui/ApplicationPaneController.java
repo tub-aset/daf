@@ -187,6 +187,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             }
             return true;
         } catch (Throwable ex) {
+            ex.printStackTrace();
             while (ex.getCause() != null) {
                 ex = ex.getCause();
             }

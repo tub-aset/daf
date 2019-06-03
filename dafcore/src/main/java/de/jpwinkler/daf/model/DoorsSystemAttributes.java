@@ -70,20 +70,20 @@ public enum DoorsSystemAttributes {
         return key == null;
     }
 
-    public <T> T getValue(Class<T> expectedType, Map<String, String> attributesMap) {
+    public <T> T getValue(Class<T> expectedType, DoorsTreeNode node) {
         if (!expectedType.isAssignableFrom(type)) {
             throw new IllegalArgumentException();
         }
 
-        return (T) this.parser.apply(attributesMap.get(this.getKey()));
+        return (T) this.parser.apply(node.getAttributes().get(this.getKey()));
     }
 
-    public <T> void setValue(Class<T> expectedType, Map<String, String> attributesMap, T value) {
+    public <T> void setValue(Class<T> expectedType, DoorsTreeNode node, T value) {
         if (!type.isAssignableFrom(expectedType)) {
             throw new IllegalArgumentException();
         }
 
-        attributesMap.put(this.getKey(), writer.apply(value));
+        node.getAttributes().put(this.getKey(), writer.apply(value));
     }
 
     public static Stream<DoorsSystemAttributes> valuesFor(Class<? extends DoorsTreeNode> cls) {

@@ -27,6 +27,11 @@
             <accelerator>
                <KeyCodeCombination alt="UP" code="M" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
             </accelerator></MenuItem>
+         <MenuItem mnemonicParsing="false" onAction="#newAttributeClicked" text="New attribute">
+            <accelerator>
+               <KeyCodeCombination alt="UP" code="A" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+            </accelerator>
+         </MenuItem>
          <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" onAction="#cutClicked" text="Cut">
                 <accelerator>

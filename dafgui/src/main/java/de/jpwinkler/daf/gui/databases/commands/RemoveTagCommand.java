@@ -9,6 +9,7 @@ import de.jpwinkler.daf.gui.CommandStack.AbstractCommand;
 import de.jpwinkler.daf.gui.UpdateAction;
 import de.jpwinkler.daf.gui.databases.DatabasePaneController;
 import de.jpwinkler.daf.model.DoorsTreeNode;
+import java.util.Collection;
 
 /**
  *
@@ -17,11 +18,11 @@ import de.jpwinkler.daf.model.DoorsTreeNode;
 public class RemoveTagCommand extends AbstractCommand {
 
     private final DoorsTreeNode node;
-    private final String tag;
+    private final Collection<String> tags;
 
-    public RemoveTagCommand(DoorsTreeNode node, String tag) {
+    public RemoveTagCommand(DoorsTreeNode node, Collection<String> tags) {
         this.node = node;
-        this.tag = tag;
+        this.tags = tags;
     }
 
     @Override
@@ -41,12 +42,12 @@ public class RemoveTagCommand extends AbstractCommand {
 
     @Override
     public void redo() {
-        node.removeTag(tag);
+        tags.forEach(node::removeTag);
     }
 
     @Override
     public void undo() {
-        node.setTag(tag);
+        tags.forEach(node::setTag);
     }
 
     @Override

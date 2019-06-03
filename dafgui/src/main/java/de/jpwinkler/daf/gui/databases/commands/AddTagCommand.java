@@ -9,6 +9,7 @@ import de.jpwinkler.daf.gui.CommandStack.AbstractCommand;
 import de.jpwinkler.daf.gui.UpdateAction;
 import de.jpwinkler.daf.gui.databases.DatabasePaneController;
 import de.jpwinkler.daf.model.DoorsTreeNode;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,13 +20,15 @@ import java.util.Set;
 public class AddTagCommand extends AbstractCommand {
 
     private final DoorsTreeNode node;
-    private final String tag;
-    private final Set<String> knownTags;
+    private final Collection<String> tag;
+    private final Set<String> previouslyKnownTags;
+    private final Set<String> currentlyKnownTags;
 
-    public AddTagCommand(DoorsTreeNode node, String tag, Set<String> knownTags) {
+    public AddTagCommand(DoorsTreeNode node, Collection<String> tag, Set<String> knownTags) {
         this.node = node;
         this.tag = tag;
-        this.knownTags = knownTags.contains(tag) ? new HashSet<>(1) : knownTags;
+        this.previouslyKnownTags = new HashSet<>(knownTags);
+        this.currentlyKnownTags = knownTags;
     }
 
     @Override
@@ -35,7 +38,7 @@ public class AddTagCommand extends AbstractCommand {
 
     @Override
     public boolean isApplicable() {
-        return node != null;
+        return node != null && tag.stream().allMatch(t -> t != null);
     }
 
     @Override
@@ -45,14 +48,15 @@ public class AddTagCommand extends AbstractCommand {
 
     @Override
     public void redo() {
-        node.setTag(tag);
-        knownTags.add(tag);
+        tag.stream().forEach(node::setTag);
+        tag.stream().forEach(currentlyKnownTags::add);
     }
 
     @Override
     public void undo() {
-        node.removeTag(tag);
-        knownTags.remove(tag);
+        tag.stream().forEach(node::removeTag);
+        currentlyKnownTags.clear();
+        currentlyKnownTags.addAll(previouslyKnownTags);
     }
 
     @Override

@@ -13,12 +13,12 @@ import de.jpwinkler.daf.gui.databases.commands.NewFolderCommand;
 import de.jpwinkler.daf.gui.databases.commands.NewModuleCommand;
 import de.jpwinkler.daf.gui.databases.commands.PasteCommand;
 import de.jpwinkler.daf.gui.databases.commands.RemoveTagCommand;
+import de.jpwinkler.daf.gui.databases.commands.RenameAttributesCommand;
 import de.jpwinkler.daf.gui.databases.commands.RenameNodeCommand;
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsSystemAttributes;
 import de.jpwinkler.daf.model.DoorsTreeNode;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -39,8 +39,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -55,10 +53,13 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.control.cell.TextFieldTreeCell;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
@@ -77,7 +78,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
         databaseTreeView.setRoot(new DoorsTreeItem(getDatabaseInterface().getDatabaseObject().getRoot()));
         databaseTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            updateGui(UpdateModulesView, UpdateTagsView, UpdateAttributesView);
+            updateGui(UpdateModulesView, UpdateTagsView, UpdateAttributesView, UpdateNodeTitle);
         });
         databaseTreeView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
@@ -88,67 +89,63 @@ public final class DatabasePaneController extends ApplicationPartController<Data
             });
         });
 
-        attributeNameColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getKey()));
-        attributeValueColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper(param.getValue()));
-        attributeValueColumn.setCellFactory(tc -> new CustomTextFieldTableCell<>(
-                it -> it.getValue(),
-                (it, newValue) -> {
-                    this.modulesTableView.getSelectionModel().getSelectedItems().stream()
-                            .map(module -> new EditAttributesCommand(it.getKey(), newValue, module))
-                            .forEach(this::executeCommand);
-                },
-                it -> {
-                }));
+        modulesTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            updateGui(UpdateTagsView, UpdateAttributesView, UpdateNodeTitle);
+        });
 
+        moduleNameColumn.setCellFactory(tc -> new CustomTextFieldTableCell<>(tc,
+                it -> it.getName(),
+                (it, newName) -> this.executeCommand(new RenameNodeCommand(it, newName)),
+                it -> this.open(this.getPath().withPath(it.getFullName()))));
+        moduleDescriptionColumn.setCellFactory(tc -> new CustomTextFieldTableCell<>(tc,
+                it -> DoorsSystemAttributes.MODULE_DESCRIPTION.getValue(String.class, it),
+                (it, newValue) -> {
+                    this.executeCommand(new EditAttributesCommand(DoorsSystemAttributes.MODULE_DESCRIPTION.getKey(), newValue, it));
+                },
+                it -> this.open(this.getPath().withPath(it.getFullName()))));
+        snapshotListsColumn.setCellFactory(tc -> new CustomTextFieldTableCell<>(tc,
+                it -> it == null ? "" : getSnapshotLists(it),
+                (it, newLists) -> {
+                    TreeMap<String, Set<String>> data = ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.retrieve();
+                    Set<String> newValueSet = Stream.of(newLists.split(","))
+                            .map(v -> v.trim())
+                            .collect(Collectors.toSet());
+
+                    data.entrySet().forEach(e -> {
+                        if (newValueSet.contains(e.getKey())) {
+                            e.getValue().add(it.getFullName());
+                        } else {
+                            e.getValue().remove(it.getFullName());
+                        }
+                    });
+                    ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.store(data);
+                    modulesTableView.refresh();
+                },
+                it -> this.open(this.getPath().withPath(it.getFullName()))
+        ));
+
+        attributeNameColumn.setCellFactory(tc -> new CustomTextFieldTableCell<>(tc,
+                it -> it.getKey(),
+                (it, newKey) -> {
+                    getCurrentDoorsTreeNode()
+                            .map(module -> new RenameAttributesCommand(it.getKey(), newKey, module))
+                            .forEach(this::executeCommand);
+                }));
         attributeNameColumn.setPrefWidth((double) ApplicationPreferences.DATABASE_PANE_ATTRIBUTENAME_WIDTH.retrieve());
         attributeNameColumn.widthProperty().addListener((obs, oldValue, newValue) -> {
             ApplicationPreferences.DATABASE_PANE_ATTRIBUTENAME_WIDTH.store(newValue.doubleValue());
         });
 
+        attributeValueColumn.setCellFactory(tc -> new CustomTextFieldTableCell<>(tc,
+                it -> it.getValue(),
+                (it, newValue) -> {
+                    this.modulesTableView.getSelectionModel().getSelectedItems().stream()
+                            .map(module -> new EditAttributesCommand(it.getKey(), newValue, module))
+                            .forEach(this::executeCommand);
+                }));
         attributeValueColumn.setPrefWidth((double) ApplicationPreferences.DATABASE_PANE_ATTRIBUTEVALUE_WIDTH.retrieve());
         attributeValueColumn.widthProperty().addListener((obs, oldValue, newValue) -> {
             ApplicationPreferences.DATABASE_PANE_ATTRIBUTEVALUE_WIDTH.store(newValue.doubleValue());
-        });
-
-        modulesTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            updateGui(UpdateTagsView, UpdateAttributesView);
-        });
-
-        moduleNameColumn.setCellFactory(tc -> new CustomTextFieldTableCell<>(
-                it -> it.getName(),
-                (it, newName) -> this.executeCommand(new RenameNodeCommand(it, newName)),
-                it -> this.open(this.getPath().withPath(it.getFullName()))
-        ));
-        moduleNameColumn.setCellValueFactory((it) -> new ReadOnlyObjectWrapper<>(it.getValue()));
-
-        moduleDescriptionColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(DoorsSystemAttributes.MODULE_DESCRIPTION.getValue(String.class, param.getValue().getAttributes())));
-
-        snapshotListsColumn.setEditable(true);
-        snapshotListsColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        snapshotListsColumn.setCellValueFactory(param -> {
-            SimpleObjectProperty<String> prop = new SimpleObjectProperty<>(
-                    getSnapshotLists(param.getValue())
-            );
-
-            prop.addListener((observable, oldValue, newValue) -> {
-                TreeMap<String, Set<String>> data = ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.retrieve();
-                Set<String> newValueSet = Stream.of(newValue.split(","))
-                        .map(v -> v.trim())
-                        .collect(Collectors.toSet());
-
-                data.entrySet().forEach(e -> {
-                    if (newValueSet.contains(e.getKey())) {
-                        e.getValue().add(param.getValue().getFullName());
-                    } else {
-                        e.getValue().remove(param.getValue().getFullName());
-                    }
-                });
-                ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.store(data);
-
-                prop.setValue(getSnapshotLists(param.getValue()));
-                modulesTableView.refresh();
-            });
-            return prop;
         });
 
         ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.addOnChangedHandler(t -> this.populateSnapshotMenu(((Map<String, ?>) t).keySet(), createSnapshotsMenu, this::createSnapshotFromListCicked));
@@ -177,6 +174,21 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     private TreeView<DoorsTreeNode> databaseTreeView;
 
     @FXML
+    private TitledPane currentNodePane;
+
+    @FXML
+    private TableView<DoorsModule> modulesTableView;
+
+    @FXML
+    private TableColumn<DoorsModule, DoorsModule> moduleNameColumn;
+
+    @FXML
+    private TableColumn<DoorsModule, DoorsModule> moduleDescriptionColumn;
+
+    @FXML
+    private TableColumn<DoorsModule, DoorsModule> snapshotListsColumn;
+
+    @FXML
     private ListView<String> tagsListView;
 
     @FXML
@@ -186,22 +198,10 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     private TableView<Entry<String, String>> attributesTableView;
 
     @FXML
-    private TableColumn<Entry<String, String>, String> attributeNameColumn;
+    private TableColumn<Entry<String, String>, Entry<String, String>> attributeNameColumn;
 
     @FXML
     private TableColumn<Entry<String, String>, Entry<String, String>> attributeValueColumn;
-
-    @FXML
-    private TableView<DoorsModule> modulesTableView;
-
-    @FXML
-    private TableColumn<DoorsModule, DoorsModule> moduleNameColumn;
-
-    @FXML
-    private TableColumn<DoorsModule, String> moduleDescriptionColumn;
-
-    @FXML
-    private TableColumn<DoorsModule, String> snapshotListsColumn;
 
     @FXML
     private Menu createSnapshotsMenu;
@@ -214,21 +214,9 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
     private List<DoorsTreeNode> nodeClipboard;
     private List<Entry<String, String>> attributeClipboard;
+    private List<String> tagsClipboard;
 
     private final HashSet<String> knownTags = new HashSet<>();
-
-    @FXML
-    public void addTagPressed() {
-        databaseTreeView.getSelectionModel().getSelectedItems().forEach(it
-                -> executeCommand(new AddTagCommand(it.getValue(), newTagComboBox.getValue(), knownTags)));
-    }
-
-    @FXML
-    public void removeTagsPressed() throws IOException {
-        databaseTreeView.getSelectionModel().getSelectedItems().forEach(
-                it -> tagsListView.getSelectionModel().getSelectedItems().forEach(
-                        t -> executeCommand(new RemoveTagCommand(it.getValue(), t))));
-    }
 
     @FXML
     public void newFolderClicked() {
@@ -240,6 +228,28 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     public void newModuleClicked() {
         databaseTreeView.getSelectionModel().getSelectedItems().stream()
                 .forEach(it -> executeCommand(new NewModuleCommand(it.getValue())));
+    }
+
+    @FXML
+    public void newAttributeClicked() {
+        getCurrentDoorsTreeNode().forEach(it -> executeCommand(new EditAttributesCommand("New attribute", "", it)));
+    }
+
+    @FXML
+    public void newTagEnterPressed(KeyEvent ev) {
+        String value = newTagComboBox.getValue();
+        if (ev.getCode() != KeyCode.ENTER || value == null || value.isEmpty() || value.isBlank()) {
+            return;
+        }
+
+        getCurrentDoorsTreeNode().forEach(it -> executeCommand(new AddTagCommand(it, Collections.singleton(value.trim()), knownTags)));
+        ev.consume();
+    }
+
+    private Stream<? extends DoorsTreeNode> getCurrentDoorsTreeNode() {
+        return modulesTableView.getSelectionModel().isEmpty()
+                ? databaseTreeView.getSelectionModel().getSelectedItems().stream().map(it -> it.getValue())
+                : modulesTableView.getSelectionModel().getSelectedItems().stream();
     }
 
     @FXML
@@ -259,6 +269,9 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         if (attributesTableView.isFocused()) {
             attributeClipboard = attributesTableView.getSelectionModel().getSelectedItems().stream().collect(Collectors.toList());
         }
+        if (tagsListView.isFocused()) {
+            tagsClipboard = tagsListView.getSelectionModel().getSelectedItems().stream().collect(Collectors.toList());
+        }
     }
 
     @FXML
@@ -274,8 +287,13 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                     .forEach(it -> executeCommand(new PasteCommand(it.getParent(), nodeClipboard)));
         }
         if (attributesTableView.isFocused()) {
-            modulesTableView.getSelectionModel().getSelectedItems().stream()
+            getCurrentDoorsTreeNode()
                     .map(it -> new EditAttributesCommand(attributeClipboard, it))
+                    .forEach(this::executeCommand);
+        }
+        if (tagsListView.isFocused()) {
+            getCurrentDoorsTreeNode()
+                    .map(it -> new AddTagCommand(it, tagsClipboard, knownTags))
                     .forEach(this::executeCommand);
         }
     }
@@ -298,9 +316,13 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                     });
         }
         if (attributesTableView.isFocused()) {
-            modulesTableView.getSelectionModel().getSelectedItems().stream()
-                    .map(it -> new DeleteAttributesCommand(attributesTableView.getSelectionModel().getSelectedItems()
-                    .stream().collect(Collectors.toList()), it))
+            getCurrentDoorsTreeNode()
+                    .map(it -> new DeleteAttributesCommand(attributesTableView.getSelectionModel().getSelectedItems().stream().collect(Collectors.toList()), it))
+                    .forEach(this::executeCommand);
+        }
+        if (tagsListView.isFocused()) {
+            getCurrentDoorsTreeNode()
+                    .map(it -> new RemoveTagCommand(it, tagsListView.getSelectionModel().getSelectedItems().stream().collect(Collectors.toList())))
                     .forEach(this::executeCommand);
         }
     }
@@ -423,7 +445,13 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
         private boolean editAllowed = false;
 
-        public CustomTextFieldTableCell(Function<T, String> toString, BiConsumer<T, String> editCommand, Consumer<T> opener) {
+        public CustomTextFieldTableCell(TableColumn<T, T> tc, Function<T, String> toString, BiConsumer<T, String> editCommand) {
+            this(tc, toString, editCommand, x -> {
+            });
+        }
+
+        public CustomTextFieldTableCell(TableColumn<T, T> tc, Function<T, String> toString, BiConsumer<T, String> editCommand, Consumer<T> opener) {
+            tc.setCellValueFactory((it) -> new ReadOnlyObjectWrapper<>(it.getValue()));
             setConverter(new StringConverter<T>() {
                 @Override
                 public String toString(T t) {
@@ -516,8 +544,13 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         };
     }
 
-    public static final UpdateAction<DatabasePaneController> RefreshTreeView = ctrl -> {
+    public static final UpdateAction<DatabasePaneController> UpdateTreeView = ctrl -> {
         ctrl.databaseTreeView.refresh();
+    };
+
+    public static final UpdateAction<DatabasePaneController> UpdateNodeTitle = ctrl -> {
+        ctrl.getCurrentDoorsTreeNode().findFirst()
+                .ifPresent(n -> ctrl.currentNodePane.setText(n.getFullName()));
     };
 
     public static final UpdateAction<DatabasePaneController> UpdateModulesView = ctrl -> {
@@ -526,6 +559,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                 .flatMap(it -> it.getValue().getChildren().stream())
                 .filter(it -> it instanceof DoorsModule)
                 .map(it -> (DoorsModule) it)
+                .peek(it -> ctrl.knownTags.addAll(it.getTags()))
                 .collect(Collectors.toCollection(() -> FXCollections.observableArrayList())));
     };
 
@@ -540,22 +574,14 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
         ctrl.tagsListView.getItems().clear();
 
-        Stream<? extends DoorsTreeNode> selModel = ctrl.modulesTableView.getSelectionModel().isEmpty()
-                ? ctrl.databaseTreeView.getSelectionModel().getSelectedItems().stream().map(it -> it.getValue())
-                : ctrl.modulesTableView.getSelectionModel().getSelectedItems().stream();
-        selModel
-                .flatMap(it -> it.getTags().stream())
+        ctrl.getCurrentDoorsTreeNode().flatMap(it -> it.getTags().stream())
                 .sorted()
                 .forEach(ctrl.tagsListView.getItems()::add);
     };
 
     public static final UpdateAction<DatabasePaneController> UpdateAttributesView = ctrl -> {
         ctrl.attributesTableView.getItems().clear();
-        Stream<? extends DoorsTreeNode> selModel = ctrl.modulesTableView.getSelectionModel().isEmpty()
-                ? ctrl.databaseTreeView.getSelectionModel().getSelectedItems().stream().map(it -> it.getValue())
-                : ctrl.modulesTableView.getSelectionModel().getSelectedItems().stream();
-
-        ctrl.attributesTableView.setItems(selModel
+        ctrl.attributesTableView.setItems(ctrl.getCurrentDoorsTreeNode()
                 .flatMap(it -> it.getAttributes().entrySet().stream())
                 .filter(it -> DoorsSystemAttributes.getForKey(it.getKey()).map(v -> !v.isSystemKey()).orElse(true))
                 .collect(Collectors.toCollection(() -> FXCollections.observableArrayList())));

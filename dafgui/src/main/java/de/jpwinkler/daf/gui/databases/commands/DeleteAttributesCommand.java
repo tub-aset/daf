@@ -18,22 +18,10 @@ public class DeleteAttributesCommand extends AttributesCommand {
     }
 
     @Override
-    public void apply() {
-        super.apply();
-        redo();
-    }
-
-    @Override
     public void redo() {
         super.attributes.stream()
                 .map(e -> e.getKey())
                 .forEach(super.treeNode.getAttributes()::remove);
-    }
-
-    @Override
-    public void undo() {
-        super.oldAttributes
-                .forEach(e -> super.treeNode.getAttributes().put(e.getKey(), e.getValue()));
     }
 
     @Override

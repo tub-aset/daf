@@ -33,8 +33,15 @@ public abstract class AttributesCommand extends CommandStack.AbstractCommand {
     }
 
     @Override
-    public void apply() {
+    public final void apply() {
         this.oldAttributes = treeNode.getAttributes().entrySet().stream().collect(Collectors.toList());
+        redo();
     }
-    
+
+    @Override
+    public final void undo() {
+        treeNode.getAttributes().clear();
+        oldAttributes.forEach(e -> treeNode.getAttributes().put(e.getKey(), e.getValue()));
+    }
+
 }

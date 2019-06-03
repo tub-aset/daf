@@ -15,10 +15,11 @@ import de.jpwinkler.daf.model.DoorsTreeNode;
  * @author fwiesweg
  */
 public class RenameNodeCommand extends CommandStack.AbstractCommand {
-    private DoorsTreeNode node;
+
+    private final DoorsTreeNode node;
     private String oldName;
-    private String newName;
-    
+    private final String newName;
+
     public RenameNodeCommand(DoorsTreeNode node, String newName) {
         this.node = node;
         this.newName = newName;
@@ -52,8 +53,7 @@ public class RenameNodeCommand extends CommandStack.AbstractCommand {
 
     @Override
     public UpdateAction[] getUpdateActions() {
-        return UpdateAction.of(DatabasePaneController.RefreshTreeView, DatabasePaneController.UpdateModulesView);
+        return UpdateAction.of(DatabasePaneController.UpdateTreeView, DatabasePaneController.UpdateModulesView, DatabasePaneController.UpdateNodeTitle);
     }
-    
-    
+
 }
