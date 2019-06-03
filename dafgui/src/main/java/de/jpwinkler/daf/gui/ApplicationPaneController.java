@@ -268,8 +268,13 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
         try {
             fsc.save();
-        } catch (IOException ex) {
-            this.setStatus("Save: Failed to save file; " + ex.getMessage());
+        } catch (Throwable ex) {
+            ex.printStackTrace();
+            while (ex.getCause() != null) {
+                ex = ex.getCause();
+            }
+            
+            this.setStatus("Save: Failed to save file; " + getMessage(ex));
             return false;
         }
 

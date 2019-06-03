@@ -27,7 +27,11 @@ public class RawFileDatabaseInterface implements DatabaseInterface {
         }
 
         this.databasePath = databasePath;
-        db.setRoot(ModuleCSV.read(new File(databasePath.getDatabasePath())));
+        if (databasePath.getDatabasePath() != null) {
+            db.setRoot(ModuleCSV.read(new File(databasePath.getDatabasePath())));
+        } else {
+            db.setRoot(DoorsFactory.eINSTANCE.createDoorsModule());
+        }
     }
 
     @Override

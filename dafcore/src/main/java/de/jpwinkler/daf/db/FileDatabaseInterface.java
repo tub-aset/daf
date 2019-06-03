@@ -34,7 +34,6 @@ public class FileDatabaseInterface implements DatabaseInterface {
 
     private final DoorsDatabase db;
     private DatabasePath<FileDatabaseInterface> databasePath;
-    private final Path databaseRoot;
 
     public FileDatabaseInterface(DatabasePath<FileDatabaseInterface> databasePath) throws IOException {
         if(!databasePath.getPath().isEmpty()) {
@@ -42,12 +41,11 @@ public class FileDatabaseInterface implements DatabaseInterface {
         }
         
         this.databasePath = databasePath;
-        this.databaseRoot = Paths.get(databasePath.getDatabasePath());
+        if (databasePath.getDatabasePath() != null) {
+            Path databaseRoot = Paths.get(databasePath.getDatabasePath());
+            Files.createDirectories(databaseRoot);
 
-        if (this.databaseRoot != null) {
-            Files.createDirectories(this.databaseRoot);
-
-            final Resource resource = new ResourceSetImpl().getResource(URI.createFileURI(this.databaseRoot.resolve(DATABASE_FILENAME).toString()), true);
+            final Resource resource = new ResourceSetImpl().getResource(URI.createFileURI(databaseRoot.resolve(DATABASE_FILENAME).toString()), true);
             this.db = (DoorsDatabase) resource.getContents().get(0);
         } else {
             this.db = DoorsFactory.eINSTANCE.createDoorsDatabase();
@@ -69,11 +67,11 @@ public class FileDatabaseInterface implements DatabaseInterface {
 
     @Override
     public final void flush() throws IOException {
-        if (databaseRoot == null) {
-            throw new IllegalStateException("No databaseRoot set");
+        if (databasePath.getDatabasePath() == null) {
+            throw new IllegalStateException("No database path set");
         }
 
-        final Resource resource = new ResourceSetImpl().createResource(URI.createFileURI(databaseRoot.resolve(DATABASE_FILENAME).toString()));
+        final Resource resource = new ResourceSetImpl().createResource(URI.createFileURI(Paths.get(databasePath.getDatabasePath()).resolve(DATABASE_FILENAME).toString()));
         resource.getContents().add((DoorsDatabaseImpl) db);
         resource.save(Collections.emptyMap());
 
@@ -136,7 +134,7 @@ public class FileDatabaseInterface implements DatabaseInterface {
 
     private Path ensureModuleFolderPath(final DoorsModule m) {
         try {
-            Path p = Paths.get(databaseRoot.toString(), m.getFullNameSegments().toArray(new String[0])).getParent();
+            Path p = Paths.get(databasePath.getDatabasePath(), m.getFullNameSegments().toArray(new String[0])).getParent();
             Files.createDirectories(p);
             return p;
         } catch (IOException ex) {
