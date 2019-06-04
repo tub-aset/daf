@@ -128,7 +128,7 @@ public class DoorsModelUtil {
 
     public static DoorsModule createModule(DoorsTreeNode parent, String name) {
         DoorsModule module = create(parent, DoorsFactory.eINSTANCE.createDoorsModule(), name);
-        module.setObjectAttributes(DoorsSystemAttributes.valuesFor(DoorsObject.class)
+        module.setObjectAttributes(DoorsAttributes.valuesFor(DoorsObject.class)
                 .filter(v -> !v.isSystemKey())
                 .map(a -> a.getKey())
                 .collect(Collectors.toList()));

@@ -2,6 +2,11 @@
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="model" nsURI="de.jpwinkler.daf.model" nsPrefix="Doors">
     
+    <eClassifiers xsi:type="ecore:EDataType" name="DoorsTreeNodeVisitor" instanceClassName="de.jpwinkler.daf.model.DoorsTreeNodeVisitor"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Pattern" instanceClassName="java.util.regex.Pattern"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Collection" instanceClassName="java.util.Collection"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="NodeFilter" instanceTypeName="java.util.function.Predicate&lt;de.jpwinkler.daf.model.DoorsTreeNode&gt;"/>
+    
     <eClassifiers xsi:type="ecore:EClass" name="DoorsFolder" eSuperTypes="#//DoorsTreeNode">
     </eClassifiers>
       
@@ -55,10 +60,6 @@
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" unique="false" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" unique="false" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eClassifiers>
-  
-    <eClassifiers xsi:type="ecore:EDataType" name="DoorsTreeNodeVisitor" instanceClassName="de.jpwinkler.daf.model.DoorsTreeNodeVisitor"/>
-    <eClassifiers xsi:type="ecore:EDataType" name="Pattern" instanceClassName="java.util.regex.Pattern"/>
-    <eClassifiers xsi:type="ecore:EDataType" name="Collection" instanceClassName="java.util.Collection"/>
     
     <eClassifiers xsi:type="ecore:EClass" name="Link" abstract="true">
         <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="#//DoorsObject"
@@ -124,6 +125,12 @@
         <eOperations name="copyFrom" eType="#//DoorsTreeNode">
             <eParameters name="node" eType="#//DoorsTreeNode"/>
             <eParameters name="newParent" eType="#//DoorsTreeNode"/>
+        </eOperations>
+        
+        <eOperations name="copyFrom" eType="#//DoorsTreeNode">
+            <eParameters name="node" eType="#//DoorsTreeNode"/>
+            <eParameters name="newParent" eType="#//DoorsTreeNode"/>
+            <eParameters name="nodeFilter" eType="#//NodeFilter"/>
         </eOperations>
         
         <eOperations name="toString" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

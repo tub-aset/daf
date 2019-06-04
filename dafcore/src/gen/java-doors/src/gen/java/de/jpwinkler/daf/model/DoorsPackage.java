@@ -213,13 +213,22 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE_DOORSTREENODE = 8;
 
 	/**
+	 * The operation id for the '<em>Copy From</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE_DOORSTREENODE_PREDICATE = 9;
+
+	/**
 	 * The operation id for the '<em>Get Child</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_TREE_NODE___GET_CHILD__STRING = 9;
+	int DOORS_TREE_NODE___GET_CHILD__STRING = 10;
 
 	/**
 	 * The operation id for the '<em>To String</em>' operation.
@@ -228,7 +237,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_TREE_NODE___TO_STRING = 10;
+	int DOORS_TREE_NODE___TO_STRING = 11;
 
 	/**
 	 * The number of operations of the '<em>Tree Node</em>' class.
@@ -237,7 +246,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_TREE_NODE_OPERATION_COUNT = 11;
+	int DOORS_TREE_NODE_OPERATION_COUNT = 12;
 
 	/**
 	 * The meta object id for the '{@link de.jpwinkler.daf.model.impl.DoorsFolderImpl <em>Folder</em>}' class.
@@ -392,6 +401,15 @@ public interface DoorsPackage extends EPackage {
 	 * @ordered
 	 */
 	int DOORS_FOLDER___COPY_FROM__DOORSTREENODE_DOORSTREENODE = DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE_DOORSTREENODE;
+
+	/**
+	 * The operation id for the '<em>Copy From</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_FOLDER___COPY_FROM__DOORSTREENODE_DOORSTREENODE_PREDICATE = DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE_DOORSTREENODE_PREDICATE;
 
 	/**
 	 * The operation id for the '<em>Get Child</em>' operation.
@@ -582,6 +600,15 @@ public interface DoorsPackage extends EPackage {
 	 * @ordered
 	 */
 	int DOORS_MODULE___COPY_FROM__DOORSTREENODE_DOORSTREENODE = DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE_DOORSTREENODE;
+
+	/**
+	 * The operation id for the '<em>Copy From</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_MODULE___COPY_FROM__DOORSTREENODE_DOORSTREENODE_PREDICATE = DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE_DOORSTREENODE_PREDICATE;
 
 	/**
 	 * The operation id for the '<em>Get Child</em>' operation.
@@ -882,6 +909,15 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_OBJECT___COPY_FROM__DOORSTREENODE_DOORSTREENODE = DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE_DOORSTREENODE;
 
 	/**
+	 * The operation id for the '<em>Copy From</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_OBJECT___COPY_FROM__DOORSTREENODE_DOORSTREENODE_PREDICATE = DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE_DOORSTREENODE_PREDICATE;
+
+	/**
 	 * The operation id for the '<em>Get Child</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1165,7 +1201,6 @@ public interface DoorsPackage extends EPackage {
 	 */
 	int DOORS_TREE_NODE_VISITOR = 8;
 
-
 	/**
 	 * The meta object id for the '<em>Pattern</em>' data type.
 	 * <!-- begin-user-doc -->
@@ -1176,7 +1211,6 @@ public interface DoorsPackage extends EPackage {
 	 */
 	int PATTERN = 9;
 
-
 	/**
 	 * The meta object id for the '<em>Collection</em>' data type.
 	 * <!-- begin-user-doc -->
@@ -1186,6 +1220,17 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 */
 	int COLLECTION = 10;
+
+
+	/**
+	 * The meta object id for the '<em>Node Filter</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see java.util.function.Predicate
+	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getNodeFilter()
+	 * @generated
+	 */
+	int NODE_FILTER = 11;
 
 
 	/**
@@ -1353,6 +1398,16 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getDoorsTreeNode__CopyFrom__DoorsTreeNode_DoorsTreeNode();
+
+	/**
+	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsTreeNode#copyFrom(de.jpwinkler.daf.model.DoorsTreeNode, de.jpwinkler.daf.model.DoorsTreeNode, java.util.function.Predicate) <em>Copy From</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Copy From</em>' operation.
+	 * @see de.jpwinkler.daf.model.DoorsTreeNode#copyFrom(de.jpwinkler.daf.model.DoorsTreeNode, de.jpwinkler.daf.model.DoorsTreeNode, java.util.function.Predicate)
+	 * @generated
+	 */
+	EOperation getDoorsTreeNode__CopyFrom__DoorsTreeNode_DoorsTreeNode_Predicate();
 
 	/**
 	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsTreeNode#getChild(java.lang.String) <em>Get Child</em>}' operation.
@@ -1727,6 +1782,17 @@ public interface DoorsPackage extends EPackage {
 	EDataType getCollection();
 
 	/**
+	 * Returns the meta object for data type '{@link java.util.function.Predicate <em>Node Filter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Node Filter</em>'.
+	 * @see java.util.function.Predicate
+	 * @model instanceClass="java.util.function.Predicate&lt;de.jpwinkler.daf.model.DoorsTreeNode&gt;"
+	 * @generated
+	 */
+	EDataType getNodeFilter();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1878,6 +1944,14 @@ public interface DoorsPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE_DOORSTREENODE = eINSTANCE.getDoorsTreeNode__CopyFrom__DoorsTreeNode_DoorsTreeNode();
+
+		/**
+		 * The meta object literal for the '<em><b>Copy From</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE_DOORSTREENODE_PREDICATE = eINSTANCE.getDoorsTreeNode__CopyFrom__DoorsTreeNode_DoorsTreeNode_Predicate();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Child</b></em>' operation.
@@ -2178,6 +2252,16 @@ public interface DoorsPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType COLLECTION = eINSTANCE.getCollection();
+
+		/**
+		 * The meta object literal for the '<em>Node Filter</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see java.util.function.Predicate
+		 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getNodeFilter()
+		 * @generated
+		 */
+		EDataType NODE_FILTER = eINSTANCE.getNodeFilter();
 
 	}
 

@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -175,6 +176,11 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNodeRef {
     }
 
     @Override
+    public DoorsTreeNode copyFrom(DoorsTreeNode node, DoorsTreeNode newParent, Predicate nodeFilter) {
+        throw new UnsupportedOperationException("Not supported");
+    }
+
+    @Override
     public DoorsTreeNode getChild(String name) {
         final List<String> pathSegments = Arrays.asList(name.split("/")).stream().filter(s -> !s.isEmpty()).collect(Collectors.toList());
         DoorsTreeNode current = this;
@@ -206,4 +212,5 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNodeRef {
     public List<String> getTags() {
         return Collections.emptyList();
     }
+
 }

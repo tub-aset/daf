@@ -37,8 +37,10 @@ public class XmiDatabaseInterface implements DatabaseInterface {
         if (openFlag == OpenFlag.CREATE_IF_INEXISTENT && !databaseFile.exists()) {
             this.databaseRoot = DoorsModelUtil.createFolder(null, FilenameUtils.getBaseName(databaseFile.getAbsolutePath()));
             this.flush();
-        } else if (openFlag == OpenFlag.ERASE_IF_EXISTS && databaseFile.exists()) {
-            databaseFile.delete();
+        } else if (openFlag == OpenFlag.ERASE_IF_EXISTS) {
+            if (databaseFile.exists()) {
+                databaseFile.delete();
+            }
             this.databaseRoot = DoorsModelUtil.createFolder(null, FilenameUtils.getBaseName(databaseFile.getAbsolutePath()));
             this.flush();
         } else if (openFlag == OpenFlag.OPEN_ONLY && databaseFile.isFile()) {

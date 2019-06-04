@@ -5,6 +5,7 @@ package de.jpwinkler.daf.model.impl;
 import de.jpwinkler.daf.model.*;
 import java.util.Collection;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
@@ -82,6 +83,8 @@ public class DoorsFactoryImpl extends EFactoryImpl implements DoorsFactory {
 				return createPatternFromString(eDataType, initialValue);
 			case DoorsPackage.COLLECTION:
 				return createCollectionFromString(eDataType, initialValue);
+			case DoorsPackage.NODE_FILTER:
+				return createNodeFilterFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -101,6 +104,8 @@ public class DoorsFactoryImpl extends EFactoryImpl implements DoorsFactory {
 				return convertPatternToString(eDataType, instanceValue);
 			case DoorsPackage.COLLECTION:
 				return convertCollectionToString(eDataType, instanceValue);
+			case DoorsPackage.NODE_FILTER:
+				return convertNodeFilterToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -223,6 +228,25 @@ public class DoorsFactoryImpl extends EFactoryImpl implements DoorsFactory {
 	 */
 	public String convertCollectionToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	public Predicate<DoorsTreeNode> createNodeFilterFromString(EDataType eDataType, String initialValue) {
+		return (Predicate<DoorsTreeNode>)super.createFromString(initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertNodeFilterToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(instanceValue);
 	}
 
 	/**

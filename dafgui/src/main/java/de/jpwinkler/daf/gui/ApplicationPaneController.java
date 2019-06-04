@@ -5,13 +5,15 @@ import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
 import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.gui.background.BackgroundTaskStatusListener;
 import de.jpwinkler.daf.gui.background.BackgroundTaskStatusMonitor;
+import de.jpwinkler.daf.model.DoorsAttributes;
 import de.jpwinkler.daf.model.DoorsTreeNode;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -303,18 +305,32 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
     @FXML
     public void saveAsClicked() {
-        createSnapshot(getCurrentFileStateController().getDatabaseInterface(), x -> true);
+        createSnapshot(getCurrentFileStateController().getDatabaseInterface(), getCurrentFileStateController().getPath(), x -> true);
     }
 
-    public void createSnapshot(DatabaseInterface databaseInterface, Predicate<DoorsTreeNode> include) {
+    public void createSnapshot(DatabaseInterface sourceDB, DatabasePath sourcePath, Predicate<DoorsTreeNode> include) {
         ChoiceDialog<ApplicationPart<?>> applicationPartChooser = new ChoiceDialog<>(null, ApplicationPart.registry().filter(p -> p.isAllowNew()).collect(Collectors.toList()));
-        
-        Optional<ApplicationPart<?>> partOptional = applicationPartChooser.showAndWait();
-        if(!partOptional.isPresent()) {
-            return;
-        }
 
-        
+        applicationPartChooser.showAndWait().stream()
+                .flatMap(part -> part.saveWithSelector(tabPane.getScene().getWindow()))
+                .forEach(path -> {
+                    try {
+                        DatabaseInterface destinationDB = (DatabaseInterface) path.getDatabaseInterface().getConstructor(DatabasePath.class, OpenFlag.class).newInstance(path, OpenFlag.ERASE_IF_EXISTS);
+                        destinationDB.getDatabaseRoot().copyFrom(sourceDB.getNode(sourcePath.getPath()), null, include);
+                        DoorsAttributes.DATABASE_COPIED_FROM.setValue(String.class, destinationDB.getDatabaseRoot(), sourceDB.getPath().toString());
+                        DoorsAttributes.DATABASE_COPIED_AT.setValue(String.class, destinationDB.getDatabaseRoot(), ZonedDateTime.now(ZoneOffset.UTC).toString());
+
+                        destinationDB.flush();
+                        this.open(path, OpenFlag.OPEN_ONLY);
+                    } catch (Throwable ex) {
+                        ex.printStackTrace();
+                        while (ex.getCause() != null) {
+                            ex = ex.getCause();
+                        }
+
+                        this.setStatus("Snapshot failed; " + getMessage(ex));
+                    }
+                });
     }
 
     @FXML

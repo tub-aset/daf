@@ -5,7 +5,7 @@ package de.jpwinkler.daf.model.impl;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsPackage;
-import de.jpwinkler.daf.model.DoorsSystemAttributes;
+import de.jpwinkler.daf.model.DoorsAttributes;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.FindObjectVisitor;
 import java.lang.reflect.InvocationTargetException;
@@ -106,7 +106,7 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
      */
     @Override
     public List<String> getObjectAttributes() {
-        return DoorsSystemAttributes.MODULE_OBJECT_ATTRIBUTES.getValue(List.class, this);
+        return DoorsAttributes.MODULE_OBJECT_ATTRIBUTES.getValue(List.class, this);
     }
 
     /**
@@ -115,7 +115,7 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
      */
     @Override
     public void setObjectAttributes(List<String> attrs) {
-        DoorsSystemAttributes.MODULE_OBJECT_ATTRIBUTES.setValue(List.class, this, attrs);
+        DoorsAttributes.MODULE_OBJECT_ATTRIBUTES.setValue(List.class, this, attrs);
     }
 
     /**
@@ -125,7 +125,7 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
     @Override
     public DoorsModule copyFrom(DoorsTreeNode newModule, DoorsTreeNode newParent) {
         super.copyFrom(newModule, newParent);
-        ((DoorsModule)newModule).setView(((DoorsModule)newParent).getView());
+        this.setView(((DoorsModule)newModule).getView());
         return this;
     }
 

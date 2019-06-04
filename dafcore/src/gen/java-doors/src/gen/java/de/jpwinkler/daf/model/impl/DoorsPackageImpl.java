@@ -14,6 +14,7 @@ import de.jpwinkler.daf.model.ResolvedLink;
 import de.jpwinkler.daf.model.UnresolvedLink;
 import java.util.Collection;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -30,82 +31,79 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
  * @generated
  */
 public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
+
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass doorsTreeNodeEClass = null;
-
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass doorsFolderEClass = null;
-
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass doorsModuleEClass = null;
-
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass doorsObjectEClass = null;
-
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass attributeMapEClass = null;
-
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass linkEClass = null;
-
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass resolvedLinkEClass = null;
-
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass unresolvedLinkEClass = null;
-
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EDataType doorsTreeNodeVisitorEDataType = null;
-
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EDataType patternEDataType = null;
-
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EDataType collectionEDataType = null;
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType nodeFilterEDataType = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -334,6 +332,16 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
+	public EOperation getDoorsTreeNode__CopyFrom__DoorsTreeNode_DoorsTreeNode_Predicate() {
+		return doorsTreeNodeEClass.getEOperations().get(10);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EOperation getDoorsTreeNode__GetChild__String() {
 		return doorsTreeNodeEClass.getEOperations().get(1);
 	}
@@ -345,7 +353,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 */
 	@Override
 	public EOperation getDoorsTreeNode__ToString() {
-		return doorsTreeNodeEClass.getEOperations().get(10);
+		return doorsTreeNodeEClass.getEOperations().get(11);
 	}
 
 	/**
@@ -684,6 +692,16 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
+	public EDataType getNodeFilter() {
+		return nodeFilterEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public DoorsFactory getDoorsFactory() {
 		return (DoorsFactory)getEFactoryInstance();
 	}
@@ -723,6 +741,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___REMOVE_TAG__PATTERN);
 		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___CAN_COPY_FROM__DOORSTREENODE);
 		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE_DOORSTREENODE);
+		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE_DOORSTREENODE_PREDICATE);
 		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___GET_CHILD__STRING);
 		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___TO_STRING);
 
@@ -767,6 +786,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		doorsTreeNodeVisitorEDataType = createEDataType(DOORS_TREE_NODE_VISITOR);
 		patternEDataType = createEDataType(PATTERN);
 		collectionEDataType = createEDataType(COLLECTION);
+		nodeFilterEDataType = createEDataType(NODE_FILTER);
 	}
 
 	/**
@@ -839,6 +859,11 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		addEParameter(op, this.getDoorsTreeNode(), "node", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getDoorsTreeNode(), "newParent", 0, 1, IS_UNIQUE, IS_ORDERED);
 
+		op = initEOperation(getDoorsTreeNode__CopyFrom__DoorsTreeNode_DoorsTreeNode_Predicate(), this.getDoorsTreeNode(), "copyFrom", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getDoorsTreeNode(), "node", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getDoorsTreeNode(), "newParent", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getNodeFilter(), "nodeFilter", 0, 1, IS_UNIQUE, IS_ORDERED);
+
 		op = initEOperation(getDoorsTreeNode__GetChild__String(), this.getDoorsTreeNode(), "getChild", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEString(), "name", 0, 1, IS_UNIQUE, IS_ORDERED);
 
@@ -893,6 +918,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		initEDataType(doorsTreeNodeVisitorEDataType, DoorsTreeNodeVisitor.class, "DoorsTreeNodeVisitor", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(patternEDataType, Pattern.class, "Pattern", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(collectionEDataType, Collection.class, "Collection", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(nodeFilterEDataType, Predicate.class, "NodeFilter", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS, "java.util.function.Predicate<de.jpwinkler.daf.model.DoorsTreeNode>");
 
 		// Create resource
 		createResource(eNS_URI);

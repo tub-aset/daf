@@ -4,6 +4,7 @@ package de.jpwinkler.daf.model;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 /**
@@ -195,6 +196,14 @@ public interface DoorsTreeNode {
 	 * @generated
 	 */
 	DoorsTreeNode copyFrom(DoorsTreeNode node, DoorsTreeNode newParent);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model nodeFilterDataType="de.jpwinkler.daf.model.NodeFilter"
+	 * @generated
+	 */
+	DoorsTreeNode copyFrom(DoorsTreeNode node, DoorsTreeNode newParent, Predicate<DoorsTreeNode> nodeFilter);
 
 	/**
 	 * <!-- begin-user-doc -->

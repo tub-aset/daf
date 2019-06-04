@@ -29,7 +29,7 @@ import de.jpwinkler.daf.gui.modules.commands.UnwrapChildrenCommand;
 import de.jpwinkler.daf.model.DoorsModelUtil;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
-import de.jpwinkler.daf.model.DoorsSystemAttributes;
+import de.jpwinkler.daf.model.DoorsAttributes;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import java.util.ArrayList;
@@ -295,7 +295,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
     private void mergeObjectAttributes() {
         Set<String> moduleAttrs = new HashSet<>(this.module.getObjectAttributes());
-        moduleAttrs.add(DoorsSystemAttributes.OBJECT_LEVEL.getKey());
+        moduleAttrs.add(DoorsAttributes.OBJECT_LEVEL.getKey());
         this.currentView.getColumns().forEach(cd -> moduleAttrs.add(cd.getAttributeName()));
         this.module.setObjectAttributes(new ArrayList<>(moduleAttrs));
     }

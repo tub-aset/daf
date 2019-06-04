@@ -21,7 +21,7 @@ import java.util.stream.Stream;
  *
  * @author fwiesweg
  */
-public enum DoorsSystemAttributes {
+public enum DoorsAttributes {
     TAGS(List.class, LIST_PARSER, LIST_WRITER),
     MODULE_OBJECT_ATTRIBUTES(List.class, LIST_PARSER, LIST_WRITER, DoorsModule.class),
     MODULE_DESCRIPTION("Description", DoorsModule.class),
@@ -31,17 +31,19 @@ public enum DoorsSystemAttributes {
     OBJECT_SHORT_TEXT("Object Short Text", DoorsObject.class),
     OBJECT_HEADING("Object Heading", DoorsObject.class),
     OBJECT_NUMBER("Object Number", DoorsObject.class),
-    ABSOLUTE_NUMBER("Absolute Number", Integer.class, INT_PARSER, INT_WRITER, DoorsObject.class);
+    ABSOLUTE_NUMBER("Absolute Number", Integer.class, INT_PARSER, INT_WRITER, DoorsObject.class),
+    DATABASE_COPIED_FROM("Copied From", DoorsFolder.class),
+    DATABASE_COPIED_AT("Copied At", DoorsFolder.class);
 
-    <T> DoorsSystemAttributes(Class<T> type, Function<String, T> parser, Function<T, String> writer, Class<? extends DoorsTreeNode>... appliesTo) {
+    <T> DoorsAttributes(Class<T> type, Function<String, T> parser, Function<T, String> writer, Class<? extends DoorsTreeNode>... appliesTo) {
         this(null, type, parser, writer);
     }
 
-    <T> DoorsSystemAttributes(String key, Class<? extends DoorsTreeNode>... appliesTo) {
+    <T> DoorsAttributes(String key, Class<? extends DoorsTreeNode>... appliesTo) {
         this(key, String.class, IDENTITY, IDENTITY, appliesTo);
     }
 
-    <T> DoorsSystemAttributes(String key, Class<T> type, Function<String, T> parser, Function<T, String> writer, Class<? extends DoorsTreeNode>... appliesTo) {
+    <T> DoorsAttributes(String key, Class<T> type, Function<String, T> parser, Function<T, String> writer, Class<? extends DoorsTreeNode>... appliesTo) {
         this.key = key;
         this.type = type;
         this.parser = parser;
@@ -49,10 +51,10 @@ public enum DoorsSystemAttributes {
         this.appliesTo = appliesTo;
     }
 
-    private static final Map<String, DoorsSystemAttributes> inverseMap = Stream.of(DoorsSystemAttributes.values())
+    private static final Map<String, DoorsAttributes> inverseMap = Stream.of(DoorsAttributes.values())
             .collect(Collectors.toMap(v -> v.getKey(), v -> v));
 
-    public static Optional<DoorsSystemAttributes> getForKey(String key) {
+    public static Optional<DoorsAttributes> getForKey(String key) {
         return inverseMap.containsKey(key) ? Optional.of(inverseMap.get(key)) : Optional.empty();
     }
 
@@ -86,8 +88,8 @@ public enum DoorsSystemAttributes {
         node.getAttributes().put(this.getKey(), writer.apply(value));
     }
 
-    public static Stream<DoorsSystemAttributes> valuesFor(Class<? extends DoorsTreeNode> cls) {
-        return Stream.of(DoorsSystemAttributes.values())
+    public static Stream<DoorsAttributes> valuesFor(Class<? extends DoorsTreeNode> cls) {
+        return Stream.of(DoorsAttributes.values())
                 .filter(v -> v.appliesTo.length == 0 || Stream.of(v.appliesTo).anyMatch(c -> c.isAssignableFrom(cls)));
     }
 }

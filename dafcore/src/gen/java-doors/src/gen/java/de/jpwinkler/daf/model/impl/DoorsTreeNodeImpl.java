@@ -4,7 +4,7 @@ package de.jpwinkler.daf.model.impl;
 
 import de.jpwinkler.daf.model.DoorsModelUtil;
 import de.jpwinkler.daf.model.DoorsPackage;
-import de.jpwinkler.daf.model.DoorsSystemAttributes;
+import de.jpwinkler.daf.model.DoorsAttributes;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import java.lang.reflect.InvocationTargetException;
@@ -243,7 +243,7 @@ public abstract class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container imp
      */
     @Override
     public boolean hasTag(String tag) {
-        return DoorsSystemAttributes.TAGS.getValue(List.class, this).contains(tag);
+        return DoorsAttributes.TAGS.getValue(List.class, this).contains(tag);
     }
 
     /**
@@ -252,53 +252,49 @@ public abstract class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container imp
      */
     @Override
     public boolean hasTag(Pattern pattern) {
-        return DoorsSystemAttributes.TAGS.getValue(List.class, this).stream().anyMatch(pattern.asMatchPredicate());
+        return DoorsAttributes.TAGS.getValue(List.class, this).stream().anyMatch(pattern.asMatchPredicate());
     }
 
     /**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated NOT
-	 */
-	@Override
-	public List<String> getTags() {
-		return DoorsSystemAttributes.TAGS.getValue(List.class, this);
-	}
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated NOT
+     */
+    @Override
+    public List<String> getTags() {
+        return DoorsAttributes.TAGS.getValue(List.class, this);
+    }
 
-				/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated NOT
-	 */
-	@Override
-	public void setTag(String tag) {
-            List<String> l = DoorsSystemAttributes.TAGS.getValue(List.class, this);
-            DoorsSystemAttributes.TAGS.setValue(List.class, this, Stream.concat(Stream.of(tag), l.stream() ).distinct().collect(Collectors.toList()));
-	}
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated NOT
+     */
+    @Override
+    public void setTag(String tag) {
+        List<String> l = DoorsAttributes.TAGS.getValue(List.class, this);
+        DoorsAttributes.TAGS.setValue(List.class, this, Stream.concat(Stream.of(tag), l.stream()).distinct().collect(Collectors.toList()));
+    }
 
-				/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated NOT
-	 */
-	@Override
-	public void removeTag(String tag) {
-            List<String> l = DoorsSystemAttributes.TAGS.getValue(List.class, this);
-	    DoorsSystemAttributes.TAGS.setValue(List.class, this, l.stream().filter(t -> !tag.equals(t)).collect(Collectors.toList()));
-	}
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated NOT
+     */
+    @Override
+    public void removeTag(String tag) {
+        List<String> l = DoorsAttributes.TAGS.getValue(List.class, this);
+        DoorsAttributes.TAGS.setValue(List.class, this, l.stream().filter(t -> !tag.equals(t)).collect(Collectors.toList()));
+    }
 
-				/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated NOT
-	 */
-	@Override
-	public void removeTag(Pattern pattern) {
-            List<String> l = DoorsSystemAttributes.TAGS.getValue(List.class, this);
-	    DoorsSystemAttributes.TAGS.setValue(List.class, this, l.stream().filter(Predicate.not(pattern.asMatchPredicate())).collect(Collectors.toList()));
-	}
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated NOT
+     */
+    @Override
+    public void removeTag(Pattern pattern) {
+        List<String> l = DoorsAttributes.TAGS.getValue(List.class, this);
+        DoorsAttributes.TAGS.setValue(List.class, this, l.stream().filter(Predicate.not(pattern.asMatchPredicate())).collect(Collectors.toList()));
+    }
 
-				/**
+    /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc --> @generated NOT
      */
@@ -316,19 +312,33 @@ public abstract class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container imp
      */
     @Override
     public DoorsTreeNode copyFrom(DoorsTreeNode node, DoorsTreeNode newParent) {
+        return copyFrom(node, newParent, x -> true);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated NOT
+     */
+    @Override
+    public DoorsTreeNode copyFrom(DoorsTreeNode node, DoorsTreeNode newParent, Predicate<DoorsTreeNode> nodeFilter) {
         if (!this.canCopyFrom(node)) {
             throw new IllegalArgumentException();
+        }
+        
+        if(!nodeFilter.test(node)) {
+            return null;
         }
 
         this.setName(node.getName());
         this.getAttributes().clear();
         this.getAttributes().putAll(node.getAttributes());
-        
+
         this.getChildren().clear();
         node.getChildren().stream()
                 .map(c -> DoorsModelUtil.createCopy(c, this))
+                .filter(c -> c != null)
                 .forEach(this.getChildren()::add);
-        
+
         this.setParent(newParent);
         return this;
     }
@@ -490,6 +500,7 @@ public abstract class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container imp
      * <!-- begin-user-doc --> <!-- end-user-doc --> @generated
      */
     @Override
+    @SuppressWarnings("unchecked")
     public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
 			case DoorsPackage.DOORS_TREE_NODE___ACCEPT__DOORSTREENODEVISITOR:
@@ -514,6 +525,8 @@ public abstract class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container imp
 				return canCopyFrom((DoorsTreeNode)arguments.get(0));
 			case DoorsPackage.DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE_DOORSTREENODE:
 				return copyFrom((DoorsTreeNode)arguments.get(0), (DoorsTreeNode)arguments.get(1));
+			case DoorsPackage.DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE_DOORSTREENODE_PREDICATE:
+				return copyFrom((DoorsTreeNode)arguments.get(0), (DoorsTreeNode)arguments.get(1), (Predicate<DoorsTreeNode>)arguments.get(2));
 			case DoorsPackage.DOORS_TREE_NODE___GET_CHILD__STRING:
 				return getChild((String)arguments.get(0));
 			case DoorsPackage.DOORS_TREE_NODE___TO_STRING:
@@ -524,12 +537,11 @@ public abstract class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container imp
 
     /**
      * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated NOT
+     * <!-- end-user-doc --> @generated NOT
      */
     @Override
     public String toString() {
-		return getName();
-	}
+        return getName();
+    }
 
 } // DoorsTreeNodeImpl

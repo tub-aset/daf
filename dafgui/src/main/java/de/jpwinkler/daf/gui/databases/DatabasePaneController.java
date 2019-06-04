@@ -20,7 +20,7 @@ import de.jpwinkler.daf.gui.databases.commands.RenameAttributesCommand;
 import de.jpwinkler.daf.gui.databases.commands.RenameNodeCommand;
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
-import de.jpwinkler.daf.model.DoorsSystemAttributes;
+import de.jpwinkler.daf.model.DoorsAttributes;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.util.Collection;
 import java.util.Collections;
@@ -109,9 +109,9 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                 (it, newName) -> this.executeCommand(new RenameNodeCommand(it, newName)),
                 it -> this.open(this.getPath().withPath(it.getFullName()), OpenFlag.OPEN_ONLY)));
         moduleDescriptionColumn.setCellFactory(tc -> new CustomTextFieldTableCell<>(tc,
-                it -> DoorsSystemAttributes.MODULE_DESCRIPTION.getValue(String.class, it),
+                it -> DoorsAttributes.MODULE_DESCRIPTION.getValue(String.class, it),
                 (it, newValue) -> {
-                    this.executeCommand(new EditAttributesCommand(DoorsSystemAttributes.MODULE_DESCRIPTION.getKey(), newValue, it));
+                    this.executeCommand(new EditAttributesCommand(DoorsAttributes.MODULE_DESCRIPTION.getKey(), newValue, it));
                 },
                 it -> this.open(this.getPath().withPath(it.getFullName()), OpenFlag.OPEN_ONLY)));
         snapshotListsColumn.setCellFactory(tc -> new CustomTextFieldTableCell<>(tc,
@@ -593,7 +593,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         ctrl.attributesTableView.getItems().clear();
         ctrl.attributesTableView.setItems(ctrl.getCurrentDoorsTreeNode()
                 .flatMap(it -> it.getAttributes().entrySet().stream())
-                .filter(it -> DoorsSystemAttributes.getForKey(it.getKey()).map(v -> !v.isSystemKey()).orElse(true))
+                .filter(it -> DoorsAttributes.getForKey(it.getKey()).map(v -> !v.isSystemKey()).orElse(true))
                 .collect(Collectors.toCollection(() -> FXCollections.observableArrayList())));
 
     };

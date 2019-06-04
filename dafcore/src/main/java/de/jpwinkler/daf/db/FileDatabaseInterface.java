@@ -83,6 +83,7 @@ public class FileDatabaseInterface implements DatabaseInterface {
     @Override
     public final void flush() throws IOException {
         FileUtils.deleteDirectory(new File(databasePath.getDatabasePath()));
+        this.databaseRoot.setName(new File(databasePath.getDatabasePath()).getName());
         databaseRoot.accept(new DoorsTreeNodeVisitor<>(DoorsFolder.class) {
             @Override
             protected void visitPostTraverse(DoorsFolder f) {
