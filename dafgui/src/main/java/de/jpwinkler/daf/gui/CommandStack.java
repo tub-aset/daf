@@ -1,7 +1,6 @@
 package de.jpwinkler.daf.gui;
 
 import java.lang.ref.WeakReference;
-import java.util.WeakHashMap;
 import java.util.function.Consumer;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -11,7 +10,11 @@ public class CommandStack {
 
     private AbstractCommand lastExecuted = INITIAL_COMMAND;
     private AbstractCommand lastSaved = INITIAL_COMMAND;
-    private final WeakHashMap<Consumer<Boolean>, Void> onDirty = new WeakHashMap<>();
+    private final Consumer<Boolean> onDirty;
+
+    public CommandStack(Consumer<Boolean> onDirty) {
+        this.onDirty = onDirty;
+    }
 
     public void addCommand(ApplicationPartController originController, final AbstractCommand command) {
         command.originController = new WeakReference<>(originController);
@@ -19,7 +22,7 @@ public class CommandStack {
         this.lastExecuted.next = command;
         this.lastExecuted = command;
 
-        onDirty.keySet().forEach(c -> c.accept(isDirty()));
+        onDirty.accept(isDirty());
     }
 
     public AbstractCommand undo(ApplicationPartController originController) {
@@ -41,7 +44,7 @@ public class CommandStack {
         this.lastExecuted = lastExecuted.previous;
         commandToUndo.undo();
 
-        onDirty.keySet().forEach(c -> c.accept(isDirty()));
+        onDirty.accept(isDirty());
         return commandToUndo;
     }
 
@@ -52,7 +55,7 @@ public class CommandStack {
             commandToRedo.redo();
         }
 
-        onDirty.keySet().forEach(c -> c.accept(isDirty()));
+        onDirty.accept(isDirty());
         return commandToRedo;
     }
 
@@ -62,11 +65,7 @@ public class CommandStack {
 
     public void setSavePoint() {
         this.lastSaved = lastExecuted;
-        onDirty.keySet().forEach(c -> c.accept(isDirty()));
-    }
-
-    public void addOnDirty(Consumer<Boolean> onDirty) {
-        this.onDirty.put(onDirty, null);
+        onDirty.accept(isDirty());
     }
 
     public static abstract class AbstractCommand {

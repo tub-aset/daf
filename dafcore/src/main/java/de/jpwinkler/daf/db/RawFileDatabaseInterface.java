@@ -21,17 +21,15 @@ public class RawFileDatabaseInterface implements DatabaseInterface {
     private final DoorsDatabase db = DoorsFactory.eINSTANCE.createDoorsDatabase();
     private final DatabasePath<RawFileDatabaseInterface> databasePath;
 
-    public RawFileDatabaseInterface(DatabasePath<RawFileDatabaseInterface> databasePath) throws IOException {
+    public RawFileDatabaseInterface(DatabasePath<RawFileDatabaseInterface> databasePath, OpenFlag openFlag) throws IOException {
         if (!databasePath.getPath().isEmpty()) {
             throw new IllegalArgumentException("databasePath must not have a path segment here");
         }
 
         this.databasePath = databasePath;
-        if (databasePath.getDatabasePath() != null) {
-            db.setRoot(ModuleCSV.read(new File(databasePath.getDatabasePath())));
-        } else {
-            db.setRoot(DoorsFactory.eINSTANCE.createDoorsModule());
-        }
+
+        File dbFile = new File(databasePath.getDatabasePath());
+        db.setRoot(ModuleCSV.read(dbFile, openFlag));
     }
 
     @Override

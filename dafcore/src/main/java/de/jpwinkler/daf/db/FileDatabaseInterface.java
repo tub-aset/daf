@@ -10,6 +10,7 @@ import de.jpwinkler.daf.model.DoorsPackage;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.model.impl.DoorsDatabaseImpl;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,6 +18,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -35,21 +38,30 @@ public class FileDatabaseInterface implements DatabaseInterface {
     private final DoorsDatabase db;
     private DatabasePath<FileDatabaseInterface> databasePath;
 
-    public FileDatabaseInterface(DatabasePath<FileDatabaseInterface> databasePath) throws IOException {
-        if(!databasePath.getPath().isEmpty()) {
+    public FileDatabaseInterface(DatabasePath<FileDatabaseInterface> databasePath, OpenFlag openFlag) throws IOException {
+        if (!databasePath.getPath().isEmpty()) {
             throw new IllegalArgumentException("databasePath must not have a path segment here");
         }
-        
-        this.databasePath = databasePath;
-        if (databasePath.getDatabasePath() != null) {
-            Path databaseRoot = Paths.get(databasePath.getDatabasePath());
-            Files.createDirectories(databaseRoot);
 
+        this.databasePath = databasePath;
+        Path databaseRoot = Paths.get(databasePath.getDatabasePath());
+
+        if (openFlag == OpenFlag.CREATE_IF_INEXISTENT && !databaseRoot.toFile().isDirectory()) {
+            Files.createDirectories(databaseRoot);
+        } else if (openFlag == OpenFlag.ERASE_IF_EXISTS && databaseRoot.toFile().exists()) {
+            FileUtils.deleteDirectory(databaseRoot.toFile());
+            Files.createDirectories(databaseRoot);
+        } else if (openFlag == OpenFlag.OPEN_ONLY && (!databaseRoot.toFile().isDirectory() || !databaseRoot.resolve(DATABASE_FILENAME).toFile().isFile())) {
+            throw new FileNotFoundException(databaseRoot.toFile().getAbsolutePath());
+        }
+        
+        if(databaseRoot.resolve(DATABASE_FILENAME).toFile().isFile()) {
             final Resource resource = new ResourceSetImpl().getResource(URI.createFileURI(databaseRoot.resolve(DATABASE_FILENAME).toString()), true);
             this.db = (DoorsDatabase) resource.getContents().get(0);
         } else {
             this.db = DoorsFactory.eINSTANCE.createDoorsDatabase();
-            this.db.setRoot(DoorsModelUtil.createFolder(null, null));
+            this.db.setRoot(DoorsModelUtil.createFolder(null, FilenameUtils.getBaseName(databaseRoot.toString())));
+            this.flush();
         }
     }
 

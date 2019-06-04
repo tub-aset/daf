@@ -1,5 +1,6 @@
 package de.jpwinkler.daf.gui.modules;
 
+import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.filter.objects.CascadingFilter;
 import de.jpwinkler.daf.filter.objects.DoorsObjectFilter;
@@ -8,6 +9,7 @@ import de.jpwinkler.daf.filter.objects.ReverseCascadingFilter;
 import de.jpwinkler.daf.gui.ApplicationPaneController;
 import de.jpwinkler.daf.gui.ApplicationPartController;
 import de.jpwinkler.daf.gui.ApplicationPreferences;
+import de.jpwinkler.daf.gui.CommandStack;
 import de.jpwinkler.daf.gui.MultiCommand;
 import de.jpwinkler.daf.gui.UpdateAction;
 import de.jpwinkler.daf.gui.modules.ViewDefinition.ColumnDefinition;
@@ -71,9 +73,9 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
         STANDARD_VIEW.setDisplayRemainingColumns(true);
     }
-
-    public ModulePaneController(ApplicationPaneController applicationController, DatabasePath path) {
-        super(applicationController, path);
+    
+    public ModulePaneController(ApplicationPaneController applicationController, DatabasePath path, DatabaseInterface databaseInterface, CommandStack databaseCommandStack) {
+        super(applicationController, path, databaseInterface, databaseCommandStack);
 
         this.module = (DoorsModule) getDatabaseInterface().getNode(path.getPath());
         if(this.module == null) {
@@ -169,13 +171,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
             traverseTreeItem(child, f);
         }
     }
-
-    @Override
-    public void setPath(DatabasePath path) {
-        super.setPath(path);
-        this.updateGui(ModuleUpdateAction.UPDATE_OUTLINE_VIEW);
-    }
-
+//
     @FXML
     public void reduceToSelectionClicked() {
         executeCommand(new ReduceToSelectionCommand(module, getCurrentObject()));

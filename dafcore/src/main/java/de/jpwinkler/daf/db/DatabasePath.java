@@ -96,8 +96,4 @@ public class DatabasePath<T extends DatabaseInterface> implements Serializable {
         return this.databaseInterface.getSimpleName() + ": " + this.databasePath + (this.path == null || this.path.isEmpty() ? "" : (":" + this.path));
     }
 
-    public boolean isValid() {
-        return databasePath != null && path != null;
-    }
-
 }

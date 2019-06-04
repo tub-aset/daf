@@ -6,14 +6,13 @@
 package de.jpwinkler.daf.gui;
 
 import de.jpwinkler.daf.db.DatabaseInterface;
+import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
 import de.jpwinkler.daf.db.DatabasePath;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.WeakHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javafx.fxml.FXML;
@@ -26,35 +25,18 @@ import javafx.scene.control.Menu;
  */
 public abstract class ApplicationPartController<T extends ApplicationPartController> extends AutoloadingPaneController<T> {
 
-    private ApplicationPaneController applicationController;
-    private final List<Menu> menus;
-
-    private DatabasePath path;
+    private final ApplicationPaneController applicationController;
+    private final DatabasePath path;
     private final DatabaseInterface databaseInterface;
     private final CommandStack commandStack;
+    
+    private final List<Menu> menus;
 
-    private static final WeakHashMap<DatabasePath, DatabaseInterface> DATABASE_INTERFACES = new WeakHashMap<>();
-    private static final WeakHashMap<DatabasePath, CommandStack> DATABASE_COMMANDSTACKS = new WeakHashMap<>();
-
-    public ApplicationPartController(ApplicationPaneController applicationController, DatabasePath path) {
+    public ApplicationPartController(ApplicationPaneController applicationController, DatabasePath path, DatabaseInterface databaseInterface, CommandStack databaseCommandStack) {
         this.applicationController = applicationController;
         this.path = path;
-
-        try {
-            DatabasePath dbPath = path.withPath("");
-            if (DATABASE_INTERFACES.containsKey(dbPath)) {
-                this.databaseInterface = DATABASE_INTERFACES.get(dbPath);
-            } else {
-                this.databaseInterface = (DatabaseInterface) path.getDatabaseInterface().getConstructor(DatabasePath.class).newInstance(dbPath);
-                DATABASE_INTERFACES.put(dbPath, databaseInterface);
-            }
-            
-            CommandStack cmdStack = new CommandStack();
-            DATABASE_COMMANDSTACKS.putIfAbsent(dbPath, cmdStack);
-            this.commandStack = DATABASE_COMMANDSTACKS.get(dbPath);
-        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | InvocationTargetException ex) {
-            throw new RuntimeException(ex);
-        }
+        this.databaseInterface = databaseInterface;
+        this.commandStack = databaseCommandStack;
 
         URL menuUrl = MainFX.class.getResource(
                 this.getClass().getSimpleName().replaceFirst("Controller$", "") + "Menu.fxml");
@@ -74,18 +56,12 @@ public abstract class ApplicationPartController<T extends ApplicationPartControl
         }
     }
 
-    public final void setStatus(final String status) {
-        if (applicationController != null) {
-            applicationController.setStatus(status);
-        }
-    }
-    
-    public final boolean open(DatabasePath path) {
-        return applicationController.open(path);
+    protected final void setStatus(final String status) {
+        applicationController.setStatus(status);
     }
 
-    public final CommandStack getCommandStack() {
-        return commandStack;
+    protected final boolean open(DatabasePath path, OpenFlag openFlag) {
+        return applicationController.open(path, openFlag);
     }
 
     protected final void executeCommand(final CommandStack.AbstractCommand command) {
@@ -97,6 +73,10 @@ public abstract class ApplicationPartController<T extends ApplicationPartControl
         command.apply();
         getCommandStack().addCommand(this, command);
         updateGui(command.getUpdateActions());
+    }
+    
+    protected final void updateGui(UpdateAction... actions) {
+        Stream.of(actions).forEach(a -> a.update(this));
     }
 
     @FXML
@@ -119,29 +99,20 @@ public abstract class ApplicationPartController<T extends ApplicationPartControl
         }
     }
 
-    protected final void updateGui(UpdateAction... actions) {
-        Stream.of(actions).forEach(a -> a.update(this));
-    }
-
     public final Collection<Menu> getMenus() {
         return this.menus == null ? Collections.emptySet() : menus;
     }
 
-    public final DatabasePath getPath() {
+    public DatabasePath getPath() {
         return path;
     }
 
-    public void setPath(DatabasePath path) {
-        this.path = path;
-    }
-
-    public void save() throws IOException {
-        getDatabaseInterface().flush();
-        commandStack.setSavePoint();
-    }
-
-    protected DatabaseInterface getDatabaseInterface() {
+    public final DatabaseInterface getDatabaseInterface() {
         return databaseInterface;
+    }
+    
+    public final CommandStack getCommandStack() {
+        return commandStack;
     }
 
 }

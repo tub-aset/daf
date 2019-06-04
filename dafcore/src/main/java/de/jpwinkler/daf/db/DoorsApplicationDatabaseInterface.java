@@ -20,9 +20,12 @@ public class DoorsApplicationDatabaseInterface implements DatabaseInterface {
     private final DoorsDatabase db;
     private final DatabasePath<DoorsApplicationDatabaseInterface> databasePath;
 
-    public DoorsApplicationDatabaseInterface(DatabasePath<DoorsApplicationDatabaseInterface> databasePath) {
+    public DoorsApplicationDatabaseInterface(DatabasePath<DoorsApplicationDatabaseInterface> databasePath, OpenFlag openFlag) {
         if (!databasePath.getDatabasePath().isEmpty() || !databasePath.getPath().isEmpty()) {
             throw new IllegalArgumentException("databasePath must be fully empty for the doors bridge");
+        }
+        if(openFlag != OpenFlag.OPEN_ONLY) {
+            throw new IllegalArgumentException("Only OpenFlag.OPEN_ONLY is allowed");
         }
 
         this.db = DoorsFactory.eINSTANCE.createDoorsDatabase();

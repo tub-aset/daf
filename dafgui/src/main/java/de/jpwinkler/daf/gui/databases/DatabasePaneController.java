@@ -1,9 +1,12 @@
 package de.jpwinkler.daf.gui.databases;
 
+import de.jpwinkler.daf.db.DatabaseInterface;
+import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
 import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.gui.ApplicationPaneController;
 import de.jpwinkler.daf.gui.ApplicationPartController;
 import de.jpwinkler.daf.gui.ApplicationPreferences;
+import de.jpwinkler.daf.gui.CommandStack;
 import de.jpwinkler.daf.gui.UpdateAction;
 import de.jpwinkler.daf.gui.databases.commands.AddTagCommand;
 import de.jpwinkler.daf.gui.databases.commands.DeleteAttributesCommand;
@@ -67,8 +70,8 @@ import javafx.util.StringConverter;
 
 public final class DatabasePaneController extends ApplicationPartController<DatabasePaneController> {
 
-    public DatabasePaneController(ApplicationPaneController applicationController, DatabasePath path) {
-        super(applicationController, path);
+    public DatabasePaneController(ApplicationPaneController applicationController, DatabasePath path, DatabaseInterface databaseInterface, CommandStack databaseCommandStack) {
+        super(applicationController, path, databaseInterface, databaseCommandStack);
 
         databaseTreeView.setCellFactory(tv -> new NodeTextFieldTreeCell<>(
                 it -> it.getName(),
@@ -96,13 +99,13 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         moduleNameColumn.setCellFactory(tc -> new CustomTextFieldTableCell<>(tc,
                 it -> it.getName(),
                 (it, newName) -> this.executeCommand(new RenameNodeCommand(it, newName)),
-                it -> this.open(this.getPath().withPath(it.getFullName()))));
+                it -> this.open(this.getPath().withPath(it.getFullName()), OpenFlag.OPEN_ONLY)));
         moduleDescriptionColumn.setCellFactory(tc -> new CustomTextFieldTableCell<>(tc,
                 it -> DoorsSystemAttributes.MODULE_DESCRIPTION.getValue(String.class, it),
                 (it, newValue) -> {
                     this.executeCommand(new EditAttributesCommand(DoorsSystemAttributes.MODULE_DESCRIPTION.getKey(), newValue, it));
                 },
-                it -> this.open(this.getPath().withPath(it.getFullName()))));
+                it -> this.open(this.getPath().withPath(it.getFullName()), OpenFlag.OPEN_ONLY)));
         snapshotListsColumn.setCellFactory(tc -> new CustomTextFieldTableCell<>(tc,
                 it -> it == null ? "" : getSnapshotLists(it),
                 (it, newLists) -> {
@@ -121,8 +124,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                     ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.store(data);
                     modulesTableView.refresh();
                 },
-                it -> this.open(this.getPath().withPath(it.getFullName()))
-        ));
+                it -> this.open(this.getPath().withPath(it.getFullName()), OpenFlag.OPEN_ONLY)));
 
         attributeNameColumn.setCellFactory(tc -> new CustomTextFieldTableCell<>(tc,
                 it -> it.getKey(),

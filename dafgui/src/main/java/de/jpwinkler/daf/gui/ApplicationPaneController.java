@@ -1,9 +1,10 @@
 package de.jpwinkler.daf.gui;
 
+import de.jpwinkler.daf.db.DatabaseInterface;
+import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
 import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.gui.background.BackgroundTaskStatusListener;
 import de.jpwinkler.daf.gui.background.BackgroundTaskStatusMonitor;
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Date;
@@ -11,8 +12,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.TreeMap;
-import java.util.function.Consumer;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
@@ -30,10 +32,13 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.Region;
+import org.apache.commons.lang3.mutable.MutableInt;
+import org.apache.commons.lang3.tuple.Triple;
 
 public final class ApplicationPaneController extends AutoloadingPaneController<ApplicationPaneController> {
 
-    private final Map<Tab, ApplicationPartController> applicationPartControllers = new HashMap<>();
+    private final Map<DatabasePath, Triple<MutableInt, DatabaseInterface, CommandStack>> databaseInterfaces = new HashMap<>();
+    private final Map<DatabasePath, ApplicationPartController> applicationPartControllers = new HashMap<>();
     private final BackgroundTaskStatusMonitor backgroundTaskStatusMonitor = new BackgroundTaskStatusMonitor();
 
     @FXML
@@ -57,18 +62,20 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     @FXML
     private Menu recentMenu;
 
+    private final Timer generalTimer = new Timer(true);
+
     private final TreeMap<Long, DatabasePath> recentFiles = ApplicationPreferences.RECENT_FILES.retrieve();
     private final int MAX_RECENT_FILES = 10;
 
     public ApplicationPaneController() {
         tabPane.getSelectionModel().selectedItemProperty().addListener((ChangeListener<Tab>) (observable, oldValue, newValue) -> {
-            if (getApplicationPartController(oldValue) != null) {
+            if (oldValue != null) {
                 getApplicationPartController(oldValue).getMenus().forEach(m -> {
                     mainMenuBar.getMenus().remove(m);
                 });
             }
 
-            if (getApplicationPartController(newValue) != null) {
+            if (newValue != null) {
                 mainMenuBar.getMenus().addAll(getApplicationPartController(newValue).getMenus());
             }
         });
@@ -112,83 +119,106 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     }
 
     private ApplicationPartController<?> getCurrentFileStateController() {
-        return getApplicationPartController(tabPane.getSelectionModel().getSelectedItem());
+        return getApplicationPartController((DatabasePath) tabPane.getSelectionModel().getSelectedItem().getUserData());
     }
 
     private ApplicationPartController<?> getApplicationPartController(Tab selectedTab) {
-        return applicationPartControllers.get(selectedTab);
+        return getApplicationPartController((DatabasePath) selectedTab.getUserData());
+    }
+
+    private ApplicationPartController<?> getApplicationPartController(DatabasePath path) {
+        return applicationPartControllers.get((DatabasePath) path);
     }
 
     public void setStatus(final String status) {
         statusBarLabel.setText(status);
+        generalTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(() -> statusBarLabel.setText(""));
+            }
+
+        }, 15000);
     }
 
     @FXML
     public void newLocalModuleClicked() {
-        open(ApplicationPart.LOCAL_MODULE.newPath(), true);
-
+        ApplicationPart.LOCAL_MODULE.saveWithSelector(tabPane.getScene().getWindow()).forEach(
+                path -> open(path, OpenFlag.ERASE_IF_EXISTS));
     }
 
     @FXML
     public void newLocalDatabaseClicked() {
-        open(ApplicationPart.LOCAL_DATABASE.newPath(), true);
-
+        ApplicationPart.LOCAL_DATABASE.saveWithSelector(tabPane.getScene().getWindow()).forEach(
+                path -> open(path, OpenFlag.ERASE_IF_EXISTS));
     }
 
     @FXML
     public void openLocalModuleClicked() throws URISyntaxException {
-        ApplicationPart.LOCAL_MODULE.openWithSelector(tabPane.getScene().getWindow()).forEach(this::open);
+        ApplicationPart.LOCAL_MODULE.openWithSelector(tabPane.getScene().getWindow()).forEach(
+                path -> this.open(path, OpenFlag.OPEN_ONLY));
     }
 
     @FXML
     public void openLocalDatabaseClicked() throws URISyntaxException {
-        ApplicationPart.LOCAL_DATABASE.openWithSelector(tabPane.getScene().getWindow()).forEach(this::open);
+        ApplicationPart.LOCAL_DATABASE.openWithSelector(tabPane.getScene().getWindow()).forEach(
+                path -> this.open(path, OpenFlag.OPEN_ONLY));
     }
 
     @FXML
     public void openDoorsDatabaseClicked() throws URISyntaxException {
-        ApplicationPart.DOORS_DATABASE.openWithSelector(tabPane.getScene().getWindow()).forEach(this::open);
+        ApplicationPart.DOORS_DATABASE.openWithSelector(tabPane.getScene().getWindow()).forEach(
+                path -> this.open(path, OpenFlag.OPEN_ONLY));
     }
 
-    public boolean open(DatabasePath path) {
-        return this.open(path, false);
-    }
-
-    public boolean open(DatabasePath path, boolean newFile) {
-        if (!newFile && applicationPartControllers.entrySet().stream()
-                .filter(e -> path.equals(e.getValue().getPath()))
+    public boolean open(DatabasePath path, OpenFlag openFlag) {
+        if (tabPane.getTabs().stream()
+                .filter(t -> path.equals((DatabasePath) t.getUserData()))
                 .findAny()
-                .map(e -> {
+                .map(t -> {
                     addToRecentMenu(path);
-                    tabPane.getSelectionModel().select(e.getKey());
-                    return e;
+                    tabPane.getSelectionModel().select(t);
+                    return t;
                 }).isPresent()) {
+
+            if (openFlag == OpenFlag.ERASE_IF_EXISTS) {
+                setStatus("Database " + path.toString() + " could not be created: already open");
+            }
 
             addToRecentMenu(path);
             return true;
         }
 
         try {
-            final ApplicationPartController controller = ApplicationPart.createControllerForAny(this, path);
+            final DatabasePath databasePath = path.withPath("");
+            final DatabaseInterface databaseInterface;
+            final CommandStack commandStack;
+            if (databaseInterfaces.containsKey(databasePath)) {
+                databaseInterfaces.get(databasePath).getLeft().increment();
+                databaseInterface = databaseInterfaces.get(databasePath).getMiddle();
+                commandStack = databaseInterfaces.get(databasePath).getRight();
+            } else {
+                databaseInterface = (DatabaseInterface) path.getDatabaseInterface().getConstructor(DatabasePath.class, OpenFlag.class).newInstance(databasePath, openFlag);
+                commandStack = new CommandStack(dirty -> {
+                    this.tabPane.getTabs().stream()
+                            .filter(t -> this.applicationPartControllers.get((DatabasePath) t.getUserData()).getDatabaseInterface() == databaseInterface)
+                            .forEach(t -> t.setText(path.toString() + (dirty ? "*" : "")));
+                });
+                databaseInterfaces.put(databasePath, Triple.of(new MutableInt(1), databaseInterface, commandStack));
+            }
+
+            final ApplicationPartController controller = ApplicationPart.createControllerForAny(this, path, databaseInterface, commandStack);
             final Parent modulePane = controller.getNode();
 
             final Tab selectedTab = new Tab(path.toString(), modulePane);
-            applicationPartControllers.put(selectedTab, controller);
-            
-            Consumer<Boolean> onDirty = dirty -> {
-                selectedTab.setText(path.toString() + (dirty ? "*" : ""));
-            };
-            selectedTab.setUserData(onDirty);
-
-            controller.getCommandStack().addOnDirty(onDirty);
+            selectedTab.setUserData(path);
+            applicationPartControllers.put(path, controller);
 
             selectedTab.setClosable(true);
             tabPane.getTabs().add(selectedTab);
 
             tabPane.getSelectionModel().select(selectedTab);
-            if (!newFile) {
-                addToRecentMenu(path);
-            }
+            addToRecentMenu(path);
             return true;
         } catch (Throwable ex) {
             ex.printStackTrace();
@@ -212,7 +242,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     }
 
     private void addToRecentMenu(DatabasePath path) {
-        if (path != null && path.isValid()) {
+        if (path != null) {
             recentFiles.values().remove(path);
             recentFiles.put(new Date().getTime(), path);
         }
@@ -240,7 +270,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             recentMenu.getItems().add(recentMenuItem);
             recentMenuItem.setOnAction(ev -> {
                 DatabasePath uri = (DatabasePath) ((MenuItem) ev.getTarget()).getUserData();
-                if (!this.open(uri)) {
+                if (!this.open(uri, OpenFlag.OPEN_ONLY)) {
                     recentFiles.entrySet().removeIf(e -> e.getValue().equals(uri));
                     ApplicationPreferences.RECENT_FILES.store(recentFiles);
                     generateRecentMenu();
@@ -251,47 +281,30 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
     @FXML
     public void saveClicked() {
-        save(getCurrentFileStateController(), true);
+        save(getCurrentFileStateController().getPath());
     }
 
-    private boolean save(ApplicationPartController fsc, boolean allowSaveAs) {
-        if (allowSaveAs && !fsc.getPath().isValid()) {
-            ApplicationPart.saveWithSelector(fsc.getPath(), tabPane.getScene().getWindow()).forEach(path -> {
-                fsc.setPath(path);
-            });
-        }
-
-        if (!fsc.getPath().isValid()) {
-            this.setStatus("Save: Failed to save file; invalid storage URI");
-            return false;
-        }
-
+    private boolean save(DatabasePath path) {
         try {
-            fsc.save();
+            applicationPartControllers.get(path).getDatabaseInterface().flush();
+            applicationPartControllers.get(path).getCommandStack().setSavePoint();
         } catch (Throwable ex) {
             ex.printStackTrace();
             while (ex.getCause() != null) {
                 ex = ex.getCause();
             }
-            
+
             this.setStatus("Save: Failed to save file; " + getMessage(ex));
             return false;
         }
 
-        addToRecentMenu(fsc.getPath());
+        addToRecentMenu(path);
         return true;
     }
 
     @FXML
     public void saveAsClicked() {
-        saveAs(getCurrentFileStateController());
-    }
-
-    private void saveAs(ApplicationPartController fsc) {
-        ApplicationPart.saveWithSelector(fsc.getPath(), tabPane.getScene().getWindow()).forEach(path -> {
-            fsc.setPath(path);
-            this.save(fsc, false);
-        });
+        throw new UnsupportedOperationException("Alias for make snapshot of full database");
     }
 
     @FXML
@@ -317,32 +330,50 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     }
 
     private void closeTabs(Collection<Tab> closedTabs) {
-        boolean cancelled = false;
+        ButtonType cancelled = ButtonType.YES;
         for (Tab t : closedTabs) {
-            if (cancelled) {
+            if (cancelled == ButtonType.CANCEL || closeTab((DatabasePath) t.getUserData()) == ButtonType.CANCEL) {
+                cancelled = ButtonType.CANCEL;
                 Platform.runLater(() -> tabPane.getTabs().add(t));
-                continue;
             }
+        }
+    }
 
-            // non-dirty files can be closed without worries
-            if (!getApplicationPartController(t).getCommandStack().isDirty()) {
-                applicationPartControllers.remove(t);
-                continue;
-            }
+    private ButtonType closeTab(DatabasePath path) {
+        // non-dirty files can be closed without worries
+        if (!getApplicationPartController(path).getCommandStack().isDirty()) {
+            removeDatabaseReference(path);
+            return ButtonType.YES;
+        }
 
-            // close if saving is not desired or we saved successfully
-            Alert alert = new Alert(AlertType.CONFIRMATION, "There are unsaved changes in " + t.getText() + ", do you want to save them?",
-                    ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
-            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-            ButtonType response = alert.showAndWait().orElse(ButtonType.NO);
-            if (response == ButtonType.NO || (response == ButtonType.YES && this.save(this.getApplicationPartController(t), true))) {
-                applicationPartControllers.remove(t);
-                continue;
-            }
+        // close if saving is not desired or we saved successfully
+        Alert alert = new Alert(AlertType.CONFIRMATION, "There are unsaved changes in " + path.toString() + ", do you want to save them?",
+                ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
+        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+        ButtonType response = alert.showAndWait().orElse(ButtonType.NO);
+        if (response == ButtonType.NO) { // no
+            removeDatabaseReference(path);
+            return ButtonType.YES;
+        } else if (response == ButtonType.YES && this.save(path)) { // yes and save success
+            removeDatabaseReference(path);
+            return ButtonType.YES;
+        } else if (response == ButtonType.YES) { // yes but save failed
+            return ButtonType.CANCEL;
+        } else if (response == ButtonType.CANCEL) { // cancel clicked
+            return ButtonType.CANCEL;
+        } else {
+            throw new AssertionError();
+        }
+    }
 
-            // allow cancellation
-            cancelled = response == ButtonType.CANCEL;
-            Platform.runLater(() -> tabPane.getTabs().add(t));
+    private void removeDatabaseReference(DatabasePath path) {
+        ApplicationPartController ctrl = applicationPartControllers.remove(path);
+        DatabasePath databasePath = ctrl.getDatabaseInterface().getPath();
+        MutableInt refCounter = databaseInterfaces.get(databasePath).getLeft();
+        refCounter.decrement();
+
+        if (refCounter.intValue() == 0) {
+            databaseInterfaces.remove(databasePath);
         }
     }
 }

@@ -19,6 +19,12 @@ import java.util.List;
  * @author fwiesweg
  */
 public interface DatabaseInterface {
+    
+    public static enum OpenFlag {
+        CREATE_IF_INEXISTENT,
+        ERASE_IF_EXISTS,
+        OPEN_ONLY
+    }
 
     DatabasePath getPath();
 

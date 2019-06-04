@@ -1,5 +1,7 @@
 package de.jpwinkler.daf.db;
 
+import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
+import de.jpwinkler.daf.model.DoorsFactory;
 import de.jpwinkler.daf.model.DoorsModelUtil;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
@@ -8,6 +10,7 @@ import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Stream;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
@@ -67,7 +71,10 @@ public class ModuleCSV {
 
     public static void writeModule(final OutputStream csvStream, final DoorsModule module) throws IOException {
         final String[] header = module.getObjectAttributes().toArray(size -> new String[size]);
-        CSVPrinter printer = new CSVPrinter(new OutputStreamWriter(csvStream, CHARSET), READ_FORMAT.withHeader(header));
+
+        CSVPrinter printer = new CSVPrinter(new OutputStreamWriter(csvStream, CHARSET), WRITE_FORMAT);
+        printer.printRecord((Object[]) header);
+
         module.accept(new DoorsTreeNodeVisitor<>(DoorsObject.class) {
             @Override
             public boolean visitPreTraverse(final DoorsObject object) {
@@ -94,13 +101,18 @@ public class ModuleCSV {
     }
 
     public static void writeMetaData(final OutputStream mmdStream, Map<String, String> metaData) throws IOException {
-        CSVPrinter csvPrinter = new CSVPrinter(new OutputStreamWriter(mmdStream, CHARSET), MMD_FORMAT);
+        CSVPrinter printer = new CSVPrinter(new OutputStreamWriter(mmdStream, CHARSET), MMD_FORMAT);
         for (Entry<String, String> e : metaData.entrySet()) {
-            csvPrinter.printRecord(e.getKey(), e.getValue());
+            printer.printRecord(e.getKey(), e.getValue());
         }
+        printer.flush();
     }
 
     public static DoorsModule read(File autoDetectFile) throws IOException {
+        return read(autoDetectFile, OpenFlag.OPEN_ONLY);
+    }
+
+    public static DoorsModule read(File autoDetectFile, OpenFlag openFlag) throws IOException {
         String path = autoDetectFile.getAbsolutePath();
         final File csvFile;
         final File mmdFile;
@@ -115,6 +127,19 @@ public class ModuleCSV {
             csvFile = new File(FilenameUtils.removeExtension(path) + ".csv");
         } else {
             throw new IOException("Bad file extension");
+        }
+
+        if (openFlag == OpenFlag.CREATE_IF_INEXISTENT && !csvFile.isFile() && !mmdFile.isFile()) {
+            write(csvFile, mmdFile, DoorsModelUtil.createModule(null, FilenameUtils.getBaseName(path)));
+        } else if (openFlag == OpenFlag.ERASE_IF_EXISTS) {
+            write(csvFile, mmdFile, DoorsModelUtil.createModule(null, FilenameUtils.getBaseName(path)));
+        }
+
+        if (!csvFile.isFile()) {
+            throw new FileNotFoundException(csvFile.getAbsolutePath());
+        }
+        if (!mmdFile.isFile()) {
+            throw new FileNotFoundException(mmdFile.getAbsolutePath());
         }
 
         return read(csvFile, mmdFile);
@@ -133,7 +158,7 @@ public class ModuleCSV {
     }
 
     public static DoorsModule readModule(final InputStream csvStream, String moduleName) throws IOException {
-        return buildModuleModel(new CSVParser(new InputStreamReader(csvStream, CHARSET), WRITE_FORMAT), moduleName);
+        return buildModuleModel(new CSVParser(new InputStreamReader(csvStream, CHARSET), READ_FORMAT), moduleName);
     }
 
     public static Map<String, String> readMetaData(final File mmdFile) throws IOException {
@@ -154,7 +179,6 @@ public class ModuleCSV {
 
     private static final CSVFormat WRITE_FORMAT = CSVFormat.newFormat(',')
             .withQuote('"')
-            .withHeader()
             .withEscape('\\')
             .withIgnoreSurroundingSpaces()
             .withRecordSeparator("\r\n");
