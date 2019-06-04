@@ -24,7 +24,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
-public class FileDatabaseInterface implements DatabaseInterface {
+public class FolderDatabaseInterface implements DatabaseInterface {
 
     static {
         Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("*", new XMIResourceFactoryImpl());
@@ -32,9 +32,9 @@ public class FileDatabaseInterface implements DatabaseInterface {
     }
 
     private DoorsFolder databaseRoot;
-    private DatabasePath<FileDatabaseInterface> databasePath;
+    private DatabasePath<FolderDatabaseInterface> databasePath;
 
-    public FileDatabaseInterface(DatabasePath<FileDatabaseInterface> databasePath, OpenFlag openFlag) throws IOException {
+    public FolderDatabaseInterface(DatabasePath<FolderDatabaseInterface> databasePath, OpenFlag openFlag) throws IOException {
         if (!databasePath.getPath().isEmpty()) {
             throw new IllegalArgumentException("databasePath must not have a path segment here");
         }
@@ -114,7 +114,7 @@ public class FileDatabaseInterface implements DatabaseInterface {
     }
 
     @Override
-    public DatabasePath<FileDatabaseInterface> getPath() {
+    public DatabasePath<FolderDatabaseInterface> getPath() {
         return databasePath;
     }
 

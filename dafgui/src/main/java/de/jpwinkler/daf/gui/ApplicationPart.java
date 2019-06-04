@@ -8,7 +8,7 @@ package de.jpwinkler.daf.gui;
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.db.DoorsApplicationDatabaseInterface;
-import de.jpwinkler.daf.db.FileDatabaseInterface;
+import de.jpwinkler.daf.db.FolderDatabaseInterface;
 import de.jpwinkler.daf.db.XmiDatabaseInterface;
 import de.jpwinkler.daf.db.RawFileDatabaseInterface;
 import de.jpwinkler.daf.gui.databases.DatabasePaneController;
@@ -57,8 +57,8 @@ public class ApplicationPart<T extends DatabaseInterface> {
 
     public static final ApplicationPart<DoorsApplicationDatabaseInterface> DOORS_DATABASE = new ApplicationPart<>("Doors Bridge", DoorsApplicationDatabaseInterface.class,
             ApplicationPart::dynamicPartConstructor, defaultSelector("/", null), false).register();
-    public static final ApplicationPart<FileDatabaseInterface> LOCAL_FILE_DATABASE = new ApplicationPart<>("Local file database", FileDatabaseInterface.class,
-            ApplicationPart::dynamicPartConstructor, fileChooserSelector(f -> f.getParent(), new ExtensionFilter("Root folder MMD", "__folder__.mmd")), true).register();
+    public static final ApplicationPart<FolderDatabaseInterface> LOCAL_FILE_DATABASE = new ApplicationPart<>("Local folder database", FolderDatabaseInterface.class,
+            ApplicationPart::dynamicPartConstructor, localFolderDatabaseSelector(), true).register();
     public static final ApplicationPart<XmiDatabaseInterface> LOCAL_XMI_DATABASE = new ApplicationPart<>("Local xmi database", XmiDatabaseInterface.class,
             ApplicationPart::dynamicPartConstructor, fileChooserSelector(new ExtensionFilter("XMI", "*.xmi")), true).register();
     public static final ApplicationPart<RawFileDatabaseInterface> LOCAL_MODULE = new ApplicationPart<>("Local module", RawFileDatabaseInterface.class,
@@ -133,6 +133,11 @@ public class ApplicationPart<T extends DatabaseInterface> {
                     })
                     .map(f -> new DatabasePath<>(part.getDatabaseInterfaceClass(), f.getAbsolutePath(), ""));
         };
+    }
+
+    private static DatabaseSelector localFolderDatabaseSelector() {
+        return (window, part, save)
+                -> save ? directorySelector().select(window, part, save) : fileChooserSelector(f -> f.getParent(), new ExtensionFilter("Root folder MMD", "__folder__.mmd")).select(window, part, save);
     }
 
     private static DatabaseSelector genericSelector() {
