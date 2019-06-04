@@ -72,8 +72,8 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
     public DatabasePaneController(ApplicationPaneController applicationController, DatabasePath path, DatabaseInterface databaseInterface, CommandStack databaseCommandStack) {
         super(applicationController, path, databaseInterface, databaseCommandStack);
-        
-        if(databaseInterface.isReadOnly()) {
+
+        if (databaseInterface.isReadOnly()) {
             databaseTreeView.setEditable(false);
             moduleNameColumn.setEditable(false);
             moduleDescriptionColumn.setEditable(false);
@@ -158,23 +158,29 @@ public final class DatabasePaneController extends ApplicationPartController<Data
             ApplicationPreferences.DATABASE_PANE_ATTRIBUTEVALUE_WIDTH.store(newValue.doubleValue());
         });
 
-        ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.addOnChangedHandler(t -> this.populateSnapshotMenu(((Map<String, ?>) t).keySet(), createSnapshotsMenu, this::createSnapshotFromListCicked));
+        ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.addOnChangedHandler(t -> this.populateSnapshotMenu(((Map<String, ?>) t).keySet(), createSnapshotsMenu, this::createSnapshotFromListClicked));
         ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.addOnChangedHandler(t -> this.populateSnapshotMenu(((Map<String, ?>) t).keySet(), deleteSnapshotListMenu, this::deleteSnapshotListClicked));
         ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.addOnChangedHandler(t -> this.populateSnapshotMenu(((Map<String, ?>) t).keySet(), showSnapshotListMenu, this::showSnapshotListClicked));
 
         Map<String, ?> snapshotLists = ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.retrieve();
-        populateSnapshotMenu(snapshotLists.keySet(), createSnapshotsMenu, this::createSnapshotFromListCicked);
+        populateSnapshotMenu(snapshotLists.keySet(), createSnapshotsMenu, this::createSnapshotFromListClicked);
         populateSnapshotMenu(snapshotLists.keySet(), deleteSnapshotListMenu, this::deleteSnapshotListClicked);
         populateSnapshotMenu(snapshotLists.keySet(), showSnapshotListMenu, this::showSnapshotListClicked);
     }
 
     private static String getSnapshotLists(DoorsTreeNode node) {
-        return ((Map<String, Set<String>>) ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.retrieve())
+        return ((Map<String, TreeSet<String>>) ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.retrieve())
                 .entrySet().stream()
-                .filter(e -> e.getValue().contains(node.getFullName()))
+                .filter(e -> isInSnapshotList(e.getValue(), node))
                 .map(e -> e.getKey())
                 .sorted()
                 .collect(Collectors.joining(", "));
+    }
+
+    private static boolean isInSnapshotList(TreeSet<String> list, DoorsTreeNode node) {
+        String fn = node.getFullName();
+        String ceil = list.ceiling(fn);
+        return ceil != null && ceil.startsWith(fn);
     }
 
     @FXML
@@ -356,8 +362,14 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.store(snapshotLists);
     }
 
-    private void createSnapshotFromListCicked(String snapshotList) {
-        System.out.println(snapshotList);
+    @FXML
+    public void createFullSnapshotClicked() {
+        createSnapshot(x -> true);
+    }
+
+    private void createSnapshotFromListClicked(String snapshotList) {
+        TreeSet<String> sl = ((TreeMap<String, TreeSet<String>>) ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.retrieve()).get(snapshotList);
+        createSnapshot(node -> isInSnapshotList(sl, node));
     }
 
     private void showSnapshotListClicked(String snapshotList) {

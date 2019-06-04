@@ -335,7 +335,7 @@ public abstract class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container imp
 
         this.getChildren().clear();
         node.getChildren().stream()
-                .map(c -> DoorsModelUtil.createCopy(c, this))
+                .map(c -> DoorsModelUtil.createCopy(c, this, nodeFilter))
                 .filter(c -> c != null)
                 .forEach(this.getChildren()::add);
 

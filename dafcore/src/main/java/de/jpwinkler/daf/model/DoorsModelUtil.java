@@ -13,6 +13,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class DoorsModelUtil {
@@ -156,8 +157,12 @@ public class DoorsModelUtil {
         object.setParent(parent);
         return object;
     }
-
+    
     public static <T extends DoorsTreeNode> T createCopy(T source, DoorsTreeNode newParent) {
+        return createCopy(source, newParent, x -> true);
+    }
+
+    public static <T extends DoorsTreeNode> T createCopy(T source, DoorsTreeNode newParent, Predicate<DoorsTreeNode> nodeFilter) {
         T copy;
         if (source instanceof DoorsObject) {
             copy = (T) DoorsFactory.eINSTANCE.createDoorsObject();
@@ -169,7 +174,7 @@ public class DoorsModelUtil {
             throw new AssertionError();
         }
 
-        return (T) copy.copyFrom(source, newParent);
+        return (T) copy.copyFrom(source, newParent, nodeFilter);
     }
 
     // Defined here to prevent forward references in DoorsSystemAttributes

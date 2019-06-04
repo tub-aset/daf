@@ -26,7 +26,7 @@
                <items>
                   <MenuButton mnemonicParsing="false" text="Make snapshot">
                     <items>
-                      <MenuItem mnemonicParsing="false" text="Of complete database" />
+                      <MenuItem mnemonicParsing="false" onAction="#createFullSnapshotClicked" text="Of complete database" />
                         <Menu fx:id="createSnapshotsMenu" mnemonicParsing="false" text="Of snapshot list" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" onAction="#addSnapshotListClicked" text="Add snapshot list" />

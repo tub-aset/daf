@@ -8,11 +8,13 @@ package de.jpwinkler.daf.gui;
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
 import de.jpwinkler.daf.db.DatabasePath;
+import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javafx.fxml.FXML;
@@ -62,6 +64,10 @@ public abstract class ApplicationPartController<T extends ApplicationPartControl
 
     protected final boolean open(DatabasePath path, OpenFlag openFlag) {
         return applicationController.open(path, openFlag);
+    }
+
+    protected final void createSnapshot(Predicate<DoorsTreeNode> include) {
+        applicationController.createSnapshot(this.getDatabaseInterface(), this.getDatabaseInterface().getPath(), include);
     }
 
     protected final void executeCommand(final CommandStack.AbstractCommand command) {
