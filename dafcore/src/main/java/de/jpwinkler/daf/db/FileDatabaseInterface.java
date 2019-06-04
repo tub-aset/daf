@@ -5,24 +5,22 @@ import de.jpwinkler.daf.model.DoorsFactory;
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModelUtil;
 import de.jpwinkler.daf.model.DoorsModule;
-import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsPackage;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
-import de.jpwinkler.daf.model.impl.DoorsDatabaseImpl;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 public class FileDatabaseInterface implements DatabaseInterface {
@@ -31,9 +29,6 @@ public class FileDatabaseInterface implements DatabaseInterface {
         Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("*", new XMIResourceFactoryImpl());
         DoorsPackage.eINSTANCE.eClass();
     }
-
-    private static final String DATABASE_ITEMNAME = "DoorsDatabasemodel";
-    private static final String DATABASE_FILENAME = "db." + DATABASE_ITEMNAME;
 
     private final DoorsDatabase db;
     private DatabasePath<FileDatabaseInterface> databasePath;
@@ -44,65 +39,70 @@ public class FileDatabaseInterface implements DatabaseInterface {
         }
 
         this.databasePath = databasePath;
-        Path databaseRoot = Paths.get(databasePath.getDatabasePath());
+        File databaseFile = new File(databasePath.getDatabasePath());
 
-        if (openFlag == OpenFlag.CREATE_IF_INEXISTENT && !databaseRoot.toFile().isDirectory()) {
-            Files.createDirectories(databaseRoot);
-        } else if (openFlag == OpenFlag.ERASE_IF_EXISTS && databaseRoot.toFile().exists()) {
-            FileUtils.deleteDirectory(databaseRoot.toFile());
-            Files.createDirectories(databaseRoot);
-        } else if (openFlag == OpenFlag.OPEN_ONLY && (!databaseRoot.toFile().isDirectory() || !databaseRoot.resolve(DATABASE_FILENAME).toFile().isFile())) {
-            throw new FileNotFoundException(databaseRoot.toFile().getAbsolutePath());
-        }
-        
-        if(databaseRoot.resolve(DATABASE_FILENAME).toFile().isFile()) {
-            final Resource resource = new ResourceSetImpl().getResource(URI.createFileURI(databaseRoot.resolve(DATABASE_FILENAME).toString()), true);
-            this.db = (DoorsDatabase) resource.getContents().get(0);
-        } else {
-            this.db = DoorsFactory.eINSTANCE.createDoorsDatabase();
-            this.db.setRoot(DoorsModelUtil.createFolder(null, FilenameUtils.getBaseName(databaseRoot.toString())));
-            this.flush();
-        }
-    }
-
-    @Override
-    public DoorsModule importModule(DoorsModule newModule) {
-        DoorsTreeNode dbParent = this.ensureDatabasePath(newModule.getParent());
-        DoorsModule dbModule = (DoorsModule) dbParent.getChild(newModule.getName());
-
-        if (dbModule != null) {
-            removeNode(dbModule);
+        if (openFlag == OpenFlag.CREATE_IF_INEXISTENT && !databaseFile.isDirectory()) {
+            Files.createDirectories(databaseFile.toPath());
+        } else if (openFlag == OpenFlag.ERASE_IF_EXISTS && databaseFile.exists()) {
+            FileUtils.deleteDirectory(databaseFile);
+            Files.createDirectories(databaseFile.toPath());
+        } else if (openFlag == OpenFlag.OPEN_ONLY && !databaseFile.isDirectory()) {
+            throw new FileNotFoundException(databaseFile.getAbsolutePath());
         }
 
-        return DoorsModelUtil.createCopy(newModule, dbParent.getParent());
+        this.db = DoorsFactory.eINSTANCE.createDoorsDatabase();
+        Files.walkFileTree(databaseFile.toPath(), new SimpleFileVisitor<Path>() {
+            private DoorsFolder currentDirectory = DoorsModelUtil.createFolder(null, FilenameUtils.getBaseName(databaseFile.getAbsolutePath()));
+
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                if ("csv".equals(FilenameUtils.getExtension(file.toString()))) {
+                    currentDirectory.getChildren().add(ModuleCSV.read(file.toFile()));
+                }
+
+                return super.visitFile(file, attrs);
+            }
+
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                currentDirectory = DoorsModelUtil.createFolder(currentDirectory, FilenameUtils.getBaseName(dir.toFile().getAbsolutePath()));
+                currentDirectory.getAttributes().putAll(ModuleCSV.readMetaData(dir.resolve("__folder__.mmd").toFile()));
+
+                return super.preVisitDirectory(dir, attrs);
+            }
+
+        });
     }
 
     @Override
     public final void flush() throws IOException {
-        if (databasePath.getDatabasePath() == null) {
-            throw new IllegalStateException("No database path set");
-        }
-
-        final Resource resource = new ResourceSetImpl().createResource(URI.createFileURI(Paths.get(databasePath.getDatabasePath()).resolve(DATABASE_FILENAME).toString()));
-        resource.getContents().add((DoorsDatabaseImpl) db);
-        resource.save(Collections.emptyMap());
-
-        db.getRoot().accept(new DoorsTreeNodeVisitor<>(DoorsModule.class) {
-
+        FileUtils.deleteDirectory(new File(databasePath.getDatabasePath()));
+        db.getRoot().accept(new DoorsTreeNodeVisitor<>(DoorsFolder.class) {
             @Override
-            protected boolean visitPreTraverse(DoorsModule m) {
-                Path modulePath = ensureModuleFolderPath(m);
+            protected void visitPostTraverse(DoorsFolder f) {
                 try {
-                    ModuleCSV.write(
-                            modulePath.resolve(m.getName() + ".csv").toFile(),
-                            modulePath.resolve(m.getName() + ".mmd").toFile(), m);
+                    Path modulePath = Paths.get(databasePath.getDatabasePath(), f.getFullNameSegments().toArray(new String[0]));
+                    Files.createDirectories(modulePath);
+
+                    ModuleCSV.writeMetaData(modulePath.resolve("__folder__.mmd").toFile(), f.getAttributes());
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
-
-                return super.visitPreTraverse(m);
             }
+        });
 
+        db.getRoot().accept(new DoorsTreeNodeVisitor<>(DoorsModule.class) {
+            @Override
+            protected void visitPostTraverse(DoorsModule m) {
+                try {
+                    Path folderPath = Paths.get(databasePath.getDatabasePath(), m.getParent().getFullNameSegments().toArray(new String[0]));
+                    ModuleCSV.write(
+                            folderPath.resolve(m.getName() + ".csv").toFile(),
+                            folderPath.resolve(m.getName() + ".mmd").toFile(), m);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
         });
     }
 
@@ -117,41 +117,15 @@ public class FileDatabaseInterface implements DatabaseInterface {
     }
 
     @Override
-    public void removeNode(final DoorsTreeNode node) {
-        if (node instanceof DoorsObject) {
-            node.getParent().getChildren().remove(node);
-        } else if (node instanceof DoorsModule) {
-            ((DoorsModule) node).setParent(null);
-            try {
-                Path p = ensureModuleFolderPath(((DoorsModule) node));
-                Files.deleteIfExists(p.resolve(node.getName() + ".csv"));
-                Files.deleteIfExists(p.resolve(node.getName() + ".mmd"));
-            } catch (final IOException e) {
-                throw new RuntimeException(e);
-            }
-        } else if (node instanceof DoorsFolder) {
-            final List<DoorsModule> markedForDeletion = new ArrayList<>();
-            node.accept(new DoorsTreeNodeVisitor<>(DoorsModule.class) {
+    public DoorsModule importModule(DoorsModule newModule) {
+        DoorsTreeNode dbParent = this.ensureDatabasePath(newModule.getParent());
+        DoorsModule dbModule = (DoorsModule) dbParent.getChild(newModule.getName());
 
-                @Override
-                public void visitPostTraverse(final DoorsModule module) {
-                    markedForDeletion.add(module);
-                }
-
-            });
-            markedForDeletion.forEach(m -> removeNode(m));
-            node.setParent(null);
+        if (dbModule != null) {
+            dbModule.setParent(null);
         }
-    }
 
-    private Path ensureModuleFolderPath(final DoorsModule m) {
-        try {
-            Path p = Paths.get(databasePath.getDatabasePath(), m.getFullNameSegments().toArray(new String[0])).getParent();
-            Files.createDirectories(p);
-            return p;
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
+        return DoorsModelUtil.createCopy(newModule, dbParent.getParent());
     }
 
     private DoorsTreeNode ensureDatabasePath(final DoorsTreeNode path) {

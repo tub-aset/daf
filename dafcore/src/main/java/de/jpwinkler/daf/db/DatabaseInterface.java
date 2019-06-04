@@ -36,10 +36,6 @@ public interface DatabaseInterface {
         throw new UnsupportedOperationException("Not supported");
     }
 
-    default void removeNode(DoorsTreeNode node) {
-        throw new UnsupportedOperationException("Not supported");
-    }
-
     default DoorsTreeNode getNode(String path) {
         return this.getDatabaseObject().getRoot().getChild(path);
     }

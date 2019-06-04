@@ -8,7 +8,7 @@ package de.jpwinkler.daf.gui;
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.db.DoorsApplicationDatabaseInterface;
-import de.jpwinkler.daf.db.FileDatabaseInterface;
+import de.jpwinkler.daf.db.XmiDatabaseInterface;
 import de.jpwinkler.daf.db.RawFileDatabaseInterface;
 import de.jpwinkler.daf.gui.databases.DatabasePaneController;
 import de.jpwinkler.daf.gui.modules.ModulePaneController;
@@ -44,7 +44,7 @@ public class ApplicationPart<T extends DatabaseInterface> {
 
     public static final ApplicationPart<DoorsApplicationDatabaseInterface> DOORS_DATABASE = new ApplicationPart<>(DoorsApplicationDatabaseInterface.class,
             ApplicationPart::dynamicPartConstructor, defaultSelector("/", null), directorySelector(true), null).register();
-    public static final ApplicationPart<FileDatabaseInterface> LOCAL_DATABASE = new ApplicationPart<>(FileDatabaseInterface.class,
+    public static final ApplicationPart<XmiDatabaseInterface> LOCAL_DATABASE = new ApplicationPart<>(XmiDatabaseInterface.class,
             ApplicationPart::dynamicPartConstructor, directorySelector(false), directorySelector(true), "New local database").register();
     public static final ApplicationPart<RawFileDatabaseInterface> LOCAL_MODULE = new ApplicationPart<>(RawFileDatabaseInterface.class,
             ModulePaneController::new, fileChooserSelector(false, new ExtensionFilter("CSV/MMD", "*.csv", "*.mmd")), fileChooserSelector(true, new ExtensionFilter("CSV/MMD", "*.csv", "*.mmd")), "New local module").register();
