@@ -17,6 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.HashMap;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -46,18 +47,19 @@ public class FileDatabaseInterface implements DatabaseInterface {
         } else if (openFlag == OpenFlag.ERASE_IF_EXISTS && databaseFile.exists()) {
             FileUtils.deleteDirectory(databaseFile);
             Files.createDirectories(databaseFile.toPath());
+            new File(databaseFile, "__folder__.mmd").createNewFile();
         } else if (openFlag == OpenFlag.OPEN_ONLY && !databaseFile.isDirectory()) {
             throw new FileNotFoundException(databaseFile.getAbsolutePath());
         }
 
         this.db = DoorsFactory.eINSTANCE.createDoorsDatabase();
         Files.walkFileTree(databaseFile.toPath(), new SimpleFileVisitor<Path>() {
-            private DoorsFolder currentDirectory = DoorsModelUtil.createFolder(null, FilenameUtils.getBaseName(databaseFile.getAbsolutePath()));
+            private final HashMap<String, DoorsFolder> folders = new HashMap<>();
 
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 if ("csv".equals(FilenameUtils.getExtension(file.toString()))) {
-                    currentDirectory.getChildren().add(ModuleCSV.read(file.toFile()));
+                    folders.get(file.getParent().toAbsolutePath().toString()).getChildren().add(ModuleCSV.read(file.toFile()));
                 }
 
                 return super.visitFile(file, attrs);
@@ -65,8 +67,13 @@ public class FileDatabaseInterface implements DatabaseInterface {
 
             @Override
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-                currentDirectory = DoorsModelUtil.createFolder(currentDirectory, FilenameUtils.getBaseName(dir.toFile().getAbsolutePath()));
-                currentDirectory.getAttributes().putAll(ModuleCSV.readMetaData(dir.resolve("__folder__.mmd").toFile()));
+                DoorsFolder folder = DoorsModelUtil.createFolder(folders.get(dir.getParent().toAbsolutePath().toString()), FilenameUtils.getBaseName(dir.toFile().getAbsolutePath()));
+                if (folder.getParent() == null) {
+                    db.setRoot(folder);
+                }
+
+                folder.getAttributes().putAll(ModuleCSV.readMetaData(dir.resolve("__folder__.mmd").toFile()));
+                folders.put(dir.toAbsolutePath().toString(), folder);
 
                 return super.preVisitDirectory(dir, attrs);
             }
@@ -81,7 +88,7 @@ public class FileDatabaseInterface implements DatabaseInterface {
             @Override
             protected void visitPostTraverse(DoorsFolder f) {
                 try {
-                    Path modulePath = Paths.get(databasePath.getDatabasePath(), f.getFullNameSegments().toArray(new String[0]));
+                    Path modulePath = Paths.get(Paths.get(databasePath.getDatabasePath()).getParent().toAbsolutePath().toString(), f.getFullNameSegments().toArray(new String[0]));
                     Files.createDirectories(modulePath);
 
                     ModuleCSV.writeMetaData(modulePath.resolve("__folder__.mmd").toFile(), f.getAttributes());
@@ -95,7 +102,7 @@ public class FileDatabaseInterface implements DatabaseInterface {
             @Override
             protected void visitPostTraverse(DoorsModule m) {
                 try {
-                    Path folderPath = Paths.get(databasePath.getDatabasePath(), m.getParent().getFullNameSegments().toArray(new String[0]));
+                    Path folderPath = Paths.get(Paths.get(databasePath.getDatabasePath()).getParent().toAbsolutePath().toString(), m.getParent().getFullNameSegments().toArray(new String[0]));
                     ModuleCSV.write(
                             folderPath.resolve(m.getName() + ".csv").toFile(),
                             folderPath.resolve(m.getName() + ".mmd").toFile(), m);

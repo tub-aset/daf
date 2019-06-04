@@ -55,8 +55,8 @@ public class ApplicationPart<T extends DatabaseInterface> {
     public static final ApplicationPart<DoorsApplicationDatabaseInterface> DOORS_DATABASE = new ApplicationPart<>("Doors Bridge", DoorsApplicationDatabaseInterface.class,
             ApplicationPart::dynamicPartConstructor, defaultSelector("/", null), false).register();
     public static final ApplicationPart<FileDatabaseInterface> LOCAL_FILE_DATABASE = new ApplicationPart<>("Local file database", FileDatabaseInterface.class,
-            ApplicationPart::dynamicPartConstructor, fileChooserSelector(new ExtensionFilter("CSV database", "__folder__.mmd")), true).register();
-    public static final ApplicationPart<XmiDatabaseInterface> LOCAL_XMI_DATABASE = new ApplicationPart<>("Local XMI database", XmiDatabaseInterface.class,
+            ApplicationPart::dynamicPartConstructor, fileChooserSelector(f -> f.getParent(), new ExtensionFilter("Root folder MMD", "__folder__.mmd")), true).register();
+    public static final ApplicationPart<XmiDatabaseInterface> LOCAL_XMI_DATABASE = new ApplicationPart<>("Local xmi database", XmiDatabaseInterface.class,
             ApplicationPart::dynamicPartConstructor, fileChooserSelector(new ExtensionFilter("XMI", "*.xmi")), true).register();
     public static final ApplicationPart<RawFileDatabaseInterface> LOCAL_MODULE = new ApplicationPart<>("Local module", RawFileDatabaseInterface.class,
             ModulePaneController::new, fileChooserSelector(f -> FilenameUtils.removeExtension(f.getAbsolutePath()), new ExtensionFilter("CSV/MMD", "*.csv", "*.mmd")), true).register();
@@ -95,7 +95,7 @@ public class ApplicationPart<T extends DatabaseInterface> {
     private static DatabaseSelector fileChooserSelector(Function<File, String> transform, ExtensionFilter... extensionFilters) {
         return (window, part, save) -> {
             FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle((save ? "Save a " : "Open a ") + part.toString());
+            fileChooser.setTitle((save ? "Save a " : "Open a ") + part.getName());
             fileChooser.setInitialDirectory(save ? ApplicationPreferences.SAVE_DIRECTORY.retrieve() : ApplicationPreferences.OPEN_DIRECTORY.retrieve());
             fileChooser.getExtensionFilters().addAll(extensionFilters);
 
@@ -116,7 +116,7 @@ public class ApplicationPart<T extends DatabaseInterface> {
     private static DatabaseSelector directorySelector() {
         return (window, part, save) -> {
             DirectoryChooser dirChooser = new DirectoryChooser();
-            dirChooser.setTitle((save ? "Save a " : "Open a ") + part.toString());
+            dirChooser.setTitle((save ? "Save a " : "Open a ") + part.getName());
             dirChooser.setInitialDirectory(save ? ApplicationPreferences.SAVE_DIRECTORY.retrieve() : ApplicationPreferences.OPEN_DIRECTORY.retrieve());
 
             return Stream.of(dirChooser.showDialog(window))
@@ -135,7 +135,7 @@ public class ApplicationPart<T extends DatabaseInterface> {
     private static DatabaseSelector genericSelector() {
         return (window, part, save) -> {
             TextInputDialog dialog = new TextInputDialog();
-            dialog.setTitle((save ? "Save a " : "Open a ") + part.toString());
+            dialog.setTitle((save ? "Save a " : "Open a ") + part.getName());
             dialog.setHeaderText("Please enter a URI to " + (save ? "save." : "open."));
             dialog.setContentText(part.getDatabaseInterfaceClass().getSimpleName() + ":");
 
