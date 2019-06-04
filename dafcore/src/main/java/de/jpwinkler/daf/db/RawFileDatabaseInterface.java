@@ -5,8 +5,7 @@
  */
 package de.jpwinkler.daf.db;
 
-import de.jpwinkler.daf.model.DoorsDatabase;
-import de.jpwinkler.daf.model.DoorsFactory;
+import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.io.File;
@@ -18,7 +17,7 @@ import java.io.IOException;
  */
 public class RawFileDatabaseInterface implements DatabaseInterface {
 
-    private final DoorsDatabase db = DoorsFactory.eINSTANCE.createDoorsDatabase();
+    private DoorsModule databaseRoot;
     private final DatabasePath<RawFileDatabaseInterface> databasePath;
 
     public RawFileDatabaseInterface(DatabasePath<RawFileDatabaseInterface> databasePath, OpenFlag openFlag) throws IOException {
@@ -29,7 +28,7 @@ public class RawFileDatabaseInterface implements DatabaseInterface {
         this.databasePath = databasePath;
 
         File dbFile = new File(databasePath.getDatabasePath());
-        db.setRoot(ModuleCSV.read(dbFile, openFlag));
+        databaseRoot = ModuleCSV.read(dbFile, openFlag);
     }
 
     @Override
@@ -39,20 +38,20 @@ public class RawFileDatabaseInterface implements DatabaseInterface {
 
     @Override
     public void flush() throws IOException {
-        ModuleCSV.write(new File(databasePath.getDatabasePath()), (DoorsModule) this.db.getRoot());
+        ModuleCSV.write(new File(databasePath.getDatabasePath()), this.databaseRoot);
     }
 
     @Override
     public DoorsTreeNode getNode(String path) {
         if (path == null || path.isEmpty()) {
-            return getDatabaseObject().getRoot();
+            return getDatabaseRoot();
         }
 
         return null;
     }
 
     @Override
-    public DoorsDatabase getDatabaseObject() {
-        return db;
+    public DoorsModule getDatabaseRoot() {
+        return databaseRoot;
     }
 }

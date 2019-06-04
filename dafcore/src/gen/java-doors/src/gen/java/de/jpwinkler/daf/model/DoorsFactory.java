@@ -31,15 +31,6 @@ public interface DoorsFactory extends EFactory {
 	DoorsFolder createDoorsFolder();
 
 	/**
-	 * Returns a new object of class '<em>Database</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Database</em>'.
-	 * @generated
-	 */
-	DoorsDatabase createDoorsDatabase();
-
-	/**
 	 * Returns a new object of class '<em>Module</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

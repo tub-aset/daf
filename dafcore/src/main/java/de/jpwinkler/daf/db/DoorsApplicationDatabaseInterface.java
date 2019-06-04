@@ -9,6 +9,7 @@ import de.jpwinkler.daf.bridge.DoorsApplication;
 import de.jpwinkler.daf.bridge.DoorsApplicationFactory;
 import de.jpwinkler.daf.model.DoorsDatabase;
 import de.jpwinkler.daf.model.DoorsFactory;
+import de.jpwinkler.daf.model.DoorsFolder;
 
 /**
  *
@@ -17,7 +18,7 @@ import de.jpwinkler.daf.model.DoorsFactory;
 public class DoorsApplicationDatabaseInterface implements DatabaseInterface {
 
     private final DoorsApplication doorsApplication = DoorsApplicationFactory.getDoorsApplication();
-    private final DoorsDatabase db;
+    private final DoorsFolder root;
     private final DatabasePath<DoorsApplicationDatabaseInterface> databasePath;
 
     public DoorsApplicationDatabaseInterface(DatabasePath<DoorsApplicationDatabaseInterface> databasePath, OpenFlag openFlag) {
@@ -28,8 +29,7 @@ public class DoorsApplicationDatabaseInterface implements DatabaseInterface {
             throw new IllegalArgumentException("Only OpenFlag.OPEN_ONLY is allowed");
         }
 
-        this.db = DoorsFactory.eINSTANCE.createDoorsDatabase();
-        this.db.setRoot(doorsApplication.getRoot());
+        this.root = (DoorsFolder) doorsApplication.getRoot();
         this.databasePath = databasePath;
     }
 
@@ -39,8 +39,8 @@ public class DoorsApplicationDatabaseInterface implements DatabaseInterface {
     }
 
     @Override
-    public DoorsDatabase getDatabaseObject() {
-        return db;
+    public DoorsFolder getDatabaseRoot() {
+        return root;
     }
 
     @Override

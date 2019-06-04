@@ -14,8 +14,10 @@ import de.jpwinkler.daf.db.RawFileDatabaseInterface;
 import de.jpwinkler.daf.gui.databases.DatabasePaneController;
 import de.jpwinkler.daf.gui.modules.ModulePaneController;
 import java.io.File;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import javafx.scene.control.TextInputDialog;
@@ -34,7 +36,8 @@ public class ApplicationPart<T extends DatabaseInterface> {
     private static final Map<Class<? extends DatabaseInterface>, ApplicationPart<?>> REGISTRY = new HashMap<>();
 
     public static Stream<ApplicationPart<?>> registry() {
-        return REGISTRY.values().stream();
+        return REGISTRY.values().stream()
+                .sorted((p1, p2) -> Objects.compare(p1.getName(), p2.getName(), Comparator.naturalOrder()));
     }
 
     private static interface ApplicationPartConstructor {
@@ -178,5 +181,10 @@ public class ApplicationPart<T extends DatabaseInterface> {
 
     public static ApplicationPartController createControllerForAny(ApplicationPaneController appController, DatabasePath path, DatabaseInterface databaseInterface, CommandStack databaseCommandStack) {
         return REGISTRY.get(databaseInterface.getClass()).createController(appController, path, databaseInterface, databaseCommandStack);
+    }
+
+    @Override
+    public String toString() {
+        return this.name;
     }
 }

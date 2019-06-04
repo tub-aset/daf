@@ -5,18 +5,19 @@ import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
 import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.gui.background.BackgroundTaskStatusListener;
 import de.jpwinkler.daf.gui.background.BackgroundTaskStatusMonitor;
-import java.net.URISyntaxException;
+import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
@@ -25,6 +26,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -126,7 +128,6 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         });
 
         ApplicationPart.registry()
-                .sorted((p1, p2) -> Objects.compare(p1.getName(), p2.getName(), Comparator.naturalOrder()))
                 .peek(part -> {
                     MenuItem it = new MenuItem(part.getName());
                     it.setOnAction(ev -> {
@@ -302,7 +303,18 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
     @FXML
     public void saveAsClicked() {
-        throw new UnsupportedOperationException("Alias for make snapshot of full database");
+        createSnapshot(getCurrentFileStateController().getDatabaseInterface(), x -> true);
+    }
+
+    public void createSnapshot(DatabaseInterface databaseInterface, Predicate<DoorsTreeNode> include) {
+        ChoiceDialog<ApplicationPart<?>> applicationPartChooser = new ChoiceDialog<>(null, ApplicationPart.registry().filter(p -> p.isAllowNew()).collect(Collectors.toList()));
+        
+        Optional<ApplicationPart<?>> partOptional = applicationPartChooser.showAndWait();
+        if(!partOptional.isPresent()) {
+            return;
+        }
+
+        
     }
 
     @FXML

@@ -421,43 +421,6 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_FOLDER_OPERATION_COUNT = DOORS_TREE_NODE_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link de.jpwinkler.daf.model.impl.DoorsDatabaseImpl <em>Database</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see de.jpwinkler.daf.model.impl.DoorsDatabaseImpl
-	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getDoorsDatabase()
-	 * @generated
-	 */
-	int DOORS_DATABASE = 2;
-
-	/**
-	 * The feature id for the '<em><b>Root</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DOORS_DATABASE__ROOT = 0;
-
-	/**
-	 * The number of structural features of the '<em>Database</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DOORS_DATABASE_FEATURE_COUNT = 1;
-
-	/**
-	 * The number of operations of the '<em>Database</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DOORS_DATABASE_OPERATION_COUNT = 0;
-
-	/**
 	 * The meta object id for the '{@link de.jpwinkler.daf.model.impl.DoorsModuleImpl <em>Module</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -465,7 +428,7 @@ public interface DoorsPackage extends EPackage {
 	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getDoorsModule()
 	 * @generated
 	 */
-	int DOORS_MODULE = 3;
+	int DOORS_MODULE = 2;
 
 	/**
 	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
@@ -682,7 +645,7 @@ public interface DoorsPackage extends EPackage {
 	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getDoorsObject()
 	 * @generated
 	 */
-	int DOORS_OBJECT = 4;
+	int DOORS_OBJECT = 3;
 
 	/**
 	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
@@ -962,7 +925,7 @@ public interface DoorsPackage extends EPackage {
 	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getAttributeMap()
 	 * @generated
 	 */
-	int ATTRIBUTE_MAP = 5;
+	int ATTRIBUTE_MAP = 4;
 
 	/**
 	 * The feature id for the '<em><b>Key</b></em>' attribute.
@@ -1008,7 +971,7 @@ public interface DoorsPackage extends EPackage {
 	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getLink()
 	 * @generated
 	 */
-	int LINK = 6;
+	int LINK = 5;
 
 	/**
 	 * The feature id for the '<em><b>Source</b></em>' container reference.
@@ -1063,7 +1026,7 @@ public interface DoorsPackage extends EPackage {
 	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getResolvedLink()
 	 * @generated
 	 */
-	int RESOLVED_LINK = 7;
+	int RESOLVED_LINK = 6;
 
 	/**
 	 * The feature id for the '<em><b>Source</b></em>' container reference.
@@ -1127,7 +1090,7 @@ public interface DoorsPackage extends EPackage {
 	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getUnresolvedLink()
 	 * @generated
 	 */
-	int UNRESOLVED_LINK = 8;
+	int UNRESOLVED_LINK = 7;
 
 	/**
 	 * The feature id for the '<em><b>Source</b></em>' container reference.
@@ -1200,7 +1163,7 @@ public interface DoorsPackage extends EPackage {
 	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getDoorsTreeNodeVisitor()
 	 * @generated
 	 */
-	int DOORS_TREE_NODE_VISITOR = 9;
+	int DOORS_TREE_NODE_VISITOR = 8;
 
 
 	/**
@@ -1211,7 +1174,7 @@ public interface DoorsPackage extends EPackage {
 	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getPattern()
 	 * @generated
 	 */
-	int PATTERN = 10;
+	int PATTERN = 9;
 
 
 	/**
@@ -1222,7 +1185,7 @@ public interface DoorsPackage extends EPackage {
 	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getCollection()
 	 * @generated
 	 */
-	int COLLECTION = 11;
+	int COLLECTION = 10;
 
 
 	/**
@@ -1420,27 +1383,6 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getDoorsFolder();
-
-	/**
-	 * Returns the meta object for class '{@link de.jpwinkler.daf.model.DoorsDatabase <em>Database</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Database</em>'.
-	 * @see de.jpwinkler.daf.model.DoorsDatabase
-	 * @generated
-	 */
-	EClass getDoorsDatabase();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link de.jpwinkler.daf.model.DoorsDatabase#getRoot <em>Root</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Root</em>'.
-	 * @see de.jpwinkler.daf.model.DoorsDatabase#getRoot()
-	 * @see #getDoorsDatabase()
-	 * @generated
-	 */
-	EReference getDoorsDatabase_Root();
 
 	/**
 	 * Returns the meta object for class '{@link de.jpwinkler.daf.model.DoorsModule <em>Module</em>}'.
@@ -1962,24 +1904,6 @@ public interface DoorsPackage extends EPackage {
 		 * @generated
 		 */
 		EClass DOORS_FOLDER = eINSTANCE.getDoorsFolder();
-
-		/**
-		 * The meta object literal for the '{@link de.jpwinkler.daf.model.impl.DoorsDatabaseImpl <em>Database</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see de.jpwinkler.daf.model.impl.DoorsDatabaseImpl
-		 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getDoorsDatabase()
-		 * @generated
-		 */
-		EClass DOORS_DATABASE = eINSTANCE.getDoorsDatabase();
-
-		/**
-		 * The meta object literal for the '<em><b>Root</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference DOORS_DATABASE__ROOT = eINSTANCE.getDoorsDatabase_Root();
 
 		/**
 		 * The meta object literal for the '{@link de.jpwinkler.daf.model.impl.DoorsModuleImpl <em>Module</em>}' class.

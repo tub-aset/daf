@@ -7,6 +7,7 @@ package de.jpwinkler.daf.db;
 
 import de.jpwinkler.daf.filter.modules.SearchExpression;
 import de.jpwinkler.daf.model.DoorsDatabase;
+import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
@@ -37,7 +38,7 @@ public interface DatabaseInterface {
     }
 
     default DoorsTreeNode getNode(String path) {
-        return this.getDatabaseObject().getRoot().getChild(path);
+        return this.getDatabaseRoot().getChild(path);
     }
     
     default boolean isReadOnly() {
@@ -46,7 +47,7 @@ public interface DatabaseInterface {
 
     default List<DoorsModule> getModules(final SearchExpression e) {
         final List<DoorsModule> result = new ArrayList<>();
-        getDatabaseObject().getRoot().accept(new DoorsTreeNodeVisitor<>(DoorsModule.class) {
+        getDatabaseRoot().accept(new DoorsTreeNodeVisitor<>(DoorsModule.class) {
 
             @Override
             public void visitPostTraverse(final DoorsModule module) {
@@ -58,5 +59,5 @@ public interface DatabaseInterface {
         return result;
     }
 
-    DoorsDatabase getDatabaseObject();
+    DoorsTreeNode getDatabaseRoot();
 }

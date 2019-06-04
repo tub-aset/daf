@@ -1,12 +1,11 @@
 package de.jpwinkler.daf.db;
 
-import de.jpwinkler.daf.model.DoorsDatabase;
-import de.jpwinkler.daf.model.DoorsFactory;
+import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModelUtil;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsPackage;
 import de.jpwinkler.daf.model.DoorsTreeNode;
-import de.jpwinkler.daf.model.impl.DoorsDatabaseImpl;
+import de.jpwinkler.daf.model.impl.DoorsFolderImpl;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -25,7 +24,7 @@ public class XmiDatabaseInterface implements DatabaseInterface {
         DoorsPackage.eINSTANCE.eClass();
     }
 
-    private final DoorsDatabase db;
+    private final DoorsFolder databaseRoot;
     private final DatabasePath<XmiDatabaseInterface> databasePath;
 
     public XmiDatabaseInterface(DatabasePath<XmiDatabaseInterface> databasePath, OpenFlag openFlag) throws IOException {
@@ -36,17 +35,15 @@ public class XmiDatabaseInterface implements DatabaseInterface {
 
         File databaseFile = new File(databasePath.getDatabasePath());
         if (openFlag == OpenFlag.CREATE_IF_INEXISTENT && !databaseFile.exists()) {
-            this.db = DoorsFactory.eINSTANCE.createDoorsDatabase();
-            this.db.setRoot(DoorsModelUtil.createFolder(null, FilenameUtils.getBaseName(databaseFile.getAbsolutePath())));
+            this.databaseRoot = DoorsModelUtil.createFolder(null, FilenameUtils.getBaseName(databaseFile.getAbsolutePath()));
             this.flush();
         } else if (openFlag == OpenFlag.ERASE_IF_EXISTS && databaseFile.exists()) {
             databaseFile.delete();
-            this.db = DoorsFactory.eINSTANCE.createDoorsDatabase();
-            this.db.setRoot(DoorsModelUtil.createFolder(null, FilenameUtils.getBaseName(databaseFile.getAbsolutePath())));
+            this.databaseRoot = DoorsModelUtil.createFolder(null, FilenameUtils.getBaseName(databaseFile.getAbsolutePath()));
             this.flush();
         } else if (openFlag == OpenFlag.OPEN_ONLY && databaseFile.isFile()) {
             final Resource resource = new ResourceSetImpl().getResource(URI.createFileURI(databaseFile.toString()), true);
-            this.db = (DoorsDatabase) resource.getContents().get(0);
+            this.databaseRoot = (DoorsFolder) resource.getContents().get(0);
         } else {
             throw new FileNotFoundException(databaseFile.getAbsolutePath());
         }
@@ -67,7 +64,7 @@ public class XmiDatabaseInterface implements DatabaseInterface {
     @Override
     public final void flush() throws IOException {
         final Resource resource = new ResourceSetImpl().createResource(URI.createFileURI(new File(databasePath.getDatabasePath()).getAbsolutePath()));
-        resource.getContents().add((DoorsDatabaseImpl) db);
+        resource.getContents().add((DoorsFolderImpl) databaseRoot);
         resource.save(Collections.emptyMap());
     }
 
@@ -77,12 +74,12 @@ public class XmiDatabaseInterface implements DatabaseInterface {
     }
 
     @Override
-    public DoorsDatabase getDatabaseObject() {
-        return db;
+    public DoorsTreeNode getDatabaseRoot() {
+        return databaseRoot;
     }
 
     private DoorsTreeNode ensureDatabasePath(final DoorsTreeNode path) {
-        return ensureDatabasePath(db.getRoot(), path.getFullNameSegments());
+        return ensureDatabasePath(databaseRoot, path.getFullNameSegments());
     }
 
     private static DoorsTreeNode ensureDatabasePath(final DoorsTreeNode parent, final List<String> path) {

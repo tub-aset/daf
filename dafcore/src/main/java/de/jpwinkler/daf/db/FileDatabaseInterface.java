@@ -31,7 +31,7 @@ public class FileDatabaseInterface implements DatabaseInterface {
         DoorsPackage.eINSTANCE.eClass();
     }
 
-    private final DoorsDatabase db;
+    private DoorsFolder databaseRoot;
     private DatabasePath<FileDatabaseInterface> databasePath;
 
     public FileDatabaseInterface(DatabasePath<FileDatabaseInterface> databasePath, OpenFlag openFlag) throws IOException {
@@ -52,7 +52,6 @@ public class FileDatabaseInterface implements DatabaseInterface {
             throw new FileNotFoundException(databaseFile.getAbsolutePath());
         }
 
-        this.db = DoorsFactory.eINSTANCE.createDoorsDatabase();
         Files.walkFileTree(databaseFile.toPath(), new SimpleFileVisitor<Path>() {
             private final HashMap<String, DoorsFolder> folders = new HashMap<>();
 
@@ -69,7 +68,7 @@ public class FileDatabaseInterface implements DatabaseInterface {
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
                 DoorsFolder folder = DoorsModelUtil.createFolder(folders.get(dir.getParent().toAbsolutePath().toString()), FilenameUtils.getBaseName(dir.toFile().getAbsolutePath()));
                 if (folder.getParent() == null) {
-                    db.setRoot(folder);
+                    databaseRoot = folder;
                 }
 
                 folder.getAttributes().putAll(ModuleCSV.readMetaData(dir.resolve("__folder__.mmd").toFile()));
@@ -84,7 +83,7 @@ public class FileDatabaseInterface implements DatabaseInterface {
     @Override
     public final void flush() throws IOException {
         FileUtils.deleteDirectory(new File(databasePath.getDatabasePath()));
-        db.getRoot().accept(new DoorsTreeNodeVisitor<>(DoorsFolder.class) {
+        databaseRoot.accept(new DoorsTreeNodeVisitor<>(DoorsFolder.class) {
             @Override
             protected void visitPostTraverse(DoorsFolder f) {
                 try {
@@ -98,7 +97,7 @@ public class FileDatabaseInterface implements DatabaseInterface {
             }
         });
 
-        db.getRoot().accept(new DoorsTreeNodeVisitor<>(DoorsModule.class) {
+        databaseRoot.accept(new DoorsTreeNodeVisitor<>(DoorsModule.class) {
             @Override
             protected void visitPostTraverse(DoorsModule m) {
                 try {
@@ -119,8 +118,8 @@ public class FileDatabaseInterface implements DatabaseInterface {
     }
 
     @Override
-    public DoorsDatabase getDatabaseObject() {
-        return db;
+    public DoorsFolder getDatabaseRoot() {
+        return databaseRoot;
     }
 
     @Override
@@ -136,7 +135,7 @@ public class FileDatabaseInterface implements DatabaseInterface {
     }
 
     private DoorsTreeNode ensureDatabasePath(final DoorsTreeNode path) {
-        return ensureDatabasePath(db.getRoot(), path.getFullNameSegments());
+        return ensureDatabasePath(databaseRoot, path.getFullNameSegments());
     }
 
     private static DoorsTreeNode ensureDatabasePath(final DoorsTreeNode parent, final List<String> path) {
