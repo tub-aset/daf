@@ -24,7 +24,7 @@ public class DoorsApplicationDatabaseInterface implements DatabaseInterface {
         if (!databasePath.getDatabasePath().isEmpty() || !databasePath.getPath().isEmpty()) {
             throw new IllegalArgumentException("databasePath must be fully empty for the doors bridge");
         }
-        if(openFlag != OpenFlag.OPEN_ONLY) {
+        if (openFlag != OpenFlag.OPEN_ONLY) {
             throw new IllegalArgumentException("Only OpenFlag.OPEN_ONLY is allowed");
         }
 
@@ -41,6 +41,11 @@ public class DoorsApplicationDatabaseInterface implements DatabaseInterface {
     @Override
     public DoorsDatabase getDatabaseObject() {
         return db;
+    }
+
+    @Override
+    public boolean isReadOnly() {
+        return true;
     }
 
 }

@@ -29,7 +29,7 @@ public abstract class ApplicationPartController<T extends ApplicationPartControl
     private final DatabasePath path;
     private final DatabaseInterface databaseInterface;
     private final CommandStack commandStack;
-    
+
     private final List<Menu> menus;
 
     public ApplicationPartController(ApplicationPaneController applicationController, DatabasePath path, DatabaseInterface databaseInterface, CommandStack databaseCommandStack) {
@@ -65,6 +65,11 @@ public abstract class ApplicationPartController<T extends ApplicationPartControl
     }
 
     protected final void executeCommand(final CommandStack.AbstractCommand command) {
+        if (getDatabaseInterface().isReadOnly()) {
+            this.setStatus(command.getName() + ": Database is read-only.");
+            return;
+        }
+
         if (!command.isApplicable()) {
             this.setStatus(command.getName() + ": Command is not applicable for this selection.");
             return;
@@ -74,7 +79,7 @@ public abstract class ApplicationPartController<T extends ApplicationPartControl
         getCommandStack().addCommand(this, command);
         updateGui(command.getUpdateActions());
     }
-    
+
     protected final void updateGui(UpdateAction... actions) {
         Stream.of(actions).forEach(a -> a.update(this));
     }
@@ -110,7 +115,7 @@ public abstract class ApplicationPartController<T extends ApplicationPartControl
     public final DatabaseInterface getDatabaseInterface() {
         return databaseInterface;
     }
-    
+
     public final CommandStack getCommandStack() {
         return commandStack;
     }

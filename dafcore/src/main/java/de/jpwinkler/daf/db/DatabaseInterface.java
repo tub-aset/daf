@@ -39,6 +39,10 @@ public interface DatabaseInterface {
     default DoorsTreeNode getNode(String path) {
         return this.getDatabaseObject().getRoot().getChild(path);
     }
+    
+    default boolean isReadOnly() {
+        return false;
+    }
 
     default List<DoorsModule> getModules(final SearchExpression e) {
         final List<DoorsModule> result = new ArrayList<>();

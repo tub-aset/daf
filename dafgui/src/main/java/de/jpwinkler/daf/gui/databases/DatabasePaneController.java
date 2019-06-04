@@ -72,6 +72,14 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
     public DatabasePaneController(ApplicationPaneController applicationController, DatabasePath path, DatabaseInterface databaseInterface, CommandStack databaseCommandStack) {
         super(applicationController, path, databaseInterface, databaseCommandStack);
+        
+        if(databaseInterface.isReadOnly()) {
+            databaseTreeView.setEditable(false);
+            moduleNameColumn.setEditable(false);
+            moduleDescriptionColumn.setEditable(false);
+            attributesTableView.setEditable(false);
+            newTagComboBox.setDisable(true);
+        }
 
         databaseTreeView.setCellFactory(tv -> new NodeTextFieldTreeCell<>(
                 it -> it.getName(),
@@ -79,7 +87,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                 it -> {
                 }));
 
-        databaseTreeView.setRoot(new DoorsTreeItem(getDatabaseInterface().getDatabaseObject().getRoot()));
+        databaseTreeView.setRoot(new DoorsTreeItem(databaseInterface.getDatabaseObject().getRoot()));
         databaseTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             updateGui(UpdateModulesView, UpdateTagsView, UpdateAttributesView, UpdateNodeTitle);
         });

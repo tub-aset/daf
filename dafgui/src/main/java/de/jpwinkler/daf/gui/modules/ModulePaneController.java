@@ -76,8 +76,13 @@ public final class ModulePaneController extends ApplicationPartController<Module
     
     public ModulePaneController(ApplicationPaneController applicationController, DatabasePath path, DatabaseInterface databaseInterface, CommandStack databaseCommandStack) {
         super(applicationController, path, databaseInterface, databaseCommandStack);
+        
+        if(databaseInterface.isReadOnly()) {
+            outlineTreeView.setEditable(false);
+            contentTableView.setEditable(false);
+        }
 
-        this.module = (DoorsModule) getDatabaseInterface().getNode(path.getPath());
+        this.module = (DoorsModule) databaseInterface.getNode(path.getPath());
         if(this.module == null) {
             throw new RuntimeException("No such module: " + path.getPath());
         }
