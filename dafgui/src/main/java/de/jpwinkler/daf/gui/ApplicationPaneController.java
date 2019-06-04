@@ -7,10 +7,12 @@ import de.jpwinkler.daf.gui.background.BackgroundTaskStatusListener;
 import de.jpwinkler.daf.gui.background.BackgroundTaskStatusMonitor;
 import java.net.URISyntaxException;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -58,6 +60,12 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
     @FXML
     private ToolBar backgroundTaskStatusToolBar;
+
+    @FXML
+    private Menu newMenu;
+
+    @FXML
+    private Menu openMenu;
 
     @FXML
     private Menu recentMenu;
@@ -116,6 +124,26 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             }
 
         });
+
+        ApplicationPart.registry()
+                .sorted((p1, p2) -> Objects.compare(p1.getName(), p2.getName(), Comparator.naturalOrder()))
+                .peek(part -> {
+                    MenuItem it = new MenuItem(part.getName());
+                    it.setOnAction(ev -> {
+                        part.openWithSelector(tabPane.getScene().getWindow()).forEach(
+                                path -> open(path, OpenFlag.OPEN_ONLY));
+                    });
+                    openMenu.getItems().add(it);
+                })
+                .filter(p -> p.isAllowNew())
+                .forEach(part -> {
+                    MenuItem it = new MenuItem(part.getName());
+                    it.setOnAction(ev -> {
+                        part.saveWithSelector(tabPane.getScene().getWindow()).forEach(
+                                path -> open(path, OpenFlag.ERASE_IF_EXISTS));
+                    });
+                    newMenu.getItems().add(it);
+                });
     }
 
     private ApplicationPartController<?> getCurrentFileStateController() {
@@ -139,36 +167,6 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             }
 
         }, 15000);
-    }
-
-    @FXML
-    public void newLocalModuleClicked() {
-        ApplicationPart.LOCAL_MODULE.saveWithSelector(tabPane.getScene().getWindow()).forEach(
-                path -> open(path, OpenFlag.ERASE_IF_EXISTS));
-    }
-
-    @FXML
-    public void newLocalDatabaseClicked() {
-        ApplicationPart.LOCAL_DATABASE.saveWithSelector(tabPane.getScene().getWindow()).forEach(
-                path -> open(path, OpenFlag.ERASE_IF_EXISTS));
-    }
-
-    @FXML
-    public void openLocalModuleClicked() throws URISyntaxException {
-        ApplicationPart.LOCAL_MODULE.openWithSelector(tabPane.getScene().getWindow()).forEach(
-                path -> this.open(path, OpenFlag.OPEN_ONLY));
-    }
-
-    @FXML
-    public void openLocalDatabaseClicked() throws URISyntaxException {
-        ApplicationPart.LOCAL_DATABASE.openWithSelector(tabPane.getScene().getWindow()).forEach(
-                path -> this.open(path, OpenFlag.OPEN_ONLY));
-    }
-
-    @FXML
-    public void openDoorsDatabaseClicked() throws URISyntaxException {
-        ApplicationPart.DOORS_DATABASE.openWithSelector(tabPane.getScene().getWindow()).forEach(
-                path -> this.open(path, OpenFlag.OPEN_ONLY));
     }
 
     public boolean open(DatabasePath path, OpenFlag openFlag) {

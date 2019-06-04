@@ -8,12 +8,15 @@ package de.jpwinkler.daf.gui;
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.db.DoorsApplicationDatabaseInterface;
+import de.jpwinkler.daf.db.FileDatabaseInterface;
 import de.jpwinkler.daf.db.XmiDatabaseInterface;
 import de.jpwinkler.daf.db.RawFileDatabaseInterface;
 import de.jpwinkler.daf.gui.databases.DatabasePaneController;
 import de.jpwinkler.daf.gui.modules.ModulePaneController;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Stream;
 import javafx.scene.control.TextInputDialog;
 import javafx.stage.DirectoryChooser;
@@ -28,43 +31,49 @@ import org.apache.commons.io.FilenameUtils;
  */
 public class ApplicationPart<T extends DatabaseInterface> {
 
-    private static final Map<Class<? extends DatabaseInterface>, ApplicationPart> REGISTRY = new HashMap<>();
+    private static final Map<Class<? extends DatabaseInterface>, ApplicationPart<?>> REGISTRY = new HashMap<>();
+
+    public static Stream<ApplicationPart<?>> registry() {
+        return REGISTRY.values().stream();
+    }
+
     private static interface ApplicationPartConstructor {
+
         public ApplicationPartController construct(ApplicationPaneController appController, DatabasePath path, DatabaseInterface databaseInterface, CommandStack databaseCommandStack);
     }
+
     private static interface DatabaseSelector {
-        public Stream<DatabasePath> select(Window window, ApplicationPart part);
+
+        public Stream<DatabasePath> select(Window window, ApplicationPart part, boolean save);
     }
-    
 
     private ApplicationPart register() {
         REGISTRY.put(this.databaseInterfaceClass, this);
         return this;
     }
 
-    public static final ApplicationPart<DoorsApplicationDatabaseInterface> DOORS_DATABASE = new ApplicationPart<>(DoorsApplicationDatabaseInterface.class,
-            ApplicationPart::dynamicPartConstructor, defaultSelector("/", null), directorySelector(true), null).register();
-    public static final ApplicationPart<XmiDatabaseInterface> LOCAL_DATABASE = new ApplicationPart<>(XmiDatabaseInterface.class,
-            ApplicationPart::dynamicPartConstructor, directorySelector(false), directorySelector(true), "New local database").register();
-    public static final ApplicationPart<RawFileDatabaseInterface> LOCAL_MODULE = new ApplicationPart<>(RawFileDatabaseInterface.class,
-            ModulePaneController::new, fileChooserSelector(false, new ExtensionFilter("CSV/MMD", "*.csv", "*.mmd")), fileChooserSelector(true, new ExtensionFilter("CSV/MMD", "*.csv", "*.mmd")), "New local module").register();
+    public static final ApplicationPart<DoorsApplicationDatabaseInterface> DOORS_DATABASE = new ApplicationPart<>("Doors Bridge", DoorsApplicationDatabaseInterface.class,
+            ApplicationPart::dynamicPartConstructor, defaultSelector("/", null), false).register();
+    public static final ApplicationPart<FileDatabaseInterface> LOCAL_FILE_DATABASE = new ApplicationPart<>("Local file database", FileDatabaseInterface.class,
+            ApplicationPart::dynamicPartConstructor, fileChooserSelector(new ExtensionFilter("CSV database", "__folder__.mmd")), true).register();
+    public static final ApplicationPart<XmiDatabaseInterface> LOCAL_XMI_DATABASE = new ApplicationPart<>("Local XMI database", XmiDatabaseInterface.class,
+            ApplicationPart::dynamicPartConstructor, fileChooserSelector(new ExtensionFilter("XMI", "*.xmi")), true).register();
+    public static final ApplicationPart<RawFileDatabaseInterface> LOCAL_MODULE = new ApplicationPart<>("Local module", RawFileDatabaseInterface.class,
+            ModulePaneController::new, fileChooserSelector(f -> FilenameUtils.removeExtension(f.getAbsolutePath()), new ExtensionFilter("CSV/MMD", "*.csv", "*.mmd")), true).register();
 
+    private final String name;
     private final Class<T> databaseInterfaceClass;
-    private final String unnamedName;
     private final ApplicationPartConstructor partConstructor;
-    private final DatabaseSelector openSelector;
-    private final DatabaseSelector saveSelector;
+    private final DatabaseSelector selector;
+    private final boolean allowNew;
 
-    private ApplicationPart(Class<T> databaseInterface,
-            ApplicationPartConstructor partConstructor,
-            DatabaseSelector openSelector,
-            DatabaseSelector saveSelector,
-            String unnamedName) {
+    private ApplicationPart(String name, Class<T> databaseInterface,
+            ApplicationPartConstructor partConstructor, DatabaseSelector selector, boolean allowNew) {
+        this.name = name;
         this.databaseInterfaceClass = databaseInterface;
-        this.unnamedName = unnamedName;
         this.partConstructor = partConstructor;
-        this.openSelector = openSelector;
-        this.saveSelector = saveSelector;
+        this.selector = selector;
+        this.allowNew = allowNew;
     }
 
     private static ApplicationPartController dynamicPartConstructor(ApplicationPaneController appController, DatabasePath path, DatabaseInterface databaseInterface, CommandStack databaseCommandStack) {
@@ -76,11 +85,15 @@ public class ApplicationPart<T extends DatabaseInterface> {
     }
 
     private static DatabaseSelector defaultSelector(String dbPath, String path) {
-        return (window, part) -> Stream.of(new DatabasePath<>(part.getDatabaseInterfaceClass(), dbPath, path));
+        return (window, part, save) -> save ? Stream.empty() : Stream.of(new DatabasePath<>(part.getDatabaseInterfaceClass(), dbPath, path));
     }
 
-    private static DatabaseSelector fileChooserSelector(boolean save, ExtensionFilter... extensionFilters) {
-        return (window, part) -> {
+    private static DatabaseSelector fileChooserSelector(ExtensionFilter... extensionFilters) {
+        return fileChooserSelector(f -> f.getAbsolutePath(), extensionFilters);
+    }
+
+    private static DatabaseSelector fileChooserSelector(Function<File, String> transform, ExtensionFilter... extensionFilters) {
+        return (window, part, save) -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle((save ? "Save a " : "Open a ") + part.toString());
             fileChooser.setInitialDirectory(save ? ApplicationPreferences.SAVE_DIRECTORY.retrieve() : ApplicationPreferences.OPEN_DIRECTORY.retrieve());
@@ -95,13 +108,13 @@ public class ApplicationPart<T extends DatabaseInterface> {
                             ApplicationPreferences.SAVE_DIRECTORY.store(f.getParentFile().getAbsoluteFile());
                         }
                     })
-                    .map(f -> FilenameUtils.removeExtension(f.getAbsolutePath()))
+                    .map(transform)
                     .map(f -> new DatabasePath<>(part.getDatabaseInterfaceClass(), f, ""));
         };
     }
 
-    private static DatabaseSelector directorySelector(boolean save) {
-        return (window, part) -> {
+    private static DatabaseSelector directorySelector() {
+        return (window, part, save) -> {
             DirectoryChooser dirChooser = new DirectoryChooser();
             dirChooser.setTitle((save ? "Save a " : "Open a ") + part.toString());
             dirChooser.setInitialDirectory(save ? ApplicationPreferences.SAVE_DIRECTORY.retrieve() : ApplicationPreferences.OPEN_DIRECTORY.retrieve());
@@ -119,8 +132,8 @@ public class ApplicationPart<T extends DatabaseInterface> {
         };
     }
 
-    private static DatabaseSelector genericSelector(boolean save) {
-        return (window, part) -> {
+    private static DatabaseSelector genericSelector() {
+        return (window, part, save) -> {
             TextInputDialog dialog = new TextInputDialog();
             dialog.setTitle((save ? "Save a " : "Open a ") + part.toString());
             dialog.setHeaderText("Please enter a URI to " + (save ? "save." : "open."));
@@ -131,16 +144,20 @@ public class ApplicationPart<T extends DatabaseInterface> {
         };
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public boolean isAllowNew() {
+        return allowNew;
+    }
+
     public Class<T> getDatabaseInterfaceClass() {
         return databaseInterfaceClass;
     }
 
-    public String getUnnamedName() {
-        return unnamedName;
-    }
-
     public Stream<DatabasePath> openWithSelector(Window window) {
-        return openSelector.select(window, this);
+        return selector.select(window, this, false);
     }
 
     public static Stream<DatabasePath> openWithSelector(DatabasePath path, Window window) {
@@ -148,7 +165,7 @@ public class ApplicationPart<T extends DatabaseInterface> {
     }
 
     public Stream<DatabasePath> saveWithSelector(Window window) {
-        return saveSelector.select(window, this);
+        return selector.select(window, this, true);
     }
 
     public static Stream<DatabasePath> saveWithSelector(DatabasePath path, Window window) {

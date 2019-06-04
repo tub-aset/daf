@@ -17,26 +17,8 @@
             <menus>
                 <Menu mnemonicParsing="false" text="File">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#newLocalModuleClicked" text="New local module">
-                     <accelerator>
-                        <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                     </accelerator></MenuItem>
-                        <MenuItem mnemonicParsing="false" onAction="#openLocalModuleClicked" text="Open local module">
-                            <accelerator>
-                                <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                            </accelerator>
-                        </MenuItem>
-                  <MenuItem mnemonicParsing="false" onAction="#newLocalDatabaseClicked" text="New local database">
-                     <accelerator>
-                        <KeyCodeCombination alt="DOWN" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                     </accelerator>
-                  </MenuItem>
-                  <MenuItem mnemonicParsing="false" onAction="#openLocalDatabaseClicked" text="Open local database">
-                     <accelerator>
-                        <KeyCodeCombination alt="DOWN" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                     </accelerator>
-                  </MenuItem>
-                  <MenuItem mnemonicParsing="false" onAction="#openDoorsDatabaseClicked" text="Open DOORS database" />
+                  <Menu fx:id="newMenu" mnemonicParsing="false" text="New" />
+                  <Menu fx:id="openMenu" mnemonicParsing="false" text="Open" />
                         <Menu fx:id="recentMenu" mnemonicParsing="false" text="Recent Files" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" onAction="#saveClicked" text="Save">
