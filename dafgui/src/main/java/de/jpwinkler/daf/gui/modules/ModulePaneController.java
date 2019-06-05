@@ -10,6 +10,7 @@ import de.jpwinkler.daf.gui.ApplicationPaneController;
 import de.jpwinkler.daf.gui.ApplicationPartController;
 import de.jpwinkler.daf.gui.ApplicationPreferences;
 import de.jpwinkler.daf.gui.CommandStack;
+import de.jpwinkler.daf.gui.CustomTextFieldTableCell;
 import de.jpwinkler.daf.gui.MultiCommand;
 import de.jpwinkler.daf.gui.UpdateAction;
 import de.jpwinkler.daf.gui.modules.ViewDefinition.ColumnDefinition;
@@ -39,7 +40,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ChangeListener;
@@ -51,6 +54,7 @@ import javafx.scene.control.MenuButton;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
@@ -73,20 +77,20 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
         STANDARD_VIEW.setDisplayRemainingColumns(true);
     }
-    
+
     public ModulePaneController(ApplicationPaneController applicationController, DatabasePath path, DatabaseInterface databaseInterface, CommandStack databaseCommandStack) {
         super(applicationController, path, databaseInterface, databaseCommandStack);
-        
-        if(databaseInterface.isReadOnly()) {
+
+        if (databaseInterface.isReadOnly()) {
             outlineTreeView.setEditable(false);
             contentTableView.setEditable(false);
         }
 
         this.module = (DoorsModule) databaseInterface.getNode(path.getPath());
-        if(this.module == null) {
+        if (this.module == null) {
             throw new RuntimeException("No such module: " + path.getPath());
         }
-        
+
         int currentViewIdx = ApplicationPreferences.MODULE_PANE_CURRENT_VIEW.retrieve();
         if (currentViewIdx < 0 || currentViewIdx >= views.size()) {
             currentView = STANDARD_VIEW;
@@ -177,6 +181,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
         }
     }
 //
+
     @FXML
     public void reduceToSelectionClicked() {
         executeCommand(new ReduceToSelectionCommand(module, getCurrentObject()));
@@ -236,7 +241,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
                 continue;
             }
 
-            final TableColumn<DoorsObject, String> c = new TableColumn<>(columnDefinition.getTitle());
+            final TableColumn<DoorsObject, DoorsObject> c = new TableColumn<>(columnDefinition.getTitle());
             c.setSortable(false);
             c.setPrefWidth(columnDefinition.getWidth());
             c.widthProperty().addListener((obs, oldValue, newValue) -> {
@@ -244,17 +249,14 @@ public final class ModulePaneController extends ApplicationPartController<Module
                 ApplicationPreferences.MODULE_PANE_VIEWS.store(this.views);
             });
 
-            c.setCellFactory(param -> new CustomTableCell());
-            c.setCellValueFactory(param -> new ReadOnlyStringWrapper(
-                    columnDefinition.getAttributeName() == null ? param.getValue().getText()
-                    : param.getValue().getAttributes().get(columnDefinition.getAttributeName())));
-            c.setOnEditCommit(event -> {
-                executeCommand(new EditObjectAttributeCommand(event.getRowValue(), columnDefinition.getAttributeName(), event.getNewValue()));
-                contentTableView.requestFocus();
-                contentTableView.getFocusModel().focusNext();
-            });
+            c.setCellFactory(tc -> new CustomTableCell(tc,
+                    it -> columnDefinition.getAttributeName() == null ? it.getText() : it.getAttributes().get(columnDefinition.getAttributeName()),
+                    (it, newValue) -> {
+                        executeCommand(new EditObjectAttributeCommand(it, columnDefinition.getAttributeName(), newValue));
+                        contentTableView.requestFocus();
+                        contentTableView.getFocusModel().focusNext();
+                    }));
             contentTableView.getColumns().add(c);
-
         }
     }
 
@@ -477,36 +479,35 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
     }
 
-    private class CustomTableCell extends TextFieldTableCell<DoorsObject, String> {
+    private class CustomTableCell extends CustomTextFieldTableCell<DoorsObject> {
 
-        public CustomTableCell() {
-            super(new DefaultStringConverter());
+        public CustomTableCell(TableColumn<DoorsObject, DoorsObject> tc, Function<DoorsObject, String> toString, BiConsumer<DoorsObject, String> editCommand) {
+            super(tc, toString, editCommand);
         }
 
         @Override
-        public void updateItem(final String item, final boolean empty) {
+        public void updateItem(final DoorsObject item, final boolean empty) {
             super.updateItem(item, empty);
             String style = "";
             if (!empty && getTableRow() != null) {
-                final DoorsObject o = getTableView().getItems().get(getTableRow().getIndex());
-                if (o.isHeading()) {
+                if (item.isHeading()) {
                     style += "-fx-font-weight: bold;";
-                    if (o.getObjectLevel() <= 2) {
+                    if (item.getObjectLevel() <= 2) {
                         style += "-fx-font-size: 140%;";
-                    } else if (o.getObjectLevel() == 3) {
+                    } else if (item.getObjectLevel() == 3) {
                         style += "-fx-font-size: 130%;";
-                    } else if (o.getObjectLevel() == 4) {
+                    } else if (item.getObjectLevel() == 4) {
                         style += "-fx-font-size: 120%;";
-                    } else if (o.getObjectLevel() == 5) {
+                    } else if (item.getObjectLevel() == 5) {
                         style += "-fx-font-size: 110%;";
                     }
 
-                    setText(o.getObjectNumber() + " " + o.getObjectHeading());
+                    setText(item.getObjectNumber() + " " + item.getObjectHeading());
                 } else {
-                    setText(o.getObjectText());
+                    setText(item.getObjectText());
                 }
 
-                setPadding(new Insets(0, 0, 0, (o.getObjectLevel() - 1) * 10));
+                setPadding(new Insets(0, 0, 0, (item.getObjectLevel() - 1) * 10));
             }
             setStyle(style);
         }

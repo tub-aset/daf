@@ -1,5 +1,7 @@
 package de.jpwinkler.daf.gui.databases;
 
+import de.jpwinkler.daf.gui.CustomTextFieldTreeCell;
+import de.jpwinkler.daf.gui.CustomTextFieldTableCell;
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
 import de.jpwinkler.daf.db.DatabasePath;
@@ -81,7 +83,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
             newTagComboBox.setDisable(true);
         }
 
-        databaseTreeView.setCellFactory(tv -> new NodeTextFieldTreeCell<>(
+        databaseTreeView.setCellFactory(tv -> new CustomTextFieldTreeCell<>(
                 it -> it.getName(),
                 (it, newName) -> executeCommand(new RenameNodeCommand(it, newName)),
                 it -> {
@@ -463,93 +465,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
     }
 
-    private class CustomTextFieldTableCell<T> extends TextFieldTableCell<T, T> {
 
-        private boolean editAllowed = false;
-
-        public CustomTextFieldTableCell(TableColumn<T, T> tc, Function<T, String> toString, BiConsumer<T, String> editCommand) {
-            this(tc, toString, editCommand, x -> {
-            });
-        }
-
-        public CustomTextFieldTableCell(TableColumn<T, T> tc, Function<T, String> toString, BiConsumer<T, String> editCommand, Consumer<T> opener) {
-            tc.setCellValueFactory((it) -> new ReadOnlyObjectWrapper<>(it.getValue()));
-            setConverter(new StringConverter<T>() {
-                @Override
-                public String toString(T t) {
-                    return toString.apply(t);
-                }
-
-                @Override
-                public T fromString(String string) {
-                    T it = CustomTextFieldTableCell.this.getItem();
-                    editCommand.accept(it, string);
-                    return it;
-                }
-            });
-
-            this.addEventFilter(MouseEvent.MOUSE_CLICKED, eh -> {
-                if (!this.isEditing() && eh.getClickCount() >= 2 && eh.getButton() == MouseButton.PRIMARY) {
-                    opener.accept(this.getItem());
-                    eh.consume();
-                } else if (eh.getClickCount() == 1 && eh.getButton() == MouseButton.SECONDARY) {
-                    editAllowed = true;
-                    super.getTableView().edit(this.getTableRow().getIndex(), this.getTableColumn());
-                    editAllowed = false;
-                    eh.consume();
-                }
-            });
-        }
-
-        @Override
-        public void startEdit() {
-            if (editAllowed) {
-                super.startEdit();
-            }
-        }
-
-    }
-
-    private class NodeTextFieldTreeCell<T> extends TextFieldTreeCell<T> {
-
-        private boolean editAllowed = false;
-
-        public NodeTextFieldTreeCell(Function<T, String> toString, BiConsumer<T, String> editCommand, Consumer<T> opener) {
-            this.setConverter(new StringConverter<>() {
-                @Override
-                public String toString(T node) {
-                    return toString.apply(node);
-                }
-
-                @Override
-                public T fromString(String newName) {
-                    T node = NodeTextFieldTreeCell.this.getItem();
-                    editCommand.accept(node, newName);
-                    return node;
-                }
-            });
-
-            this.addEventFilter(MouseEvent.MOUSE_CLICKED, eh -> {
-                if (!this.isEditing() && eh.getClickCount() >= 2 && eh.getButton() == MouseButton.PRIMARY) {
-                    opener.accept(this.getItem());
-                    eh.consume();
-                } else if (eh.getClickCount() == 1 && eh.getButton() == MouseButton.SECONDARY) {
-                    editAllowed = true;
-                    super.getTreeView().edit(this.getTreeItem());
-                    editAllowed = false;
-                    eh.consume();
-                }
-            });
-        }
-
-        @Override
-        public void startEdit() {
-            if (editAllowed) {
-                super.startEdit();
-            }
-        }
-
-    }
 
     public static final UpdateAction<DatabasePaneController> UpdateTreeItem(DoorsTreeNode node) {
         return (ctrl) -> {
