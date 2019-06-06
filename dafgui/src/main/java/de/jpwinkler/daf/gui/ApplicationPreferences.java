@@ -33,7 +33,8 @@ public enum ApplicationPreferences {
     MODULE_PANE_SPLITPOS(Double.class, 0.3),
     MODULE_PANE_VIEWS(ArrayList.class, new ArrayList<>()),
     MODULE_PANE_CURRENT_VIEW(Integer.class, -1),
-    DATABASE_PANE_SPLITPOS(Double.class, 0.3),
+    DATABASE_PANE_SPLITPOS(double[].class, new double[]{0.25, 0.75}),
+    DATABASE_PANE_SIDE_EXTENSION(String.class, null),
     DATABASE_PANE_ATTRIBUTENAME_WIDTH(Double.class, 100d),
     DATABASE_PANE_ATTRIBUTEVALUE_WIDTH(Double.class, 300d),
     DATABASE_PANE_SNAPSHOT_LISTS(TreeMap.class, new TreeMap<String, TreeSet<String>>());

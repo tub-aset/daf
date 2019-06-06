@@ -5,12 +5,17 @@
  */
 package de.jpwinkler.daf.gui;
 
+import de.jpwinkler.daf.gui.extensions.UpdateAction;
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
 import de.jpwinkler.daf.db.DatabasePath;
+import de.jpwinkler.daf.gui.extensions.AbstractCommand;
+import de.jpwinkler.daf.gui.extensions.ApplicationPartExtensionPoint;
+import de.jpwinkler.daf.gui.extensions.ApplicationPartInterface;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -25,12 +30,14 @@ import javafx.scene.control.Menu;
  *
  * @author fwiesweg
  */
-public abstract class ApplicationPartController<T extends ApplicationPartController> extends AutoloadingPaneController<T> {
+public abstract class ApplicationPartController<THIS extends ApplicationPartController> extends AutoloadingPaneController<THIS> implements ApplicationPartInterface {
 
-    private final ApplicationPaneController applicationController;
-    private final DatabasePath path;
-    private final DatabaseInterface databaseInterface;
-    private final CommandStack commandStack;
+    final ApplicationPaneController applicationController;
+    final DatabasePath path;
+    final DatabaseInterface databaseInterface;
+    final CommandStack commandStack;
+
+    protected final List<ApplicationPartExtensionPoint> extensions = Collections.unmodifiableList(Main.PLUGIN_MANAGER.getExtensions(ApplicationPartExtensionPoint.class));
 
     private final List<Menu> menus;
 
@@ -42,20 +49,25 @@ public abstract class ApplicationPartController<T extends ApplicationPartControl
 
         URL menuUrl = MainFX.class.getResource(
                 this.getClass().getSimpleName().replaceFirst("Controller$", "") + "Menu.fxml");
-        if (menuUrl == null) {
-            this.menus = Collections.emptyList();
-        } else {
+
+        menus = new ArrayList<>();
+        if (menuUrl != null) {
             try {
                 final FXMLLoader menuLoader = new FXMLLoader(menuUrl);
                 menuLoader.setController(this);
-                this.menus = ((Menu) menuLoader.load()).getItems().stream()
+                ((Menu) menuLoader.load()).getItems().stream()
                         .filter(m -> m instanceof Menu)
                         .map(m -> (Menu) m)
-                        .collect(Collectors.toList());
+                        .forEach(menus::add);
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
         }
+
+        extensions.forEach(e -> e.initialise(this));
+        extensions.stream()
+                .flatMap(e -> e.getMenus().stream())
+                .forEach(menus::add);
     }
 
     protected final void setStatus(final String status) {
@@ -66,11 +78,20 @@ public abstract class ApplicationPartController<T extends ApplicationPartControl
         return applicationController.open(path, openFlag);
     }
 
-    protected final void createSnapshot(Predicate<DoorsTreeNode> include) {
+    @Override
+    public final void createSnapshot(Predicate<DoorsTreeNode> include) {
         applicationController.createSnapshot(this.getDatabaseInterface(), this.getDatabaseInterface().getPath(), include);
     }
 
-    protected final void executeCommand(final CommandStack.AbstractCommand command) {
+    protected final <T extends ApplicationPartExtensionPoint> List<T> getExtensions(Class<T> cls) {
+        return extensions.stream()
+                .filter(e -> cls.isAssignableFrom(e.getClass()))
+                .map(e -> (T) e)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public final void executeCommand(final AbstractCommand command) {
         if (getDatabaseInterface().isReadOnly()) {
             this.setStatus(command.getName() + ": Database is read-only.");
             return;
@@ -86,13 +107,13 @@ public abstract class ApplicationPartController<T extends ApplicationPartControl
         updateGui(command.getUpdateActions());
     }
 
-    protected final void updateGui(UpdateAction... actions) {
+    public final void updateGui(UpdateAction... actions) {
         Stream.of(actions).forEach(a -> a.update(this));
     }
 
     @FXML
     public final void redoClicked() {
-        final CommandStack.AbstractCommand commandToRedo = getCommandStack().redo(this);
+        final AbstractCommand commandToRedo = getCommandStack().redo(this);
         if (commandToRedo == null) {
             this.setStatus("Cannot redo.");
         } else {
@@ -102,7 +123,7 @@ public abstract class ApplicationPartController<T extends ApplicationPartControl
 
     @FXML
     public final void undoClicked() {
-        final CommandStack.AbstractCommand commandToUndo = getCommandStack().undo(this);
+        final AbstractCommand commandToUndo = getCommandStack().undo(this);
         if (commandToUndo == null) {
             this.setStatus("Cannot undo.");
         } else {
@@ -111,13 +132,14 @@ public abstract class ApplicationPartController<T extends ApplicationPartControl
     }
 
     public final Collection<Menu> getMenus() {
-        return this.menus == null ? Collections.emptySet() : menus;
+        return menus;
     }
 
     public DatabasePath getPath() {
         return path;
     }
 
+    @Override
     public final DatabaseInterface getDatabaseInterface() {
         return databaseInterface;
     }

@@ -1,5 +1,6 @@
 package de.jpwinkler.daf.gui.modules;
 
+import de.jpwinkler.daf.gui.extensions.ViewDefinition;
 import de.jpwinkler.daf.gui.AutoloadingPaneController;
 import java.util.Collections;
 import java.util.List;

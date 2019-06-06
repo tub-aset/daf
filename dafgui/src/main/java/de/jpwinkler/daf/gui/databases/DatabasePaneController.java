@@ -9,7 +9,8 @@ import de.jpwinkler.daf.gui.ApplicationPaneController;
 import de.jpwinkler.daf.gui.ApplicationPartController;
 import de.jpwinkler.daf.gui.ApplicationPreferences;
 import de.jpwinkler.daf.gui.CommandStack;
-import de.jpwinkler.daf.gui.UpdateAction;
+import de.jpwinkler.daf.gui.ExtensionPane;
+import de.jpwinkler.daf.gui.extensions.UpdateAction;
 import de.jpwinkler.daf.gui.databases.commands.AddTagCommand;
 import de.jpwinkler.daf.gui.databases.commands.DeleteAttributesCommand;
 import de.jpwinkler.daf.gui.databases.commands.DeleteCommand;
@@ -37,13 +38,10 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.WeakHashMap;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javafx.application.Platform;
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -61,14 +59,9 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.control.cell.TextFieldTreeCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
-import javafx.util.StringConverter;
 
 public final class DatabasePaneController extends ApplicationPartController<DatabasePaneController> {
 
@@ -95,10 +88,10 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         });
         databaseTreeView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
-        mainSplitPane.setDividerPositions((double) ApplicationPreferences.DATABASE_PANE_SPLITPOS.retrieve());
+        mainSplitPane.setDividerPositions((double[]) ApplicationPreferences.DATABASE_PANE_SPLITPOS.retrieve());
         mainSplitPane.getDividers().forEach(d -> {
             d.positionProperty().addListener((obs, oldValue, newValue) -> {
-                ApplicationPreferences.DATABASE_PANE_SPLITPOS.store(newValue.doubleValue());
+                ApplicationPreferences.DATABASE_PANE_SPLITPOS.store(mainSplitPane.getDividerPositions());
             });
         });
 
@@ -168,6 +161,13 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         populateSnapshotMenu(snapshotLists.keySet(), createSnapshotsMenu, this::createSnapshotFromListClicked);
         populateSnapshotMenu(snapshotLists.keySet(), deleteSnapshotListMenu, this::deleteSnapshotListClicked);
         populateSnapshotMenu(snapshotLists.keySet(), showSnapshotListMenu, this::showSnapshotListClicked);
+
+        ExtensionPane ep = new ExtensionPane(extensions, e -> e.getBottomPanes(),
+                ApplicationPreferences.DATABASE_PANE_SIDE_EXTENSION.retrieve(),
+                ApplicationPreferences.DATABASE_PANE_SIDE_EXTENSION::store);
+        if (ep.hasPanes()) {
+            mainSplitPane.getItems().add(ep.getNode());
+        }
     }
 
     private static String getSnapshotLists(DoorsTreeNode node) {
@@ -464,8 +464,6 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         }
 
     }
-
-
 
     public static final UpdateAction<DatabasePaneController> UpdateTreeItem(DoorsTreeNode node) {
         return (ctrl) -> {

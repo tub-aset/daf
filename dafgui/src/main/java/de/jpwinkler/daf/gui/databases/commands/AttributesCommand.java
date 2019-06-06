@@ -5,7 +5,7 @@
  */
 package de.jpwinkler.daf.gui.databases.commands;
 
-import de.jpwinkler.daf.gui.CommandStack;
+import de.jpwinkler.daf.gui.extensions.AbstractCommand;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.util.Collection;
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  *
  * @author fwiesweg
  */
-public abstract class AttributesCommand extends CommandStack.AbstractCommand {
+public abstract class AttributesCommand extends AbstractCommand {
 
     protected final Collection<Entry<String, String>> attributes;
     protected List<Entry<String, String>> oldAttributes;

@@ -5,9 +5,9 @@
  */
 package de.jpwinkler.daf.gui.databases.commands;
 
-import de.jpwinkler.daf.gui.CommandStack;
-import de.jpwinkler.daf.gui.UpdateAction;
+import de.jpwinkler.daf.gui.extensions.UpdateAction;
 import de.jpwinkler.daf.gui.databases.DatabasePaneController;
+import de.jpwinkler.daf.gui.extensions.AbstractCommand;
 import de.jpwinkler.daf.model.DoorsModelUtil;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
@@ -17,7 +17,7 @@ import de.jpwinkler.daf.model.DoorsTreeNode;
  *
  * @author fwiesweg
  */
-public class NewFolderCommand extends CommandStack.AbstractCommand {
+public class NewFolderCommand extends AbstractCommand {
 
     private final DoorsTreeNode parent;
     private DoorsTreeNode newFolder;

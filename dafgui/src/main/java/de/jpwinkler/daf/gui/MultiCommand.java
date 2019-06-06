@@ -5,7 +5,8 @@
  */
 package de.jpwinkler.daf.gui;
 
-import de.jpwinkler.daf.gui.CommandStack.AbstractCommand;
+import de.jpwinkler.daf.gui.extensions.UpdateAction;
+import de.jpwinkler.daf.gui.extensions.AbstractCommand;
 import java.util.List;
 import java.util.stream.Stream;
 

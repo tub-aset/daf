@@ -5,16 +5,16 @@
  */
 package de.jpwinkler.daf.gui.databases.commands;
 
-import de.jpwinkler.daf.gui.CommandStack;
-import de.jpwinkler.daf.gui.UpdateAction;
+import de.jpwinkler.daf.gui.extensions.UpdateAction;
 import de.jpwinkler.daf.gui.databases.DatabasePaneController;
+import de.jpwinkler.daf.gui.extensions.AbstractCommand;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 
 /**
  *
  * @author fwiesweg
  */
-public class DeleteCommand extends CommandStack.AbstractCommand {
+public class DeleteCommand extends AbstractCommand {
 
     private final DoorsTreeNode node;
     private final DoorsTreeNode parent;

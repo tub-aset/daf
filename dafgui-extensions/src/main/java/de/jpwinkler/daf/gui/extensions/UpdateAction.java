@@ -1,6 +1,6 @@
-package de.jpwinkler.daf.gui;
+package de.jpwinkler.daf.gui.extensions;
 
-public interface UpdateAction<T extends ApplicationPartController<?>> {
+public interface UpdateAction<T extends ApplicationPartInterface> {
 
     void update(T ctrl);
 

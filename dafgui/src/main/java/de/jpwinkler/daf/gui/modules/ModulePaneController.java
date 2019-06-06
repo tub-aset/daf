@@ -1,5 +1,6 @@
 package de.jpwinkler.daf.gui.modules;
 
+import de.jpwinkler.daf.gui.extensions.ViewDefinition;
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.filter.objects.CascadingFilter;
@@ -11,9 +12,11 @@ import de.jpwinkler.daf.gui.ApplicationPartController;
 import de.jpwinkler.daf.gui.ApplicationPreferences;
 import de.jpwinkler.daf.gui.CommandStack;
 import de.jpwinkler.daf.gui.CustomTextFieldTableCell;
+import de.jpwinkler.daf.gui.Main;
 import de.jpwinkler.daf.gui.MultiCommand;
-import de.jpwinkler.daf.gui.UpdateAction;
-import de.jpwinkler.daf.gui.modules.ViewDefinition.ColumnDefinition;
+import de.jpwinkler.daf.gui.extensions.ModulePartExtensionPoint;
+import de.jpwinkler.daf.gui.extensions.UpdateAction;
+import de.jpwinkler.daf.gui.extensions.ViewDefinition.ColumnDefinition;
 import de.jpwinkler.daf.gui.modules.commands.DeleteObjectCommand;
 import de.jpwinkler.daf.gui.modules.commands.DemoteObjectCommand;
 import de.jpwinkler.daf.gui.modules.commands.EditObjectAttributeCommand;
@@ -44,7 +47,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import javafx.beans.property.ReadOnlyStringWrapper;
+import java.util.stream.Stream;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -54,7 +57,6 @@ import javafx.scene.control.MenuButton;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.SplitPane;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
@@ -62,8 +64,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.util.converter.DefaultStringConverter;
 
 public final class ModulePaneController extends ApplicationPartController<ModulePaneController> {
 
@@ -309,23 +309,26 @@ public final class ModulePaneController extends ApplicationPartController<Module
             this.currentView = (ViewDefinition) newValue.getUserData();
             mergeObjectAttributes();
 
-            ApplicationPreferences.MODULE_PANE_CURRENT_VIEW.store(views.indexOf(this.currentView));
+            ApplicationPreferences.MODULE_PANE_CURRENT_VIEW.store(viewsToggleGroup.getToggles().indexOf(observable));
             updateGui(ModuleUpdateAction.UPDATE_COLUMNS);
         });
 
-        boolean selected = false;
-        for (int i = views.size() - 1; i >= 0; i--) {
-            ViewDefinition vd = views.get(i);
-            RadioMenuItem rmi = new RadioMenuItem(vd.getName());
-            rmi.setUserData(vd);
-            rmi.setToggleGroup(viewsToggleGroup);
-            this.viewsMenuButton.getItems().add(0, rmi);
+        boolean selected = Stream.concat(
+                views.stream(), super.getExtensions(ModulePartExtensionPoint.class).stream()
+                .flatMap(e -> e.getAdditionalViews(getDatabaseInterface()).stream()))
+                .filter(vd -> {
 
-            if (vd == currentView) {
-                rmi.setSelected(true);
-                selected = true;
-            }
-        }
+                    RadioMenuItem rmi = new RadioMenuItem(vd.getName());
+                    rmi.setUserData(vd);
+                    rmi.setToggleGroup(viewsToggleGroup);
+                    this.viewsMenuButton.getItems().add(this.viewsMenuButton.getItems().size() - 2, rmi);
+
+                    if (vd == currentView) {
+                        rmi.setSelected(true);
+                        return true;
+                    }
+                    return false;
+                }).findAny().isPresent();
 
         RadioMenuItem standardRmi = new RadioMenuItem(STANDARD_VIEW.getName());
         standardRmi.setUserData(STANDARD_VIEW);

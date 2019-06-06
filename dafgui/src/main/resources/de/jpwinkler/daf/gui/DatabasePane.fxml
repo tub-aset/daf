@@ -4,105 +4,77 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuButton?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.control.TreeView?>
-<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<SplitPane fx:id="mainSplitPane" dividerPositions="0.2980132450331126" prefHeight="729.0" prefWidth="1059.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
-         <items>
-      <BorderPane>
-         <top>
-                  <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-               <items>
-                  <MenuButton mnemonicParsing="false" text="Make snapshot">
-                    <items>
-                      <MenuItem mnemonicParsing="false" onAction="#createFullSnapshotClicked" text="Of complete database" />
-                        <Menu fx:id="createSnapshotsMenu" mnemonicParsing="false" text="Of snapshot list" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" onAction="#addSnapshotListClicked" text="Add snapshot list" />
-                        <Menu fx:id="deleteSnapshotListMenu" mnemonicParsing="false" text="Delete snapshot list" />
-                        <Menu fx:id="showSnapshotListMenu" mnemonicParsing="false" text="Show snapshot list" />
-                    </items>
-                  </MenuButton>
-               </items>
-                  </ToolBar>
-         </top>
-         <center>
-                  <TreeView fx:id="databaseTreeView" editable="true" style="-fx-background-color: transparent;" />
-         </center>
-      </BorderPane>
-      <BorderPane prefHeight="200.0" prefWidth="200.0" SplitPane.resizableWithParent="false">
-         <center>
-            <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0" BorderPane.alignment="CENTER">
-               <children>
+
+<SplitPane fx:id="mainSplitPane" dividerPositions="0.25" prefHeight="900.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+    <items>
+          <TreeView fx:id="databaseTreeView" editable="true" style="-fx-background-color: transparent;">
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </TreeView>
+          <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0">
+              <children>
                   <TableView fx:id="modulesTableView" editable="true" VBox.vgrow="ALWAYS">
-                    <columns>
-                      <TableColumn fx:id="moduleNameColumn" maxWidth="1000.0" minWidth="150.0" prefWidth="225.0" text="Module name" />
-                      <TableColumn fx:id="moduleDescriptionColumn" maxWidth="3000.0" minWidth="150.0" prefWidth="450.0" text="Description" />
-                        <TableColumn fx:id="snapshotListsColumn" maxWidth="1000.0" minWidth="150.0" prefWidth="225.0" text="Snapshot lists" />
-                    </columns>
-                     <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                     </columnResizePolicy>
+                      <columns>
+                          <TableColumn fx:id="moduleNameColumn" maxWidth="1000.0" minWidth="150.0" prefWidth="225.0" text="Module name" />
+                          <TableColumn fx:id="moduleDescriptionColumn" maxWidth="3000.0" minWidth="150.0" prefWidth="450.0" text="Description" />
+                          <TableColumn fx:id="snapshotListsColumn" maxWidth="1000.0" minWidth="150.0" prefWidth="225.0" text="Snapshot lists" />
+                      </columns>
+                      <columnResizePolicy>
+                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                      </columnResizePolicy>
                   </TableView>
                   <TitledPane fx:id="currentNodePane" VBox.vgrow="ALWAYS">
-                     <content>
-                        <HBox>
-                           <children>
-                              <VBox HBox.hgrow="ALWAYS">
-                                 <children>
-                                    <TableView fx:id="attributesTableView" editable="true" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
-                                      <columns>
-                                        <TableColumn fx:id="attributeNameColumn" maxWidth="1000.0" minWidth="100.0" prefWidth="100.0" text="Attribute" />
-                                        <TableColumn fx:id="attributeValueColumn" maxWidth="3000.0" prefWidth="150.0" text="Value" />
-                                      </columns>
-                                       <columnResizePolicy>
-                                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                                       </columnResizePolicy>
-                                    </TableView>
-                                 </children>
-                              </VBox>
-                              <VBox>
-                                 <children>
-                                    <Label text="Tags of this element">
-                                       <VBox.margin>
-                                          <Insets bottom="5.0" left="5.0" top="5.0" />
-                                       </VBox.margin>
-                                    </Label>
+                      <content>
+                          <HBox>
+                              <children>
+                                  <VBox HBox.hgrow="ALWAYS">
+                                      <children>
+                                          <TableView fx:id="attributesTableView" editable="true" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
+                                              <columns>
+                                                  <TableColumn fx:id="attributeNameColumn" maxWidth="1000.0" minWidth="100.0" prefWidth="100.0" text="Attribute" />
+                                                  <TableColumn fx:id="attributeValueColumn" maxWidth="3000.0" prefWidth="150.0" text="Value" />
+                                              </columns>
+                                              <columnResizePolicy>
+                                                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                              </columnResizePolicy>
+                                          </TableView>
+                                      </children>
+                                  </VBox>
+                                  <VBox>
+                                      <children>
+                                          <Label text="Tags of this element">
+                                              <VBox.margin>
+                                                  <Insets bottom="5.0" left="5.0" top="5.0" />
+                                              </VBox.margin>
+                                          </Label>
                                           <ComboBox fx:id="newTagComboBox" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onKeyPressed="#newTagEnterPressed" promptText="add tag">
-                                       <VBox.margin>
-                                          <Insets bottom="5.0" />
-                                       </VBox.margin>
-                                    </ComboBox>
+                                              <VBox.margin>
+                                                  <Insets bottom="5.0" />
+                                              </VBox.margin>
+                                          </ComboBox>
                                           <ListView fx:id="tagsListView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS" />
-                                 </children>
-                                 <HBox.margin>
-                                    <Insets left="5.0" />
-                                 </HBox.margin>
-                              </VBox>
-                           </children>
-                        </HBox>
-                     </content>
+                                      </children>
+                                      <HBox.margin>
+                                          <Insets left="5.0" />
+                                      </HBox.margin>
+                                  </VBox>
+                              </children>
+                          </HBox>
+                      </content>
                   </TitledPane>
-               </children>
-               <padding>
+              </children>
+              <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </padding>
-            </VBox>
-         </center>
-         <top>
-            <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
-         </top>
-      </BorderPane>
-         </items>
-      </SplitPane>
+              </padding>
+          </VBox>
+    </items>
+</SplitPane>

@@ -1,7 +1,7 @@
 package de.jpwinkler.daf.gui.databases.commands;
 
-import de.jpwinkler.daf.gui.CommandStack.AbstractCommand;
-import de.jpwinkler.daf.gui.UpdateAction;
+import de.jpwinkler.daf.gui.extensions.AbstractCommand;
+import de.jpwinkler.daf.gui.extensions.UpdateAction;
 import de.jpwinkler.daf.gui.databases.DatabasePaneController;
 import de.jpwinkler.daf.model.DoorsModelUtil;
 import de.jpwinkler.daf.model.DoorsTreeNode;

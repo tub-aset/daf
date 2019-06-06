@@ -1,6 +1,6 @@
 package de.jpwinkler.daf.gui;
 
-import java.lang.ref.WeakReference;
+import de.jpwinkler.daf.gui.extensions.AbstractCommand;
 import java.util.function.Consumer;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -17,9 +17,9 @@ public class CommandStack {
     }
 
     public void addCommand(ApplicationPartController originController, final AbstractCommand command) {
-        command.originController = new WeakReference<>(originController);
-        command.previous = lastExecuted;
-        this.lastExecuted.next = command;
+        command.setOriginController(originController);
+        command.setPrevious(lastExecuted);
+        this.lastExecuted.setNext(command);
         this.lastExecuted = command;
 
         onDirty.accept(isDirty());
@@ -31,7 +31,7 @@ public class CommandStack {
             return null;
         }
 
-        if (commandToUndo.originController.get() != originController) {
+        if (commandToUndo.getOriginController() != originController) {
             Alert alert = new Alert(Alert.AlertType.WARNING,
                     "This action was initiated from another view, still undo from here?", ButtonType.YES, ButtonType.NO);
             alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
@@ -41,7 +41,7 @@ public class CommandStack {
             }
         }
 
-        this.lastExecuted = lastExecuted.previous;
+        this.lastExecuted = lastExecuted.getPrevious();
         commandToUndo.undo();
 
         onDirty.accept(isDirty());
@@ -49,7 +49,7 @@ public class CommandStack {
     }
 
     public AbstractCommand redo(ApplicationPartController originController) {
-        AbstractCommand commandToRedo = lastExecuted.next;
+        AbstractCommand commandToRedo = lastExecuted.getNext();
         if (commandToRedo != null) {
             this.lastExecuted = commandToRedo;
             commandToRedo.redo();
@@ -68,34 +68,8 @@ public class CommandStack {
         onDirty.accept(isDirty());
     }
 
-    public static abstract class AbstractCommand {
-
-        public boolean isApplicable() {
-            return true;
-        }
-
-        public abstract String getName();
-
-        public abstract void apply();
-
-        public abstract void redo();
-
-        public abstract void undo();
-
-        public UpdateAction[] getUpdateActions() {
-            return new UpdateAction[0];
-        }
-
-        public boolean canUndo() {
-            return true;
-        }
-
-        private WeakReference<ApplicationPartController> originController;
-        private AbstractCommand previous;
-        private AbstractCommand next;
-    }
-
     public static final AbstractCommand INITIAL_COMMAND = new AbstractCommand() {
+
         @Override
         public String getName() {
             return null;

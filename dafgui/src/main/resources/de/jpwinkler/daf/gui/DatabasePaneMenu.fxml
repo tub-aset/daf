@@ -20,19 +20,21 @@
             </MenuItem>
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" onAction="#newFolderClicked" text="New folder">
-            <accelerator>
-               <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
-            </accelerator></MenuItem>
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+                </accelerator>
+            </MenuItem>
             <MenuItem mnemonicParsing="false" onAction="#newModuleClicked" text="New module">
-            <accelerator>
-               <KeyCodeCombination alt="UP" code="M" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
-            </accelerator></MenuItem>
-         <MenuItem mnemonicParsing="false" onAction="#newAttributeClicked" text="New attribute">
-            <accelerator>
-               <KeyCodeCombination alt="UP" code="A" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
-            </accelerator>
-         </MenuItem>
-         <SeparatorMenuItem mnemonicParsing="false" />
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="M" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+                </accelerator>
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#newAttributeClicked" text="New attribute">
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="A" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+                </accelerator>
+            </MenuItem>
+            <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" onAction="#cutClicked" text="Cut">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="X" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
@@ -53,6 +55,16 @@
                     <KeyCodeCombination alt="UP" code="DELETE" control="UP" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
             </MenuItem>
+        </items>
+    </Menu>
+    <Menu mnemonicParsing="false" text="Snapshot">
+        <items>
+            <MenuItem mnemonicParsing="false" onAction="#createFullSnapshotClicked" text="Of complete database" />
+            <Menu fx:id="createSnapshotsMenu" mnemonicParsing="false" text="Of snapshot list" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" onAction="#addSnapshotListClicked" text="Add snapshot list" />
+            <Menu fx:id="deleteSnapshotListMenu" mnemonicParsing="false" text="Delete snapshot list" />
+            <Menu fx:id="showSnapshotListMenu" mnemonicParsing="false" text="Show snapshot list" />
         </items>
     </Menu>
 </Menu>
