@@ -15,6 +15,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ScrollPane;
 import org.pf4j.PluginWrapper;
 import de.jpwinkler.daf.gui.extensions.ApplicationPartExtension;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
  */
 public class ExtensionPane<T extends ApplicationPartExtension> extends AutoloadingPaneController<ExtensionPane> {
 
-    public ExtensionPane(List<T> extensions, Function<T, List<Node>> paneGetter, String defaultSelection, Consumer<String> onSelected) {
+    public ExtensionPane(Supplier<List<T>> extensions, Function<T, List<Node>> paneGetter, String defaultSelection, Consumer<String> onSelected) {
 
         extensionChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
             extensionPane.setContent(newValue.node);
@@ -40,7 +41,7 @@ public class ExtensionPane<T extends ApplicationPartExtension> extends Autoloadi
     }
 
     private final String defaultSelection;
-    private final List<T> extensions;
+    private final Supplier<List<T>> extensions;
     private final Function<T, List<Node>> paneGetter;
 
     public boolean hasPanes() {
@@ -48,7 +49,7 @@ public class ExtensionPane<T extends ApplicationPartExtension> extends Autoloadi
     }
 
     public void addPlugin(PluginWrapper plugin) {
-        extensions.stream()
+        extensions.get().stream()
                 .filter(e -> e.getClass().getClassLoader() == plugin.getPluginClassLoader())
                 .forEach(e -> {
                     List<Node> extensionNodes = paneGetter.apply(e);

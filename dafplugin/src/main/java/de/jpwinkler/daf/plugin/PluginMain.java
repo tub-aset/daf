@@ -5,6 +5,7 @@
  */
 package de.jpwinkler.daf.plugin;
 
+import de.jpwinkler.daf.gui.extensions.ApplicationPartExtension;
 import de.jpwinkler.daf.gui.extensions.ApplicationPartInterface;
 import java.util.List;
 import javafx.scene.Node;
@@ -27,21 +28,21 @@ public class PluginMain extends Plugin {
     }
 
     @Extension
-    public static class TestExtension implements MenuExtension, DatabasePanesExtension {
+    public static class TestExtension implements ApplicationPartExtension, MenuExtension, DatabasePanesExtension {
 
         private final List<Menu> menus = List.of(new Menu("Test Extension Menu"));
         private final List<Node> sidePanel = List.of(new Label("Test Extension Side Panel"));
-        private final List<Node> bottomPanel = List.of(new Label("Test Extension Side Panel"));
+        private final List<Node> bottomPanel = List.of(new Label("Test Extension Bottom Panel"));
         private ApplicationPartInterface applicationPartInterface;
-
-        @Override
-        public List<Menu> getMenus() {
-            return menus;
-        }
 
         @Override
         public void initialise(ApplicationPartInterface applicationPartInterface) {
             this.applicationPartInterface = applicationPartInterface;
+        }
+
+        @Override
+        public List<Menu> getMenus() {
+            return menus;
         }
 
         @Override

@@ -96,7 +96,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                 ApplicationPreferences.DATABASE_PANE_SPLITPOS.store(mainSplitPane.getDividerPositions());
             });
         });
-        
+
         bottomSplitPane.setDividerPositions((double[]) ApplicationPreferences.DATABASE_BOTTOMPANE_SPLITPOS.retrieve());
         bottomSplitPane.getDividers().forEach(d -> {
             d.positionProperty().addListener((obs, oldValue, newValue) -> {
@@ -186,7 +186,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         String ceil = list.ceiling(fn);
         return ceil != null && ceil.startsWith(fn);
     }
-    
+
     @FXML
     private SplitPane bottomSplitPane;
 
@@ -236,11 +236,11 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     private Menu deleteSnapshotListMenu;
 
     private final ExtensionPane<DatabasePanesExtension> sidePane = new ExtensionPane<>(
-            super.getExtensions(DatabasePanesExtension.class), e -> e.getSidePanes(),
+            () -> super.getExtensions(DatabasePanesExtension.class), e -> e.getSidePanes(),
             ApplicationPreferences.DATABASE_PANE_SIDE_EXTENSION.retrieve(),
             ApplicationPreferences.DATABASE_PANE_SIDE_EXTENSION::store);
     private final ExtensionPane<DatabasePanesExtension> bottomPane = new ExtensionPane<>(
-            super.getExtensions(DatabasePanesExtension.class), e -> e.getBottomPanes(),
+            () -> super.getExtensions(DatabasePanesExtension.class), e -> e.getBottomPanes(),
             ApplicationPreferences.DATABASE_PANE_SIDE_EXTENSION.retrieve(),
             ApplicationPreferences.DATABASE_PANE_SIDE_EXTENSION::store);
 
@@ -431,14 +431,14 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     @Override
     public void removePlugin(PluginWrapper plugin) {
         super.removePlugin(plugin);
-        
+
         sidePane.removePlugin(plugin);
-        if(!sidePane.hasPanes()) {
+        if (!sidePane.hasPanes()) {
             mainSplitPane.getItems().remove(sidePane.getNode());
         }
-        
+
         bottomPane.removePlugin(plugin);
-        if(!bottomPane.hasPanes()) {
+        if (!bottomPane.hasPanes()) {
             bottomSplitPane.getItems().remove(bottomPane.getNode());
         }
     }
@@ -446,14 +446,14 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     @Override
     public void addPlugin(PluginWrapper plugin) {
         super.addPlugin(plugin);
-        
+
         sidePane.addPlugin(plugin);
-        if(sidePane.hasPanes() && !mainSplitPane.getItems().contains(sidePane.getNode())) {
+        if (sidePane.hasPanes() && !mainSplitPane.getItems().contains(sidePane.getNode())) {
             mainSplitPane.getItems().add(sidePane.getNode());
         }
-        
-        bottomPane.addPlugin(plugin); 
-        if(bottomPane.hasPanes() && !bottomSplitPane.getItems().contains(bottomPane.getNode())) { 
+
+        bottomPane.addPlugin(plugin);
+        if (bottomPane.hasPanes() && !bottomSplitPane.getItems().contains(bottomPane.getNode())) {
             bottomSplitPane.getItems().add(bottomPane.getNode());
         }
     }

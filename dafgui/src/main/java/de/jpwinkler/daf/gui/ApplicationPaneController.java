@@ -185,7 +185,18 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     private void addPluginMenuEntries(PluginWrapper plugin) {
         MenuItem mi = new MenuItem(plugin.getPluginId());
         mi.setUserData(plugin.getPluginId());
-        mi.setOnAction(ev -> this.uninstallPlugin((String) ((MenuItem) ev.getTarget()).getUserData()));
+        mi.setOnAction(ev -> {
+            Alert alert = new Alert(AlertType.CONFIRMATION, "Are you sure you want to uninstall the plugin " + plugin.getPluginId()
+                    + "? You may loose its current state.", ButtonType.YES, ButtonType.NO);
+            alert.setTitle("Uninstall plugin " + plugin.getPluginId());
+            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+
+            if (alert.showAndWait().orElse(ButtonType.NO) != ButtonType.YES) {
+                return;
+            }
+
+            this.uninstallPlugin((String) ((MenuItem) ev.getTarget()).getUserData());
+        });
         uninstallPluginMenu.getItems().add(mi);
         uninstallPluginMenu.getItems().sort((mi1, mi2) -> mi1.getText().compareTo(mi2.getText()));
 
@@ -490,7 +501,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
                                 return;
                             }
 
-                            uninstallPlugin(pluginId);
+                            this.uninstallPlugin(pluginId);
                         }
 
                         Path destination = pluginManager.getPluginsRoot().toAbsolutePath().resolve(pluginId + ".jar");
@@ -503,7 +514,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
                         if (plugin == null) {
                             throw new RuntimeException("Invalid plugin file");
                         }
-                        if (plugin.getPluginState() != PluginState.RESOLVED) {
+                        if (plugin.getPluginState() != PluginState.RESOLVED && plugin.getPluginState() != PluginState.DISABLED) {
                             this.uninstallPlugin(pluginId);
                             throw new RuntimeException("Plugin could not be resolved");
                         }
