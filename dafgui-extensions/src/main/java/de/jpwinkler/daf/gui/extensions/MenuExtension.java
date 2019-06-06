@@ -5,14 +5,18 @@
  */
 package de.jpwinkler.daf.gui.extensions;
 
-import de.jpwinkler.daf.db.DatabaseInterface;
-import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import javafx.scene.control.Menu;
 
 /**
  *
  * @author fwiesweg
  */
-public interface ModulePartExtensionPoint extends ApplicationPartExtensionPoint {
-
-    Collection<ViewDefinition> getAdditionalViews(DatabaseInterface databaseInterface);
+public interface MenuExtension extends ApplicationPartExtension {
+    
+    default List<Menu> getMenus() {
+        return Collections.emptyList();
+    }
+    
 }

@@ -1,6 +1,5 @@
 package de.jpwinkler.daf.gui.modules;
 
-import de.jpwinkler.daf.gui.extensions.ViewDefinition;
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.filter.objects.CascadingFilter;
@@ -12,10 +11,9 @@ import de.jpwinkler.daf.gui.ApplicationPartController;
 import de.jpwinkler.daf.gui.ApplicationPreferences;
 import de.jpwinkler.daf.gui.CommandStack;
 import de.jpwinkler.daf.gui.CustomTextFieldTableCell;
-import de.jpwinkler.daf.gui.Main;
 import de.jpwinkler.daf.gui.MultiCommand;
-import de.jpwinkler.daf.gui.extensions.ModulePartExtensionPoint;
 import de.jpwinkler.daf.gui.extensions.UpdateAction;
+import de.jpwinkler.daf.gui.extensions.ViewDefinition;
 import de.jpwinkler.daf.gui.extensions.ViewDefinition.ColumnDefinition;
 import de.jpwinkler.daf.gui.modules.commands.DeleteObjectCommand;
 import de.jpwinkler.daf.gui.modules.commands.DemoteObjectCommand;
@@ -30,10 +28,10 @@ import de.jpwinkler.daf.gui.modules.commands.ReduceToSelectionCommand;
 import de.jpwinkler.daf.gui.modules.commands.SplitLinesCommand;
 import de.jpwinkler.daf.gui.modules.commands.SwapObjectHeadingAndTextCommand;
 import de.jpwinkler.daf.gui.modules.commands.UnwrapChildrenCommand;
+import de.jpwinkler.daf.model.DoorsAttributes;
 import de.jpwinkler.daf.model.DoorsModelUtil;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
-import de.jpwinkler.daf.model.DoorsAttributes;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import java.util.ArrayList;
@@ -64,6 +62,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import de.jpwinkler.daf.gui.extensions.ModuleViewsExtension;
 
 public final class ModulePaneController extends ApplicationPartController<ModulePaneController> {
 
@@ -313,8 +312,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
             updateGui(ModuleUpdateAction.UPDATE_COLUMNS);
         });
 
-        boolean selected = Stream.concat(
-                views.stream(), super.getExtensions(ModulePartExtensionPoint.class).stream()
+        boolean selected = Stream.concat(views.stream(), super.getExtensions(ModuleViewsExtension.class).stream()
                 .flatMap(e -> e.getAdditionalViews(getDatabaseInterface()).stream()))
                 .filter(vd -> {
 

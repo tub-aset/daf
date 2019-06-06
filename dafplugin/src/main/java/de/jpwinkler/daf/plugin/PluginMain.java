@@ -5,9 +5,7 @@
  */
 package de.jpwinkler.daf.plugin;
 
-import de.jpwinkler.daf.gui.extensions.ApplicationPartExtensionPoint;
 import de.jpwinkler.daf.gui.extensions.ApplicationPartInterface;
-import de.jpwinkler.daf.gui.extensions.ModulePartExtensionPoint;
 import java.util.List;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -15,6 +13,8 @@ import javafx.scene.control.Menu;
 import org.pf4j.Extension;
 import org.pf4j.Plugin;
 import org.pf4j.PluginWrapper;
+import de.jpwinkler.daf.gui.extensions.DatabasePanesExtension;
+import de.jpwinkler.daf.gui.extensions.MenuExtension;
 
 /**
  *
@@ -27,7 +27,7 @@ public class PluginMain extends Plugin {
     }
 
     @Extension
-    public static class TestExtension implements ApplicationPartExtensionPoint {
+    public static class TestExtension implements MenuExtension, DatabasePanesExtension {
 
         private final List<Menu> menus = List.of(new Menu("Test Extension Menu"));
         private final List<Node> sidePanel = List.of(new Label("Test Extension Side Panel"));

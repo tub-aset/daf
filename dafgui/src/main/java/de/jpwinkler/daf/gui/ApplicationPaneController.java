@@ -7,6 +7,10 @@ import de.jpwinkler.daf.gui.background.BackgroundTaskStatusListener;
 import de.jpwinkler.daf.gui.background.BackgroundTaskStatusMonitor;
 import de.jpwinkler.daf.model.DoorsAttributes;
 import de.jpwinkler.daf.model.DoorsTreeNode;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Collection;
@@ -14,12 +18,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
 import java.util.function.Predicate;
+import java.util.jar.Manifest;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
@@ -28,7 +35,9 @@ import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -38,14 +47,28 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.Region;
+import javafx.stage.FileChooser;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.tuple.Triple;
+import org.pf4j.DefaultPluginManager;
+import org.pf4j.ManifestPluginDescriptorFinder;
+import org.pf4j.PluginDescriptorFinder;
+import org.pf4j.PluginManager;
+import org.pf4j.PluginState;
+import org.pf4j.PluginWrapper;
 
 public final class ApplicationPaneController extends AutoloadingPaneController<ApplicationPaneController> {
 
     private final Map<DatabasePath, Triple<MutableInt, DatabaseInterface, CommandStack>> databaseInterfaces = new HashMap<>();
     private final Map<DatabasePath, ApplicationPartController> applicationPartControllers = new HashMap<>();
     private final BackgroundTaskStatusMonitor backgroundTaskStatusMonitor = new BackgroundTaskStatusMonitor();
+
+    final PluginManager pluginManager = new DefaultPluginManager() {
+        @Override
+        protected PluginDescriptorFinder createPluginDescriptorFinder() {
+            return new ManifestPluginDescriptorFinder();
+        }
+    };
 
     @FXML
     private TabPane tabPane;
@@ -73,6 +96,12 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
     @FXML
     private Menu recentMenu;
+
+    @FXML
+    private Menu pluginStateMenu;
+
+    @FXML
+    private Menu uninstallPluginMenu;
 
     private final Timer generalTimer = new Timer(true);
 
@@ -147,6 +176,36 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
                     });
                     newMenu.getItems().add(it);
                 });
+
+        pluginManager.loadPlugins();
+        pluginManager.startPlugins();
+        pluginManager.getPlugins().forEach(this::addPluginMenuEntries);
+    }
+
+    private void addPluginMenuEntries(PluginWrapper plugin) {
+        MenuItem mi = new MenuItem(plugin.getPluginId());
+        mi.setUserData(plugin.getPluginId());
+        mi.setOnAction(ev -> this.uninstallPlugin((String) ((MenuItem) ev.getTarget()).getUserData()));
+        uninstallPluginMenu.getItems().add(mi);
+        uninstallPluginMenu.getItems().sort((mi1, mi2) -> mi1.getText().compareTo(mi2.getText()));
+
+        CheckBox cb = new CheckBox(plugin.getPluginId());
+        cb.setStyle("-fx-text-fill: -fx-text-base-color");
+        cb.setUserData(plugin.getPluginId());
+
+        CustomMenuItem cmi = new CustomMenuItem(cb);
+        cmi.setHideOnClick(false);
+        cmi.setUserData(plugin.getPluginId());
+        cb.selectedProperty().set(plugin.getPluginState() == PluginState.STARTED);
+        cb.selectedProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal) {
+                startPlugin(plugin.getPluginId());
+            } else {
+                stopPlugin(plugin.getPluginId());
+            }
+        });
+        pluginStateMenu.getItems().add(cmi);
+        pluginStateMenu.getItems().sort((mi1, mi2) -> mi1.getText().compareTo(mi2.getText()));
     }
 
     private ApplicationPartController<?> getCurrentFileStateController() {
@@ -401,5 +460,87 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         if (refCounter.intValue() == 0) {
             databaseInterfaces.remove(databasePath);
         }
+    }
+
+    @FXML
+    public void installPluginClicked() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Load a plugin");
+        fileChooser.setInitialDirectory(ApplicationPreferences.PLUGIN_DIRECTORY.retrieve());
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("DAF plugin", "*.jar"));
+
+        Stream.of(fileChooser.showOpenDialog(tabPane.getScene().getWindow()))
+                .filter(f -> f != null)
+                .peek(f -> ApplicationPreferences.PLUGIN_DIRECTORY.store(f.getParentFile().getAbsoluteFile()))
+                .forEach(f -> {
+                    try (URLClassLoader urlCl = new URLClassLoader(new URL[]{f.toURI().toURL()}, null)) {
+                        Manifest mf = new Manifest(urlCl.getResourceAsStream("META-INF/MANIFEST.MF"));
+                        String pluginId = mf.getMainAttributes().getValue("Plugin-Id");
+                        if (pluginId == null) {
+                            throw new IllegalArgumentException("No plugin id in manifest");
+                        }
+
+                        if (pluginManager.getPlugin(pluginId) != null) {
+                            Alert alert = new Alert(AlertType.CONFIRMATION, "The plugin " + pluginId + " "
+                                    + "has already been loaded. Do you want to replace it? You may loose its current state.", ButtonType.YES, ButtonType.NO);
+                            alert.setTitle("Replace plugin " + pluginId);
+                            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+
+                            if (alert.showAndWait().orElse(ButtonType.NO) != ButtonType.YES) {
+                                return;
+                            }
+
+                            uninstallPlugin(pluginId);
+                        }
+
+                        Path destination = pluginManager.getPluginsRoot().toAbsolutePath().resolve(pluginId + ".jar");
+                        if (!destination.equals(f.toPath().toAbsolutePath())) {
+                            Files.copy(f.toPath(), destination);
+                        }
+
+                        pluginManager.loadPlugin(destination);
+                        PluginWrapper plugin = pluginManager.getPlugin(pluginId);
+                        if (plugin == null) {
+                            throw new RuntimeException("Invalid plugin file");
+                        }
+                        if (plugin.getPluginState() != PluginState.RESOLVED) {
+                            this.uninstallPlugin(pluginId);
+                            throw new RuntimeException("Plugin could not be resolved");
+                        }
+
+                        startPlugin(pluginId);
+                        addPluginMenuEntries(plugin);
+                    } catch (Throwable ex) {
+                        ex.printStackTrace();
+                        setStatus("Failed loading plugin: " + getMessage(ex));
+                    }
+                });
+    }
+
+    private void startPlugin(String pluginId) {
+        pluginManager.startPlugin(pluginId);
+        pluginManager.enablePlugin(pluginId);
+
+        PluginWrapper plugin = pluginManager.getPlugin(pluginId);
+        if (plugin.getPluginState() != PluginState.STARTED) {
+            this.uninstallPlugin(pluginId);
+            throw new RuntimeException("Plugin could not be started");
+        }
+        applicationPartControllers.values().stream().forEach(a -> a.addPlugin(plugin));
+    }
+
+    private void stopPlugin(String pluginId) {
+        applicationPartControllers.values().forEach(a -> a.removePlugin(pluginManager.getPlugin(pluginId)));
+
+        pluginManager.stopPlugin(pluginId);
+        pluginManager.disablePlugin(pluginId);
+    }
+
+    private void uninstallPlugin(String pluginId) {
+        uninstallPluginMenu.getItems().removeIf(mi -> Objects.equals(mi.getUserData(), pluginId));
+        pluginStateMenu.getItems().removeIf(mi -> Objects.equals(mi.getUserData(), pluginId));
+        stopPlugin(pluginId);
+
+        pluginManager.deletePlugin(pluginId);
     }
 }

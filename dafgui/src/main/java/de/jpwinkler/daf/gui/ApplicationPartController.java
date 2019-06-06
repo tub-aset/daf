@@ -5,26 +5,29 @@
  */
 package de.jpwinkler.daf.gui;
 
-import de.jpwinkler.daf.gui.extensions.UpdateAction;
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
 import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.gui.extensions.AbstractCommand;
-import de.jpwinkler.daf.gui.extensions.ApplicationPartExtensionPoint;
 import de.jpwinkler.daf.gui.extensions.ApplicationPartInterface;
+import de.jpwinkler.daf.gui.extensions.UpdateAction;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import org.pf4j.PluginWrapper;
+import de.jpwinkler.daf.gui.extensions.ApplicationPartExtension;
 
 /**
  *
@@ -37,9 +40,11 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
     final DatabaseInterface databaseInterface;
     final CommandStack commandStack;
 
-    protected final List<ApplicationPartExtensionPoint> extensions = Collections.unmodifiableList(Main.PLUGIN_MANAGER.getExtensions(ApplicationPartExtensionPoint.class));
+    private final List<ApplicationPartExtension> extensions = new ArrayList<>();
 
     private final List<Menu> menus;
+    private final Map<MenuItem, PluginWrapper> extensionSubMenus = new HashMap<>();
+    private final Menu extensionsMenu = new Menu("Plugins");
 
     public ApplicationPartController(ApplicationPaneController applicationController, DatabasePath path, DatabaseInterface databaseInterface, CommandStack databaseCommandStack) {
         this.applicationController = applicationController;
@@ -63,11 +68,8 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
                 throw new RuntimeException(ex);
             }
         }
-
-        extensions.forEach(e -> e.initialise(this));
-        extensions.stream()
-                .flatMap(e -> e.getMenus().stream())
-                .forEach(menus::add);
+        ;
+        menus.add(extensionsMenu);
     }
 
     protected final void setStatus(final String status) {
@@ -83,7 +85,7 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
         applicationController.createSnapshot(this.getDatabaseInterface(), this.getDatabaseInterface().getPath(), include);
     }
 
-    protected final <T extends ApplicationPartExtensionPoint> List<T> getExtensions(Class<T> cls) {
+    protected final <T extends ApplicationPartExtension> List<T> getExtensions(Class<T> cls) {
         return extensions.stream()
                 .filter(e -> cls.isAssignableFrom(e.getClass()))
                 .map(e -> (T) e)
@@ -135,7 +137,7 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
         return menus;
     }
 
-    public DatabasePath getPath() {
+    public final DatabasePath getPath() {
         return path;
     }
 
@@ -148,4 +150,22 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
         return commandStack;
     }
 
+    public void addPlugin(PluginWrapper plugin) {
+        List<ApplicationPartExtension> newExts = plugin.getPluginManager().getExtensions(ApplicationPartExtension.class, plugin.getPluginId());
+        newExts.forEach(e -> e.initialise(this));
+
+        extensions.addAll(newExts);
+        newExts.stream()
+                .flatMap(e -> e.getMenus().stream())
+                .peek(m -> extensionSubMenus.put(m, plugin))
+                .forEach(extensionsMenu.getItems()::add);
+    }
+
+    public void removePlugin(PluginWrapper plugin) {
+        extensions.removeIf(ext -> ext.getClass().getClassLoader() == plugin.getPluginClassLoader());
+
+        List<MenuItem> extMenus = extensionSubMenus.entrySet().stream().filter(e -> e.getValue() == plugin).map(e -> e.getKey()).collect(Collectors.toList());
+        extensionsMenu.getItems().removeAll(extMenus);
+        extMenus.forEach(extensionSubMenus::remove);
+    }
 }

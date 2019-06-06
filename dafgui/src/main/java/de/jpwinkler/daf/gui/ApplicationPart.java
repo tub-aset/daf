@@ -9,8 +9,8 @@ import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.db.DoorsApplicationDatabaseInterface;
 import de.jpwinkler.daf.db.FolderDatabaseInterface;
-import de.jpwinkler.daf.db.XmiDatabaseInterface;
 import de.jpwinkler.daf.db.RawFileDatabaseInterface;
+import de.jpwinkler.daf.db.XmiDatabaseInterface;
 import de.jpwinkler.daf.gui.databases.DatabasePaneController;
 import de.jpwinkler.daf.gui.modules.ModulePaneController;
 import java.io.File;
@@ -26,6 +26,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Window;
 import org.apache.commons.io.FilenameUtils;
+import org.pf4j.PluginState;
 
 /**
  *
@@ -181,7 +182,9 @@ public class ApplicationPart<T extends DatabaseInterface> {
     }
 
     public ApplicationPartController createController(ApplicationPaneController appController, DatabasePath path, DatabaseInterface databaseInterface, CommandStack databaseCommandStack) {
-        return partConstructor.construct(appController, path, databaseInterface, databaseCommandStack);
+        ApplicationPartController pc = partConstructor.construct(appController, path, databaseInterface, databaseCommandStack);
+        appController.pluginManager.getPlugins(PluginState.STARTED).forEach(pc::addPlugin);
+        return pc;
     }
 
     public static ApplicationPartController createControllerForAny(ApplicationPaneController appController, DatabasePath path, DatabaseInterface databaseInterface, CommandStack databaseCommandStack) {

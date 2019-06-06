@@ -1,7 +1,5 @@
 package de.jpwinkler.daf.gui.databases;
 
-import de.jpwinkler.daf.gui.CustomTextFieldTreeCell;
-import de.jpwinkler.daf.gui.CustomTextFieldTableCell;
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
 import de.jpwinkler.daf.db.DatabasePath;
@@ -9,8 +7,9 @@ import de.jpwinkler.daf.gui.ApplicationPaneController;
 import de.jpwinkler.daf.gui.ApplicationPartController;
 import de.jpwinkler.daf.gui.ApplicationPreferences;
 import de.jpwinkler.daf.gui.CommandStack;
+import de.jpwinkler.daf.gui.CustomTextFieldTableCell;
+import de.jpwinkler.daf.gui.CustomTextFieldTreeCell;
 import de.jpwinkler.daf.gui.ExtensionPane;
-import de.jpwinkler.daf.gui.extensions.UpdateAction;
 import de.jpwinkler.daf.gui.databases.commands.AddTagCommand;
 import de.jpwinkler.daf.gui.databases.commands.DeleteAttributesCommand;
 import de.jpwinkler.daf.gui.databases.commands.DeleteCommand;
@@ -21,9 +20,10 @@ import de.jpwinkler.daf.gui.databases.commands.PasteCommand;
 import de.jpwinkler.daf.gui.databases.commands.RemoveTagCommand;
 import de.jpwinkler.daf.gui.databases.commands.RenameAttributesCommand;
 import de.jpwinkler.daf.gui.databases.commands.RenameNodeCommand;
+import de.jpwinkler.daf.gui.extensions.UpdateAction;
+import de.jpwinkler.daf.model.DoorsAttributes;
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
-import de.jpwinkler.daf.model.DoorsAttributes;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.util.Collection;
 import java.util.Collections;
@@ -62,6 +62,8 @@ import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
+import org.pf4j.PluginWrapper;
+import de.jpwinkler.daf.gui.extensions.DatabasePanesExtension;
 
 public final class DatabasePaneController extends ApplicationPartController<DatabasePaneController> {
 
@@ -92,6 +94,13 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         mainSplitPane.getDividers().forEach(d -> {
             d.positionProperty().addListener((obs, oldValue, newValue) -> {
                 ApplicationPreferences.DATABASE_PANE_SPLITPOS.store(mainSplitPane.getDividerPositions());
+            });
+        });
+        
+        bottomSplitPane.setDividerPositions((double[]) ApplicationPreferences.DATABASE_BOTTOMPANE_SPLITPOS.retrieve());
+        bottomSplitPane.getDividers().forEach(d -> {
+            d.positionProperty().addListener((obs, oldValue, newValue) -> {
+                ApplicationPreferences.DATABASE_BOTTOMPANE_SPLITPOS.store(bottomSplitPane.getDividerPositions());
             });
         });
 
@@ -161,13 +170,6 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         populateSnapshotMenu(snapshotLists.keySet(), createSnapshotsMenu, this::createSnapshotFromListClicked);
         populateSnapshotMenu(snapshotLists.keySet(), deleteSnapshotListMenu, this::deleteSnapshotListClicked);
         populateSnapshotMenu(snapshotLists.keySet(), showSnapshotListMenu, this::showSnapshotListClicked);
-
-        ExtensionPane ep = new ExtensionPane(extensions, e -> e.getBottomPanes(),
-                ApplicationPreferences.DATABASE_PANE_SIDE_EXTENSION.retrieve(),
-                ApplicationPreferences.DATABASE_PANE_SIDE_EXTENSION::store);
-        if (ep.hasPanes()) {
-            mainSplitPane.getItems().add(ep.getNode());
-        }
     }
 
     private static String getSnapshotLists(DoorsTreeNode node) {
@@ -184,6 +186,9 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         String ceil = list.ceiling(fn);
         return ceil != null && ceil.startsWith(fn);
     }
+    
+    @FXML
+    private SplitPane bottomSplitPane;
 
     @FXML
     private SplitPane mainSplitPane;
@@ -229,6 +234,15 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
     @FXML
     private Menu deleteSnapshotListMenu;
+
+    private final ExtensionPane<DatabasePanesExtension> sidePane = new ExtensionPane<>(
+            super.getExtensions(DatabasePanesExtension.class), e -> e.getSidePanes(),
+            ApplicationPreferences.DATABASE_PANE_SIDE_EXTENSION.retrieve(),
+            ApplicationPreferences.DATABASE_PANE_SIDE_EXTENSION::store);
+    private final ExtensionPane<DatabasePanesExtension> bottomPane = new ExtensionPane<>(
+            super.getExtensions(DatabasePanesExtension.class), e -> e.getBottomPanes(),
+            ApplicationPreferences.DATABASE_PANE_SIDE_EXTENSION.retrieve(),
+            ApplicationPreferences.DATABASE_PANE_SIDE_EXTENSION::store);
 
     private List<DoorsTreeNode> nodeClipboard;
     private List<Entry<String, String>> attributeClipboard;
@@ -411,6 +425,36 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         } else {
             return DatabasePaneImages.IMAGE_FOLDER;
 
+        }
+    }
+
+    @Override
+    public void removePlugin(PluginWrapper plugin) {
+        super.removePlugin(plugin);
+        
+        sidePane.removePlugin(plugin);
+        if(!sidePane.hasPanes()) {
+            mainSplitPane.getItems().remove(sidePane.getNode());
+        }
+        
+        bottomPane.removePlugin(plugin);
+        if(!bottomPane.hasPanes()) {
+            bottomSplitPane.getItems().remove(bottomPane.getNode());
+        }
+    }
+
+    @Override
+    public void addPlugin(PluginWrapper plugin) {
+        super.addPlugin(plugin);
+        
+        sidePane.addPlugin(plugin);
+        if(sidePane.hasPanes() && !mainSplitPane.getItems().contains(sidePane.getNode())) {
+            mainSplitPane.getItems().add(sidePane.getNode());
+        }
+        
+        bottomPane.addPlugin(plugin); 
+        if(bottomPane.hasPanes() && !bottomSplitPane.getItems().contains(bottomPane.getNode())) { 
+            bottomSplitPane.getItems().add(bottomPane.getNode());
         }
     }
 
