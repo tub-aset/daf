@@ -3,10 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.jpwinkler.daf.gui;
+package de.jpwinkler.daf.gui.commands;
 
-import de.jpwinkler.daf.gui.extensions.AbstractCommand;
-import de.jpwinkler.daf.gui.extensions.UpdateAction;
 import java.util.List;
 import java.util.stream.Stream;
 

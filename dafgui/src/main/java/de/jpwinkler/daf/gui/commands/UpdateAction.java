@@ -1,4 +1,6 @@
-package de.jpwinkler.daf.gui.extensions;
+package de.jpwinkler.daf.gui.commands;
+
+import de.jpwinkler.daf.gui.ApplicationPartInterface;
 
 public interface UpdateAction<T extends ApplicationPartInterface> {
 

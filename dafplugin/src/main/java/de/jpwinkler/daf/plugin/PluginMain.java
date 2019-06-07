@@ -5,8 +5,8 @@
  */
 package de.jpwinkler.daf.plugin;
 
-import de.jpwinkler.daf.gui.extensions.ApplicationPartExtension;
-import de.jpwinkler.daf.gui.extensions.ApplicationPartInterface;
+import de.jpwinkler.daf.gui.ApplicationPartExtension;
+import de.jpwinkler.daf.gui.ApplicationPartInterface;
 import java.util.List;
 import javafx.scene.Node;
 import javafx.scene.control.Label;

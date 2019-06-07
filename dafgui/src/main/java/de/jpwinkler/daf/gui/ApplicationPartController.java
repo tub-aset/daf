@@ -5,12 +5,12 @@
  */
 package de.jpwinkler.daf.gui;
 
+import de.jpwinkler.daf.gui.commands.CommandStack;
+import de.jpwinkler.daf.gui.commands.AbstractCommand;
+import de.jpwinkler.daf.gui.commands.UpdateAction;
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
 import de.jpwinkler.daf.db.DatabasePath;
-import de.jpwinkler.daf.gui.extensions.AbstractCommand;
-import de.jpwinkler.daf.gui.extensions.ApplicationPartInterface;
-import de.jpwinkler.daf.gui.extensions.UpdateAction;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.io.IOException;
 import java.net.URL;
@@ -27,7 +27,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import org.pf4j.PluginWrapper;
-import de.jpwinkler.daf.gui.extensions.ApplicationPartExtension;
 
 /**
  *
@@ -76,8 +75,9 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
         applicationController.setStatus(status);
     }
 
-    protected final boolean open(DatabasePath path, OpenFlag openFlag) {
-        return applicationController.open(path, openFlag);
+    @Override
+    public final void open(DatabasePath path, OpenFlag openFlag) {
+        applicationController.open(path, openFlag);
     }
 
     @Override

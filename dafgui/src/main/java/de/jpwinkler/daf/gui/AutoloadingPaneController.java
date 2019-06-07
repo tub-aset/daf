@@ -5,9 +5,7 @@
  */
 package de.jpwinkler.daf.gui;
 
-import de.jpwinkler.daf.gui.extensions.ApplicationPartExtension;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Optional;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.jpwinkler.daf.gui;
+package de.jpwinkler.daf.gui.controls;
 
+import de.jpwinkler.daf.gui.ApplicationPartExtension;
+import de.jpwinkler.daf.gui.AutoloadingPaneController;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -14,7 +16,6 @@ import javafx.scene.Node;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ScrollPane;
 import org.pf4j.PluginWrapper;
-import de.jpwinkler.daf.gui.extensions.ApplicationPartExtension;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 

@@ -9,12 +9,11 @@ import de.jpwinkler.daf.filter.objects.ReverseCascadingFilter;
 import de.jpwinkler.daf.gui.ApplicationPaneController;
 import de.jpwinkler.daf.gui.ApplicationPartController;
 import de.jpwinkler.daf.gui.ApplicationPreferences;
-import de.jpwinkler.daf.gui.CommandStack;
-import de.jpwinkler.daf.gui.CustomTextFieldTableCell;
-import de.jpwinkler.daf.gui.MultiCommand;
-import de.jpwinkler.daf.gui.extensions.UpdateAction;
-import de.jpwinkler.daf.gui.extensions.ViewDefinition;
-import de.jpwinkler.daf.gui.extensions.ViewDefinition.ColumnDefinition;
+import de.jpwinkler.daf.gui.commands.CommandStack;
+import de.jpwinkler.daf.gui.controls.CustomTextFieldTableCell;
+import de.jpwinkler.daf.gui.commands.MultiCommand;
+import de.jpwinkler.daf.gui.commands.UpdateAction;
+import de.jpwinkler.daf.gui.modules.ViewDefinition.ColumnDefinition;
 import de.jpwinkler.daf.gui.modules.commands.DeleteObjectCommand;
 import de.jpwinkler.daf.gui.modules.commands.DemoteObjectCommand;
 import de.jpwinkler.daf.gui.modules.commands.EditObjectAttributeCommand;
@@ -62,7 +61,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import de.jpwinkler.daf.gui.extensions.ModuleViewsExtension;
 
 public final class ModulePaneController extends ApplicationPartController<ModulePaneController> {
 
@@ -312,7 +310,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
             updateGui(ModuleUpdateAction.UPDATE_COLUMNS);
         });
 
-        boolean selected = Stream.concat(views.stream(), super.getExtensions(ModuleViewsExtension.class).stream()
+        boolean selected = Stream.concat(views.stream(), super.getExtensions(ModulePaneExtension.class).stream()
                 .flatMap(e -> e.getAdditionalViews(getDatabaseInterface()).stream()))
                 .filter(vd -> {
 

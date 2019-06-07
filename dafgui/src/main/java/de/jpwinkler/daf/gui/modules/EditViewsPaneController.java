@@ -1,7 +1,6 @@
 package de.jpwinkler.daf.gui.modules;
 
 import de.jpwinkler.daf.gui.AutoloadingPaneController;
-import de.jpwinkler.daf.gui.extensions.ViewDefinition;
 import java.util.Collections;
 import java.util.List;
 import java.util.SortedSet;

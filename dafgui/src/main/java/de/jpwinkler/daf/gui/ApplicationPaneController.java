@@ -1,5 +1,6 @@
 package de.jpwinkler.daf.gui;
 
+import de.jpwinkler.daf.gui.commands.CommandStack;
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
 import de.jpwinkler.daf.db.DatabasePath;
@@ -242,7 +243,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         }, 15000);
     }
 
-    public boolean open(DatabasePath path, OpenFlag openFlag) {
+    public void open(DatabasePath path, OpenFlag openFlag) {
         if (tabPane.getTabs().stream()
                 .filter(t -> path.equals((DatabasePath) t.getUserData()))
                 .findAny()
@@ -257,7 +258,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             }
 
             addToRecentMenu(path);
-            return true;
+            return;
         }
 
         try {
@@ -290,7 +291,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
             tabPane.getSelectionModel().select(selectedTab);
             addToRecentMenu(path);
-            return true;
+            return;
         } catch (Throwable ex) {
             ex.printStackTrace();
             while (ex.getCause() != null) {
@@ -298,7 +299,6 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             }
 
             setStatus("Open: Failed to open file; " + getMessage(ex));
-            return false;
         }
     }
 
@@ -341,11 +341,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             recentMenu.getItems().add(recentMenuItem);
             recentMenuItem.setOnAction(ev -> {
                 DatabasePath uri = (DatabasePath) ((MenuItem) ev.getTarget()).getUserData();
-                if (!this.open(uri, OpenFlag.OPEN_ONLY)) {
-                    recentFiles.entrySet().removeIf(e -> e.getValue().equals(uri));
-                    ApplicationPreferences.RECENT_FILES.store(recentFiles);
-                    generateRecentMenu();
-                }
+                this.open(uri, OpenFlag.OPEN_ONLY);
             });
         }
     }

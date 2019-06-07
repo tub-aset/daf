@@ -1,4 +1,4 @@
-package de.jpwinkler.daf.gui.extensions;
+package de.jpwinkler.daf.gui.modules;
 
 import java.io.Serializable;
 import java.util.ArrayList;

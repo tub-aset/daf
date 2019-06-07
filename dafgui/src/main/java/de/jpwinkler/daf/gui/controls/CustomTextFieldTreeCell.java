@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.jpwinkler.daf.gui;
+package de.jpwinkler.daf.gui.controls;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;

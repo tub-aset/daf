@@ -3,9 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.jpwinkler.daf.gui.extensions;
+package de.jpwinkler.daf.gui;
 
+import de.jpwinkler.daf.gui.commands.AbstractCommand;
 import de.jpwinkler.daf.db.DatabaseInterface;
+import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
+import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.util.function.Predicate;
 
@@ -20,5 +23,7 @@ public interface ApplicationPartInterface {
     DatabaseInterface getDatabaseInterface();
 
     void createSnapshot(Predicate<DoorsTreeNode> include);
+    
+    void open(DatabasePath dbPath, OpenFlag openFlag);
     
 }

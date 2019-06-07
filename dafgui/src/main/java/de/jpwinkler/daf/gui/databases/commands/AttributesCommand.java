@@ -5,7 +5,7 @@
  */
 package de.jpwinkler.daf.gui.databases.commands;
 
-import de.jpwinkler.daf.gui.extensions.AbstractCommand;
+import de.jpwinkler.daf.gui.commands.AbstractCommand;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.util.Collection;
 import java.util.List;

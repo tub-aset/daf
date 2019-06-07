@@ -6,10 +6,10 @@ import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.gui.ApplicationPaneController;
 import de.jpwinkler.daf.gui.ApplicationPartController;
 import de.jpwinkler.daf.gui.ApplicationPreferences;
-import de.jpwinkler.daf.gui.CommandStack;
-import de.jpwinkler.daf.gui.CustomTextFieldTableCell;
-import de.jpwinkler.daf.gui.CustomTextFieldTreeCell;
-import de.jpwinkler.daf.gui.ExtensionPane;
+import de.jpwinkler.daf.gui.commands.CommandStack;
+import de.jpwinkler.daf.gui.controls.CustomTextFieldTableCell;
+import de.jpwinkler.daf.gui.controls.CustomTextFieldTreeCell;
+import de.jpwinkler.daf.gui.controls.ExtensionPane;
 import de.jpwinkler.daf.gui.databases.commands.AddTagCommand;
 import de.jpwinkler.daf.gui.databases.commands.DeleteAttributesCommand;
 import de.jpwinkler.daf.gui.databases.commands.DeleteCommand;
@@ -20,7 +20,7 @@ import de.jpwinkler.daf.gui.databases.commands.PasteCommand;
 import de.jpwinkler.daf.gui.databases.commands.RemoveTagCommand;
 import de.jpwinkler.daf.gui.databases.commands.RenameAttributesCommand;
 import de.jpwinkler.daf.gui.databases.commands.RenameNodeCommand;
-import de.jpwinkler.daf.gui.extensions.UpdateAction;
+import de.jpwinkler.daf.gui.commands.UpdateAction;
 import de.jpwinkler.daf.model.DoorsAttributes;
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
@@ -63,7 +63,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
 import org.pf4j.PluginWrapper;
-import de.jpwinkler.daf.gui.extensions.DatabasePanesExtension;
 
 public final class DatabasePaneController extends ApplicationPartController<DatabasePaneController> {
 
@@ -235,12 +234,12 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     @FXML
     private Menu deleteSnapshotListMenu;
 
-    private final ExtensionPane<DatabasePanesExtension> sidePane = new ExtensionPane<>(
-            () -> super.getExtensions(DatabasePanesExtension.class), e -> e.getSidePanes(),
+    private final ExtensionPane<DatabasePaneExtension> sidePane = new ExtensionPane<>(
+            () -> super.getExtensions(DatabasePaneExtension.class), e -> e.getSidePanes(),
             ApplicationPreferences.DATABASE_PANE_SIDE_EXTENSION.retrieve(),
             ApplicationPreferences.DATABASE_PANE_SIDE_EXTENSION::store);
-    private final ExtensionPane<DatabasePanesExtension> bottomPane = new ExtensionPane<>(
-            () -> super.getExtensions(DatabasePanesExtension.class), e -> e.getBottomPanes(),
+    private final ExtensionPane<DatabasePaneExtension> bottomPane = new ExtensionPane<>(
+            () -> super.getExtensions(DatabasePaneExtension.class), e -> e.getBottomPanes(),
             ApplicationPreferences.DATABASE_PANE_SIDE_EXTENSION.retrieve(),
             ApplicationPreferences.DATABASE_PANE_SIDE_EXTENSION::store);
 

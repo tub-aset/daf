@@ -1,6 +1,6 @@
-package de.jpwinkler.daf.gui;
+package de.jpwinkler.daf.gui.commands;
 
-import de.jpwinkler.daf.gui.extensions.AbstractCommand;
+import de.jpwinkler.daf.gui.ApplicationPartController;
 import java.util.function.Consumer;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
