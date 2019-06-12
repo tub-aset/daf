@@ -9,10 +9,14 @@ import de.jpwinkler.daf.gui.ApplicationPartExtension;
 import de.jpwinkler.daf.gui.AutoloadingPaneController;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableBooleanValue;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.ChoiceBox;
@@ -25,12 +29,15 @@ import org.pf4j.PluginWrapper;
  */
 public class ExtensionPane<T extends ApplicationPartExtension> extends AutoloadingPaneController<ExtensionPane> {
 
-    public ExtensionPane(Supplier<List<T>> extensions, Function<T, List<Node>> paneGetter, String defaultSelection, Consumer<String> onSelected) {
+    public ExtensionPane(Supplier<List<T>> extensions, Function<T, List<Node>> paneGetter, BiFunction<T, Node, String> paneNameGetter, String defaultSelection, Consumer<String> onSelected) {
 
         extensionChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
             extensionPane.setContent(newValue == null ? null : newValue.node);
+            updateVisibleProperty();
             onSelected.accept(newValue == null ? null : newValue.extensionPaneId);
         });
+
+        extensionChoiceBox.getItems().add(new PaneChoice(null, null, "Hide pane", null));
 
         extensionChoiceBox.getItems().stream()
                 .filter(it -> Objects.equals(it.extensionPaneId, defaultSelection))
@@ -39,14 +46,23 @@ public class ExtensionPane<T extends ApplicationPartExtension> extends Autoloadi
         this.extensions = extensions;
         this.defaultSelection = defaultSelection;
         this.paneGetter = paneGetter;
+        this.paneNameGetter = paneNameGetter;
     }
 
     private final String defaultSelection;
     private final Supplier<List<T>> extensions;
     private final Function<T, List<Node>> paneGetter;
+    private final BiFunction<T, Node, String> paneNameGetter;
 
-    public boolean hasPanes() {
-        return !extensionChoiceBox.getItems().isEmpty();
+    private final SimpleBooleanProperty visiblePanesProperty = new SimpleBooleanProperty(false);
+
+    public final ObservableBooleanValue visiblePanesProperty() {
+        return visiblePanesProperty;
+    }
+
+    private void updateVisibleProperty() {
+        visiblePanesProperty.set(extensionChoiceBox.getItems().size() > 1
+                && !extensionChoiceBox.getSelectionModel().isEmpty() && extensionChoiceBox.getSelectionModel().getSelectedItem().node != null);
     }
 
     public void addPlugin(PluginWrapper plugin) {
@@ -55,7 +71,8 @@ public class ExtensionPane<T extends ApplicationPartExtension> extends Autoloadi
                 .forEach(e -> {
                     List<Node> extensionNodes = paneGetter.apply(e);
                     for (int i = 0; i < extensionNodes.size(); i++) {
-                        PaneChoice pc = new PaneChoice(e.getClass().getCanonicalName() + "__" + i, extensionNodes.get(i), plugin);
+                        PaneChoice pc = new PaneChoice(e.getClass().getCanonicalName() + "__" + i,
+                                extensionNodes.get(i), paneNameGetter.apply(e, extensionNodes.get(i)), plugin);
                         extensionChoiceBox.getItems().add(pc);
                     }
                 });
@@ -66,6 +83,7 @@ public class ExtensionPane<T extends ApplicationPartExtension> extends Autoloadi
                             .filter(it -> Objects.equals(it.extensionPaneId, defaultSelection))
                             .findAny().orElse(null));
         }
+        updateVisibleProperty();
     }
 
     public void removePlugin(PluginWrapper plugin) {
@@ -80,23 +98,34 @@ public class ExtensionPane<T extends ApplicationPartExtension> extends Autoloadi
                             .filter(it -> Objects.equals(it.extensionPaneId, defaultSelection))
                             .findAny().orElse(null));
         }
+
+        updateVisibleProperty();
+    }
+
+    public void selectFirst() {
+        if (extensionChoiceBox.getItems().size() > 1) {
+            this.extensionChoiceBox.getSelectionModel().select(1);
+        }
     }
 
     protected static final class PaneChoice {
 
-        public PaneChoice(String extensionPaneId, Node node, PluginWrapper plugin) {
+        public PaneChoice(String extensionPaneId, Node node, String nodeName, PluginWrapper plugin) {
             this.extensionPaneId = extensionPaneId;
             this.node = node;
             this.plugin = plugin;
+            this.nodeName = nodeName;
         }
 
         private final String extensionPaneId;
         private final Node node;
+        private final String nodeName;
+
         private final PluginWrapper plugin;
 
         @Override
         public String toString() {
-            return extensionPaneId;
+            return nodeName == null ? extensionPaneId : nodeName;
         }
     }
 

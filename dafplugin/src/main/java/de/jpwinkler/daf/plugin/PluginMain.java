@@ -30,13 +30,15 @@ public class PluginMain extends Plugin {
     public static class TestExtension implements ApplicationPartExtension, DatabasePaneExtension {
 
         private final List<Menu> menus = List.of(new Menu(PluginPreferences.MENU_NAME.retrieve()));
-        private final List<Node> sidePanel = List.of(new Label("Test Extension Side Panel"));
-        private final List<Node> bottomPanel = List.of(new Label("Test Extension Bottom Panel"));
+        private final List<Node> sidePanes = List.of(new Label("Test Extension Side Panel"));
+        private final List<Node> bottomPanes = List.of(new Label("Test Extension Bottom Panel"));
         private ApplicationPartInterface applicationPartInterface;
 
         @Override
         public void initialise(ApplicationPartInterface applicationPartInterface) {
             this.applicationPartInterface = applicationPartInterface;
+            this.sidePanes.forEach(sp -> sp.setUserData("Test Plugin SP"));
+            this.bottomPanes.forEach(sp -> sp.setUserData("Test Plugin BP"));
         }
 
         @Override
@@ -46,12 +48,12 @@ public class PluginMain extends Plugin {
 
         @Override
         public List<Node> getBottomPanes() {
-            return bottomPanel;
+            return bottomPanes;
         }
 
         @Override
         public List<Node> getSidePanes() {
-            return sidePanel;
+            return sidePanes;
         }
 
     }

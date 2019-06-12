@@ -23,4 +23,8 @@ public interface DatabasePaneExtension extends ApplicationPartExtension {
     default List<Node> getSidePanes() {
         return Collections.emptyList();
     }
+
+    default String getPaneName(Node node) {
+        return (String) node.getUserData();
+    }
 }

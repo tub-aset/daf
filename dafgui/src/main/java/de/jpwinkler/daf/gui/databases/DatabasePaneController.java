@@ -99,12 +99,18 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                 DatabasePanePreferences.SPLITPOS.store(mainSplitPane.getDividerPositions());
             });
         });
+        sideExtensionPane.visiblePanesProperty().addListener(change -> {
+            this.updateExtensionPaneVisibility(sideExtensionPane, mainSplitPane);
+        });
 
         bottomSplitPane.setDividerPositions((double[]) DatabasePanePreferences.BOTTOM_SPLITPOS.retrieve());
         bottomSplitPane.getDividers().forEach(d -> {
             d.positionProperty().addListener((obs, oldValue, newValue) -> {
                 DatabasePanePreferences.BOTTOM_SPLITPOS.store(bottomSplitPane.getDividerPositions());
             });
+        });
+        bottomExtensionPane.visiblePanesProperty().addListener(change -> {
+            this.updateExtensionPaneVisibility(bottomExtensionPane, bottomSplitPane);
         });
 
         modulesTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -189,6 +195,15 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         String ceil = list.ceiling(fn);
         return ceil != null && ceil.startsWith(fn);
     }
+    
+    private void updateExtensionPaneVisibility(ExtensionPane extPane, SplitPane splitPane) {
+        if (!extPane.visiblePanesProperty().get()) {
+            splitPane.getItems().remove(extPane.getNode());
+        }
+        if (extPane.visiblePanesProperty().get() && !splitPane.getItems().contains(extPane.getNode())) {
+            splitPane.getItems().add(extPane.getNode());
+        }
+    }
 
     @FXML
     private SplitPane bottomSplitPane;
@@ -238,14 +253,12 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     @FXML
     private Menu deleteSnapshotListMenu;
 
-    private final ExtensionPane<DatabasePaneExtension> sidePane = new ExtensionPane<>(
-            () -> super.getExtensions(DatabasePaneExtension.class), e -> e.getSidePanes(),
-            DatabasePanePreferences.SIDE_EXTENSION.retrieve(),
-            DatabasePanePreferences.SIDE_EXTENSION::store);
-    private final ExtensionPane<DatabasePaneExtension> bottomPane = new ExtensionPane<>(
-            () -> super.getExtensions(DatabasePaneExtension.class), e -> e.getBottomPanes(),
-            DatabasePanePreferences.SIDE_EXTENSION.retrieve(),
-            DatabasePanePreferences.SIDE_EXTENSION::store);
+    private final ExtensionPane<DatabasePaneExtension> sideExtensionPane = new ExtensionPane<>(
+            () -> super.getExtensions(DatabasePaneExtension.class), e -> e.getSidePanes(), (e, n) -> e.getPaneName(n),
+            DatabasePanePreferences.SIDE_EXTENSION.retrieve(), DatabasePanePreferences.SIDE_EXTENSION::store);
+    private final ExtensionPane<DatabasePaneExtension> bottomExtensionPane = new ExtensionPane<>(
+            () -> super.getExtensions(DatabasePaneExtension.class), e -> e.getBottomPanes(), (e, n) -> e.getPaneName(n),
+            DatabasePanePreferences.BOTTOM_EXTENSION.retrieve(), DatabasePanePreferences.BOTTOM_EXTENSION::store);
 
     private List<DoorsTreeNode> nodeClipboard;
     private List<Entry<String, String>> attributeClipboard;
@@ -453,30 +466,16 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     public void removePlugin(PluginWrapper plugin) {
         super.removePlugin(plugin);
 
-        sidePane.removePlugin(plugin);
-        if (!sidePane.hasPanes()) {
-            mainSplitPane.getItems().remove(sidePane.getNode());
-        }
-
-        bottomPane.removePlugin(plugin);
-        if (!bottomPane.hasPanes()) {
-            bottomSplitPane.getItems().remove(bottomPane.getNode());
-        }
+        sideExtensionPane.removePlugin(plugin);
+        bottomExtensionPane.removePlugin(plugin);
     }
 
     @Override
     public void addPlugin(PluginWrapper plugin) {
         super.addPlugin(plugin);
 
-        sidePane.addPlugin(plugin);
-        if (sidePane.hasPanes() && !mainSplitPane.getItems().contains(sidePane.getNode())) {
-            mainSplitPane.getItems().add(sidePane.getNode());
-        }
-
-        bottomPane.addPlugin(plugin);
-        if (bottomPane.hasPanes() && !bottomSplitPane.getItems().contains(bottomPane.getNode())) {
-            bottomSplitPane.getItems().add(bottomPane.getNode());
-        }
+        sideExtensionPane.addPlugin(plugin);
+        bottomExtensionPane.addPlugin(plugin);
     }
 
     @Override
@@ -492,6 +491,16 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     @Override
     public SelectionModel<DoorsObject> getCurrentObjectSelectionModel() {
         return new EmptySelectionModel<>();
+    }
+    
+    @FXML
+    public void showSidePaneClicked() {
+        sideExtensionPane.selectFirst();
+    }
+    
+    @FXML
+    public void showBottomPaneClicked() {
+        bottomExtensionPane.selectFirst();
     }
 
     private class DoorsTreeItem extends TreeItem<DoorsFolder> implements Comparable<DoorsTreeItem> {
