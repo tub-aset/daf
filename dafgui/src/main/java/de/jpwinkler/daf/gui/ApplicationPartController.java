@@ -5,12 +5,12 @@
  */
 package de.jpwinkler.daf.gui;
 
-import de.jpwinkler.daf.gui.commands.CommandStack;
-import de.jpwinkler.daf.gui.commands.AbstractCommand;
-import de.jpwinkler.daf.gui.commands.UpdateAction;
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
 import de.jpwinkler.daf.db.DatabasePath;
+import de.jpwinkler.daf.gui.commands.AbstractCommand;
+import de.jpwinkler.daf.gui.commands.CommandStack;
+import de.jpwinkler.daf.gui.commands.UpdateAction;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.io.IOException;
 import java.net.URL;

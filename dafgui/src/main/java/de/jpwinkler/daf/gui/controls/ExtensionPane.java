@@ -11,13 +11,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ScrollPane;
 import org.pf4j.PluginWrapper;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 /**
  *

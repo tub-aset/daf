@@ -5,13 +5,13 @@
  */
 package de.jpwinkler.daf.gui;
 
-import de.jpwinkler.daf.gui.commands.CommandStack;
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.db.DoorsApplicationDatabaseInterface;
 import de.jpwinkler.daf.db.FolderDatabaseInterface;
 import de.jpwinkler.daf.db.RawFileDatabaseInterface;
 import de.jpwinkler.daf.db.XmiDatabaseInterface;
+import de.jpwinkler.daf.gui.commands.CommandStack;
 import de.jpwinkler.daf.gui.databases.DatabasePaneController;
 import de.jpwinkler.daf.gui.modules.ModulePaneController;
 import java.io.File;

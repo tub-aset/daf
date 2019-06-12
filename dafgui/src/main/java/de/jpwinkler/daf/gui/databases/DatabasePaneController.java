@@ -7,9 +7,12 @@ import de.jpwinkler.daf.gui.ApplicationPaneController;
 import de.jpwinkler.daf.gui.ApplicationPartController;
 import de.jpwinkler.daf.gui.ApplicationPreferences;
 import de.jpwinkler.daf.gui.commands.CommandStack;
+import de.jpwinkler.daf.gui.commands.UpdateAction;
 import de.jpwinkler.daf.gui.controls.CustomTextFieldTableCell;
 import de.jpwinkler.daf.gui.controls.CustomTextFieldTreeCell;
+import de.jpwinkler.daf.gui.controls.EmptySelectionModel;
 import de.jpwinkler.daf.gui.controls.ExtensionPane;
+import de.jpwinkler.daf.gui.controls.ForwardingMultipleSelectionModel;
 import de.jpwinkler.daf.gui.databases.commands.AddTagCommand;
 import de.jpwinkler.daf.gui.databases.commands.DeleteAttributesCommand;
 import de.jpwinkler.daf.gui.databases.commands.DeleteCommand;
@@ -20,10 +23,10 @@ import de.jpwinkler.daf.gui.databases.commands.PasteCommand;
 import de.jpwinkler.daf.gui.databases.commands.RemoveTagCommand;
 import de.jpwinkler.daf.gui.databases.commands.RenameAttributesCommand;
 import de.jpwinkler.daf.gui.databases.commands.RenameNodeCommand;
-import de.jpwinkler.daf.gui.commands.UpdateAction;
 import de.jpwinkler.daf.model.DoorsAttributes;
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
+import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.util.Collection;
 import java.util.Collections;
@@ -52,6 +55,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.SelectionModel;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -83,7 +87,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                 it -> {
                 }));
 
-        databaseTreeView.setRoot(new DoorsTreeItem(databaseInterface.getDatabaseRoot()));
+        databaseTreeView.setRoot(new DoorsTreeItem((DoorsFolder) databaseInterface.getDatabaseRoot()));
         databaseTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             updateGui(UpdateModulesView, UpdateTagsView, UpdateAttributesView, UpdateNodeTitle);
         });
@@ -193,7 +197,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     private SplitPane mainSplitPane;
 
     @FXML
-    private TreeView<DoorsTreeNode> databaseTreeView;
+    private TreeView<DoorsFolder> databaseTreeView;
 
     @FXML
     private TitledPane currentNodePane;
@@ -457,11 +461,26 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         }
     }
 
-    private class DoorsTreeItem extends TreeItem<DoorsTreeNode> implements Comparable<DoorsTreeItem> {
+    @Override
+    public SelectionModel<DoorsFolder> getCurrentFolderSelectionModel() {
+        return new ForwardingMultipleSelectionModel<>(databaseTreeView.getSelectionModel(), x -> treeNodeCache.get(x), y -> y.getValue());
+    }
+
+    @Override
+    public SelectionModel<DoorsModule> getCurrentModuleSelectionModel() {
+        return new ForwardingMultipleSelectionModel<>(modulesTableView.getSelectionModel(), x -> x, y -> y);
+    }
+
+    @Override
+    public SelectionModel<DoorsObject> getCurrentObjectSelectionModel() {
+        return new EmptySelectionModel<>();
+    }
+
+    private class DoorsTreeItem extends TreeItem<DoorsFolder> implements Comparable<DoorsTreeItem> {
 
         private boolean childrenLoaded = false;
 
-        public DoorsTreeItem(final DoorsTreeNode value) {
+        public DoorsTreeItem(final DoorsFolder value) {
             super(value, getImage(value).toImageView());
 
             treeNodeCache.put(value, this);
@@ -469,7 +488,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         }
 
         @Override
-        public ObservableList<TreeItem<DoorsTreeNode>> getChildren() {
+        public ObservableList<TreeItem<DoorsFolder>> getChildren() {
             if (!childrenLoaded) {
                 updateChildren();
 
@@ -481,7 +500,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
             final ObservableList<DoorsTreeItem> list = FXCollections.observableArrayList();
             getValue().getChildren().stream()
                     .filter(n -> n instanceof DoorsFolder)
-                    .map(n -> new DoorsTreeItem(n))
+                    .map(n -> new DoorsTreeItem((DoorsFolder) n))
                     .forEach(list::add);
 
             list.sort(Comparator.naturalOrder());
@@ -496,14 +515,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
         @Override
         public int compareTo(DoorsTreeItem o2) {
-            if (this.getValue() instanceof DoorsModule && !(o2.getValue() instanceof DoorsModule)) {
-                return -1;
-            } else if (!(this.getValue() instanceof DoorsModule) && o2.getValue() instanceof DoorsModule) {
-                return 1;
-            } else {
-                return Objects.compare(this.getValue().getName(), o2.getValue().getName(), Comparator.naturalOrder());
-            }
-
+            return Objects.compare(this.getValue().getName(), o2.getValue().getName(), Comparator.naturalOrder());
         }
 
     }

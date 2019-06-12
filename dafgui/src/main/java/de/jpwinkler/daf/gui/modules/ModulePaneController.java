@@ -10,9 +10,11 @@ import de.jpwinkler.daf.gui.ApplicationPaneController;
 import de.jpwinkler.daf.gui.ApplicationPartController;
 import de.jpwinkler.daf.gui.ApplicationPreferences;
 import de.jpwinkler.daf.gui.commands.CommandStack;
-import de.jpwinkler.daf.gui.controls.CustomTextFieldTableCell;
 import de.jpwinkler.daf.gui.commands.MultiCommand;
 import de.jpwinkler.daf.gui.commands.UpdateAction;
+import de.jpwinkler.daf.gui.controls.CustomTextFieldTableCell;
+import de.jpwinkler.daf.gui.controls.FixedSingleSelectionModel;
+import de.jpwinkler.daf.gui.controls.ForwardingMultipleSelectionModel;
 import de.jpwinkler.daf.gui.modules.ViewDefinition.ColumnDefinition;
 import de.jpwinkler.daf.gui.modules.commands.DeleteObjectCommand;
 import de.jpwinkler.daf.gui.modules.commands.DemoteObjectCommand;
@@ -28,6 +30,7 @@ import de.jpwinkler.daf.gui.modules.commands.SplitLinesCommand;
 import de.jpwinkler.daf.gui.modules.commands.SwapObjectHeadingAndTextCommand;
 import de.jpwinkler.daf.gui.modules.commands.UnwrapChildrenCommand;
 import de.jpwinkler.daf.model.DoorsAttributes;
+import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModelUtil;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
@@ -53,6 +56,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.SelectionModel;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
@@ -455,6 +459,21 @@ public final class ModulePaneController extends ApplicationPartController<Module
     @FXML
     public void analyzeObjectTypeClicked() {
         contentTableView.refresh();
+    }
+
+    @Override
+    public SelectionModel<DoorsFolder> getCurrentFolderSelectionModel() {
+        return new FixedSingleSelectionModel<>((DoorsFolder) this.module.getParent());
+    }
+
+    @Override
+    public SelectionModel<DoorsModule> getCurrentModuleSelectionModel() {
+        return new FixedSingleSelectionModel<>(this.module);
+    }
+
+    @Override
+    public SelectionModel<DoorsObject> getCurrentObjectSelectionModel() {
+        return new ForwardingMultipleSelectionModel<>(this.contentTableView.getSelectionModel(), x -> x, y -> y);
     }
 
     public static enum ModuleUpdateAction implements UpdateAction<ModulePaneController> {

@@ -1,11 +1,11 @@
 package de.jpwinkler.daf.gui;
 
-import de.jpwinkler.daf.gui.commands.CommandStack;
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
 import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.gui.background.BackgroundTaskStatusListener;
 import de.jpwinkler.daf.gui.background.BackgroundTaskStatusMonitor;
+import de.jpwinkler.daf.gui.commands.CommandStack;
 import de.jpwinkler.daf.model.DoorsAttributes;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.net.URL;

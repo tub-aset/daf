@@ -5,12 +5,16 @@
  */
 package de.jpwinkler.daf.gui;
 
-import de.jpwinkler.daf.gui.commands.AbstractCommand;
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
 import de.jpwinkler.daf.db.DatabasePath;
+import de.jpwinkler.daf.gui.commands.AbstractCommand;
+import de.jpwinkler.daf.model.DoorsFolder;
+import de.jpwinkler.daf.model.DoorsModule;
+import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.util.function.Predicate;
+import javafx.scene.control.SelectionModel;
 
 /**
  *
@@ -23,7 +27,13 @@ public interface ApplicationPartInterface {
     DatabaseInterface getDatabaseInterface();
 
     void createSnapshot(Predicate<DoorsTreeNode> include);
-    
+
     void open(DatabasePath dbPath, OpenFlag openFlag);
-    
+
+    SelectionModel<DoorsFolder> getCurrentFolderSelectionModel();
+
+    SelectionModel<DoorsModule> getCurrentModuleSelectionModel();
+
+    SelectionModel<DoorsObject> getCurrentObjectSelectionModel();
+
 }
