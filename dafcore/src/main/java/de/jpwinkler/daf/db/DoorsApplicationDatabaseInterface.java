@@ -7,8 +7,6 @@ package de.jpwinkler.daf.db;
 
 import de.jpwinkler.daf.bridge.DoorsApplication;
 import de.jpwinkler.daf.bridge.DoorsApplicationFactory;
-import de.jpwinkler.daf.model.DoorsDatabase;
-import de.jpwinkler.daf.model.DoorsFactory;
 import de.jpwinkler.daf.model.DoorsFolder;
 
 /**

@@ -6,8 +6,6 @@
 package de.jpwinkler.daf.db;
 
 import de.jpwinkler.daf.filter.modules.SearchExpression;
-import de.jpwinkler.daf.model.DoorsDatabase;
-import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;

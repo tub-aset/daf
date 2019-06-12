@@ -5,7 +5,6 @@
  */
 package de.jpwinkler.daf.db;
 
-import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.io.File;

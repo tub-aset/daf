@@ -27,6 +27,7 @@ import de.jpwinkler.daf.bridge.user32.WindowManager;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.nio.charset.Charset;
@@ -40,6 +41,40 @@ import org.apache.commons.io.FileUtils;
 public class DoorsApplicationImpl implements DoorsApplication {
 
     private static final Logger LOGGER = Logger.getLogger(DoorsApplicationImpl.class.getName());
+    private static Throwable loadError;
+
+    static {
+        try {
+            String lib;
+            switch (System.getProperty("os.arch")) {
+                case "x86":
+                    lib = "jacob-1.18-x86.dll";
+                    break;
+                case "amd64":
+                    lib = "jacob-1.18-x64.dll";
+                    break;
+                default:
+                    throw new RuntimeException("No jacob dll for architecture " + System.getProperty("os.arch"));
+            }
+            File dllFile = File.createTempFile("doorsbridge", ".dll");
+            dllFile.deleteOnExit();
+            try (InputStream is = DoorsApplication.class.getClassLoader().getResourceAsStream(lib)) {
+                FileUtils.copyInputStreamToFile(is, dllFile);
+            }
+            System.load(dllFile.getAbsolutePath());
+        } catch (Throwable t) {
+            loadError = t;
+            Logger.getLogger(DoorsApplicationImpl.class.getName()).log(Level.SEVERE, null, t);
+        }
+
+    }
+
+    public DoorsApplicationImpl() {
+        if (loadError != null) {
+            throw new RuntimeException(loadError);
+        }
+
+    }
 
     // ActiveXComponent seems to be bound to the current thread, thus we store
     // one ActiveXComponent per thread.
@@ -187,7 +222,6 @@ public class DoorsApplicationImpl implements DoorsApplication {
     public DoorsTreeNode getRoot() {
         return new DoorsFolderRefImpl(this, DoorsItemType.FOLDER, null, "Doors Application");
     }
- 
 
     String buildAndRunCommand(final Consumer<DoorsScriptBuilder> prepareScriptBuilder) {
         if (!batchMode) {

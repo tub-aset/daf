@@ -31,8 +31,6 @@ import java.util.TimerTask;
 import java.util.TreeMap;
 import java.util.function.Predicate;
 import java.util.jar.Manifest;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javafx.application.Platform;

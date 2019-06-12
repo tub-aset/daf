@@ -23,14 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
-import javafx.collections.FXCollections;
-import javafx.collections.MapChangeListener;
-import javafx.collections.ObservableMap;
-import javafx.collections.SetChangeListener;
 import javafx.scene.control.TextInputDialog;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -47,7 +41,7 @@ public final class ApplicationPart<T extends DatabaseInterface> {
 
     static void registerDefault(ApplicationPartRegistry applicationPartRegistry) {
         applicationPartRegistry.register(new ApplicationPart<>("Doors Bridge", DoorsApplicationDatabaseInterface.class,
-                ApplicationPart::dynamicPartConstructor, defaultSelector("/", null), false));
+                ApplicationPart::dynamicPartConstructor, defaultSelector("", null), false));
         applicationPartRegistry.register(new ApplicationPart<>("Local folder database", FolderDatabaseInterface.class,
                 ApplicationPart::dynamicPartConstructor, localFolderDatabaseSelector(), true));
         applicationPartRegistry.register(new ApplicationPart<>("Local xmi database", XmiDatabaseInterface.class,
