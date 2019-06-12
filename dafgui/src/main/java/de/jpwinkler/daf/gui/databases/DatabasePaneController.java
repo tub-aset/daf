@@ -4,6 +4,7 @@ import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
 import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.gui.ApplicationPaneController;
+import de.jpwinkler.daf.gui.ApplicationPart;
 import de.jpwinkler.daf.gui.ApplicationPartController;
 import de.jpwinkler.daf.gui.commands.CommandStack;
 import de.jpwinkler.daf.gui.commands.UpdateAction;
@@ -70,8 +71,8 @@ import org.pf4j.PluginWrapper;
 
 public final class DatabasePaneController extends ApplicationPartController<DatabasePaneController> {
 
-    public DatabasePaneController(ApplicationPaneController applicationController, DatabasePath path, DatabaseInterface databaseInterface, CommandStack databaseCommandStack) {
-        super(applicationController, path, databaseInterface, databaseCommandStack);
+    public DatabasePaneController(ApplicationPaneController applicationController, ApplicationPart applicationPart, DatabasePath path, DatabaseInterface databaseInterface, CommandStack databaseCommandStack) {
+        super(applicationController, applicationPart, path, databaseInterface, databaseCommandStack);
 
         if (databaseInterface.isReadOnly()) {
             databaseTreeView.setEditable(false);

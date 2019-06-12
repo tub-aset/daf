@@ -3,6 +3,7 @@ package de.jpwinkler.daf.gui;
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
 import de.jpwinkler.daf.db.DatabasePath;
+import de.jpwinkler.daf.gui.ApplicationPart.ApplicationPartRegistry;
 import de.jpwinkler.daf.gui.background.BackgroundTaskStatusListener;
 import de.jpwinkler.daf.gui.background.BackgroundTaskStatusMonitor;
 import de.jpwinkler.daf.gui.commands.CommandStack;
@@ -16,10 +17,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -61,11 +64,15 @@ import org.pf4j.PluginManager;
 import org.pf4j.PluginState;
 import org.pf4j.PluginWrapper;
 
-public final class ApplicationPaneController extends AutoloadingPaneController<ApplicationPaneController> {
+public final class ApplicationPaneController extends AutoloadingPaneController<ApplicationPaneController> implements ApplicationPaneInterface {
 
     private final Map<DatabasePath, Triple<MutableInt, DatabaseInterface, CommandStack>> databaseInterfaces = new HashMap<>();
     private final Map<DatabasePath, ApplicationPartController> applicationPartControllers = new HashMap<>();
     private final BackgroundTaskStatusMonitor backgroundTaskStatusMonitor = new BackgroundTaskStatusMonitor();
+
+    private final ApplicationPartRegistry applicationPartRegistry = new ApplicationPartRegistry();
+    private final List<ApplicationPaneExtension> extensions = new ArrayList<>();
+    private final Map<Menu, PluginWrapper> extensionMenus = new HashMap<>();
 
     final PluginManager pluginManager = new DefaultPluginManager() {
         @Override
@@ -133,6 +140,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     };
 
     public ApplicationPaneController() {
+        ApplicationPart.registerDefault(applicationPartRegistry);
         tabPane.getSelectionModel().selectedItemProperty().addListener(tabChangeListener);
 
         tabPane.getTabs().addListener((ListChangeListener<Tab>) (change) -> {
@@ -172,24 +180,40 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
         });
 
-        ApplicationPart.registry()
-                .peek(part -> {
-                    MenuItem it = new MenuItem(part.getName());
+        applicationPartRegistry.addListener((added, removed) -> {
+            if (removed != null) {
+                openMenu.getItems().removeIf(p -> p.getUserData() == removed);
+                newMenu.getItems().removeIf(p -> p.getUserData() == removed);
+
+                List<Tab> tabs = tabPane.getTabs().stream()
+                        .filter(e -> getApplicationPartController(e).getApplicationPart() == removed)
+                        .collect(Collectors.toList());
+                if (this.closeTabs(tabs) == ButtonType.CANCEL) {
+                    throw new RuntimeException("Closing tabs cancelled");
+                }
+            }
+
+            if (added != null) {
+                MenuItem it = new MenuItem(added.getName());
+                it.setUserData(added);
+                it.setOnAction(ev -> {
+                    added.openWithSelector(tabPane.getScene().getWindow()).forEach(
+                            path -> open(path, OpenFlag.OPEN_ONLY));
+                });
+
+                openMenu.getItems().add(it);
+                if (added.isAllowNew()) {
+                    it = new MenuItem(added.getName());
+                    it.setUserData(added);
                     it.setOnAction(ev -> {
-                        part.openWithSelector(tabPane.getScene().getWindow()).forEach(
-                                path -> open(path, OpenFlag.OPEN_ONLY));
-                    });
-                    openMenu.getItems().add(it);
-                })
-                .filter(p -> p.isAllowNew())
-                .forEach(part -> {
-                    MenuItem it = new MenuItem(part.getName());
-                    it.setOnAction(ev -> {
-                        part.saveWithSelector(tabPane.getScene().getWindow()).forEach(
+                        added.saveWithSelector(tabPane.getScene().getWindow()).forEach(
                                 path -> open(path, OpenFlag.ERASE_IF_EXISTS));
                     });
                     newMenu.getItems().add(it);
-                });
+                }
+            }
+        });
+        ApplicationPart.registerDefault(applicationPartRegistry);
 
         pluginManager.loadPlugins();
         pluginManager.startPlugins();
@@ -257,7 +281,8 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         }, 15000);
     }
 
-    public void open(DatabasePath path, OpenFlag openFlag) {
+    @Override
+    public ApplicationPartController open(DatabasePath path, OpenFlag openFlag) {
         if (tabPane.getTabs().stream()
                 .filter(t -> path.equals((DatabasePath) t.getUserData()))
                 .findAny()
@@ -272,7 +297,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             }
 
             addToRecentMenu(path);
-            return;
+            return getApplicationPartController(tabPane.getSelectionModel().getSelectedItem());
         }
 
         try {
@@ -293,7 +318,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
                 databaseInterfaces.put(databasePath, Triple.of(new MutableInt(1), databaseInterface, commandStack));
             }
 
-            final ApplicationPartController controller = ApplicationPart.createControllerForAny(this, path, databaseInterface, commandStack);
+            final ApplicationPartController controller = applicationPartRegistry.createControllerForAny(this, path, databaseInterface, commandStack);
             final Parent modulePane = controller.getNode();
 
             final Tab selectedTab = new Tab(path.toString(), modulePane);
@@ -305,7 +330,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
             tabPane.getSelectionModel().select(selectedTab);
             addToRecentMenu(path);
-            return;
+            return controller;
         } catch (Throwable ex) {
             ex.printStackTrace();
             while (ex.getCause() != null) {
@@ -313,6 +338,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             }
 
             setStatus("Open: Failed to open file; " + getMessage(ex));
+            return null;
         }
     }
 
@@ -402,9 +428,10 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         }
     }
 
+    @Override
     public DatabasePath createSnapshot(DatabaseInterface sourceDB, DatabasePath sourcePath, Predicate<DoorsTreeNode> include, DatabasePath destinationPath) {
         if (destinationPath == null) {
-            ChoiceDialog<ApplicationPart<?>> applicationPartChooser = new ChoiceDialog<>(null, ApplicationPart.registry().filter(p -> p.isAllowNew()).collect(Collectors.toList()));
+            ChoiceDialog<ApplicationPart<?>> applicationPartChooser = new ChoiceDialog<>(null, applicationPartRegistry.registry().filter(p -> p.isAllowNew()).collect(Collectors.toList()));
             destinationPath = applicationPartChooser.showAndWait().stream()
                     .flatMap(part -> part.saveWithSelector(tabPane.getScene().getWindow()))
                     .findAny().orElse(null);
@@ -449,7 +476,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         Platform.exit();
     }
 
-    private void closeTabs(Collection<Tab> closedTabs) {
+    private ButtonType closeTabs(Collection<Tab> closedTabs) {
         ButtonType cancelled = ButtonType.YES;
         for (Tab t : closedTabs) {
             if (cancelled == ButtonType.CANCEL || closeTab((DatabasePath) t.getUserData()) == ButtonType.CANCEL) {
@@ -457,6 +484,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
                 Platform.runLater(() -> tabPane.getTabs().add(t));
             }
         }
+        return cancelled;
     }
 
     private ButtonType closeTab(DatabasePath path) {
@@ -559,23 +587,43 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
         PluginWrapper plugin = pluginManager.getPlugin(pluginId);
         if (plugin.getPluginState() != PluginState.STARTED) {
-            this.uninstallPlugin(pluginId);
             throw new RuntimeException("Plugin could not be started");
         }
+
+        List<ApplicationPaneExtension> newExts = plugin.getPluginManager().getExtensions(ApplicationPaneExtension.class, plugin.getPluginId());
+        this.extensions.addAll(newExts);
+        newExts.stream()
+                .flatMap(e -> e.getApplicationMenus().stream())
+                .peek(m -> extensionMenus.put(m, plugin))
+                .forEach(mainMenuBar.getMenus()::add);
+        newExts.stream()
+                .flatMap(e -> e.getApplicationParts().stream())
+                .forEach(applicationPartRegistry::register);
         applicationPartControllers.values().stream().forEach(a -> a.addPlugin(plugin));
     }
 
     private void stopPlugin(String pluginId) {
-        applicationPartControllers.values().forEach(a -> a.removePlugin(pluginManager.getPlugin(pluginId)));
+        PluginWrapper plugin = pluginManager.getPlugin(pluginId);
+        this.extensions.stream()
+                .filter(ext -> ext.getClass().getClassLoader() == plugin.getPluginClassLoader())
+                .flatMap(e -> e.getApplicationParts().stream())
+                .forEach(applicationPartRegistry::unregister);
+
+        applicationPartControllers.values().forEach(a -> a.removePlugin(plugin));
+
+        List<Menu> extMenus = extensionMenus.entrySet().stream().filter(e -> e.getValue() == plugin).map(e -> e.getKey()).collect(Collectors.toList());
+        this.mainMenuBar.getMenus().removeAll(extMenus);
+        this.extensions.removeIf(ext -> ext.getClass().getClassLoader() == plugin.getPluginClassLoader());
 
         pluginManager.stopPlugin(pluginId);
         pluginManager.disablePlugin(pluginId);
     }
 
     private void uninstallPlugin(String pluginId) {
+        stopPlugin(pluginId);
+
         uninstallPluginMenu.getItems().removeIf(mi -> Objects.equals(mi.getUserData(), pluginId));
         pluginStateMenu.getItems().removeIf(mi -> Objects.equals(mi.getUserData(), pluginId));
-        stopPlugin(pluginId);
 
         pluginManager.deletePlugin(pluginId);
     }

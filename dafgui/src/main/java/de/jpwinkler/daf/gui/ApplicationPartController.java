@@ -35,18 +35,21 @@ import org.pf4j.PluginWrapper;
  */
 public abstract class ApplicationPartController<THIS extends ApplicationPartController> extends AutoloadingPaneController<THIS> implements ApplicationPartInterface {
 
-    final ApplicationPaneController applicationController;
-    final DatabasePath path;
-    final DatabaseInterface databaseInterface;
-    final CommandStack commandStack;
+    private final ApplicationPaneController applicationController;
+    private final DatabasePath path;
+    private final DatabaseInterface databaseInterface;
+    private final CommandStack commandStack;
+    private final ApplicationPart applicationPart;
 
     private final List<ApplicationPartExtension> extensions = new ArrayList<>();
 
     private final ObservableList<Menu> menus = FXCollections.observableArrayList();
     private final Map<Menu, PluginWrapper> extensionMenus = new HashMap<>();
 
-    public ApplicationPartController(ApplicationPaneController applicationController, DatabasePath path, DatabaseInterface databaseInterface, CommandStack databaseCommandStack) {
+    public ApplicationPartController(ApplicationPaneController applicationController, ApplicationPart applicationPart,
+            DatabasePath path, DatabaseInterface databaseInterface, CommandStack databaseCommandStack) {
         this.applicationController = applicationController;
+        this.applicationPart = applicationPart;
         this.path = path;
         this.databaseInterface = databaseInterface;
         this.commandStack = databaseCommandStack;
@@ -73,8 +76,8 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
     }
 
     @Override
-    public final void open(DatabasePath path, OpenFlag openFlag) {
-        applicationController.open(path, openFlag);
+    public final ApplicationPartInterface open(DatabasePath path, OpenFlag openFlag) {
+        return applicationController.open(path, openFlag);
     }
 
     @Override
@@ -164,5 +167,9 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
         List<MenuItem> extMenus = extensionMenus.entrySet().stream().filter(e -> e.getValue() == plugin).map(e -> e.getKey()).collect(Collectors.toList());
         menus.removeAll(extMenus);
         extMenus.forEach(extensionMenus::remove);
+    }
+
+    public ApplicationPart<?> getApplicationPart() {
+        return applicationPart;
     }
 }

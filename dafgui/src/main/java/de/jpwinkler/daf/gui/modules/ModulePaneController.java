@@ -7,6 +7,7 @@ import de.jpwinkler.daf.filter.objects.DoorsObjectFilter;
 import de.jpwinkler.daf.filter.objects.ObjectTextAndHeadingFilter;
 import de.jpwinkler.daf.filter.objects.ReverseCascadingFilter;
 import de.jpwinkler.daf.gui.ApplicationPaneController;
+import de.jpwinkler.daf.gui.ApplicationPart;
 import de.jpwinkler.daf.gui.ApplicationPartController;
 import de.jpwinkler.daf.gui.commands.CommandStack;
 import de.jpwinkler.daf.gui.commands.MultiCommand;
@@ -78,8 +79,8 @@ public final class ModulePaneController extends ApplicationPartController<Module
         STANDARD_VIEW.setDisplayRemainingColumns(true);
     }
 
-    public ModulePaneController(ApplicationPaneController applicationController, DatabasePath path, DatabaseInterface databaseInterface, CommandStack databaseCommandStack) {
-        super(applicationController, path, databaseInterface, databaseCommandStack);
+    public ModulePaneController(ApplicationPaneController applicationController, ApplicationPart applicationPart, DatabasePath path, DatabaseInterface databaseInterface, CommandStack databaseCommandStack) {
+        super(applicationController, applicationPart, path, databaseInterface, databaseCommandStack);
 
         if (databaseInterface.isReadOnly()) {
             outlineTreeView.setEditable(false);

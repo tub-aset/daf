@@ -28,7 +28,7 @@ public interface ApplicationPartInterface {
 
     DatabasePath createSnapshot(Predicate<DoorsTreeNode> include, DatabasePath destination);
 
-    void open(DatabasePath dbPath, OpenFlag openFlag);
+    ApplicationPartInterface open(DatabasePath dbPath, OpenFlag openFlag);
 
     SelectionModel<DoorsFolder> getCurrentFolderSelectionModel();
 

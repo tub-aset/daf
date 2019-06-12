@@ -15,12 +15,22 @@ import de.jpwinkler.daf.gui.commands.CommandStack;
 import de.jpwinkler.daf.gui.databases.DatabasePaneController;
 import de.jpwinkler.daf.gui.modules.ModulePaneController;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
+import javafx.collections.FXCollections;
+import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableMap;
+import javafx.collections.SetChangeListener;
 import javafx.scene.control.TextInputDialog;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -33,38 +43,28 @@ import org.pf4j.PluginState;
  *
  * @author fwiesweg
  */
-public class ApplicationPart<T extends DatabaseInterface> {
+public final class ApplicationPart<T extends DatabaseInterface> {
 
-    private static final Map<Class<? extends DatabaseInterface>, ApplicationPart<?>> REGISTRY = new HashMap<>();
-
-    public static Stream<ApplicationPart<?>> registry() {
-        return REGISTRY.values().stream()
-                .sorted((p1, p2) -> Objects.compare(p1.getName(), p2.getName(), Comparator.naturalOrder()));
+    static void registerDefault(ApplicationPartRegistry applicationPartRegistry) {
+        applicationPartRegistry.register(new ApplicationPart<>("Doors Bridge", DoorsApplicationDatabaseInterface.class,
+                ApplicationPart::dynamicPartConstructor, defaultSelector("/", null), false));
+        applicationPartRegistry.register(new ApplicationPart<>("Local folder database", FolderDatabaseInterface.class,
+                ApplicationPart::dynamicPartConstructor, localFolderDatabaseSelector(), true));
+        applicationPartRegistry.register(new ApplicationPart<>("Local xmi database", XmiDatabaseInterface.class,
+                ApplicationPart::dynamicPartConstructor, fileChooserSelector(new FileChooser.ExtensionFilter("XMI", "*.xmi")), true));
+        applicationPartRegistry.register(new ApplicationPart<>("Local module", RawFileDatabaseInterface.class,
+                ModulePaneController::new, fileChooserSelector(f -> FilenameUtils.removeExtension(f.getAbsolutePath()), new FileChooser.ExtensionFilter("CSV/MMD", "*.csv", "*.mmd")), true));
     }
 
-    private static interface ApplicationPartConstructor {
+    public static interface ApplicationPartConstructor {
 
-        public ApplicationPartController construct(ApplicationPaneController appController, DatabasePath path, DatabaseInterface databaseInterface, CommandStack databaseCommandStack);
+        public ApplicationPartController construct(ApplicationPaneController appController, ApplicationPart applicationPart, DatabasePath path, DatabaseInterface databaseInterface, CommandStack databaseCommandStack);
     }
 
-    private static interface DatabaseSelector {
+    public static interface DatabaseSelector {
 
         public Stream<DatabasePath> select(Window window, ApplicationPart part, boolean save);
     }
-
-    private ApplicationPart register() {
-        REGISTRY.put(this.databaseInterfaceClass, this);
-        return this;
-    }
-
-    public static final ApplicationPart<DoorsApplicationDatabaseInterface> DOORS_DATABASE = new ApplicationPart<>("Doors Bridge", DoorsApplicationDatabaseInterface.class,
-            ApplicationPart::dynamicPartConstructor, defaultSelector("/", null), false).register();
-    public static final ApplicationPart<FolderDatabaseInterface> LOCAL_FILE_DATABASE = new ApplicationPart<>("Local folder database", FolderDatabaseInterface.class,
-            ApplicationPart::dynamicPartConstructor, localFolderDatabaseSelector(), true).register();
-    public static final ApplicationPart<XmiDatabaseInterface> LOCAL_XMI_DATABASE = new ApplicationPart<>("Local xmi database", XmiDatabaseInterface.class,
-            ApplicationPart::dynamicPartConstructor, fileChooserSelector(new ExtensionFilter("XMI", "*.xmi")), true).register();
-    public static final ApplicationPart<RawFileDatabaseInterface> LOCAL_MODULE = new ApplicationPart<>("Local module", RawFileDatabaseInterface.class,
-            ModulePaneController::new, fileChooserSelector(f -> FilenameUtils.removeExtension(f.getAbsolutePath()), new ExtensionFilter("CSV/MMD", "*.csv", "*.mmd")), true).register();
 
     private final String name;
     private final Class<T> databaseInterfaceClass;
@@ -72,7 +72,7 @@ public class ApplicationPart<T extends DatabaseInterface> {
     private final DatabaseSelector selector;
     private final boolean allowNew;
 
-    private ApplicationPart(String name, Class<T> databaseInterface,
+    public ApplicationPart(String name, Class<T> databaseInterface,
             ApplicationPartConstructor partConstructor, DatabaseSelector selector, boolean allowNew) {
         this.name = name;
         this.databaseInterfaceClass = databaseInterface;
@@ -81,23 +81,23 @@ public class ApplicationPart<T extends DatabaseInterface> {
         this.allowNew = allowNew;
     }
 
-    private static ApplicationPartController dynamicPartConstructor(ApplicationPaneController appController, DatabasePath path, DatabaseInterface databaseInterface, CommandStack databaseCommandStack) {
+    public static ApplicationPartController dynamicPartConstructor(ApplicationPaneController appController, ApplicationPart applicationPart, DatabasePath path, DatabaseInterface databaseInterface, CommandStack databaseCommandStack) {
         if (path.getPath() == null || path.getPath().isEmpty()) {
-            return new DatabasePaneController(appController, path, databaseInterface, databaseCommandStack);
+            return new DatabasePaneController(appController, applicationPart, path, databaseInterface, databaseCommandStack);
         } else {
-            return new ModulePaneController(appController, path, databaseInterface, databaseCommandStack);
+            return new ModulePaneController(appController, applicationPart, path, databaseInterface, databaseCommandStack);
         }
     }
 
-    private static DatabaseSelector defaultSelector(String dbPath, String path) {
+    public static DatabaseSelector defaultSelector(String dbPath, String path) {
         return (window, part, save) -> save ? Stream.empty() : Stream.of(new DatabasePath<>(part.getDatabaseInterfaceClass(), dbPath, path));
     }
 
-    private static DatabaseSelector fileChooserSelector(ExtensionFilter... extensionFilters) {
+    public static DatabaseSelector fileChooserSelector(ExtensionFilter... extensionFilters) {
         return fileChooserSelector(f -> f.getAbsolutePath(), extensionFilters);
     }
 
-    private static DatabaseSelector fileChooserSelector(Function<File, String> transform, ExtensionFilter... extensionFilters) {
+    public static DatabaseSelector fileChooserSelector(Function<File, String> transform, ExtensionFilter... extensionFilters) {
         return (window, part, save) -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle((save ? "Save a " : "Open a ") + part.getName());
@@ -118,7 +118,7 @@ public class ApplicationPart<T extends DatabaseInterface> {
         };
     }
 
-    private static DatabaseSelector directorySelector() {
+    public static DatabaseSelector directorySelector() {
         return (window, part, save) -> {
             DirectoryChooser dirChooser = new DirectoryChooser();
             dirChooser.setTitle((save ? "Save a " : "Open a ") + part.getName());
@@ -137,12 +137,12 @@ public class ApplicationPart<T extends DatabaseInterface> {
         };
     }
 
-    private static DatabaseSelector localFolderDatabaseSelector() {
+    public static DatabaseSelector localFolderDatabaseSelector() {
         return (window, part, save)
                 -> save ? directorySelector().select(window, part, save) : fileChooserSelector(f -> f.getParent(), new ExtensionFilter("Root folder MMD", "__folder__.mmd")).select(window, part, save);
     }
 
-    private static DatabaseSelector genericSelector() {
+    public static DatabaseSelector genericSelector() {
         return (window, part, save) -> {
             TextInputDialog dialog = new TextInputDialog();
             dialog.setTitle((save ? "Save a " : "Open a ") + part.getName());
@@ -170,30 +170,74 @@ public class ApplicationPart<T extends DatabaseInterface> {
         return selector.select(window, this, false);
     }
 
-    public static Stream<DatabasePath> openWithSelector(DatabasePath path, Window window) {
-        return REGISTRY.get(path.getDatabaseInterface()).openWithSelector(window);
-    }
-
     public Stream<DatabasePath> saveWithSelector(Window window) {
         return selector.select(window, this, true);
     }
 
-    public static Stream<DatabasePath> saveWithSelector(DatabasePath path, Window window) {
-        return REGISTRY.get(path.getDatabaseInterface()).saveWithSelector(window);
-    }
-
     public ApplicationPartController createController(ApplicationPaneController appController, DatabasePath path, DatabaseInterface databaseInterface, CommandStack databaseCommandStack) {
-        ApplicationPartController pc = partConstructor.construct(appController, path, databaseInterface, databaseCommandStack);
+        ApplicationPartController pc = partConstructor.construct(appController, this, path, databaseInterface, databaseCommandStack);
         appController.pluginManager.getPlugins(PluginState.STARTED).forEach(pc::addPlugin);
         return pc;
-    }
-
-    public static ApplicationPartController createControllerForAny(ApplicationPaneController appController, DatabasePath path, DatabaseInterface databaseInterface, CommandStack databaseCommandStack) {
-        return REGISTRY.get(databaseInterface.getClass()).createController(appController, path, databaseInterface, databaseCommandStack);
     }
 
     @Override
     public String toString() {
         return this.name;
     }
+
+    public static class ApplicationPartRegistry {
+
+        private final Map<Class<? extends DatabaseInterface>, List<ApplicationPart<?>>> REGISTRY = new HashMap<>();
+        private final HashSet<BiConsumer<ApplicationPart<?>, ApplicationPart<?>>> listeners = new HashSet<>();
+
+        public void register(ApplicationPart part) {
+            if (!REGISTRY.containsKey(part.getDatabaseInterfaceClass())) {
+                REGISTRY.put(part.getDatabaseInterfaceClass(), new ArrayList<>());
+            }
+
+            REGISTRY.get(part.getDatabaseInterfaceClass()).add(part);
+            listeners.forEach(l -> l.accept(part, null));
+        }
+
+        public void unregister(ApplicationPart part) {
+            if (!REGISTRY.containsKey(part.getDatabaseInterfaceClass())) {
+                return;
+            }
+
+            REGISTRY.get(part.getDatabaseInterfaceClass()).remove(part);
+            listeners.forEach(l -> l.accept(null, part));
+        }
+
+        private ApplicationPart getPart(DatabasePath path) {
+            List<ApplicationPart<?>> partList = REGISTRY.get(path.getDatabaseInterface());
+            return partList.get(partList.size() - 1);
+        }
+
+        public Stream<DatabasePath> openWithSelector(DatabasePath path, Window window) {
+            return getPart(path).openWithSelector(window);
+        }
+
+        public Stream<DatabasePath> saveWithSelector(DatabasePath path, Window window) {
+            return getPart(path).saveWithSelector(window);
+        }
+
+        public ApplicationPartController createControllerForAny(ApplicationPaneController appController, DatabasePath path, DatabaseInterface databaseInterface, CommandStack databaseCommandStack) {
+            return getPart(path).createController(appController, path, databaseInterface, databaseCommandStack);
+        }
+
+        public void addListener(BiConsumer<ApplicationPart<?>, ApplicationPart<?>> listener) {
+            listeners.add(listener);
+        }
+
+        public void removeListener(BiConsumer<ApplicationPart<?>, ApplicationPart<?>> listener) {
+            listeners.remove(listener);
+        }
+
+        public Stream<ApplicationPart<?>> registry() {
+            return REGISTRY.values().stream()
+                    .flatMap(l -> l.stream())
+                    .sorted((p1, p2) -> Objects.compare(p1.getName(), p2.getName(), Comparator.naturalOrder()));
+        }
+    }
+
 }
