@@ -8,6 +8,8 @@ import de.jpwinkler.daf.gui.background.BackgroundTaskStatusMonitor;
 import de.jpwinkler.daf.gui.commands.CommandStack;
 import de.jpwinkler.daf.model.DoorsAttributes;
 import de.jpwinkler.daf.model.DoorsTreeNode;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
@@ -302,7 +304,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         }
     }
 
-    private String getMessage(Throwable t) {
+    public static String getMessage(Throwable t) {
         if (t.getMessage() == null && t.getCause() != null) {
             return getMessage(t.getCause());
         } else if (t.getMessage() == null) {
@@ -371,32 +373,46 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
     @FXML
     public void saveAsClicked() {
-        createSnapshot(getCurrentFileStateController().getDatabaseInterface(), getCurrentFileStateController().getPath(), x -> true);
+        DatabasePath destinationPath = null;
+        try {
+            destinationPath = this.createSnapshot(getCurrentFileStateController().getDatabaseInterface(), getCurrentFileStateController().getPath(), x -> true, destinationPath);
+        } catch (Throwable ex) {
+            ex.printStackTrace();
+            while (ex.getCause() != null) {
+                ex = ex.getCause();
+            }
+
+            this.setStatus("Snapshot failed; " + getMessage(ex));
+        }
+
+        if (destinationPath != null) {
+            this.open(destinationPath, OpenFlag.OPEN_ONLY);
+        }
     }
 
-    public void createSnapshot(DatabaseInterface sourceDB, DatabasePath sourcePath, Predicate<DoorsTreeNode> include) {
-        ChoiceDialog<ApplicationPart<?>> applicationPartChooser = new ChoiceDialog<>(null, ApplicationPart.registry().filter(p -> p.isAllowNew()).collect(Collectors.toList()));
+    public DatabasePath createSnapshot(DatabaseInterface sourceDB, DatabasePath sourcePath, Predicate<DoorsTreeNode> include, DatabasePath destinationPath) {
+        if (destinationPath == null) {
+            ChoiceDialog<ApplicationPart<?>> applicationPartChooser = new ChoiceDialog<>(null, ApplicationPart.registry().filter(p -> p.isAllowNew()).collect(Collectors.toList()));
+            destinationPath = applicationPartChooser.showAndWait().stream()
+                    .flatMap(part -> part.saveWithSelector(tabPane.getScene().getWindow()))
+                    .findAny().orElse(null);
 
-        applicationPartChooser.showAndWait().stream()
-                .flatMap(part -> part.saveWithSelector(tabPane.getScene().getWindow()))
-                .forEach(path -> {
-                    try {
-                        DatabaseInterface destinationDB = (DatabaseInterface) path.getDatabaseInterface().getConstructor(DatabasePath.class, OpenFlag.class).newInstance(path, OpenFlag.ERASE_IF_EXISTS);
-                        destinationDB.getDatabaseRoot().copyFrom(sourceDB.getNode(sourcePath.getPath()), null, include);
-                        DoorsAttributes.DATABASE_COPIED_FROM.setValue(String.class, destinationDB.getDatabaseRoot(), sourceDB.getPath().toString());
-                        DoorsAttributes.DATABASE_COPIED_AT.setValue(String.class, destinationDB.getDatabaseRoot(), ZonedDateTime.now(ZoneOffset.UTC).toString());
+            if (destinationPath == null) {
+                return null;
+            }
+        }
 
-                        destinationDB.flush();
-                        this.open(path, OpenFlag.OPEN_ONLY);
-                    } catch (Throwable ex) {
-                        ex.printStackTrace();
-                        while (ex.getCause() != null) {
-                            ex = ex.getCause();
-                        }
+        try {
+            DatabaseInterface destinationDB = (DatabaseInterface) destinationPath.getDatabaseInterface().getConstructor(DatabasePath.class, OpenFlag.class).newInstance(destinationPath, OpenFlag.ERASE_IF_EXISTS);
+            destinationDB.getDatabaseRoot().copyFrom(sourceDB.getNode(sourcePath.getPath()), null, include);
+            DoorsAttributes.DATABASE_COPIED_FROM.setValue(String.class, destinationDB.getDatabaseRoot(), sourceDB.getPath().toString());
+            DoorsAttributes.DATABASE_COPIED_AT.setValue(String.class, destinationDB.getDatabaseRoot(), ZonedDateTime.now(ZoneOffset.UTC).toString());
 
-                        this.setStatus("Snapshot failed; " + getMessage(ex));
-                    }
-                });
+            destinationDB.flush();
+            return destinationPath;
+        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     @FXML

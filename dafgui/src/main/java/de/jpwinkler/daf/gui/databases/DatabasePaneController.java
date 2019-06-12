@@ -42,6 +42,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.WeakHashMap;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javafx.application.Platform;
@@ -383,12 +384,30 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
     @FXML
     public void createFullSnapshotClicked() {
-        createSnapshot(x -> true);
+        this.createSnapshot(x -> true);
     }
 
     private void createSnapshotFromListClicked(String snapshotList) {
         TreeSet<String> sl = ((TreeMap<String, TreeSet<String>>) ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.retrieve()).get(snapshotList);
-        createSnapshot(node -> isInSnapshotList(sl, node));
+        this.createSnapshot(node -> isInSnapshotList(sl, node));
+    }
+
+    private void createSnapshot(Predicate<DoorsTreeNode> include) {
+        DatabasePath destinationPath = null;
+        try {
+            destinationPath = super.createSnapshot(include, destinationPath);
+        } catch (Throwable ex) {
+            ex.printStackTrace();
+            while (ex.getCause() != null) {
+                ex = ex.getCause();
+            }
+
+            this.setStatus("Snapshot failed; " + ApplicationPaneController.getMessage(ex));
+        }
+
+        if (destinationPath != null) {
+            this.open(destinationPath, OpenFlag.OPEN_ONLY);
+        }
     }
 
     private void showSnapshotListClicked(String snapshotList) {

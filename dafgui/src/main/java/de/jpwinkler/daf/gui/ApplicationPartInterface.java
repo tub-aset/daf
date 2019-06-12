@@ -26,7 +26,7 @@ public interface ApplicationPartInterface {
 
     DatabaseInterface getDatabaseInterface();
 
-    void createSnapshot(Predicate<DoorsTreeNode> include);
+    DatabasePath createSnapshot(Predicate<DoorsTreeNode> include, DatabasePath destination);
 
     void open(DatabasePath dbPath, OpenFlag openFlag);
 

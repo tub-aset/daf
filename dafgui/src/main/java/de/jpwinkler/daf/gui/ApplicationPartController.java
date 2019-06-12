@@ -81,8 +81,8 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
     }
 
     @Override
-    public final void createSnapshot(Predicate<DoorsTreeNode> include) {
-        applicationController.createSnapshot(this.getDatabaseInterface(), this.getDatabaseInterface().getPath(), include);
+    public final DatabasePath createSnapshot(Predicate<DoorsTreeNode> include, DatabasePath destination) {
+        return applicationController.createSnapshot(this.getDatabaseInterface(), this.getDatabaseInterface().getPath(), include, destination);
     }
 
     protected final <T extends ApplicationPartExtension> List<T> getExtensions(Class<T> cls) {
