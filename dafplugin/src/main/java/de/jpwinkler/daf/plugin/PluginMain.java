@@ -29,7 +29,7 @@ public class PluginMain extends Plugin {
     @Extension
     public static class TestExtension implements ApplicationPartExtension, DatabasePaneExtension {
 
-        private final List<Menu> menus = List.of(new Menu("Test Extension Menu"));
+        private final List<Menu> menus = List.of(new Menu(PluginPreferences.MENU_NAME.retrieve()));
         private final List<Node> sidePanel = List.of(new Label("Test Extension Side Panel"));
         private final List<Node> bottomPanel = List.of(new Label("Test Extension Bottom Panel"));
         private ApplicationPartInterface applicationPartInterface;

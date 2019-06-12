@@ -8,7 +8,6 @@ import de.jpwinkler.daf.filter.objects.ObjectTextAndHeadingFilter;
 import de.jpwinkler.daf.filter.objects.ReverseCascadingFilter;
 import de.jpwinkler.daf.gui.ApplicationPaneController;
 import de.jpwinkler.daf.gui.ApplicationPartController;
-import de.jpwinkler.daf.gui.ApplicationPreferences;
 import de.jpwinkler.daf.gui.commands.CommandStack;
 import de.jpwinkler.daf.gui.commands.MultiCommand;
 import de.jpwinkler.daf.gui.commands.UpdateAction;
@@ -92,7 +91,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
             throw new RuntimeException("No such module: " + path.getPath());
         }
 
-        int currentViewIdx = ApplicationPreferences.MODULE_PANE_CURRENT_VIEW.retrieve();
+        int currentViewIdx = ModulePanePreferences.CURRENT_VIEW.retrieve();
         if (currentViewIdx < 0 || currentViewIdx >= views.size()) {
             currentView = STANDARD_VIEW;
         } else {
@@ -122,10 +121,10 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
         });
 
-        mainSplitPane.setDividerPositions((double) ApplicationPreferences.MODULE_PANE_SPLITPOS.retrieve());
+        mainSplitPane.setDividerPositions((double) ModulePanePreferences.SPLITPOS.retrieve());
         mainSplitPane.getDividers().forEach(d -> {
             d.positionProperty().addListener((obs, oldValue, newValue) -> {
-                ApplicationPreferences.MODULE_PANE_SPLITPOS.store(newValue.doubleValue());
+                ModulePanePreferences.SPLITPOS.store(newValue.doubleValue());
             });
         });
 
@@ -144,7 +143,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
     }
 
     private final List<DoorsObject> clipboard = new ArrayList<>();
-    private final ArrayList<ViewDefinition> views = ApplicationPreferences.MODULE_PANE_VIEWS.retrieve();
+    private final ArrayList<ViewDefinition> views = ModulePanePreferences.VIEWS.retrieve();
     private final Map<DoorsTreeNode, Boolean> expanded = new WeakHashMap<>();
     private final DoorsModule module;
 
@@ -247,7 +246,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
             c.setPrefWidth(columnDefinition.getWidth());
             c.widthProperty().addListener((obs, oldValue, newValue) -> {
                 columnDefinition.setWidth(newValue.doubleValue());
-                ApplicationPreferences.MODULE_PANE_VIEWS.store(this.views);
+                ModulePanePreferences.VIEWS.store(this.views);
             });
 
             c.setCellFactory(tc -> new CustomTableCell(tc,
@@ -310,7 +309,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
             this.currentView = (ViewDefinition) newValue.getUserData();
             mergeObjectAttributes();
 
-            ApplicationPreferences.MODULE_PANE_CURRENT_VIEW.store(viewsToggleGroup.getToggles().indexOf(observable));
+            ModulePanePreferences.CURRENT_VIEW.store(viewsToggleGroup.getToggles().indexOf(observable));
             updateGui(ModuleUpdateAction.UPDATE_COLUMNS);
         });
 
@@ -419,7 +418,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
                 .ifPresent(r -> {
                     this.views.clear();
                     this.views.addAll(r);
-                    ApplicationPreferences.MODULE_PANE_VIEWS.store(this.views);
+                    ModulePanePreferences.VIEWS.store(this.views);
                     this.updateGui(ModuleUpdateAction.UPDATE_VIEWS, ModuleUpdateAction.UPDATE_COLUMNS);
                 });
     }

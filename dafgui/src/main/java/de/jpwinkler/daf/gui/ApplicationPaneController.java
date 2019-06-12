@@ -199,6 +199,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             }
 
             this.uninstallPlugin((String) ((MenuItem) ev.getTarget()).getUserData());
+            setStatus("Plugin uninstalled: " + plugin.getPluginId());
         });
         uninstallPluginMenu.getItems().add(mi);
         uninstallPluginMenu.getItems().sort((mi1, mi2) -> mi1.getText().compareTo(mi2.getText()));
@@ -533,6 +534,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
                         startPlugin(pluginId);
                         addPluginMenuEntries(plugin);
+                        setStatus("Plugin installed: " + pluginId);
                     } catch (Throwable ex) {
                         ex.printStackTrace();
                         setStatus("Failed loading plugin: " + getMessage(ex));

@@ -5,7 +5,6 @@ import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
 import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.gui.ApplicationPaneController;
 import de.jpwinkler.daf.gui.ApplicationPartController;
-import de.jpwinkler.daf.gui.ApplicationPreferences;
 import de.jpwinkler.daf.gui.commands.CommandStack;
 import de.jpwinkler.daf.gui.commands.UpdateAction;
 import de.jpwinkler.daf.gui.controls.CustomTextFieldTableCell;
@@ -94,17 +93,17 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         });
         databaseTreeView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
-        mainSplitPane.setDividerPositions((double[]) ApplicationPreferences.DATABASE_PANE_SPLITPOS.retrieve());
+        mainSplitPane.setDividerPositions((double[]) DatabasePanePreferences.SPLITPOS.retrieve());
         mainSplitPane.getDividers().forEach(d -> {
             d.positionProperty().addListener((obs, oldValue, newValue) -> {
-                ApplicationPreferences.DATABASE_PANE_SPLITPOS.store(mainSplitPane.getDividerPositions());
+                DatabasePanePreferences.SPLITPOS.store(mainSplitPane.getDividerPositions());
             });
         });
 
-        bottomSplitPane.setDividerPositions((double[]) ApplicationPreferences.DATABASE_BOTTOMPANE_SPLITPOS.retrieve());
+        bottomSplitPane.setDividerPositions((double[]) DatabasePanePreferences.BOTTOM_SPLITPOS.retrieve());
         bottomSplitPane.getDividers().forEach(d -> {
             d.positionProperty().addListener((obs, oldValue, newValue) -> {
-                ApplicationPreferences.DATABASE_BOTTOMPANE_SPLITPOS.store(bottomSplitPane.getDividerPositions());
+                DatabasePanePreferences.BOTTOM_SPLITPOS.store(bottomSplitPane.getDividerPositions());
             });
         });
 
@@ -125,7 +124,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         snapshotListsColumn.setCellFactory(tc -> new CustomTextFieldTableCell<>(tc,
                 it -> it == null ? "" : getSnapshotLists(it),
                 (it, newLists) -> {
-                    TreeMap<String, Set<String>> data = ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.retrieve();
+                    TreeMap<String, Set<String>> data = DatabasePanePreferences.SNAPSHOT_LISTS.retrieve();
                     Set<String> newValueSet = Stream.of(newLists.split(","))
                             .map(v -> v.trim())
                             .collect(Collectors.toSet());
@@ -137,7 +136,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                             e.getValue().remove(it.getFullName());
                         }
                     });
-                    ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.store(data);
+                    DatabasePanePreferences.SNAPSHOT_LISTS.store(data);
                     modulesTableView.refresh();
                 },
                 it -> this.open(this.getPath().withPath(it.getFullName()), OpenFlag.OPEN_ONLY)));
@@ -149,9 +148,9 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                             .map(module -> new RenameAttributesCommand(it.getKey(), newKey, module))
                             .forEach(this::executeCommand);
                 }));
-        attributeNameColumn.setPrefWidth((double) ApplicationPreferences.DATABASE_PANE_ATTRIBUTENAME_WIDTH.retrieve());
+        attributeNameColumn.setPrefWidth((double) DatabasePanePreferences.ATTRIBUTENAME_WIDTH.retrieve());
         attributeNameColumn.widthProperty().addListener((obs, oldValue, newValue) -> {
-            ApplicationPreferences.DATABASE_PANE_ATTRIBUTENAME_WIDTH.store(newValue.doubleValue());
+            DatabasePanePreferences.ATTRIBUTENAME_WIDTH.store(newValue.doubleValue());
         });
 
         attributeValueColumn.setCellFactory(tc -> new CustomTextFieldTableCell<>(tc,
@@ -161,23 +160,23 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                             .map(module -> new EditAttributesCommand(it.getKey(), newValue, module))
                             .forEach(this::executeCommand);
                 }));
-        attributeValueColumn.setPrefWidth((double) ApplicationPreferences.DATABASE_PANE_ATTRIBUTEVALUE_WIDTH.retrieve());
+        attributeValueColumn.setPrefWidth((double) DatabasePanePreferences.ATTRIBUTEVALUE_WIDTH.retrieve());
         attributeValueColumn.widthProperty().addListener((obs, oldValue, newValue) -> {
-            ApplicationPreferences.DATABASE_PANE_ATTRIBUTEVALUE_WIDTH.store(newValue.doubleValue());
+            DatabasePanePreferences.ATTRIBUTEVALUE_WIDTH.store(newValue.doubleValue());
         });
 
-        ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.addOnChangedHandler(t -> this.populateSnapshotMenu(((Map<String, ?>) t).keySet(), createSnapshotsMenu, this::createSnapshotFromListClicked));
-        ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.addOnChangedHandler(t -> this.populateSnapshotMenu(((Map<String, ?>) t).keySet(), deleteSnapshotListMenu, this::deleteSnapshotListClicked));
-        ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.addOnChangedHandler(t -> this.populateSnapshotMenu(((Map<String, ?>) t).keySet(), showSnapshotListMenu, this::showSnapshotListClicked));
+        DatabasePanePreferences.SNAPSHOT_LISTS.addOnChangedHandler(t -> this.populateSnapshotMenu(((Map<String, ?>) t).keySet(), createSnapshotsMenu, this::createSnapshotFromListClicked));
+        DatabasePanePreferences.SNAPSHOT_LISTS.addOnChangedHandler(t -> this.populateSnapshotMenu(((Map<String, ?>) t).keySet(), deleteSnapshotListMenu, this::deleteSnapshotListClicked));
+        DatabasePanePreferences.SNAPSHOT_LISTS.addOnChangedHandler(t -> this.populateSnapshotMenu(((Map<String, ?>) t).keySet(), showSnapshotListMenu, this::showSnapshotListClicked));
 
-        Map<String, ?> snapshotLists = ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.retrieve();
+        Map<String, ?> snapshotLists = DatabasePanePreferences.SNAPSHOT_LISTS.retrieve();
         populateSnapshotMenu(snapshotLists.keySet(), createSnapshotsMenu, this::createSnapshotFromListClicked);
         populateSnapshotMenu(snapshotLists.keySet(), deleteSnapshotListMenu, this::deleteSnapshotListClicked);
         populateSnapshotMenu(snapshotLists.keySet(), showSnapshotListMenu, this::showSnapshotListClicked);
     }
 
     private static String getSnapshotLists(DoorsTreeNode node) {
-        return ((Map<String, TreeSet<String>>) ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.retrieve())
+        return ((Map<String, TreeSet<String>>) DatabasePanePreferences.SNAPSHOT_LISTS.retrieve())
                 .entrySet().stream()
                 .filter(e -> isInSnapshotList(e.getValue(), node))
                 .map(e -> e.getKey())
@@ -241,12 +240,12 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
     private final ExtensionPane<DatabasePaneExtension> sidePane = new ExtensionPane<>(
             () -> super.getExtensions(DatabasePaneExtension.class), e -> e.getSidePanes(),
-            ApplicationPreferences.DATABASE_PANE_SIDE_EXTENSION.retrieve(),
-            ApplicationPreferences.DATABASE_PANE_SIDE_EXTENSION::store);
+            DatabasePanePreferences.SIDE_EXTENSION.retrieve(),
+            DatabasePanePreferences.SIDE_EXTENSION::store);
     private final ExtensionPane<DatabasePaneExtension> bottomPane = new ExtensionPane<>(
             () -> super.getExtensions(DatabasePaneExtension.class), e -> e.getBottomPanes(),
-            ApplicationPreferences.DATABASE_PANE_SIDE_EXTENSION.retrieve(),
-            ApplicationPreferences.DATABASE_PANE_SIDE_EXTENSION::store);
+            DatabasePanePreferences.SIDE_EXTENSION.retrieve(),
+            DatabasePanePreferences.SIDE_EXTENSION::store);
 
     private List<DoorsTreeNode> nodeClipboard;
     private List<Entry<String, String>> attributeClipboard;
@@ -370,16 +369,16 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         dialog.setHeaderText("Please enter a name for your list");
 
         dialog.showAndWait().ifPresent(ln -> {
-            TreeMap<String, TreeSet<String>> snapshotLists = ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.retrieve();
+            TreeMap<String, TreeSet<String>> snapshotLists = DatabasePanePreferences.SNAPSHOT_LISTS.retrieve();
             snapshotLists.putIfAbsent(ln, new TreeSet<>());
-            ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.store(snapshotLists);
+            DatabasePanePreferences.SNAPSHOT_LISTS.store(snapshotLists);
         });
     }
 
     public void deleteSnapshotListClicked(String snapshotList) {
-        TreeMap<String, ?> snapshotLists = ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.retrieve();
+        TreeMap<String, ?> snapshotLists = DatabasePanePreferences.SNAPSHOT_LISTS.retrieve();
         snapshotLists.remove(snapshotList);
-        ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.store(snapshotLists);
+        DatabasePanePreferences.SNAPSHOT_LISTS.store(snapshotLists);
     }
 
     @FXML
@@ -388,7 +387,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     }
 
     private void createSnapshotFromListClicked(String snapshotList) {
-        TreeSet<String> sl = ((TreeMap<String, TreeSet<String>>) ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.retrieve()).get(snapshotList);
+        TreeSet<String> sl = ((TreeMap<String, TreeSet<String>>) DatabasePanePreferences.SNAPSHOT_LISTS.retrieve()).get(snapshotList);
         this.createSnapshot(node -> isInSnapshotList(sl, node));
     }
 
@@ -411,7 +410,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     }
 
     private void showSnapshotListClicked(String snapshotList) {
-        TreeMap<String, TreeSet<String>> snapshotLists = ApplicationPreferences.DATABASE_PANE_SNAPSHOT_LISTS.retrieve();
+        TreeMap<String, TreeSet<String>> snapshotLists = DatabasePanePreferences.SNAPSHOT_LISTS.retrieve();
 
         Alert alert = new Alert(Alert.AlertType.NONE,
                 snapshotLists.get(snapshotList).isEmpty() ? "This list is empty."
