@@ -13,7 +13,7 @@ import de.jpwinkler.daf.gui.ApplicationPreference;
  */
 public class PluginPreferences extends ApplicationPreference {
 
-    public static final ApplicationPreference MENU_NAME = new PluginPreferences("MENU_NAME", String.class, "Test Extension Menu");
+    public static final ApplicationPreference MENU_NAME = new PluginPreferences("MENU_NAME", String.class, "Application Part Extension Menu");
 
     public PluginPreferences(String name, Class<?> valueType, Object defaultValue) {
         super(name, valueType, defaultValue);

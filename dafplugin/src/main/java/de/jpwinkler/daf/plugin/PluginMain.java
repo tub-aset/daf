@@ -5,8 +5,6 @@
  */
 package de.jpwinkler.daf.plugin;
 
-import de.jpwinkler.daf.db.DatabaseInterface;
-import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.gui.ApplicationPaneExtension;
 import de.jpwinkler.daf.gui.ApplicationPaneInterface;
 import de.jpwinkler.daf.gui.ApplicationPart;
@@ -14,10 +12,6 @@ import de.jpwinkler.daf.gui.ApplicationPartExtension;
 import de.jpwinkler.daf.gui.ApplicationPartInterface;
 import de.jpwinkler.daf.gui.databases.DatabasePaneController;
 import de.jpwinkler.daf.gui.databases.DatabasePaneExtension;
-import de.jpwinkler.daf.model.DoorsFolder;
-import de.jpwinkler.daf.model.DoorsModelUtil;
-import de.jpwinkler.daf.model.DoorsTreeNode;
-import java.io.IOException;
 import java.util.List;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
