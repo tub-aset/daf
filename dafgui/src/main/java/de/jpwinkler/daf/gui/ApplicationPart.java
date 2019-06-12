@@ -161,9 +161,13 @@ public final class ApplicationPart<T extends DatabaseInterface> {
     public boolean isAllowNew() {
         return allowNew;
     }
-
+    
     public Class<T> getDatabaseInterfaceClass() {
         return databaseInterfaceClass;
+    }
+
+    public String getDatabaseInterfaceName() {
+        return databaseInterfaceClass.getCanonicalName();
     }
 
     public Stream<DatabasePath> openWithSelector(Window window) {
@@ -187,29 +191,36 @@ public final class ApplicationPart<T extends DatabaseInterface> {
 
     public static class ApplicationPartRegistry {
 
-        private final Map<Class<? extends DatabaseInterface>, List<ApplicationPart<?>>> REGISTRY = new HashMap<>();
+        private final Map<String, List<ApplicationPart<?>>> REGISTRY = new HashMap<>();
         private final HashSet<BiConsumer<ApplicationPart<?>, ApplicationPart<?>>> listeners = new HashSet<>();
 
         public void register(ApplicationPart part) {
-            if (!REGISTRY.containsKey(part.getDatabaseInterfaceClass())) {
-                REGISTRY.put(part.getDatabaseInterfaceClass(), new ArrayList<>());
+            if (!REGISTRY.containsKey(part.getDatabaseInterfaceName())) {
+                REGISTRY.put(part.getDatabaseInterfaceName(), new ArrayList<>());
             }
+            REGISTRY.get(part.getDatabaseInterfaceName()).add(part);
 
-            REGISTRY.get(part.getDatabaseInterfaceClass()).add(part);
             listeners.forEach(l -> l.accept(part, null));
         }
 
         public void unregister(ApplicationPart part) {
-            if (!REGISTRY.containsKey(part.getDatabaseInterfaceClass())) {
+            if (!REGISTRY.containsKey(part.getDatabaseInterfaceName())) {
                 return;
             }
-
-            REGISTRY.get(part.getDatabaseInterfaceClass()).remove(part);
             listeners.forEach(l -> l.accept(null, part));
+
+            REGISTRY.get(part.getDatabaseInterfaceName()).remove(part);
+            if (REGISTRY.get(part.getDatabaseInterfaceName()).isEmpty()) {
+                REGISTRY.remove(part.getDatabaseInterfaceName());
+            }
         }
 
         private ApplicationPart getPart(DatabasePath path) {
             List<ApplicationPart<?>> partList = REGISTRY.get(path.getDatabaseInterface());
+            if (partList == null) {
+                throw new RuntimeException("No application part available to handle this database path");
+            }
+
             return partList.get(partList.size() - 1);
         }
 

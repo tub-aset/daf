@@ -31,6 +31,8 @@ import java.util.TimerTask;
 import java.util.TreeMap;
 import java.util.function.Predicate;
 import java.util.jar.Manifest;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javafx.application.Platform;
@@ -55,6 +57,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
+import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.tuple.Triple;
 import org.pf4j.DefaultPluginManager;
@@ -185,11 +188,12 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
                 openMenu.getItems().removeIf(p -> p.getUserData() == removed);
                 newMenu.getItems().removeIf(p -> p.getUserData() == removed);
 
-                List<Tab> tabs = tabPane.getTabs().stream()
-                        .filter(e -> getApplicationPartController(e).getApplicationPart() == removed)
-                        .collect(Collectors.toList());
-                if (this.closeTabs(tabs) == ButtonType.CANCEL) {
-                    throw new RuntimeException("Closing tabs cancelled");
+                String openPaths = this.applicationPartControllers.values().stream()
+                        .filter(c -> c.getApplicationPart() == removed)
+                        .map(c -> c.getPath().toString())
+                        .collect(Collectors.joining(", "));
+                if (!openPaths.isBlank()) {
+                    throw new RuntimeException("Open tabs remaining: " + openPaths);
                 }
             }
 
@@ -216,7 +220,24 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         ApplicationPart.registerDefault(applicationPartRegistry);
 
         pluginManager.loadPlugins();
-        pluginManager.startPlugins();
+        String failedPlugins = Stream.concat(
+                pluginManager.getPlugins(PluginState.CREATED).stream(),
+                pluginManager.getPlugins(PluginState.RESOLVED).stream())
+                .filter(pl -> {
+                    try {
+                        this.startPlugin(pl.getPluginId());
+                        return false;
+                    } catch (Throwable ex) {
+                        ex.printStackTrace();
+                        return true;
+                    }
+                })
+                .map(pl -> pl.getPluginId())
+                .collect(Collectors.joining(", "));
+        if (!failedPlugins.isBlank()) {
+            setStatus("Failed loading plugins: " + failedPlugins);
+        }
+
         pluginManager.getPlugins().forEach(this::addPluginMenuEntries);
     }
 
@@ -247,11 +268,26 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         cmi.setHideOnClick(false);
         cmi.setUserData(plugin.getPluginId());
         cb.selectedProperty().set(plugin.getPluginState() == PluginState.STARTED);
+        MutableBoolean revertedFlag = new MutableBoolean(false);
         cb.selectedProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal) {
-                startPlugin(plugin.getPluginId());
-            } else {
-                stopPlugin(plugin.getPluginId());
+            if (revertedFlag.isTrue()) {
+                revertedFlag.setFalse();
+                return;
+            }
+
+            try {
+                if (newVal) {
+                    startPlugin(plugin.getPluginId());
+                    setStatus("Plugin started: " + plugin.getPluginId());
+                } else {
+                    stopPlugin(plugin.getPluginId());
+                    setStatus("Plugin stopped: " + plugin.getPluginId());
+                }
+            } catch (Throwable ex) {
+                ex.printStackTrace();
+                setStatus("Failed changing plugin state: " + getMessage(ex));
+                revertedFlag.setTrue();
+                cb.setSelected(oldVal);
             }
         });
         pluginStateMenu.getItems().add(cmi);
@@ -309,7 +345,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
                 databaseInterface = databaseInterfaces.get(databasePath).getMiddle();
                 commandStack = databaseInterfaces.get(databasePath).getRight();
             } else {
-                databaseInterface = (DatabaseInterface) path.getDatabaseInterface().getConstructor(DatabasePath.class, OpenFlag.class).newInstance(databasePath, openFlag);
+                databaseInterface = openDatabaseInterface(path, openFlag);
                 commandStack = new CommandStack(dirty -> {
                     this.tabPane.getTabs().stream()
                             .filter(t -> this.applicationPartControllers.get((DatabasePath) t.getUserData()).getDatabaseInterface() == databaseInterface)
@@ -339,6 +375,29 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
             setStatus("Open: Failed to open file; " + getMessage(ex));
             return null;
+        }
+    }
+
+    private DatabaseInterface openDatabaseInterface(DatabasePath path, OpenFlag openFlag) {
+        try {
+            Class<? extends DatabaseInterface> dbInterface = Stream.concat(
+                    Stream.of(DatabaseInterface.class.getClassLoader()),
+                    pluginManager.getPlugins(PluginState.STARTED).stream().map(pl -> pl.getPluginClassLoader()))
+                    .map(cl -> {
+                        try {
+                            return cl.loadClass(path.getDatabaseInterface());
+                        } catch (ClassNotFoundException ex) {
+                            return null;
+                        }
+                    })
+                    .filter(cls -> cls != null)
+                    .filter(cls -> DatabaseInterface.class.isAssignableFrom(cls))
+                    .map(cls -> (Class<? extends DatabaseInterface>) cls)
+                    .findFirst().orElseThrow(() -> new ClassNotFoundException("Database interface missing: " + path.getDatabaseInterface()));
+
+            return (DatabaseInterface) dbInterface.getConstructor(DatabasePath.class, OpenFlag.class).newInstance(path.withPath(""), openFlag);
+        } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw new RuntimeException(ex);
         }
     }
 
@@ -441,17 +500,17 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             }
         }
 
-        try {
-            DatabaseInterface destinationDB = (DatabaseInterface) destinationPath.getDatabaseInterface().getConstructor(DatabasePath.class, OpenFlag.class).newInstance(destinationPath, OpenFlag.ERASE_IF_EXISTS);
-            destinationDB.getDatabaseRoot().copyFrom(sourceDB.getNode(sourcePath.getPath()), null, include);
-            DoorsAttributes.DATABASE_COPIED_FROM.setValue(String.class, destinationDB.getDatabaseRoot(), sourceDB.getPath().toString());
-            DoorsAttributes.DATABASE_COPIED_AT.setValue(String.class, destinationDB.getDatabaseRoot(), ZonedDateTime.now(ZoneOffset.UTC).toString());
+        DatabaseInterface destinationDB = openDatabaseInterface(destinationPath, OpenFlag.ERASE_IF_EXISTS);
+        destinationDB.getDatabaseRoot().copyFrom(sourceDB.getNode(sourcePath.getPath()), null, include);
+        DoorsAttributes.DATABASE_COPIED_FROM.setValue(String.class, destinationDB.getDatabaseRoot(), sourceDB.getPath().toString());
+        DoorsAttributes.DATABASE_COPIED_AT.setValue(String.class, destinationDB.getDatabaseRoot(), ZonedDateTime.now(ZoneOffset.UTC).toString());
 
+        try {
             destinationDB.flush();
-            return destinationPath;
-        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | IOException ex) {
+        } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
+        return destinationPath;
     }
 
     @FXML
@@ -566,10 +625,6 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
                         if (plugin == null) {
                             throw new RuntimeException("Invalid plugin file");
                         }
-                        if (plugin.getPluginState() != PluginState.RESOLVED && plugin.getPluginState() != PluginState.DISABLED) {
-                            this.uninstallPlugin(pluginId);
-                            throw new RuntimeException("Plugin could not be resolved");
-                        }
 
                         startPlugin(pluginId);
                         addPluginMenuEntries(plugin);
@@ -582,8 +637,16 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     }
 
     private void startPlugin(String pluginId) {
-        pluginManager.startPlugin(pluginId);
+        PluginState initialState = pluginManager.getPlugin(pluginId).getPluginState();
+        if (initialState == PluginState.CREATED) {
+            throw new RuntimeException("Plugin could not be resolved");
+        }
+        if (initialState == PluginState.STARTED) {
+            throw new RuntimeException("Plugin already started");
+        }
+
         pluginManager.enablePlugin(pluginId);
+        pluginManager.startPlugin(pluginId);
 
         PluginWrapper plugin = pluginManager.getPlugin(pluginId);
         if (plugin.getPluginState() != PluginState.STARTED) {

@@ -18,6 +18,14 @@ import java.util.Objects;
 public class DatabasePath<T extends DatabaseInterface> implements Serializable {
 
     public DatabasePath(Class<T> databaseInterface, String databasePath, String path) {
+        this(databaseInterface.getCanonicalName(), databasePath, path);
+    }
+
+    public DatabasePath(Class<T> databaseInterface, String fullPath) {
+        this(databaseInterface, fullPath.split(":", 2)[0], fullPath.split(":", 2)[1]);
+    }
+
+    private DatabasePath(String databaseInterface, String databasePath, String path) {
         Objects.requireNonNull(databaseInterface);
 
         this.databaseInterface = databaseInterface;
@@ -25,24 +33,11 @@ public class DatabasePath<T extends DatabaseInterface> implements Serializable {
         this.path = path;
     }
 
-    public DatabasePath(Class<T> databaseInterface, String fullPath) {
-        Objects.requireNonNull(databaseInterface);
-        this.databaseInterface = databaseInterface;
-
-        String[] s = fullPath.split(":");
-        if (s.length == 0 || s.length > 2) {
-            throw new IllegalArgumentException("fullPath must contain at most one colon");
-        }
-
-        this.databasePath = s[1];
-        this.path = s.length > 1 ? s[2] : "";
-    }
-
-    private final Class<T> databaseInterface;
+    private final String databaseInterface;
     private final String databasePath;
     private final String path;
 
-    public Class<T> getDatabaseInterface() {
+    public String getDatabaseInterface() {
         return databaseInterface;
     }
 
@@ -93,7 +88,10 @@ public class DatabasePath<T extends DatabaseInterface> implements Serializable {
 
     @Override
     public String toString() {
-        return this.databaseInterface.getSimpleName() + ": " + this.databasePath + (this.path == null || this.path.isEmpty() ? "" : (":" + this.path));
+        String shortName = this.databaseInterface;
+        shortName = shortName.substring(shortName.lastIndexOf('.') + 1);
+
+        return shortName + ": " + this.databasePath + (this.path == null || this.path.isEmpty() ? "" : (":" + this.path));
     }
 
 }
