@@ -33,6 +33,7 @@ import java.util.stream.Stream;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
@@ -110,19 +111,30 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
     private final TreeMap<Long, DatabasePath> recentFiles = ApplicationPreferences.RECENT_FILES.retrieve();
     private final int MAX_RECENT_FILES = 10;
+    private final ListChangeListener<Menu> partMenuChangeLister = (change) -> {
+        while (change.next()) {
+            change.getRemoved().forEach(this.mainMenuBar.getMenus()::remove);
+            this.tabChangeListener.changed(tabPane.getSelectionModel().selectedItemProperty(), tabPane.getSelectionModel().getSelectedItem(), tabPane.getSelectionModel().getSelectedItem());
+        }
+    };
+    private final ChangeListener<Tab> tabChangeListener = (observable, oldValue, newValue) -> {
+
+        if (oldValue != null) {
+            ObservableList<Menu> partMenus = getApplicationPartController(oldValue).getMenus();
+            partMenus.forEach(mainMenuBar.getMenus()::remove);
+            partMenus.removeListener(partMenuChangeLister);
+        }
+
+        if (newValue != null) {
+            ObservableList<Menu> partMenus = getApplicationPartController(newValue).getMenus();
+            partMenus.forEach(mainMenuBar.getMenus()::add);
+            partMenus.addListener(partMenuChangeLister);
+        }
+    };
 
     public ApplicationPaneController() {
-        tabPane.getSelectionModel().selectedItemProperty().addListener((ChangeListener<Tab>) (observable, oldValue, newValue) -> {
-            if (oldValue != null) {
-                getApplicationPartController(oldValue).getMenus().forEach(m -> {
-                    mainMenuBar.getMenus().remove(m);
-                });
-            }
+        tabPane.getSelectionModel().selectedItemProperty().addListener(tabChangeListener);
 
-            if (newValue != null) {
-                mainMenuBar.getMenus().addAll(getApplicationPartController(newValue).getMenus());
-            }
-        });
         tabPane.getTabs().addListener((ListChangeListener<Tab>) (change) -> {
             Set<Tab> closedTabs = new HashSet<>();
 
@@ -133,8 +145,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             }
 
             closeTabs(closedTabs);
-        }
-        );
+        });
         generateRecentMenu();
 
         backgroundTaskStatusToolBar.setManaged(false);

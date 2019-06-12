@@ -28,8 +28,8 @@ public class ExtensionPane<T extends ApplicationPartExtension> extends Autoloadi
     public ExtensionPane(Supplier<List<T>> extensions, Function<T, List<Node>> paneGetter, String defaultSelection, Consumer<String> onSelected) {
 
         extensionChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
-            extensionPane.setContent(newValue.node);
-            onSelected.accept(newValue.extensionPaneId);
+            extensionPane.setContent(newValue == null ? null : newValue.node);
+            onSelected.accept(newValue == null ? null : newValue.extensionPaneId);
         });
 
         extensionChoiceBox.getItems().stream()

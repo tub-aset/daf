@@ -15,13 +15,14 @@ import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Menu;
@@ -41,9 +42,8 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
 
     private final List<ApplicationPartExtension> extensions = new ArrayList<>();
 
-    private final List<Menu> menus;
-    private final Map<MenuItem, PluginWrapper> extensionSubMenus = new HashMap<>();
-    private final Menu extensionsMenu = new Menu("Plugins");
+    private final ObservableList<Menu> menus = FXCollections.observableArrayList();
+    private final Map<Menu, PluginWrapper> extensionMenus = new HashMap<>();
 
     public ApplicationPartController(ApplicationPaneController applicationController, DatabasePath path, DatabaseInterface databaseInterface, CommandStack databaseCommandStack) {
         this.applicationController = applicationController;
@@ -54,7 +54,6 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
         URL menuUrl = MainFX.class.getResource(
                 this.getClass().getSimpleName().replaceFirst("Controller$", "") + "Menu.fxml");
 
-        menus = new ArrayList<>();
         if (menuUrl != null) {
             try {
                 final FXMLLoader menuLoader = new FXMLLoader(menuUrl);
@@ -66,9 +65,7 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
-        }
-        ;
-        menus.add(extensionsMenu);
+        };
     }
 
     protected final void setStatus(final String status) {
@@ -133,7 +130,7 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
         }
     }
 
-    public final Collection<Menu> getMenus() {
+    public final ObservableList<Menu> getMenus() {
         return menus;
     }
 
@@ -157,15 +154,15 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
         extensions.addAll(newExts);
         newExts.stream()
                 .flatMap(e -> e.getMenus().stream())
-                .peek(m -> extensionSubMenus.put(m, plugin))
-                .forEach(extensionsMenu.getItems()::add);
+                .peek(m -> extensionMenus.put(m, plugin))
+                .forEach(menus::add);
     }
 
     public void removePlugin(PluginWrapper plugin) {
         extensions.removeIf(ext -> ext.getClass().getClassLoader() == plugin.getPluginClassLoader());
 
-        List<MenuItem> extMenus = extensionSubMenus.entrySet().stream().filter(e -> e.getValue() == plugin).map(e -> e.getKey()).collect(Collectors.toList());
-        extensionsMenu.getItems().removeAll(extMenus);
-        extMenus.forEach(extensionSubMenus::remove);
+        List<MenuItem> extMenus = extensionMenus.entrySet().stream().filter(e -> e.getValue() == plugin).map(e -> e.getKey()).collect(Collectors.toList());
+        menus.removeAll(extMenus);
+        extMenus.forEach(extensionMenus::remove);
     }
 }
