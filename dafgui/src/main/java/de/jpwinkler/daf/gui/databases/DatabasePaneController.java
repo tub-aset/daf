@@ -287,7 +287,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     @FXML
     public void newTagEnterPressed(KeyEvent ev) {
         String value = newTagComboBox.getValue();
-        if (ev.getCode() != KeyCode.ENTER || value == null || value.isEmpty() || value.isBlank()) {
+        if (ev.getCode() != KeyCode.ENTER || value == null || value.isEmpty() || value.trim().isEmpty()) {
             return;
         }
 

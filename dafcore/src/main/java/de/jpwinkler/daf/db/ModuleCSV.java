@@ -68,7 +68,7 @@ public class ModuleCSV {
     }
 
     public static void writeModule(final OutputStream csvStream, final DoorsModule module) throws IOException {
-        final String[] header = module.getObjectAttributes().toArray(size -> new String[size]);
+        final String[] header = module.getObjectAttributes().toArray(new String[module.getObjectAttributes().size()]);
 
         CSVPrinter printer = new CSVPrinter(new OutputStreamWriter(csvStream, CHARSET), WRITE_FORMAT);
         printer.printRecord((Object[]) header);

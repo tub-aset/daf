@@ -252,7 +252,7 @@ public abstract class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container imp
      */
     @Override
     public boolean hasTag(Pattern pattern) {
-        return DoorsAttributes.TAGS.getValue(List.class, this).stream().anyMatch(pattern.asMatchPredicate());
+        return DoorsAttributes.TAGS.getValue(List.class, this).stream().anyMatch(s -> pattern.matcher((String) s).matches());
     }
 
     /**
@@ -291,7 +291,7 @@ public abstract class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container imp
     @Override
     public void removeTag(Pattern pattern) {
         List<String> l = DoorsAttributes.TAGS.getValue(List.class, this);
-        DoorsAttributes.TAGS.setValue(List.class, this, l.stream().filter(Predicate.not(pattern.asMatchPredicate())).collect(Collectors.toList()));
+        DoorsAttributes.TAGS.setValue(List.class, this, l.stream().filter(s -> !pattern.matcher(s).matches()).collect(Collectors.toList()));
     }
 
     /**
@@ -300,10 +300,10 @@ public abstract class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container imp
      */
     @Override
     public boolean canCopyFrom(DoorsTreeNode node) {
-        return Arrays.stream(this.getClass().getInterfaces())
+        return !Arrays.stream(this.getClass().getInterfaces())
                 .filter(i -> DoorsTreeNode.class.isAssignableFrom(i))
                 .filter(i -> !i.isAssignableFrom(node.getClass()))
-                .findAny().isEmpty();
+                .findAny().isPresent();
     }
 
     /**

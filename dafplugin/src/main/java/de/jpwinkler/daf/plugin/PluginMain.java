@@ -12,6 +12,8 @@ import de.jpwinkler.daf.gui.ApplicationPartExtension;
 import de.jpwinkler.daf.gui.ApplicationPartInterface;
 import de.jpwinkler.daf.gui.databases.DatabasePaneController;
 import de.jpwinkler.daf.gui.databases.DatabasePaneExtension;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -29,13 +31,25 @@ public class PluginMain extends Plugin {
     public PluginMain(PluginWrapper wrapper) {
         super(wrapper);
     }
+    
+    /**
+     * Java 8 replacement for List.of
+     * @param <T>
+     * @param args
+     * @return
+     * @deprecated
+     */
+    @Deprecated
+    public static <T> List<T> List_of(T... args) {
+        return new ArrayList<>(Arrays.asList(args));
+    }
 
     @Extension
     public static class TestApplicationPartExtension implements ApplicationPartExtension, DatabasePaneExtension {
 
-        private final List<Menu> menus = List.of(new Menu(PluginPreferences.MENU_NAME.retrieve()));
-        private final List<Node> sidePanes = List.of(new Label("Test Extension Side Panel"));
-        private final List<Node> bottomPanes = List.of(new Label("Test Extension Bottom Panel"));
+        private final List<Menu> menus = List_of(new Menu(PluginPreferences.MENU_NAME.retrieve()));
+        private final List<Node> sidePanes = List_of(new Label("Test Extension Side Panel"));
+        private final List<Node> bottomPanes = List_of(new Label("Test Extension Bottom Panel"));
         private ApplicationPartInterface applicationPartInterface;
 
         @Override
@@ -65,8 +79,8 @@ public class PluginMain extends Plugin {
     @Extension
     public static class TestApplicationPaneExtension implements ApplicationPaneExtension {
 
-        private final List<Menu> menus = List.of(new Menu("Global extension menu"));
-        private final List<ApplicationPart<?>> applicationParts = List.of(new ApplicationPart<>("Test Extension Part", PluginDatabaseInterface.class,
+        private final List<Menu> menus = List_of(new Menu("Global extension menu"));
+        private final List<ApplicationPart<?>> applicationParts = List_of(new ApplicationPart<>("Test Extension Part", PluginDatabaseInterface.class,
                 DatabasePaneController::new, ApplicationPart.defaultSelector("", ""), false));
         private ApplicationPaneInterface applicationPaneInterface;
 

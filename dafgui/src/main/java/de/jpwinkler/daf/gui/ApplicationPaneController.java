@@ -190,7 +190,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
                         .filter(c -> c.getApplicationPart() == removed)
                         .map(c -> c.getPath().toString())
                         .collect(Collectors.joining(", "));
-                if (!openPaths.isBlank()) {
+                if (!openPaths.trim().isEmpty()) {
                     throw new RuntimeException("Open tabs remaining: " + openPaths);
                 }
             }
@@ -232,7 +232,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
                 })
                 .map(pl -> pl.getPluginId())
                 .collect(Collectors.joining(", "));
-        if (!failedPlugins.isBlank()) {
+        if (!failedPlugins.trim().isEmpty()) {
             setStatus("Failed loading plugins: " + failedPlugins);
         }
 
@@ -489,7 +489,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     public DatabasePath createSnapshot(DatabaseInterface sourceDB, DatabasePath sourcePath, Predicate<DoorsTreeNode> include, DatabasePath destinationPath) {
         if (destinationPath == null) {
             ChoiceDialog<ApplicationPart<?>> applicationPartChooser = new ChoiceDialog<>(null, applicationPartRegistry.registry().filter(p -> p.isAllowNew()).collect(Collectors.toList()));
-            destinationPath = applicationPartChooser.showAndWait().stream()
+            destinationPath = Main.asStream(applicationPartChooser.showAndWait())
                     .flatMap(part -> part.saveWithSelector(tabPane.getScene().getWindow()))
                     .findAny().orElse(null);
 

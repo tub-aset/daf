@@ -143,7 +143,7 @@ public final class ApplicationPart<T extends DatabaseInterface> {
             dialog.setHeaderText("Please enter a URI to " + (save ? "save." : "open."));
             dialog.setContentText(part.getDatabaseInterfaceClass().getSimpleName() + ":");
 
-            return dialog.showAndWait().stream()
+            return Main.asStream(dialog.showAndWait())
                     .map(s -> new DatabasePath(part.getDatabaseInterfaceClass(), s));
         };
     }

@@ -5,6 +5,8 @@
  */
 package de.jpwinkler.daf.gui;
 
+import java.util.Optional;
+import java.util.stream.Stream;
 import static javafx.application.Application.launch;
 
 /**
@@ -15,5 +17,16 @@ public class Main {
 
     public static void main(final String[] args) {
         launch(MainFX.class, args);
+    }
+    
+    /**
+     * Java 8 replacement for Optional.stream()
+     * @param <T>
+     * @param optional
+     * @return 
+     */
+    @Deprecated
+    public static <T> Stream<T> asStream(Optional<T> optional) {
+        return optional.isPresent() ? Stream.of(optional.get()) : Stream.empty();
     }
 }

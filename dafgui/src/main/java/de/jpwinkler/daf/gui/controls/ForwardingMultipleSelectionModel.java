@@ -44,8 +44,14 @@ public class ForwardingMultipleSelectionModel<T, V> extends MultipleSelectionMod
             public int getSourceIndex(int i) {
                 return i;
             }
-
-            @Override
+            
+            /**
+             * This should have an @Override here for Java 11, but Java 8 does not
+             * have this method, causing a compiler error. Just leaving the @Override
+             * out makes sure it compiles with both JDKs.
+             * @param i
+             * @return 
+             */
             public int getViewIndex(int i) {
                 return i;
             }
