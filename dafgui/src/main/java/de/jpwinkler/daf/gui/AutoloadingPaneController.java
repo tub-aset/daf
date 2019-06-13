@@ -45,7 +45,7 @@ public abstract class AutoloadingPaneController<THIS extends AutoloadingPaneCont
     }
 
     public Optional<DialogResult> asDialog(Window owner, ButtonType... buttonTypes) {
-        var dialog = new Dialog<ButtonType>();
+        Dialog<ButtonType> dialog = new Dialog<ButtonType>();
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.initOwner(owner);
         dialog.setResizable(true);

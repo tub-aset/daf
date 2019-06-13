@@ -73,7 +73,7 @@ public class ModuleCSV {
         CSVPrinter printer = new CSVPrinter(new OutputStreamWriter(csvStream, CHARSET), WRITE_FORMAT);
         printer.printRecord((Object[]) header);
 
-        module.accept(new DoorsTreeNodeVisitor<>(DoorsObject.class) {
+        module.accept(new DoorsTreeNodeVisitor<DoorsObject>(DoorsObject.class) {
             @Override
             public boolean visitPreTraverse(final DoorsObject object) {
                 final Object[] values = new Object[header.length];

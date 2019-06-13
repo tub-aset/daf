@@ -45,7 +45,7 @@ public interface DatabaseInterface {
 
     default List<DoorsModule> getModules(final SearchExpression e) {
         final List<DoorsModule> result = new ArrayList<>();
-        getDatabaseRoot().accept(new DoorsTreeNodeVisitor<>(DoorsModule.class) {
+        getDatabaseRoot().accept(new DoorsTreeNodeVisitor<DoorsModule>(DoorsModule.class) {
 
             @Override
             public void visitPostTraverse(final DoorsModule module) {

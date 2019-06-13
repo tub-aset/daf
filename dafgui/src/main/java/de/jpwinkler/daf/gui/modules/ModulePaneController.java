@@ -220,7 +220,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
     private void updateContentView() {
         final TablePosition<?, ?> focusedCell = contentTableView.getFocusModel().getFocusedCell();
         contentTableView.getItems().clear();
-        module.accept(new DoorsTreeNodeVisitor<>(DoorsObject.class) {
+        module.accept(new DoorsTreeNodeVisitor<DoorsObject>(DoorsObject.class) {
             @Override
             public boolean visitPreTraverse(final DoorsObject object) {
                 if (!filteredObjects.contains(object)) {
@@ -353,7 +353,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
         final DoorsObjectFilter filterFinal = filter;
 
         filteredObjects.clear();
-        module.accept(new DoorsTreeNodeVisitor<>(DoorsObject.class) {
+        module.accept(new DoorsTreeNodeVisitor<DoorsObject>(DoorsObject.class) {
             @Override
             public boolean visitPreTraverse(final DoorsObject object) {
                 if (!filterFinal.checkObject(object)) {

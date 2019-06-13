@@ -26,8 +26,8 @@ public enum DatabasePaneImages {
     private final Image image;
 
     private DatabasePaneImages(InputStream is) {
-        try (is) {
-            this.image = new Image(is);
+        try (InputStream wrappedIs = is) {
+            this.image = new Image(wrappedIs);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }

@@ -22,7 +22,7 @@ public class CustomTextFieldTreeCell<T> extends TextFieldTreeCell<T> {
     private boolean editAllowed = false;
 
     public CustomTextFieldTreeCell(Function<T, String> toString, BiConsumer<T, String> editCommand, Consumer<T> opener) {
-        this.setConverter(new StringConverter<>() {
+        this.setConverter(new StringConverter<T>() {
             @Override
             public String toString(T node) {
                 return toString.apply(node);

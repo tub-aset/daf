@@ -67,7 +67,7 @@ public class DoorsModelUtil {
         final Map<String, DoorsObject> leftObjects = new HashMap<>();
         final Map<String, DoorsObject> rightObjects = new HashMap<>();
 
-        left.accept(new DoorsTreeNodeVisitor<>(DoorsObject.class) {
+        left.accept(new DoorsTreeNodeVisitor<DoorsObject>(DoorsObject.class) {
             @Override
             public boolean visitPreTraverse(final DoorsObject object) {
                 leftObjects.put(object.getObjectIdentifier(), object);
@@ -75,7 +75,7 @@ public class DoorsModelUtil {
             }
         });
 
-        right.accept(new DoorsTreeNodeVisitor<>(DoorsObject.class) {
+        right.accept(new DoorsTreeNodeVisitor<DoorsObject>(DoorsObject.class) {
             @Override
             public boolean visitPreTraverse(final DoorsObject object) {
                 rightObjects.put(object.getObjectIdentifier(), object);

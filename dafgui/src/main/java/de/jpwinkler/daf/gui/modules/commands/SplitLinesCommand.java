@@ -34,7 +34,7 @@ public class SplitLinesCommand extends AbstractCommand {
 
     @Override
     public void apply() {
-        module.accept(new DoorsTreeNodeVisitor<>(DoorsObject.class) {
+        module.accept(new DoorsTreeNodeVisitor<DoorsObject>(DoorsObject.class) {
             @Override
             public boolean visitPreTraverse(final DoorsObject object) {
                 if (object.getText() != null) {
