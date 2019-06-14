@@ -43,6 +43,7 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNodeRef {
     private DoorsTreeNodeRef parent;
 
     private final List<String> pathSegments;
+    private List<DoorsTreeNode> children;
 
     public DoorsTreeNodeRefImpl(final DoorsApplicationImpl doorsApplicationImpl, final DoorsItemType type, final DoorsTreeNode parent, String name) {
         this.doorsApplicationImpl = doorsApplicationImpl;
@@ -71,47 +72,52 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNodeRef {
 
     @Override
     public List<DoorsTreeNode> getChildren() {
-        if (doorsApplicationImpl.isBatchMode()) {
-            throw new UnsupportedOperationException("Operation not supported in batch mode.");
-        }
-        final String resultString = doorsApplicationImpl.buildAndRunCommand(builder -> {
-            builder.addScript(new InternalDXLScript("get_children.dxl"));
-            builder.setVariable("folder", this.getFullName());
-        });
+        if (this.children == null) {
 
-        final List<DoorsTreeNode> result = new ArrayList<>();
-
-        if (resultString.trim().isEmpty()) {
-            // no children available
-            return result;
-        }
-
-        final String[] lines = resultString.split("\r\n");
-
-        for (final String line : lines) {
-            String[] split;
-            if (line == null || line.isEmpty() || (split = line.split(":")).length != 2) {
-                LOGGER.severe(String.format("Invalid result format: %s.", line));
-                continue;
+            if (doorsApplicationImpl.isBatchMode()) {
+                throw new UnsupportedOperationException("Operation not supported in batch mode.");
             }
-            final DoorsItemType type = DoorsItemType.getType(split[0]);
-            switch (type) {
-                case FORMAL:
-                    result.add(new DoorsModuleRefImpl(doorsApplicationImpl, this, split[1], STANDARD_VIEW));
-                    break;
-                case FOLDER:
-                case PROJECT:
-                    result.add(new DoorsFolderRefImpl(doorsApplicationImpl, type, this, split[1]));
-                    break;
-                case LINK:
-                case DESCRIPTIVE:
-                    LOGGER.warning("Item type not supported: " + type);
-                    break;
-                default:
-                    throw new UnsupportedOperationException("unknown type: " + split[0]);
+            final String resultString = doorsApplicationImpl.buildAndRunCommand(builder -> {
+                builder.addScript(new InternalDXLScript("get_children.dxl"));
+                builder.setVariable("folder", this.getFullName());
+            });
+
+            final List<DoorsTreeNode> result = new ArrayList<>();
+
+            if (resultString.trim().isEmpty()) {
+                // no children available
+                return result;
             }
+
+            final String[] lines = resultString.split("\r\n");
+
+            for (final String line : lines) {
+                String[] split;
+                if (line == null || line.isEmpty() || (split = line.split(":")).length != 2) {
+                    LOGGER.severe(String.format("Invalid result format: %s.", line));
+                    continue;
+                }
+                final DoorsItemType type = DoorsItemType.getType(split[0]);
+                switch (type) {
+                    case FORMAL:
+                        result.add(new DoorsModuleRefImpl(doorsApplicationImpl, this, split[1], STANDARD_VIEW));
+                        break;
+                    case FOLDER:
+                    case PROJECT:
+                        result.add(new DoorsFolderRefImpl(doorsApplicationImpl, type, this, split[1]));
+                        break;
+                    case LINK:
+                    case DESCRIPTIVE:
+                        LOGGER.warning("Item type not supported: " + type);
+                        break;
+                    default:
+                        throw new UnsupportedOperationException("unknown type: " + split[0]);
+                }
+            }
+            this.children = result;
         }
-        return result;
+
+        return children;
     }
 
     @Override
