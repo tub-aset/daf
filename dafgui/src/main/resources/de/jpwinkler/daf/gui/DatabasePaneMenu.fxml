@@ -69,7 +69,7 @@
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" onAction="#addSnapshotListClicked" text="Add snapshot list" />
             <Menu fx:id="deleteSnapshotListMenu" mnemonicParsing="false" text="Delete snapshot list" />
-            <Menu fx:id="showSnapshotListMenu" mnemonicParsing="false" text="Show snapshot list" />
+            <Menu fx:id="editSnapshotListMenu" mnemonicParsing="false" text="Edit snapshot list" />
         </items>
     </Menu>
 </Menu>

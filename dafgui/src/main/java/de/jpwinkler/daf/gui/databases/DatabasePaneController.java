@@ -28,6 +28,7 @@ import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -174,12 +175,12 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
         DatabasePanePreferences.SNAPSHOT_LISTS.addOnChangedHandler(t -> this.populateSnapshotMenu(((Map<String, ?>) t).keySet(), createSnapshotsMenu, this::createSnapshotFromListClicked));
         DatabasePanePreferences.SNAPSHOT_LISTS.addOnChangedHandler(t -> this.populateSnapshotMenu(((Map<String, ?>) t).keySet(), deleteSnapshotListMenu, this::deleteSnapshotListClicked));
-        DatabasePanePreferences.SNAPSHOT_LISTS.addOnChangedHandler(t -> this.populateSnapshotMenu(((Map<String, ?>) t).keySet(), showSnapshotListMenu, this::showSnapshotListClicked));
+        DatabasePanePreferences.SNAPSHOT_LISTS.addOnChangedHandler(t -> this.populateSnapshotMenu(((Map<String, ?>) t).keySet(), editSnapshotListMenu, this::editSnapshotListClicked));
 
         Map<String, ?> snapshotLists = DatabasePanePreferences.SNAPSHOT_LISTS.retrieve();
         populateSnapshotMenu(snapshotLists.keySet(), createSnapshotsMenu, this::createSnapshotFromListClicked);
         populateSnapshotMenu(snapshotLists.keySet(), deleteSnapshotListMenu, this::deleteSnapshotListClicked);
-        populateSnapshotMenu(snapshotLists.keySet(), showSnapshotListMenu, this::showSnapshotListClicked);
+        populateSnapshotMenu(snapshotLists.keySet(), editSnapshotListMenu, this::editSnapshotListClicked);
     }
 
     private static String getSnapshotLists(DoorsTreeNode node) {
@@ -196,7 +197,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         String ceil = list.ceiling(fn);
         return ceil != null && ceil.startsWith(fn);
     }
-    
+
     private void updateExtensionPaneVisibility(ExtensionPane extPane, SplitPane splitPane) {
         if (!extPane.visiblePanesProperty().get()) {
             splitPane.getItems().remove(extPane.getNode());
@@ -249,7 +250,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     private Menu createSnapshotsMenu;
 
     @FXML
-    private Menu showSnapshotListMenu;
+    private Menu editSnapshotListMenu;
 
     @FXML
     private Menu deleteSnapshotListMenu;
@@ -423,15 +424,17 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         }
     }
 
-    private void showSnapshotListClicked(String snapshotList) {
+    private void editSnapshotListClicked(String snapshotList) {
         TreeMap<String, TreeSet<String>> snapshotLists = DatabasePanePreferences.SNAPSHOT_LISTS.retrieve();
 
-        Alert alert = new Alert(Alert.AlertType.NONE,
-                snapshotLists.get(snapshotList).isEmpty() ? "This list is empty."
-                : snapshotLists.get(snapshotList).stream().collect(Collectors.joining("\n")), ButtonType.OK);
-        alert.setTitle("Snapshot list " + snapshotList);
-        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-        alert.showAndWait();
+        SnapshotListEditorController editor = new SnapshotListEditorController<>(snapshotLists.get(snapshotList).stream().collect(Collectors.joining("\n")));
+        if (editor.asDialog(this.databaseTreeView.getScene().getWindow(), "Snapshot list " + snapshotList, ButtonType.CANCEL, ButtonType.OK).orElse(ButtonType.CANCEL) == ButtonType.CANCEL) {
+            return;
+        }
+
+        snapshotLists.put(snapshotList, new TreeSet<>(Arrays.asList(editor.getText().split("\n"))));
+        DatabasePanePreferences.SNAPSHOT_LISTS.store(snapshotLists);
+        this.updateGui(DatabasePaneController.UpdateModulesView);
     }
 
     private void populateSnapshotMenu(Collection<String> snapshotLists, Menu menu, Consumer<String> action) {
@@ -493,12 +496,12 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     public SelectionModel<DoorsObject> getCurrentObjectSelectionModel() {
         return new EmptySelectionModel<>();
     }
-    
+
     @FXML
     public void showSidePaneClicked() {
         sideExtensionPane.selectFirst();
     }
-    
+
     @FXML
     public void showBottomPaneClicked() {
         bottomExtensionPane.selectFirst();

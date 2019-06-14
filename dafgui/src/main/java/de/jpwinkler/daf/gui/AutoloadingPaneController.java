@@ -44,11 +44,12 @@ public abstract class AutoloadingPaneController<THIS extends AutoloadingPaneCont
         return node;
     }
 
-    public Optional<DialogResult> asDialog(Window owner, ButtonType... buttonTypes) {
+    public Optional<DialogResult> asDialog(Window owner, String title, ButtonType... buttonTypes) {
         Dialog<ButtonType> dialog = new Dialog<ButtonType>();
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.initOwner(owner);
         dialog.setResizable(true);
+        dialog.setTitle(title);
 
         dialog.getDialogPane().setContent(this.getNode());
         dialog.getDialogPane().getButtonTypes().addAll(buttonTypes);
