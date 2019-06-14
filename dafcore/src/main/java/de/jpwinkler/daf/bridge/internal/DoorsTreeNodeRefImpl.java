@@ -23,7 +23,6 @@ import static de.jpwinkler.daf.model.DoorsModelUtil.STANDARD_VIEW;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +47,7 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNodeRef {
     public DoorsTreeNodeRefImpl(final DoorsApplicationImpl doorsApplicationImpl, final DoorsItemType type, final DoorsTreeNode parent, String name) {
         this.doorsApplicationImpl = doorsApplicationImpl;
         this.type = type;
-        //  make sure root does not show up in the path
+        // make sure root does not show up in the path
         this.pathSegments = parent == null ? Collections.emptyList() : Stream.concat(
                 parent.getFullNameSegments().stream(), Stream.of(name)).collect(Collectors.toList());
     }
@@ -83,7 +82,7 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNodeRef {
         final List<DoorsTreeNode> result = new ArrayList<>();
 
         if (resultString.trim().isEmpty()) {
-            //no children available
+            // no children available
             return result;
         }
 
@@ -104,8 +103,12 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNodeRef {
                 case PROJECT:
                     result.add(new DoorsFolderRefImpl(doorsApplicationImpl, type, this, split[1]));
                     break;
+                case LINK:
+                case DESCRIPTIVE:
+                    LOGGER.warning("Item type not supported: " + type);
+                    break;
                 default:
-                    throw new UnsupportedOperationException();
+                    throw new UnsupportedOperationException("unknown type: " + split[0]);
             }
         }
         return result;
@@ -127,7 +130,7 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNodeRef {
 
     @Override
     public String getFullName() {
-        return StringUtils.join(pathSegments, "/");
+        return "/" + StringUtils.join(pathSegments, "/");
     }
 
     @Override
@@ -182,15 +185,16 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNodeRef {
 
     @Override
     public DoorsTreeNode getChild(String name) {
-        final List<String> pathSegments = Arrays.asList(name.split("/")).stream().filter(s -> !s.isEmpty()).collect(Collectors.toList());
-        DoorsTreeNode current = this;
-        for (final String segment : pathSegments.subList(0, pathSegments.size())) {
-            current = current.getChild(segment);
-            if (current == null) {
-                return null;
+        name = name.replaceFirst("^/", "");
+        final String[] currentSegment = name.split("/", 2);
+        for (DoorsTreeNode child : this.getChildren()) {
+            if (currentSegment[0].equals(child.getName())) {
+                return currentSegment.length == 2 ? child.getChild(currentSegment[1]) : child;
             }
+
         }
-        return current;
+
+        return null;
     }
 
     @Override

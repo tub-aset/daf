@@ -65,7 +65,7 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsTreeNodeRe
                 builder.setVariable("name", this.getFullName());
             });
 
-            try ( CSVParser parser = CSVParser.parse(result, FORMAT)) {
+            try (CSVParser parser = CSVParser.parse(result, FORMAT)) {
                 this.moduleAttributes = parser.getRecords().stream().collect(Collectors.toMap(record -> record.get(0), record -> record.get(1)));
             } catch (final IOException e) {
                 throw new DoorsRuntimeException(e);
@@ -93,8 +93,7 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsTreeNodeRe
                 });
 
                 DoorsModule loadedModule = ModuleCSV.readModule(tempFile.toFile());
-                this.children = loadedModule.getChildren().stream()
-                        .map(c -> DoorsModelUtil.createCopy(c, this))
+                this.children = loadedModule.getChildren().stream().map(c -> DoorsModelUtil.createCopy(c, this))
                         .collect(Collectors.toList());
                 this.objectAttributes = loadedModule.getObjectAttributes();
 
@@ -131,12 +130,16 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsTreeNodeRe
 
     @Override
     public List<String> getObjectAttributes() {
+        if (this.objectAttributes == null) {
+            // objectAttributes is loaded by getChildren
+            getChildren();
+        }
         return objectAttributes;
     }
 
     @Override
     public void setObjectAttributes(List<String> attrs) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods, choose Tools | Templates.
     }
 
 }
