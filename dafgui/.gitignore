@@ -1,5 +1,6 @@
-/target/
-/plugins/
-/.classpath
-/nbactions.xml
-/.settings
+target/
+bin/
+plugins/
+.classpath
+.project
+.settings/
