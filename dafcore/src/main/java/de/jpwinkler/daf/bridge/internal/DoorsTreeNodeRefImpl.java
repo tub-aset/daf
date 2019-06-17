@@ -19,7 +19,6 @@ package de.jpwinkler.daf.bridge.internal;
 
 import de.jpwinkler.daf.bridge.DoorsItemType;
 import de.jpwinkler.daf.bridge.DoorsTreeNodeRef;
-import static de.jpwinkler.daf.model.DoorsModelUtil.STANDARD_VIEW;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import java.util.ArrayList;
@@ -101,7 +100,7 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNodeRef {
                 final DoorsItemType type = DoorsItemType.getType(split[0]);
                 switch (type) {
                     case FORMAL:
-                        result.add(new DoorsModuleRefImpl(doorsApplicationImpl, this, split[1], STANDARD_VIEW));
+                        result.add(new DoorsModuleRefImpl(doorsApplicationImpl, this, split[1]));
                         break;
                     case FOLDER:
                     case PROJECT:

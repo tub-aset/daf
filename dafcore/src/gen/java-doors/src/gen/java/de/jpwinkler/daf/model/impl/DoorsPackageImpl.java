@@ -382,8 +382,8 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getDoorsModule_View() {
-		return (EAttribute)doorsModuleEClass.getEStructuralFeatures().get(0);
+	public EOperation getDoorsModule__GetView() {
+		return doorsModuleEClass.getEOperations().get(3);
 	}
 
 	/**
@@ -748,7 +748,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		doorsFolderEClass = createEClass(DOORS_FOLDER);
 
 		doorsModuleEClass = createEClass(DOORS_MODULE);
-		createEAttribute(doorsModuleEClass, DOORS_MODULE__VIEW);
+		createEOperation(doorsModuleEClass, DOORS_MODULE___GET_VIEW);
 		createEOperation(doorsModuleEClass, DOORS_MODULE___FIND_OBJECT__STRING);
 		createEOperation(doorsModuleEClass, DOORS_MODULE___GET_OBJECT_ATTRIBUTES);
 		createEOperation(doorsModuleEClass, DOORS_MODULE___SET_OBJECT_ATTRIBUTES__LIST);
@@ -872,7 +872,8 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		initEClass(doorsFolderEClass, DoorsFolder.class, "DoorsFolder", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(doorsModuleEClass, DoorsModule.class, "DoorsModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getDoorsModule_View(), ecorePackage.getEString(), "view", null, 0, 1, DoorsModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getDoorsModule__GetView(), ecorePackage.getEString(), "getView", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		op = initEOperation(getDoorsModule__FindObject__String(), this.getDoorsObject(), "findObject", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEString(), "objectIdentifier", 0, 1, IS_UNIQUE, IS_ORDERED);

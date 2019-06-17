@@ -10,45 +10,17 @@ import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.FindObjectVisitor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Doors Module</b></em>'.
  * <!-- end-user-doc -->
- * <p>
- * The following features are implemented:
- * </p>
- * <ul>
- *   <li>{@link de.jpwinkler.daf.model.impl.DoorsModuleImpl#getView <em>View</em>}</li>
- * </ul>
  *
  * @generated
  */
 public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
-
-    /**
-	 * The default value of the '{@link #getView() <em>View</em>}' attribute.
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @see #getView()
-	 * @generated
-	 * @ordered
-	 */
-    protected static final String VIEW_EDEFAULT = null;
-
-    /**
-	 * The cached value of the '{@link #getView() <em>View</em>}' attribute.
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @see #getView()
-	 * @generated
-	 * @ordered
-	 */
-    protected String view = VIEW_EDEFAULT;
 
     /**
      * <!-- begin-user-doc -->
@@ -69,23 +41,11 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
 
     /**
      * <!-- begin-user-doc -->
-     * <!-- end-user-doc --> @generated
+     * <!-- end-user-doc --> @generated NOT
      */
     @Override
     public String getView() {
-		return view;
-	}
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc --> @generated
-     */
-    @Override
-    public void setView(String newView) {
-		String oldView = view;
-		view = newView;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DoorsPackage.DOORS_MODULE__VIEW, oldView, view));
+            return null;
 	}
 
     /**
@@ -125,64 +85,8 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
     @Override
     public DoorsModule copyFrom(DoorsTreeNode newModule, DoorsTreeNode newParent) {
         super.copyFrom(newModule, newParent);
-        this.setView(((DoorsModule)newModule).getView());
         return this;
     }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc --> @generated
-     */
-    @Override
-    public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case DoorsPackage.DOORS_MODULE__VIEW:
-				return getView();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc --> @generated
-     */
-    @SuppressWarnings("unchecked")
-    @Override
-    public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case DoorsPackage.DOORS_MODULE__VIEW:
-				setView((String)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc --> @generated
-     */
-    @Override
-    public void eUnset(int featureID) {
-		switch (featureID) {
-			case DoorsPackage.DOORS_MODULE__VIEW:
-				setView(VIEW_EDEFAULT);
-				return;
-		}
-		super.eUnset(featureID);
-	}
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc --> @generated
-     */
-    @Override
-    public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case DoorsPackage.DOORS_MODULE__VIEW:
-				return VIEW_EDEFAULT == null ? view != null : !VIEW_EDEFAULT.equals(view);
-		}
-		return super.eIsSet(featureID);
-	}
 
     /**
      * <!-- begin-user-doc -->
@@ -192,6 +96,8 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
     @SuppressWarnings("unchecked")
     public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
+			case DoorsPackage.DOORS_MODULE___GET_VIEW:
+				return getView();
 			case DoorsPackage.DOORS_MODULE___FIND_OBJECT__STRING:
 				return findObject((String)arguments.get(0));
 			case DoorsPackage.DOORS_MODULE___GET_OBJECT_ATTRIBUTES:

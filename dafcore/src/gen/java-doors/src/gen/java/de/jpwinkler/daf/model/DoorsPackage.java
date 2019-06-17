@@ -503,22 +503,13 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_MODULE__FULL_NAME_SEGMENTS = DOORS_TREE_NODE__FULL_NAME_SEGMENTS;
 
 	/**
-	 * The feature id for the '<em><b>View</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DOORS_MODULE__VIEW = DOORS_TREE_NODE_FEATURE_COUNT + 0;
-
-	/**
 	 * The number of structural features of the '<em>Module</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_MODULE_FEATURE_COUNT = DOORS_TREE_NODE_FEATURE_COUNT + 1;
+	int DOORS_MODULE_FEATURE_COUNT = DOORS_TREE_NODE_FEATURE_COUNT + 0;
 
 	/**
 	 * The operation id for the '<em>Accept</em>' operation.
@@ -629,13 +620,22 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_MODULE___TO_STRING = DOORS_TREE_NODE___TO_STRING;
 
 	/**
+	 * The operation id for the '<em>Get View</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_MODULE___GET_VIEW = DOORS_TREE_NODE_OPERATION_COUNT + 0;
+
+	/**
 	 * The operation id for the '<em>Find Object</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_MODULE___FIND_OBJECT__STRING = DOORS_TREE_NODE_OPERATION_COUNT + 0;
+	int DOORS_MODULE___FIND_OBJECT__STRING = DOORS_TREE_NODE_OPERATION_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Get Object Attributes</em>' operation.
@@ -644,7 +644,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_MODULE___GET_OBJECT_ATTRIBUTES = DOORS_TREE_NODE_OPERATION_COUNT + 1;
+	int DOORS_MODULE___GET_OBJECT_ATTRIBUTES = DOORS_TREE_NODE_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Set Object Attributes</em>' operation.
@@ -653,7 +653,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_MODULE___SET_OBJECT_ATTRIBUTES__LIST = DOORS_TREE_NODE_OPERATION_COUNT + 2;
+	int DOORS_MODULE___SET_OBJECT_ATTRIBUTES__LIST = DOORS_TREE_NODE_OPERATION_COUNT + 3;
 
 	/**
 	 * The number of operations of the '<em>Module</em>' class.
@@ -662,7 +662,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_MODULE_OPERATION_COUNT = DOORS_TREE_NODE_OPERATION_COUNT + 3;
+	int DOORS_MODULE_OPERATION_COUNT = DOORS_TREE_NODE_OPERATION_COUNT + 4;
 
 	/**
 	 * The meta object id for the '{@link de.jpwinkler.daf.model.impl.DoorsObjectImpl <em>Object</em>}' class.
@@ -1450,15 +1450,14 @@ public interface DoorsPackage extends EPackage {
 	EClass getDoorsModule();
 
 	/**
-	 * Returns the meta object for the attribute '{@link de.jpwinkler.daf.model.DoorsModule#getView <em>View</em>}'.
+	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsModule#getView() <em>Get View</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>View</em>'.
+	 * @return the meta object for the '<em>Get View</em>' operation.
 	 * @see de.jpwinkler.daf.model.DoorsModule#getView()
-	 * @see #getDoorsModule()
 	 * @generated
 	 */
-	EAttribute getDoorsModule_View();
+	EOperation getDoorsModule__GetView();
 
 	/**
 	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsModule#findObject(java.lang.String) <em>Find Object</em>}' operation.
@@ -1990,12 +1989,12 @@ public interface DoorsPackage extends EPackage {
 		EClass DOORS_MODULE = eINSTANCE.getDoorsModule();
 
 		/**
-		 * The meta object literal for the '<em><b>View</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Get View</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute DOORS_MODULE__VIEW = eINSTANCE.getDoorsModule_View();
+		EOperation DOORS_MODULE___GET_VIEW = eINSTANCE.getDoorsModule__GetView();
 
 		/**
 		 * The meta object literal for the '<em><b>Find Object</b></em>' operation.

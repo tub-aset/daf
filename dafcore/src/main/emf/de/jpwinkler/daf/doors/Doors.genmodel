@@ -64,7 +64,7 @@
         </genClasses>
         
         <genClasses ecoreClass="Doors.ecore#//DoorsModule">
-            <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//DoorsModule/view"/>
+            <genOperations ecoreOperation="Doors.ecore#//DoorsModule/getView"/>
             <genOperations ecoreOperation="Doors.ecore#//DoorsModule/findObject">
                 <genParameters ecoreParameter="Doors.ecore#//DoorsModule/findObject/objectIdentifier"/>
             </genOperations>

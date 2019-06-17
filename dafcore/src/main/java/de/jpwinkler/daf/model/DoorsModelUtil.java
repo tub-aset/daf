@@ -17,9 +17,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class DoorsModelUtil {
-
-    public static final String STANDARD_VIEW = "Standard view";
-
+    
     public static DoorsObject getPreviousObject(final DoorsObject o) {
         if (o.getParent() != null && o.getParent().getChildren().indexOf(o) > 0) {
             return (DoorsObject) o.getParent().getChildren().get(o.getParent().getChildren().indexOf(o) - 1);
@@ -133,7 +131,6 @@ public class DoorsModelUtil {
                 .filter(v -> !v.isSystemKey())
                 .map(a -> a.getKey())
                 .collect(Collectors.toList()));
-        module.setView(STANDARD_VIEW);
         return module;
     }
 

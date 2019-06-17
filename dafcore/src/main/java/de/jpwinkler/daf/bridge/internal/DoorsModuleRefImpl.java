@@ -37,21 +37,20 @@ import org.apache.commons.csv.CSVParser;
 
 class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsTreeNodeRef, DoorsModule {
 
+    public static final String STANDARD_VIEW = "Standard view";
+
     private static final CSVFormat FORMAT = CSVFormat.newFormat(',')
             .withQuote('"')
             .withEscape('\\')
             .withIgnoreSurroundingSpaces()
             .withRecordSeparator("\r\n");
 
-    private final String view;
-
     private Map<String, String> moduleAttributes = null;
     private List<DoorsTreeNode> children;
     private List<String> objectAttributes;
 
-    public DoorsModuleRefImpl(final DoorsApplicationImpl doorsApplicationImpl, final DoorsTreeNodeRef parent, final String name, final String view) {
+    public DoorsModuleRefImpl(final DoorsApplicationImpl doorsApplicationImpl, final DoorsTreeNodeRef parent, final String name) {
         super(doorsApplicationImpl, DoorsItemType.FORMAL, parent, name);
-        this.view = view;
     }
 
     @Override
@@ -78,6 +77,8 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsTreeNodeRe
     @Override
     public List<DoorsTreeNode> getChildren() {
         if (children == null) {
+            String view = this.getAttributes().get("__view__");
+
             try {
                 Path tempFile = Files.createTempFile(null, null);
 
@@ -113,12 +114,7 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsTreeNodeRe
 
     @Override
     public String getView() {
-        return view;
-    }
-
-    @Override
-    public void setView(String value) {
-        throw new UnsupportedOperationException("Not supported");
+        return getAttributes().get("__view__");
     }
 
     @Override

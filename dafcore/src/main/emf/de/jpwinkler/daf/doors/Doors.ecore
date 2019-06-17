@@ -18,8 +18,7 @@
         <eOperations name="setObjectAttributes">
             <eParameters name="attrs" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
         </eOperations>
-        
-        <eStructuralFeatures xsi:type="ecore:EAttribute" name="view" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        <eOperations name="getView" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eClassifiers>
   
     <eClassifiers xsi:type="ecore:EClass" name="DoorsObject" eSuperTypes="#//DoorsTreeNode">
