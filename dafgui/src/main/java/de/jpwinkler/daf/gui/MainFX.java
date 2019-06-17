@@ -13,9 +13,9 @@ public class MainFX extends Application {
         final Scene applicationScene = new Scene(applicationPaneController.getNode());
 
         primaryStage.setOnCloseRequest((WindowEvent event) -> {
-            applicationPaneController.closeAllPanes();
+            applicationPaneController.closeRequest();
             
-            if (applicationPaneController.hasOpenPanes()) {
+            if (!applicationPaneController.canClose()) {
                 event.consume();
             }
         });

@@ -18,4 +18,6 @@ public interface ApplicationPaneInterface {
     DatabasePath createSnapshot(DatabaseInterface sourceDB, DatabasePath sourcePath, Predicate<DoorsTreeNode> include, DatabasePath destinationPath);
 
     ApplicationPartInterface open(DatabasePath dbPath, DatabaseInterface.OpenFlag openFlag);
+    
+    BackgroundTaskMonitor getBackgroundTaskMonitor();
 }

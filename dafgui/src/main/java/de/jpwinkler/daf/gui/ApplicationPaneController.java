@@ -4,9 +4,9 @@ import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
 import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.gui.ApplicationPart.ApplicationPartRegistry;
-import de.jpwinkler.daf.gui.background.BackgroundTaskStatusListener;
-import de.jpwinkler.daf.gui.background.BackgroundTaskStatusMonitor;
 import de.jpwinkler.daf.gui.commands.CommandStack;
+import de.jpwinkler.daf.gui.controls.ProgressMenuItemController;
+import de.jpwinkler.daf.gui.controls.ProgressMenuItemController.ProgressMenuItem;
 import de.jpwinkler.daf.model.DoorsAttributes;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.io.IOException;
@@ -48,11 +48,11 @@ import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.ToolBar;
 import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import org.apache.commons.lang3.mutable.MutableBoolean;
@@ -67,9 +67,13 @@ import org.pf4j.PluginWrapper;
 
 public final class ApplicationPaneController extends AutoloadingPaneController<ApplicationPaneController> implements ApplicationPaneInterface {
 
+    private static final int MAX_STATUS_MENU_ITEMS = 20;
+    private static final int MAX_RECENT_FILES = 10;
+
     private final Map<DatabasePath, Triple<MutableInt, DatabaseInterface, CommandStack>> databaseInterfaces = new HashMap<>();
     private final Map<DatabasePath, ApplicationPartController> applicationPartControllers = new HashMap<>();
-    private final BackgroundTaskStatusMonitor backgroundTaskStatusMonitor = new BackgroundTaskStatusMonitor();
+    private final BackgroundTaskMonitor backgroundTaskMonitor = new BackgroundTaskMonitor(
+            (a, b) -> Platform.runLater(() -> this.onBackgroundTaskUpdate(a, b)));
 
     private final ApplicationPartRegistry applicationPartRegistry = new ApplicationPartRegistry();
     private final List<ApplicationPaneExtension> extensions = new ArrayList<>();
@@ -89,16 +93,16 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     private Label statusBarLabel;
 
     @FXML
-    private Label backgroundTaskStatusLabel;
+    private MenuButton statusMenuButton;
 
     @FXML
-    private MenuBar mainMenuBar;
+    private MenuButton backgroundTaskMenuButton;
 
     @FXML
     private ProgressBar backgroundTaskStatusProgressBar;
 
     @FXML
-    private ToolBar backgroundTaskStatusToolBar;
+    private MenuBar mainMenuBar;
 
     @FXML
     private Menu newMenu;
@@ -118,7 +122,6 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     private final Timer generalTimer = new Timer(true);
 
     private final TreeMap<Long, DatabasePath> recentFiles = ApplicationPreferences.RECENT_FILES.retrieve();
-    private final int MAX_RECENT_FILES = 10;
     private final ListChangeListener<Menu> partMenuChangeLister = (change) -> {
         while (change.next()) {
             change.getRemoved().forEach(this.mainMenuBar.getMenus()::remove);
@@ -156,30 +159,6 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             closeTabs(closedTabs);
         });
         generateRecentMenu();
-
-        backgroundTaskStatusToolBar.setManaged(false);
-        backgroundTaskStatusToolBar.setVisible(false);
-        backgroundTaskStatusMonitor.addListener(new BackgroundTaskStatusListener() {
-
-            @Override
-            public void onUpdateStatus(final String taskName, final int current, final int max) {
-                Platform.runLater(() -> {
-                    backgroundTaskStatusToolBar.setManaged(true);
-                    backgroundTaskStatusToolBar.setVisible(true);
-                    backgroundTaskStatusLabel.setText(taskName);
-                    backgroundTaskStatusProgressBar.setProgress((double) current / (double) max);
-                });
-            }
-
-            @Override
-            public void onDone() {
-                Platform.runLater(() -> {
-                    backgroundTaskStatusToolBar.setManaged(false);
-                    backgroundTaskStatusToolBar.setVisible(false);
-                });
-            }
-
-        });
 
         applicationPartRegistry.addListener((added, removed) -> {
             if (removed != null) {
@@ -291,6 +270,31 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         pluginStateMenu.getItems().sort((mi1, mi2) -> mi1.getText().compareTo(mi2.getText()));
     }
 
+    private void onBackgroundTaskUpdate(BackgroundTask t, Double totalProgress) {
+        backgroundTaskStatusProgressBar.setProgress(totalProgress.isNaN() || totalProgress.isInfinite() ? -1 : totalProgress);
+
+        backgroundTaskMenuButton.getItems().stream()
+                .map(mi -> (ProgressMenuItem) mi)
+                .filter(mi -> mi.getBackgroundTask() == t)
+                .findFirst().orElseGet(() -> {
+
+                    ProgressMenuItem mi = new ProgressMenuItemController(t).asMenuItem();
+                    backgroundTaskMenuButton.getItems().add(mi);
+                    return mi;
+                }).update();
+
+        backgroundTaskMenuButton.getItems().stream()
+                .map(mi -> (ProgressMenuItem) mi)
+                .filter(mi -> mi.getBackgroundTask().getTaskStatus() != BackgroundTask.TaskStatus.RUNNING)
+                .limit(Math.max(0, backgroundTaskMenuButton.getItems().size() - MAX_STATUS_MENU_ITEMS))
+                .forEach(backgroundTaskMenuButton.getItems()::remove);
+    }
+
+    @Override
+    public BackgroundTaskMonitor getBackgroundTaskMonitor() {
+        return backgroundTaskMonitor;
+    }
+
     private ApplicationPartController<?> getCurrentFileStateController() {
         return getApplicationPartController((DatabasePath) tabPane.getSelectionModel().getSelectedItem().getUserData());
     }
@@ -304,6 +308,18 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     }
 
     public void setStatus(final String status) {
+        this.setStatus(status, 15000);
+    }
+
+    public void setStatus(final String status, int timeout) {
+        if (statusMenuButton.getItems().isEmpty() || !status.equals(statusMenuButton.getItems().get(statusMenuButton.getItems().size() - 1).getText())) {
+            MenuItem statusMenuItem = new MenuItem(status);
+            statusMenuButton.getItems().add(statusMenuItem);
+            if (statusMenuButton.getItems().size() > MAX_STATUS_MENU_ITEMS) {
+                statusMenuButton.getItems().remove(0);
+            }
+        }
+
         statusBarLabel.setText(status);
         generalTimer.schedule(new TimerTask() {
             @Override
@@ -521,12 +537,25 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         tabPane.getTabs().remove(tabPane.getSelectionModel().getSelectedItem());
     }
 
-    public void closeAllPanes() {
+    private boolean backgroundMonitorPreventsClose = false;
+
+    public void closeRequest() {
+        if (backgroundTaskMonitor.hasRunningTasks()) {
+            Alert alert = new Alert(AlertType.CONFIRMATION, "There are running background tasks. Are you sure you want to close the application? You might lose their state.", ButtonType.CANCEL, ButtonType.OK);
+            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+            if (alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.CANCEL) {
+                backgroundMonitorPreventsClose = true;
+                Platform.runLater(() -> backgroundMonitorPreventsClose = false);
+                return;
+            }
+            backgroundMonitorPreventsClose = false;
+        }
+
         tabPane.getTabs().clear();
     }
 
-    public boolean hasOpenPanes() {
-        return !applicationPartControllers.isEmpty();
+    public boolean canClose() {
+        return applicationPartControllers.isEmpty() && !backgroundMonitorPreventsClose;
     }
 
     @FXML

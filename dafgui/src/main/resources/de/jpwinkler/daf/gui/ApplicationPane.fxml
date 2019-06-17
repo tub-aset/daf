@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.input.KeyCodeCombination?>
-<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
-    <top>
-        <MenuBar fx:id="mainMenuBar" BorderPane.alignment="CENTER">
+
+<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+        <MenuBar fx:id="mainMenuBar">
             <menus>
                 <Menu mnemonicParsing="false" text="File">
                     <items>
@@ -46,27 +49,22 @@
                 </Menu>
             </menus>
         </MenuBar>
-    </top>
-    <bottom>
-        <BorderPane BorderPane.alignment="CENTER">
-            <center>
-                <ToolBar prefWidth="200.0" BorderPane.alignment="CENTER">
-                    <items>
-                        <Label fx:id="statusBarLabel" text="" />
-                    </items>
-                </ToolBar>
-            </center>
-            <right>
-                <ToolBar fx:id="backgroundTaskStatusToolBar" BorderPane.alignment="CENTER">
-                    <items>
-                        <Label fx:id="backgroundTaskStatusLabel" text="2 Background Tasks running." />
-                        <ProgressBar fx:id="backgroundTaskStatusProgressBar" prefWidth="200.0" progress="1.0" />
-                    </items>
-                </ToolBar>
-            </right>
-        </BorderPane>
-    </bottom>
-    <center>
-        <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
-    </center>
-</BorderPane>
+        <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+      <HBox>
+         <children>
+            <MenuButton fx:id="statusMenuButton" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" popupSide="TOP" prefHeight="20.0" prefWidth="28.0">
+               <HBox.margin>
+                  <Insets left="5.0" right="5.0" />
+               </HBox.margin>
+            </MenuButton>
+                  <Label fx:id="statusBarLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" textOverrun="LEADING_ELLIPSIS" HBox.hgrow="ALWAYS" />
+                  <ProgressBar fx:id="backgroundTaskStatusProgressBar" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="100.0" progress="1.0">
+               <HBox.margin>
+                  <Insets left="5.0" right="5.0" />
+               </HBox.margin>
+            </ProgressBar>
+            <MenuButton fx:id="backgroundTaskMenuButton" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" popupSide="TOP" prefHeight="20.0" prefWidth="28.0" />
+         </children>
+      </HBox>
+   </children>
+</VBox>
