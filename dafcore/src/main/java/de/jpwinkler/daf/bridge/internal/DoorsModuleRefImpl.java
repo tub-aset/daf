@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 
-class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsTreeNodeRef, DoorsModule {
+class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
 
     private static final CSVFormat FORMAT = CSVFormat.newFormat(',')
             .withQuote('"')
@@ -91,9 +91,9 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsTreeNodeRe
                     builder.setVariable("file", tempFile.toAbsolutePath().toString());
                 });
 
-                DoorsModule loadedModule = ModuleCSV.readModule(tempFile.toFile());
-                this.children = loadedModule.getChildren().stream().map(c -> DoorsModelUtil.createCopy(c, this))
-                        .collect(Collectors.toList());
+                DoorsModule loadedModule = ModuleCSV.readModule(doorsApplicationImpl, tempFile.toFile());
+                this.children = loadedModule.getChildren();
+                this.children.forEach(c -> c.setParent(this));
                 this.objectAttributes = loadedModule.getObjectAttributes();
 
                 doorsApplicationImpl.buildAndRunCommand(builder -> {

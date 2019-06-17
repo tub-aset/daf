@@ -22,9 +22,16 @@ import com.jacob.com.Dispatch;
 import de.jpwinkler.daf.bridge.DoorsApplication;
 import de.jpwinkler.daf.bridge.DoorsItemType;
 import de.jpwinkler.daf.bridge.DoorsRuntimeException;
+import de.jpwinkler.daf.bridge.DoorsTreeNodeRef;
 import de.jpwinkler.daf.bridge.user32.Window;
 import de.jpwinkler.daf.bridge.user32.WindowManager;
+import de.jpwinkler.daf.db.DatabaseFactory;
+import de.jpwinkler.daf.model.DoorsFolder;
+import de.jpwinkler.daf.model.DoorsModule;
+import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
+import de.jpwinkler.daf.model.UnresolvedLink;
+import de.jpwinkler.daf.model.impl.DoorsFolderImpl;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,7 +45,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 
-public class DoorsApplicationImpl implements DoorsApplication {
+public class DoorsApplicationImpl implements DoorsApplication, DatabaseFactory {
 
     private static final Logger LOGGER = Logger.getLogger(DoorsApplicationImpl.class.getName());
     private static Throwable loadError;
@@ -78,7 +85,7 @@ public class DoorsApplicationImpl implements DoorsApplication {
 
     // ActiveXComponent seems to be bound to the current thread, thus we store
     // one ActiveXComponent per thread.
-    private final Map<Thread, ActiveXComponent> doorsApplications = new HashMap<Thread, ActiveXComponent>();
+    private final Map<Thread, ActiveXComponent> doorsApplications = new HashMap<>();
 
     /**
      * Used for detecting whether the DOORS window is visible.
@@ -321,6 +328,26 @@ public class DoorsApplicationImpl implements DoorsApplication {
         } catch (final InterruptedException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
+    }
+
+    @Override
+    public DoorsFolder createFolder(DoorsTreeNode parent, String name) {
+        return new DoorsFolderRefImpl(this, DoorsItemType.FOLDER, (DoorsTreeNodeRef) parent, name);
+    }
+
+    @Override
+    public DoorsModule createModule(DoorsTreeNode parent, String name) {
+        return new DoorsModuleRefImpl(this, (DoorsTreeNodeRef) parent, name);
+    }
+
+    @Override
+    public DoorsObject createObject(DoorsTreeNode parent, String objectText) {
+        return new DoorsObjectRefImpl(this, (DoorsTreeNodeRef) parent);
+    }
+
+    @Override
+    public UnresolvedLink createLink(DoorsObject source, String targetModule, String targetObject) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     private static class FileForwarder implements Runnable {

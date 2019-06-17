@@ -1,18 +1,20 @@
 package de.jpwinkler.daf.gui.modules.commands;
 
+import de.jpwinkler.daf.db.DatabaseFactory;
 import de.jpwinkler.daf.gui.commands.AbstractCommand;
 import de.jpwinkler.daf.gui.commands.UpdateAction;
 import de.jpwinkler.daf.gui.modules.ModulePaneController.ModuleUpdateAction;
-import de.jpwinkler.daf.model.DoorsModelUtil;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 
 public class NewObjectAfterCommand extends AbstractCommand {
 
+    private final DatabaseFactory factory;
     private final DoorsObject object;
     private DoorsObject newObject;
 
-    public NewObjectAfterCommand(final DoorsObject object) {
+    public NewObjectAfterCommand(DatabaseFactory factory, DoorsObject object) {
+        this.factory = factory;
         this.object = object;
     }
 
@@ -28,7 +30,7 @@ public class NewObjectAfterCommand extends AbstractCommand {
 
     @Override
     public void apply() {
-        newObject = DoorsModelUtil.createObject((DoorsModule) object.getParent(), "New object");
+        newObject = factory.createObject((DoorsModule) object.getParent(), "New object");
         newObject.setParent(null);
         redo();
     }

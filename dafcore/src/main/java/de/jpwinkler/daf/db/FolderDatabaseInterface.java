@@ -31,6 +31,7 @@ public class FolderDatabaseInterface implements DatabaseInterface {
 
     private DoorsFolder databaseRoot;
     private DatabasePath<FolderDatabaseInterface> databasePath;
+    private final DatabaseFactory factory = new EmfDatabaseFactory();
 
     public FolderDatabaseInterface(DatabasePath<FolderDatabaseInterface> databasePath, OpenFlag openFlag) throws IOException {
         if (!databasePath.getPath().isEmpty()) {
@@ -56,7 +57,7 @@ public class FolderDatabaseInterface implements DatabaseInterface {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 if ("csv".equals(FilenameUtils.getExtension(file.toString()))) {
-                    folders.get(file.getParent().toAbsolutePath().toString()).getChildren().add(ModuleCSV.read(file.toFile()));
+                    folders.get(file.getParent().toAbsolutePath().toString()).getChildren().add(ModuleCSV.read(factory, file.toFile()));
                 }
 
                 return super.visitFile(file, attrs);
@@ -64,12 +65,12 @@ public class FolderDatabaseInterface implements DatabaseInterface {
 
             @Override
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-                DoorsFolder folder = DoorsModelUtil.createFolder(folders.get(dir.getParent().toAbsolutePath().toString()), FilenameUtils.getBaseName(dir.toFile().getAbsolutePath()));
+                DoorsFolder folder = factory.createFolder(folders.get(dir.getParent().toAbsolutePath().toString()), FilenameUtils.getBaseName(dir.toFile().getAbsolutePath()));
                 if (folder.getParent() == null) {
                     databaseRoot = folder;
                 }
 
-                folder.getAttributes().putAll(ModuleCSV.readMetaData(dir.resolve("__folder__.mmd").toFile()));
+                folder.getAttributes().putAll(ModuleCSV.readMetaData(factory, dir.resolve("__folder__.mmd").toFile()));
                 folders.put(dir.toAbsolutePath().toString(), folder);
 
                 return super.preVisitDirectory(dir, attrs);
@@ -122,26 +123,19 @@ public class FolderDatabaseInterface implements DatabaseInterface {
     }
 
     @Override
-    public DoorsModule importModule(DoorsModule newModule) {
-        DoorsTreeNode dbParent = this.ensureDatabasePath(newModule.getParent());
-        DoorsModule dbModule = (DoorsModule) dbParent.getChild(newModule.getName());
-
-        if (dbModule != null) {
-            dbModule.setParent(null);
-        }
-
-        return DoorsModelUtil.createCopy(newModule, dbParent.getParent());
+    public DatabaseFactory getFactory() {
+        return factory;
     }
 
     private DoorsTreeNode ensureDatabasePath(final DoorsTreeNode path) {
         return ensureDatabasePath(databaseRoot, path.getFullNameSegments());
     }
 
-    private static DoorsTreeNode ensureDatabasePath(final DoorsTreeNode parent, final List<String> path) {
+    private DoorsTreeNode ensureDatabasePath(final DoorsTreeNode parent, final List<String> path) {
         if (path.size() > 0) {
             DoorsTreeNode node = parent.getChild(path.get(0));
             if (node == null) {
-                node = DoorsModelUtil.createFolder(parent, path.get(0));
+                node = factory.createFolder(parent, path.get(0));
             }
             if (path.size() > 1) {
                 return ensureDatabasePath(parent.getChild(path.get(0)), path.subList(1, path.size()));

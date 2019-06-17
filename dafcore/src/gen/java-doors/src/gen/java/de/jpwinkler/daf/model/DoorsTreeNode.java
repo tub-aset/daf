@@ -195,22 +195,6 @@ public interface DoorsTreeNode {
 	 * @model
 	 * @generated
 	 */
-	DoorsTreeNode copyFrom(DoorsTreeNode node, DoorsTreeNode newParent);
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model nodeFilterDataType="de.jpwinkler.daf.model.NodeFilter"
-	 * @generated
-	 */
-	DoorsTreeNode copyFrom(DoorsTreeNode node, DoorsTreeNode newParent, Predicate<DoorsTreeNode> nodeFilter);
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model
-	 * @generated
-	 */
 	DoorsTreeNode getChild(String name);
 
 	/**

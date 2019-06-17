@@ -43,15 +43,6 @@
             -<genOperations ecoreOperation="Doors.ecore#//DoorsTreeNode/canCopyFrom">
                 <genParameters ecoreParameter="Doors.ecore#//DoorsTreeNode/copyFrom/node"/>
             </genOperations>
-            -<genOperations ecoreOperation="Doors.ecore#//DoorsTreeNode/copyFrom">
-                <genParameters ecoreParameter="Doors.ecore#//DoorsTreeNode/copyFrom/node"/>
-                <genParameters ecoreParameter="Doors.ecore#//DoorsTreeNode/copyFrom/newParent"/>
-            </genOperations>
-            -<genOperations ecoreOperation="Doors.ecore#//DoorsTreeNode/copyFrom.1">
-                <genParameters ecoreParameter="Doors.ecore#//DoorsTreeNode/copyFrom.1/node"/>
-                <genParameters ecoreParameter="Doors.ecore#//DoorsTreeNode/copyFrom.1/newParent"/>
-                <genParameters ecoreParameter="Doors.ecore#//DoorsTreeNode/copyFrom.1/nodeFilter"/>
-            </genOperations>
             
             <genOperations ecoreOperation="Doors.ecore#//DoorsTreeNode/getChild">
                 <genParameters ecoreParameter="Doors.ecore#//DoorsTreeNode/getChild/name"/>

@@ -50,7 +50,6 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
@@ -67,7 +66,6 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Region;
 import org.pf4j.PluginWrapper;
 
 public final class DatabasePaneController extends ApplicationPartController<DatabasePaneController> {
@@ -271,13 +269,13 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     @FXML
     public void newFolderClicked() {
         databaseTreeView.getSelectionModel().getSelectedItems().stream()
-                .forEach(it -> executeCommand(new NewFolderCommand(it.getValue())));
+                .forEach(it -> executeCommand(new NewFolderCommand(super.getDatabaseInterface().getFactory(), it.getValue())));
     }
 
     @FXML
     public void newModuleClicked() {
         databaseTreeView.getSelectionModel().getSelectedItems().stream()
-                .forEach(it -> executeCommand(new NewModuleCommand(it.getValue())));
+                .forEach(it -> executeCommand(new NewModuleCommand(super.getDatabaseInterface().getFactory(), it.getValue())));
     }
 
     @FXML
@@ -329,12 +327,12 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         if (databaseTreeView.isFocused()) {
             databaseTreeView.getSelectionModel().getSelectedItems().stream()
                     .limit(1)
-                    .forEach(it -> executeCommand(new PasteCommand(it.getValue(), nodeClipboard)));
+                    .forEach(it -> executeCommand(new PasteCommand(super.getDatabaseInterface().getFactory(), it.getValue(), nodeClipboard)));
         }
         if (modulesTableView.isFocused()) {
             modulesTableView.getSelectionModel().getSelectedItems().stream()
                     .limit(1)
-                    .forEach(it -> executeCommand(new PasteCommand(it.getParent(), nodeClipboard)));
+                    .forEach(it -> executeCommand(new PasteCommand(super.getDatabaseInterface().getFactory(), it.getParent(), nodeClipboard)));
         }
         if (attributesTableView.isFocused()) {
             getCurrentDoorsTreeNode()

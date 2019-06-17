@@ -46,4 +46,8 @@ public class DoorsApplicationDatabaseInterface implements DatabaseInterface {
         return true;
     }
 
+    @Override
+    public DatabaseFactory getFactory() {
+        throw new UnsupportedOperationException("Not implemented");
+    }
 }

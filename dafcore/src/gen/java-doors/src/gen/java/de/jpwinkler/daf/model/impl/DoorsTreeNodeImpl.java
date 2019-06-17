@@ -311,43 +311,6 @@ public abstract class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container imp
      * <!-- end-user-doc --> @generated NOT
      */
     @Override
-    public DoorsTreeNode copyFrom(DoorsTreeNode node, DoorsTreeNode newParent) {
-        return copyFrom(node, newParent, x -> true);
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc --> @generated NOT
-     */
-    @Override
-    public DoorsTreeNode copyFrom(DoorsTreeNode node, DoorsTreeNode newParent, Predicate<DoorsTreeNode> nodeFilter) {
-        if (!this.canCopyFrom(node)) {
-            throw new IllegalArgumentException();
-        }
-        
-        if(!nodeFilter.test(node)) {
-            return null;
-        }
-
-        this.setName(node.getName());
-        this.getAttributes().clear();
-        this.getAttributes().putAll(node.getAttributes());
-
-        this.getChildren().clear();
-        node.getChildren().stream()
-                .map(c -> DoorsModelUtil.createCopy(c, this, nodeFilter))
-                .filter(c -> c != null)
-                .forEach(this.getChildren()::add);
-
-        this.setParent(newParent);
-        return this;
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc --> @generated NOT
-     */
-    @Override
     public DoorsTreeNode getChild(String name) {
         final List<String> pathSegments = Arrays.asList(name.split("/")).stream().filter(s -> !s.isEmpty()).collect(Collectors.toList());
         DoorsTreeNode current = this;
@@ -523,10 +486,6 @@ public abstract class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container imp
 				return null;
 			case DoorsPackage.DOORS_TREE_NODE___CAN_COPY_FROM__DOORSTREENODE:
 				return canCopyFrom((DoorsTreeNode)arguments.get(0));
-			case DoorsPackage.DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE_DOORSTREENODE:
-				return copyFrom((DoorsTreeNode)arguments.get(0), (DoorsTreeNode)arguments.get(1));
-			case DoorsPackage.DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE_DOORSTREENODE_PREDICATE:
-				return copyFrom((DoorsTreeNode)arguments.get(0), (DoorsTreeNode)arguments.get(1), (Predicate<DoorsTreeNode>)arguments.get(2));
 			case DoorsPackage.DOORS_TREE_NODE___GET_CHILD__STRING:
 				return getChild((String)arguments.get(0));
 			case DoorsPackage.DOORS_TREE_NODE___TO_STRING:

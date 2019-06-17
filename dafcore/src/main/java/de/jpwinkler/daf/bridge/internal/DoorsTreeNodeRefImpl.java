@@ -180,16 +180,6 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNodeRef {
     }
 
     @Override
-    public DoorsTreeNode copyFrom(DoorsTreeNode node, DoorsTreeNode newParent) {
-        throw new UnsupportedOperationException("Not supported");
-    }
-
-    @Override
-    public DoorsTreeNode copyFrom(DoorsTreeNode node, DoorsTreeNode newParent, Predicate nodeFilter) {
-        throw new UnsupportedOperationException("Not supported");
-    }
-
-    @Override
     public DoorsTreeNode getChild(String name) {
         name = name.replaceFirst("^/", "");
         final String[] currentSegment = name.split("/", 2);

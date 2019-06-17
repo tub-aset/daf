@@ -31,10 +31,6 @@ public interface DatabaseInterface {
         throw new UnsupportedOperationException("Not supported");
     }
 
-    default DoorsModule importModule(final DoorsModule module) {
-        throw new UnsupportedOperationException("Not supported");
-    }
-
     default DoorsTreeNode getNode(String path) {
         return this.getDatabaseRoot().getChild(path);
     }
@@ -58,4 +54,6 @@ public interface DatabaseInterface {
     }
 
     DoorsTreeNode getDatabaseRoot();
+    
+    DatabaseFactory getFactory();
 }

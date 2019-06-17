@@ -80,16 +80,6 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
 
     /**
      * <!-- begin-user-doc -->
-     * <!-- end-user-doc --> @generated NOT
-     */
-    @Override
-    public DoorsModule copyFrom(DoorsTreeNode newModule, DoorsTreeNode newParent) {
-        super.copyFrom(newModule, newParent);
-        return this;
-    }
-
-    /**
-     * <!-- begin-user-doc -->
      * <!-- end-user-doc --> @generated
      */
     @Override

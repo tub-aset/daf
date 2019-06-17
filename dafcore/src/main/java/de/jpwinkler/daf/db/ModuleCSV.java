@@ -106,11 +106,11 @@ public class ModuleCSV {
         printer.flush();
     }
 
-    public static DoorsModule read(File autoDetectFile) throws IOException {
-        return read(autoDetectFile, OpenFlag.OPEN_ONLY);
+    public static DoorsModule read(DatabaseFactory factory, File autoDetectFile) throws IOException {
+        return read(factory, autoDetectFile, OpenFlag.OPEN_ONLY);
     }
 
-    public static DoorsModule read(File autoDetectFile, OpenFlag openFlag) throws IOException {
+    public static DoorsModule read(DatabaseFactory factory, File autoDetectFile, OpenFlag openFlag) throws IOException {
         String path = autoDetectFile.getAbsolutePath();
         final File csvFile;
         final File mmdFile;
@@ -128,9 +128,9 @@ public class ModuleCSV {
         }
 
         if (openFlag == OpenFlag.CREATE_IF_INEXISTENT && !csvFile.isFile() && !mmdFile.isFile()) {
-            write(csvFile, mmdFile, DoorsModelUtil.createModule(null, FilenameUtils.getBaseName(path)));
+            write(csvFile, mmdFile, factory.createModule(null, FilenameUtils.getBaseName(path)));
         } else if (openFlag == OpenFlag.ERASE_IF_EXISTS) {
-            write(csvFile, mmdFile, DoorsModelUtil.createModule(null, FilenameUtils.getBaseName(path)));
+            write(csvFile, mmdFile, factory.createModule(null, FilenameUtils.getBaseName(path)));
         }
 
         if (!csvFile.isFile()) {
@@ -140,32 +140,32 @@ public class ModuleCSV {
             throw new FileNotFoundException(mmdFile.getAbsolutePath());
         }
 
-        return read(csvFile, mmdFile);
+        return read(factory, csvFile, mmdFile);
     }
 
-    public static DoorsModule read(File csvFile, File mmdFile) throws IOException {
-        DoorsModule module = readModule(csvFile);
-        module.getAttributes().putAll(readMetaData(mmdFile));
+    public static DoorsModule read(DatabaseFactory factory, File csvFile, File mmdFile) throws IOException {
+        DoorsModule module = readModule(factory, csvFile);
+        module.getAttributes().putAll(readMetaData(factory, mmdFile));
         return module;
     }
 
-    public static DoorsModule readModule(final File csvFile) throws IOException {
+    public static DoorsModule readModule(DatabaseFactory factory, final File csvFile) throws IOException {
         try (InputStream csvStream = new FileInputStream(csvFile)) {
-            return readModule(csvStream, FilenameUtils.getBaseName(csvFile.getAbsolutePath()));
+            return readModule(factory, csvStream, FilenameUtils.getBaseName(csvFile.getAbsolutePath()));
         }
     }
 
-    public static DoorsModule readModule(final InputStream csvStream, String moduleName) throws IOException {
-        return buildModuleModel(new CSVParser(new InputStreamReader(csvStream, CHARSET), READ_FORMAT), moduleName);
+    public static DoorsModule readModule(DatabaseFactory factory, final InputStream csvStream, String moduleName) throws IOException {
+        return buildModuleModel(factory, new CSVParser(new InputStreamReader(csvStream, CHARSET), READ_FORMAT), moduleName);
     }
 
-    public static Map<String, String> readMetaData(final File mmdFile) throws IOException {
+    public static Map<String, String> readMetaData(DatabaseFactory factory, final File mmdFile) throws IOException {
         try (InputStream mmdStream = new FileInputStream(mmdFile)) {
-            return readMetaData(mmdStream);
+            return readMetaData(factory, mmdStream);
         }
     }
 
-    public static Map<String, String> readMetaData(final InputStream mmdStream) throws IOException {
+    public static Map<String, String> readMetaData(DatabaseFactory factory, final InputStream mmdStream) throws IOException {
         CSVParser parser = new CSVParser(new InputStreamReader(mmdStream, CHARSET), MMD_FORMAT);
         final Map<String, String> metadata = new HashMap<>();
         for (final CSVRecord record : parser.getRecords()) {
@@ -193,8 +193,8 @@ public class ModuleCSV {
             .withIgnoreSurroundingSpaces()
             .withRecordSeparator("\r\n");
 
-    private static DoorsModule buildModuleModel(final CSVParser csvParser, String moduleName) throws NumberFormatException, IOException {
-        final DoorsModule module = DoorsModelUtil.createModule(null, moduleName);
+    private static DoorsModule buildModuleModel(DatabaseFactory factory, final CSVParser csvParser, String moduleName) throws NumberFormatException, IOException {
+        final DoorsModule module = factory.createModule(null, moduleName);
 
         DoorsTreeNode current = module;
         int currentLevel = 0;
@@ -212,14 +212,14 @@ public class ModuleCSV {
 
             while (objectLevel > currentLevel + 1) {
                 if (current.getChildren().isEmpty()) {
-                    final DoorsObject createDoorsObject = DoorsModelUtil.createObject(current, "");
+                    final DoorsObject createDoorsObject = factory.createObject(current, "");
                     current.getChildren().add(createDoorsObject);
                 }
                 current = current.getChildren().get(current.getChildren().size() - 1);
                 currentLevel++;
             }
 
-            final DoorsObject newObject = DoorsModelUtil.createObject(module, "");
+            final DoorsObject newObject = factory.createObject(module, "");
 
             newObject.setParent(module);
 

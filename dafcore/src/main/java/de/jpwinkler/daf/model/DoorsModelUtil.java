@@ -13,8 +13,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 public class DoorsModelUtil {
     
@@ -119,59 +117,6 @@ public class DoorsModelUtil {
             return null;
         }
 
-    }
-
-    public static DoorsFolder createFolder(DoorsTreeNode parent, String name) {
-        return create(parent, DoorsFactory.eINSTANCE.createDoorsFolder(), name);
-    }
-
-    public static DoorsModule createModule(DoorsTreeNode parent, String name) {
-        DoorsModule module = create(parent, DoorsFactory.eINSTANCE.createDoorsModule(), name);
-        module.setObjectAttributes(DoorsAttributes.valuesFor(DoorsObject.class)
-                .filter(v -> !v.isSystemKey())
-                .map(a -> a.getKey())
-                .collect(Collectors.toList()));
-        return module;
-    }
-
-    public static DoorsObject createObject(DoorsTreeNode parent, String objectText) {
-        DoorsObject object = create(parent, DoorsFactory.eINSTANCE.createDoorsObject(), null);
-        if (parent instanceof DoorsModule) {
-            object.setObjectLevel(1);
-        } else if (parent instanceof DoorsObject) {
-            object.setObjectLevel(((DoorsObject) parent).getObjectLevel() + 1);
-        } else if (parent instanceof DoorsFolder) {
-            throw new IllegalArgumentException("parent");
-        }
-
-        object.setObjectText(objectText);
-        object.setObjectHeading("");
-        return object;
-    }
-
-    private static <T extends DoorsTreeNode> T create(DoorsTreeNode parent, T object, String name) {
-        object.setName(name);
-        object.setParent(parent);
-        return object;
-    }
-    
-    public static <T extends DoorsTreeNode> T createCopy(T source, DoorsTreeNode newParent) {
-        return createCopy(source, newParent, x -> true);
-    }
-
-    public static <T extends DoorsTreeNode> T createCopy(T source, DoorsTreeNode newParent, Predicate<DoorsTreeNode> nodeFilter) {
-        T copy;
-        if (source instanceof DoorsObject) {
-            copy = (T) DoorsFactory.eINSTANCE.createDoorsObject();
-        } else if (source instanceof DoorsModule) {
-            copy = (T) DoorsFactory.eINSTANCE.createDoorsModule();
-        } else if (source instanceof DoorsFolder) {
-            copy = (T) DoorsFactory.eINSTANCE.createDoorsFolder();
-        } else {
-            throw new AssertionError();
-        }
-
-        return (T) copy.copyFrom(source, newParent, nodeFilter);
     }
 
     // Defined here to prevent forward references in DoorsSystemAttributes

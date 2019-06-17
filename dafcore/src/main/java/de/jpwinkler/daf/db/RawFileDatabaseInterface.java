@@ -18,6 +18,7 @@ public class RawFileDatabaseInterface implements DatabaseInterface {
 
     private DoorsModule databaseRoot;
     private final DatabasePath<RawFileDatabaseInterface> databasePath;
+    private final DatabaseFactory factory = new EmfDatabaseFactory();
 
     public RawFileDatabaseInterface(DatabasePath<RawFileDatabaseInterface> databasePath, OpenFlag openFlag) throws IOException {
         if (!databasePath.getPath().isEmpty()) {
@@ -27,7 +28,7 @@ public class RawFileDatabaseInterface implements DatabaseInterface {
         this.databasePath = databasePath;
 
         File dbFile = new File(databasePath.getDatabasePath());
-        databaseRoot = ModuleCSV.read(dbFile, openFlag);
+        databaseRoot = ModuleCSV.read(factory, dbFile, openFlag);
     }
 
     @Override
@@ -52,5 +53,10 @@ public class RawFileDatabaseInterface implements DatabaseInterface {
     @Override
     public DoorsModule getDatabaseRoot() {
         return databaseRoot;
+    }
+    
+    @Override
+    public DatabaseFactory getFactory() {
+        return factory;
     }
 }

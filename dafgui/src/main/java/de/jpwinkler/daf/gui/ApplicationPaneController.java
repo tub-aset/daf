@@ -500,7 +500,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         }
 
         DatabaseInterface destinationDB = openDatabaseInterface(destinationPath, OpenFlag.ERASE_IF_EXISTS);
-        destinationDB.getDatabaseRoot().copyFrom(sourceDB.getNode(sourcePath.getPath()), null, include);
+        destinationDB.getFactory().copy(sourceDB.getNode(sourcePath.getPath()), destinationDB.getDatabaseRoot(), include);
         DoorsAttributes.DATABASE_COPIED_FROM.setValue(String.class, destinationDB.getDatabaseRoot(), sourceDB.getPath().toString());
         DoorsAttributes.DATABASE_COPIED_AT.setValue(String.class, destinationDB.getDatabaseRoot(), ZonedDateTime.now(ZoneOffset.UTC).toString());
 

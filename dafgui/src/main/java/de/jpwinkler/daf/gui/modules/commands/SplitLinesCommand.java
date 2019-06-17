@@ -1,5 +1,6 @@
 package de.jpwinkler.daf.gui.modules.commands;
 
+import de.jpwinkler.daf.db.DatabaseFactory;
 import de.jpwinkler.daf.gui.commands.AbstractCommand;
 import de.jpwinkler.daf.gui.commands.UpdateAction;
 import de.jpwinkler.daf.gui.modules.ModulePaneController.ModuleUpdateAction;
@@ -15,10 +16,12 @@ import java.util.Map.Entry;
 
 public class SplitLinesCommand extends AbstractCommand {
 
+    private final DatabaseFactory factory;
     private final Map<DoorsObject, List<DoorsObject>> newObjects = new HashMap<>();
     private final DoorsModule module;
 
-    public SplitLinesCommand(final DoorsModule module) {
+    public SplitLinesCommand(DatabaseFactory factory, DoorsModule module) {
+        this.factory = factory;
         this.module = module;
     }
 
@@ -62,7 +65,7 @@ public class SplitLinesCommand extends AbstractCommand {
     }
 
     private void newObjectAfter(final DoorsObject object, final int i, final String string) {
-        final DoorsObject newObject = DoorsModelUtil.createCopy(object, object.getParent());
+        final DoorsObject newObject = factory.createCopy(object, object.getParent());
         newObject.setObjectIdentifier(object.getObjectIdentifier() + "-" + i);
         newObject.setText(string);
 

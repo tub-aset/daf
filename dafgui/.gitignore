@@ -4,3 +4,4 @@ plugins/
 .classpath
 .project
 .settings/
+/nbactions.xml

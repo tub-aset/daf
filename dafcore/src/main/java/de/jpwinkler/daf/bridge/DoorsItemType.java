@@ -26,6 +26,7 @@ public enum DoorsItemType {
     FORMAL,
     LINK,
     DESCRIPTIVE,
+    OBJECT,
     UNKNOWN;
 
     private static final Logger LOGGER = Logger.getLogger(DoorsItemType.class.getName());

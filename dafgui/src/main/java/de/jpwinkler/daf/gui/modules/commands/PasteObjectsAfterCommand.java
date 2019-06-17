@@ -1,5 +1,6 @@
 package de.jpwinkler.daf.gui.modules.commands;
 
+import de.jpwinkler.daf.db.DatabaseFactory;
 import de.jpwinkler.daf.gui.commands.AbstractCommand;
 import de.jpwinkler.daf.gui.commands.UpdateAction;
 import de.jpwinkler.daf.gui.modules.ModulePaneController.ModuleUpdateAction;
@@ -11,11 +12,15 @@ import java.util.stream.Collectors;
 
 public class PasteObjectsAfterCommand extends AbstractCommand {
 
+    private final DatabaseFactory factory;
     private final DoorsObject reference;
-    private List<DoorsObject> copiedObjects;
     private final List<DoorsObject> objectsToCopy;
+    
+    
+    private List<DoorsObject> copiedObjects;
 
-    public PasteObjectsAfterCommand(final DoorsObject reference, final List<DoorsObject> objectsToCopy) {
+    public PasteObjectsAfterCommand(DatabaseFactory factory, DoorsObject reference, List<DoorsObject> objectsToCopy) {
+        this.factory = factory;
         this.reference = reference;
         this.objectsToCopy = new ArrayList<>(objectsToCopy);
     }
@@ -33,7 +38,7 @@ public class PasteObjectsAfterCommand extends AbstractCommand {
     @Override
     public void apply() {
         copiedObjects = objectsToCopy.stream()
-                .map(o -> (DoorsObject) DoorsModelUtil.createCopy(o, reference.getParent()))
+                .map(o -> (DoorsObject) factory.createCopy(o, reference.getParent()))
                 .collect(Collectors.toList());
         redo();
     }

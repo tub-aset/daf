@@ -309,11 +309,7 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
      */
     @Override
     public String getText() {
-        if (isHeading()) {
-            return getObjectHeading();
-        } else {
-            return getObjectText();
-        }
+        return isHeading() ? getObjectHeading(): getObjectText();
     }
 
     /**
@@ -353,32 +349,6 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 		}
 		return incomingLinks;
 	}
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc --> @generated NOT
-     */
-    @Override
-    public DoorsObject copyFrom(DoorsTreeNode newModule, DoorsTreeNode newParent) {
-        if (!super.canCopyFrom(newModule)) {
-            throw new IllegalArgumentException();
-        }
-        
-        super.copyFrom(newModule, newParent);
-        
-        this.getOutgoingLinks().clear();
-        ((DoorsObject)newModule).getOutgoingLinks().stream()
-                .map(l -> {
-                    UnresolvedLink nl = DoorsFactory.eINSTANCE.createUnresolvedLink();
-                    nl.setSource(this);
-                    nl.setTargetModule(l.getTargetModule());
-                    nl.setTargetObject(l.getTargetObject());
-                    return nl;
-                })
-                .forEach(this.getOutgoingLinks()::add);
-
-        return this;
-    }
 
     /**
      * <!-- begin-user-doc -->

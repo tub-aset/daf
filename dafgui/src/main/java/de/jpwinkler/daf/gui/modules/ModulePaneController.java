@@ -407,12 +407,12 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
     @FXML
     public void newObjectBelowClicked() {
-        executeCommand(new NewObjectBelowCommand(getCurrentObject() != null ? this.getCurrentObject() : this.module));
+        executeCommand(new NewObjectBelowCommand(super.getDatabaseInterface().getFactory(), getCurrentObject() != null ? this.getCurrentObject() : this.module));
     }
 
     @FXML
     public void newObjectAfterClicked() {
-        executeCommand(new NewObjectAfterCommand(getCurrentObject()));
+        executeCommand(new NewObjectAfterCommand(super.getDatabaseInterface().getFactory(), getCurrentObject()));
     }
 
     @FXML
@@ -431,12 +431,12 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
     @FXML
     public void pasteBelowClicked() {
-        executeCommand(new PasteObjectsBelowCommand(contentTableView.getSelectionModel().getSelectedItem(), clipboard));
+        executeCommand(new PasteObjectsBelowCommand(super.getDatabaseInterface().getFactory(), contentTableView.getSelectionModel().getSelectedItem(), clipboard));
     }
 
     @FXML
     public void pasteAfterClicked() {
-        executeCommand(new PasteObjectsAfterCommand(contentTableView.getSelectionModel().getSelectedItem(), clipboard));
+        executeCommand(new PasteObjectsAfterCommand(super.getDatabaseInterface().getFactory(), contentTableView.getSelectionModel().getSelectedItem(), clipboard));
     }
 
     @FXML
@@ -458,7 +458,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
     @FXML
     public void splitLinesClicked() {
-        executeCommand(new SplitLinesCommand(module));
+        executeCommand(new SplitLinesCommand(super.getDatabaseInterface().getFactory(), module));
     }
 
     @FXML
