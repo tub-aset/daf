@@ -1,7 +1,6 @@
 package de.jpwinkler.daf.db;
 
 import de.jpwinkler.daf.model.DoorsFolder;
-import de.jpwinkler.daf.model.DoorsModelUtil;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsPackage;
 import de.jpwinkler.daf.model.DoorsTreeNode;

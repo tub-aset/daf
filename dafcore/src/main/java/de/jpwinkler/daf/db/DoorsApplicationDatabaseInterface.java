@@ -6,7 +6,6 @@
 package de.jpwinkler.daf.db;
 
 import de.jpwinkler.daf.bridge.DoorsApplication;
-import de.jpwinkler.daf.bridge.DoorsApplicationFactory;
 import de.jpwinkler.daf.model.DoorsFolder;
 
 /**
@@ -15,7 +14,7 @@ import de.jpwinkler.daf.model.DoorsFolder;
  */
 public class DoorsApplicationDatabaseInterface implements DatabaseInterface {
 
-    private final DoorsApplication doorsApplication = DoorsApplicationFactory.getDoorsApplication();
+    private final DoorsApplication doorsApplication = new DoorsApplication();
     private final DoorsFolder root;
     private final DatabasePath<DoorsApplicationDatabaseInterface> databasePath;
 
@@ -27,7 +26,7 @@ public class DoorsApplicationDatabaseInterface implements DatabaseInterface {
             throw new IllegalArgumentException("Only OpenFlag.OPEN_ONLY is allowed");
         }
 
-        this.root = (DoorsFolder) doorsApplication.getRoot();
+        this.root = doorsApplication.getDatabaseFactory().createFolder(null, "Doors Application");
         this.databasePath = databasePath;
     }
 

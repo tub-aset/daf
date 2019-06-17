@@ -15,13 +15,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.jpwinkler.daf.bridge.internal;
+package de.jpwinkler.daf.bridge.model;
 
+import de.jpwinkler.daf.bridge.DXLScript;
+import de.jpwinkler.daf.bridge.DoorsApplication;
 import de.jpwinkler.daf.bridge.DoorsItemType;
 import de.jpwinkler.daf.bridge.DoorsRuntimeException;
 import de.jpwinkler.daf.bridge.DoorsTreeNodeRef;
 import de.jpwinkler.daf.db.ModuleCSV;
-import de.jpwinkler.daf.model.DoorsModelUtil;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
@@ -47,17 +48,17 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
     private List<DoorsTreeNode> children;
     private List<String> objectAttributes;
 
-    public DoorsModuleRefImpl(final DoorsApplicationImpl doorsApplicationImpl, final DoorsTreeNodeRef parent, final String name) {
+    public DoorsModuleRefImpl(final DoorsApplication doorsApplicationImpl, final DoorsTreeNodeRef parent, final String name) {
         super(doorsApplicationImpl, DoorsItemType.FORMAL, parent, name);
     }
 
     @Override
     public Map<String, String> getAttributes() {
         if (moduleAttributes == null) {
-            String result = doorsApplicationImpl.buildAndRunCommand(builder -> {
-                builder.addLibrary(new InternalDXLScript("lib/utils.dxl"));
-                builder.addLibrary(new InternalDXLScript("lib/export_mmd.dxl"));
-                builder.addScript(new InternalDXLScript("get_module_attributes.dxl"));
+            String result = doorsApplicationImpl.runScript(builder -> {
+                builder.addLibrary(DXLScript.fromResource("lib/utils.dxl"));
+                builder.addLibrary(DXLScript.fromResource("lib/export_mmd.dxl"));
+                builder.addScript(DXLScript.fromResource("get_module_attributes.dxl"));
                 builder.setVariable("url", null);
                 builder.setVariable("name", this.getFullName());
             });
@@ -80,25 +81,25 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
             try {
                 Path tempFile = Files.createTempFile(null, null);
 
-                doorsApplicationImpl.buildAndRunCommand(builder -> {
-                    builder.addLibrary(new InternalDXLScript("lib/utils.dxl"));
-                    builder.addLibrary(new InternalDXLScript("lib/export_csv.dxl"));
-                    builder.addLibrary(new InternalDXLScript("lib/export_mmd.dxl"));
-                    builder.addScript(new InternalDXLScript("export_csv_single.dxl"));
+                doorsApplicationImpl.runScript(builder -> {
+                    builder.addLibrary(DXLScript.fromResource("lib/utils.dxl"));
+                    builder.addLibrary(DXLScript.fromResource("lib/export_csv.dxl"));
+                    builder.addLibrary(DXLScript.fromResource("lib/export_mmd.dxl"));
+                    builder.addScript(DXLScript.fromResource("export_csv_single.dxl"));
                     builder.setVariable("url", null);
                     builder.setVariable("name", this.getFullName());
                     builder.setVariable("view", view);
                     builder.setVariable("file", tempFile.toAbsolutePath().toString());
                 });
 
-                DoorsModule loadedModule = ModuleCSV.readModule(doorsApplicationImpl, tempFile.toFile());
+                DoorsModule loadedModule = ModuleCSV.readModule(doorsApplicationImpl.getDatabaseFactory(), tempFile.toFile());
                 this.children = loadedModule.getChildren();
                 this.children.forEach(c -> c.setParent(this));
                 this.objectAttributes = loadedModule.getObjectAttributes();
 
-                doorsApplicationImpl.buildAndRunCommand(builder -> {
-                    builder.addLibrary(new InternalDXLScript("lib/utils.dxl"));
-                    builder.addScript(new InternalDXLScript("close_module.dxl"));
+                doorsApplicationImpl.runScript(builder -> {
+                    builder.addLibrary(DXLScript.fromResource("lib/utils.dxl"));
+                    builder.addScript(DXLScript.fromResource("close_module.dxl"));
                     builder.setVariable("url", null);
                     builder.setVariable("name", this.getFullName());
                 });

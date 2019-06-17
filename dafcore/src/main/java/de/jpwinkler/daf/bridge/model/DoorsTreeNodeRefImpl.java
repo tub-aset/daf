@@ -15,8 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.jpwinkler.daf.bridge.internal;
+package de.jpwinkler.daf.bridge.model;
 
+import de.jpwinkler.daf.bridge.DXLScript;
+import de.jpwinkler.daf.bridge.DoorsApplication;
 import de.jpwinkler.daf.bridge.DoorsItemType;
 import de.jpwinkler.daf.bridge.DoorsTreeNodeRef;
 import de.jpwinkler.daf.model.DoorsTreeNode;
@@ -25,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -36,7 +37,7 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNodeRef {
 
     private static final Logger LOGGER = Logger.getLogger(DoorsTreeNodeRefImpl.class.getName());
 
-    protected final DoorsApplicationImpl doorsApplicationImpl;
+    protected final DoorsApplication doorsApplicationImpl;
 
     private DoorsItemType type;
     private DoorsTreeNodeRef parent;
@@ -44,7 +45,7 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNodeRef {
     private final List<String> pathSegments;
     private List<DoorsTreeNode> children;
 
-    public DoorsTreeNodeRefImpl(final DoorsApplicationImpl doorsApplicationImpl, final DoorsItemType type, final DoorsTreeNodeRef parent, String name) {
+    public DoorsTreeNodeRefImpl(final DoorsApplication doorsApplicationImpl, final DoorsItemType type, final DoorsTreeNodeRef parent, String name) {
         this.doorsApplicationImpl = doorsApplicationImpl;
         this.type = type;
         // make sure root does not show up in the path
@@ -56,8 +57,8 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNodeRef {
     @Override
     public DoorsItemType getType() {
         if (type == null) {
-            final String typeStr = doorsApplicationImpl.buildAndRunCommand(builder -> {
-                builder.addScript(new InternalDXLScript("get_type.dxl"));
+            final String typeStr = doorsApplicationImpl.runScript(builder -> {
+                builder.addScript(DXLScript.fromResource("get_type.dxl"));
                 builder.setVariable("item", this.getFullName());
             });
             type = DoorsItemType.getType(typeStr);
@@ -74,11 +75,8 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNodeRef {
     public List<DoorsTreeNode> getChildren() {
         if (this.children == null) {
 
-            if (doorsApplicationImpl.isBatchMode()) {
-                throw new UnsupportedOperationException("Operation not supported in batch mode.");
-            }
-            final String resultString = doorsApplicationImpl.buildAndRunCommand(builder -> {
-                builder.addScript(new InternalDXLScript("get_children.dxl"));
+            final String resultString = doorsApplicationImpl.runScript(builder -> {
+                builder.addScript(DXLScript.fromResource("get_children.dxl"));
                 builder.setVariable("folder", this.getFullName());
             });
 
@@ -122,8 +120,8 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNodeRef {
 
     @Override
     public boolean exists() {
-        final String result = doorsApplicationImpl.buildAndRunCommand(builder -> {
-            builder.addScript(new InternalDXLScript("exists.dxl"));
+        final String result = doorsApplicationImpl.runScript(builder -> {
+            builder.addScript(DXLScript.fromResource("exists.dxl"));
             builder.setVariable("item", this.getFullName());
         });
         return result.equals("true");

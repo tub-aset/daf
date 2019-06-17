@@ -15,9 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.jpwinkler.daf.bridge.internal;
+package de.jpwinkler.daf.bridge;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -26,31 +25,31 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-class DoorsScriptBuilder {
+public class DoorsScriptBuilder {
 
     private final List<DXLScript> preamble = new ArrayList<>();
     private final Set<DXLScript> libraries = new LinkedHashSet<>();
     private final List<DXLScript> scripts = new ArrayList<>();
     private final Map<String, String> variables = new HashMap<>();
 
-    private DXLScriptScope currentScope;
+    private DoorsScriptBuilder parentBuilder;
+
+    public DoorsScriptBuilder() {
+        this(null);
+    }
+
+    public DoorsScriptBuilder(DoorsScriptBuilder parentBuilder) {
+        this.parentBuilder = parentBuilder;
+    }
 
     public DoorsScriptBuilder beginScope() {
-        if (currentScope == null) {
-            currentScope = new DXLScriptScope();
-            scripts.add(currentScope);
-        } else {
-            throw new RuntimeException("Already in a scope.");
-        }
-        return this;
+        DoorsScriptBuilder scopeBuilder = new DoorsScriptBuilder(this);
+        scripts.add(DXLScript.fromBuilder(scopeBuilder));
+        return scopeBuilder;
     }
 
     public DoorsScriptBuilder endScope() {
-        if (currentScope == null) {
-            throw new RuntimeException("Not in a scope.");
-        }
-        currentScope = null;
-        return this;
+        return parentBuilder;
     }
 
     public DoorsScriptBuilder addPreamble(final DXLScript script) {
@@ -63,25 +62,17 @@ class DoorsScriptBuilder {
         return this;
     }
 
-    public DoorsScriptBuilder addScript(final DXLScript scritp) {
-        if (currentScope != null) {
-            currentScope.getBuilder().addScript(scritp);
-        } else {
-            scripts.add(scritp);
-        }
+    public DoorsScriptBuilder addScript(final DXLScript script) {
+        scripts.add(script);
         return this;
     }
 
     public DoorsScriptBuilder setVariable(final String variable, final String value) {
-        if (currentScope != null) {
-            currentScope.getBuilder().setVariable(variable, value);
-        } else if (value != null) {
-            variables.put(variable, value);
-        }
+        variables.put(variable, value);
         return this;
     }
 
-    public String build() throws IOException {
+    public String build() {
         final StringBuilder builder = new StringBuilder();
 
         for (final DXLScript script : preamble) {

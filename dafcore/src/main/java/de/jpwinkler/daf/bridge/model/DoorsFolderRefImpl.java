@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.jpwinkler.daf.bridge.internal;
+package de.jpwinkler.daf.bridge.model;
 
+import de.jpwinkler.daf.bridge.DoorsApplication;
 import de.jpwinkler.daf.bridge.DoorsItemType;
 import de.jpwinkler.daf.bridge.DoorsTreeNodeRef;
 import de.jpwinkler.daf.model.DoorsFolder;
@@ -13,9 +14,9 @@ import de.jpwinkler.daf.model.DoorsFolder;
  *
  * @author fwiesweg
  */
-public class DoorsFolderRefImpl extends DoorsTreeNodeRefImpl implements DoorsFolder {
+class DoorsFolderRefImpl extends DoorsTreeNodeRefImpl implements DoorsFolder {
 
-    public DoorsFolderRefImpl(DoorsApplicationImpl doorsApplicationImpl, DoorsItemType type, DoorsTreeNodeRef parent, String name) {
+    public DoorsFolderRefImpl(DoorsApplication doorsApplicationImpl, DoorsItemType type, DoorsTreeNodeRef parent, String name) {
         super(doorsApplicationImpl, type, parent, name);
     }
 
