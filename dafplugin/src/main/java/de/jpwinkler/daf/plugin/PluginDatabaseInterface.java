@@ -5,10 +5,11 @@
  */
 package de.jpwinkler.daf.plugin;
 
+import de.jpwinkler.daf.db.DatabaseFactory;
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabasePath;
+import de.jpwinkler.daf.db.EmfDatabaseFactory;
 import de.jpwinkler.daf.model.DoorsFolder;
-import de.jpwinkler.daf.model.DoorsModelUtil;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.io.IOException;
 
@@ -17,15 +18,16 @@ import java.io.IOException;
  * @author fwiesweg
  */
 public class PluginDatabaseInterface implements DatabaseInterface {
-    
+
     private DatabasePath<PluginDatabaseInterface> databasePath;
     private final DoorsFolder databaseRoot;
 
     public PluginDatabaseInterface(DatabasePath<PluginDatabaseInterface> databasePath, DatabaseInterface.OpenFlag openFlag) throws IOException {
         this.databasePath = databasePath;
-        this.databaseRoot = DoorsModelUtil.createFolder(null, "Test plugin root folder");
-        DoorsModelUtil.createFolder(databaseRoot, "Test plugin folder 1");
-        DoorsModelUtil.createFolder(databaseRoot, "Test plugin folder 2");
+        DatabaseFactory factory = new EmfDatabaseFactory();
+        this.databaseRoot = factory.createFolder(null, "Test plugin root folder");
+        factory.createFolder(databaseRoot, "Test plugin folder 1");
+        factory.createFolder(databaseRoot, "Test plugin folder 2");
     }
 
     @Override
@@ -50,5 +52,10 @@ public class PluginDatabaseInterface implements DatabaseInterface {
     public boolean isReadOnly() {
         return true;
     }
-    
+
+    @Override
+    public DatabaseFactory getFactory() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
 }
