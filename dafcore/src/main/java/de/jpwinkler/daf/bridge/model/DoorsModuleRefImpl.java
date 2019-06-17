@@ -31,6 +31,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -52,9 +53,9 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
     }
 
     @Override
-    public Map<String, String> getAttributes() {
+    public synchronized Map<String, String> getAttributes() {
         if (moduleAttributes == null) {
-            String result = doorsApplicationImpl.runScript(builder -> {
+            String result = doorsApplication.runScript(builder -> {
                 builder.addLibrary(DXLScript.fromResource("lib/utils.dxl"));
                 builder.addLibrary(DXLScript.fromResource("lib/export_mmd.dxl"));
                 builder.addScript(DXLScript.fromResource("get_module_attributes.dxl"));
@@ -73,6 +74,11 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
     }
 
     @Override
+    public Future<Map<String, String>> getAttributesAsync() {
+        return doorsApplication.getBackgroundTaskExecutor().runBackgroundTask("Load attributes", i -> this.getAttributes());
+    }
+
+    @Override
     public List<DoorsTreeNode> getChildren() {
         if (children == null) {
             String view = this.getAttributes().get("__view__");
@@ -80,7 +86,7 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
             try {
                 Path tempFile = Files.createTempFile(null, null);
 
-                doorsApplicationImpl.runScript(builder -> {
+                doorsApplication.runScript(builder -> {
                     builder.addLibrary(DXLScript.fromResource("lib/utils.dxl"));
                     builder.addLibrary(DXLScript.fromResource("lib/export_csv.dxl"));
                     builder.addLibrary(DXLScript.fromResource("lib/export_mmd.dxl"));
@@ -91,12 +97,12 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
                     builder.setVariable("file", tempFile.toAbsolutePath().toString());
                 });
 
-                DoorsModule loadedModule = ModuleCSV.readModule(doorsApplicationImpl.getDatabaseFactory(), tempFile.toFile());
+                DoorsModule loadedModule = ModuleCSV.readModule(doorsApplication.getDatabaseFactory(), tempFile.toFile());
                 this.children = loadedModule.getChildren();
                 this.children.forEach(c -> c.setParent(this));
                 this.objectAttributes = loadedModule.getObjectAttributes();
 
-                doorsApplicationImpl.runScript(builder -> {
+                doorsApplication.runScript(builder -> {
                     builder.addLibrary(DXLScript.fromResource("lib/utils.dxl"));
                     builder.addScript(DXLScript.fromResource("close_module.dxl"));
                     builder.setVariable("url", null);
@@ -108,6 +114,11 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
         }
 
         return children;
+    }
+
+    @Override
+    public Future<List<String>> getObjectAttributesAsync() {
+        return doorsApplication.getBackgroundTaskExecutor().runBackgroundTask("Load object attributes", i -> this.getObjectAttributes());
     }
 
     @Override

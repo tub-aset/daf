@@ -1,30 +1,31 @@
 package de.jpwinkler.daf.gui;
 
+import de.jpwinkler.daf.db.BackgroundTaskInterface;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
+import java.util.function.Function;
 import org.apache.commons.lang3.tuple.Pair;
 
-public class BackgroundTask {
+public class BackgroundTask<T> {
 
     private final String name;
-    private final Consumer<BackgroundTaskInterface> runnable;
+    private final Function<BackgroundTaskInterface, T> runnable;
     private final BiConsumer<BackgroundTask, Pair<Long, Long>> monitor;
 
     private final AtomicBoolean cancelled = new AtomicBoolean(false);
     private final AtomicReference<Pair<Long, Long>> taskProgress = new AtomicReference<>(null);
     private final AtomicReference<Throwable> taskError = new AtomicReference<>();
 
-    public BackgroundTask(String name, Consumer<BackgroundTaskInterface> runnable, BiConsumer<BackgroundTask, Pair<Long, Long>> monitor) {
+    public BackgroundTask(String name, Function<BackgroundTaskInterface, T> runnable, BiConsumer<BackgroundTask, Pair<Long, Long>> monitor) {
         this.name = name;
         this.runnable = runnable;
         this.monitor = monitor;
     }
 
-    public final Future<?> run(ExecutorService executor) {
+    public final Future<T> run(ExecutorService executor) {
         if (!taskProgress.compareAndSet(null, Pair.of(0l, 1l))) {
             throw new IllegalStateException("Task already started");
         }
@@ -32,10 +33,12 @@ public class BackgroundTask {
 
         return executor.submit(() -> {
             try {
-                this.runnable.accept(new BackgroundTaskInterface());
+                T value = this.runnable.apply(new BackgroundTaskInterfaceImpl());
                 this.finish(null);
+                return value;
             } catch (Throwable t) {
                 this.finish(t);
+                throw new RuntimeException(t);
             }
         });
     }
@@ -100,13 +103,15 @@ public class BackgroundTask {
         monitor.accept(this, Pair.of(-existingProgress.getLeft(), -existingProgress.getRight()));
     }
 
-    public class BackgroundTaskInterface {
+    public class BackgroundTaskInterfaceImpl implements BackgroundTaskInterface {
 
-        protected final void incrementProgress(long increment) {
+        @Override
+        public final void incrementProgress(long increment) {
             this.incrementProgress(increment, 0);
         }
 
-        protected final void incrementProgress(long increment, long maxProgressIncrement) {
+        @Override
+        public final void incrementProgress(long increment, long maxProgressIncrement) {
             if (increment < 0 || maxProgressIncrement < 0) {
                 throw new IllegalArgumentException("Negative increments are not allowed");
             } else if (increment == 0 && maxProgressIncrement == 0) {

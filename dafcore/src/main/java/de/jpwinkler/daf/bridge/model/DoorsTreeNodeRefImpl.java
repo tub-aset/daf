@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Future;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -36,7 +37,7 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNode {
 
     private static final Logger LOGGER = Logger.getLogger(DoorsTreeNodeRefImpl.class.getName());
 
-    protected final DoorsApplication doorsApplicationImpl;
+    protected final DoorsApplication doorsApplication;
 
     private DoorsItemType type;
     private final DoorsTreeNode parent;
@@ -45,7 +46,7 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNode {
     private List<DoorsTreeNode> children;
 
     public DoorsTreeNodeRefImpl(final DoorsApplication doorsApplicationImpl, final DoorsItemType type, final DoorsTreeNode parent, String name) {
-        this.doorsApplicationImpl = doorsApplicationImpl;
+        this.doorsApplication = doorsApplicationImpl;
         this.type = type;
         // make sure root does not show up in the path
         this.pathSegments = parent == null ? Collections.emptyList() : Stream.concat(
@@ -59,10 +60,10 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNode {
     }
 
     @Override
-    public List<DoorsTreeNode> getChildren() {
+    public synchronized List<DoorsTreeNode> getChildren() {
         if (this.children == null) {
 
-            final String resultString = doorsApplicationImpl.runScript(builder -> {
+            final String resultString = doorsApplication.runScript(builder -> {
                 builder.addScript(DXLScript.fromResource("get_children.dxl"));
                 builder.setVariable("folder", this.getFullName());
             });
@@ -85,11 +86,11 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNode {
                 final DoorsItemType type = DoorsItemType.getType(split[0]);
                 switch (type) {
                     case FORMAL:
-                        result.add(new DoorsModuleRefImpl(doorsApplicationImpl, this, split[1]));
+                        result.add(new DoorsModuleRefImpl(doorsApplication, this, split[1]));
                         break;
                     case FOLDER:
                     case PROJECT:
-                        result.add(new DoorsFolderRefImpl(doorsApplicationImpl, type, this, split[1]));
+                        result.add(new DoorsFolderRefImpl(doorsApplication, type, this, split[1]));
                         break;
                     case LINK:
                     case DESCRIPTIVE:
@@ -103,6 +104,11 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNode {
         }
 
         return children;
+    }
+
+    @Override
+    public Future<List<DoorsTreeNode>> getChildrenAsync() {
+        return doorsApplication.getBackgroundTaskExecutor().runBackgroundTask("Load node children", i -> this.getChildren());
     }
 
     @Override

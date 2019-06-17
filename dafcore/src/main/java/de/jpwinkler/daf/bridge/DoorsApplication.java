@@ -22,6 +22,7 @@ import com.jacob.com.Dispatch;
 import de.jpwinkler.daf.bridge.model.DoorsBridgeDatabaseFactory;
 import de.jpwinkler.daf.bridge.user32.Window;
 import de.jpwinkler.daf.bridge.user32.WindowManager;
+import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import de.jpwinkler.daf.db.DatabaseFactory;
 import java.io.File;
 import java.io.IOException;
@@ -312,6 +313,10 @@ public class DoorsApplication {
         } else {
             return null;
         }
+    }
+
+    public BackgroundTaskExecutor getBackgroundTaskExecutor() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     private static class FileForwarder implements Runnable {

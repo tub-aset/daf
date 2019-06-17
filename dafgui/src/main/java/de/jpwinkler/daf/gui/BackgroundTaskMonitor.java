@@ -1,5 +1,7 @@
 package de.jpwinkler.daf.gui;
 
+import de.jpwinkler.daf.db.BackgroundTaskExecutor;
+import de.jpwinkler.daf.db.BackgroundTaskInterface;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -12,9 +14,10 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import org.apache.commons.lang3.tuple.Pair;
 
-public class BackgroundTaskMonitor {
+public class BackgroundTaskMonitor implements BackgroundTaskExecutor {
 
     private final BiConsumer<BackgroundTask, Double> sharedListener;
 
@@ -39,12 +42,14 @@ public class BackgroundTaskMonitor {
         return !tasks.isEmpty();
     }
 
-    public Future<?> runBackgroundTask(String name, Consumer<BackgroundTask.BackgroundTaskInterface> runnable) {
+    @Override
+    public <T> Future<T> runBackgroundTask(String name, Function<BackgroundTaskInterface, T> runnable) {
         return this.runBackgroundTask(name, runnable, executor);
     }
 
-    public Future<?> runBackgroundTask(String name, Consumer<BackgroundTask.BackgroundTaskInterface> runnable, ExecutorService executorService) {
-        BackgroundTask bt = new BackgroundTask(name, runnable, this::onBackgroundTaskUpdate);
+    @Override
+    public <T> Future<T> runBackgroundTask(String name, Function<BackgroundTaskInterface, T> runnable, ExecutorService executorService) {
+        BackgroundTask bt = new BackgroundTask<>(name, runnable, this::onBackgroundTaskUpdate);
         this.tasks.add(bt);
         return bt.run(executorService);
     }

@@ -3,6 +3,8 @@
 package de.jpwinkler.daf.model;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Future;
 
 /**
  * <!-- begin-user-doc -->
@@ -38,6 +40,14 @@ public interface DoorsModule extends DoorsTreeNode {
 	 * @generated
 	 */
 	List<String> getObjectAttributes();
+        
+        /**
+         * @return 
+         * @generated NOT
+         */
+        default Future<List<String>> getObjectAttributesAsync() {
+            return DoorsModelUtil.futureOf(getObjectAttributes());
+        }
 
 	/**
 	 * <!-- begin-user-doc -->

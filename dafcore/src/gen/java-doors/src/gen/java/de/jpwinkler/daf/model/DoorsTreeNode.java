@@ -4,6 +4,7 @@ package de.jpwinkler.daf.model;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Future;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
@@ -42,6 +43,14 @@ public interface DoorsTreeNode {
 	 * @generated
 	 */
 	List<DoorsTreeNode> getChildren();
+        
+        /**
+         * @return 
+         * @generated NOT
+         */
+        default Future<List<DoorsTreeNode>> getChildrenAsync() {
+            return DoorsModelUtil.futureOf(getChildren());
+        }
 
 	/**
 	 * Returns the value of the '<em><b>Parent</b></em>' container reference.
@@ -79,6 +88,14 @@ public interface DoorsTreeNode {
 	 * @generated
 	 */
 	Map<String, String> getAttributes();
+        
+        /**
+         * @return 
+         * @generated NOT
+         */
+        default Future<Map<String, String>> getAttributesAsync() {
+            return DoorsModelUtil.futureOf(getAttributes());
+        }
 
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.
@@ -196,6 +213,14 @@ public interface DoorsTreeNode {
 	 * @generated
 	 */
 	DoorsTreeNode getChild(String name);
+        
+        /**
+         * @return 
+         * @generated NOT
+         */
+        default Future<DoorsTreeNode> getChildAsync(String name) {
+            return DoorsModelUtil.futureOf(getChild(name));
+        }
 
 	/**
 	 * <!-- begin-user-doc -->
