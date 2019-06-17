@@ -20,6 +20,8 @@ package de.jpwinkler.daf.bridge;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 
 public interface DoorsTreeNodeRef extends DoorsTreeNode {
+    
+    public static final String STANDARD_VIEW = "Standard view";
 
     DoorsItemType getType();
 
