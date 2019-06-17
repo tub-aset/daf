@@ -45,12 +45,13 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNodeRef {
     private final List<String> pathSegments;
     private List<DoorsTreeNode> children;
 
-    public DoorsTreeNodeRefImpl(final DoorsApplicationImpl doorsApplicationImpl, final DoorsItemType type, final DoorsTreeNode parent, String name) {
+    public DoorsTreeNodeRefImpl(final DoorsApplicationImpl doorsApplicationImpl, final DoorsItemType type, final DoorsTreeNodeRef parent, String name) {
         this.doorsApplicationImpl = doorsApplicationImpl;
         this.type = type;
         // make sure root does not show up in the path
         this.pathSegments = parent == null ? Collections.emptyList() : Stream.concat(
                 parent.getFullNameSegments().stream(), Stream.of(name)).collect(Collectors.toList());
+        this.parent = parent;
     }
 
     @Override

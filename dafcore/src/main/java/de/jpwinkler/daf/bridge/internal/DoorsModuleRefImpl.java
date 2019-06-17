@@ -49,7 +49,7 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsTreeNodeRe
     private List<DoorsTreeNode> children;
     private List<String> objectAttributes;
 
-    public DoorsModuleRefImpl(final DoorsApplicationImpl doorsApplicationImpl, final DoorsTreeNode parent, final String name, final String view) {
+    public DoorsModuleRefImpl(final DoorsApplicationImpl doorsApplicationImpl, final DoorsTreeNodeRef parent, final String name, final String view) {
         super(doorsApplicationImpl, DoorsItemType.FORMAL, parent, name);
         this.view = view;
     }
