@@ -1,6 +1,6 @@
 package de.jpwinkler.daf.gui.modules;
 
-import de.jpwinkler.daf.bridge.DoorsTreeNodeRef;
+import de.jpwinkler.daf.bridge.DoorsApplication;
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.filter.objects.CascadingFilter;
@@ -143,7 +143,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
             this.updateFilter(filterTextField.getText(), newValue, includeChildrenCheckbox.isSelected(), filterExpressionCheckBox.isSelected());
         });
 
-        if (!DoorsTreeNodeRef.STANDARD_VIEW.equals(module.getView())) {
+        if (!DoorsApplication.STANDARD_VIEW.equals(module.getView())) {
             setStatus("Warning: This module's view is not the standard view.");
         }
     }

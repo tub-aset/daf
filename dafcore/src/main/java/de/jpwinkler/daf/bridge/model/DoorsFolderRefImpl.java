@@ -7,8 +7,8 @@ package de.jpwinkler.daf.bridge.model;
 
 import de.jpwinkler.daf.bridge.DoorsApplication;
 import de.jpwinkler.daf.bridge.DoorsItemType;
-import de.jpwinkler.daf.bridge.DoorsTreeNodeRef;
 import de.jpwinkler.daf.model.DoorsFolder;
+import de.jpwinkler.daf.model.DoorsTreeNode;
 
 /**
  *
@@ -16,7 +16,7 @@ import de.jpwinkler.daf.model.DoorsFolder;
  */
 class DoorsFolderRefImpl extends DoorsTreeNodeRefImpl implements DoorsFolder {
 
-    public DoorsFolderRefImpl(DoorsApplication doorsApplicationImpl, DoorsItemType type, DoorsTreeNodeRef parent, String name) {
+    public DoorsFolderRefImpl(DoorsApplication doorsApplicationImpl, DoorsItemType type, DoorsTreeNode parent, String name) {
         super(doorsApplicationImpl, type, parent, name);
     }
 

@@ -21,7 +21,6 @@ import de.jpwinkler.daf.bridge.DXLScript;
 import de.jpwinkler.daf.bridge.DoorsApplication;
 import de.jpwinkler.daf.bridge.DoorsItemType;
 import de.jpwinkler.daf.bridge.DoorsRuntimeException;
-import de.jpwinkler.daf.bridge.DoorsTreeNodeRef;
 import de.jpwinkler.daf.db.ModuleCSV;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
@@ -48,7 +47,7 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
     private List<DoorsTreeNode> children;
     private List<String> objectAttributes;
 
-    public DoorsModuleRefImpl(final DoorsApplication doorsApplicationImpl, final DoorsTreeNodeRef parent, final String name) {
+    public DoorsModuleRefImpl(final DoorsApplication doorsApplicationImpl, final DoorsTreeNode parent, final String name) {
         super(doorsApplicationImpl, DoorsItemType.FORMAL, parent, name);
     }
 

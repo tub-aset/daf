@@ -35,6 +35,8 @@ import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 
 public class DoorsApplication {
+    
+    public static final String STANDARD_VIEW = "Standard view";
 
     private static final Logger LOGGER = Logger.getLogger(DoorsApplication.class.getName());
     private static Throwable loadError;

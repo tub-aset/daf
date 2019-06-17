@@ -1,7 +1,0 @@
-Item i = item("$$item$$")
-
-if (!null i) {
-	returnToJava("true")
-} else {
-	returnToJava("false")
-}

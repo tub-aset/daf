@@ -20,7 +20,6 @@ package de.jpwinkler.daf.bridge.model;
 import de.jpwinkler.daf.bridge.DXLScript;
 import de.jpwinkler.daf.bridge.DoorsApplication;
 import de.jpwinkler.daf.bridge.DoorsItemType;
-import de.jpwinkler.daf.bridge.DoorsTreeNodeRef;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import java.util.ArrayList;
@@ -33,19 +32,19 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 
-abstract class DoorsTreeNodeRefImpl implements DoorsTreeNodeRef {
+abstract class DoorsTreeNodeRefImpl implements DoorsTreeNode {
 
     private static final Logger LOGGER = Logger.getLogger(DoorsTreeNodeRefImpl.class.getName());
 
     protected final DoorsApplication doorsApplicationImpl;
 
     private DoorsItemType type;
-    private DoorsTreeNodeRef parent;
+    private final DoorsTreeNode parent;
 
     private final List<String> pathSegments;
     private List<DoorsTreeNode> children;
 
-    public DoorsTreeNodeRefImpl(final DoorsApplication doorsApplicationImpl, final DoorsItemType type, final DoorsTreeNodeRef parent, String name) {
+    public DoorsTreeNodeRefImpl(final DoorsApplication doorsApplicationImpl, final DoorsItemType type, final DoorsTreeNode parent, String name) {
         this.doorsApplicationImpl = doorsApplicationImpl;
         this.type = type;
         // make sure root does not show up in the path
@@ -55,19 +54,7 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNodeRef {
     }
 
     @Override
-    public DoorsItemType getType() {
-        if (type == null) {
-            final String typeStr = doorsApplicationImpl.runScript(builder -> {
-                builder.addScript(DXLScript.fromResource("get_type.dxl"));
-                builder.setVariable("item", this.getFullName());
-            });
-            type = DoorsItemType.getType(typeStr);
-        }
-        return type;
-    }
-
-    @Override
-    public DoorsTreeNodeRef getParent() {
+    public DoorsTreeNode getParent() {
         return parent;
     }
 
@@ -116,15 +103,6 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNodeRef {
         }
 
         return children;
-    }
-
-    @Override
-    public boolean exists() {
-        final String result = doorsApplicationImpl.runScript(builder -> {
-            builder.addScript(DXLScript.fromResource("exists.dxl"));
-            builder.setVariable("item", this.getFullName());
-        });
-        return result.equals("true");
     }
 
     @Override

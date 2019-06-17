@@ -7,7 +7,6 @@ package de.jpwinkler.daf.bridge.model;
 
 import de.jpwinkler.daf.bridge.DoorsApplication;
 import de.jpwinkler.daf.bridge.DoorsItemType;
-import de.jpwinkler.daf.bridge.DoorsTreeNodeRef;
 import de.jpwinkler.daf.db.DatabaseFactory;
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
@@ -27,20 +26,19 @@ public class DoorsBridgeDatabaseFactory implements DatabaseFactory {
         this.doorsApplication = doorsApplication;
     }
 
-    
     @Override
     public DoorsFolder createFolder(DoorsTreeNode parent, String name) {
-        return new DoorsFolderRefImpl(doorsApplication, DoorsItemType.FOLDER, (DoorsTreeNodeRef) parent, name);
+        return new DoorsFolderRefImpl(doorsApplication, DoorsItemType.FOLDER, parent, name);
     }
 
     @Override
     public DoorsModule createModule(DoorsTreeNode parent, String name) {
-        return new DoorsModuleRefImpl(doorsApplication, (DoorsTreeNodeRef) parent, name);
+        return new DoorsModuleRefImpl(doorsApplication, parent, name);
     }
 
     @Override
     public DoorsObject createObject(DoorsTreeNode parent, String objectText) {
-        return new DoorsObjectRefImpl(doorsApplication, (DoorsTreeNodeRef) parent);
+        return new DoorsObjectRefImpl(doorsApplication, parent);
     }
 
     @Override
