@@ -215,7 +215,6 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
                 }
             }
         });
-        ApplicationPart.registerDefault(applicationPartRegistry);
 
         pluginManager.loadPlugins();
         String failedPlugins = Stream.concat(
@@ -489,6 +488,8 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     public DatabasePath createSnapshot(DatabaseInterface sourceDB, DatabasePath sourcePath, Predicate<DoorsTreeNode> include, DatabasePath destinationPath) {
         if (destinationPath == null) {
             ChoiceDialog<ApplicationPart<?>> applicationPartChooser = new ChoiceDialog<>(null, applicationPartRegistry.registry().filter(p -> p.isAllowNew()).collect(Collectors.toList()));
+            applicationPartChooser.setTitle("Create snapshot");
+            applicationPartChooser.setHeaderText("Select a destination database type");
             destinationPath = Main.asStream(applicationPartChooser.showAndWait())
                     .flatMap(part -> part.saveWithSelector(tabPane.getScene().getWindow()))
                     .findAny().orElse(null);
