@@ -5,6 +5,7 @@
  */
 package de.jpwinkler.daf.gui.databases;
 
+import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import de.jpwinkler.daf.gui.MainFX;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,7 +17,6 @@ import javafx.scene.image.ImageView;
  * @author fwiesweg
  */
 public enum DatabasePaneImages {
-
     IMAGE_DB(MainFX.class.getResourceAsStream("icons/database.svg")),
     IMAGE_FOLDER(MainFX.class.getResourceAsStream("icons/folder.svg")),
     IMAGE_FORMAL(MainFX.class.getResourceAsStream("icons/file.svg")),
@@ -28,7 +28,7 @@ public enum DatabasePaneImages {
 
     private DatabasePaneImages(InputStream is) {
         try (InputStream wrappedIs = is) {
-            this.image = new Image(wrappedIs);
+            this.image = new Image(wrappedIs, 20, 20, true, true);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
