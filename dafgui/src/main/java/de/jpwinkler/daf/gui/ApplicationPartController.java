@@ -5,6 +5,7 @@
  */
 package de.jpwinkler.daf.gui;
 
+import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
 import de.jpwinkler.daf.db.DatabasePath;
@@ -172,4 +173,10 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
     public ApplicationPart<?> getApplicationPart() {
         return applicationPart;
     }
+
+    @Override
+    public BackgroundTaskExecutor getBackgroundTaskExecutor() {
+        return applicationController.getBackgroundTaskExecutor();
+    }
+
 }

@@ -21,6 +21,7 @@ import de.jpwinkler.daf.bridge.DXLScript;
 import de.jpwinkler.daf.bridge.DoorsApplication;
 import de.jpwinkler.daf.bridge.DoorsItemType;
 import de.jpwinkler.daf.bridge.DoorsRuntimeException;
+import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import de.jpwinkler.daf.db.ModuleCSV;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
@@ -31,7 +32,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Future;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -74,8 +75,8 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
     }
 
     @Override
-    public Future<Map<String, String>> getAttributesAsync() {
-        return doorsApplication.getBackgroundTaskExecutor().runBackgroundTask("Load attributes", i -> this.getAttributes());
+    public CompletableFuture<Map<String, String>> getAttributesAsync(BackgroundTaskExecutor executor) {
+        return executor.runBackgroundTask("Load attributes", i -> this.getAttributes());
     }
 
     @Override
@@ -117,8 +118,8 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
     }
 
     @Override
-    public Future<List<String>> getObjectAttributesAsync() {
-        return doorsApplication.getBackgroundTaskExecutor().runBackgroundTask("Load object attributes", i -> this.getObjectAttributes());
+    public CompletableFuture<List<String>> getObjectAttributesAsync(BackgroundTaskExecutor executor) {
+        return executor.runBackgroundTask("Load object attributes", i -> this.getObjectAttributes());
     }
 
     @Override

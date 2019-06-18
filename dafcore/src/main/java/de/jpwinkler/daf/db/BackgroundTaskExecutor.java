@@ -5,8 +5,8 @@
  */
 package de.jpwinkler.daf.db;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
 import java.util.function.Function;
 
 /**
@@ -15,8 +15,8 @@ import java.util.function.Function;
  */
 public interface BackgroundTaskExecutor {
 
-    <T> Future<T> runBackgroundTask(String name, Function<BackgroundTaskInterface, T> runnable);
+    <T> CompletableFuture<T> runBackgroundTask(String name, Function<BackgroundTaskNotifier, T> runnable);
 
-    <T> Future<T> runBackgroundTask(String name, Function<BackgroundTaskInterface, T> runnable, ExecutorService executorService);
+    <T> CompletableFuture<T> runBackgroundTask(String name, Function<BackgroundTaskNotifier, T> runnable, ExecutorService executorService);
     
 }

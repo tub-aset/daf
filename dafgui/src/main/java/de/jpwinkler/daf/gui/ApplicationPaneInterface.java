@@ -5,6 +5,7 @@
  */
 package de.jpwinkler.daf.gui;
 
+import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.model.DoorsTreeNode;
@@ -19,5 +20,5 @@ public interface ApplicationPaneInterface {
 
     ApplicationPartInterface open(DatabasePath dbPath, DatabaseInterface.OpenFlag openFlag);
     
-    BackgroundTaskMonitor getBackgroundTaskMonitor();
+    BackgroundTaskExecutor getBackgroundTaskExecutor();
 }

@@ -2,10 +2,11 @@
  */
 package de.jpwinkler.daf.model;
 
+import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
-import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 /**
@@ -48,8 +49,8 @@ public interface DoorsTreeNode {
          * @return 
          * @generated NOT
          */
-        default Future<List<DoorsTreeNode>> getChildrenAsync() {
-            return DoorsModelUtil.futureOf(getChildren());
+        default CompletableFuture<List<DoorsTreeNode>> getChildrenAsync(BackgroundTaskExecutor executor) {
+            return CompletableFuture.completedFuture(getChildren());
         }
 
 	/**
@@ -93,8 +94,8 @@ public interface DoorsTreeNode {
          * @return 
          * @generated NOT
          */
-        default Future<Map<String, String>> getAttributesAsync() {
-            return DoorsModelUtil.futureOf(getAttributes());
+        default CompletableFuture<Map<String, String>> getAttributesAsync(BackgroundTaskExecutor executor) {
+            return CompletableFuture.completedFuture(getAttributes());
         }
 
 	/**
@@ -218,8 +219,8 @@ public interface DoorsTreeNode {
          * @return 
          * @generated NOT
          */
-        default Future<DoorsTreeNode> getChildAsync(String name) {
-            return DoorsModelUtil.futureOf(getChild(name));
+        default Future<DoorsTreeNode> getChildAsync(BackgroundTaskExecutor executor, String name) {
+            return CompletableFuture.completedFuture(getChild(name));
         }
 
 	/**

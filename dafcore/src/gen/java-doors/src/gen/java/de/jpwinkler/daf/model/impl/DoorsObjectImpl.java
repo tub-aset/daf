@@ -2,14 +2,11 @@
  */
 package de.jpwinkler.daf.model.impl;
 
-import de.jpwinkler.daf.model.DoorsFactory;
+import de.jpwinkler.daf.model.DoorsAttributes;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsPackage;
-import de.jpwinkler.daf.model.DoorsAttributes;
-import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.Link;
 import de.jpwinkler.daf.model.ResolvedLink;
-import de.jpwinkler.daf.model.UnresolvedLink;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.List;

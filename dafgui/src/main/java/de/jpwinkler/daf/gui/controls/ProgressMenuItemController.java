@@ -34,6 +34,11 @@ public class ProgressMenuItemController extends AutoloadingPaneController<Progre
     @FXML
     private ProgressBar progressBar;
 
+    @FXML
+    public void cancelButtonClicked() {
+        this.backgroundTask.getFuture().cancel(true);
+    }
+
     public final class ProgressMenuItem extends CustomMenuItem {
 
         private ProgressMenuItem() {

@@ -204,8 +204,8 @@ public final class ApplicationPart<T extends DatabaseInterface> {
                 commandStack = databaseInterfaces.get(databasePath).getRight();
             } else {
                 try {
-                    Class<? extends DatabaseInterface> dbInterface = pluginSupplier.get()
-                            .map(pl -> pl.getPluginClassLoader())
+                    Class<? extends DatabaseInterface> dbInterface = Stream.concat(
+                            Stream.of(ApplicationPart.class.getClassLoader()), pluginSupplier.get().map(pl -> pl.getPluginClassLoader()))
                             .map(cl -> {
                                 try {
                                     return cl.loadClass(databasePath.getDatabaseInterface());

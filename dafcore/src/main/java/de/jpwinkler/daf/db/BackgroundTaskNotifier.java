@@ -9,7 +9,7 @@ package de.jpwinkler.daf.db;
  *
  * @author fwiesweg
  */
-public interface BackgroundTaskInterface {
+public interface BackgroundTaskNotifier {
 
     void incrementProgress(long increment);
 

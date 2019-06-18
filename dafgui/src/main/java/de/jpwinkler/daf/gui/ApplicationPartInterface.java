@@ -5,6 +5,7 @@
  */
 package de.jpwinkler.daf.gui;
 
+import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
 import de.jpwinkler.daf.db.DatabasePath;
@@ -25,6 +26,8 @@ public interface ApplicationPartInterface {
     void executeCommand(final AbstractCommand command);
 
     DatabaseInterface getDatabaseInterface();
+    
+    BackgroundTaskExecutor getBackgroundTaskExecutor();
 
     DatabasePath createSnapshot(Predicate<DoorsTreeNode> include, DatabasePath destination);
 

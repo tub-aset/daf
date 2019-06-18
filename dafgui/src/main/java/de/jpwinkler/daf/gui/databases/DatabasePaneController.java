@@ -512,29 +512,36 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         public DoorsTreeItem(final DoorsFolder value) {
             super(value, getImage(value).toImageView());
 
-            treeNodeCache.put(value, this);
             knownTags.addAll(value.getTags());
+            treeNodeCache.put(value, this);
         }
 
         @Override
         public ObservableList<TreeItem<DoorsFolder>> getChildren() {
             if (!childrenLoaded) {
                 updateChildren();
-
             }
             return super.getChildren();
         }
 
         private void updateChildren() {
-            final ObservableList<DoorsTreeItem> list = FXCollections.observableArrayList();
-            getValue().getChildren().stream()
-                    .filter(n -> n instanceof DoorsFolder)
-                    .map(n -> new DoorsTreeItem((DoorsFolder) n))
-                    .forEach(list::add);
-
-            list.sort(Comparator.naturalOrder());
-            super.getChildren().setAll(list);
             childrenLoaded = true;
+            this.setGraphic(DatabasePaneImages.IMAGE_LOADING.toImageView());
+
+            getValue().getChildrenAsync(DatabasePaneController.this.getBackgroundTaskExecutor())
+                    .thenAccept(children -> Platform.runLater(() -> {
+                this.setGraphic(getImage(this.getValue()).toImageView());
+
+                final ObservableList<DoorsTreeItem> list = FXCollections.observableArrayList();
+                list.clear();
+                getValue().getChildren().stream()
+                        .filter(n -> n instanceof DoorsFolder)
+                        .map(n -> new DoorsTreeItem((DoorsFolder) n))
+                        .forEach(list::add);
+
+                list.sort(Comparator.naturalOrder());
+                super.getChildren().setAll(list);
+            }));
         }
 
         @Override

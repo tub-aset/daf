@@ -1,41 +1,37 @@
 package de.jpwinkler.daf.gui;
 
 import de.jpwinkler.daf.db.BackgroundTaskExecutor;
-import de.jpwinkler.daf.db.BackgroundTaskInterface;
+import de.jpwinkler.daf.db.BackgroundTaskNotifier;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import org.apache.commons.lang3.tuple.Pair;
 
-public class BackgroundTaskMonitor implements BackgroundTaskExecutor {
+public class BackgroundTaskExecutorImpl implements BackgroundTaskExecutor {
 
     private final BiConsumer<BackgroundTask, Double> sharedListener;
 
-    public BackgroundTaskMonitor(BiConsumer<BackgroundTask, Double> sharedListener) {
+    public BackgroundTaskExecutorImpl(BiConsumer<BackgroundTask, Double> sharedListener) {
         this.sharedListener = sharedListener;
     }
 
     private final List<BackgroundTask> tasks = Collections.synchronizedList(new ArrayList<>());
-    private final Map<BackgroundTask, Consumer<BackgroundTask>> taskSpecificListeners = Collections.synchronizedMap(new WeakHashMap<>());
+    private final Map<BackgroundTaskNotifier, Consumer<BackgroundTask>> taskSpecificListeners = Collections.synchronizedMap(new WeakHashMap<>());
     private final AtomicReference<Pair<Long, Long>> totalProgress = new AtomicReference<>(Pair.of(0l, 0l));
 
-    private final ExecutorService executor = Executors.newCachedThreadPool(new ThreadFactory() {
-        @Override
-        public Thread newThread(Runnable r) {
-            Thread t = new Thread(r);
-            t.setDaemon(true);
-            return t;
-        }
+    private final ExecutorService executor = Executors.newCachedThreadPool((Runnable r) -> {
+        Thread t = new Thread(r);
+        t.setDaemon(true);
+        return t;
     });
 
     public boolean hasRunningTasks() {
@@ -43,13 +39,13 @@ public class BackgroundTaskMonitor implements BackgroundTaskExecutor {
     }
 
     @Override
-    public <T> Future<T> runBackgroundTask(String name, Function<BackgroundTaskInterface, T> runnable) {
+    public <T> CompletableFuture<T> runBackgroundTask(String name, Function<BackgroundTaskNotifier, T> runnable) {
         return this.runBackgroundTask(name, runnable, executor);
     }
 
     @Override
-    public <T> Future<T> runBackgroundTask(String name, Function<BackgroundTaskInterface, T> runnable, ExecutorService executorService) {
-        BackgroundTask bt = new BackgroundTask<>(name, runnable, this::onBackgroundTaskUpdate);
+    public <T> CompletableFuture<T> runBackgroundTask(String name, Function<BackgroundTaskNotifier, T> runnable, ExecutorService executorService) {
+        BackgroundTask<T> bt = new BackgroundTask<>(name, runnable, this::onBackgroundTaskUpdate);
         this.tasks.add(bt);
         return bt.run(executorService);
     }

@@ -1,5 +1,6 @@
 package de.jpwinkler.daf.gui;
 
+import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
 import de.jpwinkler.daf.db.DatabasePath;
@@ -68,7 +69,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     private static final int MAX_RECENT_FILES = 10;
 
     private final Map<DatabasePath, ApplicationPartController> applicationPartControllers = new HashMap<>();
-    private final BackgroundTaskMonitor backgroundTaskMonitor = new BackgroundTaskMonitor(
+    private final BackgroundTaskExecutorImpl backgroundTaskExecutor = new BackgroundTaskExecutorImpl(
             (a, b) -> Platform.runLater(() -> this.onBackgroundTaskUpdate(a, b)));
 
     private final ApplicationPartRegistry applicationPartRegistry = new ApplicationPartRegistry(
@@ -292,8 +293,8 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     }
 
     @Override
-    public BackgroundTaskMonitor getBackgroundTaskMonitor() {
-        return backgroundTaskMonitor;
+    public BackgroundTaskExecutor getBackgroundTaskExecutor() {
+        return backgroundTaskExecutor;
     }
 
     private ApplicationPartController<?> getCurrentFileStateController() {
@@ -503,7 +504,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     private boolean backgroundMonitorPreventsClose = false;
 
     public void closeRequest() {
-        if (backgroundTaskMonitor.hasRunningTasks()) {
+        if (backgroundTaskExecutor.hasRunningTasks()) {
             Alert alert = new Alert(AlertType.CONFIRMATION, "There are running background tasks. Are you sure you want to close the application? You might lose their state.", ButtonType.CANCEL, ButtonType.OK);
             alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
             if (alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.CANCEL) {

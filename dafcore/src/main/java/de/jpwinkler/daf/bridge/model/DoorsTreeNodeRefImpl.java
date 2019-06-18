@@ -20,12 +20,14 @@ package de.jpwinkler.daf.bridge.model;
 import de.jpwinkler.daf.bridge.DXLScript;
 import de.jpwinkler.daf.bridge.DoorsApplication;
 import de.jpwinkler.daf.bridge.DoorsItemType;
+import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -107,8 +109,8 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNode {
     }
 
     @Override
-    public Future<List<DoorsTreeNode>> getChildrenAsync() {
-        return doorsApplication.getBackgroundTaskExecutor().runBackgroundTask("Load node children", i -> this.getChildren());
+    public CompletableFuture<List<DoorsTreeNode>> getChildrenAsync(BackgroundTaskExecutor executor) {
+        return executor.runBackgroundTask("Load node children", i -> this.getChildren());
     }
 
     @Override
@@ -173,6 +175,11 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNode {
         }
 
         return null;
+    }
+
+    @Override
+    public Future<DoorsTreeNode> getChildAsync(BackgroundTaskExecutor executor, String name) {
+        return executor.runBackgroundTask("Searching for child", i -> this.getChild(name));
     }
 
     @Override

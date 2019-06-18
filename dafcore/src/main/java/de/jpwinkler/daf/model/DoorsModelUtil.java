@@ -12,10 +12,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
 
 public class DoorsModelUtil {
@@ -121,35 +117,6 @@ public class DoorsModelUtil {
             return null;
         }
 
-    }
-
-    public static <T> Future<T> futureOf(T value) {
-        return new Future<T>() {
-            @Override
-            public boolean cancel(boolean mayInterruptIfRunning) {
-                return false;
-            }
-
-            @Override
-            public boolean isCancelled() {
-                return false;
-            }
-
-            @Override
-            public boolean isDone() {
-                return true;
-            }
-
-            @Override
-            public T get() throws InterruptedException, ExecutionException {
-                return value;
-            }
-
-            @Override
-            public T get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
-                return value;
-            }
-        };
     }
 
     // Defined here to prevent forward references in DoorsSystemAttributes

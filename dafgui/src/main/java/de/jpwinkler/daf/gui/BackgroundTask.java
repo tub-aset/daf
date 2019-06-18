@@ -1,9 +1,8 @@
 package de.jpwinkler.daf.gui;
 
-import de.jpwinkler.daf.db.BackgroundTaskInterface;
+import de.jpwinkler.daf.db.BackgroundTaskNotifier;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -12,43 +11,43 @@ import org.apache.commons.lang3.tuple.Pair;
 public class BackgroundTask<T> {
 
     private final String name;
-    private final Function<BackgroundTaskInterface, T> runnable;
+    private final Function<BackgroundTaskNotifier, T> runnable;
     private final BiConsumer<BackgroundTask, Pair<Long, Long>> monitor;
 
-    private final AtomicBoolean cancelled = new AtomicBoolean(false);
     private final AtomicReference<Pair<Long, Long>> taskProgress = new AtomicReference<>(null);
     private final AtomicReference<Throwable> taskError = new AtomicReference<>();
+    private final AtomicReference<CompletableFuture<T>> future = new AtomicReference<>();
 
-    public BackgroundTask(String name, Function<BackgroundTaskInterface, T> runnable, BiConsumer<BackgroundTask, Pair<Long, Long>> monitor) {
+    public BackgroundTask(String name, Function<BackgroundTaskNotifier, T> runnable, BiConsumer<BackgroundTask, Pair<Long, Long>> monitor) {
         this.name = name;
         this.runnable = runnable;
         this.monitor = monitor;
     }
 
-    public final Future<T> run(ExecutorService executor) {
+    final synchronized CompletableFuture<T> run(ExecutorService executor) {
+        if (future.get() != null) {
+            throw new IllegalStateException("Task already started");
+        }
+
         if (!taskProgress.compareAndSet(null, Pair.of(0l, 1l))) {
             throw new IllegalStateException("Task already started");
         }
-        this.monitor.accept(this, taskProgress.get());
-
-        return executor.submit(() -> {
+        this.future.set(CompletableFuture.supplyAsync(() -> {
             try {
-                T value = this.runnable.apply(new BackgroundTaskInterfaceImpl());
+                T value = this.runnable.apply(new BackgroundTaskNotifierImpl());
                 this.finish(null);
                 return value;
             } catch (Throwable t) {
                 this.finish(t);
                 throw new RuntimeException(t);
             }
-        });
+        }, executor));
+        this.monitor.accept(this, taskProgress.get());
+        return future.get();
     }
 
-    public final void cancel() {
-        this.cancelled.set(true);
-    }
-
-    public final boolean isCancelled() {
-        return this.cancelled.get();
+    public CompletableFuture<T> getFuture() {
+        return future.get();
     }
 
     public TaskStatus getTaskStatus() {
@@ -103,7 +102,7 @@ public class BackgroundTask<T> {
         monitor.accept(this, Pair.of(-existingProgress.getLeft(), -existingProgress.getRight()));
     }
 
-    public class BackgroundTaskInterfaceImpl implements BackgroundTaskInterface {
+    private class BackgroundTaskNotifierImpl implements BackgroundTaskNotifier {
 
         @Override
         public final void incrementProgress(long increment) {

@@ -2,9 +2,9 @@
  */
 package de.jpwinkler.daf.model;
 
+import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Future;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * <!-- begin-user-doc -->
@@ -45,8 +45,8 @@ public interface DoorsModule extends DoorsTreeNode {
          * @return 
          * @generated NOT
          */
-        default Future<List<String>> getObjectAttributesAsync() {
-            return DoorsModelUtil.futureOf(getObjectAttributes());
+        default CompletableFuture<List<String>> getObjectAttributesAsync(BackgroundTaskExecutor executor) {
+            return CompletableFuture.completedFuture(getObjectAttributes());
         }
 
 	/**

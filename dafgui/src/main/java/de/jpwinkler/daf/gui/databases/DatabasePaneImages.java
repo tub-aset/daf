@@ -17,11 +17,12 @@ import javafx.scene.image.ImageView;
  */
 public enum DatabasePaneImages {
 
-    IMAGE_FOLDER(MainFX.class.getResourceAsStream("icons/doors_folder.png")),
-    IMAGE_DB(MainFX.class.getResourceAsStream("icons/doors_db.png")),
-    IMAGE_FORMAL(MainFX.class.getResourceAsStream("icons/doors_formal.png")),
-    IMAGE_LINK(MainFX.class.getResourceAsStream("icons/doors_link.png")),
-    IMAGE_PROJECT(MainFX.class.getResourceAsStream("icons/doors_project.png"));
+    IMAGE_DB(MainFX.class.getResourceAsStream("icons/database.svg")),
+    IMAGE_FOLDER(MainFX.class.getResourceAsStream("icons/folder.svg")),
+    IMAGE_FORMAL(MainFX.class.getResourceAsStream("icons/file.svg")),
+    IMAGE_LINK(MainFX.class.getResourceAsStream("icons/link.svg")),
+    IMAGE_PROJECT(MainFX.class.getResourceAsStream("icons/folder-zip.svg")),
+    IMAGE_LOADING(MainFX.class.getResourceAsStream("icons/refresh.svg"));
 
     private final Image image;
 
