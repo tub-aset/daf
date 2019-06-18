@@ -6,6 +6,7 @@
 package de.jpwinkler.daf.gui.modules;
 
 import de.jpwinkler.daf.gui.ApplicationPreference;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -18,7 +19,7 @@ class ModulePanePreferences extends ApplicationPreference {
     public static final ApplicationPreference VIEWS = new ModulePanePreferences("VIEWS", ArrayList.class, new ArrayList<>());
     public static final ApplicationPreference CURRENT_VIEW = new ModulePanePreferences("CURRENT_VIEW", Integer.class, -1);
 
-    public ModulePanePreferences(String name, Class<?> valueType, Object defaultValue) {
+    public <T extends Serializable> ModulePanePreferences(String name, Class<T> valueType, Object defaultValue) {
         super(name, valueType, defaultValue);
     }
 }

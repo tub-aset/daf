@@ -23,7 +23,7 @@ import java.util.prefs.Preferences;
  */
 public class ApplicationPreference {
 
-    protected ApplicationPreference(String name, Class<?> valueType, Object defaultValue) {
+    protected <T extends Serializable> ApplicationPreference(String name, Class<T> valueType, Object defaultValue) {
         this.name = name;
         this.valueType = valueType;
         this.defaultValue = defaultValue;
