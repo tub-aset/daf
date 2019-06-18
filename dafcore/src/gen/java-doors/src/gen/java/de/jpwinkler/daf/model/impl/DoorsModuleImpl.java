@@ -2,6 +2,7 @@
  */
 package de.jpwinkler.daf.model.impl;
 
+import static de.jpwinkler.daf.bridge.DoorsApplication.STANDARD_VIEW;
 import de.jpwinkler.daf.model.DoorsAttributes;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
@@ -44,7 +45,7 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
      */
     @Override
     public String getView() {
-            return null;
+            return STANDARD_VIEW;
 	}
 
     /**
