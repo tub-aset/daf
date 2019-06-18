@@ -9,6 +9,7 @@ import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.model.DoorsTreeNode;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 
 /**
@@ -16,7 +17,7 @@ import java.util.function.Predicate;
  * @author fwiesweg
  */
 public interface ApplicationPaneInterface {
-    DatabasePath createSnapshot(DatabaseInterface sourceDB, DatabasePath sourcePath, Predicate<DoorsTreeNode> include, DatabasePath destinationPath);
+    CompletableFuture<DatabasePath> createSnapshot(DatabaseInterface sourceDB, DatabasePath sourcePath, Predicate<DoorsTreeNode> include, DatabasePath destinationPath);
 
     ApplicationPartInterface open(DatabasePath dbPath, DatabaseInterface.OpenFlag openFlag);
     

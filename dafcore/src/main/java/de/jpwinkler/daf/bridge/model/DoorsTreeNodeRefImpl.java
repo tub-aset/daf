@@ -149,6 +149,14 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNode {
     }
 
     @Override
+    public CompletableFuture<Void> acceptAsync(BackgroundTaskExecutor executor, DoorsTreeNodeVisitor visitor) {
+        return executor.runBackgroundTask("Visiting nodes", i -> {
+            this.accept(visitor);
+            return null;
+        });
+    }
+
+    @Override
     public boolean hasTag(String tag) {
         return false;
     }
@@ -178,7 +186,7 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNode {
     }
 
     @Override
-    public Future<DoorsTreeNode> getChildAsync(BackgroundTaskExecutor executor, String name) {
+    public CompletableFuture<DoorsTreeNode> getChildAsync(BackgroundTaskExecutor executor, String name) {
         return executor.runBackgroundTask("Searching for child", i -> this.getChild(name));
     }
 

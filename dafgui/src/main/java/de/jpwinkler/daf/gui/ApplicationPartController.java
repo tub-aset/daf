@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -82,7 +83,7 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
     }
 
     @Override
-    public final DatabasePath createSnapshot(Predicate<DoorsTreeNode> include, DatabasePath destination) {
+    public final CompletableFuture<DatabasePath> createSnapshot(Predicate<DoorsTreeNode> include, DatabasePath destination) {
         return applicationController.createSnapshot(this.getDatabaseInterface(), this.getDatabaseInterface().getPath(), include, destination);
     }
 

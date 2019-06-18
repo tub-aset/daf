@@ -1,6 +1,7 @@
 package de.jpwinkler.daf.gui.modules;
 
 import de.jpwinkler.daf.bridge.DoorsApplication;
+import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.filter.objects.CascadingFilter;
@@ -14,6 +15,8 @@ import de.jpwinkler.daf.gui.commands.CommandStack;
 import de.jpwinkler.daf.gui.commands.MultiCommand;
 import de.jpwinkler.daf.gui.commands.UpdateAction;
 import de.jpwinkler.daf.gui.controls.CustomTextFieldTableCell;
+import de.jpwinkler.daf.gui.controls.CustomTextFieldTreeCell;
+import de.jpwinkler.daf.gui.controls.DoorsTreeItem;
 import de.jpwinkler.daf.gui.controls.FixedSingleSelectionModel;
 import de.jpwinkler.daf.gui.controls.ForwardingMultipleSelectionModel;
 import de.jpwinkler.daf.gui.modules.ViewDefinition.ColumnDefinition;
@@ -49,6 +52,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -88,11 +92,6 @@ public final class ModulePaneController extends ApplicationPartController<Module
             contentTableView.setEditable(false);
         }
 
-        this.module = (DoorsModule) databaseInterface.getNode(path.getPath());
-        if (this.module == null) {
-            throw new RuntimeException("No such module: " + path.getPath());
-        }
-
         int currentViewIdx = ModulePanePreferences.CURRENT_VIEW.retrieve();
         if (currentViewIdx < 0 || currentViewIdx >= views.size()) {
             currentView = STANDARD_VIEW;
@@ -100,23 +99,46 @@ public final class ModulePaneController extends ApplicationPartController<Module
             currentView = views.get(currentViewIdx);
         }
 
-        mergeObjectAttributes();
-
-        updateGui(ModuleUpdateAction.UPDATE_VIEWS, ModuleUpdateAction.UPDATE_COLUMNS, ModuleUpdateAction.UPDATE_CONTENT_VIEW, ModuleUpdateAction.UPDATE_OUTLINE_VIEW);
-        traverseTreeItem(outlineTreeView.getRoot(), ti -> ti.setExpanded(true));
-
         contentTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         contentTableView.getSelectionModel().selectedItemProperty().addListener((ChangeListener<DoorsObject>) (observable, oldValue, newValue) -> {
             traverseTreeItem(outlineTreeView.getRoot(), item -> {
-                if (item != null && item.getValue() != null && Objects.equals(item.getValue().treeNode, newValue)) {
+                if (item != null && item.getValue() != null && Objects.equals(item.getValue(), newValue)) {
                     outlineTreeView.getSelectionModel().select(item);
                 }
             });
         });
 
-        outlineTreeView.getSelectionModel().selectedItemProperty().addListener((ChangeListener<TreeItem<OutlineTreeItem>>) (observable, oldValue, newValue) -> {
+        outlineTreeView.setCellFactory(tv -> new CustomTextFieldTreeCell<>(
+                treeNode -> {
+                    if (treeNode instanceof DoorsModule) {
+                        return ((DoorsModule) treeNode).getName();
+                    } else if (treeNode instanceof DoorsObject) {
+
+                        String truncatedText = ((DoorsObject) treeNode).getText().replace("\n", "");
+                        if (truncatedText.length() > 50) {
+                            truncatedText = truncatedText.substring(0, 47) + "...";
+                        }
+
+                        if (((DoorsObject) treeNode).isHeading()) {
+                            return ((DoorsObject) treeNode).getObjectNumber() + " " + truncatedText;
+                        } else {
+                            return truncatedText;
+                        }
+                    } else if (treeNode != null) {
+                        return treeNode.toString();
+                    } else {
+                        return "";
+                    }
+                },
+                (it, newName) -> {
+                    throw new UnsupportedOperationException();
+                },
+                it -> {
+                }
+        ));
+        outlineTreeView.getSelectionModel().selectedItemProperty().addListener((ChangeListener<TreeItem<DoorsTreeNode>>) (observable, oldValue, newValue) -> {
             contentTableView.getItems().forEach(c -> {
-                if (newValue != null && newValue.getValue() != null && newValue.getValue().treeNode == c) {
+                if (newValue != null && newValue == c) {
                     contentTableView.scrollTo(c);
                 }
             });
@@ -143,15 +165,28 @@ public final class ModulePaneController extends ApplicationPartController<Module
             this.updateFilter(filterTextField.getText(), newValue, includeChildrenCheckbox.isSelected(), filterExpressionCheckBox.isSelected());
         });
 
-        if (!DoorsApplication.STANDARD_VIEW.equals(module.getView())) {
-            setStatus("Warning: This module's view is not the standard view.");
-        }
+        databaseInterface.getDatabaseRoot().getChildAsync(super.getBackgroundTaskExecutor(), path.getPath())
+                .thenAccept(module -> Platform.runLater(() -> {
+            this.module = (DoorsModule) module;
+            if (this.module == null) {
+                throw new RuntimeException("No such module: " + path.getPath());
+            }
+
+            mergeObjectAttributes();
+
+            updateGui(ModuleUpdateAction.UPDATE_VIEWS, ModuleUpdateAction.UPDATE_COLUMNS, ModuleUpdateAction.UPDATE_CONTENT_VIEW, ModuleUpdateAction.UPDATE_OUTLINE_VIEW);
+            traverseTreeItem(outlineTreeView.getRoot(), ti -> ti.setExpanded(true));
+
+            if (!DoorsApplication.STANDARD_VIEW.equals(this.module.getView())) {
+                setStatus("Warning: This module's view is not the standard view.");
+            }
+        }));
     }
 
     private final List<DoorsObject> clipboard = new ArrayList<>();
     private final ArrayList<ViewDefinition> views = ModulePanePreferences.VIEWS.retrieve();
     private final Map<DoorsTreeNode, Boolean> expanded = new WeakHashMap<>();
-    private final DoorsModule module;
+    private DoorsModule module;
 
     private ViewDefinition currentView;
     private final Set<DoorsObject> filteredObjects = new HashSet<>();
@@ -160,7 +195,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
     private SplitPane mainSplitPane;
 
     @FXML
-    private TreeView<OutlineTreeItem> outlineTreeView;
+    private TreeView<DoorsTreeNode> outlineTreeView;
 
     @FXML
     private TableView<DoorsObject> contentTableView;
@@ -186,7 +221,6 @@ public final class ModulePaneController extends ApplicationPartController<Module
             traverseTreeItem(child, f);
         }
     }
-//
 
     @FXML
     public void reduceToSelectionClicked() {
@@ -200,37 +234,29 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
     private void updateOutlineView(final DoorsModule module) {
         if (outlineTreeView.getRoot() != null) {
-            traverseTreeItem(outlineTreeView.getRoot(), ti -> expanded.put(ti.getValue().treeNode, ti.isExpanded()));
+            traverseTreeItem(outlineTreeView.getRoot(), ti -> expanded.put(ti.getValue(), ti.isExpanded()));
         }
 
         if (module != null) {
-
-            final TreeItem<OutlineTreeItem> wrappedModule = wrapModule(module);
-            traverseTreeItem(wrappedModule, ti -> ti.setExpanded(expanded.containsKey(ti.getValue().treeNode) && expanded.get(ti.getValue().treeNode)));
-            outlineTreeView.setRoot(wrappedModule);
+            outlineTreeView.setRoot(new DoorsTreeItem(super.getBackgroundTaskExecutor(), module, (item, node) -> {
+            }, a -> true));
+            traverseTreeItem(outlineTreeView.getRoot(), ti -> ti.setExpanded(expanded.containsKey(ti.getValue()) && expanded.get(ti.getValue())));
         } else {
             outlineTreeView.setRoot(null);
         }
     }
 
-    private TreeItem<OutlineTreeItem> wrapModule(final DoorsTreeNode doorsTreeNode) {
-        final TreeItem<OutlineTreeItem> treeItem = new TreeItem<>(new OutlineTreeItem(doorsTreeNode));
-
-        for (final DoorsTreeNode childNode : doorsTreeNode.getChildren()) {
-            treeItem.getChildren().add(wrapModule(childNode));
-        }
-        return treeItem;
-    }
-
     private void updateContentView() {
         final TablePosition<?, ?> focusedCell = contentTableView.getFocusModel().getFocusedCell();
         contentTableView.getItems().clear();
-        module.accept(new DoorsTreeNodeVisitor<DoorsObject>(DoorsObject.class) {
+        module.acceptAsync(super.getBackgroundTaskExecutor(), new DoorsTreeNodeVisitor<DoorsObject>(DoorsObject.class) {
             @Override
             public boolean visitPreTraverse(final DoorsObject object) {
-                if (!filteredObjects.contains(object)) {
-                    contentTableView.getItems().add(object);
-                }
+                Platform.runLater(() -> {
+                    if (!filteredObjects.contains(object)) {
+                        contentTableView.getItems().add(object);
+                    }
+                });
                 return true;
             }
 
@@ -536,35 +562,4 @@ public final class ModulePaneController extends ApplicationPartController<Module
         }
 
     }
-
-    private static class OutlineTreeItem {
-
-        public final DoorsTreeNode treeNode;
-
-        public OutlineTreeItem(final DoorsTreeNode treeNode) {
-            this.treeNode = treeNode;
-        }
-
-        @Override
-        public String toString() {
-            if (treeNode instanceof DoorsModule) {
-                return ((DoorsModule) treeNode).getName();
-            } else if (treeNode instanceof DoorsObject) {
-
-                String truncatedText = ((DoorsObject) treeNode).getText().replace("\n", "");
-                if (truncatedText.length() > 50) {
-                    truncatedText = truncatedText.substring(0, 47) + "...";
-                }
-
-                if (((DoorsObject) treeNode).isHeading()) {
-                    return ((DoorsObject) treeNode).getObjectNumber() + " " + truncatedText;
-                } else {
-                    return truncatedText;
-                }
-            } else {
-                return treeNode.toString();
-            }
-        }
-    }
-
 }

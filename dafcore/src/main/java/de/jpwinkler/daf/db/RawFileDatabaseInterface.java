@@ -42,15 +42,6 @@ public class RawFileDatabaseInterface implements DatabaseInterface {
     }
 
     @Override
-    public DoorsTreeNode getNode(String path) {
-        if (path == null || path.isEmpty()) {
-            return getDatabaseRoot();
-        }
-
-        return null;
-    }
-
-    @Override
     public DoorsModule getDatabaseRoot() {
         return databaseRoot;
     }

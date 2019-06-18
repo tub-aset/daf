@@ -1,5 +1,8 @@
 package de.jpwinkler.daf.gui.databases;
 
+import de.jpwinkler.daf.gui.controls.DoorsTreeItem;
+import de.jpwinkler.daf.db.BackgroundTaskExecutor;
+import de.jpwinkler.daf.gui.ApplicationIcons;
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
 import de.jpwinkler.daf.db.DatabasePath;
@@ -42,6 +45,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.WeakHashMap;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -87,7 +91,10 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                 it -> {
                 }));
 
-        databaseTreeView.setRoot(new DoorsTreeItem((DoorsFolder) databaseInterface.getDatabaseRoot()));
+        databaseTreeView.setRoot(new DoorsTreeItem(super.getBackgroundTaskExecutor(), (DoorsTreeNode) databaseInterface.getDatabaseRoot(), (item, node) -> {
+            knownTags.addAll(node.getTags());
+            treeNodeCache.put(node, item);
+        }, node -> node instanceof DoorsFolder));
         databaseTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             updateGui(UpdateModulesView, UpdateTagsView, UpdateAttributesView, UpdateNodeTitle);
         });
@@ -212,7 +219,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     private SplitPane mainSplitPane;
 
     @FXML
-    private TreeView<DoorsFolder> databaseTreeView;
+    private TreeView<DoorsTreeNode> databaseTreeView;
 
     @FXML
     private TitledPane currentNodePane;
@@ -264,6 +271,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     private List<Entry<String, String>> attributeClipboard;
     private List<String> tagsClipboard;
 
+    private final WeakHashMap<DoorsTreeNode, DoorsTreeItem> treeNodeCache = new WeakHashMap<>();
     private final HashSet<String> knownTags = new HashSet<>();
 
     @FXML
@@ -405,21 +413,14 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     }
 
     private void createSnapshot(Predicate<DoorsTreeNode> include) {
-        DatabasePath destinationPath = null;
-        try {
-            destinationPath = super.createSnapshot(include, destinationPath);
-        } catch (Throwable ex) {
-            ex.printStackTrace();
-            while (ex.getCause() != null) {
-                ex = ex.getCause();
+        super.createSnapshot(include, null).thenAccept(destinationPath -> {
+            if (destinationPath != null) {
+                Platform.runLater(() -> {
+                    this.open(destinationPath, OpenFlag.OPEN_ONLY);
+                });
             }
+        });
 
-            this.setStatus("Snapshot failed; " + ApplicationPaneController.getMessage(ex));
-        }
-
-        if (destinationPath != null) {
-            this.open(destinationPath, OpenFlag.OPEN_ONLY);
-        }
     }
 
     private void editSnapshotListClicked(String snapshotList) {
@@ -444,23 +445,10 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         });
     }
 
-    private <T> void traverseTreeItem(final TreeItem<T> root, final Consumer<TreeItem<T>> f) {
+    private void traverseTreeItem(final DoorsTreeItem root, final Consumer<DoorsTreeItem> f) {
         f.accept(root);
-        for (final TreeItem<T> child : root.getChildren()) {
-            traverseTreeItem(child, f);
-        }
-    }
-
-    private final WeakHashMap<DoorsTreeNode, DoorsTreeItem> treeNodeCache = new WeakHashMap<>();
-
-    private static DatabasePaneImages getImage(DoorsTreeNode value) {
-        if (value.getParent() == null) {
-            return DatabasePaneImages.IMAGE_DB;
-        } else if (value instanceof DoorsModule) {
-            return DatabasePaneImages.IMAGE_FORMAL;
-        } else {
-            return DatabasePaneImages.IMAGE_FOLDER;
-
+        for (final TreeItem<?> child : root.getChildren()) {
+            traverseTreeItem((DoorsTreeItem) child, f);
         }
     }
 
@@ -482,7 +470,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
     @Override
     public SelectionModel<DoorsFolder> getCurrentFolderSelectionModel() {
-        return new ForwardingMultipleSelectionModel<>(databaseTreeView.getSelectionModel(), x -> treeNodeCache.get(x), y -> y.getValue());
+        return new ForwardingMultipleSelectionModel<>(databaseTreeView.getSelectionModel(), x -> treeNodeCache.get(x), y -> (DoorsFolder) y.getValue());
     }
 
     @Override
@@ -503,57 +491,6 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     @FXML
     public void showBottomPaneClicked() {
         bottomExtensionPane.selectFirst();
-    }
-
-    private class DoorsTreeItem extends TreeItem<DoorsFolder> implements Comparable<DoorsTreeItem> {
-
-        private boolean childrenLoaded = false;
-
-        public DoorsTreeItem(final DoorsFolder value) {
-            super(value, getImage(value).toImageView());
-
-            knownTags.addAll(value.getTags());
-            treeNodeCache.put(value, this);
-        }
-
-        @Override
-        public ObservableList<TreeItem<DoorsFolder>> getChildren() {
-            if (!childrenLoaded) {
-                updateChildren();
-            }
-            return super.getChildren();
-        }
-
-        private void updateChildren() {
-            childrenLoaded = true;
-            this.setGraphic(DatabasePaneImages.IMAGE_LOADING.toImageView());
-
-            getValue().getChildrenAsync(DatabasePaneController.this.getBackgroundTaskExecutor())
-                    .thenAccept(children -> Platform.runLater(() -> {
-                this.setGraphic(getImage(this.getValue()).toImageView());
-
-                final ObservableList<DoorsTreeItem> list = FXCollections.observableArrayList();
-                list.clear();
-                getValue().getChildren().stream()
-                        .filter(n -> n instanceof DoorsFolder)
-                        .map(n -> new DoorsTreeItem((DoorsFolder) n))
-                        .forEach(list::add);
-
-                list.sort(Comparator.naturalOrder());
-                super.getChildren().setAll(list);
-            }));
-        }
-
-        @Override
-        public boolean isLeaf() {
-            return childrenLoaded && getChildren().isEmpty();
-        }
-
-        @Override
-        public int compareTo(DoorsTreeItem o2) {
-            return Objects.compare(this.getValue().getName(), o2.getValue().getName(), Comparator.naturalOrder());
-        }
-
     }
 
     public static final UpdateAction<DatabasePaneController> UpdateTreeItem(DoorsTreeNode node) {
@@ -582,12 +519,15 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
     public static final UpdateAction<DatabasePaneController> UpdateModulesView = ctrl -> {
         ctrl.modulesTableView.getItems().clear();
-        ctrl.modulesTableView.setItems(ctrl.databaseTreeView.getSelectionModel().getSelectedItems().stream()
-                .flatMap(it -> it.getValue().getChildren().stream())
-                .filter(it -> it instanceof DoorsModule)
-                .map(it -> (DoorsModule) it)
-                .peek(it -> ctrl.knownTags.addAll(it.getTags()))
-                .collect(Collectors.toCollection(() -> FXCollections.observableArrayList())));
+        ctrl.databaseTreeView.getSelectionModel().getSelectedItems().stream()
+                .map(it -> it.getValue().getChildrenAsync(ctrl.getBackgroundTaskExecutor()))
+                .forEach(ft -> ft.thenAccept(children -> Platform.runLater(() -> {
+            ctrl.modulesTableView.getItems().addAll(children.stream()
+                    .filter(it -> it instanceof DoorsModule)
+                    .map(it -> (DoorsModule) it)
+                    .peek(it -> ctrl.knownTags.addAll(it.getTags()))
+                    .collect(Collectors.toList()));
+        })));
     };
 
     public static final UpdateAction<DatabasePaneController> UpdateTagsView = ctrl -> {
@@ -608,10 +548,12 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
     public static final UpdateAction<DatabasePaneController> UpdateAttributesView = ctrl -> {
         ctrl.attributesTableView.getItems().clear();
-        ctrl.attributesTableView.setItems(ctrl.getCurrentDoorsTreeNode()
-                .flatMap(it -> it.getAttributes().entrySet().stream())
-                .filter(it -> DoorsAttributes.getForKey(it.getKey()).map(v -> !v.isSystemKey()).orElse(true))
-                .collect(Collectors.toCollection(() -> FXCollections.observableArrayList())));
-
+        ctrl.getCurrentDoorsTreeNode()
+                .map(it -> it.getAttributesAsync(ctrl.getBackgroundTaskExecutor()))
+                .forEach(ft -> ft.thenAccept(attr -> Platform.runLater(() -> {
+            ctrl.attributesTableView.getItems().addAll(attr.entrySet().stream()
+                    .filter(it -> DoorsAttributes.getForKey(it.getKey()).map(v -> !v.isSystemKey()).orElse(true))
+                    .collect(Collectors.toList()));
+        })));
     };
 }

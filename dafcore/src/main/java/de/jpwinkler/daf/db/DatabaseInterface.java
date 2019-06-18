@@ -30,10 +30,6 @@ public interface DatabaseInterface {
     default void flush() throws IOException {
         throw new UnsupportedOperationException("Not supported");
     }
-
-    default DoorsTreeNode getNode(String path) {
-        return this.getDatabaseRoot().getChild(path);
-    }
     
     default boolean isReadOnly() {
         return false;

@@ -150,6 +150,11 @@ public interface DoorsTreeNode {
 	 * @generated
 	 */
 	void accept(DoorsTreeNodeVisitor visitor);
+        
+        default CompletableFuture<Void> acceptAsync(BackgroundTaskExecutor executor, DoorsTreeNodeVisitor visitor) {
+            accept(visitor);
+            return CompletableFuture.completedFuture(null);
+        }
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -219,7 +224,7 @@ public interface DoorsTreeNode {
          * @return 
          * @generated NOT
          */
-        default Future<DoorsTreeNode> getChildAsync(BackgroundTaskExecutor executor, String name) {
+        default CompletableFuture<DoorsTreeNode> getChildAsync(BackgroundTaskExecutor executor, String name) {
             return CompletableFuture.completedFuture(getChild(name));
         }
 

@@ -14,6 +14,7 @@ import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 import javafx.scene.control.SelectionModel;
 
@@ -29,7 +30,7 @@ public interface ApplicationPartInterface {
     
     BackgroundTaskExecutor getBackgroundTaskExecutor();
 
-    DatabasePath createSnapshot(Predicate<DoorsTreeNode> include, DatabasePath destination);
+    CompletableFuture<DatabasePath> createSnapshot(Predicate<DoorsTreeNode> include, DatabasePath destination);
 
     ApplicationPartInterface open(DatabasePath dbPath, OpenFlag openFlag);
 

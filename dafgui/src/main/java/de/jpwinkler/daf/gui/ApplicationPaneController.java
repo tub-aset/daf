@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 import java.util.jar.Manifest;
 import java.util.stream.Collectors;
@@ -445,51 +446,66 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
     @FXML
     public void saveAsClicked() {
-        DatabasePath destinationPath = null;
-        try {
-            destinationPath = this.createSnapshot(getCurrentFileStateController().getDatabaseInterface(), getCurrentFileStateController().getPath(), x -> true, destinationPath);
-        } catch (Throwable ex) {
-            ex.printStackTrace();
-            while (ex.getCause() != null) {
-                ex = ex.getCause();
-            }
-
-            this.setStatus("Snapshot failed; " + getMessage(ex));
-        }
-
-        if (destinationPath != null) {
-            this.open(destinationPath, OpenFlag.OPEN_ONLY);
-        }
+        this.createSnapshot(getCurrentFileStateController().getDatabaseInterface(), getCurrentFileStateController().getPath(), x -> true, null)
+                .thenAccept(destinationPath -> {
+                    if (destinationPath != null) {
+                        Platform.runLater(() -> {
+                            this.open(destinationPath, OpenFlag.OPEN_ONLY);
+                        });
+                    }
+                });
     }
 
     @Override
-    public DatabasePath createSnapshot(DatabaseInterface sourceDB, DatabasePath sourcePath, Predicate<DoorsTreeNode> include, DatabasePath destinationPath) {
-        if (destinationPath == null) {
+    public CompletableFuture<DatabasePath> createSnapshot(DatabaseInterface sourceDB, DatabasePath sourcePath, Predicate<DoorsTreeNode> include, DatabasePath destinationPathArg) {
+        DatabasePath destinationPath;
+        if (destinationPathArg == null) {
             ChoiceDialog<ApplicationPart<?>> applicationPartChooser = new ChoiceDialog<>(null, applicationPartRegistry.registry().filter(p -> p.isAllowNew()).collect(Collectors.toList()));
             applicationPartChooser.setTitle("Create snapshot");
             applicationPartChooser.setHeaderText("Select a destination database type");
-            destinationPath = Main.asStream(applicationPartChooser.showAndWait())
+            destinationPathArg = Main.asStream(applicationPartChooser.showAndWait())
                     .flatMap(part -> part.saveWithSelector(tabPane.getScene().getWindow()))
                     .findAny().orElse(null);
 
-            if (destinationPath == null) {
-                return null;
+            if (destinationPathArg == null) {
+                return CompletableFuture.completedFuture(null);
             }
+
+            destinationPath = destinationPathArg;
+        } else {
+            destinationPath = destinationPathArg;
         }
 
-        try {
-            DatabaseInterface destinationDB = applicationPartRegistry.openDatabase(destinationPath, OpenFlag.ERASE_IF_EXISTS).getLeft();
-            destinationDB.getFactory().copy(sourceDB.getNode(sourcePath.getPath()), destinationDB.getDatabaseRoot(), include);
-            DoorsAttributes.DATABASE_COPIED_FROM.setValue(String.class, destinationDB.getDatabaseRoot(), sourceDB.getPath().toString());
-            DoorsAttributes.DATABASE_COPIED_AT.setValue(String.class, destinationDB.getDatabaseRoot(), ZonedDateTime.now(ZoneOffset.UTC).toString());
+        return this.getBackgroundTaskExecutor().runBackgroundTask("Creating snapshot", i -> {
+            try {
+                DatabaseInterface destinationDB = applicationPartRegistry.openDatabase(destinationPath, OpenFlag.ERASE_IF_EXISTS).getLeft();
+                destinationDB.getFactory().copy(sourceDB.getDatabaseRoot().getChild(sourcePath.getPath()), destinationDB.getDatabaseRoot(), include);
+                DoorsAttributes.DATABASE_COPIED_FROM.setValue(String.class,
+                        destinationDB.getDatabaseRoot(), sourceDB.getPath().toString());
+                DoorsAttributes.DATABASE_COPIED_AT.setValue(String.class,
+                        destinationDB.getDatabaseRoot(), ZonedDateTime.now(ZoneOffset.UTC).toString());
 
-            destinationDB.flush();
-            return destinationPath;
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        } finally {
-            applicationPartRegistry.closeDatabase(destinationPath);
-        }
+                destinationDB.flush();
+                return destinationPath;
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            } finally {
+                applicationPartRegistry.closeDatabase(destinationPath);
+            }
+        }).handleAsync((val, exo) -> {
+            Platform.runLater(() -> {
+                if (exo != null) {
+                    Throwable ex = exo;
+                    ex.printStackTrace();
+                    while (ex.getCause() != null) {
+                        ex = ex.getCause();
+                    }
+
+                    this.setStatus("Snapshot failed; " + getMessage(ex));
+                }
+            });
+            return val;
+        });
     }
 
     @FXML
@@ -637,7 +653,8 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             throw new RuntimeException("Plugin could not be started");
         }
 
-        List<ApplicationPaneExtension> newExts = plugin.getPluginManager().getExtensions(ApplicationPaneExtension.class, plugin.getPluginId());
+        List<ApplicationPaneExtension> newExts = plugin.getPluginManager().getExtensions(ApplicationPaneExtension.class,
+                plugin.getPluginId());
         this.extensions.addAll(newExts);
         newExts.stream()
                 .flatMap(e -> e.getApplicationMenus().stream())

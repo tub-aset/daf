@@ -13,7 +13,6 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
 <VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
         <MenuBar fx:id="mainMenuBar">
@@ -63,7 +62,7 @@
                   <Insets left="5.0" right="5.0" />
                </HBox.margin>
             </ProgressBar>
-            <MenuButton fx:id="backgroundTaskMenuButton" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" popupSide="LEFT" prefHeight="20.0" prefWidth="28.0" />
+            <MenuButton fx:id="backgroundTaskMenuButton" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" popupSide="TOP" prefHeight="20.0" prefWidth="28.0" />
          </children>
       </HBox>
    </children>
