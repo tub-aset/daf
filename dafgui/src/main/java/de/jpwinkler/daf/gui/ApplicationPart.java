@@ -6,6 +6,7 @@
 package de.jpwinkler.daf.gui;
 
 import de.jpwinkler.daf.db.DatabaseInterface;
+import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
 import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.db.DoorsApplicationDatabaseInterface;
 import de.jpwinkler.daf.db.FolderDatabaseInterface;
@@ -15,6 +16,7 @@ import de.jpwinkler.daf.gui.commands.CommandStack;
 import de.jpwinkler.daf.gui.databases.DatabasePaneController;
 import de.jpwinkler.daf.gui.modules.ModulePaneController;
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -24,6 +26,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 import javafx.scene.control.TextInputDialog;
 import javafx.stage.DirectoryChooser;
@@ -31,7 +34,10 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Window;
 import org.apache.commons.io.FilenameUtils;
-import org.pf4j.PluginState;
+import org.apache.commons.lang3.mutable.MutableInt;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
+import org.pf4j.PluginWrapper;
 
 /**
  *
@@ -84,7 +90,7 @@ public final class ApplicationPart<T extends DatabaseInterface> {
     }
 
     public static DatabaseSelector defaultSelector(String dbPath, String path) {
-        return (window, part, save) -> save ? Stream.empty() : Stream.of(new DatabasePath<>(part.getDatabaseInterfaceClass(), dbPath, path));
+        return (window, part, save) -> save ? Stream.empty() : Stream.of(new DatabasePath<>(part.databaseInterfaceClass, dbPath, path));
     }
 
     public static DatabaseSelector fileChooserSelector(ExtensionFilter... extensionFilters) {
@@ -108,7 +114,7 @@ public final class ApplicationPart<T extends DatabaseInterface> {
                         }
                     })
                     .map(transform)
-                    .map(f -> new DatabasePath<>(part.getDatabaseInterfaceClass(), f, ""));
+                    .map(f -> new DatabasePath<>(part.databaseInterfaceClass, f, ""));
         };
     }
 
@@ -127,7 +133,7 @@ public final class ApplicationPart<T extends DatabaseInterface> {
                             ApplicationPreferences.SAVE_DIRECTORY.store(f.getParentFile().getAbsoluteFile());
                         }
                     })
-                    .map(f -> new DatabasePath<>(part.getDatabaseInterfaceClass(), f.getAbsolutePath(), ""));
+                    .map(f -> new DatabasePath<>(part.databaseInterfaceClass, f.getAbsolutePath(), ""));
         };
     }
 
@@ -141,27 +147,15 @@ public final class ApplicationPart<T extends DatabaseInterface> {
             TextInputDialog dialog = new TextInputDialog();
             dialog.setTitle((save ? "Save a " : "Open a ") + part.getName());
             dialog.setHeaderText("Please enter a URI to " + (save ? "save." : "open."));
-            dialog.setContentText(part.getDatabaseInterfaceClass().getSimpleName() + ":");
+            dialog.setContentText(part.databaseInterfaceClass.getSimpleName() + ":");
 
             return Main.asStream(dialog.showAndWait())
-                    .map(s -> new DatabasePath(part.getDatabaseInterfaceClass(), s));
+                    .map(s -> new DatabasePath(part.databaseInterfaceClass, s));
         };
-    }
-
-    public String getName() {
-        return name;
     }
 
     public boolean isAllowNew() {
         return allowNew;
-    }
-    
-    public Class<T> getDatabaseInterfaceClass() {
-        return databaseInterfaceClass;
-    }
-
-    public String getDatabaseInterfaceName() {
-        return databaseInterfaceClass.getCanonicalName();
     }
 
     public Stream<DatabasePath> openWithSelector(Window window) {
@@ -172,21 +166,77 @@ public final class ApplicationPart<T extends DatabaseInterface> {
         return selector.select(window, this, true);
     }
 
-    public ApplicationPartController createController(ApplicationPaneController appController, DatabasePath path, DatabaseInterface databaseInterface, CommandStack databaseCommandStack) {
-        ApplicationPartController pc = partConstructor.construct(appController, this, path, databaseInterface, databaseCommandStack);
-        appController.pluginManager.getPlugins(PluginState.STARTED).forEach(pc::addPlugin);
-        return pc;
+    public String getName() {
+        return name;
     }
 
     @Override
     public String toString() {
-        return this.name;
+        return getName();
+    }
+
+    private String getDatabaseInterfaceName() {
+        return databaseInterfaceClass.getCanonicalName();
     }
 
     public static class ApplicationPartRegistry {
 
+        public ApplicationPartRegistry(Supplier<Stream<PluginWrapper>> pluginSupplier, BiConsumer<DatabaseInterface, Boolean> dirtyListener) {
+            this.dirtyListener = dirtyListener;
+            this.pluginSupplier = pluginSupplier;
+        }
+        private final BiConsumer<DatabaseInterface, Boolean> dirtyListener;
+        private final Supplier<Stream<PluginWrapper>> pluginSupplier;
+
         private final Map<String, List<ApplicationPart<?>>> REGISTRY = new HashMap<>();
         private final HashSet<BiConsumer<ApplicationPart<?>, ApplicationPart<?>>> listeners = new HashSet<>();
+
+        private final Map<DatabasePath, Triple<MutableInt, DatabaseInterface, CommandStack>> databaseInterfaces = new HashMap<>();
+
+        public Pair<DatabaseInterface, CommandStack> openDatabase(DatabasePath path, OpenFlag openFlag) {
+            DatabasePath databasePath = path.withPath("");
+            DatabaseInterface databaseInterface;
+            CommandStack commandStack;
+
+            if (databaseInterfaces.containsKey(databasePath)) {
+                databaseInterfaces.get(databasePath).getLeft().increment();
+                databaseInterface = databaseInterfaces.get(databasePath).getMiddle();
+                commandStack = databaseInterfaces.get(databasePath).getRight();
+            } else {
+                try {
+                    Class<? extends DatabaseInterface> dbInterface = pluginSupplier.get()
+                            .map(pl -> pl.getPluginClassLoader())
+                            .map(cl -> {
+                                try {
+                                    return cl.loadClass(databasePath.getDatabaseInterface());
+                                } catch (ClassNotFoundException ex) {
+                                    return null;
+                                }
+                            })
+                            .filter(cls -> cls != null)
+                            .filter(cls -> DatabaseInterface.class.isAssignableFrom(cls))
+                            .map(cls -> (Class<? extends DatabaseInterface>) cls)
+                            .findFirst().orElseThrow(() -> new ClassNotFoundException("Database interface missing: " + databasePath.getDatabaseInterface()));
+
+                    databaseInterface = dbInterface.getConstructor(DatabasePath.class, OpenFlag.class).newInstance(databasePath, openFlag);
+                } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                    throw new RuntimeException(ex);
+                }
+                commandStack = new CommandStack(dirty -> dirtyListener.accept(databaseInterface, dirty));
+                databaseInterfaces.put(databasePath, Triple.of(new MutableInt(1), databaseInterface, commandStack));
+            }
+            return Pair.of(databaseInterface, commandStack);
+        }
+
+        public void closeDatabase(DatabasePath path) {
+            path = path.withPath("");
+            MutableInt refCounter = databaseInterfaces.get(path).getLeft();
+            refCounter.decrement();
+
+            if (refCounter.intValue() == 0) {
+                databaseInterfaces.remove(path);
+            }
+        }
 
         public void register(ApplicationPart part) {
             if (!REGISTRY.containsKey(part.getDatabaseInterfaceName())) {
@@ -226,8 +276,21 @@ public final class ApplicationPart<T extends DatabaseInterface> {
             return getPart(path).saveWithSelector(window);
         }
 
-        public ApplicationPartController createControllerForAny(ApplicationPaneController appController, DatabasePath path, DatabaseInterface databaseInterface, CommandStack databaseCommandStack) {
-            return getPart(path).createController(appController, path, databaseInterface, databaseCommandStack);
+        public ApplicationPartController createController(ApplicationPaneController appController, DatabasePath path, ApplicationPart part, OpenFlag openFlag) {
+            Pair<DatabaseInterface, CommandStack> db = openDatabase(path, openFlag);
+
+            ApplicationPartController pc = part.partConstructor.construct(appController, part, path, db.getLeft(), db.getRight());
+            pluginSupplier.get().forEach(pc::addPlugin);
+            return pc;
+        }
+
+        public ApplicationPartController createController(ApplicationPaneController appController, DatabasePath path, OpenFlag openFlag) {
+            Pair<DatabaseInterface, CommandStack> db = openDatabase(path, openFlag);
+            ApplicationPart part = getPart(path);
+
+            ApplicationPartController pc = part.partConstructor.construct(appController, part, path, db.getLeft(), db.getRight());
+            pluginSupplier.get().forEach(pc::addPlugin);
+            return pc;
         }
 
         public void addListener(BiConsumer<ApplicationPart<?>, ApplicationPart<?>> listener) {

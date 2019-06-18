@@ -4,13 +4,11 @@ import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
 import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.gui.ApplicationPart.ApplicationPartRegistry;
-import de.jpwinkler.daf.gui.commands.CommandStack;
 import de.jpwinkler.daf.gui.controls.ProgressMenuItemController;
 import de.jpwinkler.daf.gui.controls.ProgressMenuItemController.ProgressMenuItem;
 import de.jpwinkler.daf.model.DoorsAttributes;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
@@ -56,8 +54,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import org.apache.commons.lang3.mutable.MutableBoolean;
-import org.apache.commons.lang3.mutable.MutableInt;
-import org.apache.commons.lang3.tuple.Triple;
+import org.apache.commons.lang3.tuple.Pair;
 import org.pf4j.DefaultPluginManager;
 import org.pf4j.ManifestPluginDescriptorFinder;
 import org.pf4j.PluginDescriptorFinder;
@@ -70,16 +67,20 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     private static final int MAX_STATUS_MENU_ITEMS = 20;
     private static final int MAX_RECENT_FILES = 10;
 
-    private final Map<DatabasePath, Triple<MutableInt, DatabaseInterface, CommandStack>> databaseInterfaces = new HashMap<>();
     private final Map<DatabasePath, ApplicationPartController> applicationPartControllers = new HashMap<>();
     private final BackgroundTaskMonitor backgroundTaskMonitor = new BackgroundTaskMonitor(
             (a, b) -> Platform.runLater(() -> this.onBackgroundTaskUpdate(a, b)));
 
-    private final ApplicationPartRegistry applicationPartRegistry = new ApplicationPartRegistry();
+    private final ApplicationPartRegistry applicationPartRegistry = new ApplicationPartRegistry(
+            () -> this.pluginManager.getPlugins(PluginState.STARTED).stream().distinct(),
+            (databaseInterface, dirty) -> this.tabPane.getTabs().stream()
+                    .map(t -> Pair.of(t, this.applicationPartControllers.get((DatabasePath) t.getUserData())))
+                    .filter(t -> t.getRight().getDatabaseInterface() == databaseInterface)
+                    .forEach(t -> t.getLeft().setText(t.getRight().getPath().toString() + (dirty ? "*" : ""))));
     private final List<ApplicationPaneExtension> extensions = new ArrayList<>();
     private final Map<Menu, PluginWrapper> extensionMenus = new HashMap<>();
 
-    final PluginManager pluginManager = new DefaultPluginManager() {
+    private final PluginManager pluginManager = new DefaultPluginManager() {
         @Override
         protected PluginDescriptorFinder createPluginDescriptorFinder() {
             return new ManifestPluginDescriptorFinder();
@@ -350,24 +351,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         }
 
         try {
-            final DatabasePath databasePath = path.withPath("");
-            final DatabaseInterface databaseInterface;
-            final CommandStack commandStack;
-            if (databaseInterfaces.containsKey(databasePath)) {
-                databaseInterfaces.get(databasePath).getLeft().increment();
-                databaseInterface = databaseInterfaces.get(databasePath).getMiddle();
-                commandStack = databaseInterfaces.get(databasePath).getRight();
-            } else {
-                databaseInterface = openDatabaseInterface(path, openFlag);
-                commandStack = new CommandStack(dirty -> {
-                    this.tabPane.getTabs().stream()
-                            .filter(t -> this.applicationPartControllers.get((DatabasePath) t.getUserData()).getDatabaseInterface() == databaseInterface)
-                            .forEach(t -> t.setText(path.toString() + (dirty ? "*" : "")));
-                });
-                databaseInterfaces.put(databasePath, Triple.of(new MutableInt(1), databaseInterface, commandStack));
-            }
-
-            final ApplicationPartController controller = applicationPartRegistry.createControllerForAny(this, path, databaseInterface, commandStack);
+            final ApplicationPartController controller = applicationPartRegistry.createController(this, path, openFlag);
             final Parent modulePane = controller.getNode();
 
             final Tab selectedTab = new Tab(path.toString(), modulePane);
@@ -388,29 +372,6 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
             setStatus("Open: Failed to open file; " + getMessage(ex));
             return null;
-        }
-    }
-
-    private DatabaseInterface openDatabaseInterface(DatabasePath path, OpenFlag openFlag) {
-        try {
-            Class<? extends DatabaseInterface> dbInterface = Stream.concat(
-                    Stream.of(DatabaseInterface.class.getClassLoader()),
-                    pluginManager.getPlugins(PluginState.STARTED).stream().map(pl -> pl.getPluginClassLoader()))
-                    .map(cl -> {
-                        try {
-                            return cl.loadClass(path.getDatabaseInterface());
-                        } catch (ClassNotFoundException ex) {
-                            return null;
-                        }
-                    })
-                    .filter(cls -> cls != null)
-                    .filter(cls -> DatabaseInterface.class.isAssignableFrom(cls))
-                    .map(cls -> (Class<? extends DatabaseInterface>) cls)
-                    .findFirst().orElseThrow(() -> new ClassNotFoundException("Database interface missing: " + path.getDatabaseInterface()));
-
-            return (DatabaseInterface) dbInterface.getConstructor(DatabasePath.class, OpenFlag.class).newInstance(path.withPath(""), openFlag);
-        } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-            throw new RuntimeException(ex);
         }
     }
 
@@ -515,17 +476,19 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             }
         }
 
-        DatabaseInterface destinationDB = openDatabaseInterface(destinationPath, OpenFlag.ERASE_IF_EXISTS);
-        destinationDB.getFactory().copy(sourceDB.getNode(sourcePath.getPath()), destinationDB.getDatabaseRoot(), include);
-        DoorsAttributes.DATABASE_COPIED_FROM.setValue(String.class, destinationDB.getDatabaseRoot(), sourceDB.getPath().toString());
-        DoorsAttributes.DATABASE_COPIED_AT.setValue(String.class, destinationDB.getDatabaseRoot(), ZonedDateTime.now(ZoneOffset.UTC).toString());
-
         try {
+            DatabaseInterface destinationDB = applicationPartRegistry.openDatabase(destinationPath, OpenFlag.ERASE_IF_EXISTS).getLeft();
+            destinationDB.getFactory().copy(sourceDB.getNode(sourcePath.getPath()), destinationDB.getDatabaseRoot(), include);
+            DoorsAttributes.DATABASE_COPIED_FROM.setValue(String.class, destinationDB.getDatabaseRoot(), sourceDB.getPath().toString());
+            DoorsAttributes.DATABASE_COPIED_AT.setValue(String.class, destinationDB.getDatabaseRoot(), ZonedDateTime.now(ZoneOffset.UTC).toString());
+
             destinationDB.flush();
+            return destinationPath;
         } catch (IOException ex) {
             throw new RuntimeException(ex);
+        } finally {
+            applicationPartRegistry.closeDatabase(destinationPath);
         }
-        return destinationPath;
     }
 
     @FXML
@@ -577,7 +540,8 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     private ButtonType closeTab(DatabasePath path) {
         // non-dirty files can be closed without worries
         if (!getApplicationPartController(path).getCommandStack().isDirty()) {
-            removeDatabaseReference(path);
+            applicationPartControllers.remove(path);
+            applicationPartRegistry.closeDatabase(path);
             return ButtonType.YES;
         }
 
@@ -587,10 +551,12 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         ButtonType response = alert.showAndWait().orElse(ButtonType.NO);
         if (response == ButtonType.NO) { // no
-            removeDatabaseReference(path);
+            applicationPartControllers.remove(path);
+            applicationPartRegistry.closeDatabase(path);
             return ButtonType.YES;
         } else if (response == ButtonType.YES && this.save(path)) { // yes and save success
-            removeDatabaseReference(path);
+            applicationPartControllers.remove(path);
+            applicationPartRegistry.closeDatabase(path);
             return ButtonType.YES;
         } else if (response == ButtonType.YES) { // yes but save failed
             return ButtonType.CANCEL;
@@ -598,17 +564,6 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             return ButtonType.CANCEL;
         } else {
             throw new AssertionError();
-        }
-    }
-
-    private void removeDatabaseReference(DatabasePath path) {
-        ApplicationPartController ctrl = applicationPartControllers.remove(path);
-        DatabasePath databasePath = ctrl.getDatabaseInterface().getPath();
-        MutableInt refCounter = databaseInterfaces.get(databasePath).getLeft();
-        refCounter.decrement();
-
-        if (refCounter.intValue() == 0) {
-            databaseInterfaces.remove(databasePath);
         }
     }
 
