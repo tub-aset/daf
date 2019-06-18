@@ -47,10 +47,10 @@ public class DoorsApplication {
             String lib;
             switch (System.getProperty("os.arch")) {
                 case "x86":
-                    lib = "jacob-1.18-x86.dll";
+                    lib = "jacob/jacob-1.18-x86.dll";
                     break;
                 case "amd64":
-                    lib = "jacob-1.18-x64.dll";
+                    lib = "jacob/jacob-1.18-x64.dll";
                     break;
                 default:
                     throw new RuntimeException("No jacob dll for architecture " + System.getProperty("os.arch"));
