@@ -21,5 +21,7 @@ public interface ApplicationPaneInterface {
 
     ApplicationPartInterface open(DatabasePath dbPath, DatabaseInterface.OpenFlag openFlag);
     
+    ApplicationPartInterface open(ApplicationPartFactoryRegistry.ApplicationPart part, DatabaseInterface.OpenFlag openFlag);
+    
     BackgroundTaskExecutor getBackgroundTaskExecutor();
 }

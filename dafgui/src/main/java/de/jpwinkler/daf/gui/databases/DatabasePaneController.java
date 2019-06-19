@@ -1,18 +1,13 @@
 package de.jpwinkler.daf.gui.databases;
 
-import de.jpwinkler.daf.gui.controls.DoorsTreeItem;
-import de.jpwinkler.daf.db.BackgroundTaskExecutor;
-import de.jpwinkler.daf.gui.ApplicationIcons;
-import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
-import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.gui.ApplicationPaneController;
-import de.jpwinkler.daf.gui.ApplicationPart;
 import de.jpwinkler.daf.gui.ApplicationPartController;
-import de.jpwinkler.daf.gui.commands.CommandStack;
+import de.jpwinkler.daf.gui.ApplicationPartFactoryRegistry.ApplicationPart;
 import de.jpwinkler.daf.gui.commands.UpdateAction;
 import de.jpwinkler.daf.gui.controls.CustomTextFieldTableCell;
 import de.jpwinkler.daf.gui.controls.CustomTextFieldTreeCell;
+import de.jpwinkler.daf.gui.controls.DoorsTreeItem;
 import de.jpwinkler.daf.gui.controls.EmptySelectionModel;
 import de.jpwinkler.daf.gui.controls.ExtensionPane;
 import de.jpwinkler.daf.gui.controls.ForwardingMultipleSelectionModel;
@@ -34,25 +29,20 @@ import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.WeakHashMap;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
@@ -74,10 +64,10 @@ import org.pf4j.PluginWrapper;
 
 public final class DatabasePaneController extends ApplicationPartController<DatabasePaneController> {
 
-    public DatabasePaneController(ApplicationPaneController applicationController, ApplicationPart applicationPart, DatabasePath path, DatabaseInterface databaseInterface, CommandStack databaseCommandStack) {
-        super(applicationController, applicationPart, path, databaseInterface, databaseCommandStack);
+    public DatabasePaneController(ApplicationPaneController applicationController, ApplicationPart applicationPart) {
+        super(applicationController, applicationPart);
 
-        if (databaseInterface.isReadOnly()) {
+        if (super.getDatabaseInterface().isReadOnly()) {
             databaseTreeView.setEditable(false);
             moduleNameColumn.setEditable(false);
             moduleDescriptionColumn.setEditable(false);
@@ -91,7 +81,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                 it -> {
                 }));
 
-        databaseTreeView.setRoot(new DoorsTreeItem(super.getBackgroundTaskExecutor(), (DoorsTreeNode) databaseInterface.getDatabaseRoot(), (item, node) -> {
+        databaseTreeView.setRoot(new DoorsTreeItem(super.getBackgroundTaskExecutor(), (DoorsTreeNode) super.getDatabaseInterface().getDatabaseRoot(), (item, node) -> {
             knownTags.addAll(node.getTags());
             treeNodeCache.put(node, item);
         }, node -> node instanceof DoorsFolder));

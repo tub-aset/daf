@@ -89,6 +89,10 @@ public class DatabasePath<T extends DatabaseInterface> implements Serializable {
     public List<String> getPathSegments() {
         return path == null ? Collections.emptyList() : Arrays.asList(path.split("/"));
     }
+    
+    public boolean isRoot() {
+        return path == null || path.isEmpty() || "/".equals(path);
+    }
 
     @Override
     public String toString() {

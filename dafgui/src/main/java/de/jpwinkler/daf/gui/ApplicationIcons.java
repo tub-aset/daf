@@ -5,8 +5,6 @@
  */
 package de.jpwinkler.daf.gui;
 
-import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
-import de.jpwinkler.daf.gui.MainFX;
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;

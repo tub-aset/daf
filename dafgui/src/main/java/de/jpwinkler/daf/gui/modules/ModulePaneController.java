@@ -1,17 +1,13 @@
 package de.jpwinkler.daf.gui.modules;
 
 import de.jpwinkler.daf.bridge.DoorsApplication;
-import de.jpwinkler.daf.db.BackgroundTaskExecutor;
-import de.jpwinkler.daf.db.DatabaseInterface;
-import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.filter.objects.CascadingFilter;
 import de.jpwinkler.daf.filter.objects.DoorsObjectFilter;
 import de.jpwinkler.daf.filter.objects.ObjectTextAndHeadingFilter;
 import de.jpwinkler.daf.filter.objects.ReverseCascadingFilter;
 import de.jpwinkler.daf.gui.ApplicationPaneController;
-import de.jpwinkler.daf.gui.ApplicationPart;
 import de.jpwinkler.daf.gui.ApplicationPartController;
-import de.jpwinkler.daf.gui.commands.CommandStack;
+import de.jpwinkler.daf.gui.ApplicationPartFactoryRegistry.ApplicationPart;
 import de.jpwinkler.daf.gui.commands.MultiCommand;
 import de.jpwinkler.daf.gui.commands.UpdateAction;
 import de.jpwinkler.daf.gui.controls.CustomTextFieldTableCell;
@@ -84,10 +80,10 @@ public final class ModulePaneController extends ApplicationPartController<Module
         STANDARD_VIEW.setDisplayRemainingColumns(true);
     }
 
-    public ModulePaneController(ApplicationPaneController applicationController, ApplicationPart applicationPart, DatabasePath path, DatabaseInterface databaseInterface, CommandStack databaseCommandStack) {
-        super(applicationController, applicationPart, path, databaseInterface, databaseCommandStack);
+    public ModulePaneController(ApplicationPaneController applicationController, ApplicationPart part) {
+        super(applicationController, part);
 
-        if (databaseInterface.isReadOnly()) {
+        if (super.getDatabaseInterface().isReadOnly()) {
             outlineTreeView.setEditable(false);
             contentTableView.setEditable(false);
         }
@@ -165,11 +161,11 @@ public final class ModulePaneController extends ApplicationPartController<Module
             this.updateFilter(filterTextField.getText(), newValue, includeChildrenCheckbox.isSelected(), filterExpressionCheckBox.isSelected());
         });
 
-        databaseInterface.getDatabaseRoot().getChildAsync(super.getBackgroundTaskExecutor(), path.getPath())
+        super.getDatabaseInterface().getDatabaseRoot().getChildAsync(super.getBackgroundTaskExecutor(), part.getDatabasePath().getPath())
                 .thenAccept(module -> Platform.runLater(() -> {
             this.module = (DoorsModule) module;
             if (this.module == null) {
-                throw new RuntimeException("No such module: " + path.getPath());
+                throw new RuntimeException("No such module: " + part.getDatabasePath().toString());
             }
 
             mergeObjectAttributes();

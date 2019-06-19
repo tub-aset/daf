@@ -8,33 +8,20 @@ package de.jpwinkler.daf.gui;
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
 import de.jpwinkler.daf.db.DatabasePath;
-import de.jpwinkler.daf.db.DoorsApplicationDatabaseInterface;
-import de.jpwinkler.daf.db.FolderDatabaseInterface;
-import de.jpwinkler.daf.db.RawFileDatabaseInterface;
-import de.jpwinkler.daf.db.XmiDatabaseInterface;
 import de.jpwinkler.daf.gui.commands.CommandStack;
-import de.jpwinkler.daf.gui.databases.DatabasePaneController;
-import de.jpwinkler.daf.gui.modules.ModulePaneController;
-import java.io.File;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
-import java.util.function.Function;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
-import javafx.scene.control.TextInputDialog;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
-import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Window;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
@@ -44,265 +31,286 @@ import org.pf4j.PluginWrapper;
  *
  * @author fwiesweg
  */
-public final class ApplicationPart implements Serializable {
+public final class ApplicationPartFactoryRegistry {
 
-    static void registerDefault(ApplicationPartRegistry applicationPartRegistry) {
-        applicationPartRegistry.register(new ApplicationPart("Doors Bridge", DoorsApplicationDatabaseInterface.class,
-                ApplicationPart::dynamicPartConstructor, defaultSelector("", null), false));
-        applicationPartRegistry.register(new ApplicationPart("Local folder database", FolderDatabaseInterface.class,
-                ApplicationPart::dynamicPartConstructor, localFolderDatabaseSelector(), true));
-        applicationPartRegistry.register(new ApplicationPart("Local xmi database", XmiDatabaseInterface.class,
-                ApplicationPart::dynamicPartConstructor, fileChooserSelector(new FileChooser.ExtensionFilter("XMI", "*.xmi")), true));
-        applicationPartRegistry.register(new ApplicationPart("Local module", RawFileDatabaseInterface.class,
-                ModulePaneController::new, fileChooserSelector(f -> FilenameUtils.removeExtension(f.getAbsolutePath()), new FileChooser.ExtensionFilter("CSV/MMD", "*.csv", "*.mmd")), true));
+    public ApplicationPartFactoryRegistry(Supplier<Stream<PluginWrapper>> pluginSupplier, BiConsumer<ApplicationPart, Boolean> dirtyListener) {
+        this.dirtyListener = dirtyListener;
+        this.pluginSupplier = pluginSupplier;
     }
+    private final BiConsumer<ApplicationPart, Boolean> dirtyListener;
+    private final Supplier<Stream<PluginWrapper>> pluginSupplier;
 
-    public static interface ApplicationPartConstructor {
+    private final LinkedHashMap<String, ApplicationPartFactory> REGISTRY = new LinkedHashMap<>();
+    private final HashSet<BiConsumer<ApplicationPartFactory, ApplicationPartFactory>> listeners = new HashSet<>();
 
-        public ApplicationPartController construct(ApplicationPaneController appController, ApplicationPart applicationPart, DatabasePath path, DatabaseInterface databaseInterface, CommandStack databaseCommandStack);
-    }
+    private final Map<DatabasePath, Triple<MutableInt, DatabaseInterface, CommandStack>> databaseInterfaces = new HashMap<>();
 
-    public static interface DatabaseSelector {
+    public Pair<DatabaseInterface, CommandStack> openDatabase(DatabasePath path, OpenFlag openFlag) {
+        DatabasePath databasePath = path.withPath("");
+        DatabaseInterface databaseInterface;
+        CommandStack commandStack;
 
-        public Stream<DatabasePath> select(Window window, ApplicationPart part, boolean save);
-    }
-
-    private final String name;
-    private final String databaseInterfaceClass;
-    private final ApplicationPartConstructor partConstructor;
-    private final DatabaseSelector selector;
-    private final boolean allowNew;
-
-    public <T extends DatabaseInterface> ApplicationPart(String name, Class<T> databaseInterface,
-            ApplicationPartConstructor partConstructor, DatabaseSelector selector, boolean allowNew) {
-        this.name = name;
-        this.databaseInterfaceClass = databaseInterface.getCanonicalName();
-        this.partConstructor = partConstructor;
-        this.selector = selector;
-        this.allowNew = allowNew;
-    }
-
-    public static ApplicationPartController dynamicPartConstructor(ApplicationPaneController appController, ApplicationPart applicationPart, DatabasePath path, DatabaseInterface databaseInterface, CommandStack databaseCommandStack) {
-        if (path.getPath() == null || path.getPath().isEmpty()) {
-            return new DatabasePaneController(appController, applicationPart, path, databaseInterface, databaseCommandStack);
+        if (databaseInterfaces.containsKey(databasePath)) {
+            databaseInterfaces.get(databasePath).getLeft().increment();
+            databaseInterface = databaseInterfaces.get(databasePath).getMiddle();
+            commandStack = databaseInterfaces.get(databasePath).getRight();
         } else {
-            return new ModulePaneController(appController, applicationPart, path, databaseInterface, databaseCommandStack);
-        }
-    }
+            try {
+                Class<? extends DatabaseInterface> dbInterface = Stream.concat(
+                        Stream.of(ApplicationPartFactory.class.getClassLoader()), pluginSupplier.get().map(pl -> pl.getPluginClassLoader()))
+                        .map(cl -> {
+                            try {
+                                return cl.loadClass(databasePath.getDatabaseInterface());
+                            } catch (ClassNotFoundException ex) {
+                                return null;
+                            }
+                        })
+                        .filter(cls -> cls != null)
+                        .filter(cls -> DatabaseInterface.class.isAssignableFrom(cls))
+                        .map(cls -> (Class<? extends DatabaseInterface>) cls)
+                        .findFirst().orElseThrow(() -> new ClassNotFoundException("Database interface missing: " + databasePath.getDatabaseInterface()));
 
-    public static DatabaseSelector defaultSelector(String dbPath, String path) {
-        return (window, part, save) -> save ? Stream.empty() : Stream.of(new DatabasePath<>(part.databaseInterfaceClass, dbPath, path));
-    }
-
-    public static DatabaseSelector fileChooserSelector(ExtensionFilter... extensionFilters) {
-        return fileChooserSelector(f -> f.getAbsolutePath(), extensionFilters);
-    }
-
-    public static DatabaseSelector fileChooserSelector(Function<File, String> transform, ExtensionFilter... extensionFilters) {
-        return (window, part, save) -> {
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle((save ? "Save a " : "Open a ") + part.getName());
-            fileChooser.setInitialDirectory(save ? ApplicationPreferences.SAVE_DIRECTORY.retrieve() : ApplicationPreferences.OPEN_DIRECTORY.retrieve());
-            fileChooser.getExtensionFilters().addAll(extensionFilters);
-
-            return Stream.of(save ? fileChooser.showSaveDialog(window) : fileChooser.showOpenDialog(window))
-                    .filter(f -> f != null)
-                    .peek(f -> {
-                        if (save) {
-                            ApplicationPreferences.OPEN_DIRECTORY.store(f.getParentFile().getAbsoluteFile());
-                        } else {
-                            ApplicationPreferences.SAVE_DIRECTORY.store(f.getParentFile().getAbsoluteFile());
-                        }
-                    })
-                    .map(transform)
-                    .map(f -> new DatabasePath<>(part.databaseInterfaceClass, f, ""));
-        };
-    }
-
-    public static DatabaseSelector directorySelector() {
-        return (window, part, save) -> {
-            DirectoryChooser dirChooser = new DirectoryChooser();
-            dirChooser.setTitle((save ? "Save a " : "Open a ") + part.getName());
-            dirChooser.setInitialDirectory(save ? ApplicationPreferences.SAVE_DIRECTORY.retrieve() : ApplicationPreferences.OPEN_DIRECTORY.retrieve());
-
-            return Stream.of(dirChooser.showDialog(window))
-                    .filter(f -> f != null)
-                    .peek(f -> {
-                        if (save) {
-                            ApplicationPreferences.OPEN_DIRECTORY.store(f.getParentFile().getAbsoluteFile());
-                        } else {
-                            ApplicationPreferences.SAVE_DIRECTORY.store(f.getParentFile().getAbsoluteFile());
-                        }
-                    })
-                    .map(f -> new DatabasePath<>(part.databaseInterfaceClass, f.getAbsolutePath(), ""));
-        };
-    }
-
-    public static DatabaseSelector localFolderDatabaseSelector() {
-        return (window, part, save)
-                -> save ? directorySelector().select(window, part, save) : fileChooserSelector(f -> f.getParent(), new ExtensionFilter("Root folder MMD", "__folder__.mmd")).select(window, part, save);
-    }
-
-    public static DatabaseSelector genericSelector() {
-        return (window, part, save) -> {
-            TextInputDialog dialog = new TextInputDialog();
-            dialog.setTitle((save ? "Save a " : "Open a ") + part.getName());
-            dialog.setHeaderText("Please enter a URI to " + (save ? "save." : "open."));
-            dialog.setContentText(part.databaseInterfaceClass + ":");
-
-            return Main.asStream(dialog.showAndWait())
-                    .map(s -> new DatabasePath(part.databaseInterfaceClass, s));
-        };
-    }
-
-    public boolean isAllowNew() {
-        return allowNew;
-    }
-
-    public Stream<DatabasePath> openWithSelector(Window window) {
-        return selector.select(window, this, false);
-    }
-
-    public Stream<DatabasePath> saveWithSelector(Window window) {
-        return selector.select(window, this, true);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public String toString() {
-        return getName();
-    }
-
-    public static class ApplicationPartRegistry {
-
-        public ApplicationPartRegistry(Supplier<Stream<PluginWrapper>> pluginSupplier, BiConsumer<DatabaseInterface, Boolean> dirtyListener) {
-            this.dirtyListener = dirtyListener;
-            this.pluginSupplier = pluginSupplier;
-        }
-        private final BiConsumer<DatabaseInterface, Boolean> dirtyListener;
-        private final Supplier<Stream<PluginWrapper>> pluginSupplier;
-
-        private final Map<String, List<ApplicationPart>> REGISTRY = new HashMap<>();
-        private final HashSet<BiConsumer<ApplicationPart, ApplicationPart>> listeners = new HashSet<>();
-
-        private final Map<DatabasePath, Triple<MutableInt, DatabaseInterface, CommandStack>> databaseInterfaces = new HashMap<>();
-
-        public Pair<DatabaseInterface, CommandStack> openDatabase(DatabasePath path, OpenFlag openFlag) {
-            DatabasePath databasePath = path.withPath("");
-            DatabaseInterface databaseInterface;
-            CommandStack commandStack;
-
-            if (databaseInterfaces.containsKey(databasePath)) {
-                databaseInterfaces.get(databasePath).getLeft().increment();
-                databaseInterface = databaseInterfaces.get(databasePath).getMiddle();
-                commandStack = databaseInterfaces.get(databasePath).getRight();
-            } else {
-                try {
-                    Class<? extends DatabaseInterface> dbInterface = Stream.concat(
-                            Stream.of(ApplicationPart.class.getClassLoader()), pluginSupplier.get().map(pl -> pl.getPluginClassLoader()))
-                            .map(cl -> {
-                                try {
-                                    return cl.loadClass(databasePath.getDatabaseInterface());
-                                } catch (ClassNotFoundException ex) {
-                                    return null;
-                                }
-                            })
-                            .filter(cls -> cls != null)
-                            .filter(cls -> DatabaseInterface.class.isAssignableFrom(cls))
-                            .map(cls -> (Class<? extends DatabaseInterface>) cls)
-                            .findFirst().orElseThrow(() -> new ClassNotFoundException("Database interface missing: " + databasePath.getDatabaseInterface()));
-
-                    databaseInterface = dbInterface.getConstructor(DatabasePath.class, OpenFlag.class).newInstance(databasePath, openFlag);
-                } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-                    throw new RuntimeException(ex);
-                }
-                commandStack = new CommandStack(dirty -> dirtyListener.accept(databaseInterface, dirty));
-                databaseInterfaces.put(databasePath, Triple.of(new MutableInt(1), databaseInterface, commandStack));
+                databaseInterface = dbInterface.getConstructor(DatabasePath.class, OpenFlag.class).newInstance(databasePath, openFlag);
+            } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                throw new RuntimeException(ex);
             }
-            return Pair.of(databaseInterface, commandStack);
+            commandStack = new CommandStack();
+            databaseInterfaces.put(databasePath, Triple.of(new MutableInt(1), databaseInterface, commandStack));
+        }
+        return Pair.of(databaseInterface, commandStack);
+    }
+
+    public void closeDatabase(DatabasePath path) {
+        path = path.withPath("");
+        MutableInt refCounter = databaseInterfaces.get(path).getLeft();
+        refCounter.decrement();
+
+        if (refCounter.intValue() == 0) {
+            databaseInterfaces.remove(path).getMiddle().close();
+        }
+    }
+
+    public void register(Class<? extends ApplicationPartFactory> partFactoryClass) {
+        this.unregister(partFactoryClass);
+
+        ApplicationPartFactory partFactory;
+        try {
+            partFactory = partFactoryClass.getConstructor().newInstance();
+        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw new RuntimeException(ex);
         }
 
-        public void closeDatabase(DatabasePath path) {
-            path = path.withPath("");
-            MutableInt refCounter = databaseInterfaces.get(path).getLeft();
-            refCounter.decrement();
+        REGISTRY.put(partFactoryClass.getCanonicalName(), partFactory);
+        listeners.forEach(l -> l.accept(partFactory, null));
+    }
 
-            if (refCounter.intValue() == 0) {
-                databaseInterfaces.remove(path);
-            }
+    public void unregister(Class<? extends ApplicationPartFactory> partFactoryClass) {
+        ApplicationPartFactory partFactory = REGISTRY.remove(partFactoryClass.getCanonicalName());
+
+        if (partFactory != null) {
+            listeners.forEach(l -> l.accept(null, partFactory));
+        }
+    }
+
+    public ApplicationPart getDefaultPart(DatabasePath path) {
+        return REGISTRY.values().stream()
+                .filter(ap -> ap.databaseInterface.equals(path.getDatabaseInterface()))
+                .reduce((ap1, ap2) -> ap2)
+                .orElseThrow(() -> new RuntimeException("No application partFactory available to handle this database path"))
+                .openPath(path);
+    }
+
+    public void addListener(BiConsumer<ApplicationPartFactory, ApplicationPartFactory> listener) {
+        listeners.add(listener);
+    }
+
+    public void removeListener(BiConsumer<ApplicationPartFactory, ApplicationPartFactory> listener) {
+        listeners.remove(listener);
+    }
+
+    public Collection<ApplicationPartFactory> registry() {
+        return REGISTRY.values();
+    }
+
+    private ApplicationPartFactory getPartFactory(String className) {
+        return REGISTRY.values().stream()
+                .filter(pf -> className.equals(pf.getClass().getCanonicalName()))
+                .findAny().orElse(null);
+    }
+
+    public static interface DatabasePathFactory {
+
+        public Stream<DatabasePath> create(Window window, ApplicationPartFactory partFactory, boolean save);
+    }
+
+    public static interface ApplicationPartControllerFactory {
+
+        public ApplicationPartController construct(ApplicationPaneController appController, ApplicationPart applicationPart);
+    }
+
+    public static abstract class ApplicationPartFactory implements Serializable {
+
+        private final String name;
+        private final String databaseInterface;
+        private final boolean allowNew;
+
+        protected ApplicationPartFactory(String name, Class<? extends DatabaseInterface> databaseInterface, boolean allowNew) {
+            this.name = name;
+            this.databaseInterface = databaseInterface.getCanonicalName();
+            this.allowNew = allowNew;
         }
 
-        public void register(ApplicationPart part) {
-            if (!REGISTRY.containsKey(part.databaseInterfaceClass)) {
-                REGISTRY.put(part.databaseInterfaceClass, new ArrayList<>());
-            }
-            REGISTRY.get(part.databaseInterfaceClass).add(part);
-
-            listeners.forEach(l -> l.accept(part, null));
+        public final boolean isAllowNew() {
+            return allowNew;
         }
 
-        public void unregister(ApplicationPart part) {
-            if (!REGISTRY.containsKey(part.databaseInterfaceClass)) {
-                return;
-            }
-            listeners.forEach(l -> l.accept(null, part));
-
-            REGISTRY.get(part.databaseInterfaceClass).remove(part);
-            if (REGISTRY.get(part.databaseInterfaceClass).isEmpty()) {
-                REGISTRY.remove(part.databaseInterfaceClass);
-            }
+        public final String getName() {
+            return name;
         }
 
-        private ApplicationPart getPart(DatabasePath path) {
-            List<ApplicationPart> partList = REGISTRY.get(path.getDatabaseInterface());
-            if (partList == null) {
-                throw new RuntimeException("No application part available to handle this database path");
+        @Override
+        public final String toString() {
+            return getName();
+        }
+
+        public final String getDatabaseInterface() {
+            return databaseInterface;
+        }
+
+        public final Stream<ApplicationPart> openWithSelector(Window window) {
+            return this.getDatabasePathFactory().create(window, this, false).map(this::openPath);
+        }
+
+        public final Stream<ApplicationPart> saveWithSelector(Window window) {
+            return this.getDatabasePathFactory().create(window, this, true).map(this::openPath);
+        }
+
+        protected DatabasePathFactory getDatabasePathFactory() {
+            return ApplicationPartFactories.genericSelector();
+        }
+
+        protected ApplicationPartControllerFactory getApplicationPartControllerFactory() {
+            return ApplicationPartFactories::dynamicPartConstructor;
+        }
+
+        private ApplicationPart openPath(DatabasePath path) {
+            if (!this.databaseInterface.equals(path.getDatabaseInterface())) {
+                throw new IllegalArgumentException();
             }
 
-            return partList.get(partList.size() - 1);
-        }
+            return new ApplicationPart(this.getClass().getCanonicalName(), path);
 
-        public Stream<DatabasePath> openWithSelector(DatabasePath path, Window window) {
-            return getPart(path).openWithSelector(window);
-        }
-
-        public Stream<DatabasePath> saveWithSelector(DatabasePath path, Window window) {
-            return getPart(path).saveWithSelector(window);
-        }
-
-        public ApplicationPartController createController(ApplicationPaneController appController, DatabasePath path, ApplicationPart part, OpenFlag openFlag) {
-            Pair<DatabaseInterface, CommandStack> db = openDatabase(path, openFlag);
-
-            ApplicationPartController pc = part.partConstructor.construct(appController, part, path, db.getLeft(), db.getRight());
-            pluginSupplier.get().forEach(pc::addPlugin);
-            return pc;
-        }
-
-        public ApplicationPartController createController(ApplicationPaneController appController, DatabasePath path, OpenFlag openFlag) {
-            Pair<DatabaseInterface, CommandStack> db = openDatabase(path, openFlag);
-            ApplicationPart part = getPart(path);
-
-            ApplicationPartController pc = part.partConstructor.construct(appController, part, path, db.getLeft(), db.getRight());
-            pluginSupplier.get().forEach(pc::addPlugin);
-            return pc;
-        }
-
-        public void addListener(BiConsumer<ApplicationPart, ApplicationPart> listener) {
-            listeners.add(listener);
-        }
-
-        public void removeListener(BiConsumer<ApplicationPart, ApplicationPart> listener) {
-            listeners.remove(listener);
-        }
-
-        public Stream<ApplicationPart> registry() {
-            return REGISTRY.values().stream()
-                    .flatMap(l -> l.stream())
-                    .sorted((p1, p2) -> Objects.compare(p1.getName(), p2.getName(), Comparator.naturalOrder()));
         }
     }
 
+    public static final class ApplicationPart implements Serializable {
+
+        private final String partFactoryClass;
+        private final DatabasePath databasePath;
+
+        private transient ApplicationPartFactoryRegistry registry;
+
+        private transient DatabaseInterface databaseInterface;
+        private transient CommandStack commandStack;
+        private transient ApplicationPartController controller;
+
+        private ApplicationPart(String partFactoryClass, DatabasePath databasePath) {
+            this.partFactoryClass = partFactoryClass;
+            this.databasePath = databasePath;
+        }
+
+        public ApplicationPartFactory getApplicationPartFactory() {
+            return registry.getPartFactory(partFactoryClass);
+        }
+
+        public DatabasePath getDatabasePath() {
+            return databasePath;
+        }
+
+        public boolean isStarted() {
+            return this.databaseInterface != null && this.commandStack != null;
+        }
+
+        private void dirtyListener(boolean dirty) {
+            this.registry.dirtyListener.accept(this, dirty);
+        }
+
+        public ApplicationPartController start(ApplicationPaneController appController, OpenFlag openFlag) {
+            if (this.isStarted()) {
+                throw new IllegalStateException("Already started");
+            }
+
+            this.registry = appController.getApplicationPartFactoryRegistry();
+            Pair<DatabaseInterface, CommandStack> db = registry.openDatabase(databasePath, openFlag);
+            this.databaseInterface = db.getLeft();
+            this.commandStack = db.getRight();
+            this.commandStack.addDirtyListener(this::dirtyListener);
+
+            this.controller = appController.getApplicationPartFactoryRegistry().getPartFactory(this.partFactoryClass).getApplicationPartControllerFactory().construct(appController, this);
+            this.registry.pluginSupplier.get().forEach(controller::addPlugin);
+
+            return this.controller;
+        }
+
+        public ApplicationPart stop() {
+            if (!this.isStarted()) {
+                return this;
+            }
+
+            this.registry.pluginSupplier.get().forEach(controller::removePlugin);
+            this.registry.closeDatabase(databasePath);
+            this.controller = null;
+
+            this.commandStack.removeDirtyListener(this::dirtyListener);
+            this.commandStack = null;
+            this.databaseInterface = null;
+            this.registry = null;
+
+            return this;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(this.partFactoryClass, this.databasePath);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final ApplicationPart other = (ApplicationPart) obj;
+            if (!Objects.equals(this.partFactoryClass, other.partFactoryClass)) {
+                return false;
+            }
+            if (!Objects.equals(this.databasePath, other.databasePath)) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        public String toString() {
+            return databasePath.toString();
+        }
+
+        public DatabaseInterface getDatabaseInterface() {
+            return databaseInterface;
+        }
+
+        public CommandStack getCommandStack() {
+            return commandStack;
+        }
+
+        public ApplicationPartController getController() {
+            return controller;
+        }
+
+    }
 }

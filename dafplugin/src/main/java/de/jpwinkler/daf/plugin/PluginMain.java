@@ -7,8 +7,11 @@ package de.jpwinkler.daf.plugin;
 
 import de.jpwinkler.daf.gui.ApplicationPaneExtension;
 import de.jpwinkler.daf.gui.ApplicationPaneInterface;
-import de.jpwinkler.daf.gui.ApplicationPart;
 import de.jpwinkler.daf.gui.ApplicationPartExtension;
+import de.jpwinkler.daf.gui.ApplicationPartFactories;
+import de.jpwinkler.daf.gui.ApplicationPartFactoryRegistry.ApplicationPartControllerFactory;
+import de.jpwinkler.daf.gui.ApplicationPartFactoryRegistry.ApplicationPartFactory;
+import de.jpwinkler.daf.gui.ApplicationPartFactoryRegistry.DatabasePathFactory;
 import de.jpwinkler.daf.gui.ApplicationPartInterface;
 import de.jpwinkler.daf.gui.databases.DatabasePaneController;
 import de.jpwinkler.daf.gui.databases.DatabasePaneExtension;
@@ -31,9 +34,10 @@ public class PluginMain extends Plugin {
     public PluginMain(PluginWrapper wrapper) {
         super(wrapper);
     }
-    
+
     /**
      * Java 8 replacement for List.of
+     *
      * @param <T>
      * @param args
      * @return
@@ -80,8 +84,7 @@ public class PluginMain extends Plugin {
     public static class TestApplicationPaneExtension implements ApplicationPaneExtension {
 
         private final List<Menu> menus = List_of(new Menu("Global extension menu"));
-        private final List<ApplicationPart> applicationParts = List_of(new ApplicationPart("Test Extension Part", PluginDatabaseInterface.class,
-                DatabasePaneController::new, ApplicationPart.defaultSelector("", ""), false));
+        private final List<Class<? extends ApplicationPartFactory>> applicationParts = List_of(TestApplicationPartFactory.class);
         private ApplicationPaneInterface applicationPaneInterface;
 
         @Override
@@ -95,11 +98,28 @@ public class PluginMain extends Plugin {
         }
 
         @Override
-        public List<ApplicationPart> getApplicationParts() {
+        public List<Class<? extends ApplicationPartFactory>> getApplicationPartFactories() {
             return applicationParts;
         }
 
     }
 
+    public static class TestApplicationPartFactory extends ApplicationPartFactory {
+
+        public TestApplicationPartFactory() {
+            super("Test Extension Part", PluginDatabaseInterface.class, false);
+        }
+
+        @Override
+        protected ApplicationPartControllerFactory getApplicationPartControllerFactory() {
+            return DatabasePaneController::new;
+        }
+
+        @Override
+        protected DatabasePathFactory getDatabasePathFactory() {
+            return ApplicationPartFactories.defaultSelector("", "");
+        }
+
+    }
 
 }

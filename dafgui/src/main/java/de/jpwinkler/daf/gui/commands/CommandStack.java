@@ -1,6 +1,7 @@
 package de.jpwinkler.daf.gui.commands;
 
 import de.jpwinkler.daf.gui.ApplicationPartController;
+import java.util.HashSet;
 import java.util.function.Consumer;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -10,10 +11,14 @@ public class CommandStack {
 
     private AbstractCommand lastExecuted = INITIAL_COMMAND;
     private AbstractCommand lastSaved = INITIAL_COMMAND;
-    private final Consumer<Boolean> onDirty;
+    private final HashSet<Consumer<Boolean>> dirtyListeners = new HashSet<>();
 
-    public CommandStack(Consumer<Boolean> onDirty) {
-        this.onDirty = onDirty;
+    public void addDirtyListener(Consumer<Boolean> listener) {
+        this.dirtyListeners.add(listener);
+    }
+
+    public void removeDirtyListener(Consumer<Boolean> listener) {
+        this.dirtyListeners.remove(listener);
     }
 
     public void addCommand(ApplicationPartController originController, final AbstractCommand command) {
@@ -22,7 +27,7 @@ public class CommandStack {
         this.lastExecuted.setNext(command);
         this.lastExecuted = command;
 
-        onDirty.accept(isDirty());
+        dirtyListeners.forEach(l -> l.accept(isDirty()));
     }
 
     public AbstractCommand undo(ApplicationPartController originController) {
@@ -44,7 +49,7 @@ public class CommandStack {
         this.lastExecuted = lastExecuted.getPrevious();
         commandToUndo.undo();
 
-        onDirty.accept(isDirty());
+        dirtyListeners.forEach(l -> l.accept(isDirty()));
         return commandToUndo;
     }
 
@@ -55,7 +60,7 @@ public class CommandStack {
             commandToRedo.redo();
         }
 
-        onDirty.accept(isDirty());
+        dirtyListeners.forEach(l -> l.accept(isDirty()));
         return commandToRedo;
     }
 
@@ -65,7 +70,7 @@ public class CommandStack {
 
     public void setSavePoint() {
         this.lastSaved = lastExecuted;
-        onDirty.accept(isDirty());
+        dirtyListeners.forEach(l -> l.accept(isDirty()));
     }
 
     public static final AbstractCommand INITIAL_COMMAND = new AbstractCommand() {

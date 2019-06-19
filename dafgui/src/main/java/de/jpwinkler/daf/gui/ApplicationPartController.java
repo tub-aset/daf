@@ -9,8 +9,8 @@ import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
 import de.jpwinkler.daf.db.DatabasePath;
+import de.jpwinkler.daf.gui.ApplicationPartFactoryRegistry.ApplicationPart;
 import de.jpwinkler.daf.gui.commands.AbstractCommand;
-import de.jpwinkler.daf.gui.commands.CommandStack;
 import de.jpwinkler.daf.gui.commands.UpdateAction;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.io.IOException;
@@ -38,9 +38,6 @@ import org.pf4j.PluginWrapper;
 public abstract class ApplicationPartController<THIS extends ApplicationPartController> extends AutoloadingPaneController<THIS> implements ApplicationPartInterface {
 
     private final ApplicationPaneController applicationController;
-    private final DatabasePath path;
-    private final DatabaseInterface databaseInterface;
-    private final CommandStack commandStack;
     private final ApplicationPart applicationPart;
 
     private final List<ApplicationPartExtension> extensions = new ArrayList<>();
@@ -48,13 +45,9 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
     private final ObservableList<Menu> menus = FXCollections.observableArrayList();
     private final Map<Menu, PluginWrapper> extensionMenus = new HashMap<>();
 
-    public ApplicationPartController(ApplicationPaneController applicationController, ApplicationPart applicationPart,
-            DatabasePath path, DatabaseInterface databaseInterface, CommandStack databaseCommandStack) {
+    public ApplicationPartController(ApplicationPaneController applicationController, ApplicationPart applicationPart) {
         this.applicationController = applicationController;
         this.applicationPart = applicationPart;
-        this.path = path;
-        this.databaseInterface = databaseInterface;
-        this.commandStack = databaseCommandStack;
 
         URL menuUrl = MainFX.class.getResource(
                 this.getClass().getSimpleName().replaceFirst("Controller$", "") + "Menu.fxml");
@@ -75,6 +68,11 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
 
     protected final void setStatus(final String status) {
         applicationController.setStatus(status);
+    }
+
+    @Override
+    public ApplicationPartInterface open(ApplicationPart part, OpenFlag openFlag) {
+        return applicationController.open(part, openFlag);
     }
 
     @Override
@@ -107,7 +105,7 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
         }
 
         command.apply();
-        getCommandStack().addCommand(this, command);
+        applicationPart.getCommandStack().addCommand(this, command);
         updateGui(command.getUpdateActions());
     }
 
@@ -117,7 +115,7 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
 
     @FXML
     public final void redoClicked() {
-        final AbstractCommand commandToRedo = getCommandStack().redo(this);
+        final AbstractCommand commandToRedo = applicationPart.getCommandStack().redo(this);
         if (commandToRedo == null) {
             this.setStatus("Cannot redo.");
         } else {
@@ -127,7 +125,7 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
 
     @FXML
     public final void undoClicked() {
-        final AbstractCommand commandToUndo = getCommandStack().undo(this);
+        final AbstractCommand commandToUndo = applicationPart.getCommandStack().undo(this);
         if (commandToUndo == null) {
             this.setStatus("Cannot undo.");
         } else {
@@ -140,16 +138,12 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
     }
 
     public final DatabasePath getPath() {
-        return path;
+        return applicationPart.getDatabasePath();
     }
 
     @Override
     public final DatabaseInterface getDatabaseInterface() {
-        return databaseInterface;
-    }
-
-    public final CommandStack getCommandStack() {
-        return commandStack;
+        return applicationPart.getDatabaseInterface();
     }
 
     public void addPlugin(PluginWrapper plugin) {

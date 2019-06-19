@@ -10,7 +10,6 @@ import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.db.EmfDatabaseFactory;
 import de.jpwinkler.daf.model.DoorsFolder;
-import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.io.IOException;
 
 /**

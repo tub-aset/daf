@@ -4,7 +4,8 @@ import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
 import de.jpwinkler.daf.db.DatabasePath;
-import de.jpwinkler.daf.gui.ApplicationPart.ApplicationPartRegistry;
+import de.jpwinkler.daf.gui.ApplicationPartFactoryRegistry.ApplicationPart;
+import de.jpwinkler.daf.gui.ApplicationPartFactoryRegistry.ApplicationPartFactory;
 import de.jpwinkler.daf.gui.controls.ProgressMenuItemController;
 import de.jpwinkler.daf.gui.controls.ProgressMenuItemController.ProgressMenuItem;
 import de.jpwinkler.daf.model.DoorsAttributes;
@@ -18,6 +19,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -57,7 +59,6 @@ import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import javafx.stage.WindowEvent;
 import org.apache.commons.lang3.mutable.MutableBoolean;
-import org.apache.commons.lang3.tuple.Pair;
 import org.pf4j.DefaultPluginManager;
 import org.pf4j.ManifestPluginDescriptorFinder;
 import org.pf4j.PluginDescriptorFinder;
@@ -70,16 +71,15 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     private static final int MAX_STATUS_MENU_ITEMS = 20;
     private static final int MAX_RECENT_FILES = 10;
 
-    private final Map<DatabasePath, ApplicationPartController> applicationPartControllers = new HashMap<>();
+    private final Map<ApplicationPart, ApplicationPartController> applicationPartControllers = new HashMap<>();
     private final BackgroundTaskExecutorImpl backgroundTaskExecutor = new BackgroundTaskExecutorImpl(
             (a, b) -> Platform.runLater(() -> this.onBackgroundTaskUpdate(a, b)));
 
-    private final ApplicationPartRegistry applicationPartRegistry = new ApplicationPartRegistry(
+    private final ApplicationPartFactoryRegistry applicationPartFactoryRegistry = new ApplicationPartFactoryRegistry(
             () -> this.pluginManager.getPlugins(PluginState.STARTED).stream().distinct(),
-            (databaseInterface, dirty) -> this.tabPane.getTabs().stream()
-                    .map(t -> Pair.of(t, this.applicationPartControllers.get((DatabasePath) t.getUserData())))
-                    .filter(t -> t.getRight().getDatabaseInterface() == databaseInterface)
-                    .forEach(t -> t.getLeft().setText(t.getRight().getPath().toString() + (dirty ? "*" : ""))));
+            (part, dirty) -> this.tabPane.getTabs().stream()
+                    .filter(t -> ((ApplicationPart) t.getUserData()) == part)
+                    .forEach(t -> t.setText(((ApplicationPart) t.getUserData()).getDatabasePath().toString() + (dirty ? "*" : ""))));
     private final List<ApplicationPaneExtension> extensions = new ArrayList<>();
     private final Map<Menu, PluginWrapper> extensionMenus = new HashMap<>();
 
@@ -125,7 +125,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
     private final Timer generalTimer = new Timer(true);
 
-    private final TreeMap<Long, DatabasePath> recentFiles = ApplicationPreferences.RECENT_FILES.retrieve();
+    private final TreeMap<Long, ApplicationPart> recentFiles = ApplicationPreferences.RECENT_FILES.retrieve();
     private final ListChangeListener<Menu> partMenuChangeLister = (change) -> {
         while (change.next()) {
             change.getRemoved().forEach(this.mainMenuBar.getMenus()::remove);
@@ -148,7 +148,6 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     };
 
     public ApplicationPaneController() {
-        ApplicationPart.registerDefault(applicationPartRegistry);
         tabPane.getSelectionModel().selectedItemProperty().addListener(tabChangeListener);
 
         tabPane.getTabs().addListener((ListChangeListener<Tab>) (change) -> {
@@ -164,13 +163,13 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         });
         generateRecentMenu();
 
-        applicationPartRegistry.addListener((added, removed) -> {
+        applicationPartFactoryRegistry.addListener((added, removed) -> {
             if (removed != null) {
                 openMenu.getItems().removeIf(p -> p.getUserData() == removed);
                 newMenu.getItems().removeIf(p -> p.getUserData() == removed);
 
                 String openPaths = this.applicationPartControllers.values().stream()
-                        .filter(c -> c.getApplicationPart() == removed)
+                        .filter(c -> c.getApplicationPart().getApplicationPartFactory() == removed)
                         .map(c -> c.getPath().toString())
                         .collect(Collectors.joining(", "));
                 if (!openPaths.trim().isEmpty()) {
@@ -219,8 +218,9 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         }
 
         pluginManager.getPlugins().forEach(this::addPluginMenuEntries);
-
-        ((ArrayList<DatabasePath>) ApplicationPreferences.EXIT_FILES.retrieve()).forEach(path -> this.open(path, OpenFlag.OPEN_ONLY));
+        ApplicationPartFactories.registerDefault(applicationPartFactoryRegistry);
+        
+        ((ArrayList<ApplicationPart>) ApplicationPreferences.EXIT_FILES.retrieve()).forEach(part -> this.open(part, OpenFlag.OPEN_ONLY));
     }
 
     private void addPluginMenuEntries(PluginWrapper plugin) {
@@ -296,21 +296,25 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
                 .forEach(backgroundTaskMenuButton.getItems()::remove);
     }
 
+    public ApplicationPartFactoryRegistry getApplicationPartFactoryRegistry() {
+        return applicationPartFactoryRegistry;
+    }
+
     @Override
     public BackgroundTaskExecutor getBackgroundTaskExecutor() {
         return backgroundTaskExecutor;
     }
 
     private ApplicationPartController<?> getCurrentFileStateController() {
-        return getApplicationPartController((DatabasePath) tabPane.getSelectionModel().getSelectedItem().getUserData());
+        return getApplicationPartController(tabPane.getSelectionModel().getSelectedItem());
     }
 
-    private ApplicationPartController<?> getApplicationPartController(Tab selectedTab) {
-        return getApplicationPartController((DatabasePath) selectedTab.getUserData());
+    private ApplicationPartController<?> getApplicationPartController(Tab tab) {
+        return getApplicationPartController((ApplicationPart) tab.getUserData());
     }
 
-    private ApplicationPartController<?> getApplicationPartController(DatabasePath path) {
-        return applicationPartControllers.get((DatabasePath) path);
+    private ApplicationPartController<?> getApplicationPartController(ApplicationPart part) {
+        return applicationPartControllers.get(part);
     }
 
     public void setStatus(final String status) {
@@ -338,36 +342,41 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
     @Override
     public ApplicationPartController open(DatabasePath path, OpenFlag openFlag) {
+        return this.open(applicationPartFactoryRegistry.getDefaultPart(path), openFlag);
+    }
+
+    @Override
+    public ApplicationPartController open(ApplicationPart part, OpenFlag openFlag) {
         if (tabPane.getTabs().stream()
-                .filter(t -> path.equals((DatabasePath) t.getUserData()))
+                .filter(t -> part.equals((ApplicationPart) t.getUserData()))
                 .findAny()
                 .map(t -> {
-                    addToRecentMenu(path);
+                    addToRecentMenu(part);
                     tabPane.getSelectionModel().select(t);
                     return t;
                 }).isPresent()) {
 
             if (openFlag == OpenFlag.ERASE_IF_EXISTS) {
-                setStatus("Database " + path.toString() + " could not be created: already open");
+                setStatus("Database " + part.getDatabasePath().toString() + " could not be created: already open");
             }
 
-            addToRecentMenu(path);
+            addToRecentMenu(part);
             return getApplicationPartController(tabPane.getSelectionModel().getSelectedItem());
         }
 
         try {
-            final ApplicationPartController controller = applicationPartRegistry.createController(this, path, openFlag);
+            final ApplicationPartController controller = part.start(this, openFlag);
             final Parent modulePane = controller.getNode();
 
-            final Tab selectedTab = new Tab(path.toString(), modulePane);
-            selectedTab.setUserData(path);
-            applicationPartControllers.put(path, controller);
+            final Tab selectedTab = new Tab(part.toString(), modulePane);
+            selectedTab.setUserData(part);
+            applicationPartControllers.put(part, controller);
 
             selectedTab.setClosable(true);
             tabPane.getTabs().add(selectedTab);
 
             tabPane.getSelectionModel().select(selectedTab);
-            addToRecentMenu(path);
+            addToRecentMenu(part);
             return controller;
         } catch (Throwable ex) {
             ex.printStackTrace();
@@ -390,10 +399,10 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         }
     }
 
-    private void addToRecentMenu(DatabasePath path) {
-        if (path != null) {
-            recentFiles.values().remove(path);
-            recentFiles.put(new Date().getTime(), path);
+    private void addToRecentMenu(ApplicationPart part) {
+        if (part != null) {
+            recentFiles.values().remove(part);
+            recentFiles.put(new Date().getTime(), part);
         }
         generateRecentMenu();
     }
@@ -413,26 +422,23 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             return;
         }
 
-        for (DatabasePath recentFile : recentFiles.descendingMap().values()) {
+        for (ApplicationPart recentFile : recentFiles.descendingMap().values()) {
             MenuItem recentMenuItem = new MenuItem(recentFile.toString());
             recentMenuItem.setUserData(recentFile);
             recentMenu.getItems().add(recentMenuItem);
-            recentMenuItem.setOnAction(ev -> {
-                DatabasePath uri = (DatabasePath) ((MenuItem) ev.getTarget()).getUserData();
-                this.open(uri, OpenFlag.OPEN_ONLY);
-            });
+            recentMenuItem.setOnAction(ev -> this.open((ApplicationPart) ((MenuItem) ev.getTarget()).getUserData(), OpenFlag.OPEN_ONLY));
         }
     }
 
     @FXML
     public void saveClicked() {
-        save(getCurrentFileStateController().getPath());
+        save(getCurrentFileStateController().getApplicationPart());
     }
 
-    private boolean save(DatabasePath path) {
+    private boolean save(ApplicationPart part) {
         try {
-            applicationPartControllers.get(path).getDatabaseInterface().flush();
-            applicationPartControllers.get(path).getCommandStack().setSavePoint();
+            part.getDatabaseInterface().flush();
+            part.getCommandStack().setSavePoint();
         } catch (Throwable ex) {
             ex.printStackTrace();
             while (ex.getCause() != null) {
@@ -443,7 +449,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             return false;
         }
 
-        addToRecentMenu(path);
+        addToRecentMenu(part);
         return true;
     }
 
@@ -463,11 +469,15 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     public CompletableFuture<DatabasePath> createSnapshot(DatabaseInterface sourceDB, DatabasePath sourcePath, Predicate<DoorsTreeNode> include, DatabasePath destinationPathArg) {
         DatabasePath destinationPath;
         if (destinationPathArg == null) {
-            ChoiceDialog<ApplicationPart> applicationPartChooser = new ChoiceDialog<>(null, applicationPartRegistry.registry().filter(p -> p.isAllowNew()).collect(Collectors.toList()));
+            ChoiceDialog<ApplicationPartFactory> applicationPartChooser = new ChoiceDialog<>(null, applicationPartFactoryRegistry.registry().stream()
+                    .filter(p -> p.isAllowNew())
+                    .sorted((p1, p2) -> Objects.compare(p1.getName(), p2.getName(), Comparator.naturalOrder()))
+                    .collect(Collectors.toList()));
             applicationPartChooser.setTitle("Create snapshot");
             applicationPartChooser.setHeaderText("Select a destination database type");
             destinationPathArg = Main.asStream(applicationPartChooser.showAndWait())
                     .flatMap(part -> part.saveWithSelector(tabPane.getScene().getWindow()))
+                    .map(part -> part.getDatabasePath())
                     .findAny().orElse(null);
 
             if (destinationPathArg == null) {
@@ -481,7 +491,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
         return this.getBackgroundTaskExecutor().runBackgroundTask("Creating snapshot", i -> {
             try {
-                DatabaseInterface destinationDB = applicationPartRegistry.openDatabase(destinationPath, OpenFlag.ERASE_IF_EXISTS).getLeft();
+                DatabaseInterface destinationDB = applicationPartFactoryRegistry.openDatabase(destinationPath, OpenFlag.ERASE_IF_EXISTS).getLeft();
                 destinationDB.getFactory().copy(sourceDB.getDatabaseRoot().getChild(sourcePath.getPath()), destinationDB.getDatabaseRoot(), include);
                 DoorsAttributes.DATABASE_COPIED_FROM.setValue(String.class,
                         destinationDB.getDatabaseRoot(), sourceDB.getPath().toString());
@@ -493,7 +503,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             } finally {
-                applicationPartRegistry.closeDatabase(destinationPath);
+                applicationPartFactoryRegistry.closeDatabase(destinationPath);
             }
         }).handleAsync((val, exo) -> {
             Platform.runLater(() -> {
@@ -529,13 +539,13 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             }
         }
 
-        ArrayList<DatabasePath> exitPaths = new ArrayList<>(applicationPartControllers.keySet());
+        ArrayList<ApplicationPart> exitParts = new ArrayList<>(applicationPartControllers.keySet());
         tabPane.getTabs().clear();
         if (!applicationPartControllers.isEmpty()) {
             return false;
         }
 
-        ApplicationPreferences.EXIT_FILES.store(exitPaths);
+        ApplicationPreferences.EXIT_FILES.store(exitParts);
         return true;
     }
 
@@ -547,7 +557,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     private ButtonType closeTabs(Collection<Tab> closedTabs) {
         ButtonType cancelled = ButtonType.YES;
         for (Tab t : closedTabs) {
-            if (cancelled == ButtonType.CANCEL || closeTab((DatabasePath) t.getUserData()) == ButtonType.CANCEL) {
+            if (cancelled == ButtonType.CANCEL || closeTab((ApplicationPart) t.getUserData()) == ButtonType.CANCEL) {
                 cancelled = ButtonType.CANCEL;
                 Platform.runLater(() -> tabPane.getTabs().add(t));
             }
@@ -555,26 +565,23 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         return cancelled;
     }
 
-    private ButtonType closeTab(DatabasePath path) {
+    private ButtonType closeTab(ApplicationPart part) {
         // non-dirty files can be closed without worries
-        if (!getApplicationPartController(path).getCommandStack().isDirty()) {
-            applicationPartControllers.remove(path);
-            applicationPartRegistry.closeDatabase(path);
+        if (!part.getCommandStack().isDirty()) {
+            applicationPartControllers.remove(part.stop());
             return ButtonType.YES;
         }
 
         // close if saving is not desired or we saved successfully
-        Alert alert = new Alert(AlertType.CONFIRMATION, "There are unsaved changes in " + path.toString() + ", do you want to save them?",
+        Alert alert = new Alert(AlertType.CONFIRMATION, "There are unsaved changes in " + part.toString() + ", do you want to save them?",
                 ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
         alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         ButtonType response = alert.showAndWait().orElse(ButtonType.NO);
         if (response == ButtonType.NO) { // no
-            applicationPartControllers.remove(path);
-            applicationPartRegistry.closeDatabase(path);
+            applicationPartControllers.remove(part.stop());
             return ButtonType.YES;
-        } else if (response == ButtonType.YES && this.save(path)) { // yes and save success
-            applicationPartControllers.remove(path);
-            applicationPartRegistry.closeDatabase(path);
+        } else if (response == ButtonType.YES && this.save(part)) { // yes and save success
+            applicationPartControllers.remove(part.stop());
             return ButtonType.YES;
         } else if (response == ButtonType.YES) { // yes but save failed
             return ButtonType.CANCEL;
@@ -662,8 +669,8 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
                 .peek(m -> extensionMenus.put(m, plugin))
                 .forEach(mainMenuBar.getMenus()::add);
         newExts.stream()
-                .flatMap(e -> e.getApplicationParts().stream())
-                .forEach(applicationPartRegistry::register);
+                .flatMap(e -> e.getApplicationPartFactories().stream())
+                .forEach(applicationPartFactoryRegistry::register);
         applicationPartControllers.values().stream().forEach(a -> a.addPlugin(plugin));
     }
 
@@ -671,8 +678,8 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         PluginWrapper plugin = pluginManager.getPlugin(pluginId);
         this.extensions.stream()
                 .filter(ext -> ext.getClass().getClassLoader() == plugin.getPluginClassLoader())
-                .flatMap(e -> e.getApplicationParts().stream())
-                .forEach(applicationPartRegistry::unregister);
+                .flatMap(e -> e.getApplicationPartFactories().stream())
+                .forEach(applicationPartFactoryRegistry::unregister);
 
         applicationPartControllers.values().forEach(a -> a.removePlugin(plugin));
 

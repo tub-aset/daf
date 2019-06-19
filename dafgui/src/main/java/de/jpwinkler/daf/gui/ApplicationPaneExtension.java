@@ -5,6 +5,7 @@
  */
 package de.jpwinkler.daf.gui;
 
+import de.jpwinkler.daf.gui.ApplicationPartFactoryRegistry.ApplicationPartFactory;
 import java.util.Collections;
 import java.util.List;
 import javafx.scene.control.Menu;
@@ -19,7 +20,7 @@ public interface ApplicationPaneExtension extends ExtensionPoint {
     default void initialise(ApplicationPaneInterface applicationPart) {
     }
 
-    default List<ApplicationPart> getApplicationParts() {
+    default List<Class<? extends ApplicationPartFactory>> getApplicationPartFactories() {
         return Collections.emptyList();
     }
     
