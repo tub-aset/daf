@@ -72,6 +72,34 @@ public class DoorsScriptBuilder {
         return this;
     }
 
+    List<DXLScript> getPreamble() {
+        return preamble;
+    }
+
+    Set<DXLScript> getLibraries() {
+        return libraries;
+    }
+
+    List<DXLScript> getScripts() {
+        return scripts;
+    }
+
+    Map<String, String> getVariables() {
+        DoorsScriptBuilder currentBuilder = this;
+        List<DoorsScriptBuilder> builders = new ArrayList<>();
+        do {
+            builders.add(0, currentBuilder);
+            currentBuilder = currentBuilder.parentBuilder;
+        } while (currentBuilder != null);
+
+        HashMap<String, String> variables = new HashMap<>();
+        for (DoorsScriptBuilder bd : builders) {
+            variables.putAll(bd.variables);
+        }
+        
+        return variables;
+    }
+
     public String build() {
         final StringBuilder builder = new StringBuilder();
 
@@ -98,19 +126,8 @@ public class DoorsScriptBuilder {
         // replace variables with variables from parent builders or our own variables,
         // the ones closer to this builder replacing the ones farther away.
         String script = builder.toString();
-        DoorsScriptBuilder currentBuilder = this;
-        List<DoorsScriptBuilder> builders = new ArrayList<>();
-        do {
-            builders.add(0, currentBuilder);
-            currentBuilder = currentBuilder.parentBuilder;
-        } while (currentBuilder != null);
-        
-        HashMap<String, String> variables = new HashMap<>();
-        for(DoorsScriptBuilder bd : builders) {
-            variables.putAll(bd.variables);
-        }
 
-        for (final Entry<String, String> e : variables.entrySet()) {
+        for (final Entry<String, String> e : getVariables().entrySet()) {
             final String variable = "$$" + e.getKey() + "$$";
 
             script = script.replace(variable, escapeString(e.getValue()));

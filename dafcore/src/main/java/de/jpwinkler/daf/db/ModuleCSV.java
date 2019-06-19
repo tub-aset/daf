@@ -32,7 +32,7 @@ public class ModuleCSV {
     private ModuleCSV() {
     }
 
-    private static final Charset CHARSET = Charset.forName("UTF-8");
+    public static final Charset CHARSET = Charset.forName("UTF-8");
 
     public static void write(File autoDetectFile, DoorsModule module) throws IOException {
         String path = autoDetectFile.getAbsolutePath();
@@ -218,10 +218,7 @@ public class ModuleCSV {
                 currentLevel++;
             }
 
-            final DoorsObject newObject = factory.createObject(module, "");
-
-            newObject.setParent(module);
-
+            final DoorsObject newObject = factory.createObject(current, "");
             for (final Entry<String, String> e : record.toMap().entrySet()) {
                 newObject.getAttributes().put(e.getKey(), e.getValue());
             }

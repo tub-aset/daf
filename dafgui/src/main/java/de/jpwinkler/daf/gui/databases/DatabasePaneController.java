@@ -109,7 +109,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         bottomExtensionPane.visiblePanesProperty().addListener(change -> {
             this.updateExtensionPaneVisibility(bottomExtensionPane, bottomSplitPane);
         });
-        
+
         attributesModulesSplitPane.setDividerPositions((double[]) DatabasePanePreferences.ATTRIBUTES_MODULES_SPLITPOS.retrieve());
         attributesModulesSplitPane.getDividers().forEach(d -> {
             d.positionProperty().addListener((obs, oldValue, newValue) -> {
@@ -126,7 +126,15 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                 (it, newName) -> this.executeCommand(new RenameNodeCommand(it, newName)),
                 it -> this.open(this.getPath().withPath(it.getFullName()), OpenFlag.OPEN_ONLY)));
         moduleDescriptionColumn.setCellFactory(tc -> new CustomTextFieldTableCell<>(tc,
-                it -> DoorsAttributes.MODULE_DESCRIPTION.getValue(String.class, it),
+                it -> {
+                    if (it.getAttributesAsync(super.getBackgroundTaskExecutor()).isDone()) {
+                        return DoorsAttributes.MODULE_DESCRIPTION.getValue(String.class, it);
+                    } else {
+                        it.getAttributesAsync(super.getBackgroundTaskExecutor()).thenRun(() -> Platform.runLater(() -> this.modulesTableView.refresh()));
+                    }
+
+                    return "Loading...";
+                },
                 (it, newValue) -> {
                     this.executeCommand(new EditAttributesCommand(DoorsAttributes.MODULE_DESCRIPTION.getKey(), newValue, it));
                 },
@@ -214,7 +222,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
     @FXML
     private SplitPane mainSplitPane;
-    
+
     @FXML
     private SplitPane attributesModulesSplitPane;
 

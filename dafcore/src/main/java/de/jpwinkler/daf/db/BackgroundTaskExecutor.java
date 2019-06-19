@@ -15,8 +15,36 @@ import java.util.function.Function;
  */
 public interface BackgroundTaskExecutor {
 
+    public static final BackgroundTaskExecutor SYNCHRONOUS = new BackgroundTaskExecutor() {
+        @Override
+        public <T> CompletableFuture<T> runBackgroundTask(String name, Function<BackgroundTaskNotifier, T> runnable) {
+            return CompletableFuture.completedFuture(runnable.apply(new BackgroundTaskNotifier() {
+                @Override
+                public void incrementProgress(long increment) {
+                }
+
+                @Override
+                public void incrementProgress(long increment, long maxProgressIncrement) {
+                }
+            }));
+        }
+
+        @Override
+        public <T> CompletableFuture<T> runBackgroundTask(String name, Function<BackgroundTaskNotifier, T> runnable, ExecutorService executorService) {
+            return CompletableFuture.supplyAsync(() -> runnable.apply(new BackgroundTaskNotifier() {
+                @Override
+                public void incrementProgress(long increment) {
+                }
+
+                @Override
+                public void incrementProgress(long increment, long maxProgressIncrement) {
+                }
+            }), executorService);
+        }
+    };
+
     <T> CompletableFuture<T> runBackgroundTask(String name, Function<BackgroundTaskNotifier, T> runnable);
 
     <T> CompletableFuture<T> runBackgroundTask(String name, Function<BackgroundTaskNotifier, T> runnable, ExecutorService executorService);
-    
+
 }

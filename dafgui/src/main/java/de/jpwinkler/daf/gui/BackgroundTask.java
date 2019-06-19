@@ -38,6 +38,7 @@ public class BackgroundTask<T> {
                 this.finish(null);
                 return value;
             } catch (Throwable t) {
+                t.printStackTrace();
                 this.finish(t);
                 throw new RuntimeException(t);
             }

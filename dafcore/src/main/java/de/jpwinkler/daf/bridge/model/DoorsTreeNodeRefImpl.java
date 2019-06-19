@@ -17,18 +17,16 @@
  */
 package de.jpwinkler.daf.bridge.model;
 
-import de.jpwinkler.daf.bridge.DXLScript;
 import de.jpwinkler.daf.bridge.DoorsApplication;
 import de.jpwinkler.daf.bridge.DoorsItemType;
 import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.logging.Logger;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -36,18 +34,15 @@ import org.apache.commons.lang3.StringUtils;
 
 abstract class DoorsTreeNodeRefImpl implements DoorsTreeNode {
 
-    private static final Logger LOGGER = Logger.getLogger(DoorsTreeNodeRefImpl.class.getName());
-
     protected final DoorsApplication doorsApplication;
 
-    private DoorsItemType type;
     private DoorsTreeNode parent;
 
     private final List<String> pathSegments;
-    private List<DoorsTreeNode> children;
+    private final DoorsItemType type;
 
-    public DoorsTreeNodeRefImpl(final DoorsApplication doorsApplicationImpl, final DoorsItemType type, final DoorsTreeNode parent, String name) {
-        this.doorsApplication = doorsApplicationImpl;
+    public DoorsTreeNodeRefImpl(final DoorsApplication DoorsApplication, final DoorsItemType type, final DoorsTreeNode parent, String name) {
+        this.doorsApplication = DoorsApplication;
         this.type = type;
         // make sure root does not show up in the path
         this.pathSegments = parent == null ? Collections.emptyList() : Stream.concat(parent.getFullNameSegments().stream(), Stream.of(name)).collect(Collectors.toList());
@@ -55,60 +50,17 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNode {
     }
 
     @Override
+    public List<DoorsTreeNode> getChildren() {
+        try {
+            return getChildrenAsync(BackgroundTaskExecutor.SYNCHRONOUS).get();
+        } catch (InterruptedException | ExecutionException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
     public DoorsTreeNode getParent() {
         return parent;
-    }
-
-    @Override
-    public synchronized List<DoorsTreeNode> getChildren() {
-        if (this.children == null) {
-
-            final String resultString = doorsApplication.runScript(builder -> {
-                builder.addScript(DXLScript.fromResource("get_children.dxl"));
-                builder.setVariable("folder", this.getFullName());
-            });
-
-            final List<DoorsTreeNode> result = new ArrayList<>();
-
-            if (resultString.trim().isEmpty()) {
-                // no children available
-                return result;
-            }
-
-            final String[] lines = resultString.split("\r\n");
-
-            for (final String line : lines) {
-                String[] split;
-                if (line == null || line.isEmpty() || (split = line.split(":")).length != 2) {
-                    LOGGER.severe(String.format("Invalid result format: %s.", line));
-                    continue;
-                }
-                final DoorsItemType type = DoorsItemType.getType(split[0]);
-                switch (type) {
-                    case FORMAL:
-                        result.add(new DoorsModuleRefImpl(doorsApplication, this, split[1]));
-                        break;
-                    case FOLDER:
-                    case PROJECT:
-                        result.add(new DoorsFolderRefImpl(doorsApplication, type, this, split[1]));
-                        break;
-                    case LINK:
-                    case DESCRIPTIVE:
-                        LOGGER.warning("Item type not supported: " + type);
-                        break;
-                    default:
-                        throw new UnsupportedOperationException("unknown type: " + split[0]);
-                }
-            }
-            this.children = result;
-        }
-
-        return children;
-    }
-
-    @Override
-    public CompletableFuture<List<DoorsTreeNode>> getChildrenAsync(BackgroundTaskExecutor executor) {
-        return executor.runBackgroundTask("Load node children", i -> this.getChildren());
     }
 
     @Override
@@ -170,7 +122,7 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNode {
     }
 
     @Override
-    public DoorsTreeNode getChild(String name) {
+    public synchronized DoorsTreeNode getChild(String name) {
         name = name.replaceFirst("^/", "");
         final String[] currentSegment = name.split("/", 2);
         for (DoorsTreeNode child : this.getChildren()) {

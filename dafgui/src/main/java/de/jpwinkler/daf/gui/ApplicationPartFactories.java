@@ -7,6 +7,7 @@ package de.jpwinkler.daf.gui;
 
 import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.db.DoorsApplicationDatabaseInterface;
+import de.jpwinkler.daf.db.DoorsApplicationDummyDatabaseInterface;
 import de.jpwinkler.daf.db.FolderDatabaseInterface;
 import de.jpwinkler.daf.db.RawFileDatabaseInterface;
 import de.jpwinkler.daf.db.XmiDatabaseInterface;
@@ -36,6 +37,7 @@ public final class ApplicationPartFactories {
 
     public static void registerDefault(ApplicationPartFactoryRegistry registry) {
         registry.register(DoorsAppplicationPartFactory.class);
+        registry.register(DoorsDummyAppplicationPartFactory.class);
         registry.register(LocalFolderApplicationPartFactory.class);
         registry.register(LocalXmiApplicationPartFactory.class);
         registry.register(LocalModuleApplicationPartFactory.class);
@@ -53,7 +55,20 @@ public final class ApplicationPartFactories {
         }
 
     }
-    
+
+    public static final class DoorsDummyAppplicationPartFactory extends ApplicationPartFactory {
+
+        public DoorsDummyAppplicationPartFactory() {
+            super("Doors Bridge Dummy", DoorsApplicationDummyDatabaseInterface.class, false);
+        }
+
+        @Override
+        protected ApplicationPartFactoryRegistry.DatabasePathFactory getDatabasePathFactory() {
+            return defaultSelector("", null);
+        }
+
+    }
+
     public static final class LocalFolderApplicationPartFactory extends ApplicationPartFactory {
 
         public LocalFolderApplicationPartFactory() {
@@ -62,10 +77,10 @@ public final class ApplicationPartFactories {
 
         @Override
         protected ApplicationPartFactoryRegistry.DatabasePathFactory getDatabasePathFactory() {
-            return  localFolderDatabaseSelector();
+            return localFolderDatabaseSelector();
         }
     }
-    
+
     public static final class LocalXmiApplicationPartFactory extends ApplicationPartFactory {
 
         public LocalXmiApplicationPartFactory() {
@@ -77,7 +92,7 @@ public final class ApplicationPartFactories {
             return fileChooserSelector(new FileChooser.ExtensionFilter("XMI", "*.xmi"));
         }
     }
-    
+
     public static final class LocalModuleApplicationPartFactory extends ApplicationPartFactory {
 
         public LocalModuleApplicationPartFactory() {
@@ -89,8 +104,7 @@ public final class ApplicationPartFactories {
             return fileChooserSelector(f -> FilenameUtils.removeExtension(f.getAbsolutePath()), new FileChooser.ExtensionFilter("CSV/MMD", "*.csv", "*.mmd"));
         }
     }
-    
-    
+
     public static DatabasePathFactory fileChooserSelector(FileChooser.ExtensionFilter... extensionFilters) {
         return fileChooserSelector((f) -> f.getAbsolutePath(), extensionFilters);
     }

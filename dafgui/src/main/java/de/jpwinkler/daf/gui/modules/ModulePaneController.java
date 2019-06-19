@@ -1,6 +1,6 @@
 package de.jpwinkler.daf.gui.modules;
 
-import de.jpwinkler.daf.bridge.DoorsApplication;
+import de.jpwinkler.daf.bridge.DoorsApplicationImpl;
 import de.jpwinkler.daf.filter.objects.CascadingFilter;
 import de.jpwinkler.daf.filter.objects.DoorsObjectFilter;
 import de.jpwinkler.daf.filter.objects.ObjectTextAndHeadingFilter;
@@ -162,21 +162,23 @@ public final class ModulePaneController extends ApplicationPartController<Module
         });
 
         super.getDatabaseInterface().getDatabaseRoot().getChildAsync(super.getBackgroundTaskExecutor(), part.getDatabasePath().getPath())
-                .thenAccept(module -> Platform.runLater(() -> {
-            this.module = (DoorsModule) module;
-            if (this.module == null) {
-                throw new RuntimeException("No such module: " + part.getDatabasePath().toString());
-            }
+                .thenAccept(module -> {
+                    DoorsModule dm = (DoorsModule) module;
+                    dm.getObjectAttributesAsync(super.getBackgroundTaskExecutor()).thenAccept(objectAttrs -> Platform.runLater(() -> {
+                        this.module = dm;
+                        if (this.module == null) {
+                            throw new RuntimeException("No such module: " + part.getDatabasePath().toString());
+                        }
+                        mergeObjectAttributes();
 
-            mergeObjectAttributes();
+                        updateGui(ModuleUpdateAction.UPDATE_VIEWS, ModuleUpdateAction.UPDATE_COLUMNS, ModuleUpdateAction.UPDATE_CONTENT_VIEW, ModuleUpdateAction.UPDATE_OUTLINE_VIEW);
+                        traverseTreeItem(outlineTreeView.getRoot(), ti -> ti.setExpanded(true));
 
-            updateGui(ModuleUpdateAction.UPDATE_VIEWS, ModuleUpdateAction.UPDATE_COLUMNS, ModuleUpdateAction.UPDATE_CONTENT_VIEW, ModuleUpdateAction.UPDATE_OUTLINE_VIEW);
-            traverseTreeItem(outlineTreeView.getRoot(), ti -> ti.setExpanded(true));
-
-            if (!DoorsApplication.STANDARD_VIEW.equals(this.module.getView())) {
-                setStatus("Warning: This module's view is not the standard view.");
-            }
-        }));
+                        if (!DoorsApplicationImpl.STANDARD_VIEW.equals(this.module.getView())) {
+                            setStatus("Warning: This module's view is not the standard view.");
+                        }
+                    }));
+                });
     }
 
     private final List<DoorsObject> clipboard = new ArrayList<>();

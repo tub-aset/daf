@@ -19,9 +19,11 @@ import org.apache.commons.lang3.tuple.Pair;
 public class BackgroundTaskExecutorImpl implements BackgroundTaskExecutor {
 
     private final BiConsumer<BackgroundTask, Double> sharedListener;
+    private final BiConsumer<BackgroundTask, Throwable> errorListener;
 
-    public BackgroundTaskExecutorImpl(BiConsumer<BackgroundTask, Double> sharedListener) {
+    public BackgroundTaskExecutorImpl(BiConsumer<BackgroundTask, Double> sharedListener, BiConsumer<BackgroundTask, Throwable> errorListener) {
         this.sharedListener = sharedListener;
+        this.errorListener = errorListener;
     }
 
     private final List<BackgroundTask> tasks = Collections.synchronizedList(new ArrayList<>());
@@ -47,7 +49,10 @@ public class BackgroundTaskExecutorImpl implements BackgroundTaskExecutor {
     public <T> CompletableFuture<T> runBackgroundTask(String name, Function<BackgroundTaskNotifier, T> runnable, ExecutorService executorService) {
         BackgroundTask<T> bt = new BackgroundTask<>(name, runnable, this::onBackgroundTaskUpdate);
         this.tasks.add(bt);
-        return bt.run(executorService);
+        return bt.run(executorService).exceptionally((t) -> {
+            this.errorListener.accept(bt, t);
+            throw new RuntimeException(t);
+        });
     }
 
     private void onBackgroundTaskUpdate(BackgroundTask t, Pair<Long, Long> increment) {

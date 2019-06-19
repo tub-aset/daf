@@ -6,20 +6,20 @@
 package de.jpwinkler.daf.db;
 
 import de.jpwinkler.daf.bridge.DoorsApplication;
-import de.jpwinkler.daf.bridge.DoorsApplicationImpl;
+import de.jpwinkler.daf.bridge.DoorsApplicationDummyImpl;
 import de.jpwinkler.daf.model.DoorsFolder;
 
 /**
  *
  * @author fwiesweg
  */
-public class DoorsApplicationDatabaseInterface implements DatabaseInterface {
+public class DoorsApplicationDummyDatabaseInterface implements DatabaseInterface {
 
-    private final DoorsApplication doorsApplication = new DoorsApplicationImpl();
+    private final DoorsApplication doorsApplication = new DoorsApplicationDummyImpl();
     private final DoorsFolder root;
-    private final DatabasePath<DoorsApplicationDatabaseInterface> databasePath;
+    private final DatabasePath<DoorsApplicationDummyDatabaseInterface> databasePath;
 
-    public DoorsApplicationDatabaseInterface(DatabasePath<DoorsApplicationDatabaseInterface> databasePath, OpenFlag openFlag) {
+    public DoorsApplicationDummyDatabaseInterface(DatabasePath<DoorsApplicationDummyDatabaseInterface> databasePath, OpenFlag openFlag) {
         if (!databasePath.getDatabasePath().isEmpty() || !databasePath.getPath().isEmpty()) {
             throw new IllegalArgumentException("databasePath must be fully empty for the doors bridge");
         }

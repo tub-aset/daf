@@ -5,6 +5,7 @@
  */
 package de.jpwinkler.daf.model;
 
+import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import static de.jpwinkler.daf.model.DoorsModelUtil.IDENTITY;
 import static de.jpwinkler.daf.model.DoorsModelUtil.INT_PARSER;
 import static de.jpwinkler.daf.model.DoorsModelUtil.INT_WRITER;
@@ -13,6 +14,7 @@ import static de.jpwinkler.daf.model.DoorsModelUtil.LIST_WRITER;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -78,6 +80,16 @@ public enum DoorsAttributes {
         }
 
         return (T) this.parser.apply(node.getAttributes().get(this.getKey()));
+    }
+
+    public <T> CompletableFuture<T> getValueAsync(BackgroundTaskExecutor executor, Class<T> expectedType, DoorsTreeNode node) {
+        if (!expectedType.isAssignableFrom(type)) {
+            throw new IllegalArgumentException();
+        }
+
+        return node.getAttributesAsync(executor)
+                .thenApply(m -> m.get(this.getKey()))
+                .thenApply(v -> (T) this.parser.apply(v));
     }
 
     public <T> void setValue(Class<T> expectedType, DoorsTreeNode node, T value) {

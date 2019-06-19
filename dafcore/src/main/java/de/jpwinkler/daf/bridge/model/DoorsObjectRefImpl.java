@@ -7,15 +7,18 @@ package de.jpwinkler.daf.bridge.model;
 
 import de.jpwinkler.daf.bridge.DoorsApplication;
 import de.jpwinkler.daf.bridge.DoorsItemType;
+import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import de.jpwinkler.daf.model.DoorsAttributes;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.Link;
 import de.jpwinkler.daf.model.ResolvedLink;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 /**
  *
@@ -23,11 +26,22 @@ import java.util.Map;
  */
 class DoorsObjectRefImpl extends DoorsTreeNodeRefImpl implements DoorsObject {
 
-    public DoorsObjectRefImpl(DoorsApplication doorsApplicationImpl, DoorsTreeNode parent) {
-        super(doorsApplicationImpl, DoorsItemType.OBJECT, parent, null);
+    public DoorsObjectRefImpl(DoorsApplication DoorsApplication, DoorsTreeNode parent) {
+        super(DoorsApplication, DoorsItemType.OBJECT, parent, null);
     }
 
-    private final Map<String, String> attributes = new HashMap<>();
+    private final Map<String, String> attributes = Collections.synchronizedMap(new HashMap<>());
+    private final List<DoorsTreeNode> dumbChildrenHolder = new ArrayList<>();
+
+    @Override
+    public CompletableFuture<DoorsTreeNode> getChildAsync(BackgroundTaskExecutor executor, String name) {
+        return super.getChildAsync(executor, name); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public CompletableFuture<List<DoorsTreeNode>> getChildrenAsync(BackgroundTaskExecutor executor) {
+        return CompletableFuture.completedFuture(this.dumbChildrenHolder);
+    }
 
     @Override
     public Map<String, String> getAttributes() {

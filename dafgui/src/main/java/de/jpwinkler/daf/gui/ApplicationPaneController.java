@@ -73,7 +73,8 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
     private final Map<ApplicationPart, ApplicationPartController> applicationPartControllers = new HashMap<>();
     private final BackgroundTaskExecutorImpl backgroundTaskExecutor = new BackgroundTaskExecutorImpl(
-            (a, b) -> Platform.runLater(() -> this.onBackgroundTaskUpdate(a, b)));
+            (bt, p) -> Platform.runLater(() -> this.onBackgroundTaskUpdate(bt, p)),
+            (bt, t) -> Platform.runLater(() -> this.setStatus("Error in task " + bt.getName() + ": " + getMessage(t))));
 
     private final ApplicationPartFactoryRegistry applicationPartFactoryRegistry = new ApplicationPartFactoryRegistry(
             () -> this.pluginManager.getPlugins(PluginState.STARTED).stream().distinct(),
@@ -219,7 +220,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
         pluginManager.getPlugins().forEach(this::addPluginMenuEntries);
         ApplicationPartFactories.registerDefault(applicationPartFactoryRegistry);
-        
+
         ((ArrayList<ApplicationPart>) ApplicationPreferences.EXIT_FILES.retrieve()).forEach(part -> this.open(part, OpenFlag.OPEN_ONLY));
     }
 
