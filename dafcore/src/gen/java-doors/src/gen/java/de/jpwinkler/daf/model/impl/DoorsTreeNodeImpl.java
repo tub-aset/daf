@@ -207,7 +207,7 @@ public abstract class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container imp
             fullName = parent.getName() + "/" + fullName;
             parent = parent.getParent();
         }
-        return fullName.replaceAll("/$", "");
+        return "/" + fullName.replaceAll("/$", "");
     }
 
     /**

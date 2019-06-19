@@ -20,6 +20,7 @@ class DatabasePanePreferences extends ApplicationPreference {
     public static final ApplicationPreference BOTTOM_SPLITPOS = new DatabasePanePreferences("BOTTOM_SPLITPOS", double[].class, new double[]{0.8});
     public static final ApplicationPreference SIDE_EXTENSION = new DatabasePanePreferences("SIDE_EXTENSION", String.class, null);
     public static final ApplicationPreference BOTTOM_EXTENSION = new DatabasePanePreferences("BOTTOM_EXTENSION", String.class, null);
+    public static final ApplicationPreference ATTRIBUTES_MODULES_SPLITPOS = new DatabasePanePreferences("ATTRIBUTES_MODULES_SPLITPOS", double[].class, new double[]{0.7});
     public static final ApplicationPreference ATTRIBUTENAME_WIDTH = new DatabasePanePreferences("ATTRIBUTENAME_WIDTH", Double.class, 100d);
     public static final ApplicationPreference ATTRIBUTEVALUE_WIDTH = new DatabasePanePreferences("ATTRIBUTEVALUE_WIDTH", Double.class, 300d);
     public static final ApplicationPreference SNAPSHOT_LISTS = new DatabasePanePreferences("SNAPSHOT_LISTS", TreeMap.class, new TreeMap<String, TreeSet<String>>());

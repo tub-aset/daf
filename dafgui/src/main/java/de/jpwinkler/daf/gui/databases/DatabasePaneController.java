@@ -46,6 +46,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
@@ -55,7 +56,6 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextInputDialog;
-import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
@@ -108,6 +108,13 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         });
         bottomExtensionPane.visiblePanesProperty().addListener(change -> {
             this.updateExtensionPaneVisibility(bottomExtensionPane, bottomSplitPane);
+        });
+        
+        attributesModulesSplitPane.setDividerPositions((double[]) DatabasePanePreferences.ATTRIBUTES_MODULES_SPLITPOS.retrieve());
+        attributesModulesSplitPane.getDividers().forEach(d -> {
+            d.positionProperty().addListener((obs, oldValue, newValue) -> {
+                DatabasePanePreferences.ATTRIBUTES_MODULES_SPLITPOS.store(attributesModulesSplitPane.getDividerPositions());
+            });
         });
 
         modulesTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -207,12 +214,15 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
     @FXML
     private SplitPane mainSplitPane;
+    
+    @FXML
+    private SplitPane attributesModulesSplitPane;
 
     @FXML
     private TreeView<DoorsTreeNode> databaseTreeView;
 
     @FXML
-    private TitledPane currentNodePane;
+    private Label currentNodeLabel;
 
     @FXML
     private TableView<DoorsModule> modulesTableView;
@@ -504,7 +514,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
     public static final UpdateAction<DatabasePaneController> UpdateNodeTitle = ctrl -> {
         ctrl.getCurrentDoorsTreeNode().findFirst()
-                .ifPresent(n -> ctrl.currentNodePane.setText(n.getFullName()));
+                .ifPresent(n -> ctrl.currentNodeLabel.setText(n.getFullName()));
     };
 
     public static final UpdateAction<DatabasePaneController> UpdateModulesView = ctrl -> {

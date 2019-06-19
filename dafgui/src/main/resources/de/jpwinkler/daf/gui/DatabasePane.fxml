@@ -4,14 +4,14 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-
+<?import javafx.scene.text.Font?>
 
 <SplitPane fx:id="bottomSplitPane" orientation="VERTICAL" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <items>
@@ -22,9 +22,9 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
             </TreeView>
-                <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0">
-                    <children>
-                        <TableView fx:id="modulesTableView" editable="true" VBox.vgrow="ALWAYS">
+            <SplitPane fx:id="attributesModulesSplitPane" dividerPositions="0.5" orientation="VERTICAL">
+               <items>
+                        <TableView fx:id="modulesTableView" editable="true">
                             <columns>
                                 <TableColumn fx:id="moduleNameColumn" maxWidth="1000.0" minWidth="150.0" prefWidth="225.0" text="Module name" />
                                 <TableColumn fx:id="moduleDescriptionColumn" maxWidth="3000.0" minWidth="150.0" prefWidth="450.0" text="Description" />
@@ -34,9 +34,22 @@
                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                             </columnResizePolicy>
                         </TableView>
-                        <TitledPane fx:id="currentNodePane" VBox.vgrow="ALWAYS">
-                            <content>
-                                <HBox>
+                  <VBox>
+                     <children>
+                        <Label fx:id="currentNodeLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" textAlignment="CENTER">
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </VBox.margin>
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                        </Label>
+                        <Separator prefWidth="200.0">
+                           <VBox.margin>
+                              <Insets bottom="5.0" />
+                           </VBox.margin>
+                        </Separator>
+                                <HBox VBox.vgrow="ALWAYS">
                                     <children>
                                         <VBox HBox.hgrow="ALWAYS">
                                             <children>
@@ -71,13 +84,10 @@
                                         </VBox>
                                     </children>
                                 </HBox>
-                            </content>
-                        </TitledPane>
-                    </children>
-                    <padding>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                    </padding>
-                </VBox>
+                     </children>
+                  </VBox>
+               </items>
+            </SplitPane>
           </items>
       </SplitPane>
    </items>
