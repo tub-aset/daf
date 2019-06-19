@@ -49,4 +49,9 @@ public class DoorsApplicationDatabaseInterface implements DatabaseInterface {
     public DatabaseFactory getFactory() {
         throw new UnsupportedOperationException("Not implemented");
     }
+
+    @Override
+    public void close() {
+        this.doorsApplication.close();
+    }
 }

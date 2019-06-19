@@ -20,9 +20,6 @@ package de.jpwinkler.daf.bridge;
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.Dispatch;
 import de.jpwinkler.daf.bridge.model.DoorsBridgeDatabaseFactory;
-import de.jpwinkler.daf.bridge.user32.Window;
-import de.jpwinkler.daf.bridge.user32.WindowManager;
-import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import de.jpwinkler.daf.db.DatabaseFactory;
 import java.io.File;
 import java.io.IOException;
@@ -30,13 +27,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.nio.charset.Charset;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 
 public class DoorsApplication {
-    
+
     public static final String STANDARD_VIEW = "Standard view";
 
     private static final Logger LOGGER = Logger.getLogger(DoorsApplication.class.getName());
@@ -117,12 +116,8 @@ public class DoorsApplication {
 
     // ActiveXComponent seems to be bound to the current thread, thus we store
     // one ActiveXComponent per thread.
-    private final ThreadLocal<ActiveXComponent> doorsApplication = ThreadLocal.withInitial(() -> new ActiveXComponent("Doors.Application"));
-
-    /**
-     * Used for detecting whether the DOORS window is visible.
-     */
-    private final WindowManager windowManager = new WindowManager();
+    private final AtomicReference<ThreadLocal<ActiveXComponent>> doorsApplication = new AtomicReference<>(
+            ThreadLocal.withInitial(() -> new ActiveXComponent("Doors.Application")));
 
     /**
      * If assigned, output is redirected here.
@@ -143,34 +138,19 @@ public class DoorsApplication {
         return silentMode;
     }
 
-    /**
-     * Checks whether DOORS is running or not by testing if the DOORS Database
-     * Browser Window exists and if DOORS is ready to execute DXL code.
-     *
-     * @return true if DOORS is running.
-     */
-    public boolean isDoorsRunning() {
-        return findDoorsWindow() && canExecuteDxl();
-    }
-
-    private boolean canExecuteDxl() {
-        try {
-            Dispatch.call(doorsApplication.get(), "runStr", " ");
-            return true;
-        } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
-            return false;
-        }
-    }
-
     private void executeDxl(final String dxl) {
-        if (!isDoorsRunning()) {
-            throw new DoorsRuntimeException("DOORS is not running");
-        }
+        ThreadLocal<ActiveXComponent> doorsApplicationThreadLocal = this.doorsApplication.get();
+        try {
+            Dispatch.call(doorsApplicationThreadLocal.get(), "runStr", dxl);
+        } catch (Throwable t) {
+            // restart the component
+            doorsApplicationThreadLocal.get().safeRelease();
+            doorsApplicationThreadLocal.remove();
 
-        Dispatch.call(doorsApplication.get(), "runStr", dxl);
+            throw new DoorsRuntimeException(t);
+        }
     }
-    
+
     private void executeDxlSilent(final String dxl) throws IOException {
         final File f = getTempFile();
         FileUtils.write(f, dxl);
@@ -187,15 +167,6 @@ public class DoorsApplication {
         } catch (final InterruptedException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
-    }
-
-    private boolean findDoorsWindow() {
-        for (final Window window : windowManager.listWindows()) {
-            if (window.isVisible() && window.getClassName().equals("DOORSWindow")) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private File getTempFile() throws IOException {
@@ -236,8 +207,7 @@ public class DoorsApplication {
      * Runs a DXL script.
      *
      * @param script the DXL script to be executed.
-     * @throws DoorsRuntimeException If the script executes the 'throw()'
-     * function.
+     * @throws DoorsRuntimeException If the script fails or executes 'throw()'
      */
     public String runScript(final DXLScript script) {
         return runScript(builder -> builder.addScript(script));
@@ -248,8 +218,7 @@ public class DoorsApplication {
      *
      * @param prepareScriptBuilder Function receiving a builder to create as
      * script with.
-     * @throws DoorsRuntimeException If the script executes the 'throw()'
-     * function.
+     * @throws DoorsRuntimeException If the script fails or executes 'throw()'
      */
     public String runScript(final Consumer<DoorsScriptBuilder> prepareScriptBuilder) {
         try {
@@ -261,7 +230,7 @@ public class DoorsApplication {
         }
     }
 
-    public String executeSript(DoorsScriptBuilder scriptBuilder) throws IOException {
+    private String executeSript(DoorsScriptBuilder scriptBuilder) throws IOException {
 
         final boolean redirectOutput = outputStream != null;
 
@@ -315,8 +284,8 @@ public class DoorsApplication {
         }
     }
 
-    public BackgroundTaskExecutor getBackgroundTaskExecutor() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public final void close() {
+        doorsApplication.set(null);
     }
 
     private static class FileForwarder implements Runnable {

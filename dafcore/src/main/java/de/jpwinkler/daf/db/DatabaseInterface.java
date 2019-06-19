@@ -52,4 +52,7 @@ public interface DatabaseInterface {
     DoorsTreeNode getDatabaseRoot();
     
     DatabaseFactory getFactory();
+    
+    default void close() {
+    }
 }
