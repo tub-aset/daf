@@ -13,7 +13,9 @@ import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.Link;
 import de.jpwinkler.daf.model.ResolvedLink;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -23,6 +25,13 @@ class DoorsObjectRefImpl extends DoorsTreeNodeRefImpl implements DoorsObject {
 
     public DoorsObjectRefImpl(DoorsApplication doorsApplicationImpl, DoorsTreeNode parent) {
         super(doorsApplicationImpl, DoorsItemType.OBJECT, parent, null);
+    }
+
+    private final Map<String, String> attributes = new HashMap<>();
+
+    @Override
+    public Map<String, String> getAttributes() {
+        return attributes;
     }
 
     @Override
@@ -97,7 +106,7 @@ class DoorsObjectRefImpl extends DoorsTreeNodeRefImpl implements DoorsObject {
 
     @Override
     public String getText() {
-        return isHeading() ? getObjectHeading(): getObjectText();
+        return isHeading() ? getObjectHeading() : getObjectText();
     }
 
     @Override

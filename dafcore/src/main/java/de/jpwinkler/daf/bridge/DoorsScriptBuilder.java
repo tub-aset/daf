@@ -95,13 +95,25 @@ public class DoorsScriptBuilder {
             builder.append("\n");
         }
 
+        // replace variables with variables from parent builders or our own variables,
+        // the ones closer to this builder replacing the ones farther away.
         String script = builder.toString();
+        DoorsScriptBuilder currentBuilder = this;
+        List<DoorsScriptBuilder> builders = new ArrayList<>();
+        do {
+            builders.add(0, currentBuilder);
+            currentBuilder = currentBuilder.parentBuilder;
+        } while (currentBuilder != null);
+        
+        HashMap<String, String> variables = new HashMap<>();
+        for(DoorsScriptBuilder bd : builders) {
+            variables.putAll(bd.variables);
+        }
 
         for (final Entry<String, String> e : variables.entrySet()) {
             final String variable = "$$" + e.getKey() + "$$";
 
             script = script.replace(variable, escapeString(e.getValue()));
-
         }
 
         // Replace any unknown variables.
@@ -112,7 +124,7 @@ public class DoorsScriptBuilder {
     }
 
     private String escapeString(final String value) {
-        return value.replace("\\", "\\\\");
+        return value == null ? "" : value.replace("\\", "\\\\");
     }
 
 }

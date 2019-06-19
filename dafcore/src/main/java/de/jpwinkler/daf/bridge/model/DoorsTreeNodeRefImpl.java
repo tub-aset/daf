@@ -41,7 +41,7 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNode {
     protected final DoorsApplication doorsApplication;
 
     private DoorsItemType type;
-    private final DoorsTreeNode parent;
+    private DoorsTreeNode parent;
 
     private final List<String> pathSegments;
     private List<DoorsTreeNode> children;
@@ -50,8 +50,7 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNode {
         this.doorsApplication = doorsApplicationImpl;
         this.type = type;
         // make sure root does not show up in the path
-        this.pathSegments = parent == null ? Collections.emptyList() : Stream.concat(
-                parent.getFullNameSegments().stream(), Stream.of(name)).collect(Collectors.toList());
+        this.pathSegments = parent == null ? Collections.emptyList() : Stream.concat(parent.getFullNameSegments().stream(), Stream.of(name)).collect(Collectors.toList());
         this.parent = parent;
     }
 
@@ -124,7 +123,7 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNode {
 
     @Override
     public void setParent(DoorsTreeNode value) {
-        throw new UnsupportedOperationException("Not supported");
+        this.parent = value;
     }
 
     @Override
