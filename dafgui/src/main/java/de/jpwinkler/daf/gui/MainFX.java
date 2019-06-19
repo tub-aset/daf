@@ -27,7 +27,7 @@ public class MainFX extends Application {
         });
 
         SerializableRectangle2D storedRectangle = ApplicationPreferences.WINDOW_RECTANGLE.retrieve();
-        if (storedRectangle != null && Screen.getScreens().stream().anyMatch(sc -> sc.getBounds().contains(storedRectangle.toRectangle2D()))) {
+        if (storedRectangle != null) {
             primaryStage.setX(storedRectangle.getX());
             primaryStage.setY(storedRectangle.getY());
             primaryStage.setWidth(storedRectangle.getWidth());
