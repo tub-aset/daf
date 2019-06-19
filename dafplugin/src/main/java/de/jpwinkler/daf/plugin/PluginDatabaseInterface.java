@@ -36,14 +36,6 @@ public class PluginDatabaseInterface implements DatabaseInterface {
     }
 
     @Override
-    public DoorsTreeNode getNode(String path) {
-        if (path == null || path.isEmpty()) {
-            return getDatabaseRoot();
-        }
-        return null;
-    }
-
-    @Override
     public DoorsFolder getDatabaseRoot() {
         return databaseRoot;
     }

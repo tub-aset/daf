@@ -463,7 +463,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     public CompletableFuture<DatabasePath> createSnapshot(DatabaseInterface sourceDB, DatabasePath sourcePath, Predicate<DoorsTreeNode> include, DatabasePath destinationPathArg) {
         DatabasePath destinationPath;
         if (destinationPathArg == null) {
-            ChoiceDialog<ApplicationPart<?>> applicationPartChooser = new ChoiceDialog<>(null, applicationPartRegistry.registry().filter(p -> p.isAllowNew()).collect(Collectors.toList()));
+            ChoiceDialog<ApplicationPart> applicationPartChooser = new ChoiceDialog<>(null, applicationPartRegistry.registry().filter(p -> p.isAllowNew()).collect(Collectors.toList()));
             applicationPartChooser.setTitle("Create snapshot");
             applicationPartChooser.setHeaderText("Select a destination database type");
             destinationPathArg = Main.asStream(applicationPartChooser.showAndWait())

@@ -6,6 +6,7 @@
 package de.jpwinkler.daf.plugin;
 
 import de.jpwinkler.daf.gui.ApplicationPreference;
+import java.io.Serializable;
 
 /**
  *
@@ -15,7 +16,7 @@ public class PluginPreferences extends ApplicationPreference {
 
     public static final ApplicationPreference MENU_NAME = new PluginPreferences("MENU_NAME", String.class, "Application Part Extension Menu");
 
-    public PluginPreferences(String name, Class<?> valueType, Object defaultValue) {
+    public PluginPreferences(String name, Class<? extends Serializable> valueType, Object defaultValue) {
         super(name, valueType, defaultValue);
     }
 }

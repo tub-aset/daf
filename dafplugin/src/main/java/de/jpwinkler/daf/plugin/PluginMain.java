@@ -80,7 +80,7 @@ public class PluginMain extends Plugin {
     public static class TestApplicationPaneExtension implements ApplicationPaneExtension {
 
         private final List<Menu> menus = List_of(new Menu("Global extension menu"));
-        private final List<ApplicationPart<?>> applicationParts = List_of(new ApplicationPart<>("Test Extension Part", PluginDatabaseInterface.class,
+        private final List<ApplicationPart> applicationParts = List_of(new ApplicationPart("Test Extension Part", PluginDatabaseInterface.class,
                 DatabasePaneController::new, ApplicationPart.defaultSelector("", ""), false));
         private ApplicationPaneInterface applicationPaneInterface;
 
@@ -95,7 +95,7 @@ public class PluginMain extends Plugin {
         }
 
         @Override
-        public List<ApplicationPart<?>> getApplicationParts() {
+        public List<ApplicationPart> getApplicationParts() {
             return applicationParts;
         }
 

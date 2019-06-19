@@ -22,10 +22,14 @@ public class DatabasePath<T extends DatabaseInterface> implements Serializable {
     }
 
     public DatabasePath(Class<T> databaseInterface, String fullPath) {
+        this(databaseInterface.getCanonicalName(), fullPath);
+    }
+
+    public DatabasePath(String databaseInterface, String fullPath) {
         this(databaseInterface, fullPath.split(":", 2)[0], fullPath.split(":", 2)[1]);
     }
 
-    private DatabasePath(String databaseInterface, String databasePath, String path) {
+    public DatabasePath(String databaseInterface, String databasePath, String path) {
         Objects.requireNonNull(databaseInterface);
 
         this.databaseInterface = databaseInterface;

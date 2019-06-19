@@ -19,7 +19,7 @@ public interface ApplicationPaneExtension extends ExtensionPoint {
     default void initialise(ApplicationPaneInterface applicationPart) {
     }
 
-    default List<ApplicationPart<?>> getApplicationParts() {
+    default List<ApplicationPart> getApplicationParts() {
         return Collections.emptyList();
     }
     

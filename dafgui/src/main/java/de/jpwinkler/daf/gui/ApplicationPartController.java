@@ -171,7 +171,7 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
         extMenus.forEach(extensionMenus::remove);
     }
 
-    public ApplicationPart<?> getApplicationPart() {
+    public ApplicationPart getApplicationPart() {
         return applicationPart;
     }
 

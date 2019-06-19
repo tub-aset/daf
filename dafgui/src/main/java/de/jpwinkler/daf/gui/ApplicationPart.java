@@ -16,6 +16,7 @@ import de.jpwinkler.daf.gui.commands.CommandStack;
 import de.jpwinkler.daf.gui.databases.DatabasePaneController;
 import de.jpwinkler.daf.gui.modules.ModulePaneController;
 import java.io.File;
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -43,16 +44,16 @@ import org.pf4j.PluginWrapper;
  *
  * @author fwiesweg
  */
-public final class ApplicationPart<T extends DatabaseInterface> {
+public final class ApplicationPart implements Serializable {
 
     static void registerDefault(ApplicationPartRegistry applicationPartRegistry) {
-        applicationPartRegistry.register(new ApplicationPart<>("Doors Bridge", DoorsApplicationDatabaseInterface.class,
+        applicationPartRegistry.register(new ApplicationPart("Doors Bridge", DoorsApplicationDatabaseInterface.class,
                 ApplicationPart::dynamicPartConstructor, defaultSelector("", null), false));
-        applicationPartRegistry.register(new ApplicationPart<>("Local folder database", FolderDatabaseInterface.class,
+        applicationPartRegistry.register(new ApplicationPart("Local folder database", FolderDatabaseInterface.class,
                 ApplicationPart::dynamicPartConstructor, localFolderDatabaseSelector(), true));
-        applicationPartRegistry.register(new ApplicationPart<>("Local xmi database", XmiDatabaseInterface.class,
+        applicationPartRegistry.register(new ApplicationPart("Local xmi database", XmiDatabaseInterface.class,
                 ApplicationPart::dynamicPartConstructor, fileChooserSelector(new FileChooser.ExtensionFilter("XMI", "*.xmi")), true));
-        applicationPartRegistry.register(new ApplicationPart<>("Local module", RawFileDatabaseInterface.class,
+        applicationPartRegistry.register(new ApplicationPart("Local module", RawFileDatabaseInterface.class,
                 ModulePaneController::new, fileChooserSelector(f -> FilenameUtils.removeExtension(f.getAbsolutePath()), new FileChooser.ExtensionFilter("CSV/MMD", "*.csv", "*.mmd")), true));
     }
 
@@ -67,15 +68,15 @@ public final class ApplicationPart<T extends DatabaseInterface> {
     }
 
     private final String name;
-    private final Class<T> databaseInterfaceClass;
+    private final String databaseInterfaceClass;
     private final ApplicationPartConstructor partConstructor;
     private final DatabaseSelector selector;
     private final boolean allowNew;
 
-    public ApplicationPart(String name, Class<T> databaseInterface,
+    public <T extends DatabaseInterface> ApplicationPart(String name, Class<T> databaseInterface,
             ApplicationPartConstructor partConstructor, DatabaseSelector selector, boolean allowNew) {
         this.name = name;
-        this.databaseInterfaceClass = databaseInterface;
+        this.databaseInterfaceClass = databaseInterface.getCanonicalName();
         this.partConstructor = partConstructor;
         this.selector = selector;
         this.allowNew = allowNew;
@@ -147,7 +148,7 @@ public final class ApplicationPart<T extends DatabaseInterface> {
             TextInputDialog dialog = new TextInputDialog();
             dialog.setTitle((save ? "Save a " : "Open a ") + part.getName());
             dialog.setHeaderText("Please enter a URI to " + (save ? "save." : "open."));
-            dialog.setContentText(part.databaseInterfaceClass.getSimpleName() + ":");
+            dialog.setContentText(part.databaseInterfaceClass + ":");
 
             return Main.asStream(dialog.showAndWait())
                     .map(s -> new DatabasePath(part.databaseInterfaceClass, s));
@@ -175,10 +176,6 @@ public final class ApplicationPart<T extends DatabaseInterface> {
         return getName();
     }
 
-    private String getDatabaseInterfaceName() {
-        return databaseInterfaceClass.getCanonicalName();
-    }
-
     public static class ApplicationPartRegistry {
 
         public ApplicationPartRegistry(Supplier<Stream<PluginWrapper>> pluginSupplier, BiConsumer<DatabaseInterface, Boolean> dirtyListener) {
@@ -188,8 +185,8 @@ public final class ApplicationPart<T extends DatabaseInterface> {
         private final BiConsumer<DatabaseInterface, Boolean> dirtyListener;
         private final Supplier<Stream<PluginWrapper>> pluginSupplier;
 
-        private final Map<String, List<ApplicationPart<?>>> REGISTRY = new HashMap<>();
-        private final HashSet<BiConsumer<ApplicationPart<?>, ApplicationPart<?>>> listeners = new HashSet<>();
+        private final Map<String, List<ApplicationPart>> REGISTRY = new HashMap<>();
+        private final HashSet<BiConsumer<ApplicationPart, ApplicationPart>> listeners = new HashSet<>();
 
         private final Map<DatabasePath, Triple<MutableInt, DatabaseInterface, CommandStack>> databaseInterfaces = new HashMap<>();
 
@@ -239,28 +236,28 @@ public final class ApplicationPart<T extends DatabaseInterface> {
         }
 
         public void register(ApplicationPart part) {
-            if (!REGISTRY.containsKey(part.getDatabaseInterfaceName())) {
-                REGISTRY.put(part.getDatabaseInterfaceName(), new ArrayList<>());
+            if (!REGISTRY.containsKey(part.databaseInterfaceClass)) {
+                REGISTRY.put(part.databaseInterfaceClass, new ArrayList<>());
             }
-            REGISTRY.get(part.getDatabaseInterfaceName()).add(part);
+            REGISTRY.get(part.databaseInterfaceClass).add(part);
 
             listeners.forEach(l -> l.accept(part, null));
         }
 
         public void unregister(ApplicationPart part) {
-            if (!REGISTRY.containsKey(part.getDatabaseInterfaceName())) {
+            if (!REGISTRY.containsKey(part.databaseInterfaceClass)) {
                 return;
             }
             listeners.forEach(l -> l.accept(null, part));
 
-            REGISTRY.get(part.getDatabaseInterfaceName()).remove(part);
-            if (REGISTRY.get(part.getDatabaseInterfaceName()).isEmpty()) {
-                REGISTRY.remove(part.getDatabaseInterfaceName());
+            REGISTRY.get(part.databaseInterfaceClass).remove(part);
+            if (REGISTRY.get(part.databaseInterfaceClass).isEmpty()) {
+                REGISTRY.remove(part.databaseInterfaceClass);
             }
         }
 
         private ApplicationPart getPart(DatabasePath path) {
-            List<ApplicationPart<?>> partList = REGISTRY.get(path.getDatabaseInterface());
+            List<ApplicationPart> partList = REGISTRY.get(path.getDatabaseInterface());
             if (partList == null) {
                 throw new RuntimeException("No application part available to handle this database path");
             }
@@ -293,15 +290,15 @@ public final class ApplicationPart<T extends DatabaseInterface> {
             return pc;
         }
 
-        public void addListener(BiConsumer<ApplicationPart<?>, ApplicationPart<?>> listener) {
+        public void addListener(BiConsumer<ApplicationPart, ApplicationPart> listener) {
             listeners.add(listener);
         }
 
-        public void removeListener(BiConsumer<ApplicationPart<?>, ApplicationPart<?>> listener) {
+        public void removeListener(BiConsumer<ApplicationPart, ApplicationPart> listener) {
             listeners.remove(listener);
         }
 
-        public Stream<ApplicationPart<?>> registry() {
+        public Stream<ApplicationPart> registry() {
             return REGISTRY.values().stream()
                     .flatMap(l -> l.stream())
                     .sorted((p1, p2) -> Objects.compare(p1.getName(), p2.getName(), Comparator.naturalOrder()));
