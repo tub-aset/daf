@@ -8,6 +8,7 @@ package de.jpwinkler.daf.gui;
 import de.jpwinkler.daf.db.DatabasePath;
 import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.TreeMap;
 import javafx.geometry.Rectangle2D;
 
@@ -17,6 +18,7 @@ import javafx.geometry.Rectangle2D;
  */
 class ApplicationPreferences extends ApplicationPreference {
 
+    public static final ApplicationPreference EXIT_FILES = new ApplicationPreferences("EXIT_FILES", ArrayList.class, new ArrayList<>(0));
     public static final ApplicationPreference RECENT_FILES = new ApplicationPreferences("RECENT_FILES", TreeMap.class, new TreeMap<Long, DatabasePath>());
     public static final ApplicationPreference SAVE_DIRECTORY = new ApplicationPreferences("SAVE_DIRECTORY", File.class, new File(System.getProperty("user.home")).getAbsoluteFile());
     public static final ApplicationPreference OPEN_DIRECTORY = new ApplicationPreferences("OPEN_DIRECTORY", File.class, new File(System.getProperty("user.home")).getAbsoluteFile());

@@ -55,6 +55,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
+import javafx.stage.WindowEvent;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.tuple.Pair;
 import org.pf4j.DefaultPluginManager;
@@ -218,6 +219,8 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         }
 
         pluginManager.getPlugins().forEach(this::addPluginMenuEntries);
+
+        ((ArrayList<DatabasePath>) ApplicationPreferences.EXIT_FILES.retrieve()).forEach(path -> this.open(path, OpenFlag.OPEN_ONLY));
     }
 
     private void addPluginMenuEntries(PluginWrapper plugin) {
@@ -517,30 +520,28 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         tabPane.getTabs().remove(tabPane.getSelectionModel().getSelectedItem());
     }
 
-    private boolean backgroundMonitorPreventsClose = false;
-
-    public void closeRequest() {
+    public boolean tryClose() {
         if (backgroundTaskExecutor.hasRunningTasks()) {
             Alert alert = new Alert(AlertType.CONFIRMATION, "There are running background tasks. Are you sure you want to close the application? You might lose their state.", ButtonType.CANCEL, ButtonType.OK);
             alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
             if (alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.CANCEL) {
-                backgroundMonitorPreventsClose = true;
-                Platform.runLater(() -> backgroundMonitorPreventsClose = false);
-                return;
+                return false;
             }
-            backgroundMonitorPreventsClose = false;
         }
 
+        ArrayList<DatabasePath> exitPaths = new ArrayList<>(applicationPartControllers.keySet());
         tabPane.getTabs().clear();
-    }
+        if (!applicationPartControllers.isEmpty()) {
+            return false;
+        }
 
-    public boolean canClose() {
-        return applicationPartControllers.isEmpty() && !backgroundMonitorPreventsClose;
+        ApplicationPreferences.EXIT_FILES.store(exitPaths);
+        return true;
     }
 
     @FXML
     public void exitClicked() {
-        Platform.exit();
+        this.tabPane.getScene().getWindow().fireEvent(new WindowEvent(this.tabPane.getScene().getWindow(), WindowEvent.WINDOW_CLOSE_REQUEST));
     }
 
     private ButtonType closeTabs(Collection<Tab> closedTabs) {
