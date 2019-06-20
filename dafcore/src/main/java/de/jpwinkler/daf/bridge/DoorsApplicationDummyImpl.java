@@ -7,21 +7,14 @@ package de.jpwinkler.daf.bridge;
 
 import de.jpwinkler.daf.bridge.model.DoorsBridgeDatabaseFactory;
 import de.jpwinkler.daf.db.DatabaseFactory;
-import de.jpwinkler.daf.db.ModuleCSV;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.nio.channels.FileChannel;
 import java.util.HashMap;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.apache.commons.io.FileUtils;
 
 /**
  *
@@ -49,7 +42,6 @@ public class DoorsApplicationDummyImpl implements DoorsApplication {
     }
 
     @Override
-
     public void ack(String message) {
     }
 
