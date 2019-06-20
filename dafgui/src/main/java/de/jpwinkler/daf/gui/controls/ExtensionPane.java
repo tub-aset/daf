@@ -15,6 +15,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableBooleanValue;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -29,18 +30,18 @@ import org.pf4j.PluginWrapper;
 public class ExtensionPane<T extends ApplicationPartExtension> extends AutoloadingPaneController<ExtensionPane> {
 
     public ExtensionPane(Supplier<List<T>> extensions, Function<T, List<Node>> paneGetter, BiFunction<T, Node, String> paneNameGetter, String defaultSelection, Consumer<String> onSelected) {
-
-        extensionChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
-            extensionPane.setContent(newValue == null ? null : newValue.node);
-            updateVisibleProperty();
-            onSelected.accept(newValue == null ? null : newValue.extensionPaneId);
-        });
-
         extensionChoiceBox.getItems().add(new PaneChoice(null, null, "Hide pane", null));
 
         extensionChoiceBox.getItems().stream()
                 .filter(it -> Objects.equals(it.extensionPaneId, defaultSelection))
                 .findAny().ifPresent(extensionChoiceBox.getSelectionModel()::select);
+
+        this.selectionChangeListener = (obs, oldValue, newValue) -> {
+            this.extensionPane.setContent(newValue == null ? null : newValue.node);
+            updateVisibleProperty();
+            onSelected.accept(newValue == null ? null : newValue.extensionPaneId);
+        };
+        extensionChoiceBox.getSelectionModel().selectedItemProperty().addListener(this.selectionChangeListener);
 
         this.extensions = extensions;
         this.defaultSelection = defaultSelection;
@@ -63,6 +64,8 @@ public class ExtensionPane<T extends ApplicationPartExtension> extends Autoloadi
         visiblePanesProperty.set(extensionChoiceBox.getItems().size() > 1
                 && !extensionChoiceBox.getSelectionModel().isEmpty() && extensionChoiceBox.getSelectionModel().getSelectedItem().node != null);
     }
+
+    private final ChangeListener<PaneChoice> selectionChangeListener;
 
     public void addPlugin(PluginWrapper plugin) {
         extensions.get().stream()
@@ -99,6 +102,11 @@ public class ExtensionPane<T extends ApplicationPartExtension> extends Autoloadi
         }
 
         updateVisibleProperty();
+    }
+
+    public void shutdown() {
+        extensionChoiceBox.getSelectionModel().selectedItemProperty().removeListener(this.selectionChangeListener);
+        extensionChoiceBox.getItems().clear();
     }
 
     public void selectFirst() {

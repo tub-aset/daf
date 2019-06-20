@@ -12,6 +12,8 @@ import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.gui.ApplicationPartFactoryRegistry.ApplicationPart;
 import de.jpwinkler.daf.gui.commands.AbstractCommand;
 import de.jpwinkler.daf.gui.commands.UpdateAction;
+import de.jpwinkler.daf.gui.controls.ExtensionPane;
+import de.jpwinkler.daf.gui.databases.DatabasePaneExtension;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.io.IOException;
 import java.net.URL;
@@ -20,15 +22,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SplitPane;
 import org.pf4j.PluginWrapper;
 
 /**
@@ -64,6 +70,39 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
                 throw new RuntimeException(ex);
             }
         };
+    }
+
+    public static void setupDividerStorage(SplitPane splitPane, ApplicationPreference SPLITPOS, ExtensionPane<DatabasePaneExtension> extensionPane) {
+        HashMap<Integer, double[]> dividerPos = (HashMap<Integer, double[]>) SPLITPOS.retrieve();
+        if (dividerPos.containsKey(splitPane.getDividers().size())) {
+            Platform.runLater(() -> splitPane.setDividerPositions(dividerPos.get(splitPane.getDividers().size())));
+        }
+
+        Consumer<SplitPane.Divider> dividerChangeRunnable = d -> d.positionProperty().addListener((obs, oldValue, newValue) -> {
+            dividerPos.put(splitPane.getDividers().size(), splitPane.getDividerPositions());
+            SPLITPOS.store(dividerPos);
+        });
+        splitPane.getDividers().forEach(dividerChangeRunnable);
+        splitPane.getDividers().addListener((ListChangeListener.Change<? extends SplitPane.Divider> change) -> {
+            while (change.next()) {
+                change.getAddedSubList().forEach(dividerChangeRunnable);
+
+                if (change.getAddedSize() != 0 || change.getRemovedSize() != 0 && dividerPos.containsKey(splitPane.getDividers().size())) {
+                    splitPane.setDividerPositions(dividerPos.get(splitPane.getDividers().size()));
+                }
+            }
+        });
+
+        if (extensionPane != null) {
+            extensionPane.visiblePanesProperty().addListener(change -> {
+                if (!extensionPane.visiblePanesProperty().get()) {
+                    splitPane.getItems().remove(extensionPane.getNode());
+                }
+                if (extensionPane.visiblePanesProperty().get() && !splitPane.getItems().contains(extensionPane.getNode())) {
+                    splitPane.getItems().add(extensionPane.getNode());
+                }
+            });
+        }
     }
 
     protected final void setStatus(final String status) {
@@ -172,6 +211,12 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
     @Override
     public BackgroundTaskExecutor getBackgroundTaskExecutor() {
         return applicationController.getBackgroundTaskExecutor();
+    }
+
+    public void shutdown() {
+        extensions.clear();
+        menus.removeAll(extensionMenus.keySet());
+        extensionMenus.clear();
     }
 
 }

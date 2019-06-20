@@ -91,32 +91,9 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         });
         databaseTreeView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
-        mainSplitPane.setDividerPositions((double[]) DatabasePanePreferences.SPLITPOS.retrieve());
-        mainSplitPane.getDividers().forEach(d -> {
-            d.positionProperty().addListener((obs, oldValue, newValue) -> {
-                DatabasePanePreferences.SPLITPOS.store(mainSplitPane.getDividerPositions());
-            });
-        });
-        sideExtensionPane.visiblePanesProperty().addListener(change -> {
-            this.updateExtensionPaneVisibility(sideExtensionPane, mainSplitPane);
-        });
-
-        bottomSplitPane.setDividerPositions((double[]) DatabasePanePreferences.BOTTOM_SPLITPOS.retrieve());
-        bottomSplitPane.getDividers().forEach(d -> {
-            d.positionProperty().addListener((obs, oldValue, newValue) -> {
-                DatabasePanePreferences.BOTTOM_SPLITPOS.store(bottomSplitPane.getDividerPositions());
-            });
-        });
-        bottomExtensionPane.visiblePanesProperty().addListener(change -> {
-            this.updateExtensionPaneVisibility(bottomExtensionPane, bottomSplitPane);
-        });
-
-        attributesModulesSplitPane.setDividerPositions((double[]) DatabasePanePreferences.ATTRIBUTES_MODULES_SPLITPOS.retrieve());
-        attributesModulesSplitPane.getDividers().forEach(d -> {
-            d.positionProperty().addListener((obs, oldValue, newValue) -> {
-                DatabasePanePreferences.ATTRIBUTES_MODULES_SPLITPOS.store(attributesModulesSplitPane.getDividerPositions());
-            });
-        });
+        setupDividerStorage(mainSplitPane, DatabasePanePreferences.SPLITPOS, sideExtensionPane);
+        setupDividerStorage(bottomSplitPane, DatabasePanePreferences.BOTTOM_SPLITPOS, bottomExtensionPane);
+        setupDividerStorage(attributesModulesSplitPane, DatabasePanePreferences.ATTRIBUTES_MODULES_SPLITPOS, null);
 
         modulesTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             updateGui(UpdateTagsView, UpdateAttributesView, UpdateNodeTitle);
@@ -207,15 +184,6 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         String fn = node.getFullName();
         String ceil = list.ceiling(fn);
         return ceil != null && ceil.startsWith(fn);
-    }
-
-    private void updateExtensionPaneVisibility(ExtensionPane extPane, SplitPane splitPane) {
-        if (!extPane.visiblePanesProperty().get()) {
-            splitPane.getItems().remove(extPane.getNode());
-        }
-        if (extPane.visiblePanesProperty().get() && !splitPane.getItems().contains(extPane.getNode())) {
-            splitPane.getItems().add(extPane.getNode());
-        }
     }
 
     @FXML
@@ -462,6 +430,14 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     }
 
     @Override
+    public void shutdown() {
+        sideExtensionPane.shutdown();
+        bottomExtensionPane.shutdown();
+    }
+    
+    
+
+    @Override
     public void removePlugin(PluginWrapper plugin) {
         super.removePlugin(plugin);
 
@@ -562,7 +538,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     public static final UpdateAction<DatabasePaneController> UpdateAttributesView = ctrl -> {
         ctrl.attributesTableView.getItems().clear();
         ctrl.attributesTableView.setPlaceholder(new ProgressBar());
-        
+
         ctrl.getCurrentDoorsTreeNode()
                 .map(it -> it.getAttributesAsync(ctrl.getBackgroundTaskExecutor()))
                 .forEach(ft -> ft.thenAccept(attr -> Platform.runLater(() -> {

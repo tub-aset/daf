@@ -8,6 +8,7 @@ package de.jpwinkler.daf.gui.modules;
 import de.jpwinkler.daf.gui.ApplicationPreference;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
@@ -15,7 +16,12 @@ import java.util.ArrayList;
  */
 class ModulePanePreferences extends ApplicationPreference {
 
-    public static final ApplicationPreference SPLITPOS = new ModulePanePreferences("SPLITPOS", Double.class, 0.3);
+    public static final ApplicationPreference SPLITPOS = new ModulePanePreferences("SPLITPOS", HashMap.class, new HashMap<Integer, double[]>() {
+        {
+            put(0, new double[]{});
+            put(1, new double[]{0.3});
+        }
+    });
     public static final ApplicationPreference VIEWS = new ModulePanePreferences("VIEWS", ArrayList.class, new ArrayList<>());
     public static final ApplicationPreference CURRENT_VIEW = new ModulePanePreferences("CURRENT_VIEW", Integer.class, -1);
 

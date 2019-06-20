@@ -256,7 +256,7 @@ public final class ApplicationPartFactoryRegistry {
                 return this;
             }
 
-            this.registry.pluginSupplier.get().forEach(controller::removePlugin);
+            this.controller.shutdown();
             this.registry.closeDatabase(databasePath);
             this.controller = null;
 

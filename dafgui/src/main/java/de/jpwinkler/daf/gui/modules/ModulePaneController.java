@@ -143,12 +143,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
         });
 
-        mainSplitPane.setDividerPositions((double) ModulePanePreferences.SPLITPOS.retrieve());
-        mainSplitPane.getDividers().forEach(d -> {
-            d.positionProperty().addListener((obs, oldValue, newValue) -> {
-                ModulePanePreferences.SPLITPOS.store(newValue.doubleValue());
-            });
-        });
+        setupDividerStorage(mainSplitPane, ModulePanePreferences.SPLITPOS, null);
 
         filterTextField.textProperty().addListener((ChangeListener<String>) (observable, oldValue, newValue) -> {
             this.updateFilter(newValue, includeParentsCheckbox.isSelected(), includeChildrenCheckbox.isSelected(), filterExpressionCheckBox.isSelected());
