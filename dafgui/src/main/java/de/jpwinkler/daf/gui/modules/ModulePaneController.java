@@ -13,6 +13,7 @@ import de.jpwinkler.daf.gui.commands.UpdateAction;
 import de.jpwinkler.daf.gui.controls.CustomTextFieldTableCell;
 import de.jpwinkler.daf.gui.controls.CustomTextFieldTreeCell;
 import de.jpwinkler.daf.gui.controls.DoorsTreeItem;
+import de.jpwinkler.daf.gui.controls.ExtensionPane;
 import de.jpwinkler.daf.gui.controls.FixedSingleSelectionModel;
 import de.jpwinkler.daf.gui.controls.ForwardingMultipleSelectionModel;
 import de.jpwinkler.daf.gui.modules.ViewDefinition.ColumnDefinition;
@@ -67,6 +68,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import org.pf4j.PluginWrapper;
 
 public final class ModulePaneController extends ApplicationPartController<ModulePaneController> {
 
@@ -82,7 +84,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
     }
 
     public ModulePaneController(ApplicationPaneController applicationController, ApplicationPart part) {
-        super(applicationController, part);
+        super(applicationController, part, ModulePaneExtension.class);
 
         if (super.getDatabaseInterface().isReadOnly()) {
             outlineTreeView.setEditable(false);
@@ -143,7 +145,8 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
         });
 
-        setupDividerStorage(mainSplitPane, ModulePanePreferences.SPLITPOS, null);
+        setupDividerStorage(mainSplitPane, ModulePanePreferences.SPLITPOS, sideExtensionPane);
+        setupDividerStorage(bottomSplitPane, ModulePanePreferences.BOTTOM_SPLITPOS, bottomExtensionPane);
 
         filterTextField.textProperty().addListener((ChangeListener<String>) (observable, oldValue, newValue) -> {
             this.updateFilter(newValue, includeParentsCheckbox.isSelected(), includeChildrenCheckbox.isSelected(), filterExpressionCheckBox.isSelected());
@@ -186,9 +189,19 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
     private ViewDefinition currentView;
     private final Set<DoorsObject> filteredObjects = new HashSet<>();
+    
+    private final ExtensionPane<ModulePaneExtension> sideExtensionPane = new ExtensionPane<>(
+            () -> super.getExtensions(ModulePaneExtension.class), e -> e.getSidePanes(), (e, n) -> e.getPaneName(n),
+            ModulePanePreferences.SIDE_EXTENSION.retrieve(), ModulePanePreferences.SIDE_EXTENSION::store);
+    private final ExtensionPane<ModulePaneExtension> bottomExtensionPane = new ExtensionPane<>(
+            () -> super.getExtensions(ModulePaneExtension.class), e -> e.getBottomPanes(), (e, n) -> e.getPaneName(n),
+            ModulePanePreferences.BOTTOM_EXTENSION.retrieve(), ModulePanePreferences.BOTTOM_EXTENSION::store);
 
     @FXML
     private SplitPane mainSplitPane;
+    
+    @FXML
+    private SplitPane bottomSplitPane;
 
     @FXML
     private TreeView<DoorsTreeNode> outlineTreeView;
@@ -341,7 +354,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
         });
 
         boolean selected = Stream.concat(views.stream(), super.getExtensions(ModulePaneExtension.class).stream()
-                .flatMap(e -> e.getAdditionalViews(getDatabaseInterface()).stream()))
+                .flatMap(e -> e.getAdditionalViews().stream()))
                 .filter(vd -> {
 
                     RadioMenuItem rmi = new RadioMenuItem(vd.getName());
@@ -500,6 +513,40 @@ public final class ModulePaneController extends ApplicationPartController<Module
     @Override
     public SelectionModel<DoorsObject> getCurrentObjectSelectionModel() {
         return new ForwardingMultipleSelectionModel<>(this.contentTableView.getSelectionModel(), x -> x, y -> y);
+    }
+    
+    @FXML
+    public void showSidePaneClicked() {
+        sideExtensionPane.selectFirst();
+    }
+
+    @FXML
+    public void showBottomPaneClicked() {
+        bottomExtensionPane.selectFirst();
+    }
+    
+    @Override
+    public void shutdown() {
+        super.shutdown();
+        
+        sideExtensionPane.shutdown();
+        bottomExtensionPane.shutdown();
+    }
+
+    @Override
+    public void removePlugin(PluginWrapper plugin) {
+        super.removePlugin(plugin);
+
+        sideExtensionPane.removePlugin(plugin);
+        bottomExtensionPane.removePlugin(plugin);
+    }
+
+    @Override
+    public void addPlugin(PluginWrapper plugin) {
+        super.addPlugin(plugin);
+
+        sideExtensionPane.addPlugin(plugin);
+        bottomExtensionPane.addPlugin(plugin);
     }
 
     public static enum ModuleUpdateAction implements UpdateAction<ModulePaneController> {

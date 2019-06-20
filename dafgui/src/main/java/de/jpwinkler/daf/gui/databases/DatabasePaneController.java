@@ -66,7 +66,7 @@ import org.pf4j.PluginWrapper;
 public final class DatabasePaneController extends ApplicationPartController<DatabasePaneController> {
 
     public DatabasePaneController(ApplicationPaneController applicationController, ApplicationPart applicationPart) {
-        super(applicationController, applicationPart);
+        super(applicationController, applicationPart, DatabasePaneExtension.class);
 
         if (super.getDatabaseInterface().isReadOnly()) {
             databaseTreeView.setEditable(false);
@@ -431,11 +431,11 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
     @Override
     public void shutdown() {
+        super.shutdown();
+        
         sideExtensionPane.shutdown();
         bottomExtensionPane.shutdown();
     }
-    
-    
 
     @Override
     public void removePlugin(PluginWrapper plugin) {

@@ -5,9 +5,10 @@
  */
 package de.jpwinkler.daf.gui.modules;
 
-import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.gui.ApplicationPartExtension;
-import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import javafx.scene.Node;
 
 /**
  *
@@ -15,5 +16,19 @@ import java.util.Collection;
  */
 public interface ModulePaneExtension extends ApplicationPartExtension {
 
-    Collection<ViewDefinition> getAdditionalViews(DatabaseInterface databaseInterface);
+    default List<ViewDefinition> getAdditionalViews() {
+        return Collections.emptyList();
+    }
+    
+    default List<Node> getBottomPanes() {
+        return Collections.emptyList();
+    }
+
+    default List<Node> getSidePanes() {
+        return Collections.emptyList();
+    }
+    
+    default String getPaneName(Node node) {
+        return (String) node.getUserData();
+    }
 }

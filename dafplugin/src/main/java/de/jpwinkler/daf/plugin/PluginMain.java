@@ -5,6 +5,7 @@
  */
 package de.jpwinkler.daf.plugin;
 
+import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.gui.ApplicationPaneExtension;
 import de.jpwinkler.daf.gui.ApplicationPaneInterface;
 import de.jpwinkler.daf.gui.ApplicationPartExtension;
@@ -15,6 +16,8 @@ import de.jpwinkler.daf.gui.ApplicationPartFactoryRegistry.DatabasePathFactory;
 import de.jpwinkler.daf.gui.ApplicationPartInterface;
 import de.jpwinkler.daf.gui.databases.DatabasePaneController;
 import de.jpwinkler.daf.gui.databases.DatabasePaneExtension;
+import de.jpwinkler.daf.gui.modules.ModulePaneExtension;
+import de.jpwinkler.daf.gui.modules.ViewDefinition;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -49,7 +52,7 @@ public class PluginMain extends Plugin {
     }
 
     @Extension
-    public static class TestApplicationPartExtension implements ApplicationPartExtension, DatabasePaneExtension {
+    public static class TestApplicationPartExtension implements DatabasePaneExtension {
 
         private final List<Menu> menus = List_of(new Menu(PluginPreferences.MENU_NAME.retrieve()));
         private final List<Node> sidePanes = List_of(new Label("Test Extension Side Panel"));
@@ -78,6 +81,37 @@ public class PluginMain extends Plugin {
             return sidePanes;
         }
 
+    }
+
+    @Extension
+    public static class TestModulePaneExtension implements ModulePaneExtension {
+
+        private final List<Node> sidePanes = List_of(new Label("Test Extension Side Panel for Modules"));
+        private final List<Node> bottomPanes = List_of(new Label("Test Extension Bottom Panel for Modules"));
+        private final List<ViewDefinition> views = List_of(new ViewDefinition("Test Extension View"));
+        private ApplicationPartInterface applicationPartInterface;
+
+        @Override
+        public void initialise(ApplicationPartInterface applicationPartInterface) {
+            this.applicationPartInterface = applicationPartInterface;
+            this.sidePanes.forEach(sp -> sp.setUserData("Test Plugin SP"));
+            this.bottomPanes.forEach(sp -> sp.setUserData("Test Plugin BP"));
+        }
+
+        @Override
+        public List<Node> getBottomPanes() {
+            return bottomPanes;
+        }
+
+        @Override
+        public List<Node> getSidePanes() {
+            return sidePanes;
+        }
+
+        @Override
+        public List<ViewDefinition> getAdditionalViews() {
+            return views;
+        }
     }
 
     @Extension

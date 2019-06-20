@@ -46,6 +46,12 @@
             </MenuItem>
         </items>
     </Menu>
+   <Menu mnemonicParsing="false" text="View">
+     <items>
+       <MenuItem mnemonicParsing="false" onAction="#showSidePaneClicked" text="Show side pane" />
+         <MenuItem mnemonicParsing="false" onAction="#showBottomPaneClicked" text="Show bottom pane" />
+     </items>
+   </Menu>
     <Menu mnemonicParsing="false" text="Module">
         <items>
             <MenuItem mnemonicParsing="false" onAction="#reduceToSelectionClicked" text="Reduce to Selection" />

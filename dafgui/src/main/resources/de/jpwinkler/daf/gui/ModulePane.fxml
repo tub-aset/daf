@@ -12,43 +12,48 @@
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.VBox?>
 
-<SplitPane fx:id="mainSplitPane" dividerPositions="0.3" prefHeight="616.0" prefWidth="1225.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
-      <items>
-          <TreeView fx:id="outlineTreeView" prefHeight="2520.0" prefWidth="559.0" />
-      <VBox>
-         <children>
-                <ToolBar maxHeight="1.7976931348623157E308" nodeOrientation="RIGHT_TO_LEFT">
-                    <items>
-                  <MenuButton fx:id="viewsMenuButton" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" text="View options">
-                    <items>
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" onAction="#editViewsClicked" text="Edit views" />
-                    </items>
-                  </MenuButton>
-                  <MenuButton mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" text="Filter options">
-                    <items>
-                        <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
-                          <content>
-                            <CheckBox fx:id="filterExpressionCheckBox" text="Filter expression" />
-                          </content>
-                        </CustomMenuItem>
-                        <CustomMenuItem hideOnClick="false" mnemonicParsing="false">
-                           <content>
-                              <CheckBox fx:id="includeChildrenCheckbox" text="Include children" />
-                           </content>
-                        </CustomMenuItem>
-                        <CustomMenuItem hideOnClick="false" mnemonicParsing="false">
-                           <content>
-                              <CheckBox fx:id="includeParentsCheckbox" text="Include parents" />
-                           </content>
-                        </CustomMenuItem>
-                    </items>
-                  </MenuButton>
-                        <TextField fx:id="filterTextField" nodeOrientation="LEFT_TO_RIGHT" prefWidth="250.0" promptText="Quick Filter" />
-                    </items>
-                </ToolBar>
-                <TableView fx:id="contentTableView" editable="true" prefWidth="403.0" VBox.vgrow="ALWAYS" />
-         </children>
-      </VBox>
-      </items>
-  </SplitPane>
+
+<SplitPane fx:id="bottomSplitPane" orientation="VERTICAL" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <items>
+      <SplitPane fx:id="mainSplitPane" dividerPositions="0.3" prefHeight="616.0" prefWidth="1225.0">
+            <items>
+                <TreeView fx:id="outlineTreeView" prefHeight="2520.0" prefWidth="559.0" />
+            <VBox>
+               <children>
+                      <ToolBar maxHeight="1.7976931348623157E308" nodeOrientation="RIGHT_TO_LEFT">
+                          <items>
+                        <MenuButton fx:id="viewsMenuButton" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" text="View options">
+                          <items>
+                              <SeparatorMenuItem mnemonicParsing="false" />
+                              <MenuItem mnemonicParsing="false" onAction="#editViewsClicked" text="Edit views" />
+                          </items>
+                        </MenuButton>
+                        <MenuButton mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" text="Filter options">
+                          <items>
+                              <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
+                                <content>
+                                  <CheckBox fx:id="filterExpressionCheckBox" text="Filter expression" />
+                                </content>
+                              </CustomMenuItem>
+                              <CustomMenuItem hideOnClick="false" mnemonicParsing="false">
+                                 <content>
+                                    <CheckBox fx:id="includeChildrenCheckbox" text="Include children" />
+                                 </content>
+                              </CustomMenuItem>
+                              <CustomMenuItem hideOnClick="false" mnemonicParsing="false">
+                                 <content>
+                                    <CheckBox fx:id="includeParentsCheckbox" text="Include parents" />
+                                 </content>
+                              </CustomMenuItem>
+                          </items>
+                        </MenuButton>
+                              <TextField fx:id="filterTextField" nodeOrientation="LEFT_TO_RIGHT" prefWidth="250.0" promptText="Quick Filter" />
+                          </items>
+                      </ToolBar>
+                      <TableView fx:id="contentTableView" editable="true" prefWidth="403.0" VBox.vgrow="ALWAYS" />
+               </children>
+            </VBox>
+            </items>
+        </SplitPane>
+   </items>
+</SplitPane>

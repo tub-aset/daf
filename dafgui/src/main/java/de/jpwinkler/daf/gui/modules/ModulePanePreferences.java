@@ -22,6 +22,15 @@ class ModulePanePreferences extends ApplicationPreference {
             put(1, new double[]{0.3});
         }
     });
+    public static final ApplicationPreference BOTTOM_SPLITPOS = new ModulePanePreferences("BOTTOM_SPLITPOS", HashMap.class, new HashMap<Integer, double[]>() {
+        {
+            put(0, new double[]{});
+            put(1, new double[]{0.8});
+        }
+    });
+    public static final ApplicationPreference SIDE_EXTENSION = new ModulePanePreferences("SIDE_EXTENSION", String.class, null);
+    public static final ApplicationPreference BOTTOM_EXTENSION = new ModulePanePreferences("BOTTOM_EXTENSION", String.class, null);
+
     public static final ApplicationPreference VIEWS = new ModulePanePreferences("VIEWS", ArrayList.class, new ArrayList<>());
     public static final ApplicationPreference CURRENT_VIEW = new ModulePanePreferences("CURRENT_VIEW", Integer.class, -1);
 

@@ -13,7 +13,6 @@ import de.jpwinkler.daf.gui.ApplicationPartFactoryRegistry.ApplicationPart;
 import de.jpwinkler.daf.gui.commands.AbstractCommand;
 import de.jpwinkler.daf.gui.commands.UpdateAction;
 import de.jpwinkler.daf.gui.controls.ExtensionPane;
-import de.jpwinkler.daf.gui.databases.DatabasePaneExtension;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.io.IOException;
 import java.net.URL;
@@ -50,8 +49,9 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
 
     private final ObservableList<Menu> menus = FXCollections.observableArrayList();
     private final Map<Menu, PluginWrapper> extensionMenus = new HashMap<>();
+    private final Class<? extends ApplicationPartExtension> extensionClass;
 
-    public ApplicationPartController(ApplicationPaneController applicationController, ApplicationPart applicationPart) {
+    public ApplicationPartController(ApplicationPaneController applicationController, ApplicationPart applicationPart, Class<? extends ApplicationPartExtension> extensionClass) {
         this.applicationController = applicationController;
         this.applicationPart = applicationPart;
 
@@ -70,9 +70,10 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
                 throw new RuntimeException(ex);
             }
         };
+        this.extensionClass = extensionClass;
     }
 
-    public static void setupDividerStorage(SplitPane splitPane, ApplicationPreference SPLITPOS, ExtensionPane<DatabasePaneExtension> extensionPane) {
+    public static void setupDividerStorage(SplitPane splitPane, ApplicationPreference SPLITPOS, ExtensionPane<?> extensionPane) {
         HashMap<Integer, double[]> dividerPos = (HashMap<Integer, double[]>) SPLITPOS.retrieve();
         if (dividerPos.containsKey(splitPane.getDividers().size())) {
             Platform.runLater(() -> splitPane.setDividerPositions(dividerPos.get(splitPane.getDividers().size())));
@@ -88,7 +89,7 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
                 change.getAddedSubList().forEach(dividerChangeRunnable);
 
                 if (change.getAddedSize() != 0 || change.getRemovedSize() != 0 && dividerPos.containsKey(splitPane.getDividers().size())) {
-                    splitPane.setDividerPositions(dividerPos.get(splitPane.getDividers().size()));
+                    Platform.runLater(() -> splitPane.setDividerPositions(dividerPos.get(splitPane.getDividers().size())));
                 }
             }
         });
@@ -186,7 +187,7 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
     }
 
     public void addPlugin(PluginWrapper plugin) {
-        List<ApplicationPartExtension> newExts = plugin.getPluginManager().getExtensions(ApplicationPartExtension.class, plugin.getPluginId());
+        List<? extends ApplicationPartExtension> newExts = plugin.getPluginManager().getExtensions(extensionClass, plugin.getPluginId());
         newExts.forEach(e -> e.initialise(this));
 
         extensions.addAll(newExts);
