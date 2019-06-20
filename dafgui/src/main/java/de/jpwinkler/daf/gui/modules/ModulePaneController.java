@@ -1,7 +1,6 @@
 package de.jpwinkler.daf.gui.modules;
 
 import de.jpwinkler.daf.bridge.DoorsApplicationImpl;
-import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import de.jpwinkler.daf.filter.objects.CascadingFilter;
 import de.jpwinkler.daf.filter.objects.DoorsObjectFilter;
 import de.jpwinkler.daf.filter.objects.ObjectTextAndHeadingFilter;
@@ -102,6 +101,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
             traverseTreeItem(outlineTreeView.getRoot(), item -> {
                 if (item != null && item.getValue() != null && Objects.equals(item.getValue(), newValue)) {
                     outlineTreeView.getSelectionModel().select(item);
+                    outlineTreeView.scrollTo(outlineTreeView.getSelectionModel().getSelectedIndex());
                 }
             });
         });
@@ -136,7 +136,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
         ));
         outlineTreeView.getSelectionModel().selectedItemProperty().addListener((ChangeListener<TreeItem<DoorsTreeNode>>) (observable, oldValue, newValue) -> {
             contentTableView.getItems().forEach(c -> {
-                if (newValue != null && newValue == c) {
+                if (newValue.getValue() != null && newValue.getValue() == c) {
                     contentTableView.scrollTo(c);
                 }
             });
