@@ -50,10 +50,12 @@ public class DoorsTreeItem extends TreeItem<DoorsTreeNode> implements Comparable
     public void updateChildren() {
         childrenLoaded = true;
         this.setGraphic(ApplicationIcons.LOADING.toImageView());
-        getValue().getChildrenAsync(executor).thenAccept((children) -> Platform.runLater(() -> {
+        getValue().getChildrenAsync(executor).exceptionally(t -> {
+            childrenLoaded = false;
+            throw new RuntimeException(t);
+        }).thenAccept((children) -> Platform.runLater(() -> {
             this.setGraphic(ApplicationIcons.getImage(getValue()).toImageView());
             final ObservableList<DoorsTreeItem> list = FXCollections.observableArrayList();
-            list.clear();
             children.stream().filter(childFilter).map(n -> this.construct((DoorsTreeNode) n)).forEach(list::add);
             list.sort(Comparator.naturalOrder());
             super.getChildren().setAll(list);

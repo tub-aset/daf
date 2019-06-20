@@ -526,10 +526,10 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     };
 
     public static final UpdateAction<DatabasePaneController> UpdateModulesView = ctrl -> {
-        ctrl.modulesTableView.getItems().clear();
         ctrl.databaseTreeView.getSelectionModel().getSelectedItems().stream()
                 .map(it -> it.getValue().getChildrenAsync(ctrl.getBackgroundTaskExecutor()))
                 .forEach(ft -> ft.thenAccept(children -> Platform.runLater(() -> {
+            ctrl.modulesTableView.getItems().clear();
             ctrl.modulesTableView.getItems().addAll(children.stream()
                     .filter(it -> it instanceof DoorsModule)
                     .map(it -> (DoorsModule) it)
