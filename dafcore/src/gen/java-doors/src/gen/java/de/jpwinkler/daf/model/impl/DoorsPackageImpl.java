@@ -322,26 +322,6 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getDoorsTreeNode__CopyFrom__DoorsTreeNode_DoorsTreeNode() {
-		return doorsTreeNodeEClass.getEOperations().get(9);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getDoorsTreeNode__CopyFrom__DoorsTreeNode_DoorsTreeNode_Predicate() {
-		return doorsTreeNodeEClass.getEOperations().get(10);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EOperation getDoorsTreeNode__GetChild__String() {
 		return doorsTreeNodeEClass.getEOperations().get(1);
 	}
@@ -353,7 +333,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 */
 	@Override
 	public EOperation getDoorsTreeNode__ToString() {
-		return doorsTreeNodeEClass.getEOperations().get(11);
+		return doorsTreeNodeEClass.getEOperations().get(9);
 	}
 
 	/**
@@ -740,8 +720,6 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___REMOVE_TAG__STRING);
 		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___REMOVE_TAG__PATTERN);
 		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___CAN_COPY_FROM__DOORSTREENODE);
-		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE_DOORSTREENODE);
-		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___COPY_FROM__DOORSTREENODE_DOORSTREENODE_PREDICATE);
 		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___GET_CHILD__STRING);
 		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___TO_STRING);
 
@@ -854,15 +832,6 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 
 		op = initEOperation(getDoorsTreeNode__CanCopyFrom__DoorsTreeNode(), ecorePackage.getEBoolean(), "canCopyFrom", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getDoorsTreeNode(), "node", 0, 1, IS_UNIQUE, IS_ORDERED);
-
-		op = initEOperation(getDoorsTreeNode__CopyFrom__DoorsTreeNode_DoorsTreeNode(), this.getDoorsTreeNode(), "copyFrom", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, this.getDoorsTreeNode(), "node", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, this.getDoorsTreeNode(), "newParent", 0, 1, IS_UNIQUE, IS_ORDERED);
-
-		op = initEOperation(getDoorsTreeNode__CopyFrom__DoorsTreeNode_DoorsTreeNode_Predicate(), this.getDoorsTreeNode(), "copyFrom", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, this.getDoorsTreeNode(), "node", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, this.getDoorsTreeNode(), "newParent", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, this.getNodeFilter(), "nodeFilter", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		op = initEOperation(getDoorsTreeNode__GetChild__String(), this.getDoorsTreeNode(), "getChild", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEString(), "name", 0, 1, IS_UNIQUE, IS_ORDERED);

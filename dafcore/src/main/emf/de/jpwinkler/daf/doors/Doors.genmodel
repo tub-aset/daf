@@ -41,7 +41,7 @@
             </genOperations>
             
             -<genOperations ecoreOperation="Doors.ecore#//DoorsTreeNode/canCopyFrom">
-                <genParameters ecoreParameter="Doors.ecore#//DoorsTreeNode/copyFrom/node"/>
+                <genParameters ecoreParameter="Doors.ecore#//DoorsTreeNode/canCopyFrom/node"/>
             </genOperations>
             
             <genOperations ecoreOperation="Doors.ecore#//DoorsTreeNode/getChild">
