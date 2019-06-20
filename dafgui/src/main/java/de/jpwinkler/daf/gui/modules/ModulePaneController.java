@@ -1,6 +1,7 @@
 package de.jpwinkler.daf.gui.modules;
 
 import de.jpwinkler.daf.bridge.DoorsApplicationImpl;
+import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import de.jpwinkler.daf.filter.objects.CascadingFilter;
 import de.jpwinkler.daf.filter.objects.DoorsObjectFilter;
 import de.jpwinkler.daf.filter.objects.ObjectTextAndHeadingFilter;
@@ -55,6 +56,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.MenuButton;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.SelectionModel;
@@ -161,6 +163,8 @@ public final class ModulePaneController extends ApplicationPartController<Module
             this.updateFilter(filterTextField.getText(), newValue, includeChildrenCheckbox.isSelected(), filterExpressionCheckBox.isSelected());
         });
 
+        this.contentTableView.setPlaceholder(new ProgressBar());
+
         super.getDatabaseInterface().getDatabaseRoot().getChildAsync(super.getBackgroundTaskExecutor(), part.getDatabasePath().getPath())
                 .thenAccept(module -> {
                     DoorsModule dm = (DoorsModule) module;
@@ -169,14 +173,13 @@ public final class ModulePaneController extends ApplicationPartController<Module
                         if (this.module == null) {
                             throw new RuntimeException("No such module: " + part.getDatabasePath().toString());
                         }
+                        if (!DoorsApplicationImpl.STANDARD_VIEW.equals(this.module.getView())) {
+                            setStatus("Warning: This module's view is not the standard view.");
+                        }
                         mergeObjectAttributes();
 
                         updateGui(ModuleUpdateAction.UPDATE_VIEWS, ModuleUpdateAction.UPDATE_COLUMNS, ModuleUpdateAction.UPDATE_CONTENT_VIEW, ModuleUpdateAction.UPDATE_OUTLINE_VIEW);
                         traverseTreeItem(outlineTreeView.getRoot(), ti -> ti.setExpanded(true));
-
-                        if (!DoorsApplicationImpl.STANDARD_VIEW.equals(this.module.getView())) {
-                            setStatus("Warning: This module's view is not the standard view.");
-                        }
                     }));
                 });
     }
@@ -247,7 +250,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
     private void updateContentView() {
         final TablePosition<?, ?> focusedCell = contentTableView.getFocusModel().getFocusedCell();
         contentTableView.getItems().clear();
-        module.acceptAsync(super.getBackgroundTaskExecutor(), new DoorsTreeNodeVisitor<DoorsObject>(DoorsObject.class) {
+        module.accept(new DoorsTreeNodeVisitor<DoorsObject>(DoorsObject.class) {
             @Override
             public boolean visitPreTraverse(final DoorsObject object) {
                 Platform.runLater(() -> {
@@ -257,7 +260,6 @@ public final class ModulePaneController extends ApplicationPartController<Module
                 });
                 return true;
             }
-
         });
         if (focusedCell != null) {
             contentTableView.getFocusModel().focus(focusedCell);

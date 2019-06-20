@@ -50,6 +50,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.SelectionModel;
 import javafx.scene.control.SplitPane;
@@ -526,9 +527,13 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     };
 
     public static final UpdateAction<DatabasePaneController> UpdateModulesView = ctrl -> {
+        ctrl.modulesTableView.getItems().clear();
+        ctrl.modulesTableView.setPlaceholder(new ProgressBar());
+
         ctrl.databaseTreeView.getSelectionModel().getSelectedItems().stream()
                 .map(it -> it.getValue().getChildrenAsync(ctrl.getBackgroundTaskExecutor()))
                 .forEach(ft -> ft.thenAccept(children -> Platform.runLater(() -> {
+            ctrl.modulesTableView.setPlaceholder(null);
             ctrl.modulesTableView.getItems().clear();
             ctrl.modulesTableView.getItems().addAll(children.stream()
                     .filter(it -> it instanceof DoorsModule)
@@ -556,9 +561,13 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
     public static final UpdateAction<DatabasePaneController> UpdateAttributesView = ctrl -> {
         ctrl.attributesTableView.getItems().clear();
+        ctrl.attributesTableView.setPlaceholder(new ProgressBar());
+        
         ctrl.getCurrentDoorsTreeNode()
                 .map(it -> it.getAttributesAsync(ctrl.getBackgroundTaskExecutor()))
                 .forEach(ft -> ft.thenAccept(attr -> Platform.runLater(() -> {
+            ctrl.attributesTableView.setPlaceholder(null);
+            ctrl.attributesTableView.getItems().clear();
             ctrl.attributesTableView.getItems().addAll(attr.entrySet().stream()
                     .filter(it -> DoorsAttributes.getForKey(it.getKey()).map(v -> !v.isSystemKey()).orElse(true))
                     .collect(Collectors.toList()));

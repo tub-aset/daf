@@ -160,4 +160,8 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNode {
         return Collections.emptyList();
     }
 
+    @Override
+    public String toString() {
+        return getName();
+    }
 }

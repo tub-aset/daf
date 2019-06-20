@@ -99,15 +99,4 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
 		return super.eInvoke(operationID, arguments);
 	}
 
-				/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated NOT
-	 */
-	@Override
-	public String toString() {
-		return super.toString();
-	}
-
-
 } //DoorsModuleImpl

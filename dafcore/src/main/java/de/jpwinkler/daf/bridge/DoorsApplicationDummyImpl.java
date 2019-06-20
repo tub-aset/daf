@@ -78,8 +78,9 @@ public class DoorsApplicationDummyImpl implements DoorsApplication {
                 .flatMap(entry -> builder.getScripts().stream()
                 .map(sc -> sc.getSource())
                 .filter(entry.getKey())
-                .map(uri -> entry.getValue().apply(builder))
-                ).findAny().orElse("");
+                .peek(uri -> System.out.println("Faking " + uri.toString()))
+                .map(uri -> entry.getValue().apply(builder)))
+                .findAny().orElse("");
     }
 
 }

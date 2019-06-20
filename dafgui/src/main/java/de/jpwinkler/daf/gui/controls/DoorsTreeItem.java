@@ -9,9 +9,14 @@ import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import de.jpwinkler.daf.gui.ApplicationIcons;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -47,19 +52,31 @@ public class DoorsTreeItem extends TreeItem<DoorsTreeNode> implements Comparable
         return super.getChildren();
     }
 
+    private void loadChildren(List<DoorsTreeNode> children) {
+        this.setGraphic(ApplicationIcons.getImage(getValue()).toImageView());
+        final ObservableList<DoorsTreeItem> list = FXCollections.observableArrayList();
+        children.stream().filter(childFilter).map(n -> this.construct((DoorsTreeNode) n)).forEach(list::add);
+        list.sort(Comparator.naturalOrder());
+        super.getChildren().setAll(list);
+    }
+
     public void updateChildren() {
         childrenLoaded = true;
+
         this.setGraphic(ApplicationIcons.LOADING.toImageView());
-        getValue().getChildrenAsync(executor).exceptionally(t -> {
+        CompletableFuture<List<DoorsTreeNode>> promise = getValue().getChildrenAsync(executor).exceptionally(t -> {
             childrenLoaded = false;
             throw new RuntimeException(t);
-        }).thenAccept((children) -> Platform.runLater(() -> {
-            this.setGraphic(ApplicationIcons.getImage(getValue()).toImageView());
-            final ObservableList<DoorsTreeItem> list = FXCollections.observableArrayList();
-            children.stream().filter(childFilter).map(n -> this.construct((DoorsTreeNode) n)).forEach(list::add);
-            list.sort(Comparator.naturalOrder());
-            super.getChildren().setAll(list);
-        }));
+        });
+        if (promise.isDone()) {
+            try {
+                this.loadChildren(promise.get());
+            } catch (InterruptedException | ExecutionException ex) {
+                throw new RuntimeException();
+            }
+        } else {
+            promise.thenAccept((children) -> Platform.runLater(() -> this.loadChildren(children)));
+        }
     }
 
     protected DoorsTreeItem construct(DoorsTreeNode node) {

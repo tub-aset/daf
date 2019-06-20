@@ -214,5 +214,4 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
         accept(visitor);
         return visitor.getObject();
     }
-
 }

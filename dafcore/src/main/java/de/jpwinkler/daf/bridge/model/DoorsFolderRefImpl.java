@@ -27,19 +27,19 @@ class DoorsFolderRefImpl extends DoorsTreeNodeRefImpl implements DoorsFolder {
     public DoorsFolderRefImpl(DoorsApplication DoorsApplication, DoorsItemType type, DoorsTreeNode parent, String name) {
         super(DoorsApplication, type, parent, name);
     }
-    
+
     private static final Logger LOGGER = Logger.getLogger(DoorsTreeNodeRefImpl.class.getName());
-    
+
     private final AtomicReference<CompletableFuture<List<DoorsTreeNode>>> children = new AtomicReference<>();
 
     @Override
     public CompletableFuture<List<DoorsTreeNode>> getChildrenAsync(BackgroundTaskExecutor executor) {
         if (this.children.get() == null) {
             synchronized (this.children) {
-                if(this.children.get() != null) {
+                if (this.children.get() != null) {
                     return this.children.get();
                 }
-                
+
                 this.children.compareAndSet(null, executor.runBackgroundTask("Load node children", i -> {
                     final String resultString = doorsApplication.runScript(builder -> {
                         builder.addScript(DXLScript.fromResource("get_children.dxl"));
@@ -85,5 +85,4 @@ class DoorsFolderRefImpl extends DoorsTreeNodeRefImpl implements DoorsFolder {
 
         return children.get();
     }
-
 }
