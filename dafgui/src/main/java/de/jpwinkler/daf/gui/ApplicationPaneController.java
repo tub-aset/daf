@@ -84,7 +84,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     private final List<ApplicationPaneExtension> extensions = new ArrayList<>();
     private final Map<Menu, PluginWrapper> extensionMenus = new HashMap<>();
 
-    private final PluginManager pluginManager = new DefaultPluginManager() {
+    private final PluginManager pluginManager = new DefaultPluginManager(ApplicationPreference.APPLICATION_PLUGINS_PATH) {
         @Override
         protected PluginDescriptorFinder createPluginDescriptorFinder() {
             return new ManifestPluginDescriptorFinder();

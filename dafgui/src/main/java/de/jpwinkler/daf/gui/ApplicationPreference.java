@@ -12,16 +12,37 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectStreamException;
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.HashSet;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+import net.harawata.appdirs.AppDirsFactory;
 
 /**
  *
  * @author fwiesweg
  */
 public class ApplicationPreference {
+
+    public static final Path APPLICATION_DATA_PATH = Paths.get(AppDirsFactory.getInstance().getUserConfigDir(Main.class.getPackageName(), null, null)).toAbsolutePath();
+    public static final Path APPLICATION_PREFERENCES_PATH = APPLICATION_DATA_PATH.resolve("preferences");
+    public static final Path APPLICATION_PLUGINS_PATH = APPLICATION_DATA_PATH.resolve("plugins");
+
+    static {
+        try {
+            Files.createDirectories(APPLICATION_PREFERENCES_PATH);
+            Files.createDirectories(APPLICATION_PLUGINS_PATH);
+            
+            System.setProperty("java -Djava.util.prefs.userRoot", APPLICATION_PREFERENCES_PATH.toString());
+        } catch (IOException ex) {
+            Logger.getLogger(ApplicationPreference.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     protected <T extends Serializable> ApplicationPreference(String name, Class<T> valueType, Object defaultValue) {
         this.name = name;
