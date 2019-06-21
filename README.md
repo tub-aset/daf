@@ -53,9 +53,7 @@ An example plugin providing simple dummies to showcase the dafgui's plugin funct
 The following should work out-of-the-box, no prerequisites necessary. All eCore/EMF/ant code generation will run automatically.
 
 0. Install maven3
-1. `cd dafcore && mvn clean install && cd ..`
-2. `cd dafgui && mvn clean install && cd ..`
-3. `cd dafplugin && mvn clean install && cd ..`
+1. `cd daf && mvn clean install`
 4. `java -jar dafgui/target/dafgui-1.0.0-SNAPSHOT-jar-with-dependencies.jar`
 
 >>>
