@@ -22,6 +22,7 @@ package de.jpwinkler.daf.gui.databases;
  * #L%
  */
 
+import de.jpwinkler.daf.gui.controls.MultiLineTextInputDialog;
 import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
 import de.jpwinkler.daf.gui.ApplicationPaneController;
 import de.jpwinkler.daf.gui.ApplicationPartController;
@@ -425,8 +426,8 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     private void editSnapshotListClicked(String snapshotList) {
         TreeMap<String, TreeSet<String>> snapshotLists = DatabasePanePreferences.SNAPSHOT_LISTS.retrieve();
 
-        SnapshotListEditorController editor = new SnapshotListEditorController<>(snapshotLists.get(snapshotList).stream().collect(Collectors.joining("\n")));
-        if (editor.asDialog(this.databaseTreeView.getScene().getWindow(), "Snapshot list " + snapshotList, ButtonType.CANCEL, ButtonType.OK).orElse(ButtonType.CANCEL) == ButtonType.CANCEL) {
+        MultiLineTextInputDialog editor = new MultiLineTextInputDialog<>(snapshotLists.get(snapshotList).stream().collect(Collectors.joining("\n")));
+        if (editor.showDialog(this.databaseTreeView.getScene().getWindow(), "Snapshot list " + snapshotList, ButtonType.CANCEL, ButtonType.OK).orElse(ButtonType.CANCEL) == ButtonType.CANCEL) {
             return;
         }
 

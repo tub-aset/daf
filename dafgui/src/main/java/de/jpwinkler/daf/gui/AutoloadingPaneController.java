@@ -60,9 +60,13 @@ public abstract class AutoloadingPaneController<THIS extends AutoloadingPaneCont
     public Parent getNode() {
         return node;
     }
+    
+    public Optional<DialogResult> showDialog(Window owner, String title, ButtonType... buttonTypes) {
+        return asDialog(owner, title, buttonTypes).showAndWait().map(bt -> new DialogResult(bt, (THIS) this));
+    }
 
-    public Optional<DialogResult> asDialog(Window owner, String title, ButtonType... buttonTypes) {
-        Dialog<ButtonType> dialog = new Dialog<ButtonType>();
+    public Dialog<ButtonType> asDialog(Window owner, String title, ButtonType... buttonTypes) {
+        Dialog<ButtonType> dialog = new Dialog<>();
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.initOwner(owner);
         dialog.setResizable(true);
@@ -72,7 +76,8 @@ public abstract class AutoloadingPaneController<THIS extends AutoloadingPaneCont
         dialog.getDialogPane().getButtonTypes().addAll(buttonTypes);
 
         dialog.setResultConverter(bt -> bt);
-        return dialog.showAndWait().map(bt -> new DialogResult(bt, (THIS) this));
+        return dialog;
+        
     }
 
     public final class DialogResult {

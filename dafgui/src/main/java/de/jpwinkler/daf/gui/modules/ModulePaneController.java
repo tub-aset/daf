@@ -474,7 +474,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
     @FXML
     public void editViewsClicked() {
         new EditViewsPaneController(this.views, module.getObjectAttributes().stream())
-                .asDialog(outlineTreeView.getScene().getWindow(), "Edit views", ButtonType.CANCEL, ButtonType.OK)
+                .showDialog(outlineTreeView.getScene().getWindow(), "Edit views", ButtonType.CANCEL, ButtonType.OK)
                 .filter(r -> r.buttonType == ButtonType.OK)
                 .map(r -> r.result.getViews())
                 .ifPresent(r -> {

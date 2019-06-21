@@ -21,20 +21,22 @@ package de.jpwinkler.daf.gui;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
 import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.gui.ApplicationPartFactoryRegistry.ApplicationPart;
 import de.jpwinkler.daf.gui.ApplicationPartFactoryRegistry.ApplicationPartFactory;
+import de.jpwinkler.daf.gui.controls.MultiLineTextInputDialog;
 import de.jpwinkler.daf.gui.controls.ProgressMenuItemController;
 import de.jpwinkler.daf.gui.controls.ProgressMenuItemController.ProgressMenuItem;
 import de.jpwinkler.daf.model.DoorsAttributes;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.ZoneOffset;
@@ -69,6 +71,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.CustomMenuItem;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -79,6 +82,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.pf4j.DefaultPluginManager;
@@ -665,6 +669,22 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
                         setStatus("Failed loading plugin: " + getMessage(ex));
                     }
                 });
+    }
+
+    @FXML
+    public void showLicensesClicked() throws IOException {
+        String text;
+        try (InputStream is = ApplicationPaneController.class.getClassLoader().getResourceAsStream("THIRD-PARTY.txt")) {
+            text = new String(is.readAllBytes(), Charset.forName("UTF-8"));
+        }
+
+        MultiLineTextInputDialog controller = new MultiLineTextInputDialog("Developped by TU Berlin ASET\n\nThe following dependencies are bundled with this software.\n" + text);
+        Dialog dialog = controller.asDialog(tabPane.getScene().getWindow(), "About " + ((Stage) tabPane.getScene().getWindow()).getTitle(), ButtonType.OK);
+        controller.getTextArea().setEditable(false);
+        dialog.setHeaderText("About " + ((Stage) tabPane.getScene().getWindow()).getTitle());
+        dialog.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+        dialog.getDialogPane().setMinWidth(800);
+        dialog.showAndWait();
     }
 
     private void startPlugin(String pluginId) {

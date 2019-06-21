@@ -58,7 +58,7 @@ public class MainFX extends Application {
         primaryStage.setMaximized(ApplicationPreferences.WINDOW_MAXIMIZED.retrieve());
 
         primaryStage.setScene(applicationScene);
-        primaryStage.setTitle("Doors Access Framework – GUI");
+        primaryStage.setTitle("DOORS Access Framework – GUI");
         primaryStage.show();
     }
 

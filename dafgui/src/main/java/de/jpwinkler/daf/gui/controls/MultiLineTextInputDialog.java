@@ -1,4 +1,4 @@
-package de.jpwinkler.daf.gui.databases;
+package de.jpwinkler.daf.gui.controls;
 
 /*-
  * #%L
@@ -30,9 +30,9 @@ import javafx.scene.control.TextArea;
  *
  * @author fwiesweg
  */
-public class SnapshotListEditorController<THIS extends SnapshotListEditorController> extends AutoloadingPaneController<THIS> {
+public class MultiLineTextInputDialog<THIS extends MultiLineTextInputDialog> extends AutoloadingPaneController<THIS> {
 
-    public SnapshotListEditorController(String initialText) {
+    public MultiLineTextInputDialog(String initialText) {
         textArea.setText(initialText);
     }
     
@@ -42,5 +42,9 @@ public class SnapshotListEditorController<THIS extends SnapshotListEditorControl
     
     @FXML
     private TextArea textArea;
+
+    public TextArea getTextArea() {
+        return textArea;
+    }
     
 }

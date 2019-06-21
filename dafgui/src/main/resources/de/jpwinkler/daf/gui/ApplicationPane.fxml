@@ -38,6 +38,8 @@
                   <Menu fx:id="pluginStateMenu" mnemonicParsing="false" text="Enable/disable plugin" />
                   <Menu fx:id="uninstallPluginMenu" mnemonicParsing="false" text="Uninstall plugin" />
                   <SeparatorMenuItem mnemonicParsing="false" />
+                <MenuItem mnemonicParsing="false" onAction="#showLicensesClicked" text="About..." />
+                  <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" onAction="#closeClicked" text="Close">
                             <accelerator>
                                 <KeyCodeCombination alt="UP" code="W" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
