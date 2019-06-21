@@ -19,6 +19,7 @@ package de.jpwinkler.daf.bridge;
 
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.Dispatch;
+import com.jacob.com.LibraryLoader;
 import de.jpwinkler.daf.bridge.model.DoorsBridgeDatabaseFactory;
 import de.jpwinkler.daf.db.DatabaseFactory;
 import java.io.File;
@@ -32,6 +33,7 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.SystemUtils;
 
 public class DoorsApplicationImpl implements DoorsApplication {
 
@@ -40,23 +42,16 @@ public class DoorsApplicationImpl implements DoorsApplication {
 
     static {
         try {
-            String lib;
-            switch (System.getProperty("os.arch")) {
-                case "x86":
-                    lib = "jacob/jacob-1.18-x86.dll";
-                    break;
-                case "amd64":
-                    lib = "jacob/jacob-1.18-x64.dll";
-                    break;
-                default:
-                    throw new RuntimeException("No jacob dll for architecture " + System.getProperty("os.arch"));
+            if(!SystemUtils.IS_OS_WINDOWS) {
+                throw new RuntimeException("DOORS Bridge is only available on Windows");
             }
-            File dllFile = File.createTempFile("doorsbridge", ".dll");
-            dllFile.deleteOnExit();
+            String lib = "jacob/" + LibraryLoader.getPreferredDLLName() + ".dll";
+            File dllFile = new TempFile("doorsbridge", ".dll");
             try (InputStream is = DoorsApplicationImpl.class.getClassLoader().getResourceAsStream(lib)) {
                 FileUtils.copyInputStreamToFile(is, dllFile);
             }
-            System.load(dllFile.getAbsolutePath());
+
+            System.setProperty(LibraryLoader.JACOB_DLL_PATH, dllFile.getAbsolutePath());
         } catch (Throwable t) {
             loadError = t;
             Logger.getLogger(DoorsApplicationImpl.class.getName()).log(Level.SEVERE, null, t);
@@ -150,27 +145,22 @@ public class DoorsApplicationImpl implements DoorsApplication {
     }
 
     private void executeDxlSilent(final String dxl) throws IOException {
-        final File f = getTempFile();
-        FileUtils.write(f, dxl);
+        try (TempFile dxlFile = new TempFile()) {
+            FileUtils.write(dxlFile, dxl);
 
-        final String[] cmdLine = new String[]{doorsPath, "-b", f.getAbsolutePath(), "-d", doorsServer, "-u", user, "-P", "xxxx"};
+            final String[] cmdLine = new String[]{doorsPath, "-b", dxlFile.getAbsolutePath(), "-d", doorsServer, "-u", user, "-P", "xxxx"};
 
-        LOGGER.info(String.format("Running DOORS in silent mode. Command line: %s", String.join(" ", cmdLine)));
+            LOGGER.info(String.format("Running DOORS in silent mode. Command line: %s", String.join(" ", cmdLine)));
 
-        cmdLine[cmdLine.length - 1] = password;
+            cmdLine[cmdLine.length - 1] = password;
 
-        final Process exec = Runtime.getRuntime().exec(cmdLine);
-        try {
-            exec.waitFor();
-        } catch (final InterruptedException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            final Process exec = Runtime.getRuntime().exec(cmdLine);
+            try {
+                exec.waitFor();
+            } catch (final InterruptedException e) {
+                LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            }
         }
-    }
-
-    private File getTempFile() throws IOException {
-        final File outFile = File.createTempFile("doors_temp", "");
-        outFile.deleteOnExit();
-        return outFile;
     }
 
     @Override
@@ -226,53 +216,54 @@ public class DoorsApplicationImpl implements DoorsApplication {
 
         final boolean redirectOutput = outputStream != null;
 
-        final File exceptionFile = getTempFile();
-        final File returnFile = getTempFile();
+        try (TempFile exceptionFile = new TempFile(); TempFile returnFile = new TempFile()) {
 
-        scriptBuilder.addPreamble(DXLScript.fromResource("pre/exception_handling.dxl"));
-        scriptBuilder.setVariable("exceptionFilename", exceptionFile.getAbsolutePath());
+            scriptBuilder.addPreamble(DXLScript.fromResource("pre/exception_handling.dxl"));
+            scriptBuilder.setVariable("exceptionFilename", exceptionFile.getAbsolutePath());
 
-        scriptBuilder.addPreamble(DXLScript.fromResource("pre/return.dxl"));
-        scriptBuilder.setVariable("returnFilename", returnFile.getAbsolutePath());
+            scriptBuilder.addPreamble(DXLScript.fromResource("pre/return.dxl"));
+            scriptBuilder.setVariable("returnFilename", returnFile.getAbsolutePath());
 
-        if (redirectOutput) {
-            scriptBuilder.addPreamble(DXLScript.fromResource("pre/redirect_output.dxl"));
-        }
-
-        FileForwarder t = null;
-        if (redirectOutput) {
-            scriptBuilder.addScript(DXLScript.fromResource("lib/redirect_output_post.dxl"));
-
-            final File outputFile = getTempFile();
-            scriptBuilder.setVariable("outputRedirectFilename", outputFile.getAbsolutePath());
-            if (!outputFile.exists()) {
-                outputFile.createNewFile();
+            if (redirectOutput) {
+                scriptBuilder.addPreamble(DXLScript.fromResource("pre/redirect_output.dxl"));
             }
-            t = FileForwarder.create(outputFile, outputStream);
-        }
 
-        final String dxl = scriptBuilder.build();
-        if (silentMode) {
-            executeDxlSilent(dxl);
-        } else {
-            executeDxl(dxl);
-        }
+            FileForwarder t = null;
+            if (redirectOutput) {
+                scriptBuilder.addScript(DXLScript.fromResource("lib/redirect_output_post.dxl"));
 
-        if (redirectOutput) {
-            t.stop();
-        }
-
-        if (exceptionFile.exists()) {
-            final String message = FileUtils.readFileToString(exceptionFile, Charset.forName("Cp1252"));
-            if (!message.isEmpty()) {
-                throw new DoorsRuntimeException("DXL script failed: " + message);
+                try (TempFile outputFile = new TempFile()) {
+                    scriptBuilder.setVariable("outputRedirectFilename", outputFile.getAbsolutePath());
+                    if (!outputFile.exists()) {
+                        outputFile.createNewFile();
+                    }
+                    t = FileForwarder.create(outputFile, outputStream);
+                }
             }
-        }
 
-        if (returnFile.exists()) {
-            return FileUtils.readFileToString(returnFile, Charset.forName("Cp1252"));
-        } else {
-            return null;
+            final String dxl = scriptBuilder.build();
+            if (silentMode) {
+                executeDxlSilent(dxl);
+            } else {
+                executeDxl(dxl);
+            }
+
+            if (redirectOutput) {
+                t.stop();
+            }
+
+            if (exceptionFile.exists()) {
+                final String message = FileUtils.readFileToString(exceptionFile, Charset.forName("Cp1252"));
+                if (!message.isEmpty()) {
+                    throw new DoorsRuntimeException("DXL script failed: " + message);
+                }
+            }
+
+            if (returnFile.exists()) {
+                return FileUtils.readFileToString(returnFile, Charset.forName("Cp1252"));
+            } else {
+                return null;
+            }
         }
     }
 

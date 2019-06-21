@@ -385,7 +385,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
                 ex = ex.getCause();
             }
 
-            setStatus("Open: Failed to open file; " + getMessage(ex));
+            setStatus("Open: Failed to open database; " + getMessage(ex));
             return null;
         }
     }
