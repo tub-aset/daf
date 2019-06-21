@@ -58,12 +58,16 @@ The following should work out-of-the-box, no prerequisites necessary. All eCore/
 3. `cd dafplugin && mvn clean install && cd ..`
 4. `java -jar dafgui/target/dafgui-1.0.0-SNAPSHOT-jar-with-dependencies.jar`
 
-> The dafgui JAR is platform-specific. If compiled on $X, it will only run on $X. This is due to the way JavaFX is packaged. The dafplugin jars themselves are platform-independent (as long as you do not add platform-specific calls) and can easily be installed via the `File` menu in dafgui.
+>>>
+On cross-platform executables:
 
-> The DOORS bridge automatically loads the necessary jacob DLL packaged in the JAR to interact with the DOORS ActiveX interface on Windows. No additional action should be required. This of course only works on windows.
+The dafgui JAR is platform-specific. If compiled on $X, it will only run on $X. This is due to the way JavaFX is packaged.
+The dafplugin jars themselves are platform-independent (as long as you do not add platform-specific calls) and can easily be installed via the `File` menu in dafgui.
+
+The DOORS bridge automatically loads the necessary jacob DLL packaged in the JAR to interact with the DOORS ActiveX interface on Windows.
+No additional action should be required. This of course only works on windows.
+>>>
 
 # Contributing
 
-To contribute, please create a new branch, apply your changes and push it to this repository. Then, create a merge request. If the code passes the review, it will be merged into master.
-
-This project uses the netbeans default Java formatting. Please open any source file you edited in NetBeans with a clean formatting config, and click the menu item Source -> Format to achieve a correct code layout. We have looked into providing a .editorconfig file, but so far the work required has outweighed the benefits. If you feel like writing one, go ahead!
+Please refer to CONTRIBUTING.md.
