@@ -5,10 +5,8 @@
  */
 package de.jpwinkler.daf.plugin;
 
-import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.gui.ApplicationPaneExtension;
 import de.jpwinkler.daf.gui.ApplicationPaneInterface;
-import de.jpwinkler.daf.gui.ApplicationPartExtension;
 import de.jpwinkler.daf.gui.ApplicationPartFactories;
 import de.jpwinkler.daf.gui.ApplicationPartFactoryRegistry.ApplicationPartControllerFactory;
 import de.jpwinkler.daf.gui.ApplicationPartFactoryRegistry.ApplicationPartFactory;
