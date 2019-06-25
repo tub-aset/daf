@@ -91,6 +91,7 @@ public class DoorsTreeItem extends TreeItem<DoorsTreeNode> implements Comparable
         } else {
             promise.exceptionally(t -> {
                 Platform.runLater(() -> {
+                    this.setGraphic(ApplicationIcons.ERROR.toImageView());
                     childrenLoadingStarted = false;
                 });
                 throw new RuntimeException(t);
