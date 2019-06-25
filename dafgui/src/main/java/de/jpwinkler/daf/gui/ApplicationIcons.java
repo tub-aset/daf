@@ -21,38 +21,35 @@ package de.jpwinkler.daf.gui;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
-import java.io.IOException;
-import java.io.InputStream;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+
 public enum ApplicationIcons {
-    DATABASE("icons/database.svg"),
-    FOLDER("icons/folder.svg"),
-    FORMAL("icons/files.svg"),
-    LINK("icons/link.svg"),
-    PROJECT("icons/folder-zip.svg"),
-    LOADING("icons/refresh.svg"), 
-    OBJECT("icons/file.svg");
+    DATABASE("icons/database.svg.png"),
+    FOLDER("icons/folder.svg.png"),
+    FORMAL("icons/files.svg.png"),
+    LINK("icons/link.svg.png"),
+    PROJECT("icons/folder-zip.svg.png"),
+    LOADING("icons/refresh.svg.png"),
+    OBJECT("icons/file.svg.png");
 
     private final Image image;
 
     private ApplicationIcons(String resourceName) {
-        try (InputStream is = MainFX.class.getResourceAsStream(resourceName)) {
-            this.image = new Image(is, 20, 20, true, true);
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
+        this.image = new Image(MainFX.class.getResource(resourceName).toString(), 20, 20, true, true);
+        if (this.image.getException() != null) {
+            throw new RuntimeException(this.image.getException());
         }
     }
 
     public ImageView toImageView() {
         return new ImageView(this.image);
     }
-    
+
     public static ApplicationIcons getImage(DoorsTreeNode value) {
         if (value.getParent() == null) {
             return ApplicationIcons.DATABASE;
@@ -60,7 +57,7 @@ public enum ApplicationIcons {
             return ApplicationIcons.FORMAL;
         } else if (value instanceof DoorsFolder) {
             return ApplicationIcons.FOLDER;
-        } else if(value instanceof DoorsObject) {
+        } else if (value instanceof DoorsObject) {
             return ApplicationIcons.OBJECT;
         } else {
             throw new AssertionError();
