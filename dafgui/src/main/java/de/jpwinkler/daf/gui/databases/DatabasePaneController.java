@@ -541,6 +541,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                     .map(it -> (DoorsModule) it)
                     .peek(it -> ctrl.knownTags.addAll(it.getTags()))
                     .collect(Collectors.toList()));
+            ctrl.modulesTableView.sort();
         })));
     };
 
@@ -572,6 +573,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
             ctrl.attributesTableView.getItems().addAll(attr.entrySet().stream()
                     .filter(it -> DoorsAttributes.getForKey(it.getKey()).map(v -> !v.isSystemKey()).orElse(true))
                     .collect(Collectors.toList()));
+            ctrl.attributesTableView.sort();
         })));
     };
 }
