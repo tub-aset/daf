@@ -41,6 +41,9 @@
                 <version>1.20</version>
                 <configuration>
                     <licenseName>gpl_v3</licenseName>
+                    <excludes>
+                        <exclude>**/*.svg</exclude>
+                    </excludes>
                 </configuration>
                 <executions>
                     <execution>

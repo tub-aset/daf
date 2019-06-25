@@ -21,8 +21,6 @@ package de.jpwinkler.daf.gui;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
-import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import de.jpwinkler.daf.gui.ApplicationPreferences.SerializableRectangle2D;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -35,14 +33,13 @@ public class MainFX extends Application {
 
     @Override
     public void start(final Stage primaryStage) throws Exception {
-        SvgImageLoaderFactory.install();
         this.primaryStage = primaryStage;
 
         final ApplicationPaneController applicationPaneController = new ApplicationPaneController();
         final Scene applicationScene = new Scene(applicationPaneController.getNode());
 
         primaryStage.setOnCloseRequest((WindowEvent event) -> {
-            if(!applicationPaneController.tryClose()) {
+            if (!applicationPaneController.tryClose()) {
                 event.consume();
             }
         });
@@ -54,7 +51,7 @@ public class MainFX extends Application {
             primaryStage.setWidth(storedRectangle.getWidth());
             primaryStage.setHeight(storedRectangle.getHeight());
         }
-        
+
         primaryStage.setMaximized(ApplicationPreferences.WINDOW_MAXIMIZED.retrieve());
 
         primaryStage.setScene(applicationScene);
