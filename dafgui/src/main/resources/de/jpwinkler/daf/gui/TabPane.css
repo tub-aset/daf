@@ -1,0 +1,3 @@
+.tab .tab-label {
+    -fx-text-overrun: center-ellipsis;
+}

@@ -79,6 +79,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -396,6 +397,8 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             final Parent modulePane = controller.getNode();
 
             final Tab selectedTab = new Tab(part.toString(), modulePane);
+            selectedTab.setTooltip(new Tooltip(part.toString()));
+            
             selectedTab.setUserData(part);
             applicationPartControllers.put(part, controller);
 
