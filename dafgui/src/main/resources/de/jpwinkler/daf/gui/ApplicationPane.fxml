@@ -50,7 +50,7 @@
                 </Menu>
             </menus>
         </MenuBar>
-        <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+        <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="ALL_TABS" VBox.vgrow="ALWAYS" />
       <HBox>
          <children>
             <MenuButton fx:id="statusMenuButton" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" popupSide="TOP" prefHeight="20.0" prefWidth="28.0">
