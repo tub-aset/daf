@@ -6,11 +6,12 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<HBox fx:id="hbox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label fx:id="statusLabel" maxWidth="1.7976931348623157E308" text="Label" textOverrun="LEADING_ELLIPSIS" HBox.hgrow="ALWAYS" />
+      <Label fx:id="nameLabel" maxWidth="1.7976931348623157E308" text="Label" textOverrun="LEADING_ELLIPSIS" HBox.hgrow="ALWAYS" />
+      <Label fx:id="doneLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" visible="false" />
       <ProgressBar fx:id="progressBar" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="100.0" progress="1.0" HBox.hgrow="NEVER" />
-      <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#cancelButtonClicked" prefHeight="18.0" prefWidth="18.0" text="X">
+      <Button fx:id="cancelButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#cancelButtonClicked" prefHeight="18.0" prefWidth="18.0" text="X">
          <font>
             <Font size="8.0" />
          </font>

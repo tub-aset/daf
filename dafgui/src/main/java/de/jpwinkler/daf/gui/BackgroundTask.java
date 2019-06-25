@@ -109,9 +109,9 @@ public class BackgroundTask<T> {
         if (existingTaskProgress == null || existingTaskProgress.getLeft() < existingTaskProgress.getRight()) {
             return TaskStatus.RUNNING;
         } else if (taskError.get() == null) {
-            return TaskStatus.FAILED;
-        } else {
             return TaskStatus.DONE;
+        } else {
+            return TaskStatus.FAILED;
         }
     }
 

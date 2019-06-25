@@ -94,7 +94,7 @@ import org.pf4j.PluginWrapper;
 
 public final class ApplicationPaneController extends AutoloadingPaneController<ApplicationPaneController> implements ApplicationPaneInterface {
 
-    private static final int MAX_STATUS_MENU_ITEMS = 20;
+    private static final int MAX_STATUS_MENU_ITEMS = 10;
     private static final int MAX_RECENT_FILES = 10;
 
     private final Map<ApplicationPart, ApplicationPartController> applicationPartControllers = new HashMap<>();

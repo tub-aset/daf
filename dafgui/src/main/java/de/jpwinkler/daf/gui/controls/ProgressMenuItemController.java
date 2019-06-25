@@ -21,13 +21,14 @@ package de.jpwinkler.daf.gui.controls;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.gui.AutoloadingPaneController;
 import de.jpwinkler.daf.gui.BackgroundTask;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.layout.HBox;
 
 /**
  *
@@ -46,10 +47,19 @@ public class ProgressMenuItemController extends AutoloadingPaneController<Progre
     }
 
     @FXML
-    private Label statusLabel;
+    private Label nameLabel;
+
+    @FXML
+    private Label doneLabel;
+    
+    @FXML
+    private Button cancelButton;
 
     @FXML
     private ProgressBar progressBar;
+    
+    @FXML
+    private HBox hbox;
 
     @FXML
     public void cancelButtonClicked() {
@@ -68,7 +78,7 @@ public class ProgressMenuItemController extends AutoloadingPaneController<Progre
         }
 
         public void update() {
-            statusLabel.setText(backgroundTask.getName());
+            nameLabel.setText(backgroundTask.getName());
 
             Double currentProgress = backgroundTask.getCurrentProgress();
             if (currentProgress == null) {
@@ -79,6 +89,15 @@ public class ProgressMenuItemController extends AutoloadingPaneController<Progre
 
             if (backgroundTask.getTaskStatus() != BackgroundTask.TaskStatus.RUNNING) {
                 ProgressMenuItemController.this.getNode().setDisable(true);
+                doneLabel.setVisible(true);
+                hbox.getChildren().remove(cancelButton);
+                hbox.getChildren().remove(progressBar);
+            }
+
+            if (backgroundTask.getTaskStatus() == BackgroundTask.TaskStatus.DONE) {
+                doneLabel.setText("Finished");
+            } else if (backgroundTask.getTaskStatus() == BackgroundTask.TaskStatus.FAILED) {
+                doneLabel.setText("Failed");
             }
         }
     }
