@@ -21,9 +21,9 @@ package de.jpwinkler.daf.db;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
 /**
@@ -64,4 +64,39 @@ public interface BackgroundTaskExecutor {
 
     <T> CompletableFuture<T> runBackgroundTask(String name, Function<BackgroundTaskNotifier, T> runnable, ExecutorService executorService);
 
+    default <T> CompletableFuture<T> runBackgroundTask(String name, AtomicReference<CompletableFuture<T>> promiseReference, Function<BackgroundTaskNotifier, T> runnable) {
+        CompletableFuture<T> ref = promiseReference.get();
+
+        if (ref == null || ref.isCompletedExceptionally()) {
+            synchronized (promiseReference) {
+                ref = promiseReference.get();
+
+                if (ref != null && !ref.isCompletedExceptionally()) {
+                    return ref;
+                }
+
+                promiseReference.compareAndSet(ref, this.runBackgroundTask(name, runnable));
+            }
+        }
+
+        return promiseReference.get();
+    }
+
+    default <T> CompletableFuture<T> runBackgroundTask(String name, AtomicReference<CompletableFuture<T>> promiseReference, Function<BackgroundTaskNotifier, T> runnable, ExecutorService executorService) {
+        CompletableFuture<T> ref = promiseReference.get();
+
+        if (ref == null || ref.isCompletedExceptionally()) {
+            synchronized (promiseReference) {
+                ref = promiseReference.get();
+
+                if (ref != null && !ref.isCompletedExceptionally()) {
+                    return ref;
+                }
+
+                promiseReference.compareAndSet(ref, this.runBackgroundTask(name, runnable, executorService));
+            }
+        }
+
+        return promiseReference.get();
+    }
 }

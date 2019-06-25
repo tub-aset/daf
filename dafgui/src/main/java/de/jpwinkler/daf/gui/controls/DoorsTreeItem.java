@@ -21,7 +21,6 @@ package de.jpwinkler.daf.gui.controls;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import de.jpwinkler.daf.gui.ApplicationIcons;
 import de.jpwinkler.daf.model.DoorsTreeNode;
@@ -43,11 +42,12 @@ import javafx.scene.control.TreeItem;
  */
 public class DoorsTreeItem extends TreeItem<DoorsTreeNode> implements Comparable<DoorsTreeItem> {
 
+    private boolean childrenLoadingStarted = false;
     private boolean childrenLoaded = false;
 
-    protected final BackgroundTaskExecutor executor;
-    protected final BiConsumer<DoorsTreeItem, DoorsTreeNode> onLoad;
-    protected final Predicate<DoorsTreeNode> childFilter;
+    private final BackgroundTaskExecutor executor;
+    private final BiConsumer<DoorsTreeItem, DoorsTreeNode> onLoad;
+    private final Predicate<DoorsTreeNode> childFilter;
 
     public DoorsTreeItem(BackgroundTaskExecutor executor, DoorsTreeNode value, BiConsumer<DoorsTreeItem, DoorsTreeNode> onLoad, Predicate<DoorsTreeNode> childFilter) {
         super(value, ApplicationIcons.getImage(value).toImageView());
@@ -61,7 +61,7 @@ public class DoorsTreeItem extends TreeItem<DoorsTreeNode> implements Comparable
 
     @Override
     public ObservableList<TreeItem<DoorsTreeNode>> getChildren() {
-        if (!childrenLoaded) {
+        if (!childrenLoadingStarted) {
             updateChildren();
         }
         return super.getChildren();
@@ -76,13 +76,11 @@ public class DoorsTreeItem extends TreeItem<DoorsTreeNode> implements Comparable
     }
 
     public void updateChildren() {
-        childrenLoaded = true;
+        childrenLoadingStarted = true;
 
         this.setGraphic(ApplicationIcons.LOADING.toImageView());
-        CompletableFuture<List<DoorsTreeNode>> promise = getValue().getChildrenAsync(executor).exceptionally(t -> {
-            childrenLoaded = false;
-            throw new RuntimeException(t);
-        });
+        CompletableFuture<List<DoorsTreeNode>> promise = getValue().getChildrenAsync(executor);
+
         if (promise.isDone()) {
             try {
                 this.loadChildren(promise.get());
@@ -90,7 +88,15 @@ public class DoorsTreeItem extends TreeItem<DoorsTreeNode> implements Comparable
                 throw new RuntimeException();
             }
         } else {
-            promise.thenAccept((children) -> Platform.runLater(() -> this.loadChildren(children)));
+            promise.exceptionally(t -> {
+                Platform.runLater(() -> {
+                    childrenLoadingStarted = false;
+                });
+                throw new RuntimeException(t);
+            }).thenAccept((children) -> Platform.runLater(() -> {
+                this.loadChildren(children);
+                childrenLoaded = true;
+            }));
         }
     }
 

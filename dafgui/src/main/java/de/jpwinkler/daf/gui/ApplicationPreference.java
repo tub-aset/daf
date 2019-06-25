@@ -46,7 +46,7 @@ import net.harawata.appdirs.AppDirsFactory;
  */
 public class ApplicationPreference {
 
-    public static final Path APPLICATION_DATA_PATH = Paths.get(AppDirsFactory.getInstance().getUserConfigDir(Main.class.getPackageName(), null, null)).toAbsolutePath();
+    public static final Path APPLICATION_DATA_PATH = Paths.get(AppDirsFactory.getInstance().getUserConfigDir(Main.class.getPackage().getName(), null, null)).toAbsolutePath();
     public static final Path APPLICATION_PREFERENCES_PATH = APPLICATION_DATA_PATH.resolve("preferences");
     public static final Path APPLICATION_PLUGINS_PATH = APPLICATION_DATA_PATH.resolve("plugins");
 

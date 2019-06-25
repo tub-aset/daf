@@ -84,6 +84,7 @@ import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.pf4j.DefaultPluginManager;
 import org.pf4j.ManifestPluginDescriptorFinder;
@@ -675,7 +676,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     public void showLicensesClicked() throws IOException {
         String text;
         try (InputStream is = ApplicationPaneController.class.getClassLoader().getResourceAsStream("THIRD-PARTY.txt")) {
-            text = new String(is.readAllBytes(), Charset.forName("UTF-8"));
+            text = IOUtils.readLines(is, Charset.forName("UTF-8")).stream().collect(Collectors.joining("\n"));
         }
 
         MultiLineTextInputDialog controller = new MultiLineTextInputDialog("Developped by TU Berlin ASET\n\nThe following dependencies are bundled with this software.\n" + text);

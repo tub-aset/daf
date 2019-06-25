@@ -21,7 +21,6 @@ package de.jpwinkler.daf.bridge;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.bridge.model.DoorsBridgeDatabaseFactory;
 import de.jpwinkler.daf.db.DatabaseFactory;
 import java.io.FileOutputStream;
@@ -29,9 +28,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import org.apache.commons.io.IOUtils;
 
 /**
  *
@@ -40,16 +41,24 @@ import java.util.function.Predicate;
 public class DoorsApplicationDummyImpl implements DoorsApplication {
 
     private final HashMap<Predicate<URI>, Function<DoorsScriptBuilder, String>> dataFakers = new HashMap<>();
+    
+    
+    private static final Random ERROR_RANDOM = new Random(0);
 
     public DoorsApplicationDummyImpl() {
-        dataFakers.put(uri -> uri.toString().endsWith("dxl/get_children.dxl"), b -> "Folder:test\r\nFolder:test 2\r\nFormal:My module");
+        dataFakers.put(uri -> uri.toString().endsWith("dxl/get_children.dxl"), b -> {
+            if(ERROR_RANDOM.nextBoolean()) {
+                throw new RuntimeException();
+            }
+            
+            return "Folder:test\r\nFolder:test 2\r\nFormal:My module";
+        });
         dataFakers.put(uri -> uri.toString().endsWith("dxl/get_module_attributes.dxl"), b -> "\"__view__\",\"" + DoorsApplication.STANDARD_VIEW + "\"\r\n\"Description\",\"Some random module\"");
         dataFakers.put(uri -> uri.toString().endsWith("dxl/export_csv_single.dxl"), b -> {
             try (FileOutputStream fos = new FileOutputStream(b.getVariables().get("file"));
                     InputStream is = DoorsApplicationDummyImpl.class.getClassLoader().getResourceAsStream("dummy.csv")) {
 
-                is.transferTo(fos);
-
+                IOUtils.copy(is, fos);
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }

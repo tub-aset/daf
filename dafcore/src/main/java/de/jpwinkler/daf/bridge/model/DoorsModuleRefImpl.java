@@ -21,7 +21,6 @@ package de.jpwinkler.daf.bridge.model;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.bridge.DXLScript;
 import de.jpwinkler.daf.bridge.DoorsApplication;
 import de.jpwinkler.daf.bridge.DoorsItemType;
@@ -67,123 +66,104 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
 
     @Override
     public CompletableFuture<Map<String, String>> getAttributesAsync(BackgroundTaskExecutor executor) {
-        if (moduleAttributes.get() == null) {
-            synchronized (moduleAttributes) {
-                if (moduleAttributes.get() != null) {
-                    return moduleAttributes.get();
-                }
+        return executor.runBackgroundTask("Load attributes", this.moduleAttributes, i -> {
+            String result = doorsApplication.runScript(builder -> {
+                builder.addLibrary(DXLScript.fromResource("lib/utils.dxl"));
+                builder.addLibrary(DXLScript.fromResource("lib/export_mmd.dxl"));
+                builder.addScript(DXLScript.fromResource("get_module_attributes.dxl"));
+                builder.setVariable("url", null);
+                builder.setVariable("name", this.getFullName());
+            });
 
-                moduleAttributes.compareAndSet(null, executor.runBackgroundTask("Load attributes", i -> {
-
-                    String result = doorsApplication.runScript(builder -> {
-                        builder.addLibrary(DXLScript.fromResource("lib/utils.dxl"));
-                        builder.addLibrary(DXLScript.fromResource("lib/export_mmd.dxl"));
-                        builder.addScript(DXLScript.fromResource("get_module_attributes.dxl"));
-                        builder.setVariable("url", null);
-                        builder.setVariable("name", this.getFullName());
-                    });
-
-                    try (ByteArrayInputStream bis = new ByteArrayInputStream(result.getBytes(ModuleCSV.CHARSET))) {
-                        return ModuleCSV.readMetaData(doorsApplication.getDatabaseFactory(), bis);
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                }));
+            try (ByteArrayInputStream bis = new ByteArrayInputStream(result.getBytes(ModuleCSV.CHARSET))) {
+                return ModuleCSV.readMetaData(doorsApplication.getDatabaseFactory(), bis);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
             }
-        }
-
-        return moduleAttributes.get();
+        });
     }
 
     @Override
     public CompletableFuture<List<DoorsTreeNode>> getChildrenAsync(BackgroundTaskExecutor executor) {
-        if (this.children.get() == null) {
-            synchronized (this.children) {
-                if (this.children.get() != null) {
-                    return this.children.get();
-                }
+        return executor.runBackgroundTask("Load module", this.children, i -> {
+            String view = this.getAttributes().get("__view__");
 
-                this.children.compareAndSet(null, executor.runBackgroundTask("Load module", i -> {
-                    String view = this.getAttributes().get("__view__");
+            try {
+                Path tempFile = Files.createTempFile(null, null);
 
-                    try {
-                        Path tempFile = Files.createTempFile(null, null);
+                doorsApplication.runScript(builder -> {
+                    builder.addLibrary(DXLScript.fromResource("lib/utils.dxl"));
+                    builder.addLibrary(DXLScript.fromResource("lib/export_csv.dxl"));
+                    builder.addLibrary(DXLScript.fromResource("lib/export_mmd.dxl"));
+                    builder.addScript(DXLScript.fromResource("export_csv_single.dxl"));
+                    builder.setVariable("url", null);
+                    builder.setVariable("name", this.getFullName());
+                    builder.setVariable("view", view);
+                    builder.setVariable("file", tempFile.toAbsolutePath().toString());
+                });
 
-                        doorsApplication.runScript(builder -> {
-                            builder.addLibrary(DXLScript.fromResource("lib/utils.dxl"));
-                            builder.addLibrary(DXLScript.fromResource("lib/export_csv.dxl"));
-                            builder.addLibrary(DXLScript.fromResource("lib/export_mmd.dxl"));
-                            builder.addScript(DXLScript.fromResource("export_csv_single.dxl"));
-                            builder.setVariable("url", null);
-                            builder.setVariable("name", this.getFullName());
-                            builder.setVariable("view", view);
-                            builder.setVariable("file", tempFile.toAbsolutePath().toString());
-                        });
+                doorsApplication.runScript(builder -> {
+                    builder.addLibrary(DXLScript.fromResource("lib/utils.dxl"));
+                    builder.addScript(DXLScript.fromResource("close_module.dxl"));
+                    builder.setVariable("url", null);
+                    builder.setVariable("name", this.getFullName());
+                });
 
-                        DoorsModule loadedModule = ModuleCSV.readModule(new DatabaseFactory() {
-                            @Override
-                            public DoorsFolder createFolder(DoorsTreeNode parent, String name) {
-                                throw new UnsupportedOperationException("Not supported.");
-                            }
-
-                            @Override
-                            public DoorsModule createModule(DoorsTreeNode parent, String name) {
-                                return new DoorsModuleRefImpl(doorsApplication, parent, name) {
-                                    private ArrayList<DoorsTreeNode> dumbChildrenHolder = new ArrayList<>();
-                                    private List<String> dumbObjectAttributeHolder;
-
-                                    @Override
-                                    public List<DoorsTreeNode> getChildren() {
-                                        return dumbChildrenHolder;
-                                    }
-
-                                    @Override
-                                    public void setObjectAttributes(List<String> attrs) {
-                                        this.dumbObjectAttributeHolder = attrs;
-                                    }
-
-                                    @Override
-                                    public CompletableFuture<List<String>> getObjectAttributesAsync(BackgroundTaskExecutor executor) {
-                                        return CompletableFuture.completedFuture(this.dumbObjectAttributeHolder);
-                                    }
-
-                                    @Override
-                                    public List<String> getObjectAttributes() {
-                                        return dumbObjectAttributeHolder;
-                                    }
-
-                                };
-                            }
-
-                            @Override
-                            public DoorsObject createObject(DoorsTreeNode parent, String objectText) {
-                                return doorsApplication.getDatabaseFactory().createObject(parent, objectText);
-                            }
-
-                            @Override
-                            public UnresolvedLink createLink(DoorsObject source, String targetModule, String targetObject) {
-                                throw new UnsupportedOperationException("Not supported.");
-                            }
-
-                        }, tempFile.toFile());
-                        List<DoorsTreeNode> result = loadedModule.getChildren();
-                        result.forEach(c -> c.setParent(this));
-                        this.objectAttributes.complete(loadedModule.getObjectAttributes());
-
-                        doorsApplication.runScript(builder -> {
-                            builder.addLibrary(DXLScript.fromResource("lib/utils.dxl"));
-                            builder.addScript(DXLScript.fromResource("close_module.dxl"));
-                            builder.setVariable("url", null);
-                            builder.setVariable("name", this.getFullName());
-                        });
-                        return result;
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
+                DoorsModule loadedModule = ModuleCSV.readModule(new DatabaseFactory() {
+                    @Override
+                    public DoorsFolder createFolder(DoorsTreeNode parent, String name) {
+                        throw new UnsupportedOperationException("Not supported.");
                     }
-                }));
+
+                    @Override
+                    public DoorsModule createModule(DoorsTreeNode parent, String name) {
+                        return new DoorsModuleRefImpl(doorsApplication, parent, name) {
+                            private final ArrayList<DoorsTreeNode> dumbChildrenHolder = new ArrayList<>();
+                            private List<String> dumbObjectAttributeHolder;
+
+                            @Override
+                            public List<DoorsTreeNode> getChildren() {
+                                return dumbChildrenHolder;
+                            }
+
+                            @Override
+                            public void setObjectAttributes(List<String> attrs) {
+                                this.dumbObjectAttributeHolder = attrs;
+                            }
+
+                            @Override
+                            public CompletableFuture<List<String>> getObjectAttributesAsync(BackgroundTaskExecutor executor) {
+                                return CompletableFuture.completedFuture(this.dumbObjectAttributeHolder);
+                            }
+
+                            @Override
+                            public List<String> getObjectAttributes() {
+                                return dumbObjectAttributeHolder;
+                            }
+
+                        };
+                    }
+
+                    @Override
+                    public DoorsObject createObject(DoorsTreeNode parent, String objectText) {
+                        return doorsApplication.getDatabaseFactory().createObject(parent, objectText);
+                    }
+
+                    @Override
+                    public UnresolvedLink createLink(DoorsObject source, String targetModule, String targetObject) {
+                        throw new UnsupportedOperationException("Not supported.");
+                    }
+
+                }, tempFile.toFile());
+                List<DoorsTreeNode> result = loadedModule.getChildren();
+                result.forEach(c -> c.setParent(this));
+                this.objectAttributes.complete(loadedModule.getObjectAttributes());
+
+                return result;
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
             }
-        }
-        return this.children.get();
+        });
     }
 
     @Override

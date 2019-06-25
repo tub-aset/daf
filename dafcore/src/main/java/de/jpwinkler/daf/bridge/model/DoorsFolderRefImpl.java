@@ -21,7 +21,6 @@ package de.jpwinkler.daf.bridge.model;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.bridge.DXLScript;
 import de.jpwinkler.daf.bridge.DoorsApplication;
 import de.jpwinkler.daf.bridge.DoorsItemType;
@@ -51,55 +50,45 @@ class DoorsFolderRefImpl extends DoorsTreeNodeRefImpl implements DoorsFolder {
 
     @Override
     public CompletableFuture<List<DoorsTreeNode>> getChildrenAsync(BackgroundTaskExecutor executor) {
-        if (this.children.get() == null) {
-            synchronized (this.children) {
-                if (this.children.get() != null) {
-                    return this.children.get();
-                }
+        return executor.runBackgroundTask("Load node children", this.children, i -> {
+            final String resultString = doorsApplication.runScript(builder -> {
+                builder.addScript(DXLScript.fromResource("get_children.dxl"));
+                builder.setVariable("folder", this.getFullName());
+            });
 
-                this.children.compareAndSet(null, executor.runBackgroundTask("Load node children", i -> {
-                    final String resultString = doorsApplication.runScript(builder -> {
-                        builder.addScript(DXLScript.fromResource("get_children.dxl"));
-                        builder.setVariable("folder", this.getFullName());
-                    });
+            final List<DoorsTreeNode> result = new ArrayList<>();
 
-                    final List<DoorsTreeNode> result = new ArrayList<>();
-
-                    if (resultString.trim().isEmpty()) {
-                        // no children available
-                        return result;
-                    }
-
-                    final String[] lines = resultString.split("\r\n");
-
-                    for (final String line : lines) {
-                        String[] split;
-                        if (line == null || line.isEmpty() || (split = line.split(":")).length != 2) {
-                            LOGGER.severe(String.format("Invalid result format: %s.", line));
-                            continue;
-                        }
-                        final DoorsItemType itemType = DoorsItemType.getType(split[0]);
-                        switch (itemType) {
-                            case FORMAL:
-                                result.add(new DoorsModuleRefImpl(doorsApplication, this, split[1]));
-                                break;
-                            case FOLDER:
-                            case PROJECT:
-                                result.add(new DoorsFolderRefImpl(doorsApplication, itemType, this, split[1]));
-                                break;
-                            case LINK:
-                            case DESCRIPTIVE:
-                                LOGGER.log(Level.WARNING, "Item type not supported: {0}", itemType);
-                                break;
-                            default:
-                                throw new UnsupportedOperationException("unknown type: " + split[0]);
-                        }
-                    }
-                    return result;
-                }));
+            if (resultString.trim().isEmpty()) {
+                // no children available
+                return result;
             }
-        }
 
-        return children.get();
+            final String[] lines = resultString.split("\r\n");
+
+            for (final String line : lines) {
+                String[] split;
+                if (line == null || line.isEmpty() || (split = line.split(":")).length != 2) {
+                    LOGGER.severe(String.format("Invalid result format: %s.", line));
+                    continue;
+                }
+                final DoorsItemType itemType = DoorsItemType.getType(split[0]);
+                switch (itemType) {
+                    case FORMAL:
+                        result.add(new DoorsModuleRefImpl(doorsApplication, this, split[1]));
+                        break;
+                    case FOLDER:
+                    case PROJECT:
+                        result.add(new DoorsFolderRefImpl(doorsApplication, itemType, this, split[1]));
+                        break;
+                    case LINK:
+                    case DESCRIPTIVE:
+                        LOGGER.log(Level.WARNING, "Item type not supported: {0}", itemType);
+                        break;
+                    default:
+                        throw new UnsupportedOperationException("unknown type: " + split[0]);
+                }
+            }
+            return result;
+        });
     }
 }
