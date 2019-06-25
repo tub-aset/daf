@@ -74,6 +74,7 @@ public class DoorsTreeItem extends TreeItem<DoorsTreeNode> implements Comparable
         children.stream().filter(childFilter).map(n -> this.construct((DoorsTreeNode) n)).forEach(list::add);
         list.sort(Comparator.naturalOrder());
         super.getChildren().setAll(list);
+        childrenLoaded = true;
     }
 
     public void updateChildren() {
@@ -97,7 +98,6 @@ public class DoorsTreeItem extends TreeItem<DoorsTreeNode> implements Comparable
                 throw new RuntimeException(t);
             }).thenAccept((children) -> Platform.runLater(() -> {
                 this.loadChildren(children);
-                childrenLoaded = true;
             }));
         }
     }
