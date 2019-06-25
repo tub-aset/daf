@@ -21,7 +21,6 @@ package de.jpwinkler.daf.gui.modules;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.bridge.DoorsApplicationImpl;
 import de.jpwinkler.daf.filter.objects.CascadingFilter;
 import de.jpwinkler.daf.filter.objects.DoorsObjectFilter;
@@ -76,6 +75,7 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.MenuButton;
@@ -184,15 +184,31 @@ public final class ModulePaneController extends ApplicationPartController<Module
             this.updateFilter(filterTextField.getText(), newValue, includeChildrenCheckbox.isSelected(), filterExpressionCheckBox.isSelected());
         });
 
+        this.loadContent();
+    }
+
+    private void loadContent() {
         this.contentTableView.setPlaceholder(new ProgressBar());
 
-        super.getDatabaseInterface().getDatabaseRoot().getChildAsync(super.getBackgroundTaskExecutor().withPriority(BackgroundTask.PRIORITY_MODULE_CONTENT), part.getDatabasePath().getPath())
+        super.getDatabaseInterface().getDatabaseRoot().getChildAsync(super.getBackgroundTaskExecutor().withPriority(BackgroundTask.PRIORITY_MODULE_CONTENT), super.getApplicationPart().getDatabasePath().getPath())
+                .exceptionally(t -> {
+                    Platform.runLater(() -> {
+
+                        Button retryButton = new Button("Retry");
+                        retryButton.setOnAction(ev -> this.loadContent());
+                        this.contentTableView.setPlaceholder(retryButton);
+
+                    });
+                    throw new RuntimeException(t);
+                })
                 .thenAccept(module -> {
                     DoorsModule dm = (DoorsModule) module;
                     dm.getObjectAttributesAsync(super.getBackgroundTaskExecutor().withPriority(BackgroundTask.PRIORITY_MODULE_CONTENT)).thenAccept(objectAttrs -> Platform.runLater(() -> {
+                        this.contentTableView.setPlaceholder(null);
+
                         this.module = dm;
                         if (this.module == null) {
-                            throw new RuntimeException("No such module: " + part.getDatabasePath().toString());
+                            throw new RuntimeException("No such module: " + super.getApplicationPart().getDatabasePath().toString());
                         }
                         if (!DoorsApplicationImpl.STANDARD_VIEW.equals(this.module.getView())) {
                             setStatus("Warning: This module's view is not the standard view.");
@@ -212,7 +228,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
     private ViewDefinition currentView;
     private final Set<DoorsObject> filteredObjects = new HashSet<>();
-    
+
     private final ExtensionPane<ModulePaneExtension> sideExtensionPane = new ExtensionPane<>(
             () -> super.getExtensions(ModulePaneExtension.class), e -> e.getSidePanes(), (e, n) -> e.getPaneName(n),
             ModulePanePreferences.SIDE_EXTENSION.retrieve(), ModulePanePreferences.SIDE_EXTENSION::store);
@@ -222,7 +238,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
     @FXML
     private SplitPane mainSplitPane;
-    
+
     @FXML
     private SplitPane bottomSplitPane;
 
@@ -537,7 +553,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
     public SelectionModel<DoorsObject> getCurrentObjectSelectionModel() {
         return new ForwardingMultipleSelectionModel<>(this.contentTableView.getSelectionModel(), x -> x, y -> y);
     }
-    
+
     @FXML
     public void showSidePaneClicked() {
         sideExtensionPane.selectFirst();
@@ -547,11 +563,11 @@ public final class ModulePaneController extends ApplicationPartController<Module
     public void showBottomPaneClicked() {
         bottomExtensionPane.selectFirst();
     }
-    
+
     @Override
     public void shutdown() {
         super.shutdown();
-        
+
         sideExtensionPane.shutdown();
         bottomExtensionPane.shutdown();
     }

@@ -68,6 +68,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -533,7 +534,15 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
         ctrl.databaseTreeView.getSelectionModel().getSelectedItems().stream()
                 .map(it -> it.getValue().getChildrenAsync(ctrl.getBackgroundTaskExecutor().withPriority(BackgroundTask.PRIORITY_FOLDERS)))
-                .forEach(ft -> ft.thenAccept(children -> Platform.runLater(() -> {
+                .forEach(ft -> ft.exceptionally(t -> {
+            Platform.runLater(() -> {
+                Button retryButton = new Button("Retry");
+                retryButton.setOnAction(ev -> ctrl.updateGui(ctrl.UpdateModulesView));
+                ctrl.modulesTableView.setPlaceholder(retryButton);
+
+            });
+            throw new RuntimeException(t);
+        }).thenAccept(children -> Platform.runLater(() -> {
             ctrl.modulesTableView.setPlaceholder(null);
             ctrl.modulesTableView.getItems().clear();
             ctrl.modulesTableView.getItems().addAll(children.stream()
@@ -567,7 +576,15 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
         ctrl.getCurrentDoorsTreeNode()
                 .map(it -> it.getAttributesAsync(ctrl.getBackgroundTaskExecutor().withPriority(BackgroundTask.PRIORITY_ATTRIBUTES)))
-                .forEach(ft -> ft.thenAccept(attr -> Platform.runLater(() -> {
+                .forEach(ft -> ft.exceptionally(t -> {
+            Platform.runLater(() -> {
+                Button retryButton = new Button("Retry");
+                retryButton.setOnAction(ev -> ctrl.updateGui(ctrl.UpdateAttributesView));
+                ctrl.attributesTableView.setPlaceholder(retryButton);
+
+            });
+            throw new RuntimeException(t);
+        }).thenAccept(attr -> Platform.runLater(() -> {
             ctrl.attributesTableView.setPlaceholder(null);
             ctrl.attributesTableView.getItems().clear();
             ctrl.attributesTableView.getItems().addAll(attr.entrySet().stream()
@@ -576,4 +593,5 @@ public final class DatabasePaneController extends ApplicationPartController<Data
             ctrl.attributesTableView.sort();
         })));
     };
+  
 }
