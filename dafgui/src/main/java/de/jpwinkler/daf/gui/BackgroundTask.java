@@ -21,7 +21,6 @@ package de.jpwinkler.daf.gui;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.db.BackgroundTaskNotifier;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -31,6 +30,11 @@ import java.util.function.Function;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class BackgroundTask<T> {
+    
+    public static final int PRIORITY_ATTRIBUTES = 100;
+    public static final int PRIORITY_FOLDERS = -100;
+    public static final int PRIORITY_MODULE_CONTENT = -200;
+    
 
     private final String name;
     private final Function<BackgroundTaskNotifier, T> runnable;
@@ -46,7 +50,7 @@ public class BackgroundTask<T> {
         this.monitor = monitor;
     }
 
-    final synchronized CompletableFuture<T> run(ExecutorService executor) {
+    final synchronized CompletableFuture<T> run(ExecutorService executor, int priority) {
         if (future.get() != null) {
             throw new IllegalStateException("Task already started");
         }
@@ -54,19 +58,45 @@ public class BackgroundTask<T> {
         if (!taskProgress.compareAndSet(null, Pair.of(0l, 1l))) {
             throw new IllegalStateException("Task already started");
         }
-        this.future.set(CompletableFuture.supplyAsync(() -> {
+
+        CompletableFuture<T> localFuture = new CompletableFuture<>();
+        executor.execute(new ComparableRunnable(priority, () -> {
             try {
                 T value = this.runnable.apply(new BackgroundTaskNotifierImpl());
                 this.finish(null);
-                return value;
+                localFuture.complete(value);
             } catch (Throwable t) {
                 t.printStackTrace();
                 this.finish(t);
-                throw new RuntimeException(t);
+                localFuture.completeExceptionally(t);
             }
-        }, executor));
+        }));
+
+        this.future.set(localFuture);
         this.monitor.accept(this, taskProgress.get());
         return future.get();
+    }
+
+    private final class ComparableRunnable implements Comparable<Runnable>, Runnable {
+
+        private final Runnable runnable;
+        private final int priority;
+
+        public ComparableRunnable(int priority, Runnable runnable) {
+            this.runnable = runnable;
+            this.priority = priority;
+        }
+
+        @Override
+        public int compareTo(Runnable t) {
+            return Integer.compare(priority, ((ComparableRunnable) t).priority);
+        }
+
+        @Override
+        public void run() {
+            runnable.run();
+        }
+
     }
 
     public CompletableFuture<T> getFuture() {
@@ -108,7 +138,7 @@ public class BackgroundTask<T> {
         DONE
     }
 
-    protected void finish(Throwable t) {
+    private void finish(Throwable t) {
         Pair<Long, Long> existingProgress;
         do {
             existingProgress = taskProgress.get();

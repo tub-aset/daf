@@ -30,6 +30,7 @@ import de.jpwinkler.daf.filter.objects.ReverseCascadingFilter;
 import de.jpwinkler.daf.gui.ApplicationPaneController;
 import de.jpwinkler.daf.gui.ApplicationPartController;
 import de.jpwinkler.daf.gui.ApplicationPartFactoryRegistry.ApplicationPart;
+import de.jpwinkler.daf.gui.BackgroundTask;
 import de.jpwinkler.daf.gui.commands.MultiCommand;
 import de.jpwinkler.daf.gui.commands.UpdateAction;
 import de.jpwinkler.daf.gui.controls.CustomTextFieldTableCell;
@@ -185,10 +186,10 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
         this.contentTableView.setPlaceholder(new ProgressBar());
 
-        super.getDatabaseInterface().getDatabaseRoot().getChildAsync(super.getBackgroundTaskExecutor(), part.getDatabasePath().getPath())
+        super.getDatabaseInterface().getDatabaseRoot().getChildAsync(super.getBackgroundTaskExecutor().withPriority(BackgroundTask.PRIORITY_MODULE_CONTENT), part.getDatabasePath().getPath())
                 .thenAccept(module -> {
                     DoorsModule dm = (DoorsModule) module;
-                    dm.getObjectAttributesAsync(super.getBackgroundTaskExecutor()).thenAccept(objectAttrs -> Platform.runLater(() -> {
+                    dm.getObjectAttributesAsync(super.getBackgroundTaskExecutor().withPriority(BackgroundTask.PRIORITY_MODULE_CONTENT)).thenAccept(objectAttrs -> Platform.runLater(() -> {
                         this.module = dm;
                         if (this.module == null) {
                             throw new RuntimeException("No such module: " + part.getDatabasePath().toString());

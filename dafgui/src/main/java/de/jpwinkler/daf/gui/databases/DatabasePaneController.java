@@ -21,12 +21,11 @@ package de.jpwinkler.daf.gui.databases;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
-import de.jpwinkler.daf.gui.controls.MultiLineTextInputDialog;
 import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
 import de.jpwinkler.daf.gui.ApplicationPaneController;
 import de.jpwinkler.daf.gui.ApplicationPartController;
 import de.jpwinkler.daf.gui.ApplicationPartFactoryRegistry.ApplicationPart;
+import de.jpwinkler.daf.gui.BackgroundTask;
 import de.jpwinkler.daf.gui.commands.UpdateAction;
 import de.jpwinkler.daf.gui.controls.CustomTextFieldTableCell;
 import de.jpwinkler.daf.gui.controls.CustomTextFieldTreeCell;
@@ -34,6 +33,7 @@ import de.jpwinkler.daf.gui.controls.DoorsTreeItem;
 import de.jpwinkler.daf.gui.controls.EmptySelectionModel;
 import de.jpwinkler.daf.gui.controls.ExtensionPane;
 import de.jpwinkler.daf.gui.controls.ForwardingMultipleSelectionModel;
+import de.jpwinkler.daf.gui.controls.MultiLineTextInputDialog;
 import de.jpwinkler.daf.gui.databases.commands.AddTagCommand;
 import de.jpwinkler.daf.gui.databases.commands.DeleteAttributesCommand;
 import de.jpwinkler.daf.gui.databases.commands.DeleteCommand;
@@ -61,6 +61,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.WeakHashMap;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -128,10 +129,11 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                 it -> this.open(this.getPath().withPath(it.getFullName()), OpenFlag.OPEN_ONLY)));
         moduleDescriptionColumn.setCellFactory(tc -> new CustomTextFieldTableCell<>(tc,
                 it -> {
-                    if (it.getAttributesAsync(super.getBackgroundTaskExecutor()).isDone()) {
+                    CompletableFuture<Map<String, String>> future = it.getAttributesAsync(super.getBackgroundTaskExecutor().withPriority(BackgroundTask.PRIORITY_ATTRIBUTES));
+                    if (future.isDone()) {
                         return DoorsAttributes.MODULE_DESCRIPTION.getValue(String.class, it);
                     } else {
-                        it.getAttributesAsync(super.getBackgroundTaskExecutor()).thenRun(() -> Platform.runLater(() -> this.modulesTableView.refresh()));
+                        future.thenRun(() -> Platform.runLater(() -> this.modulesTableView.refresh()));
                     }
 
                     return "Loading...";
@@ -455,7 +457,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     @Override
     public void shutdown() {
         super.shutdown();
-        
+
         sideExtensionPane.shutdown();
         bottomExtensionPane.shutdown();
     }
@@ -530,7 +532,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         ctrl.modulesTableView.setPlaceholder(new ProgressBar());
 
         ctrl.databaseTreeView.getSelectionModel().getSelectedItems().stream()
-                .map(it -> it.getValue().getChildrenAsync(ctrl.getBackgroundTaskExecutor()))
+                .map(it -> it.getValue().getChildrenAsync(ctrl.getBackgroundTaskExecutor().withPriority(BackgroundTask.PRIORITY_FOLDERS)))
                 .forEach(ft -> ft.thenAccept(children -> Platform.runLater(() -> {
             ctrl.modulesTableView.setPlaceholder(null);
             ctrl.modulesTableView.getItems().clear();
@@ -563,7 +565,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         ctrl.attributesTableView.setPlaceholder(new ProgressBar());
 
         ctrl.getCurrentDoorsTreeNode()
-                .map(it -> it.getAttributesAsync(ctrl.getBackgroundTaskExecutor()))
+                .map(it -> it.getAttributesAsync(ctrl.getBackgroundTaskExecutor().withPriority(BackgroundTask.PRIORITY_ATTRIBUTES)))
                 .forEach(ft -> ft.thenAccept(attr -> Platform.runLater(() -> {
             ctrl.attributesTableView.setPlaceholder(null);
             ctrl.attributesTableView.getItems().clear();

@@ -21,7 +21,6 @@ package de.jpwinkler.daf.gui;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import de.jpwinkler.daf.db.BackgroundTaskNotifier;
 import java.util.ArrayList;
@@ -31,7 +30,9 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -52,11 +53,12 @@ public class BackgroundTaskExecutorImpl implements BackgroundTaskExecutor {
     private final Map<BackgroundTaskNotifier, Consumer<BackgroundTask>> taskSpecificListeners = Collections.synchronizedMap(new WeakHashMap<>());
     private final AtomicReference<Pair<Long, Long>> totalProgress = new AtomicReference<>(Pair.of(0l, 0l));
 
-    private final ExecutorService executor = Executors.newCachedThreadPool((Runnable r) -> {
-        Thread t = new Thread(r);
-        t.setDaemon(true);
-        return t;
-    });
+    private final ExecutorService executor = new ThreadPoolExecutor(2, Runtime.getRuntime().availableProcessors(), 5, TimeUnit.SECONDS,
+            new PriorityBlockingQueue(), r -> {
+                Thread t = new Thread(r);
+                t.setDaemon(true);
+                return t;
+            });
 
     public boolean hasRunningTasks() {
         return !tasks.isEmpty();
@@ -64,14 +66,32 @@ public class BackgroundTaskExecutorImpl implements BackgroundTaskExecutor {
 
     @Override
     public <T> CompletableFuture<T> runBackgroundTask(String name, Function<BackgroundTaskNotifier, T> runnable) {
-        return this.runBackgroundTask(name, runnable, executor);
+        return this.runBackgroundTask(0, name, runnable, executor);
     }
 
     @Override
     public <T> CompletableFuture<T> runBackgroundTask(String name, Function<BackgroundTaskNotifier, T> runnable, ExecutorService executorService) {
+        return this.runBackgroundTask(0, name, runnable, executorService);
+    }
+    
+    public BackgroundTaskExecutor withPriority(int priority) {
+        return new BackgroundTaskExecutor() {
+            @Override
+            public <T> CompletableFuture<T> runBackgroundTask(String name, Function<BackgroundTaskNotifier, T> runnable) {
+                return BackgroundTaskExecutorImpl.this.runBackgroundTask(priority, name, runnable, executor);
+            }
+
+            @Override
+            public <T> CompletableFuture<T> runBackgroundTask(String name, Function<BackgroundTaskNotifier, T> runnable, ExecutorService executorService) {
+                return BackgroundTaskExecutorImpl.this.runBackgroundTask(priority, name, runnable, executorService);
+            }
+        };
+    }
+    
+    public <T> CompletableFuture<T> runBackgroundTask(int piority, String name, Function<BackgroundTaskNotifier, T> runnable, ExecutorService executorService) {
         BackgroundTask<T> bt = new BackgroundTask<>(name, runnable, this::onBackgroundTaskUpdate);
         this.tasks.add(bt);
-        return bt.run(executorService).exceptionally((t) -> {
+        return bt.run(executorService, piority).exceptionally((t) -> {
             this.errorListener.accept(bt, t);
             throw new RuntimeException(t);
         });

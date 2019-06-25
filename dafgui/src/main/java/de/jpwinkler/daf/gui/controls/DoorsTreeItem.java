@@ -21,8 +21,9 @@ package de.jpwinkler.daf.gui.controls;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import de.jpwinkler.daf.gui.ApplicationIcons;
+import de.jpwinkler.daf.gui.BackgroundTask;
+import de.jpwinkler.daf.gui.BackgroundTaskExecutorImpl;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.util.Comparator;
 import java.util.List;
@@ -45,11 +46,11 @@ public class DoorsTreeItem extends TreeItem<DoorsTreeNode> implements Comparable
     private boolean childrenLoadingStarted = false;
     private boolean childrenLoaded = false;
 
-    private final BackgroundTaskExecutor executor;
+    private final BackgroundTaskExecutorImpl executor;
     private final BiConsumer<DoorsTreeItem, DoorsTreeNode> onLoad;
     private final Predicate<DoorsTreeNode> childFilter;
 
-    public DoorsTreeItem(BackgroundTaskExecutor executor, DoorsTreeNode value, BiConsumer<DoorsTreeItem, DoorsTreeNode> onLoad, Predicate<DoorsTreeNode> childFilter) {
+    public DoorsTreeItem(BackgroundTaskExecutorImpl executor, DoorsTreeNode value, BiConsumer<DoorsTreeItem, DoorsTreeNode> onLoad, Predicate<DoorsTreeNode> childFilter) {
         super(value, ApplicationIcons.getImage(value).toImageView());
         this.executor = executor;
 
@@ -79,7 +80,7 @@ public class DoorsTreeItem extends TreeItem<DoorsTreeNode> implements Comparable
         childrenLoadingStarted = true;
 
         this.setGraphic(ApplicationIcons.LOADING.toImageView());
-        CompletableFuture<List<DoorsTreeNode>> promise = getValue().getChildrenAsync(executor);
+        CompletableFuture<List<DoorsTreeNode>> promise = getValue().getChildrenAsync(executor.withPriority(BackgroundTask.PRIORITY_FOLDERS));
 
         if (promise.isDone()) {
             try {

@@ -21,7 +21,6 @@ package de.jpwinkler.daf.gui;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
 import de.jpwinkler.daf.db.DatabasePath;
@@ -329,7 +328,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     }
 
     @Override
-    public BackgroundTaskExecutor getBackgroundTaskExecutor() {
+    public BackgroundTaskExecutorImpl getBackgroundTaskExecutor() {
         return backgroundTaskExecutor;
     }
 
