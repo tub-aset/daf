@@ -272,7 +272,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
     @FXML
     public void reduceToSelectionClicked() {
-        executeCommand(new ReduceToSelectionCommand(module, getCurrentObject()));
+        executeCommand(new ReduceToSelectionCommand(module, getCurrentObjects()));
     }
 
     @FXML
@@ -296,6 +296,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
     private void updateContentView() {
         final TablePosition<?, ?> focusedCell = contentTableView.getFocusModel().getFocusedCell();
+        final List<Integer> selected = new ArrayList<>(contentTableView.getSelectionModel().getSelectedIndices());
         contentTableView.getItems().clear();
         module.accept(new DoorsTreeNodeVisitor<DoorsObject>(DoorsObject.class) {
             @Override
@@ -309,7 +310,11 @@ public final class ModulePaneController extends ApplicationPartController<Module
             }
         });
         if (focusedCell != null) {
-            contentTableView.getFocusModel().focus(focusedCell);
+            Platform.runLater(() -> {
+                contentTableView.getFocusModel().focus(focusedCell);
+                contentTableView.getSelectionModel().getSelectedIndices().setAll(selected);
+            });
+
         }
     }
 

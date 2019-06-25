@@ -21,7 +21,8 @@ package de.jpwinkler.daf.gui.commands;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -29,11 +30,11 @@ import java.util.stream.Stream;
  *
  * @author fwiesweg
  */
-public class MultiCommand extends AbstractCommand {
-    
-    private final List<AbstractCommand> subCommands;
+public class MultiCommand<T extends AbstractCommand> extends AbstractCommand {
 
-    public MultiCommand(List<AbstractCommand> subCommands) {
+    private final List<T> subCommands;
+
+    public MultiCommand(List<T> subCommands) {
         this.subCommands = subCommands;
     }
 
@@ -54,12 +55,14 @@ public class MultiCommand extends AbstractCommand {
 
     @Override
     public void undo() {
-        subCommands.forEach(sc -> sc.undo());
+        List<AbstractCommand> undoCommands = new ArrayList<>(subCommands);
+        Collections.reverse(undoCommands);
+        undoCommands.forEach(sc -> sc.undo());
     }
 
     @Override
     public boolean canUndo() {
-        return subCommands.stream().map(sc -> sc.canUndo()).reduce( (b1, b2) -> b1 && b2).orElse(super.canUndo());
+        return subCommands.stream().map(sc -> sc.canUndo()).reduce((b1, b2) -> b1 && b2).orElse(super.canUndo());
     }
 
     @Override
@@ -69,9 +72,7 @@ public class MultiCommand extends AbstractCommand {
 
     @Override
     public boolean isApplicable() {
-        return subCommands.stream().map(sc -> sc.isApplicable()).reduce( (b1, b2) -> b1 && b2).orElse(super.isApplicable());
+        return subCommands.stream().map(sc -> sc.isApplicable()).reduce((b1, b2) -> b1 && b2).orElse(super.isApplicable());
     }
-    
-    
-    
+
 }

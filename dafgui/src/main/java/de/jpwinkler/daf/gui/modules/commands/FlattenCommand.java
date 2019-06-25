@@ -74,7 +74,7 @@ public class FlattenCommand extends AbstractCommand {
     public void redo() {
         for (final DoorsObject object : objectList) {
             object.getParent().getChildren().remove(object);
-            object.getParent().getChildren().add(object);
+            module.getChildren().add(object);
         }
     }
 

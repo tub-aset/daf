@@ -21,13 +21,13 @@ package de.jpwinkler.daf.gui.modules.commands;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.gui.commands.AbstractCommand;
 import de.jpwinkler.daf.gui.commands.UpdateAction;
 import de.jpwinkler.daf.gui.modules.ModulePaneController.ModuleUpdateAction;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +40,10 @@ public class DeleteObjectCommand extends AbstractCommand {
 
     public DeleteObjectCommand(final List<DoorsObject> objects) {
         this.objects = new ArrayList<>(objects);
+    }
+
+    public DeleteObjectCommand(final DoorsObject object) {
+        this(Collections.singletonList(object));
     }
 
     @Override
@@ -77,6 +81,6 @@ public class DeleteObjectCommand extends AbstractCommand {
 
     @Override
     public UpdateAction[] getUpdateActions() {
-        return new UpdateAction[] { ModuleUpdateAction.FIX_OBJECT_NUMBERS, ModuleUpdateAction.UPDATE_CONTENT_VIEW, ModuleUpdateAction.UPDATE_OUTLINE_VIEW };
+        return new UpdateAction[]{ModuleUpdateAction.FIX_OBJECT_NUMBERS, ModuleUpdateAction.UPDATE_CONTENT_VIEW, ModuleUpdateAction.UPDATE_OUTLINE_VIEW};
     }
 }

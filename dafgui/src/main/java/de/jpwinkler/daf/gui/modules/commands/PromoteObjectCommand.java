@@ -43,7 +43,7 @@ public class PromoteObjectCommand extends AbstractCommand {
 
     @Override
     public boolean isApplicable() {
-        return object.getParent() != null && object.getParent().getParent() != null && DoorsModelUtil.getNextObject(object) == null;
+        return object.getParent() instanceof DoorsObject && object.getParent().getParent() != null;
     }
 
     @Override
