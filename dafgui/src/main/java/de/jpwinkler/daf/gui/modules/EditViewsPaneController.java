@@ -107,6 +107,10 @@ public final class EditViewsPaneController extends AutoloadingPaneController<Edi
                 if (newValue != null) {
                     this.knownAttributes.add(newValue);
                 }
+                
+                if(colTitleTextField.getText().startsWith("New column ") || this.knownAttributes.contains(colTitleTextField.getText())) {
+                    colTitleTextField.setText(newValue);
+                }
             }
         });
         colVisibleCheckBox.selectedProperty().addListener((obs, oldValue, newValue) -> {
