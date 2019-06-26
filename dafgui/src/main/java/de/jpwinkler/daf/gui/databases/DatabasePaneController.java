@@ -146,7 +146,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         snapshotListsColumn.setCellFactory(tc -> new CustomTextFieldTableCell<>(tc,
                 it -> it == null ? "" : getSnapshotLists(it),
                 (it, newLists) -> {
-                    TreeMap<String, Set<String>> data = DatabasePanePreferences.SNAPSHOT_LISTS.retrieve();
+                    TreeMap<String, TreeSet<String>> data = DatabasePanePreferences.SNAPSHOT_LISTS.retrieve();
                     Set<String> newValueSet = Stream.of(newLists.split(","))
                             .map(v -> v.trim())
                             .collect(Collectors.toSet());

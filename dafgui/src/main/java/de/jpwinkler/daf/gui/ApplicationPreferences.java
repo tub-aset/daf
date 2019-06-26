@@ -21,29 +21,33 @@ package de.jpwinkler.daf.gui;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.gui.ApplicationPartFactoryRegistry.ApplicationPart;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.TreeMap;
+import java.util.function.Consumer;
 import javafx.geometry.Rectangle2D;
 
 /**
  *
  * @author fwiesweg
  */
-class ApplicationPreferences extends ApplicationPreference {
+class ApplicationPreferences<T extends Serializable> extends ApplicationPreference<T> {
 
-    public static final ApplicationPreference EXIT_FILES = new ApplicationPreferences("EXIT_FILES", ArrayList.class, new ArrayList<ApplicationPart>(0));
-    public static final ApplicationPreference RECENT_FILES = new ApplicationPreferences("RECENT_FILES", TreeMap.class, new TreeMap<Long, ApplicationPart>());
-    public static final ApplicationPreference SAVE_DIRECTORY = new ApplicationPreferences("SAVE_DIRECTORY", File.class, new File(System.getProperty("user.home")).getAbsoluteFile());
-    public static final ApplicationPreference OPEN_DIRECTORY = new ApplicationPreferences("OPEN_DIRECTORY", File.class, new File(System.getProperty("user.home")).getAbsoluteFile());
-    public static final ApplicationPreference PLUGIN_DIRECTORY = new ApplicationPreferences("PLUGIN_DIRECTORY", File.class, new File(System.getProperty("user.home")).getAbsoluteFile());
-    public static final ApplicationPreference WINDOW_MAXIMIZED = new ApplicationPreferences("WINDOW_MAXIMIZED", Boolean.class, false);
-    public static final ApplicationPreference WINDOW_RECTANGLE = new ApplicationPreferences("WINDOW_RECTANGLE", SerializableRectangle2D.class, null);
+    public static final ApplicationPreference<ArrayList<ApplicationPart>> EXIT_FILES = new ApplicationPreferences<>("EXIT_FILES", ArrayList.class, new ArrayList<ApplicationPart>(0));
+    public static final ApplicationPreference<TreeMap<Long, ApplicationPart>> RECENT_FILES = new ApplicationPreferences<>("RECENT_FILES", TreeMap.class, new TreeMap<Long, ApplicationPart>());
+    public static final ApplicationPreference<File> SAVE_DIRECTORY = new ApplicationPreferences<>("SAVE_DIRECTORY", File.class, new File(System.getProperty("user.home")).getAbsoluteFile(), ApplicationPreferences::isDir);
+    public static final ApplicationPreference<File> OPEN_DIRECTORY = new ApplicationPreferences<>("OPEN_DIRECTORY", File.class, new File(System.getProperty("user.home")).getAbsoluteFile(), ApplicationPreferences::isDir);
+    public static final ApplicationPreference<File> PLUGIN_DIRECTORY = new ApplicationPreferences<>("PLUGIN_DIRECTORY", File.class, new File(System.getProperty("user.home")).getAbsoluteFile(), ApplicationPreferences::isDir);
+    public static final ApplicationPreference<Boolean> WINDOW_MAXIMIZED = new ApplicationPreferences<>("WINDOW_MAXIMIZED", Boolean.class, false);
+    public static final ApplicationPreference<SerializableRectangle2D> WINDOW_RECTANGLE = new ApplicationPreferences<>("WINDOW_RECTANGLE", SerializableRectangle2D.class, null);
 
-    public <T extends Serializable> ApplicationPreferences(String name, Class<T> valueType, Object defaultValue) {
+    public ApplicationPreferences(String name, Class<? super T> valueType, T defaultValue, Consumer<T> validator) {
+        super(name, valueType, defaultValue, validator);
+    }
+
+    public ApplicationPreferences(String name, Class<? super T> valueType, T defaultValue) {
         super(name, valueType, defaultValue);
     }
 
@@ -81,5 +85,11 @@ class ApplicationPreferences extends ApplicationPreference {
             return new Rectangle2D(x, y, width, height);
         }
 
+    }
+
+    public static final void isDir(File f) {
+        if (!f.isDirectory()) {
+            throw new IllegalArgumentException(f.getAbsolutePath() + " is no directory");
+        }
     }
 }

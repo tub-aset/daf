@@ -21,7 +21,6 @@ package de.jpwinkler.daf.plugin;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.gui.ApplicationPreference;
 import java.io.Serializable;
 
@@ -29,11 +28,11 @@ import java.io.Serializable;
  *
  * @author fwiesweg
  */
-public class PluginPreferences extends ApplicationPreference {
+public class PluginPreferences<T extends Serializable> extends ApplicationPreference<T> {
 
-    public static final ApplicationPreference MENU_NAME = new PluginPreferences("MENU_NAME", String.class, "Application Part Extension Menu");
+    public static final ApplicationPreference<String> MENU_NAME = new PluginPreferences("MENU_NAME", String.class, "Application Part Extension Menu");
 
-    public PluginPreferences(String name, Class<? extends Serializable> valueType, Object defaultValue) {
+    public PluginPreferences(String name, Class<? super T> valueType, T defaultValue) {
         super(name, valueType, defaultValue);
     }
 }

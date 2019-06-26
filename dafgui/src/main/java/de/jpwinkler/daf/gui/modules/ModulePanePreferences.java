@@ -21,7 +21,6 @@ package de.jpwinkler.daf.gui.modules;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.gui.ApplicationPreference;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -31,27 +30,27 @@ import java.util.HashMap;
  *
  * @author fwiesweg
  */
-class ModulePanePreferences extends ApplicationPreference {
+class ModulePanePreferences<T extends Serializable> extends ApplicationPreference<T> {
 
-    public static final ApplicationPreference SPLITPOS = new ModulePanePreferences("SPLITPOS", HashMap.class, new HashMap<Integer, double[]>() {
+    public static final ApplicationPreference<HashMap<Integer, double[]>> SPLITPOS = new ModulePanePreferences<>("SPLITPOS", HashMap.class, new HashMap<Integer, double[]>() {
         {
             put(0, new double[]{});
             put(1, new double[]{0.3});
         }
     });
-    public static final ApplicationPreference BOTTOM_SPLITPOS = new ModulePanePreferences("BOTTOM_SPLITPOS", HashMap.class, new HashMap<Integer, double[]>() {
+    public static final ApplicationPreference<HashMap<Integer, double[]>> BOTTOM_SPLITPOS = new ModulePanePreferences<>("BOTTOM_SPLITPOS", HashMap.class, new HashMap<Integer, double[]>() {
         {
             put(0, new double[]{});
             put(1, new double[]{0.8});
         }
     });
-    public static final ApplicationPreference SIDE_EXTENSION = new ModulePanePreferences("SIDE_EXTENSION", String.class, null);
-    public static final ApplicationPreference BOTTOM_EXTENSION = new ModulePanePreferences("BOTTOM_EXTENSION", String.class, null);
+    public static final ApplicationPreference<String> SIDE_EXTENSION = new ModulePanePreferences<>("SIDE_EXTENSION", String.class, null);
+    public static final ApplicationPreference<String> BOTTOM_EXTENSION = new ModulePanePreferences<>("BOTTOM_EXTENSION", String.class, null);
 
-    public static final ApplicationPreference VIEWS = new ModulePanePreferences("VIEWS", ArrayList.class, new ArrayList<>());
-    public static final ApplicationPreference CURRENT_VIEW = new ModulePanePreferences("CURRENT_VIEW", Integer.class, -1);
+    public static final ApplicationPreference<ArrayList<ViewDefinition>> VIEWS = new ModulePanePreferences<>("VIEWS", ArrayList.class, new ArrayList<>());
+    public static final ApplicationPreference<Integer> CURRENT_VIEW = new ModulePanePreferences<>("CURRENT_VIEW", Integer.class, -1);
 
-    public <T extends Serializable> ModulePanePreferences(String name, Class<T> valueType, Object defaultValue) {
+    public ModulePanePreferences(String name, Class<? super T> valueType, T defaultValue) {
         super(name, valueType, defaultValue);
     }
 }
