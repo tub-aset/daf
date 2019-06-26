@@ -44,27 +44,27 @@ import net.harawata.appdirs.AppDirsFactory;
  * @author fwiesweg
  */
 public class ApplicationPreference<T extends Serializable> {
-    
+
     public static final Path APPLICATION_DATA_PATH = Paths.get(AppDirsFactory.getInstance().getUserConfigDir(Main.class.getPackage().getName(), null, null)).toAbsolutePath();
     public static final Path APPLICATION_PREFERENCES_PATH = APPLICATION_DATA_PATH.resolve("preferences");
     public static final Path APPLICATION_PLUGINS_PATH = APPLICATION_DATA_PATH.resolve("plugins");
-    
+
     static {
         try {
             Files.createDirectories(APPLICATION_PREFERENCES_PATH);
             Files.createDirectories(APPLICATION_PLUGINS_PATH);
-            
+
             System.setProperty("java -Djava.util.prefs.userRoot", APPLICATION_PREFERENCES_PATH.toString());
         } catch (IOException ex) {
             Logger.getLogger(ApplicationPreference.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     protected ApplicationPreference(String name, Class<? super T> valueType, T defaultValue) {
         this(name, valueType, defaultValue, value -> {
         });
     }
-    
+
     protected ApplicationPreference(String name, Class<? super T> valueType, T defaultValue, Consumer<T> validator) {
         this.name = name;
         this.valueType = valueType;
@@ -72,14 +72,14 @@ public class ApplicationPreference<T extends Serializable> {
         this.validator = validator;
         this.prefs = Preferences.userNodeForPackage(this.getClass());
     }
-    
+
     private final String name;
     private final Class<? super T> valueType;
     private final T defaultValue;
     private final Consumer<T> validator;
     private final HashSet<Consumer<Object>> onChangedHandlers = new HashSet<>();
     private final Preferences prefs;
-    
+
     public final <T extends Serializable> void store(T object) {
         if (object != null && !valueType.isAssignableFrom(object.getClass())) {
             throw new IllegalArgumentException("Object must be null or a " + valueType.getCanonicalName());
@@ -91,10 +91,10 @@ public class ApplicationPreference<T extends Serializable> {
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
-        
+
         this.onChangedHandlers.forEach(h -> h.accept(object));
     }
-    
+
     public final T retrieve() {
         String data = prefs.get(this.name, null);
         if (data == null) {
@@ -105,18 +105,18 @@ public class ApplicationPreference<T extends Serializable> {
             T value = (T) valueType.cast(ois.readObject());
             validator.accept(value);
             return value;
-        } catch (ObjectStreamException | ClassNotFoundException | ClassCastException ex) {
+        } catch (IllegalArgumentException | ObjectStreamException | ClassNotFoundException | ClassCastException ex) {
             prefs.remove(this.name);
             return (T) defaultValue;
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
     }
-    
+
     public final void addOnChangedHandler(Consumer<Object> handler) {
         this.onChangedHandlers.add(handler);
     }
-    
+
     public final void removeOnChangedHandler(Consumer<Object> handler) {
         this.onChangedHandlers.remove(handler);
     }
