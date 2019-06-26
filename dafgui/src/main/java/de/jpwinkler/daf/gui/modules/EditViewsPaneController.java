@@ -21,15 +21,14 @@ package de.jpwinkler.daf.gui.modules;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.gui.AutoloadingPaneController;
-import java.util.Collections;
 import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.TreeMap;
 import java.util.stream.Stream;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableListBase;
+import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -58,7 +57,7 @@ public final class EditViewsPaneController extends AutoloadingPaneController<Edi
     @FXML
     private TextField colTitleTextField;
     @FXML
-    private ComboBox<String> colAttributeComboBox;
+    private ComboBox<ColumnAttribute> colAttributeComboBox;
     @FXML
     private HBox colPositionHbox;
     @FXML
@@ -72,7 +71,32 @@ public final class EditViewsPaneController extends AutoloadingPaneController<Edi
     private ViewDefinition.ColumnDefinition currentCol;
     private int newCounter = 1;
 
-    private final SortedSet<String> knownAttributes = new TreeSet<>();
+    private final TreeMap<String, ColumnAttribute> knownAttributesTreeMap = new TreeMap<>();
+    private final ObservableMap<String, ColumnAttribute> knownAttributes = FXCollections.observableMap(knownAttributesTreeMap);
+    private static final String NEW_COLUMN_TEXT = "New column ";
+    private static final String NEW_VIEW_TEXT = "New view ";
+
+    private static final class ColumnAttribute {
+
+        private final String columnAttribute;
+
+        public ColumnAttribute(String columnAttribute) {
+            this.columnAttribute = columnAttribute;
+        }
+
+        public String getColumnAttribute() {
+            return columnAttribute;
+        }
+
+        public String getAttributeName() {
+            return columnAttribute.isEmpty() ? null : columnAttribute;
+        }
+
+        @Override
+        public String toString() {
+            return columnAttribute.isEmpty() ? "Combined Object Heading/Text" : columnAttribute;
+        }
+    }
 
     public EditViewsPaneController(List<ViewDefinition> initialValue, Stream<String> knownAttributes) {
         initialValue.forEach(vd -> viewListView.getItems().add(vd));
@@ -80,8 +104,8 @@ public final class EditViewsPaneController extends AutoloadingPaneController<Edi
                 .flatMap(vd -> vd.getColumns().stream())
                 .map(cd -> cd.getAttributeName()))
                 .distinct()
-                .forEach(an -> this.knownAttributes.add(an == null ? "" : an));
-        this.knownAttributes.add("");
+                .forEach(an -> this.knownAttributes.put(an, new ColumnAttribute(an)));
+        this.knownAttributes.put("", new ColumnAttribute(""));
 
         viewTitleTextField.textProperty().addListener((obs, oldValue, newValue) -> {
             if (currentView != null) {
@@ -103,13 +127,18 @@ public final class EditViewsPaneController extends AutoloadingPaneController<Edi
         });
         colAttributeComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
             if (currentCol != null) {
-                currentCol.setAttributeName((newValue == null || newValue.isEmpty()) ? null : newValue);
-                if (newValue != null) {
-                    this.knownAttributes.add(newValue);
+                if (newValue == null) {
+                    newValue = this.knownAttributes.get("");
+                } else if (!this.knownAttributes.containsKey(newValue.getColumnAttribute())) {
+                    this.knownAttributes.put(newValue.getColumnAttribute(), newValue);
                 }
-                
-                if(colTitleTextField.getText().startsWith("New column ") || this.knownAttributes.contains(colTitleTextField.getText())) {
-                    colTitleTextField.setText(newValue);
+
+                currentCol.setAttributeName(newValue.getAttributeName());
+
+                if (colTitleTextField.getText().startsWith(NEW_COLUMN_TEXT)
+                        || this.knownAttributes.containsKey(colTitleTextField.getText())
+                        || colTitleTextField.getText().equals(this.knownAttributes.get("").toString())) {
+                    colTitleTextField.setText(newValue.toString());
                 }
             }
         });
@@ -163,9 +192,23 @@ public final class EditViewsPaneController extends AutoloadingPaneController<Edi
 
             colAttributeComboBox.setDisable(false);
 
-            String attributeName = cd.getAttributeName();
-            colAttributeComboBox.setItems(FXCollections.observableArrayList(knownAttributes));
-            colAttributeComboBox.getSelectionModel().select(attributeName);
+            String columnAttribute = cd.getAttributeName() == null ? "" : cd.getAttributeName();
+            if (!knownAttributes.containsKey(columnAttribute)) {
+                knownAttributes.put(columnAttribute, new ColumnAttribute(columnAttribute));
+            }
+
+            colAttributeComboBox.setItems(new ObservableListBase<ColumnAttribute>() {
+                @Override
+                public ColumnAttribute get(int i) {
+                    return knownAttributesTreeMap.values().stream().skip(i).findFirst().orElse(null);
+                }
+
+                @Override
+                public int size() {
+                    return knownAttributes.size();
+                }
+            });
+            colAttributeComboBox.getSelectionModel().select(knownAttributes.get(columnAttribute));
             colPositionHbox.setDisable(false);
 
             colVisibleCheckBox.setDisable(false);
@@ -177,7 +220,7 @@ public final class EditViewsPaneController extends AutoloadingPaneController<Edi
             colTitleTextField.setDisable(true);
 
             colAttributeComboBox.setDisable(true);
-            colAttributeComboBox.setItems(FXCollections.observableArrayList(Collections.emptyList()));
+            colAttributeComboBox.setItems(FXCollections.emptyObservableList());
 
             colPositionHbox.setDisable(true);
             colVisibleCheckBox.setDisable(true);
@@ -253,7 +296,7 @@ public final class EditViewsPaneController extends AutoloadingPaneController<Edi
 
     @FXML
     public void addViewClicked() {
-        ViewDefinition vd = new ViewDefinition("New view " + newCounter++);
+        ViewDefinition vd = new ViewDefinition(NEW_VIEW_TEXT + newCounter++);
         this.viewListView.getItems().add(vd);
         this.viewListView.getSelectionModel().select(vd);
     }
@@ -268,7 +311,7 @@ public final class EditViewsPaneController extends AutoloadingPaneController<Edi
 
     @FXML
     public void addColumnClicked() {
-        ViewDefinition.ColumnDefinition cd = new ViewDefinition.ColumnDefinition("New column " + newCounter++);
+        ViewDefinition.ColumnDefinition cd = new ViewDefinition.ColumnDefinition(NEW_COLUMN_TEXT + newCounter++);
         this.colListView.getItems().add(cd);
         this.colListView.getSelectionModel().select(cd);
     }
