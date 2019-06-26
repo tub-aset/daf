@@ -103,7 +103,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
         columnDefinition.setVisible(true);
         STANDARD_VIEW.getColumns().add(columnDefinition);
 
-        STANDARD_VIEW.setDisplayRemainingColumns(true);
+        STANDARD_VIEW.setDisplayRemainingColumns(false);
     }
 
     public ModulePaneController(ApplicationPaneController applicationController, ApplicationPart part) {
@@ -112,13 +112,6 @@ public final class ModulePaneController extends ApplicationPartController<Module
         if (super.getDatabaseInterface().isReadOnly()) {
             outlineTreeView.setEditable(false);
             contentTableView.setEditable(false);
-        }
-
-        int currentViewIdx = ModulePanePreferences.CURRENT_VIEW.retrieve();
-        if (currentViewIdx < 0 || currentViewIdx >= views.size()) {
-            currentView = STANDARD_VIEW;
-        } else {
-            currentView = views.get(currentViewIdx);
         }
 
         contentTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -213,7 +206,6 @@ public final class ModulePaneController extends ApplicationPartController<Module
                         if (!DoorsApplicationImpl.STANDARD_VIEW.equals(this.module.getView())) {
                             setStatus("Warning: This module's view is not the standard view.");
                         }
-                        mergeObjectAttributes();
 
                         updateGui(ModuleUpdateAction.UPDATE_VIEWS, ModuleUpdateAction.UPDATE_COLUMNS, ModuleUpdateAction.UPDATE_CONTENT_VIEW, ModuleUpdateAction.UPDATE_OUTLINE_VIEW);
                         traverseTreeItem(outlineTreeView.getRoot(), ti -> ti.setExpanded(true));
@@ -312,7 +304,9 @@ public final class ModulePaneController extends ApplicationPartController<Module
         if (focusedCell != null) {
             Platform.runLater(() -> {
                 contentTableView.getFocusModel().focus(focusedCell);
-                contentTableView.getSelectionModel().getSelectedIndices().setAll(selected);
+                if (!selected.isEmpty()) {
+                    contentTableView.getSelectionModel().selectIndices(selected.get(0), selected.stream().skip(1).mapToInt(a -> a).toArray());
+                }
             });
 
         }
@@ -333,13 +327,18 @@ public final class ModulePaneController extends ApplicationPartController<Module
                 ModulePanePreferences.VIEWS.store(this.views);
             });
 
-            c.setCellFactory(tc -> new CustomTableCell(tc,
-                    it -> columnDefinition.getAttributeName() == null ? it.getText() : it.getAttributes().get(columnDefinition.getAttributeName()),
-                    (it, newValue) -> {
-                        executeCommand(new EditObjectAttributeCommand(it, columnDefinition.getAttributeName(), newValue));
-                        contentTableView.requestFocus();
-                        contentTableView.getFocusModel().focusNext();
-                    }));
+            BiConsumer<DoorsObject, String> edit = (it, newValue) -> {
+                executeCommand(new EditObjectAttributeCommand(it, columnDefinition.getAttributeName(), newValue));
+                contentTableView.requestFocus();
+                contentTableView.getFocusModel().focusNext();
+            };
+            if (columnDefinition.getAttributeName() == null) {
+                c.setCellFactory(tc -> new CombinedTextHeadingCell(tc,
+                        it -> it.getText(), edit));
+            } else {
+                c.setCellFactory(tc -> new CustomTextFieldTableCell<>(tc,
+                        it -> it.getAttributes().get(columnDefinition.getAttributeName()), edit));
+            }
             contentTableView.getColumns().add(c);
         }
     }
@@ -379,46 +378,45 @@ public final class ModulePaneController extends ApplicationPartController<Module
         }
     }
 
-    private void mergeObjectAttributes() {
-        Set<String> moduleAttrs = new HashSet<>(this.module.getObjectAttributes());
-        moduleAttrs.add(DoorsAttributes.OBJECT_LEVEL.getKey());
-        this.currentView.getColumns().forEach(cd -> moduleAttrs.add(cd.getAttributeName()));
-        this.module.setObjectAttributes(new ArrayList<>(moduleAttrs));
-    }
-
     private void updateViews() {
         this.viewsMenuButton.getItems().removeIf(mi -> mi instanceof RadioMenuItem);
         ToggleGroup viewsToggleGroup = new ToggleGroup();
         viewsToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-            this.currentView = (ViewDefinition) newValue.getUserData();
-            mergeObjectAttributes();
+            if (newValue == null) {
+                return;
+            }
 
-            ModulePanePreferences.CURRENT_VIEW.store(viewsToggleGroup.getToggles().indexOf(observable));
+            this.currentView = (ViewDefinition) newValue.getUserData();
+
+            Set<String> moduleAttrs = new HashSet<>(this.module.getObjectAttributes());
+            moduleAttrs.add(DoorsAttributes.OBJECT_LEVEL.getKey());
+            this.currentView.getColumns().forEach(cd -> moduleAttrs.add(cd.getAttributeName()));
+            this.module.setObjectAttributes(new ArrayList<>(moduleAttrs));
+
+            ModulePanePreferences.CURRENT_VIEW.store(viewsToggleGroup.getToggles().indexOf(viewsToggleGroup.getSelectedToggle()));
             updateGui(ModuleUpdateAction.UPDATE_COLUMNS);
         });
 
-        boolean selected = Stream.concat(views.stream(), super.getExtensions(ModulePaneExtension.class).stream()
+        RadioMenuItem standardRmi = new RadioMenuItem(STANDARD_VIEW.getName());
+        this.viewsMenuButton.getItems().add(0, standardRmi);
+        standardRmi.setUserData(STANDARD_VIEW);
+        standardRmi.setToggleGroup(viewsToggleGroup);
+
+        Stream.concat(views.stream(), super.getExtensions(ModulePaneExtension.class).stream()
                 .flatMap(e -> e.getAdditionalViews().stream()))
-                .filter(vd -> {
+                .forEach(vd -> {
 
                     RadioMenuItem rmi = new RadioMenuItem(vd.getName());
                     rmi.setUserData(vd);
                     rmi.setToggleGroup(viewsToggleGroup);
                     this.viewsMenuButton.getItems().add(this.viewsMenuButton.getItems().size() - 2, rmi);
+                });
 
-                    if (vd == currentView) {
-                        rmi.setSelected(true);
-                        return true;
-                    }
-                    return false;
-                }).findAny().isPresent();
-
-        RadioMenuItem standardRmi = new RadioMenuItem(STANDARD_VIEW.getName());
-        standardRmi.setUserData(STANDARD_VIEW);
-        standardRmi.setToggleGroup(viewsToggleGroup);
-        this.viewsMenuButton.getItems().add(0, standardRmi);
-        if (!selected) {
-            standardRmi.setSelected(true);
+        int currentViewIdx = ModulePanePreferences.CURRENT_VIEW.retrieve();
+        if (viewsToggleGroup.getToggles().size() > currentViewIdx) {
+            viewsToggleGroup.getToggles().get(currentViewIdx).setSelected(true);
+        } else {
+            viewsToggleGroup.getToggles().get(0).setSelected(true);
         }
     }
 
@@ -614,9 +612,9 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
     }
 
-    private class CustomTableCell extends CustomTextFieldTableCell<DoorsObject> {
+    private class CombinedTextHeadingCell extends CustomTextFieldTableCell<DoorsObject> {
 
-        public CustomTableCell(TableColumn<DoorsObject, DoorsObject> tc, Function<DoorsObject, String> toString, BiConsumer<DoorsObject, String> editCommand) {
+        public CombinedTextHeadingCell(TableColumn<DoorsObject, DoorsObject> tc, Function<DoorsObject, String> toString, BiConsumer<DoorsObject, String> editCommand) {
             super(tc, toString, editCommand);
         }
 
