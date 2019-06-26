@@ -48,8 +48,8 @@
     </Menu>
    <Menu mnemonicParsing="false" text="View">
      <items>
-       <MenuItem mnemonicParsing="false" onAction="#showSidePaneClicked" text="Show side pane" />
-         <MenuItem mnemonicParsing="false" onAction="#showBottomPaneClicked" text="Show bottom pane" />
+       <MenuItem mnemonicParsing="false" onAction="#showSidePaneClicked" text="Show side plugin pane" />
+         <MenuItem mnemonicParsing="false" onAction="#showBottomPaneClicked" text="Show bottom plugin pane" />
      </items>
    </Menu>
     <Menu mnemonicParsing="false" text="Module">

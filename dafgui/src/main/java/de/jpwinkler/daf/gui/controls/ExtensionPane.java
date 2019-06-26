@@ -21,7 +21,6 @@ package de.jpwinkler.daf.gui.controls;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.gui.ApplicationPartExtension;
 import de.jpwinkler.daf.gui.AutoloadingPaneController;
 import java.util.List;
@@ -36,8 +35,10 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableBooleanValue;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.Region;
 import org.pf4j.PluginWrapper;
 
 /**
@@ -129,6 +130,12 @@ public class ExtensionPane<T extends ApplicationPartExtension> extends Autoloadi
     public void selectFirst() {
         if (extensionChoiceBox.getItems().size() > 1) {
             this.extensionChoiceBox.getSelectionModel().select(1);
+        } else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "No content has been registered for this pane by any plugin.");
+            alert.setTitle("Cannot show pane");
+            alert.setHeaderText("Cannot show pane");
+            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+            alert.showAndWait();
         }
     }
 
