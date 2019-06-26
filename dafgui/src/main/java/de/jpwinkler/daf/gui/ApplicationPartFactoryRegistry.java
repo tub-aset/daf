@@ -156,7 +156,7 @@ public final class ApplicationPartFactoryRegistry {
 
     public static interface DatabasePathFactory {
 
-        public Stream<DatabasePath> create(Window window, ApplicationPartFactory partFactory, boolean save);
+        public Stream<DatabasePath> create(Window window, ApplicationPartFactory partFactory, boolean save, String proposedName);
     }
 
     public static interface ApplicationPartControllerFactory {
@@ -194,11 +194,11 @@ public final class ApplicationPartFactoryRegistry {
         }
 
         public final Stream<ApplicationPart> openWithSelector(Window window) {
-            return this.getDatabasePathFactory().create(window, this, false).map(this::openPath);
+            return this.getDatabasePathFactory().create(window, this, false, null).map(this::openPath);
         }
 
-        public final Stream<ApplicationPart> saveWithSelector(Window window) {
-            return this.getDatabasePathFactory().create(window, this, true).map(this::openPath);
+        public final Stream<ApplicationPart> saveWithSelector(Window window, String proposedName) {
+            return this.getDatabasePathFactory().create(window, this, true, proposedName).map(this::openPath);
         }
 
         protected DatabasePathFactory getDatabasePathFactory() {

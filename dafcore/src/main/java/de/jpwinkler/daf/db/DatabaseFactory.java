@@ -21,7 +21,6 @@ package de.jpwinkler.daf.db;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
@@ -65,7 +64,7 @@ public interface DatabaseFactory {
     default <T extends DoorsTreeNode> T copy(T source, T destination, Predicate<DoorsTreeNode> nodeFilter) {
 
         if (!destination.canCopyFrom(source)) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Cannot copy from a " + source.getClass().getSimpleName() + " to a " + destination.getClass().getSimpleName());
         }
 
         if (!nodeFilter.test(source)) {

@@ -21,7 +21,6 @@ package de.jpwinkler.daf.gui;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.db.DoorsApplicationDatabaseInterface;
 import de.jpwinkler.daf.db.DoorsApplicationDummyDatabaseInterface;
@@ -53,16 +52,16 @@ public final class ApplicationPartFactories {
     }
 
     public static void registerDefault(ApplicationPartFactoryRegistry registry) {
-        registry.register(DoorsAppplicationPartFactory.class);
-        registry.register(DoorsDummyAppplicationPartFactory.class);
+        registry.register(DoorsApplicationPartFactory.class);
+        registry.register(DoorsDummyApplicationPartFactory.class);
         registry.register(LocalFolderApplicationPartFactory.class);
         registry.register(LocalXmiApplicationPartFactory.class);
         registry.register(LocalModuleApplicationPartFactory.class);
     }
 
-    public static final class DoorsAppplicationPartFactory extends ApplicationPartFactory {
+    public static final class DoorsApplicationPartFactory extends ApplicationPartFactory {
 
-        public DoorsAppplicationPartFactory() {
+        public DoorsApplicationPartFactory() {
             super("Doors Bridge", DoorsApplicationDatabaseInterface.class, false);
         }
 
@@ -73,9 +72,9 @@ public final class ApplicationPartFactories {
 
     }
 
-    public static final class DoorsDummyAppplicationPartFactory extends ApplicationPartFactory {
+    public static final class DoorsDummyApplicationPartFactory extends ApplicationPartFactory {
 
-        public DoorsDummyAppplicationPartFactory() {
+        public DoorsDummyApplicationPartFactory() {
             super("Doors Bridge Dummy", DoorsApplicationDummyDatabaseInterface.class, false);
         }
 
@@ -127,9 +126,11 @@ public final class ApplicationPartFactories {
     }
 
     public static DatabasePathFactory fileChooserSelector(Function<File, String> transform, FileChooser.ExtensionFilter... extensionFilters) {
-        return (window, partFactory, save) -> {
+        return (window, partFactory, save, proposedName) -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle((save ? "Save a " : "Open a ") + partFactory.getName());
+            fileChooser.setInitialFileName(proposedName + (extensionFilters.length == 0 ? "" : extensionFilters[0].getExtensions().get(0).substring(1)));
+
             fileChooser.setInitialDirectory(save ? ApplicationPreferences.SAVE_DIRECTORY.retrieve() : ApplicationPreferences.OPEN_DIRECTORY.retrieve());
             fileChooser.getExtensionFilters().addAll(extensionFilters);
             return Stream.of(save ? fileChooser.showSaveDialog(window) : fileChooser.showOpenDialog(window)).filter((f) -> f != null).peek((f) -> {
@@ -143,11 +144,11 @@ public final class ApplicationPartFactories {
     }
 
     public static DatabasePathFactory defaultSelector(String dbPath, String path) {
-        return (window, partFactory, save) -> save ? Stream.empty() : Stream.of(new DatabasePath<>(partFactory.getDatabaseInterface(), dbPath, path));
+        return (window, partFactory, save, proposedName) -> save ? Stream.empty() : Stream.of(new DatabasePath<>(partFactory.getDatabaseInterface(), dbPath, path));
     }
 
     public static DatabasePathFactory directorySelector() {
-        return (window, partFactory, save) -> {
+        return (window, partFactory, save, proposedName) -> {
             DirectoryChooser dirChooser = new DirectoryChooser();
             dirChooser.setTitle((save ? "Save a " : "Open a ") + partFactory.getName());
             dirChooser.setInitialDirectory(save ? ApplicationPreferences.SAVE_DIRECTORY.retrieve() : ApplicationPreferences.OPEN_DIRECTORY.retrieve());
@@ -162,17 +163,17 @@ public final class ApplicationPartFactories {
     }
 
     public static DatabasePathFactory genericSelector() {
-        return (window, partFactory, save) -> {
+        return (window, partFactory, save, proposedName) -> {
             TextInputDialog dialog = new TextInputDialog();
             dialog.setTitle((save ? "Save a " : "Open a ") + partFactory.getName());
             dialog.setHeaderText("Please enter a URI to " + (save ? "save." : "open."));
-            dialog.setContentText(partFactory + ":");
+            dialog.setContentText(partFactory + ":" + proposedName != null ? proposedName : null);
             return Main.asStream(dialog.showAndWait()).map((s) -> new DatabasePath(partFactory.getDatabaseInterface(), s));
         };
     }
 
     public static DatabasePathFactory localFolderDatabaseSelector() {
-        return (window, partFactory, save) -> save ? directorySelector().create(window, partFactory, save) : fileChooserSelector((f) -> f.getParent(), new FileChooser.ExtensionFilter("Root folder MMD", "__folder__.mmd")).create(window, partFactory, save);
+        return (window, partFactory, save, proposedName) -> save ? directorySelector().create(window, partFactory, save, proposedName) : fileChooserSelector((f) -> f.getParent(), new FileChooser.ExtensionFilter("Root folder MMD", "__folder__.mmd")).create(window, partFactory, save, proposedName);
     }
 
     public static ApplicationPartController dynamicPartConstructor(ApplicationPaneController appController, ApplicationPart part) {

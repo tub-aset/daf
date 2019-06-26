@@ -218,7 +218,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
                     it = new MenuItem(added.getName());
                     it.setUserData(added);
                     it.setOnAction(ev -> {
-                        added.saveWithSelector(tabPane.getScene().getWindow()).forEach(
+                        added.saveWithSelector(tabPane.getScene().getWindow(), "").forEach(
                                 path -> open(path, OpenFlag.ERASE_IF_EXISTS));
                     });
                     newMenu.getItems().add(it);
@@ -398,7 +398,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
             final Tab selectedTab = new Tab(part.toString(), modulePane);
             selectedTab.setTooltip(new Tooltip(part.toString()));
-            
+
             selectedTab.setUserData(part);
             applicationPartControllers.put(part, controller);
 
@@ -498,7 +498,10 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     @Override
     public CompletableFuture<DatabasePath> createSnapshot(DatabaseInterface sourceDB, DatabasePath sourcePath, Predicate<DoorsTreeNode> include, DatabasePath destinationPathArg) {
         DatabasePath destinationPath;
+        DoorsTreeNode copyRoot = sourceDB.getDatabaseRoot().getChild(sourcePath.getPath());
         if (destinationPathArg == null) {
+            String proposedName = sourcePath.getPathSegments().isEmpty() ? "" : (String) sourcePath.getPathSegments().get(sourcePath.getPathSegments().size() - 1);
+
             ChoiceDialog<ApplicationPartFactory> applicationPartChooser = new ChoiceDialog<>(null, applicationPartFactoryRegistry.registry().stream()
                     .filter(p -> p.isAllowNew())
                     .sorted((p1, p2) -> Objects.compare(p1.getName(), p2.getName(), Comparator.naturalOrder()))
@@ -506,7 +509,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             applicationPartChooser.setTitle("Create snapshot");
             applicationPartChooser.setHeaderText("Select a destination database type");
             destinationPathArg = Main.asStream(applicationPartChooser.showAndWait())
-                    .flatMap(part -> part.saveWithSelector(tabPane.getScene().getWindow()))
+                    .flatMap(part -> part.saveWithSelector(tabPane.getScene().getWindow(), proposedName))
                     .map(part -> part.getDatabasePath())
                     .findAny().orElse(null);
 
@@ -522,7 +525,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         return this.getBackgroundTaskExecutor().runBackgroundTask("Creating snapshot", i -> {
             try {
                 DatabaseInterface destinationDB = applicationPartFactoryRegistry.openDatabase(destinationPath, OpenFlag.ERASE_IF_EXISTS).getLeft();
-                destinationDB.getFactory().copy(sourceDB.getDatabaseRoot().getChild(sourcePath.getPath()), destinationDB.getDatabaseRoot(), include);
+                destinationDB.getFactory().copy(copyRoot, destinationDB.getDatabaseRoot(), include);
                 DoorsAttributes.DATABASE_COPIED_FROM.setValue(String.class,
                         destinationDB.getDatabaseRoot(), sourceDB.getPath().toString());
                 DoorsAttributes.DATABASE_COPIED_AT.setValue(String.class,
