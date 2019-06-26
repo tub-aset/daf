@@ -504,6 +504,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
             ChoiceDialog<ApplicationPartFactory> applicationPartChooser = new ChoiceDialog<>(null, applicationPartFactoryRegistry.registry().stream()
                     .filter(p -> p.isAllowNew())
+                    .filter(p -> p.canStore(copyRoot))
                     .sorted((p1, p2) -> Objects.compare(p1.getName(), p2.getName(), Comparator.naturalOrder()))
                     .collect(Collectors.toList()));
             applicationPartChooser.setTitle("Create snapshot");
@@ -523,8 +524,8 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         }
 
         return this.getBackgroundTaskExecutor().runBackgroundTask("Creating snapshot", i -> {
+            DatabaseInterface destinationDB = applicationPartFactoryRegistry.openDatabase(destinationPath, OpenFlag.ERASE_IF_EXISTS).getLeft();
             try {
-                DatabaseInterface destinationDB = applicationPartFactoryRegistry.openDatabase(destinationPath, OpenFlag.ERASE_IF_EXISTS).getLeft();
                 destinationDB.getFactory().copy(copyRoot, destinationDB.getDatabaseRoot(), include);
                 DoorsAttributes.DATABASE_COPIED_FROM.setValue(String.class,
                         destinationDB.getDatabaseRoot(), sourceDB.getPath().toString());

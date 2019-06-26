@@ -37,7 +37,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 public enum DoorsAttributes {
     TAGS(List.class, LIST_PARSER, LIST_WRITER),
-    MODULE_OBJECT_ATTRIBUTES(List.class, LIST_PARSER, LIST_WRITER, DoorsModule.class),
     MODULE_DESCRIPTION("Description", DoorsModule.class),
     OBJECT_LEVEL("Object Level", Integer.class, INT_PARSER, INT_WRITER, DoorsObject.class),
     OBJECT_IDENTIFIER("Object Identifier", DoorsObject.class),

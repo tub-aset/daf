@@ -33,6 +33,8 @@ import de.jpwinkler.daf.gui.ApplicationPartFactoryRegistry.DatabasePathFactory;
 import de.jpwinkler.daf.gui.databases.DatabasePaneController;
 import de.jpwinkler.daf.gui.modules.ModulePaneController;
 import de.jpwinkler.daf.model.DoorsFolder;
+import de.jpwinkler.daf.model.DoorsModule;
+import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.io.File;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -70,6 +72,11 @@ public final class ApplicationPartFactories {
             return defaultSelector("", null);
         }
 
+        @Override
+        public boolean canStore(DoorsTreeNode databaseRoot) {
+            return false;
+        }
+
     }
 
     public static final class DoorsDummyApplicationPartFactory extends ApplicationPartFactory {
@@ -81,6 +88,11 @@ public final class ApplicationPartFactories {
         @Override
         protected ApplicationPartFactoryRegistry.DatabasePathFactory getDatabasePathFactory() {
             return defaultSelector("", null);
+        }
+        
+        @Override
+        public boolean canStore(DoorsTreeNode databaseRoot) {
+            return false;
         }
 
     }
@@ -95,6 +107,11 @@ public final class ApplicationPartFactories {
         protected ApplicationPartFactoryRegistry.DatabasePathFactory getDatabasePathFactory() {
             return localFolderDatabaseSelector();
         }
+        
+        @Override
+        public boolean canStore(DoorsTreeNode databaseRoot) {
+            return databaseRoot instanceof DoorsFolder;
+        }
     }
 
     public static final class LocalXmiApplicationPartFactory extends ApplicationPartFactory {
@@ -107,6 +124,11 @@ public final class ApplicationPartFactories {
         protected ApplicationPartFactoryRegistry.DatabasePathFactory getDatabasePathFactory() {
             return fileChooserSelector(new FileChooser.ExtensionFilter("XMI", "*.xmi"));
         }
+        
+        @Override
+        public boolean canStore(DoorsTreeNode databaseRoot) {
+            return databaseRoot instanceof DoorsFolder;
+        }
     }
 
     public static final class LocalModuleApplicationPartFactory extends ApplicationPartFactory {
@@ -118,6 +140,11 @@ public final class ApplicationPartFactories {
         @Override
         protected ApplicationPartFactoryRegistry.DatabasePathFactory getDatabasePathFactory() {
             return fileChooserSelector(f -> FilenameUtils.removeExtension(f.getAbsolutePath()), new FileChooser.ExtensionFilter("CSV/MMD", "*.csv", "*.mmd"));
+        }
+        
+        @Override
+        public boolean canStore(DoorsTreeNode databaseRoot) {
+            return databaseRoot instanceof DoorsModule;
         }
     }
 

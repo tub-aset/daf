@@ -25,7 +25,6 @@ package de.jpwinkler.daf.model;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -51,15 +50,6 @@ public class DoorsModelUtil {
             return (DoorsObject) o.getParent().getChildren().get(o.getParent().getChildren().indexOf(o) + 1);
         } else {
             return null;
-        }
-    }
-
-    public static void ensureAttributeDefinition(final DoorsModule module, final String attributeName) {
-        List<String> attrs = module.getObjectAttributes();
-        if (!attrs.contains(attributeName)) {
-            attrs = new ArrayList<>(attrs);
-            attrs.add(attributeName);
-            module.setObjectAttributes(attrs);
         }
     }
 

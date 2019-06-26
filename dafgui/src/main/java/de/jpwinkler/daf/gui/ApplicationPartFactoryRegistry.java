@@ -26,6 +26,7 @@ import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
 import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.gui.commands.CommandStack;
+import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
@@ -215,8 +216,9 @@ public final class ApplicationPartFactoryRegistry {
             }
 
             return new ApplicationPart(this.getClass().getCanonicalName(), path);
-
         }
+        
+        public abstract boolean canStore(DoorsTreeNode databaseRoot);
     }
 
     public static final class ApplicationPart implements Serializable {

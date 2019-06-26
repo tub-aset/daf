@@ -21,15 +21,19 @@ package de.jpwinkler.daf.model.impl;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import static de.jpwinkler.daf.bridge.DoorsApplication.STANDARD_VIEW;
 import de.jpwinkler.daf.model.DoorsAttributes;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsPackage;
+import de.jpwinkler.daf.model.DoorsTreeNode;
+import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.model.FindObjectVisitor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 
@@ -65,8 +69,8 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
      */
     @Override
     public String getView() {
-            return STANDARD_VIEW;
-	}
+        return STANDARD_VIEW;
+    }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -86,7 +90,18 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
      */
     @Override
     public List<String> getObjectAttributes() {
-        return DoorsAttributes.MODULE_OBJECT_ATTRIBUTES.getValue(List.class, this);
+        LinkedHashSet<String> objectAttrs = new LinkedHashSet<>(DoorsAttributes.valuesFor(DoorsObject.class)
+                .filter(v -> !v.isSystemKey())
+                .map(a -> a.getKey())
+                .collect(Collectors.toList()));
+        this.accept(new DoorsTreeNodeVisitor(DoorsObject.class) {
+            @Override
+            protected void visitPostTraverse(DoorsTreeNode object) {
+                objectAttrs.addAll(object.getAttributes().keySet());
+            }
+
+        });
+        return new ArrayList<>(objectAttrs);
     }
 
     /**
@@ -95,7 +110,15 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
      */
     @Override
     public void setObjectAttributes(List<String> attrs) {
-        DoorsAttributes.MODULE_OBJECT_ATTRIBUTES.setValue(List.class, this, attrs);
+        this.accept(new DoorsTreeNodeVisitor(DoorsObject.class) {
+            @Override
+            protected void visitPostTraverse(DoorsTreeNode object) {
+                attrs.stream()
+                        .filter(a -> !object.getAttributes().containsKey(a))
+                        .forEach(a -> object.getAttributes().put(a, ""));
+            }
+
+        });
     }
 
     /**

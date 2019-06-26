@@ -22,14 +22,12 @@ package de.jpwinkler.daf.db;
  * #L%
  */
 
-import de.jpwinkler.daf.model.DoorsAttributes;
 import de.jpwinkler.daf.model.DoorsFactory;
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.UnresolvedLink;
-import java.util.stream.Collectors;
 public class EmfDatabaseFactory implements DatabaseFactory {
 
     @Override
@@ -39,12 +37,7 @@ public class EmfDatabaseFactory implements DatabaseFactory {
 
     @Override
     public DoorsModule createModule(DoorsTreeNode parent, String name) {
-        DoorsModule module = create(parent, DoorsFactory.eINSTANCE.createDoorsModule(), name);
-        module.setObjectAttributes(DoorsAttributes.valuesFor(DoorsObject.class)
-                .filter(v -> !v.isSystemKey())
-                .map(a -> a.getKey())
-                .collect(Collectors.toList()));
-        return module;
+        return create(parent, DoorsFactory.eINSTANCE.createDoorsModule(), name);
     }
 
     @Override
