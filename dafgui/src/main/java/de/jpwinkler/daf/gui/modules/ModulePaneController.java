@@ -413,7 +413,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
                 });
 
         int currentViewIdx = ModulePanePreferences.CURRENT_VIEW.retrieve();
-        if (viewsToggleGroup.getToggles().size() > currentViewIdx) {
+        if (0 <= currentViewIdx && currentViewIdx < viewsToggleGroup.getToggles().size()) {
             viewsToggleGroup.getToggles().get(currentViewIdx).setSelected(true);
         } else {
             viewsToggleGroup.getToggles().get(0).setSelected(true);
