@@ -32,6 +32,7 @@ import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.FindObjectVisitor;
+import de.jpwinkler.daf.model.RuntimeExecutionException;
 import de.jpwinkler.daf.model.UnresolvedLink;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -41,7 +42,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicReference;
 
 class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
@@ -59,8 +59,10 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
     public Map<String, String> getAttributes() {
         try {
             return getAttributesAsync(BackgroundTaskExecutor.SYNCHRONOUS).get();
-        } catch (InterruptedException | ExecutionException ex) {
+        } catch (InterruptedException ex) {
             throw new RuntimeException();
+        } catch (Throwable ex) {
+            throw new RuntimeExecutionException(ex);
         }
     }
 
@@ -170,8 +172,10 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
     public List<String> getObjectAttributes() {
         try {
             return objectAttributes.get();
-        } catch (InterruptedException | ExecutionException ex) {
+        } catch (InterruptedException ex) {
             throw new RuntimeException(ex);
+        } catch (Throwable ex) {
+            throw new RuntimeExecutionException(ex);
         }
     }
 

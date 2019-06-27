@@ -35,7 +35,7 @@ import de.jpwinkler.daf.model.UnresolvedLink;
  *
  * @author fwiesweg
  */
-public class DoorsBridgeDatabaseFactory implements DatabaseFactory {
+public class DoorsBridgeDatabaseFactory extends DatabaseFactory {
 
     private final DoorsApplication doorsApplication;
 

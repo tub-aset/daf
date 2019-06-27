@@ -91,7 +91,7 @@ public class DoorsTreeItem extends TreeItem<DoorsTreeNode> implements Comparable
             try {
                 this.loadChildren(promise.get());
             } catch (InterruptedException | ExecutionException ex) {
-                throw new RuntimeException();
+                throw new RuntimeException(ex);
             }
         } else {
             promise.exceptionally(t -> {

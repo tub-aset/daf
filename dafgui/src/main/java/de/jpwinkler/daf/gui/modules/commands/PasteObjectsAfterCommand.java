@@ -59,7 +59,7 @@ public class PasteObjectsAfterCommand extends AbstractCommand {
     @Override
     public void apply() {
         copiedObjects = objectsToCopy.stream()
-                .map(o -> (DoorsObject) factory.createCopy(o, reference.getParent()))
+                .map(o -> (DoorsObject) factory.createCopy(o, reference.getParent(), false))
                 .collect(Collectors.toList());
         redo();
     }

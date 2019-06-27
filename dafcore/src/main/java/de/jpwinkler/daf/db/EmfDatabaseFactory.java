@@ -28,7 +28,7 @@ import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.UnresolvedLink;
-public class EmfDatabaseFactory implements DatabaseFactory {
+public class EmfDatabaseFactory extends DatabaseFactory {
 
     @Override
     public DoorsFolder createFolder(DoorsTreeNode parent, String name) {

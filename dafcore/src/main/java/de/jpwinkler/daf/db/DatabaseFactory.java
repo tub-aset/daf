@@ -25,32 +25,35 @@ import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
+import de.jpwinkler.daf.model.RuntimeExecutionException;
 import de.jpwinkler.daf.model.UnresolvedLink;
 import java.util.function.Predicate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author fwiesweg
  */
-public interface DatabaseFactory {
+public abstract class DatabaseFactory {
 
-    DoorsFolder createFolder(DoorsTreeNode parent, String name);
+    public abstract DoorsFolder createFolder(DoorsTreeNode parent, String name);
 
-    DoorsModule createModule(DoorsTreeNode parent, String name);
+    public abstract DoorsModule createModule(DoorsTreeNode parent, String name);
 
-    DoorsObject createObject(DoorsTreeNode parent, String objectText);
+    public abstract DoorsObject createObject(DoorsTreeNode parent, String objectText);
 
-    UnresolvedLink createLink(DoorsObject source, String targetModule, String targetObject);
+    public abstract UnresolvedLink createLink(DoorsObject source, String targetModule, String targetObject);
 
-    default <T extends DoorsTreeNode> T createCopy(T source, DoorsTreeNode newParent) {
-        return (T) createCopy(source, newParent, x -> true);
+    public final <T extends DoorsTreeNode> T createCopy(T source, DoorsTreeNode newParent, boolean resilient) {
+        return (T) createCopy(source, newParent, x -> true, resilient);
     }
 
-    default <T extends DoorsTreeNode> T createCopy(T source, DoorsTreeNode newParent, Predicate<DoorsTreeNode> childFilter) {
+    public final <T extends DoorsTreeNode> T createCopy(T source, DoorsTreeNode newParent, Predicate<DoorsTreeNode> childFilter, boolean resilient) {
         if (!childFilter.test(source)) {
             return null;
         }
-        
+
         T copy;
         if (source instanceof DoorsObject) {
             copy = (T) this.createObject(newParent, null);
@@ -62,36 +65,47 @@ public interface DatabaseFactory {
             throw new AssertionError();
         }
 
-        return this.copy(source, copy, childFilter);
+        return this.copy(source, copy, childFilter, resilient);
     }
 
-    default <T extends DoorsTreeNode> T copy(T source, T destination, Predicate<DoorsTreeNode> childFilter) {
+    public final <T extends DoorsTreeNode> T copy(T source, T destination, Predicate<DoorsTreeNode> childFilter, boolean resilient) {
 
         if (!destination.canCopyFrom(source)) {
             throw new IllegalArgumentException("Cannot copy from a " + source.getClass().getSimpleName() + " to a " + destination.getClass().getSimpleName());
         }
 
-        destination.setName(source.getName());
-        destination.getAttributes().clear();
-        destination.getAttributes().putAll(source.getAttributes());
+        do {
+            try {
+                destination.setName(source.getName());
+                destination.getAttributes().clear();
+                destination.getAttributes().putAll(source.getAttributes());
 
-        destination.getChildren().clear();
-        source.getChildren().stream()
-                .map(c -> this.createCopy(c, destination, childFilter))
-                .filter(c -> c != null)
-                .forEach(destination.getChildren()::add);
+                destination.getChildren().clear();
+                source.getChildren().stream()
+                        .map(c -> this.createCopy(c, destination, childFilter, resilient))
+                        .filter(c -> c != null)
+                        .forEach(destination.getChildren()::add);
 
-        if (source instanceof DoorsObject) {
-            DoorsObject sourceObj = (DoorsObject) source;
-            DoorsObject copyObj = (DoorsObject) destination;
+                if (source instanceof DoorsObject) {
+                    DoorsObject sourceObj = (DoorsObject) source;
+                    DoorsObject copyObj = (DoorsObject) destination;
 
-            sourceObj.getOutgoingLinks().clear();
-            copyObj.getOutgoingLinks().stream()
-                    .map(l -> this.createLink(copyObj, l.getTargetModule(), l.getTargetObject()))
-                    .forEach(sourceObj.getOutgoingLinks()::add);
-        }
+                    sourceObj.getOutgoingLinks().clear();
+                    copyObj.getOutgoingLinks().stream()
+                            .map(l -> this.createLink(copyObj, l.getTargetModule(), l.getTargetObject()))
+                            .forEach(sourceObj.getOutgoingLinks()::add);
+                }
+                return destination;
+            } catch (RuntimeExecutionException ex) {
+                if (resilient) {
+                    Logger.getLogger(DatabaseFactory.class.getName()).log(Level.SEVERE, "Loading from database failed, trying again", ex);
+                } else {
+                    throw new RuntimeException(ex);
+                }
+            }
+        } while (resilient);
 
-        return destination;
+        throw new AssertionError();
     }
 
 }

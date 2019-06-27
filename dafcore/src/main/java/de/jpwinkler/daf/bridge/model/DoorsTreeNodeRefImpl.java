@@ -26,11 +26,11 @@ import de.jpwinkler.daf.bridge.DoorsItemType;
 import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
+import de.jpwinkler.daf.model.RuntimeExecutionException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -57,8 +57,10 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNode {
     public List<DoorsTreeNode> getChildren() {
         try {
             return getChildrenAsync(BackgroundTaskExecutor.SYNCHRONOUS).get();
-        } catch (InterruptedException | ExecutionException ex) {
+        } catch (InterruptedException ex) {
             throw new RuntimeException(ex);
+        } catch (Throwable ex) {
+            throw new RuntimeExecutionException(ex);
         }
     }
 

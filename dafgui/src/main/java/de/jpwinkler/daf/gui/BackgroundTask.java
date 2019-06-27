@@ -30,18 +30,19 @@ import java.util.function.Function;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class BackgroundTask<T> {
-    
+
     public static final int PRIORITY_ATTRIBUTES = 100;
     public static final int PRIORITY_FOLDERS = -100;
     public static final int PRIORITY_MODULE_CONTENT = -200;
-    
 
     private final String name;
     private final Function<BackgroundTaskNotifier, T> runnable;
     private final BiConsumer<BackgroundTask, Pair<Long, Long>> monitor;
 
-    private final AtomicReference<Pair<Long, Long>> taskProgress = new AtomicReference<>(null);
-    private final AtomicReference<Throwable> taskError = new AtomicReference<>();
+    private final Throwable notDoneYetThrowable = new Exception();
+
+    private final AtomicReference<Pair<Long, Long>> taskProgress = new AtomicReference<>(Pair.of(0l, 1l));
+    private final AtomicReference<Throwable> taskError = new AtomicReference<>(notDoneYetThrowable);
     private final AtomicReference<CompletableFuture<T>> future = new AtomicReference<>();
 
     public BackgroundTask(String name, Function<BackgroundTaskNotifier, T> runnable, BiConsumer<BackgroundTask, Pair<Long, Long>> monitor) {
@@ -51,30 +52,22 @@ public class BackgroundTask<T> {
     }
 
     final synchronized CompletableFuture<T> run(ExecutorService executor, int priority) {
-        if (future.get() != null) {
+        BackgroundTaskNotifierImpl notifier = new BackgroundTaskNotifierImpl();
+        if (!this.future.compareAndSet(null, notifier.taskFuture)) {
             throw new IllegalStateException("Task already started");
         }
 
-        if (!taskProgress.compareAndSet(null, Pair.of(0l, 1l))) {
-            throw new IllegalStateException("Task already started");
-        }
-
-        CompletableFuture<T> localFuture = new CompletableFuture<>();
+        this.monitor.accept(this, taskProgress.get());
         executor.execute(new ComparableRunnable(priority, () -> {
             try {
-                T value = this.runnable.apply(new BackgroundTaskNotifierImpl());
-                this.finish(null);
-                localFuture.complete(value);
+                T value = this.runnable.apply(notifier);
+                notifier.taskFuture.complete(value);
             } catch (Throwable t) {
                 t.printStackTrace();
-                this.finish(t);
-                localFuture.completeExceptionally(t);
+                notifier.taskFuture.completeExceptionally(t);
             }
         }));
-
-        this.future.set(localFuture);
-        this.monitor.accept(this, taskProgress.get());
-        return future.get();
+        return notifier.taskFuture;
     }
 
     private final class ComparableRunnable implements Comparable<Runnable>, Runnable {
@@ -104,11 +97,11 @@ public class BackgroundTask<T> {
     }
 
     public TaskStatus getTaskStatus() {
-        Pair<Long, Long> existingTaskProgress = this.taskProgress.get();
+        Throwable taskError = this.taskError.get();
 
-        if (existingTaskProgress == null || existingTaskProgress.getLeft() < existingTaskProgress.getRight()) {
+        if (taskError == notDoneYetThrowable) {
             return TaskStatus.RUNNING;
-        } else if (taskError.get() == null) {
+        } else if (taskError == null) {
             return TaskStatus.DONE;
         } else {
             return TaskStatus.FAILED;
@@ -117,15 +110,12 @@ public class BackgroundTask<T> {
 
     public Double getCurrentProgress() {
         Pair<Long, Long> existingTaskProgress = this.taskProgress.get();
-        if (existingTaskProgress == null || (existingTaskProgress.getLeft() == 0 && existingTaskProgress.getRight() == 1)) {
-            return null;
-        }
-
         return (double) existingTaskProgress.getLeft() / (double) existingTaskProgress.getRight();
     }
 
     public Throwable getError() {
-        return taskError.get();
+        Throwable existingTaskError = this.taskError.get();
+        return existingTaskError == notDoneYetThrowable ? null : existingTaskError;
     }
 
     public String getName() {
@@ -138,24 +128,55 @@ public class BackgroundTask<T> {
         DONE
     }
 
-    private void finish(Throwable t) {
-        Pair<Long, Long> existingProgress;
-        do {
-            existingProgress = taskProgress.get();
-            if (existingProgress.getLeft() >= existingProgress.getRight()) {
-                throw new IllegalStateException("Progress exceeds max progress");
-            }
-        } while (!taskProgress.compareAndSet(existingProgress, Pair.of(existingProgress.getRight(), existingProgress.getRight())));
-
-        if (!taskError.compareAndSet(null, t)) {
-            // should never happen
-            throw new IllegalStateException("Error has already been set");
-        }
-
-        monitor.accept(this, Pair.of(-existingProgress.getLeft(), -existingProgress.getRight()));
-    }
-
     private class BackgroundTaskNotifierImpl implements BackgroundTaskNotifier {
+
+        private final CompletableFuture<T> taskFuture = new CompletableFuture<T>() {
+            @Override
+            public boolean cancel(boolean bln) {
+                return this.completeExceptionally(new RuntimeException("Task cancelled"));
+            }
+
+            @Override
+            public boolean completeExceptionally(Throwable t) {
+                if (!this.completeTask(null)) {
+                    return false;
+                }
+
+                return super.completeExceptionally(t);
+            }
+
+            @Override
+            public boolean complete(T t) {
+                if (!this.completeTask(null)) {
+                    return false;
+                }
+
+                return super.complete(t);
+            }
+
+            private boolean completeTask(Throwable t) {
+                if (!taskError.compareAndSet(notDoneYetThrowable, t)) {
+                    return false;
+                }
+
+                Pair<Long, Long> existingProgress;
+                do {
+                    existingProgress = taskProgress.get();
+                    if (existingProgress.getLeft() >= existingProgress.getRight()) {
+                        throw new IllegalStateException("Progress exceeds max progress");
+                    }
+                } while (!taskProgress.compareAndSet(existingProgress, Pair.of(-existingProgress.getRight(), -existingProgress.getRight())));
+
+                monitor.accept(BackgroundTask.this, taskProgress.get());
+                return true;
+            }
+
+        };
+
+        @Override
+        public final boolean isCancelled() {
+            return BackgroundTask.this.getTaskStatus() == TaskStatus.FAILED;
+        }
 
         @Override
         public final void incrementProgress(long increment) {
@@ -164,15 +185,19 @@ public class BackgroundTask<T> {
 
         @Override
         public final void incrementProgress(long increment, long maxProgressIncrement) {
-            if (increment < 0 || maxProgressIncrement < 0) {
-                throw new IllegalArgumentException("Negative increments are not allowed");
-            } else if (increment == 0 && maxProgressIncrement == 0) {
+            if (increment == 0 && maxProgressIncrement == 0) {
                 return;
+            } else if (increment < 0 || maxProgressIncrement < 0) {
+                throw new IllegalArgumentException("Negative increments are not allowed");
             }
 
             Pair<Long, Long> existingProgress;
             do {
                 existingProgress = taskProgress.get();
+                if (existingProgress.getLeft() < 0 && existingProgress.getRight() < 0) {
+                    throw new IllegalStateException("Task already done");
+                }
+
                 if (Math.addExact(existingProgress.getLeft(), increment) >= Math.addExact(existingProgress.getRight(), maxProgressIncrement)) {
                     throw new IllegalStateException("Progress exceeds max progress");
                 }

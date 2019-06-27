@@ -43,6 +43,11 @@ public interface BackgroundTaskExecutor {
                 @Override
                 public void incrementProgress(long increment, long maxProgressIncrement) {
                 }
+
+                @Override
+                public boolean isCancelled() {
+                    return false;
+                }
             }));
         }
 
@@ -55,6 +60,11 @@ public interface BackgroundTaskExecutor {
 
                 @Override
                 public void incrementProgress(long increment, long maxProgressIncrement) {
+                }
+
+                @Override
+                public boolean isCancelled() {
+                    return false;
                 }
             }), executorService);
         }

@@ -1,4 +1,9 @@
-package de.jpwinkler.daf.db;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package de.jpwinkler.daf.model;
 
 /*-
  * #%L
@@ -21,15 +26,15 @@ package de.jpwinkler.daf.db;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
+
 /**
  *
  * @author fwiesweg
  */
-public interface BackgroundTaskNotifier {
+public class RuntimeExecutionException extends RuntimeException {
 
-    void incrementProgress(long increment);
-
-    void incrementProgress(long increment, long maxProgressIncrement);
-
-    boolean isCancelled();
+    public RuntimeExecutionException(Throwable cause) {
+        super(cause);
+    }
+    
 }

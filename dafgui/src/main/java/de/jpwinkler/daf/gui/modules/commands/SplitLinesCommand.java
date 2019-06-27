@@ -86,7 +86,7 @@ public class SplitLinesCommand extends AbstractCommand {
     }
 
     private void newObjectAfter(final DoorsObject object, final int i, final String string) {
-        final DoorsObject newObject = factory.createCopy(object, object.getParent());
+        final DoorsObject newObject = factory.createCopy(object, object.getParent(), false);
         newObject.setObjectIdentifier(object.getObjectIdentifier() + "-" + i);
         newObject.setText(string);
 
