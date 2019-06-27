@@ -317,11 +317,11 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
                     return mi;
                 }).update();
 
-        backgroundTaskMenuButton.getItems().stream()
+        backgroundTaskMenuButton.getItems().removeAll(backgroundTaskMenuButton.getItems().stream()
                 .map(mi -> (ProgressMenuItem) mi)
                 .filter(mi -> mi.getBackgroundTask().getTaskStatus() != BackgroundTask.TaskStatus.RUNNING)
                 .limit(Math.max(0, backgroundTaskMenuButton.getItems().size() - MAX_STATUS_MENU_ITEMS))
-                .forEach(backgroundTaskMenuButton.getItems()::remove);
+                .collect(Collectors.toList()));
     }
 
     public ApplicationPartFactoryRegistry getApplicationPartFactoryRegistry() {
