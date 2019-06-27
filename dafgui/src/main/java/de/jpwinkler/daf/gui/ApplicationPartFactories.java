@@ -162,9 +162,9 @@ public final class ApplicationPartFactories {
             fileChooser.getExtensionFilters().addAll(extensionFilters);
             return Stream.of(save ? fileChooser.showSaveDialog(window) : fileChooser.showOpenDialog(window)).filter((f) -> f != null).peek((f) -> {
                 if (save) {
-                    ApplicationPreferences.OPEN_DIRECTORY.store(f.getParentFile().getAbsoluteFile());
-                } else {
                     ApplicationPreferences.SAVE_DIRECTORY.store(f.getParentFile().getAbsoluteFile());
+                } else {
+                    ApplicationPreferences.OPEN_DIRECTORY.store(f.getParentFile().getAbsoluteFile());
                 }
             }).map(transform).map((f) -> new DatabasePath(partFactory.getDatabaseInterface(), f, ""));
         };
@@ -181,9 +181,9 @@ public final class ApplicationPartFactories {
             dirChooser.setInitialDirectory(save ? ApplicationPreferences.SAVE_DIRECTORY.retrieve() : ApplicationPreferences.OPEN_DIRECTORY.retrieve());
             return Stream.of(dirChooser.showDialog(window)).filter((f) -> f != null).peek((f) -> {
                 if (save) {
-                    ApplicationPreferences.OPEN_DIRECTORY.store(f.getParentFile().getAbsoluteFile());
-                } else {
                     ApplicationPreferences.SAVE_DIRECTORY.store(f.getParentFile().getAbsoluteFile());
+                } else {
+                    ApplicationPreferences.OPEN_DIRECTORY.store(f.getParentFile().getAbsoluteFile());
                 }
             }).map((f) -> new DatabasePath(partFactory.getDatabaseInterface(), f.getAbsolutePath(), ""));
         };

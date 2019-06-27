@@ -209,8 +209,9 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
     private static boolean isInSnapshotList(TreeSet<String> list, DoorsTreeNode node) {
         String fn = node.getFullName();
-        String ceil = list.ceiling(fn);
-        return ceil != null && ceil.startsWith(fn);
+        String ceil = list.floor(fn);
+        // add slash to make sure only children are matched, not same level nodes with similar name
+        return ceil != null && (ceil.equals(fn) || fn.startsWith(ceil.charAt(ceil.length() - 1) == '/' ? ceil : ceil + "/"));
     }
 
     @FXML

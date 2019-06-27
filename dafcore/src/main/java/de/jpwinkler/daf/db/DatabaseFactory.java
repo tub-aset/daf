@@ -46,7 +46,11 @@ public interface DatabaseFactory {
         return (T) createCopy(source, newParent, x -> true);
     }
 
-    default <T extends DoorsTreeNode> T createCopy(T source, DoorsTreeNode newParent, Predicate<DoorsTreeNode> nodeFilter) {
+    default <T extends DoorsTreeNode> T createCopy(T source, DoorsTreeNode newParent, Predicate<DoorsTreeNode> childFilter) {
+        if (!childFilter.test(source)) {
+            return null;
+        }
+        
         T copy;
         if (source instanceof DoorsObject) {
             copy = (T) this.createObject(newParent, null);
@@ -58,17 +62,13 @@ public interface DatabaseFactory {
             throw new AssertionError();
         }
 
-        return this.copy(source, copy, nodeFilter);
+        return this.copy(source, copy, childFilter);
     }
 
-    default <T extends DoorsTreeNode> T copy(T source, T destination, Predicate<DoorsTreeNode> nodeFilter) {
+    default <T extends DoorsTreeNode> T copy(T source, T destination, Predicate<DoorsTreeNode> childFilter) {
 
         if (!destination.canCopyFrom(source)) {
             throw new IllegalArgumentException("Cannot copy from a " + source.getClass().getSimpleName() + " to a " + destination.getClass().getSimpleName());
-        }
-
-        if (!nodeFilter.test(source)) {
-            return null;
         }
 
         destination.setName(source.getName());
@@ -77,7 +77,7 @@ public interface DatabaseFactory {
 
         destination.getChildren().clear();
         source.getChildren().stream()
-                .map(c -> this.createCopy(c, destination, nodeFilter))
+                .map(c -> this.createCopy(c, destination, childFilter))
                 .filter(c -> c != null)
                 .forEach(destination.getChildren()::add);
 
