@@ -58,6 +58,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -216,28 +217,27 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
         String name = node.getFullName();
         String floor = list.floor(name);
-        if (floor == null) {
+        String ceil = list.ceiling(name);
+        if (floor == null && ceil == null) {
             return false;
-        }
-
-        if (floor.equals(name)) {
+        } else if (Objects.equals(floor, ceil)) {
             return true;
         }
 
         // match children
         // add slash to make sure only children are matched, not same level nodes with similar name
-        if (name.startsWith(floor.charAt(floor.length() - 1) != '/' ? floor + "/" : floor)) {
+        if (floor != null && name.startsWith(floor.charAt(floor.length() - 1) != '/' ? floor + "/" : floor)) {
             return true;
         }
 
         // match parents if there is a matching child and we're a parent
-        if (floor.startsWith(name.charAt(name.length() - 1) != '/' ? name + "/" : name)) {
+        if (ceil != null && ceil.startsWith(name.charAt(name.length() - 1) != '/' ? name + "/" : name)) {
             DoorsTreeNode root = node;
             while (root.getParent() != null) {
                 root = root.getParent();
             }
 
-            if (root.getChild(floor) != null) {
+            if (root.getChild(ceil) != null) {
                 return true;
             }
         }
