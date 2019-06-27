@@ -500,7 +500,14 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         DatabasePath destinationPath;
         DoorsTreeNode copyRoot = sourceDB.getDatabaseRoot().getChild(sourcePath.getPath());
         if (destinationPathArg == null) {
-            String proposedName = sourcePath.getPathSegments().isEmpty() ? "" : (String) sourcePath.getPathSegments().get(sourcePath.getPathSegments().size() - 1);
+            String proposedName;
+            if (!sourcePath.getPathSegments().isEmpty()) {
+                proposedName = sourcePath.getPathSegments().get(sourcePath.getPathSegments().size() - 1);
+            } else if (!sourcePath.getDatabasePathSegments().isEmpty()) {
+                proposedName = sourcePath.getDatabasePathSegments().get(sourcePath.getDatabasePathSegments().size() - 1);
+            } else {
+                proposedName = "";
+            }
 
             ChoiceDialog<ApplicationPartFactory> applicationPartChooser = new ChoiceDialog<>(null, applicationPartFactoryRegistry.registry().stream()
                     .filter(p -> p.isAllowNew())

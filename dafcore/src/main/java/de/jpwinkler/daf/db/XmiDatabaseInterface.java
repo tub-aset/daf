@@ -45,10 +45,10 @@ public class XmiDatabaseInterface implements DatabaseInterface {
     }
 
     private final DoorsFolder databaseRoot;
-    private final DatabasePath<XmiDatabaseInterface> databasePath;
+    private final DatabasePath databasePath;
     private final DatabaseFactory factory = new EmfDatabaseFactory();
 
-    public XmiDatabaseInterface(DatabasePath<XmiDatabaseInterface> databasePath, OpenFlag openFlag) throws IOException {
+    public XmiDatabaseInterface(DatabasePath databasePath, OpenFlag openFlag) throws IOException {
         if (!databasePath.getPath().isEmpty()) {
             throw new IllegalArgumentException("databasePath must not have a path segment here");
         }
@@ -80,7 +80,7 @@ public class XmiDatabaseInterface implements DatabaseInterface {
     }
 
     @Override
-    public DatabasePath<XmiDatabaseInterface> getPath() {
+    public DatabasePath getPath() {
         return databasePath;
     }
 

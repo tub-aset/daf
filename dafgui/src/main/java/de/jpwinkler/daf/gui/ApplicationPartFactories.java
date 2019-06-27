@@ -166,12 +166,12 @@ public final class ApplicationPartFactories {
                 } else {
                     ApplicationPreferences.SAVE_DIRECTORY.store(f.getParentFile().getAbsoluteFile());
                 }
-            }).map(transform).map((f) -> new DatabasePath<>(partFactory.getDatabaseInterface(), f, ""));
+            }).map(transform).map((f) -> new DatabasePath(partFactory.getDatabaseInterface(), f, ""));
         };
     }
 
     public static DatabasePathFactory defaultSelector(String dbPath, String path) {
-        return (window, partFactory, save, proposedName) -> save ? Stream.empty() : Stream.of(new DatabasePath<>(partFactory.getDatabaseInterface(), dbPath, path));
+        return (window, partFactory, save, proposedName) -> save ? Stream.empty() : Stream.of(new DatabasePath(partFactory.getDatabaseInterface(), dbPath, path));
     }
 
     public static DatabasePathFactory directorySelector() {
@@ -185,7 +185,7 @@ public final class ApplicationPartFactories {
                 } else {
                     ApplicationPreferences.SAVE_DIRECTORY.store(f.getParentFile().getAbsoluteFile());
                 }
-            }).map((f) -> new DatabasePath<>(partFactory.getDatabaseInterface(), f.getAbsolutePath(), ""));
+            }).map((f) -> new DatabasePath(partFactory.getDatabaseInterface(), f.getAbsolutePath(), ""));
         };
     }
 

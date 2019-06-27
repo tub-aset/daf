@@ -32,13 +32,13 @@ import java.util.Objects;
  *
  * @author fwiesweg
  */
-public class DatabasePath<T extends DatabaseInterface> implements Serializable {
+public class DatabasePath implements Serializable {
 
-    public DatabasePath(Class<T> databaseInterface, String databasePath, String path) {
+    public DatabasePath(Class<? extends DatabaseInterface> databaseInterface, String databasePath, String path) {
         this(databaseInterface.getCanonicalName(), databasePath, path);
     }
 
-    public DatabasePath(Class<T> databaseInterface, String fullPath) {
+    public DatabasePath(Class<? extends DatabaseInterface> databaseInterface, String fullPath) {
         this(databaseInterface.getCanonicalName(), fullPath);
     }
 
@@ -90,7 +90,7 @@ public class DatabasePath<T extends DatabaseInterface> implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final DatabasePath<?> other = (DatabasePath<?>) obj;
+        final DatabasePath other = (DatabasePath) obj;
         if (!Objects.equals(this.databasePath, other.databasePath)) {
             return false;
         }
@@ -102,9 +102,13 @@ public class DatabasePath<T extends DatabaseInterface> implements Serializable {
         }
         return true;
     }
+    
+    public List<String> getDatabasePathSegments() {
+        return databasePath == null || databasePath.isEmpty() ? Collections.emptyList() : Arrays.asList(databasePath.split("/"));
+    }
 
     public List<String> getPathSegments() {
-        return path == null ? Collections.emptyList() : Arrays.asList(path.split("/"));
+        return path == null || path.isEmpty() ? Collections.emptyList() : Arrays.asList(path.split("/"));
     }
     
     public boolean isRoot() {

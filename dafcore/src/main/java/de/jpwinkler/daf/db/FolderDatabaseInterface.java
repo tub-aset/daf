@@ -51,10 +51,10 @@ public class FolderDatabaseInterface implements DatabaseInterface {
     }
 
     private DoorsFolder databaseRoot;
-    private DatabasePath<FolderDatabaseInterface> databasePath;
+    private DatabasePath databasePath;
     private final DatabaseFactory factory = new EmfDatabaseFactory();
 
-    public FolderDatabaseInterface(DatabasePath<FolderDatabaseInterface> databasePath, OpenFlag openFlag) throws IOException {
+    public FolderDatabaseInterface(DatabasePath databasePath, OpenFlag openFlag) throws IOException {
         if (!databasePath.getPath().isEmpty()) {
             throw new IllegalArgumentException("databasePath must not have a path segment here");
         }
@@ -134,7 +134,7 @@ public class FolderDatabaseInterface implements DatabaseInterface {
     }
 
     @Override
-    public DatabasePath<FolderDatabaseInterface> getPath() {
+    public DatabasePath getPath() {
         return databasePath;
     }
 

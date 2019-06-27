@@ -34,9 +34,9 @@ public class DoorsApplicationDummyDatabaseInterface implements DatabaseInterface
 
     private final DoorsApplication doorsApplication = new DoorsApplicationDummyImpl();
     private final DoorsFolder root;
-    private final DatabasePath<DoorsApplicationDummyDatabaseInterface> databasePath;
+    private final DatabasePath databasePath;
 
-    public DoorsApplicationDummyDatabaseInterface(DatabasePath<DoorsApplicationDummyDatabaseInterface> databasePath, OpenFlag openFlag) {
+    public DoorsApplicationDummyDatabaseInterface(DatabasePath databasePath, OpenFlag openFlag) {
         if (!databasePath.getDatabasePath().isEmpty() || !databasePath.getPath().isEmpty()) {
             throw new IllegalArgumentException("databasePath must be fully empty for the doors bridge");
         }

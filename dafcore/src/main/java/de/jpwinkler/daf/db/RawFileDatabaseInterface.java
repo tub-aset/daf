@@ -28,10 +28,10 @@ import java.io.IOException;
 public class RawFileDatabaseInterface implements DatabaseInterface {
 
     private DoorsModule databaseRoot;
-    private final DatabasePath<RawFileDatabaseInterface> databasePath;
+    private final DatabasePath databasePath;
     private final DatabaseFactory factory = new EmfDatabaseFactory();
 
-    public RawFileDatabaseInterface(DatabasePath<RawFileDatabaseInterface> databasePath, OpenFlag openFlag) throws IOException {
+    public RawFileDatabaseInterface(DatabasePath databasePath, OpenFlag openFlag) throws IOException {
         if (!databasePath.getPath().isEmpty()) {
             throw new IllegalArgumentException("databasePath must not have a path segment here");
         }
@@ -43,7 +43,7 @@ public class RawFileDatabaseInterface implements DatabaseInterface {
     }
 
     @Override
-    public DatabasePath<RawFileDatabaseInterface> getPath() {
+    public DatabasePath getPath() {
         return databasePath;
     }
 
