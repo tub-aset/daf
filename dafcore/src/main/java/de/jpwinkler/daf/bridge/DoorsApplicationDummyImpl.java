@@ -41,17 +41,23 @@ import org.apache.commons.io.IOUtils;
 public class DoorsApplicationDummyImpl implements DoorsApplication {
 
     private final HashMap<Predicate<URI>, Function<DoorsScriptBuilder, String>> dataFakers = new HashMap<>();
-    
-    
-    private static final Random ERROR_RANDOM = new Random(0);
 
-    public DoorsApplicationDummyImpl() {
+    private static final Random ERROR_RANDOM = new Random(0);
+    private final double errorProbability;
+
+    public DoorsApplicationDummyImpl(double errorProbability) {
+        this.errorProbability = errorProbability;
         dataFakers.put(uri -> uri.toString().endsWith("dxl/get_children.dxl"), b -> {
-            if(ERROR_RANDOM.nextBoolean()) {
-                throw new RuntimeException();
+
+            switch (b.getVariables().get("folder")) {
+                case "/":
+                    return "Folder:test\r\nFolder:test 2";
+                case "/test":
+                    return "Formal:My module";
+                default:
+                    return "";
+
             }
-            
-            return "Folder:test\r\nFolder:test 2\r\nFormal:My module";
         });
         dataFakers.put(uri -> uri.toString().endsWith("dxl/get_module_attributes.dxl"), b -> "\"__view__\",\"" + DoorsApplication.STANDARD_VIEW + "\"\r\n\"Description\",\"Some random module\"");
         dataFakers.put(uri -> uri.toString().endsWith("dxl/export_csv_single.dxl"), b -> {
@@ -91,6 +97,10 @@ public class DoorsApplicationDummyImpl implements DoorsApplication {
 
     @Override
     public String runScript(Consumer<DoorsScriptBuilder> prepareScriptBuilder) {
+        if (errorProbability > 0 && ERROR_RANDOM.nextDouble() < errorProbability) {
+            throw new RuntimeException();
+        }
+
         DoorsScriptBuilder builder = new DoorsScriptBuilder();
         prepareScriptBuilder.accept(builder);
 

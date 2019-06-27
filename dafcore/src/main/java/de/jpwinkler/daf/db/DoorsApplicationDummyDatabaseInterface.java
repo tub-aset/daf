@@ -21,7 +21,6 @@ package de.jpwinkler.daf.db;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.bridge.DoorsApplication;
 import de.jpwinkler.daf.bridge.DoorsApplicationDummyImpl;
 import de.jpwinkler.daf.model.DoorsFolder;
@@ -32,7 +31,7 @@ import de.jpwinkler.daf.model.DoorsFolder;
  */
 public class DoorsApplicationDummyDatabaseInterface implements DatabaseInterface {
 
-    private final DoorsApplication doorsApplication = new DoorsApplicationDummyImpl();
+    private final DoorsApplication doorsApplication = new DoorsApplicationDummyImpl(-1);
     private final DoorsFolder root;
     private final DatabasePath databasePath;
 
