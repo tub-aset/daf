@@ -31,7 +31,7 @@ import de.jpwinkler.daf.model.DoorsFolder;
  */
 public class DoorsApplicationDummyDatabaseInterface implements DatabaseInterface {
 
-    private final DoorsApplication doorsApplication = new DoorsApplicationDummyImpl(0.75);
+    private final DoorsApplication doorsApplication = new DoorsApplicationDummyImpl(0.1);
     private final DoorsFolder root;
     private final DatabasePath databasePath;
 

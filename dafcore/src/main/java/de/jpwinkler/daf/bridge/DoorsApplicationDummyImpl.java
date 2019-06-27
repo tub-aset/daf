@@ -53,7 +53,9 @@ public class DoorsApplicationDummyImpl implements DoorsApplication {
                 case "/":
                     return "Folder:test\r\nFolder:test 2";
                 case "/test":
-                    return "Formal:My module";
+                    return "Formal:My module\r\nFolder:subtest";
+                case "/test/subtest":
+                    return "Formal:My sub module\r\nFormal:My submodule 2";
                 default:
                     return "";
 
