@@ -33,6 +33,7 @@ import de.jpwinkler.daf.model.DoorsAttributes;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.Charset;
@@ -56,6 +57,8 @@ import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 import java.util.jar.Manifest;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javafx.application.Platform;
@@ -177,6 +180,17 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
     public ApplicationPaneController() {
         tabPane.getSelectionModel().selectedItemProperty().addListener(tabChangeListener);
+        try {
+            Class<? extends Enum> tdPolicy = (Class<? extends Enum>) Class.forName("javafx.scene.control.TabPane$TabDragPolicy", true, TabPane.class.getClassLoader());
+            Enum[] enumConstants = tdPolicy.getEnumConstants();
+            Enum constant = Stream.of(enumConstants)
+                    .filter(e -> "REORDER".equals(e.name()))
+                    .findAny().orElseThrow(() -> new ClassNotFoundException("Missing enum constant: REORDER"));
+
+            tabPane.getClass().getMethod("setTabDragPolicy", tdPolicy).invoke(tabPane, constant);
+        } catch (ClassNotFoundException | ClassCastException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            Logger.getLogger(ApplicationPaneController.class.getName()).log(Level.WARNING, "Running below Java 10, tab reordering not available", ex);
+        }
 
         tabPane.getTabs().addListener((ListChangeListener<Tab>) (change) -> {
             Set<Tab> closedTabs = new HashSet<>();
@@ -579,8 +593,11 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
                 return false;
             }
         }
-
-        ArrayList<ApplicationPart> exitParts = new ArrayList<>(applicationPartControllers.keySet());
+        
+        ArrayList<ApplicationPart> exitParts = tabPane.getTabs().stream()
+                .map(t -> getApplicationPartController(t))
+                .map(pc -> pc.getApplicationPart())
+                .collect(Collectors.toCollection(() -> new ArrayList<>()));
         tabPane.getTabs().clear();
         if (!applicationPartControllers.isEmpty()) {
             return false;
