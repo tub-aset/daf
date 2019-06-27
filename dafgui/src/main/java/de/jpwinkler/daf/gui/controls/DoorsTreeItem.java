@@ -27,10 +27,10 @@ import de.jpwinkler.daf.gui.BackgroundTaskExecutorImpl;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -47,17 +47,17 @@ public class DoorsTreeItem extends TreeItem<DoorsTreeNode> implements Comparable
     private boolean childrenLoaded = false;
 
     private final BackgroundTaskExecutorImpl executor;
-    private final BiConsumer<DoorsTreeItem, DoorsTreeNode> onLoad;
     private final Predicate<DoorsTreeNode> childFilter;
+    private final Map<DoorsTreeNode, DoorsTreeItem> cache;
 
-    public DoorsTreeItem(BackgroundTaskExecutorImpl executor, DoorsTreeNode value, BiConsumer<DoorsTreeItem, DoorsTreeNode> onLoad, Predicate<DoorsTreeNode> childFilter) {
+    public DoorsTreeItem(BackgroundTaskExecutorImpl executor, DoorsTreeNode value, Predicate<DoorsTreeNode> childFilter,
+            Map<DoorsTreeNode, DoorsTreeItem> cache) {
         super(value, ApplicationIcons.getImage(value).toImageView());
         this.executor = executor;
 
-        this.onLoad = onLoad;
         this.childFilter = childFilter;
-
-        onLoad.accept(this, value);
+        this.cache = cache;
+        this.cache.put(value, this);
     }
 
     @Override
@@ -71,7 +71,9 @@ public class DoorsTreeItem extends TreeItem<DoorsTreeNode> implements Comparable
     private void loadChildren(List<DoorsTreeNode> children) {
         this.setGraphic(ApplicationIcons.getImage(getValue()).toImageView());
         final ObservableList<DoorsTreeItem> list = FXCollections.observableArrayList();
-        children.stream().filter(childFilter).map(n -> this.construct((DoorsTreeNode) n)).forEach(list::add);
+        children.stream().filter(childFilter)
+                .map(n -> this.construct((DoorsTreeNode) n))
+                .forEach(list::add);
         list.sort(Comparator.naturalOrder());
         super.getChildren().setAll(list);
         childrenLoaded = true;
@@ -103,7 +105,7 @@ public class DoorsTreeItem extends TreeItem<DoorsTreeNode> implements Comparable
     }
 
     protected DoorsTreeItem construct(DoorsTreeNode node) {
-        return new DoorsTreeItem(executor, node, onLoad, childFilter);
+        return (cache != null && cache.containsKey(node)) ? cache.get(node) : new DoorsTreeItem(executor, node, childFilter, cache);
     }
 
     @Override

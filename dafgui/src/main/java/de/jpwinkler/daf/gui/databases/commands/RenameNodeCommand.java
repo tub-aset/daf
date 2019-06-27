@@ -70,7 +70,7 @@ public class RenameNodeCommand extends AbstractCommand {
 
     @Override
     public UpdateAction[] getUpdateActions() {
-        return UpdateAction.of(DatabasePaneController.UpdateTreeView, DatabasePaneController.UpdateModulesView, DatabasePaneController.UpdateNodeTitle);
+        return UpdateAction.of(DatabasePaneController.UpdateTreeItem(node.getParent()), DatabasePaneController.UpdateModulesView, DatabasePaneController.UpdateNodeTitle);
     }
 
 }

@@ -278,8 +278,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
         }
 
         if (module != null) {
-            outlineTreeView.setRoot(new DoorsTreeItem(super.getBackgroundTaskExecutor(), module, (item, node) -> {
-            }, a -> true));
+            outlineTreeView.setRoot(new DoorsTreeItem(super.getBackgroundTaskExecutor(), module, a -> true, null));
             traverseTreeItem(outlineTreeView.getRoot(), ti -> ti.setExpanded(expanded.containsKey(ti.getValue()) && expanded.get(ti.getValue())));
         } else {
             outlineTreeView.setRoot(null);

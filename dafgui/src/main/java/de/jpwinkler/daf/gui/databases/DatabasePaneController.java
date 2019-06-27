@@ -49,6 +49,7 @@ import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -102,15 +103,15 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         }
 
         databaseTreeView.setCellFactory(tv -> new CustomTextFieldTreeCell<>(
-                it -> it.getName(),
+                it -> {
+                    knownTags.addAll(it.getTags());
+                    return it.getName();
+                },
                 (it, newName) -> executeCommand(new RenameNodeCommand(it, newName)),
                 it -> {
                 }));
 
-        databaseTreeView.setRoot(new DoorsTreeItem(super.getBackgroundTaskExecutor(), (DoorsTreeNode) super.getDatabaseInterface().getDatabaseRoot(), (item, node) -> {
-            knownTags.addAll(node.getTags());
-            treeNodeCache.put(node, item);
-        }, node -> node instanceof DoorsFolder));
+        databaseTreeView.setRoot(new DoorsTreeItem(super.getBackgroundTaskExecutor(), (DoorsTreeNode) super.getDatabaseInterface().getDatabaseRoot(), node -> node instanceof DoorsFolder, treeNodeCache));
         databaseTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             updateGui(UpdateModulesView, UpdateTagsView, UpdateAttributesView, UpdateNodeTitle);
         });
@@ -307,7 +308,9 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
     private Stream<? extends DoorsTreeNode> getCurrentDoorsTreeNode() {
         return modulesTableView.getSelectionModel().isEmpty()
-                ? databaseTreeView.getSelectionModel().getSelectedItems().stream().map(it -> it.getValue())
+                ? databaseTreeView.getSelectionModel().getSelectedItems().stream()
+                        .filter(it -> it != null)
+                        .map(it -> it.getValue())
                 : modulesTableView.getSelectionModel().getSelectedItems().stream();
     }
 
@@ -504,10 +507,10 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         bottomExtensionPane.selectFirst();
     }
 
-    public static final UpdateAction<DatabasePaneController> UpdateTreeItem(DoorsTreeNode node) {
+    public static final UpdateAction<DatabasePaneController> UpdateTreeItem(DoorsTreeNode parentNode) {
         return (ctrl) -> {
-
-            DoorsTreeItem parent = ctrl.treeNodeCache.get(node);
+            DoorsTreeItem parent = ctrl.treeNodeCache.get(parentNode);
+            List<TreeItem<DoorsTreeNode>> selectedItems = new ArrayList<>(ctrl.databaseTreeView.getSelectionModel().getSelectedItems());
 
             final HashMap<DoorsTreeNode, Boolean> expanded = new HashMap<>();
             ctrl.traverseTreeItem(parent, i -> expanded.put(i.getValue(), i.isExpanded()));
@@ -516,12 +519,14 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
             ctrl.traverseTreeItem(parent, i -> i.setExpanded(expanded.containsKey(i.getValue()) && expanded.get(i.getValue())));
             parent.setExpanded(true);
+
+            ctrl.databaseTreeView.refresh();
+            if (!selectedItems.isEmpty()) {
+                ctrl.databaseTreeView.getSelectionModel().selectIndices(ctrl.databaseTreeView.getRow(selectedItems.get(0)),
+                        selectedItems.stream().skip(1).mapToInt(ctrl.databaseTreeView::getRow).toArray());
+            }
         };
     }
-
-    public static final UpdateAction<DatabasePaneController> UpdateTreeView = ctrl -> {
-        ctrl.databaseTreeView.refresh();
-    };
 
     public static final UpdateAction<DatabasePaneController> UpdateNodeTitle = ctrl -> {
         ctrl.getCurrentDoorsTreeNode().findFirst()
@@ -530,11 +535,11 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
     public static final UpdateAction<DatabasePaneController> UpdateModulesView = ctrl -> {
         ctrl.modulesTableView.getItems().clear();
-        ctrl.modulesTableView.setPlaceholder(new ProgressBar());
 
         ctrl.databaseTreeView.getSelectionModel().getSelectedItems().stream()
+                .filter(it -> it != null)
                 .map(it -> it.getValue().getChildrenAsync(ctrl.getBackgroundTaskExecutor().withPriority(BackgroundTask.PRIORITY_FOLDERS)))
-                .forEach(ft -> ft.exceptionally(t -> {
+                .peek(ft -> ft.exceptionally(t -> {
             Platform.runLater(() -> {
                 Button retryButton = new Button("Retry");
                 retryButton.setOnAction(ev -> ctrl.updateGui(ctrl.UpdateModulesView));
@@ -551,7 +556,9 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                     .peek(it -> ctrl.knownTags.addAll(it.getTags()))
                     .collect(Collectors.toList()));
             ctrl.modulesTableView.sort();
-        })));
+        })))
+                .limit(1)
+                .forEach(ft -> ctrl.modulesTableView.setPlaceholder(new ProgressBar()));
     };
 
     public static final UpdateAction<DatabasePaneController> UpdateTagsView = ctrl -> {
@@ -572,11 +579,10 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
     public static final UpdateAction<DatabasePaneController> UpdateAttributesView = ctrl -> {
         ctrl.attributesTableView.getItems().clear();
-        ctrl.attributesTableView.setPlaceholder(new ProgressBar());
 
         ctrl.getCurrentDoorsTreeNode()
                 .map(it -> it.getAttributesAsync(ctrl.getBackgroundTaskExecutor().withPriority(BackgroundTask.PRIORITY_ATTRIBUTES)))
-                .forEach(ft -> ft.exceptionally(t -> {
+                .peek(ft -> ft.exceptionally(t -> {
             Platform.runLater(() -> {
                 Button retryButton = new Button("Retry");
                 retryButton.setOnAction(ev -> ctrl.updateGui(ctrl.UpdateAttributesView));
@@ -591,7 +597,9 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                     .filter(it -> DoorsAttributes.getForKey(it.getKey()).map(v -> !v.isSystemKey()).orElse(true))
                     .collect(Collectors.toList()));
             ctrl.attributesTableView.sort();
-        })));
+        })))
+                .limit(1)
+                .forEach(ft -> ctrl.attributesTableView.setPlaceholder(new ProgressBar()));
     };
-  
+
 }
