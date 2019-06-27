@@ -69,6 +69,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -76,6 +77,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
+import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.SelectionMode;
@@ -189,14 +191,16 @@ public final class DatabasePaneController extends ApplicationPartController<Data
             DatabasePanePreferences.ATTRIBUTEVALUE_WIDTH.store(newValue.doubleValue());
         });
 
-        DatabasePanePreferences.SNAPSHOT_LISTS.addOnChangedHandler(t -> this.populateSnapshotMenu(((Map<String, ?>) t).keySet(), createSnapshotsMenu, this::createSnapshotFromListClicked));
-        DatabasePanePreferences.SNAPSHOT_LISTS.addOnChangedHandler(t -> this.populateSnapshotMenu(((Map<String, ?>) t).keySet(), deleteSnapshotListMenu, this::deleteSnapshotListClicked));
-        DatabasePanePreferences.SNAPSHOT_LISTS.addOnChangedHandler(t -> this.populateSnapshotMenu(((Map<String, ?>) t).keySet(), editSnapshotListMenu, this::editSnapshotListClicked));
+        DatabasePanePreferences.SNAPSHOT_LISTS.addOnChangedHandler(t -> this.populateSnapshotMenu(((Map<String, ?>) t).keySet(), createSnapshotsMenu.getItems(), this::createSnapshotFromListClicked));
+        DatabasePanePreferences.SNAPSHOT_LISTS.addOnChangedHandler(t -> this.populateSnapshotMenu(((Map<String, ?>) t).keySet(), deleteSnapshotListMenu.getItems(), this::deleteSnapshotListClicked));
+        DatabasePanePreferences.SNAPSHOT_LISTS.addOnChangedHandler(t -> this.populateSnapshotMenu(((Map<String, ?>) t).keySet(), editSnapshotListMenu.getItems(), this::editSnapshotListClicked));
+        DatabasePanePreferences.SNAPSHOT_LISTS.addOnChangedHandler(t -> this.populateSnapshotMenu(((Map<String, ?>) t).keySet(), addToSnapshotListMenuButton.getItems(), this::addToSnapshotListClicked));
 
         Map<String, ?> snapshotLists = DatabasePanePreferences.SNAPSHOT_LISTS.retrieve();
-        populateSnapshotMenu(snapshotLists.keySet(), createSnapshotsMenu, this::createSnapshotFromListClicked);
-        populateSnapshotMenu(snapshotLists.keySet(), deleteSnapshotListMenu, this::deleteSnapshotListClicked);
-        populateSnapshotMenu(snapshotLists.keySet(), editSnapshotListMenu, this::editSnapshotListClicked);
+        populateSnapshotMenu(snapshotLists.keySet(), createSnapshotsMenu.getItems(), this::createSnapshotFromListClicked);
+        populateSnapshotMenu(snapshotLists.keySet(), deleteSnapshotListMenu.getItems(), this::deleteSnapshotListClicked);
+        populateSnapshotMenu(snapshotLists.keySet(), editSnapshotListMenu.getItems(), this::editSnapshotListClicked);
+        populateSnapshotMenu(snapshotLists.keySet(), addToSnapshotListMenuButton.getItems(), this::addToSnapshotListClicked);
     }
 
     private static String getSnapshotLists(DoorsTreeNode node) {
@@ -294,6 +298,9 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
     @FXML
     private Menu deleteSnapshotListMenu;
+
+    @FXML
+    private MenuButton addToSnapshotListMenuButton;
 
     private final ExtensionPane<DatabasePaneExtension> sideExtensionPane = new ExtensionPane<>(
             () -> super.getExtensions(DatabasePaneExtension.class), e -> e.getSidePanes(), (e, n) -> e.getPaneName(n),
@@ -473,12 +480,23 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         this.updateGui(DatabasePaneController.UpdateModulesView);
     }
 
-    private void populateSnapshotMenu(Collection<String> snapshotLists, Menu menu, Consumer<String> action) {
-        menu.getItems().clear();
+    private void addToSnapshotListClicked(String t) {
+        TreeMap<String, TreeSet<String>> snapshotLists = DatabasePanePreferences.SNAPSHOT_LISTS.retrieve();
+        if (!this.getCurrentDoorsTreeNode().peek(n -> snapshotLists.get(t).add(n.getFullName())).findFirst().isPresent()) {
+            setStatus("No module or folder has been selected.");
+        }
+
+        DatabasePanePreferences.SNAPSHOT_LISTS.store(snapshotLists);
+        this.updateGui(DatabasePaneController.UpdateModulesView);
+
+    }
+
+    private void populateSnapshotMenu(Collection<String> snapshotLists, ObservableList<MenuItem> menu, Consumer<String> action) {
+        menu.clear();
         snapshotLists.forEach(ln -> {
             MenuItem mi = new MenuItem(ln);
             mi.setOnAction(eh -> action.accept(ln));
-            menu.getItems().add(mi);
+            menu.add(mi);
         });
     }
 
