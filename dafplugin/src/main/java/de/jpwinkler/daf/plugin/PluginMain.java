@@ -21,7 +21,6 @@ package de.jpwinkler.daf.plugin;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.gui.ApplicationPaneExtension;
 import de.jpwinkler.daf.gui.ApplicationPaneInterface;
 import de.jpwinkler.daf.gui.ApplicationPartFactories;
@@ -33,6 +32,7 @@ import de.jpwinkler.daf.gui.databases.DatabasePaneController;
 import de.jpwinkler.daf.gui.databases.DatabasePaneExtension;
 import de.jpwinkler.daf.gui.modules.ModulePaneExtension;
 import de.jpwinkler.daf.gui.modules.ViewDefinition;
+import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -167,6 +167,11 @@ public class PluginMain extends Plugin {
         @Override
         protected DatabasePathFactory getDatabasePathFactory() {
             return ApplicationPartFactories.defaultSelector("", "");
+        }
+
+        @Override
+        public boolean canStore(DoorsTreeNode databaseRoot) {
+            return false;
         }
 
     }

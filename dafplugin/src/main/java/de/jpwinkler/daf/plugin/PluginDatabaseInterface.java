@@ -35,10 +35,10 @@ import java.io.IOException;
  */
 public class PluginDatabaseInterface implements DatabaseInterface {
 
-    private DatabasePath<PluginDatabaseInterface> databasePath;
+    private DatabasePath databasePath;
     private final DoorsFolder databaseRoot;
 
-    public PluginDatabaseInterface(DatabasePath<PluginDatabaseInterface> databasePath, DatabaseInterface.OpenFlag openFlag) throws IOException {
+    public PluginDatabaseInterface(DatabasePath databasePath, DatabaseInterface.OpenFlag openFlag) throws IOException {
         this.databasePath = databasePath;
         DatabaseFactory factory = new EmfDatabaseFactory();
         this.databaseRoot = factory.createFolder(null, "Test plugin root folder");
@@ -47,7 +47,7 @@ public class PluginDatabaseInterface implements DatabaseInterface {
     }
 
     @Override
-    public DatabasePath<PluginDatabaseInterface> getPath() {
+    public DatabasePath getPath() {
         return databasePath;
     }
 
