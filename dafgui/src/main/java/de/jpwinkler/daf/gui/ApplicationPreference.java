@@ -54,7 +54,7 @@ public class ApplicationPreference<T extends Serializable> {
             Files.createDirectories(APPLICATION_PREFERENCES_PATH);
             Files.createDirectories(APPLICATION_PLUGINS_PATH);
 
-            System.setProperty("java -Djava.util.prefs.userRoot", APPLICATION_PREFERENCES_PATH.toString());
+            System.setProperty("java.util.prefs.userRoot", APPLICATION_PREFERENCES_PATH.toString());
         } catch (IOException ex) {
             Logger.getLogger(ApplicationPreference.class.getName()).log(Level.SEVERE, null, ex);
         }
