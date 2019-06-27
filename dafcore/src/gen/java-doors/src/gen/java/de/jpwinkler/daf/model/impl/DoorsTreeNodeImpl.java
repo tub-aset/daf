@@ -325,23 +325,16 @@ public abstract class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container imp
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc --> @generated NOT
-     */
-    @Override
-    public DoorsTreeNode getChild(String name) {
-        final List<String> pathSegments = Arrays.asList(name.split("/")).stream().filter(s -> !s.isEmpty()).collect(Collectors.toList());
-        DoorsTreeNode current = this;
-        for (final String segment : pathSegments.subList(0, pathSegments.size())) {
-            current = current.getChildren().stream().filter(c -> segment.equals(c.getName())).findAny().orElse(null);
-            if (current == null) {
-                return null;
-            }
-        }
-        return current;
-    }
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	@Override
+	public DoorsTreeNode getChild(String name) {
+		return DoorsTreeNode.super.getChild(name);
+	}
 
-    /**
+				/**
      * <!-- begin-user-doc --> <!-- end-user-doc --> @generated
      */
     @SuppressWarnings("unchecked")

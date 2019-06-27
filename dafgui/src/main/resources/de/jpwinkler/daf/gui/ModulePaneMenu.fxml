@@ -48,6 +48,7 @@
     </Menu>
    <Menu mnemonicParsing="false" text="View">
      <items>
+         <MenuItem mnemonicParsing="false" onAction="#showDatabaseClicked" text="Show database" />
        <MenuItem mnemonicParsing="false" onAction="#showSidePaneClicked" text="Show side plugin pane" />
          <MenuItem mnemonicParsing="false" onAction="#showBottomPaneClicked" text="Show bottom plugin pane" />
      </items>

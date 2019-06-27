@@ -208,10 +208,40 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     }
 
     private static boolean isInSnapshotList(TreeSet<String> list, DoorsTreeNode node) {
-        String fn = node.getFullName();
-        String ceil = list.floor(fn);
+        if (node == null) {
+            return false;
+        } else if (node instanceof DoorsObject) {
+            return true;
+        }
+
+        String name = node.getFullName();
+        String floor = list.floor(name);
+        if (floor == null) {
+            return false;
+        }
+
+        if (floor.equals(name)) {
+            return true;
+        }
+
+        // match children
         // add slash to make sure only children are matched, not same level nodes with similar name
-        return ceil != null && (ceil.equals(fn) || fn.startsWith(ceil.charAt(ceil.length() - 1) == '/' ? ceil : ceil + "/"));
+        if (name.startsWith(floor.charAt(floor.length() - 1) != '/' ? floor + "/" : floor)) {
+            return true;
+        }
+
+        // match parents if there is a matching child and we're a parent
+        if (floor.startsWith(name.charAt(name.length() - 1) != '/' ? name + "/" : name)) {
+            DoorsTreeNode root = node;
+            while (root.getParent() != null) {
+                root = root.getParent();
+            }
+
+            if (root.getChild(floor) != null) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @FXML

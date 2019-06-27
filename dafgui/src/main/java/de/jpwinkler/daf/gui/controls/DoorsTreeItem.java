@@ -57,7 +57,9 @@ public class DoorsTreeItem extends TreeItem<DoorsTreeNode> implements Comparable
 
         this.childFilter = childFilter;
         this.cache = cache;
-        this.cache.put(value, this);
+        if (cache != null) {
+            this.cache.put(value, this);
+        }
     }
 
     @Override

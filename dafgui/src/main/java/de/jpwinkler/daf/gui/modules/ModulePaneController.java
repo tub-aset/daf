@@ -22,6 +22,7 @@ package de.jpwinkler.daf.gui.modules;
  * #L%
  */
 import de.jpwinkler.daf.bridge.DoorsApplicationImpl;
+import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.filter.objects.CascadingFilter;
 import de.jpwinkler.daf.filter.objects.DoorsObjectFilter;
 import de.jpwinkler.daf.filter.objects.ObjectTextAndHeadingFilter;
@@ -564,6 +565,11 @@ public final class ModulePaneController extends ApplicationPartController<Module
     @FXML
     public void showBottomPaneClicked() {
         bottomExtensionPane.selectFirst();
+    }
+    
+    @FXML
+    public void showDatabaseClicked() {
+        this.open(this.getPath().withPath(""), DatabaseInterface.OpenFlag.OPEN_ONLY);
     }
 
     @Override

@@ -21,12 +21,13 @@ package de.jpwinkler.daf.model;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.db.BackgroundTaskExecutor;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * <!-- begin-user-doc -->
@@ -50,33 +51,33 @@ import java.util.regex.Pattern;
  * @generated
  */
 public interface DoorsTreeNode {
-	/**
+
+    /**
 	 * Returns the value of the '<em><b>Children</b></em>' containment reference list.
 	 * The list contents are of type {@link de.jpwinkler.daf.model.DoorsTreeNode}.
 	 * It is bidirectional and its opposite is '{@link de.jpwinkler.daf.model.DoorsTreeNode#getParent <em>Parent</em>}'.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @return the value of the '<em>Children</em>' containment reference list.
 	 * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsTreeNode_Children()
 	 * @see de.jpwinkler.daf.model.DoorsTreeNode#getParent
 	 * @model opposite="parent" containment="true"
 	 * @generated
 	 */
-	List<DoorsTreeNode> getChildren();
-        
-        /**
-         * @return 
-         * @generated NOT
-         */
-        default CompletableFuture<List<DoorsTreeNode>> getChildrenAsync(BackgroundTaskExecutor executor) {
-            return CompletableFuture.completedFuture(getChildren());
-        }
+    List<DoorsTreeNode> getChildren();
 
-	/**
+    /**
+     * @return @generated NOT
+     */
+    default CompletableFuture<List<DoorsTreeNode>> getChildrenAsync(BackgroundTaskExecutor executor) {
+        return CompletableFuture.completedFuture(getChildren());
+    }
+
+    /**
 	 * Returns the value of the '<em><b>Parent</b></em>' container reference.
 	 * It is bidirectional and its opposite is '{@link de.jpwinkler.daf.model.DoorsTreeNode#getChildren <em>Children</em>}'.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @return the value of the '<em>Parent</em>' container reference.
 	 * @see #setParent(DoorsTreeNode)
 	 * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsTreeNode_Parent()
@@ -84,175 +85,170 @@ public interface DoorsTreeNode {
 	 * @model opposite="children" transient="false"
 	 * @generated
 	 */
-	DoorsTreeNode getParent();
+    DoorsTreeNode getParent();
 
-	/**
+    /**
 	 * Sets the value of the '{@link de.jpwinkler.daf.model.DoorsTreeNode#getParent <em>Parent</em>}' container reference.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Parent</em>' container reference.
 	 * @see #getParent()
 	 * @generated
 	 */
-	void setParent(DoorsTreeNode value);
+    void setParent(DoorsTreeNode value);
 
-	/**
+    /**
 	 * Returns the value of the '<em><b>Attributes</b></em>' map.
 	 * The key is of type {@link java.lang.String},
 	 * and the value is of type {@link java.lang.String},
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @return the value of the '<em>Attributes</em>' map.
 	 * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsTreeNode_Attributes()
 	 * @model mapType="de.jpwinkler.daf.model.AttributeMap&lt;org.eclipse.emf.ecore.EString, org.eclipse.emf.ecore.EString&gt;" ordered="false"
 	 * @generated
 	 */
-	Map<String, String> getAttributes();
-        
-        /**
-         * @return 
-         * @generated NOT
-         */
-        default CompletableFuture<Map<String, String>> getAttributesAsync(BackgroundTaskExecutor executor) {
-            return CompletableFuture.completedFuture(getAttributes());
-        }
+    Map<String, String> getAttributes();
 
-	/**
+    /**
+     * @return @generated NOT
+     */
+    default CompletableFuture<Map<String, String>> getAttributesAsync(BackgroundTaskExecutor executor) {
+        return CompletableFuture.completedFuture(getAttributes());
+    }
+
+    /**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @return the value of the '<em>Name</em>' attribute.
 	 * @see #setName(String)
 	 * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsTreeNode_Name()
 	 * @model
 	 * @generated
 	 */
-	String getName();
+    String getName();
 
-	/**
+    /**
 	 * Sets the value of the '{@link de.jpwinkler.daf.model.DoorsTreeNode#getName <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Name</em>' attribute.
 	 * @see #getName()
 	 * @generated
 	 */
-	void setName(String value);
+    void setName(String value);
 
-	/**
+    /**
 	 * Returns the value of the '<em><b>Full Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @return the value of the '<em>Full Name</em>' attribute.
 	 * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsTreeNode_FullName()
 	 * @model transient="true" changeable="false" volatile="true" derived="true"
 	 * @generated
 	 */
-	String getFullName();
+    String getFullName();
 
-	/**
+    /**
 	 * Returns the value of the '<em><b>Full Name Segments</b></em>' attribute list.
 	 * The list contents are of type {@link java.lang.String}.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @return the value of the '<em>Full Name Segments</em>' attribute list.
 	 * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsTreeNode_FullNameSegments()
 	 * @model transient="true" changeable="false" volatile="true" derived="true"
 	 * @generated
 	 */
-	List<String> getFullNameSegments();
+    List<String> getFullNameSegments();
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model visitorDataType="de.jpwinkler.daf.model.DoorsTreeNodeVisitor"
-	 * @generated
-	 */
-	void accept(DoorsTreeNodeVisitor visitor);
-        
-        default CompletableFuture<Void> acceptAsync(BackgroundTaskExecutor executor, DoorsTreeNodeVisitor visitor) {
-            accept(visitor);
-            return CompletableFuture.completedFuture(null);
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @model
+     * visitorDataType="de.jpwinkler.daf.model.DoorsTreeNodeVisitor"
+     * @generated
+     */
+    void accept(DoorsTreeNodeVisitor visitor);
+
+    default CompletableFuture<Void> acceptAsync(BackgroundTaskExecutor executor, DoorsTreeNodeVisitor visitor) {
+        accept(visitor);
+        return CompletableFuture.completedFuture(null);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @model @generated
+     */
+    boolean hasTag(String tag);
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @model
+     * patternDataType="de.jpwinkler.daf.model.Pattern"
+     * @generated
+     */
+    boolean hasTag(Pattern pattern);
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @model kind="operation"
+     * @generated
+     */
+    List<String> getTags();
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @model @generated
+     */
+    void setTag(String tag);
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @model @generated
+     */
+    void removeTag(String tag);
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @model
+     * patternDataType="de.jpwinkler.daf.model.Pattern"
+     * @generated
+     */
+    void removeTag(Pattern pattern);
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @model @generated
+     */
+    boolean canCopyFrom(DoorsTreeNode node);
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @model @generated NOT
+     */
+    default DoorsTreeNode getChild(String name) {
+        final List<String> pathSegments = Arrays.asList(name.split("/")).stream().filter(s -> !s.isEmpty()).collect(Collectors.toList());
+        DoorsTreeNode current = this;
+        for (final String segment : pathSegments.subList(0, pathSegments.size())) {
+            current = current.getChildren().stream().filter(c -> segment.equals(c.getName())).findAny().orElse(null);
+            if (current == null) {
+                return null;
+            }
         }
+        return current;
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model
-	 * @generated
-	 */
-	boolean hasTag(String tag);
+    /**
+     * @return @generated NOT
+     */
+    default CompletableFuture<DoorsTreeNode> getChildAsync(BackgroundTaskExecutor executor, String name) {
+        return CompletableFuture.completedFuture(getChild(name));
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model patternDataType="de.jpwinkler.daf.model.Pattern"
-	 * @generated
-	 */
-	boolean hasTag(Pattern pattern);
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model kind="operation"
-	 * @generated
-	 */
-	List<String> getTags();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model
-	 * @generated
-	 */
-	void setTag(String tag);
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model
-	 * @generated
-	 */
-	void removeTag(String tag);
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model patternDataType="de.jpwinkler.daf.model.Pattern"
-	 * @generated
-	 */
-	void removeTag(Pattern pattern);
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model
-	 * @generated
-	 */
-	boolean canCopyFrom(DoorsTreeNode node);
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model
-	 * @generated
-	 */
-	DoorsTreeNode getChild(String name);
-        
-        /**
-         * @return 
-         * @generated NOT
-         */
-        default CompletableFuture<DoorsTreeNode> getChildAsync(BackgroundTaskExecutor executor, String name) {
-            return CompletableFuture.completedFuture(getChild(name));
-        }
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model
-	 * @generated
-	 */
-	String toString();
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @model @generated
+     */
+    String toString();
 
 } // DoorsTreeNode

@@ -69,7 +69,7 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNode {
 
     @Override
     public String getName() {
-        return pathSegments.size() > 0 ? pathSegments.get(pathSegments.size() - 1) : "/";
+        return pathSegments.size() > 0 ? pathSegments.get(pathSegments.size() - 1) : "DOORS";
     }
 
     @Override
@@ -127,16 +127,8 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNode {
 
     @Override
     public synchronized DoorsTreeNode getChild(String name) {
-        name = name.replaceFirst("^/", "");
-        final String[] currentSegment = name.split("/", 2);
-        for (DoorsTreeNode child : this.getChildren()) {
-            if (currentSegment[0].equals(child.getName())) {
-                return currentSegment.length == 2 ? child.getChild(currentSegment[1]) : child;
-            }
-
-        }
-
-        return null;
+        // synchronize access since we're properly implementing getChildAsync
+        return DoorsTreeNode.super.getChild(name);
     }
 
     @Override
