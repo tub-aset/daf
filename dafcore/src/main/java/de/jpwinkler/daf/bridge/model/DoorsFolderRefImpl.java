@@ -54,7 +54,7 @@ class DoorsFolderRefImpl extends DoorsTreeNodeRefImpl implements DoorsFolder {
         return executor.runBackgroundTask("Load node children", this.children, i -> {
             final String resultString = doorsApplication.runScript(builder -> {
                 builder.addScript(DXLScript.fromResource("get_children.dxl"));
-                builder.setVariable("folder", this.getFullName());
+                builder.setVariable("folder", this.getDoorsPath());
             });
 
             final List<DoorsTreeNode> result = new ArrayList<>();

@@ -51,7 +51,7 @@ public class DoorsApplicationDummyImpl implements DoorsApplication {
 
             switch (b.getVariables().get("folder")) {
                 case "/":
-                    return "Folder:test\r\nFolder:test 2";
+                    return "Project:test\r\nProject:test 2";
                 case "/test":
                     return "Formal:My module\r\nFolder:subtest";
                 case "/test/subtest":

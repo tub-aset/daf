@@ -162,4 +162,14 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNode {
     public String toString() {
         return getName();
     }
+    
+    public String getDoorsPath() {
+        if(this.type == DoorsItemType.PROJECT) {
+            return "/" + this.getName();
+        } else if(this.type == DoorsItemType.FOLDER) {
+            return ((DoorsTreeNodeRefImpl)this.parent).getDoorsPath() + "/" + this.getName();
+        } else {
+            throw new AssertionError();
+        }
+    }
 }
