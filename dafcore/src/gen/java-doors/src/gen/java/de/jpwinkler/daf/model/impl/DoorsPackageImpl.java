@@ -383,17 +383,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 */
 	@Override
 	public EOperation getDoorsModule__GetView() {
-		return doorsModuleEClass.getEOperations().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getDoorsModule__FindObject__String() {
-		return doorsModuleEClass.getEOperations().get(0);
+		return doorsModuleEClass.getEOperations().get(2);
 	}
 
 	/**
@@ -403,7 +393,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 */
 	@Override
 	public EOperation getDoorsModule__GetObjectAttributes() {
-		return doorsModuleEClass.getEOperations().get(1);
+		return doorsModuleEClass.getEOperations().get(0);
 	}
 
 	/**
@@ -413,7 +403,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 */
 	@Override
 	public EOperation getDoorsModule__SetObjectAttributes__List() {
-		return doorsModuleEClass.getEOperations().get(2);
+		return doorsModuleEClass.getEOperations().get(1);
 	}
 
 	/**
@@ -747,7 +737,6 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 
 		doorsModuleEClass = createEClass(DOORS_MODULE);
 		createEOperation(doorsModuleEClass, DOORS_MODULE___GET_VIEW);
-		createEOperation(doorsModuleEClass, DOORS_MODULE___FIND_OBJECT__STRING);
 		createEOperation(doorsModuleEClass, DOORS_MODULE___GET_OBJECT_ATTRIBUTES);
 		createEOperation(doorsModuleEClass, DOORS_MODULE___SET_OBJECT_ATTRIBUTES__LIST);
 
@@ -863,9 +852,6 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		initEClass(doorsModuleEClass, DoorsModule.class, "DoorsModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEOperation(getDoorsModule__GetView(), ecorePackage.getEString(), "getView", 0, 1, IS_UNIQUE, IS_ORDERED);
-
-		op = initEOperation(getDoorsModule__FindObject__String(), this.getDoorsObject(), "findObject", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, ecorePackage.getEString(), "objectIdentifier", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getDoorsModule__GetObjectAttributes(), ecorePackage.getEString(), "getObjectAttributes", 0, -1, IS_UNIQUE, IS_ORDERED);
 

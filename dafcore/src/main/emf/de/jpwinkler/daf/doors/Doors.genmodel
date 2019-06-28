@@ -56,9 +56,6 @@
         
         <genClasses ecoreClass="Doors.ecore#//DoorsModule">
             <genOperations ecoreOperation="Doors.ecore#//DoorsModule/getView"/>
-            <genOperations ecoreOperation="Doors.ecore#//DoorsModule/findObject">
-                <genParameters ecoreParameter="Doors.ecore#//DoorsModule/findObject/objectIdentifier"/>
-            </genOperations>
             <genOperations ecoreOperation="Doors.ecore#//DoorsModule/getObjectAttributes"/>
             <genOperations ecoreOperation="Doors.ecore#//DoorsModule/setObjectAttributes">
                 <genParameters ecoreParameter="Doors.ecore#//DoorsModule/setObjectAttributes/attrs"/>

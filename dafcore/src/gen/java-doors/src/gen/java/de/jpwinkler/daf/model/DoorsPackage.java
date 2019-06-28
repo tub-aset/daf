@@ -595,22 +595,13 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_MODULE___GET_VIEW = DOORS_TREE_NODE_OPERATION_COUNT + 0;
 
 	/**
-	 * The operation id for the '<em>Find Object</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DOORS_MODULE___FIND_OBJECT__STRING = DOORS_TREE_NODE_OPERATION_COUNT + 1;
-
-	/**
 	 * The operation id for the '<em>Get Object Attributes</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_MODULE___GET_OBJECT_ATTRIBUTES = DOORS_TREE_NODE_OPERATION_COUNT + 2;
+	int DOORS_MODULE___GET_OBJECT_ATTRIBUTES = DOORS_TREE_NODE_OPERATION_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Set Object Attributes</em>' operation.
@@ -619,7 +610,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_MODULE___SET_OBJECT_ATTRIBUTES__LIST = DOORS_TREE_NODE_OPERATION_COUNT + 3;
+	int DOORS_MODULE___SET_OBJECT_ATTRIBUTES__LIST = DOORS_TREE_NODE_OPERATION_COUNT + 2;
 
 	/**
 	 * The number of operations of the '<em>Module</em>' class.
@@ -628,7 +619,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_MODULE_OPERATION_COUNT = DOORS_TREE_NODE_OPERATION_COUNT + 4;
+	int DOORS_MODULE_OPERATION_COUNT = DOORS_TREE_NODE_OPERATION_COUNT + 3;
 
 	/**
 	 * The meta object id for the '{@link de.jpwinkler.daf.model.impl.DoorsObjectImpl <em>Object</em>}' class.
@@ -1388,16 +1379,6 @@ public interface DoorsPackage extends EPackage {
 	EOperation getDoorsModule__GetView();
 
 	/**
-	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsModule#findObject(java.lang.String) <em>Find Object</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Find Object</em>' operation.
-	 * @see de.jpwinkler.daf.model.DoorsModule#findObject(java.lang.String)
-	 * @generated
-	 */
-	EOperation getDoorsModule__FindObject__String();
-
-	/**
 	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsModule#getObjectAttributes() <em>Get Object Attributes</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1907,14 +1888,6 @@ public interface DoorsPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation DOORS_MODULE___GET_VIEW = eINSTANCE.getDoorsModule__GetView();
-
-		/**
-		 * The meta object literal for the '<em><b>Find Object</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation DOORS_MODULE___FIND_OBJECT__STRING = eINSTANCE.getDoorsModule__FindObject__String();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Object Attributes</b></em>' operation.

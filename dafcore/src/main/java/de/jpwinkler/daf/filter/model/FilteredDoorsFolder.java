@@ -35,9 +35,9 @@ import java.util.function.Predicate;
  *
  * @author fwiesweg
  */
-public class DoorsFolderImpl extends DoorsTreeNodeImpl<DoorsFolder> implements DoorsFolder {
+class FilteredDoorsFolder extends FilteredDoorsTreeNode<DoorsFolder> implements DoorsFolder {
 
-    public DoorsFolderImpl(DoorsFolder self, Predicate<DoorsTreeNode> filter) {
+    FilteredDoorsFolder(DoorsFolder self, Predicate<DoorsTreeNode> filter) {
         super(self, filter);
     }
 

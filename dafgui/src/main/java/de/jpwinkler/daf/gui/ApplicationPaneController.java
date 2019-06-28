@@ -24,6 +24,7 @@ package de.jpwinkler.daf.gui;
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
 import de.jpwinkler.daf.db.DatabasePath;
+import de.jpwinkler.daf.filter.model.FilteredDoorsTreeNode;
 import de.jpwinkler.daf.gui.ApplicationPartFactoryRegistry.ApplicationPart;
 import de.jpwinkler.daf.gui.ApplicationPartFactoryRegistry.ApplicationPartFactory;
 import de.jpwinkler.daf.gui.controls.MultiLineTextInputDialog;
@@ -547,7 +548,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         return this.getBackgroundTaskExecutor().runBackgroundTask("Creating snapshot", i -> {
             DatabaseInterface destinationDB = applicationPartFactoryRegistry.openDatabase(destinationPath, OpenFlag.ERASE_IF_EXISTS).getLeft();
             try {
-                destinationDB.getFactory().copy(copyRoot, destinationDB.getDatabaseRoot(), include, true);
+                destinationDB.getFactory().copy(FilteredDoorsTreeNode.createFilteredTree(copyRoot, include), destinationDB.getDatabaseRoot(), true);
                 DoorsAttributes.DATABASE_COPIED_FROM.setValue(String.class,
                         destinationDB.getDatabaseRoot(), sourceDB.getPath().toString());
                 DoorsAttributes.DATABASE_COPIED_AT.setValue(String.class,
@@ -593,7 +594,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
                 return false;
             }
         }
-        
+
         ArrayList<ApplicationPart> exitParts = tabPane.getTabs().stream()
                 .map(t -> getApplicationPartController(t))
                 .map(pc -> pc.getApplicationPart())

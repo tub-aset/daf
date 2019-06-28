@@ -28,6 +28,9 @@ package de.jpwinkler.daf.filter.model;
  */
 
 import de.jpwinkler.daf.db.BackgroundTaskExecutor;
+import de.jpwinkler.daf.model.DoorsFolder;
+import de.jpwinkler.daf.model.DoorsModule;
+import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import java.util.List;
@@ -40,12 +43,24 @@ import java.util.regex.Pattern;
  *
  * @author fwiesweg
  */
-public class DoorsTreeNodeImpl<T extends DoorsTreeNode> implements DoorsTreeNode {
+public class FilteredDoorsTreeNode<T extends DoorsTreeNode> implements DoorsTreeNode {
+    
+    public static FilteredDoorsTreeNode<?> createFilteredTree(DoorsTreeNode node, Predicate<DoorsTreeNode> predicate) {
+        if (node instanceof DoorsFolder) {
+             return new FilteredDoorsFolder((DoorsFolder) node, predicate);
+        } else if (node instanceof DoorsModule) {
+            return new FilteredDoorsModule((DoorsModule) node, predicate);
+        } else if (node instanceof DoorsObject) {
+            return new FilteredDoorsObject((DoorsObject) node, predicate);
+        } else {
+            throw new AssertionError();
+        }
+    }
 
     protected final T self;
     private final ForwardingChildrenList children;
 
-    public DoorsTreeNodeImpl(T self, Predicate<DoorsTreeNode> filter) {
+    FilteredDoorsTreeNode(T self, Predicate<DoorsTreeNode> filter) {
         this.self = self;
         this.children = new ForwardingChildrenList(
                 DoorsTreeNode.class, () -> self.getChildren(), filter);

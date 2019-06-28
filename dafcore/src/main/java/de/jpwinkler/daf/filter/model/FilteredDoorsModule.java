@@ -26,10 +26,8 @@ package de.jpwinkler.daf.filter.model;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import de.jpwinkler.daf.model.DoorsModule;
-import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -39,35 +37,30 @@ import java.util.function.Predicate;
  *
  * @author fwiesweg
  */
-public class DoorsModuleImpl extends DoorsTreeNodeImpl<DoorsModule> implements DoorsModule {
+class FilteredDoorsModule extends FilteredDoorsTreeNode<DoorsModule> implements DoorsModule {
 
-    public DoorsModuleImpl(DoorsModule self, Predicate<DoorsTreeNode> filter) {
+    FilteredDoorsModule(DoorsModule self, Predicate<DoorsTreeNode> filter) {
         super(self, filter);
     }
 
     @Override
     public String getView() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public DoorsObject findObject(String objectIdentifier) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return self.getView();
     }
 
     @Override
     public List<String> getObjectAttributes() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return self.getObjectAttributes();
     }
 
     @Override
     public CompletableFuture<List<String>> getObjectAttributesAsync(BackgroundTaskExecutor executor) {
-        return DoorsModule.super.getObjectAttributesAsync(executor); //To change body of generated methods, choose Tools | Templates.
+        return self.getObjectAttributesAsync(executor);
     }
 
     @Override
     public void setObjectAttributes(List<String> attrs) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        self.setObjectAttributes(attrs);
     }
-    
+
 }

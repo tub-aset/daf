@@ -27,9 +27,6 @@ package de.jpwinkler.daf.filter.model;
  * #L%
  */
 
-import de.jpwinkler.daf.model.DoorsFolder;
-import de.jpwinkler.daf.model.DoorsModule;
-import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
@@ -45,13 +42,13 @@ import java.util.stream.Collectors;
  *
  * @author fwiesweg
  */
-public class ForwardingChildrenList implements List<DoorsTreeNode> {
+class ForwardingChildrenList implements List<DoorsTreeNode> {
 
     private final Class<DoorsTreeNode> clz;
     private final Supplier<List<DoorsTreeNode>> listSupplier;
     private final Predicate<DoorsTreeNode> predicate;
 
-    private final WeakHashMap<DoorsTreeNode, DoorsTreeNodeImpl<?>> childrenMap = new WeakHashMap<>();
+    private final WeakHashMap<DoorsTreeNode, FilteredDoorsTreeNode<?>> childrenMap = new WeakHashMap<>();
 
     public ForwardingChildrenList(Class<DoorsTreeNode> clz, Supplier<List<DoorsTreeNode>> listSupplier, Predicate<DoorsTreeNode> predicate) {
         this.clz = clz;
@@ -63,25 +60,19 @@ public class ForwardingChildrenList implements List<DoorsTreeNode> {
         return predicate;
     }
 
-    private DoorsTreeNode wrap(DoorsTreeNode node) {
-        if (childrenMap.containsKey(node)) {
+    DoorsTreeNode wrap(DoorsTreeNode node) {
+        if (node instanceof FilteredDoorsTreeNode && childrenMap.containsValue( (FilteredDoorsTreeNode<?>) node)) {
             return node;
-        } else if (node instanceof DoorsFolder) {
-            childrenMap.putIfAbsent(node, new DoorsFolderImpl((DoorsFolder) node, predicate));
-        } else if (node instanceof DoorsModule) {
-            childrenMap.putIfAbsent(node, new DoorsModuleImpl((DoorsModule) node, predicate));
-        } else if (node instanceof DoorsObject) {
-            childrenMap.putIfAbsent(node, new DoorsObjectImpl((DoorsObject) node, predicate));
-        } else {
-            throw new AssertionError();
+        } else if(!childrenMap.containsKey(node)) {
+            childrenMap.put(node, FilteredDoorsTreeNode.createFilteredTree(node, predicate));
         }
-
+        
         return childrenMap.get(node);
     }
 
-    private <T> T unwrap(T node) {
-        if (node instanceof DoorsTreeNodeImpl) {
-            return (T) ((DoorsTreeNodeImpl) node).getSelf();
+    <T> T unwrap(T node) {
+        if (node instanceof FilteredDoorsTreeNode) {
+            return (T) ((FilteredDoorsTreeNode) node).getSelf();
         } else {
             return node;
         }

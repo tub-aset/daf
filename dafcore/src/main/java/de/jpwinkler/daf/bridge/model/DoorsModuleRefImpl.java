@@ -31,7 +31,6 @@ import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
-import de.jpwinkler.daf.model.FindObjectVisitor;
 import de.jpwinkler.daf.model.RuntimeExecutionException;
 import de.jpwinkler.daf.model.UnresolvedLink;
 import java.io.ByteArrayInputStream;
@@ -195,12 +194,5 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
     @Override
     public String getView() {
         return getAttributes().get("__view__");
-    }
-
-    @Override
-    public DoorsObject findObject(String objectIdentifier) {
-        final FindObjectVisitor visitor = new FindObjectVisitor(objectIdentifier);
-        accept(visitor);
-        return visitor.getObject();
     }
 }

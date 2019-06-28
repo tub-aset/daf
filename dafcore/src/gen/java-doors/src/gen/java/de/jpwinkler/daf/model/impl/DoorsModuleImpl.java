@@ -28,7 +28,6 @@ import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsPackage;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
-import de.jpwinkler.daf.model.FindObjectVisitor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -70,18 +69,6 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
     @Override
     public String getView() {
         return STANDARD_VIEW;
-    }
-
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     *
-     * @generated NOT
-     */
-    @Override
-    public DoorsObject findObject(final String objectIdentifier) {
-        final FindObjectVisitor visitor = new FindObjectVisitor(objectIdentifier);
-        accept(visitor);
-        return visitor.getObject();
     }
 
     /**
@@ -131,8 +118,6 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
 		switch (operationID) {
 			case DoorsPackage.DOORS_MODULE___GET_VIEW:
 				return getView();
-			case DoorsPackage.DOORS_MODULE___FIND_OBJECT__STRING:
-				return findObject((String)arguments.get(0));
 			case DoorsPackage.DOORS_MODULE___GET_OBJECT_ATTRIBUTES:
 				return getObjectAttributes();
 			case DoorsPackage.DOORS_MODULE___SET_OBJECT_ATTRIBUTES__LIST:
