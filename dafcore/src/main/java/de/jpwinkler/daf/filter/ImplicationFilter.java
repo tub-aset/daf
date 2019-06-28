@@ -21,19 +21,19 @@ package de.jpwinkler.daf.filter;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.model.DoorsTreeNode;
+import java.util.function.Predicate;
 
 /**
  *
  * @author fwiesweg
  */
-class ImplicationFilter extends DoorsTreeNodeFilter {
+class ImplicationFilter implements Predicate<DoorsTreeNode> {
 
-    private final DoorsTreeNodeFilter f1;
-    private final DoorsTreeNodeFilter f2;
+    private final Predicate<DoorsTreeNode> f1;
+    private final Predicate<DoorsTreeNode> f2;
 
-    public ImplicationFilter(final DoorsTreeNodeFilter f1, DoorsTreeNodeFilter f2) {
+    public ImplicationFilter(Predicate<DoorsTreeNode> f1, Predicate<DoorsTreeNode> f2) {
         this.f1 = f1;
         this.f2 = f2;
     }

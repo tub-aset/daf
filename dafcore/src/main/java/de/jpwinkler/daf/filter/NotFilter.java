@@ -21,14 +21,14 @@ package de.jpwinkler.daf.filter;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.model.DoorsTreeNode;
+import java.util.function.Predicate;
 
-class NotFilter extends DoorsTreeNodeFilter {
+class NotFilter implements Predicate<DoorsTreeNode> {
 
-    private final DoorsTreeNodeFilter filter;
+    private final Predicate<DoorsTreeNode> filter;
 
-    public NotFilter(final DoorsTreeNodeFilter filter) {
+    public NotFilter(final Predicate<DoorsTreeNode> filter) {
         this.filter = filter;
     }
 

@@ -12,7 +12,6 @@
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.VBox?>
 
-
 <SplitPane fx:id="bottomSplitPane" orientation="VERTICAL" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <items>
       <SplitPane fx:id="mainSplitPane" dividerPositions="0.3" prefHeight="616.0" prefWidth="1225.0">
@@ -37,12 +36,7 @@
                               </CustomMenuItem>
                               <CustomMenuItem hideOnClick="false" mnemonicParsing="false">
                                  <content>
-                                    <CheckBox fx:id="includeChildrenCheckbox" text="Include children" />
-                                 </content>
-                              </CustomMenuItem>
-                              <CustomMenuItem hideOnClick="false" mnemonicParsing="false">
-                                 <content>
-                                    <CheckBox fx:id="includeParentsCheckbox" text="Include parents" />
+                                    <CheckBox fx:id="caseSensitiveCheckbox" text="Case sensitive" />
                                  </content>
                               </CustomMenuItem>
                           </items>

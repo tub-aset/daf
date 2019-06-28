@@ -22,21 +22,20 @@ package de.jpwinkler.daf.filter;
  * #L%
  */
 import de.jpwinkler.daf.model.DoorsTreeNode;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.function.Predicate;
 
-class ExclusiveOrFilter extends DoorsTreeNodeFilter {
+class ExclusiveOrFilter implements Predicate<DoorsTreeNode> {
 
-    private final List<DoorsTreeNodeFilter> filters = new ArrayList<>();
+    private final Predicate<DoorsTreeNode>[] filters;
 
-    public ExclusiveOrFilter(final DoorsTreeNodeFilter... filters) {
-        this.filters.addAll(Arrays.asList(filters));
+    public ExclusiveOrFilter(final Predicate<DoorsTreeNode>... filters) {
+        this.filters = filters;
     }
 
     @Override
     public boolean test(final DoorsTreeNode object) {
-        return filters.stream().filter(f -> f.test(object)).count() == 1;
+        return Arrays.stream(filters).filter(f -> f.test(object)).count() == 1;
     }
 
 }

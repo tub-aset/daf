@@ -31,32 +31,39 @@ import java.util.function.Predicate;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 
-public abstract class DoorsTreeNodeFilter implements Predicate<DoorsTreeNode> {
+public final class ExpressionFilter {
 
     /**
      * Create a DoorsTreeNodeFilter
      *
      * @param filter Filter expression as described in the ANTLR grammar
+     * @param caseSensitive Whether attribute values will be mathced in a
+     * case-insensitive way. (Attributes names never are.)
      * @param patternFlags Flags passed to java.util.regex.Pattern::compile.
      * @return
      */
-    public static DoorsTreeNodeFilter compile(final String filter, int patternFlags) {
+    public static Predicate<DoorsTreeNode> compileExpression(String filter, boolean caseSensitive, int patternFlags) {
         final DoorsTreeNodeFilterLexer lexer = new DoorsTreeNodeFilterLexer(CharStreams.fromString(filter));
         final DoorsTreeNodeFilterParser parser = new DoorsTreeNodeFilterParser(new CommonTokenStream(lexer));
-        final DoorsTreeNodeFilterListener listener = new DoorsTreeNodeFilterListener(patternFlags);
+        final DoorsTreeNodeFilterListener listener = new DoorsTreeNodeFilterListener(caseSensitive, patternFlags);
 
         parser.addParseListener(listener);
         parser.filterExpression();
         return listener.getFilter();
-
+    }
+    
+    public static Predicate<DoorsTreeNode> compileSimple(String filter, boolean caseSensitive) {
+        return new SimpleFilter(filter, caseSensitive);
     }
 
     private static class DoorsTreeNodeFilterListener extends DoorsTreeNodeFilterBaseListener {
 
-        private final Deque<DoorsTreeNodeFilter> filterStack = new LinkedList<>();
+        private final Deque<Predicate<DoorsTreeNode>> filterStack = new LinkedList<>();
+        private final boolean caseSensitive;
         private final int patternFlags;
 
-        public DoorsTreeNodeFilterListener(int patternFlags) {
+        public DoorsTreeNodeFilterListener(boolean caseSensitive, int patternFlags) {
+            this.caseSensitive = caseSensitive;
             this.patternFlags = patternFlags;
         }
 
@@ -71,52 +78,52 @@ public abstract class DoorsTreeNodeFilter implements Predicate<DoorsTreeNode> {
 
         @Override
         public void exitOrFilterExpression(final DoorsTreeNodeFilterParser.OrFilterExpressionContext ctx) {
-            final DoorsTreeNodeFilter f2 = filterStack.pop();
-            final DoorsTreeNodeFilter f1 = filterStack.pop();
+            final Predicate<DoorsTreeNode> f2 = filterStack.pop();
+            final Predicate<DoorsTreeNode> f1 = filterStack.pop();
 
             filterStack.push(new OrFilter(f1, f2));
         }
 
         @Override
         public void exitAndFilterExpression(final DoorsTreeNodeFilterParser.AndFilterExpressionContext ctx) {
-            final DoorsTreeNodeFilter f2 = filterStack.pop();
-            final DoorsTreeNodeFilter f1 = filterStack.pop();
+            final Predicate<DoorsTreeNode> f2 = filterStack.pop();
+            final Predicate<DoorsTreeNode> f1 = filterStack.pop();
 
             filterStack.push(new AndFilter(f1, f2));
         }
 
         @Override
         public void exitEquivalenceExpression(DoorsTreeNodeFilterParser.EquivalenceExpressionContext ctx) {
-            final DoorsTreeNodeFilter f2 = filterStack.pop();
-            final DoorsTreeNodeFilter f1 = filterStack.pop();
+            final Predicate<DoorsTreeNode> f2 = filterStack.pop();
+            final Predicate<DoorsTreeNode> f1 = filterStack.pop();
 
             filterStack.push(new EquivalenceFilter(f1, f2));
         }
 
         @Override
         public void exitImplicationExpression(DoorsTreeNodeFilterParser.ImplicationExpressionContext ctx) {
-            final DoorsTreeNodeFilter f2 = filterStack.pop();
-            final DoorsTreeNodeFilter f1 = filterStack.pop();
+            final Predicate<DoorsTreeNode> f2 = filterStack.pop();
+            final Predicate<DoorsTreeNode> f1 = filterStack.pop();
 
             filterStack.push(new ImplicationFilter(f1, f2));
         }
 
         @Override
         public void exitExclusiveOrFilterExpression(DoorsTreeNodeFilterParser.ExclusiveOrFilterExpressionContext ctx) {
-            final DoorsTreeNodeFilter f2 = filterStack.pop();
-            final DoorsTreeNodeFilter f1 = filterStack.pop();
+            final Predicate<DoorsTreeNode> f2 = filterStack.pop();
+            final Predicate<DoorsTreeNode> f1 = filterStack.pop();
 
             filterStack.push(new ExclusiveOrFilter(f1, f2));
         }
 
         @Override
         public void exitAttributeLikeExpression(final DoorsTreeNodeFilterParser.AttributeLikeExpressionContext ctx) {
-            filterStack.push(new AttributeFilter(ctx.attributeName.getText(), new ValueMatcher(ctx.attributeValue.getText(), false, -1)));
+            filterStack.push(new AttributeFilter(ctx.attributeName.getText(), new ValueMatcher(ctx.attributeValue.getText(), false, caseSensitive, -1)));
         }
 
         @Override
         public void exitAttributeIsExpression(final DoorsTreeNodeFilterParser.AttributeIsExpressionContext ctx) {
-            filterStack.push(new AttributeFilter(ctx.attributeName.getText(), new ValueMatcher(ctx.attributeValue.getText(), true, -1)));
+            filterStack.push(new AttributeFilter(ctx.attributeName.getText(), new ValueMatcher(ctx.attributeValue.getText(), true, caseSensitive, -1)));
         }
 
         @Override
@@ -126,11 +133,11 @@ public abstract class DoorsTreeNodeFilter implements Predicate<DoorsTreeNode> {
 
         @Override
         public void exitAttributeRegexpExpression(final DoorsTreeNodeFilterParser.AttributeRegexpExpressionContext ctx) {
-            filterStack.push(new AttributeFilter(ctx.attributeName.getText(), new ValueMatcher(ctx.regexp.getText(), false, patternFlags)));
+            filterStack.push(new AttributeFilter(ctx.attributeName.getText(), new ValueMatcher(ctx.regexp.getText(), false, caseSensitive, patternFlags)));
 
         }
 
-        public DoorsTreeNodeFilter getFilter() {
+        public Predicate<DoorsTreeNode> getFilter() {
             return filterStack.peek();
         }
     }

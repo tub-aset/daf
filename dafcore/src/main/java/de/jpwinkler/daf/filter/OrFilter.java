@@ -21,20 +21,19 @@ package de.jpwinkler.daf.filter;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
 
-class OrFilter extends DoorsTreeNodeFilter {
+class OrFilter implements Predicate<DoorsTreeNode> {
 
-    private final List<DoorsTreeNodeFilter> filters = new ArrayList<>();
+    private final List<Predicate<DoorsTreeNode>> filters = new ArrayList<>();
 
-    public OrFilter(final DoorsTreeNodeFilter... filters) {
+    public OrFilter(final Predicate<DoorsTreeNode>... filters) {
         this.filters.addAll(Arrays.asList(filters));
     }
-
 
     @Override
     public boolean test(final DoorsTreeNode object) {

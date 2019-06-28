@@ -24,8 +24,9 @@ package de.jpwinkler.daf.filter;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.util.Objects;
+import java.util.function.Predicate;
 
-class AttributeFilter extends DoorsTreeNodeFilter {
+class AttributeFilter implements Predicate<DoorsTreeNode> {
 
     private final String attribute;
     private final ValueMatcher valueMatcher;

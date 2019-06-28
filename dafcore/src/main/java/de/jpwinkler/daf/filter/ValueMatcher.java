@@ -21,11 +21,9 @@ package de.jpwinkler.daf.filter;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.commons.text.StringEscapeUtils;
 
 /**
  *
@@ -37,10 +35,10 @@ class ValueMatcher implements Predicate<String> {
     private final boolean exactMatch;
     private final Pattern pattern;
 
-    public ValueMatcher(String filter, boolean exactMatch, int patternFlags) {
-        this.filter = unescapeString(filter);
+    public ValueMatcher(String filter, boolean exactMatch, boolean caseSensitive, int patternFlags) {
+        this.filter = filter;
         this.exactMatch = exactMatch;
-        this.pattern = patternFlags >= 0 ? Pattern.compile(filter, patternFlags) : null;
+        this.pattern = patternFlags >= 0 ? Pattern.compile(filter, caseSensitive ? patternFlags : (patternFlags | Pattern.CASE_INSENSITIVE)) : null;
     }
 
     @Override
@@ -48,7 +46,6 @@ class ValueMatcher implements Predicate<String> {
         if (s == null) {
             s = "";
         }
-        s = unescapeString(s);
 
         if (pattern != null) {
             final Matcher matcher = pattern.matcher(s);
@@ -56,9 +53,5 @@ class ValueMatcher implements Predicate<String> {
         } else {
             return exactMatch ? s.equalsIgnoreCase(filter) : s.toLowerCase().contains(filter.toLowerCase());
         }
-    }
-
-    private String unescapeString(final String string) {
-        return StringEscapeUtils.unescapeJava(string.substring(1, string.length() - 1));
     }
 }

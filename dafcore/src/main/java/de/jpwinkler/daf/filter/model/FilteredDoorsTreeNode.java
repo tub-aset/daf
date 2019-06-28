@@ -178,4 +178,21 @@ public class FilteredDoorsTreeNode<T extends DoorsTreeNode> implements DoorsTree
                 .thenApply(child -> children.getPredicate().test(child) ? child : null);
     }
 
+    @Override
+    public String toString() {
+        return self.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return self.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return self.hashCode();
+    }
+    
+    
+
 }

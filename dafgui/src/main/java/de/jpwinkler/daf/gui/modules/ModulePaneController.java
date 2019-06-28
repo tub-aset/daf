@@ -23,6 +23,8 @@ package de.jpwinkler.daf.gui.modules;
  */
 import de.jpwinkler.daf.bridge.DoorsApplicationImpl;
 import de.jpwinkler.daf.db.DatabaseInterface;
+import de.jpwinkler.daf.filter.ExpressionFilter;
+import de.jpwinkler.daf.filter.model.FilteredDoorsTreeNode;
 import de.jpwinkler.daf.gui.ApplicationPaneController;
 import de.jpwinkler.daf.gui.ApplicationPartController;
 import de.jpwinkler.daf.gui.ApplicationPartFactoryRegistry.ApplicationPart;
@@ -65,6 +67,8 @@ import java.util.WeakHashMap;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javafx.application.Platform;
@@ -161,16 +165,13 @@ public final class ModulePaneController extends ApplicationPartController<Module
         setupDividerStorage(bottomSplitPane, ModulePanePreferences.BOTTOM_SPLITPOS, bottomExtensionPane);
 
         filterTextField.textProperty().addListener((ChangeListener<String>) (observable, oldValue, newValue) -> {
-            this.updateFilter(newValue, includeParentsCheckbox.isSelected(), includeChildrenCheckbox.isSelected(), filterExpressionCheckBox.isSelected());
+            this.updateFilter(newValue, filterExpressionCheckBox.isSelected(), caseSensitiveCheckbox.isSelected());
         });
         filterExpressionCheckBox.selectedProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
-            this.updateFilter(filterTextField.getText(), includeParentsCheckbox.isSelected(), includeChildrenCheckbox.isSelected(), newValue);
+            this.updateFilter(filterTextField.getText(), newValue, caseSensitiveCheckbox.isSelected());
         });
-        includeChildrenCheckbox.selectedProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
-            this.updateFilter(filterTextField.getText(), includeParentsCheckbox.isSelected(), newValue, filterExpressionCheckBox.isSelected());
-        });
-        includeParentsCheckbox.selectedProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
-            this.updateFilter(filterTextField.getText(), newValue, includeChildrenCheckbox.isSelected(), filterExpressionCheckBox.isSelected());
+        caseSensitiveCheckbox.selectedProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
+            this.updateFilter(filterTextField.getText(), filterExpressionCheckBox.isSelected(), newValue);
         });
 
         this.loadContent();
@@ -195,14 +196,15 @@ public final class ModulePaneController extends ApplicationPartController<Module
                     dm.getObjectAttributesAsync(super.getBackgroundTaskExecutor().withPriority(BackgroundTask.PRIORITY_MODULE_CONTENT)).thenAccept(objectAttrs -> Platform.runLater(() -> {
                         this.contentTableView.setPlaceholder(null);
 
-                        this.module = dm;
-                        if (this.module == null) {
+                        this.actualModule = dm;
+                        if (this.actualModule == null) {
                             throw new RuntimeException("No such module: " + super.getApplicationPart().getDatabasePath().toString());
                         }
-                        if (!DoorsApplicationImpl.STANDARD_VIEW.equals(this.module.getView())) {
+                        if (!DoorsApplicationImpl.STANDARD_VIEW.equals(this.actualModule.getView())) {
                             setStatus("Warning: This module's view is not the standard view.");
                         }
 
+                        this.filteredModule = actualModule;
                         updateGui(ModuleUpdateAction.UPDATE_VIEWS, ModuleUpdateAction.UPDATE_COLUMNS, ModuleUpdateAction.UPDATE_CONTENT_VIEW, ModuleUpdateAction.UPDATE_OUTLINE_VIEW);
                         traverseTreeItem(outlineTreeView.getRoot(), ti -> ti.setExpanded(true));
                     }));
@@ -212,7 +214,8 @@ public final class ModulePaneController extends ApplicationPartController<Module
     private final List<DoorsObject> clipboard = new ArrayList<>();
     private final ArrayList<ViewDefinition> views = ModulePanePreferences.VIEWS.retrieve();
     private final Map<DoorsTreeNode, Boolean> expanded = new WeakHashMap<>();
-    private DoorsModule module;
+    private DoorsModule filteredModule;
+    private DoorsModule actualModule;
 
     private ViewDefinition currentView;
 
@@ -242,10 +245,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
     private CheckBox filterExpressionCheckBox;
 
     @FXML
-    private CheckBox includeChildrenCheckbox;
-
-    @FXML
-    private CheckBox includeParentsCheckbox;
+    private CheckBox caseSensitiveCheckbox;
 
     @FXML
     private MenuButton viewsMenuButton;
@@ -259,7 +259,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
     @FXML
     public void reduceToSelectionClicked() {
-        executeCommand(new ReduceToSelectionCommand(module, getCurrentObjects()));
+        executeCommand(new ReduceToSelectionCommand(filteredModule, getCurrentObjects()));
     }
 
     @FXML
@@ -284,7 +284,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
         final TablePosition<?, ?> focusedCell = contentTableView.getFocusModel().getFocusedCell();
         final List<Integer> selected = new ArrayList<>(contentTableView.getSelectionModel().getSelectedIndices());
         contentTableView.getItems().clear();
-        module.accept(new DoorsTreeNodeVisitor<DoorsObject>(DoorsObject.class) {
+        filteredModule.accept(new DoorsTreeNodeVisitor<DoorsObject>(DoorsObject.class) {
             @Override
             public boolean visitPreTraverse(final DoorsObject object) {
                 Platform.runLater(() -> {
@@ -380,10 +380,10 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
             this.currentView = (ViewDefinition) newValue.getUserData();
 
-            Set<String> moduleAttrs = new HashSet<>(this.module.getObjectAttributes());
+            Set<String> moduleAttrs = new HashSet<>(this.filteredModule.getObjectAttributes());
             moduleAttrs.add(DoorsAttributes.OBJECT_LEVEL.getKey());
             this.currentView.getColumns().forEach(cd -> moduleAttrs.add(cd.getAttributeName()));
-            this.module.setObjectAttributes(new ArrayList<>(moduleAttrs));
+            this.filteredModule.setObjectAttributes(new ArrayList<>(moduleAttrs));
 
             ModulePanePreferences.CURRENT_VIEW.store(viewsToggleGroup.getToggles().indexOf(viewsToggleGroup.getSelectedToggle()));
             updateGui(ModuleUpdateAction.UPDATE_COLUMNS);
@@ -412,40 +412,20 @@ public final class ModulePaneController extends ApplicationPartController<Module
         }
     }
 
-    private void updateFilter(final String text, final boolean includeParents, final boolean includeChildren, final boolean isExpression) {
-
-        /*DoorsObjectFilter filter = isExpression ? DoorsObjectFilter.compile(text) : new ObjectTextAndHeadingFilter(text, false, false);
-        if (includeChildren) {
-            filter = new CascadingFilter(filter);
+    private void updateFilter(String text, boolean caseSensitive, boolean isExpression) {
+        if (text == null || text.trim().isEmpty()) {
+            this.filteredModule = this.actualModule;
+        } else if (isExpression) {
+            Predicate<DoorsTreeNode> filter = ExpressionFilter.compileExpression(text, caseSensitive, Pattern.CASE_INSENSITIVE);
+            this.filteredModule = (DoorsModule) FilteredDoorsTreeNode.createFilteredTree(actualModule, filter);
+        } else {
+            Predicate<DoorsTreeNode> filter = ExpressionFilter.compileSimple(text, caseSensitive);
+            this.filteredModule = (DoorsModule) FilteredDoorsTreeNode.createFilteredTree(actualModule, filter);
         }
 
-        if (includeParents) {
-            filter = new ReverseCascadingFilter(filter);
-        }
+        setStatus("Filter applied");
 
-        final DoorsObjectFilter filterFinal = filter;
-
-        filteredObjects.clear();
-        module.accept(new DoorsTreeNodeVisitor<DoorsObject>(DoorsObject.class) {
-            @Override
-            public boolean visitPreTraverse(final DoorsObject object) {
-                if (!filterFinal.checkObject(object)) {
-                    filteredObjects.add(object);
-                }
-                return true;
-            }
-        });
-        
-        // check if object is visible:
-        filteredObjects.contains(object)
-
-        updateGui(ModuleUpdateAction.UPDATE_CONTENT_VIEW);
-
-        final int totalObjects = DoorsModelUtil.countObjects(module);
-        final int visibleObjects = totalObjects - filteredObjects.size();
-
-        this.setStatus(visibleObjects < totalObjects
-                ? String.format("Showing %d out of %d objects.", visibleObjects, totalObjects) : "");*/
+        updateGui(ModuleUpdateAction.UPDATE_VIEWS, ModuleUpdateAction.UPDATE_COLUMNS, ModuleUpdateAction.UPDATE_CONTENT_VIEW, ModuleUpdateAction.UPDATE_OUTLINE_VIEW);
     }
 
     private DoorsObject getCurrentObject() {
@@ -478,7 +458,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
     @FXML
     public void newObjectBelowClicked() {
-        executeCommand(new NewObjectBelowCommand(super.getDatabaseInterface().getFactory(), getCurrentObject() != null ? this.getCurrentObject() : this.module));
+        executeCommand(new NewObjectBelowCommand(super.getDatabaseInterface().getFactory(), getCurrentObject() != null ? this.getCurrentObject() : this.filteredModule));
     }
 
     @FXML
@@ -488,7 +468,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
     @FXML
     public void editViewsClicked() {
-        new EditViewsPaneController(this.views, module.getObjectAttributes().stream())
+        new EditViewsPaneController(this.views, filteredModule.getObjectAttributes().stream())
                 .showDialog(outlineTreeView.getScene().getWindow(), "Edit views", ButtonType.CANCEL, ButtonType.OK)
                 .filter(r -> r.buttonType == ButtonType.OK)
                 .map(r -> r.result.getViews())
@@ -524,12 +504,12 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
     @FXML
     public void flattenClicked() {
-        executeCommand(new FlattenCommand(module));
+        executeCommand(new FlattenCommand(filteredModule));
     }
 
     @FXML
     public void splitLinesClicked() {
-        executeCommand(new SplitLinesCommand(super.getDatabaseInterface().getFactory(), module));
+        executeCommand(new SplitLinesCommand(super.getDatabaseInterface().getFactory(), filteredModule));
     }
 
     @FXML
@@ -539,12 +519,12 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
     @Override
     public SelectionModel<DoorsFolder> getCurrentFolderSelectionModel() {
-        return new FixedSingleSelectionModel<>((DoorsFolder) this.module.getParent());
+        return new FixedSingleSelectionModel<>((DoorsFolder) this.filteredModule.getParent());
     }
 
     @Override
     public SelectionModel<DoorsModule> getCurrentModuleSelectionModel() {
-        return new FixedSingleSelectionModel<>(this.module);
+        return new FixedSingleSelectionModel<>(this.filteredModule);
     }
 
     @Override
@@ -592,10 +572,10 @@ public final class ModulePaneController extends ApplicationPartController<Module
     }
 
     public static enum ModuleUpdateAction implements UpdateAction<ModulePaneController> {
-        FIX_OBJECT_LEVELS(t -> t.fixObjectLevel(t.module, 0)),
-        FIX_OBJECT_NUMBERS(t -> t.fixObjectNumbers(t.module, "")),
+        FIX_OBJECT_LEVELS(t -> t.fixObjectLevel(t.filteredModule, 0)),
+        FIX_OBJECT_NUMBERS(t -> t.fixObjectNumbers(t.filteredModule, "")),
         UPDATE_CONTENT_VIEW(t -> t.updateContentView()),
-        UPDATE_OUTLINE_VIEW(t -> t.updateOutlineView(t.module)),
+        UPDATE_OUTLINE_VIEW(t -> t.updateOutlineView(t.filteredModule)),
         UPDATE_COLUMNS(t -> t.updateColumns()),
         UPDATE_VIEWS(t -> t.updateViews());
 
