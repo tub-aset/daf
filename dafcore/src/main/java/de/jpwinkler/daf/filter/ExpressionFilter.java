@@ -28,6 +28,7 @@ import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.function.Predicate;
+import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 
@@ -48,6 +49,7 @@ public final class ExpressionFilter {
         final DoorsTreeNodeFilterListener listener = new DoorsTreeNodeFilterListener(caseSensitive, patternFlags);
 
         parser.addParseListener(listener);
+        parser.setErrorHandler(new BailErrorStrategy());
         parser.filterExpression();
         return listener.getFilter();
     }

@@ -67,11 +67,16 @@ public interface DoorsTreeNode {
     List<DoorsTreeNode> getChildren();
 
     /**
-     * @return @generated NOT
+     * @return 
+     * @generated NOT
      */
-    default CompletableFuture<List<DoorsTreeNode>> getChildrenAsync(BackgroundTaskExecutor executor) {
-        return CompletableFuture.completedFuture(getChildren());
-    }
+    CompletableFuture<List<DoorsTreeNode>> getChildrenAsync(BackgroundTaskExecutor executor);
+    
+    /**
+     * @return 
+     * @generated NOT
+     */
+     boolean isChildrenLoaded();
 
     /**
 	 * Returns the value of the '<em><b>Parent</b></em>' container reference.
@@ -113,9 +118,7 @@ public interface DoorsTreeNode {
     /**
      * @return @generated NOT
      */
-    default CompletableFuture<Map<String, String>> getAttributesAsync(BackgroundTaskExecutor executor) {
-        return CompletableFuture.completedFuture(getAttributes());
-    }
+    CompletableFuture<Map<String, String>> getAttributesAsync(BackgroundTaskExecutor executor);
 
     /**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.
@@ -170,10 +173,11 @@ public interface DoorsTreeNode {
      */
     void accept(DoorsTreeNodeVisitor visitor);
 
-    default CompletableFuture<Void> acceptAsync(BackgroundTaskExecutor executor, DoorsTreeNodeVisitor visitor) {
-        accept(visitor);
-        return CompletableFuture.completedFuture(null);
-    }
+    /**
+     * 
+     * @generated NOT
+     */
+    CompletableFuture<Void> acceptAsync(BackgroundTaskExecutor executor, DoorsTreeNodeVisitor visitor);
 
     /**
      * <!-- begin-user-doc -->
@@ -241,9 +245,7 @@ public interface DoorsTreeNode {
     /**
      * @return @generated NOT
      */
-    default CompletableFuture<DoorsTreeNode> getChildAsync(BackgroundTaskExecutor executor, String name) {
-        return CompletableFuture.completedFuture(getChild(name));
-    }
+    CompletableFuture<DoorsTreeNode> getChildAsync(BackgroundTaskExecutor executor, String name);
 
     /**
      * <!-- begin-user-doc -->

@@ -29,6 +29,7 @@ import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
@@ -90,5 +91,16 @@ class DoorsFolderRefImpl extends DoorsTreeNodeRefImpl implements DoorsFolder {
             }
             return result;
         });
+    }
+
+    @Override
+    public boolean isChildrenLoaded() {
+        CompletableFuture<List<DoorsTreeNode>> childrenFuture = children.get();
+        return childrenFuture != null && childrenFuture.isDone();
+    }
+
+    @Override
+    public CompletableFuture<Map<String, String>> getAttributesAsync(BackgroundTaskExecutor executor) {
+        return CompletableFuture.completedFuture(this.getAttributes());
     }
 }

@@ -33,12 +33,18 @@ class ValueMatcher implements Predicate<String> {
 
     private final String filter;
     private final boolean exactMatch;
+    private final boolean caseSensitive;
     private final Pattern pattern;
 
     public ValueMatcher(String filter, boolean exactMatch, boolean caseSensitive, int patternFlags) {
-        this.filter = filter;
+        this(filter, exactMatch, caseSensitive, patternFlags, true);
+    }
+
+    public ValueMatcher(String filter, boolean exactMatch, boolean caseSensitive, int patternFlags, boolean removeMarks) {
+        this.filter = removeMarks ? filter.substring(1, filter.length() - 1) : filter;
         this.exactMatch = exactMatch;
-        this.pattern = patternFlags >= 0 ? Pattern.compile(filter, caseSensitive ? patternFlags : (patternFlags | Pattern.CASE_INSENSITIVE)) : null;
+        this.caseSensitive = caseSensitive;
+        this.pattern = patternFlags >= 0 ? Pattern.compile(this.filter, caseSensitive ? patternFlags : (patternFlags | Pattern.CASE_INSENSITIVE)) : null;
     }
 
     @Override
@@ -50,6 +56,8 @@ class ValueMatcher implements Predicate<String> {
         if (pattern != null) {
             final Matcher matcher = pattern.matcher(s);
             return exactMatch ? matcher.matches() : matcher.find();
+        } else if (caseSensitive) {
+            return exactMatch ? s.equals(filter) : s.contains(filter);
         } else {
             return exactMatch ? s.equalsIgnoreCase(filter) : s.toLowerCase().contains(filter.toLowerCase());
         }

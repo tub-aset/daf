@@ -168,6 +168,12 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
     }
 
     @Override
+    public boolean isChildrenLoaded() {
+         CompletableFuture<List<DoorsTreeNode>> childrenFuture = children.get();
+         return childrenFuture != null && childrenFuture.isDone();
+    }
+
+    @Override
     public List<String> getObjectAttributes() {
         try {
             return objectAttributes.get();

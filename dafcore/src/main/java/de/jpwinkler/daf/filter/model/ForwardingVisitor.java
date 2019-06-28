@@ -41,6 +41,7 @@ class ForwardingVisitor<T extends DoorsTreeNode> extends DoorsTreeNodeVisitor<T>
     private Predicate<DoorsTreeNode> filter;
 
     public ForwardingVisitor(DoorsTreeNodeVisitor<T> self, Predicate<DoorsTreeNode> filter) {
+        super(self.getVisitedNodeClass());
         this.self = self;
         this.filter = filter;
     }

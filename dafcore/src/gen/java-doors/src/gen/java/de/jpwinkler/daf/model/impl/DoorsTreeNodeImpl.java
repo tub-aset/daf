@@ -22,6 +22,7 @@ package de.jpwinkler.daf.model.impl;
  * #L%
  */
 
+import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import de.jpwinkler.daf.model.DoorsAttributes;
 import de.jpwinkler.daf.model.DoorsPackage;
 import de.jpwinkler.daf.model.DoorsTreeNode;
@@ -31,6 +32,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -144,6 +146,8 @@ public abstract class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container imp
 		}
 		return children;
 	}
+    
+    
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc --> @generated
@@ -513,5 +517,53 @@ public abstract class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container imp
     public String toString() {
         return getName();
     }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated NOT
+     */
+    @Override
+    public CompletableFuture<List<DoorsTreeNode>> getChildrenAsync(BackgroundTaskExecutor executor) {
+        return CompletableFuture.completedFuture(this.getChildren());
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated NOT
+     */
+    @Override
+    public boolean isChildrenLoaded() {
+        return true;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated NOT
+     */
+    @Override
+    public CompletableFuture<Map<String, String>> getAttributesAsync(BackgroundTaskExecutor executor) {
+        return CompletableFuture.completedFuture(this.getAttributes());
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated NOT
+     */
+    @Override
+    public CompletableFuture<Void> acceptAsync(BackgroundTaskExecutor executor, DoorsTreeNodeVisitor visitor) {
+        this.accept(visitor);
+        return CompletableFuture.completedFuture(null);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated NOT
+     */
+    @Override
+    public CompletableFuture<DoorsTreeNode> getChildAsync(BackgroundTaskExecutor executor, String name) {
+        return CompletableFuture.completedFuture(this.getChild(name));
+    }
+    
+    
 
 } // DoorsTreeNodeImpl

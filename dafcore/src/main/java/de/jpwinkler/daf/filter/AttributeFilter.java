@@ -32,7 +32,7 @@ class AttributeFilter implements Predicate<DoorsTreeNode> {
     private final ValueMatcher valueMatcher;
 
     public AttributeFilter(final String attribute, ValueMatcher valueMatcher) {
-        this.attribute = attribute;
+        this.attribute = attribute.substring(1, attribute.length() - 1);
         this.valueMatcher = valueMatcher;
     }
 

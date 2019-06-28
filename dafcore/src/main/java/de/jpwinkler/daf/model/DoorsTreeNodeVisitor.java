@@ -33,6 +33,10 @@ public abstract class DoorsTreeNodeVisitor<T extends DoorsTreeNode> {
 
     private final Class<T> visitedNodeCls;
 
+    public Class<T> getVisitedNodeClass() {
+        return visitedNodeCls;
+    }
+
     public final void traverse(final DoorsTreeNode node) {
         boolean classMatch = visitedNodeCls == null || visitedNodeCls.isAssignableFrom(node.getClass());
 

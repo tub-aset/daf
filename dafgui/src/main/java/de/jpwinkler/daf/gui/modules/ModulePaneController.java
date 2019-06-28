@@ -91,6 +91,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.pf4j.PluginWrapper;
 
 public final class ModulePaneController extends ApplicationPartController<ModulePaneController> {
@@ -412,15 +413,20 @@ public final class ModulePaneController extends ApplicationPartController<Module
         }
     }
 
-    private void updateFilter(String text, boolean caseSensitive, boolean isExpression) {
+    private void updateFilter(String text, boolean isExpression, boolean caseSensitive) {
         if (text == null || text.trim().isEmpty()) {
             this.filteredModule = this.actualModule;
         } else if (isExpression) {
-            Predicate<DoorsTreeNode> filter = ExpressionFilter.compileExpression(text, caseSensitive, Pattern.CASE_INSENSITIVE);
-            this.filteredModule = (DoorsModule) FilteredDoorsTreeNode.createFilteredTree(actualModule, filter);
+            try {
+                Predicate<DoorsTreeNode> filter = ExpressionFilter.compileExpression(text, caseSensitive, Pattern.CASE_INSENSITIVE);
+                this.filteredModule = (DoorsModule) FilteredDoorsTreeNode.createFilteredTree(actualModule, filter, true);
+            } catch (ParseCancellationException ex) {
+                setStatus("Invalid filter: " + ApplicationPaneController.getMessage(ex));
+                return;
+            }
         } else {
             Predicate<DoorsTreeNode> filter = ExpressionFilter.compileSimple(text, caseSensitive);
-            this.filteredModule = (DoorsModule) FilteredDoorsTreeNode.createFilteredTree(actualModule, filter);
+            this.filteredModule = (DoorsModule) FilteredDoorsTreeNode.createFilteredTree(actualModule, filter, true);
         }
 
         setStatus("Filter applied");

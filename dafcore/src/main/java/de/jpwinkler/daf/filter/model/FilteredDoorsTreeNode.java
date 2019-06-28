@@ -26,7 +26,6 @@ package de.jpwinkler.daf.filter.model;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
@@ -35,6 +34,7 @@ import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -44,14 +44,33 @@ import java.util.regex.Pattern;
  * @author fwiesweg
  */
 public class FilteredDoorsTreeNode<T extends DoorsTreeNode> implements DoorsTreeNode {
-    
-    public static FilteredDoorsTreeNode<?> createFilteredTree(DoorsTreeNode node, Predicate<DoorsTreeNode> predicate) {
+
+    public static FilteredDoorsTreeNode<?> createFilteredTree(DoorsTreeNode node, Predicate<DoorsTreeNode> predicate, boolean recursing) {
+        Predicate fullPredicate = !recursing ? predicate : predicate.or(t -> {
+            boolean matched = false;
+            Stack<DoorsTreeNode> tbd = new Stack<>();
+            tbd.push(t);
+
+            while (!matched && !tbd.isEmpty()) {
+                DoorsTreeNode next = tbd.pop();
+                if (!next.isChildrenLoaded()) {
+                    continue;
+                }
+
+                matched = next.getChildren().stream()
+                        .peek(tbd::add)
+                        .anyMatch(predicate);
+            }
+
+            return matched;
+        });
+        
         if (node instanceof DoorsFolder) {
-             return new FilteredDoorsFolder((DoorsFolder) node, predicate);
+            return new FilteredDoorsFolder((DoorsFolder) node, fullPredicate);
         } else if (node instanceof DoorsModule) {
-            return new FilteredDoorsModule((DoorsModule) node, predicate);
+            return new FilteredDoorsModule((DoorsModule) node, fullPredicate);
         } else if (node instanceof DoorsObject) {
-            return new FilteredDoorsObject((DoorsObject) node, predicate);
+            return new FilteredDoorsObject((DoorsObject) node, fullPredicate);
         } else {
             throw new AssertionError();
         }
@@ -123,12 +142,12 @@ public class FilteredDoorsTreeNode<T extends DoorsTreeNode> implements DoorsTree
 
     @Override
     public void accept(DoorsTreeNodeVisitor visitor) {
-        self.accept(new ForwardingVisitor(visitor, children.getPredicate()));
+        self.accept(new ForwardingVisitor(visitor, children.predicate));
     }
 
     @Override
     public CompletableFuture<Void> acceptAsync(BackgroundTaskExecutor executor, DoorsTreeNodeVisitor visitor) {
-        return self.acceptAsync(executor, new ForwardingVisitor(visitor, children.getPredicate()));
+        return self.acceptAsync(executor, new ForwardingVisitor(visitor, children.predicate));
     }
 
     @Override
@@ -169,13 +188,13 @@ public class FilteredDoorsTreeNode<T extends DoorsTreeNode> implements DoorsTree
     @Override
     public DoorsTreeNode getChild(String name) {
         DoorsTreeNode child = self.getChild(name);
-        return children.getPredicate().test(child) ? child : null;
+        return children.predicate.test(child) ? child : null;
     }
 
     @Override
     public CompletableFuture<DoorsTreeNode> getChildAsync(BackgroundTaskExecutor executor, String name) {
         return self.getChildAsync(executor, name)
-                .thenApply(child -> children.getPredicate().test(child) ? child : null);
+                .thenApply(child -> children.predicate.test(child) ? child : null);
     }
 
     @Override
@@ -192,7 +211,10 @@ public class FilteredDoorsTreeNode<T extends DoorsTreeNode> implements DoorsTree
     public int hashCode() {
         return self.hashCode();
     }
-    
-    
+
+    @Override
+    public boolean isChildrenLoaded() {
+        return self.isChildrenLoaded();
+    }
 
 }

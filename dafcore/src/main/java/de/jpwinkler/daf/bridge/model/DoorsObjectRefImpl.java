@@ -21,7 +21,6 @@ package de.jpwinkler.daf.bridge.model;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.bridge.DoorsApplication;
 import de.jpwinkler.daf.bridge.DoorsItemType;
 import de.jpwinkler.daf.db.BackgroundTaskExecutor;
@@ -63,6 +62,11 @@ class DoorsObjectRefImpl extends DoorsTreeNodeRefImpl implements DoorsObject {
     @Override
     public Map<String, String> getAttributes() {
         return attributes;
+    }
+
+    @Override
+    public CompletableFuture<Map<String, String>> getAttributesAsync(BackgroundTaskExecutor executor) {
+        return CompletableFuture.completedFuture(attributes);
     }
 
     @Override
@@ -158,6 +162,11 @@ class DoorsObjectRefImpl extends DoorsTreeNodeRefImpl implements DoorsObject {
     @Override
     public boolean isHeading() {
         return getObjectHeading() != null && !getObjectHeading().isEmpty();
+    }
+
+    @Override
+    public boolean isChildrenLoaded() {
+        return true;
     }
 
 }

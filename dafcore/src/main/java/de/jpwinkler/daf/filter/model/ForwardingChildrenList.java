@@ -26,7 +26,6 @@ package de.jpwinkler.daf.filter.model;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
@@ -46,7 +45,7 @@ class ForwardingChildrenList implements List<DoorsTreeNode> {
 
     private final Class<DoorsTreeNode> clz;
     private final Supplier<List<DoorsTreeNode>> listSupplier;
-    private final Predicate<DoorsTreeNode> predicate;
+    final Predicate<DoorsTreeNode> predicate;
 
     private final WeakHashMap<DoorsTreeNode, FilteredDoorsTreeNode<?>> childrenMap = new WeakHashMap<>();
 
@@ -56,17 +55,13 @@ class ForwardingChildrenList implements List<DoorsTreeNode> {
         this.predicate = predicate;
     }
 
-    public Predicate<DoorsTreeNode> getPredicate() {
-        return predicate;
-    }
-
     DoorsTreeNode wrap(DoorsTreeNode node) {
-        if (node instanceof FilteredDoorsTreeNode && childrenMap.containsValue( (FilteredDoorsTreeNode<?>) node)) {
+        if (node instanceof FilteredDoorsTreeNode && childrenMap.containsValue((FilteredDoorsTreeNode<?>) node)) {
             return node;
-        } else if(!childrenMap.containsKey(node)) {
-            childrenMap.put(node, FilteredDoorsTreeNode.createFilteredTree(node, predicate));
+        } else if (!childrenMap.containsKey(node)) {
+            childrenMap.put(node, FilteredDoorsTreeNode.createFilteredTree(node, predicate, false)); // if we already have a recursing predicate, no need to create it again
         }
-        
+
         return childrenMap.get(node);
     }
 
