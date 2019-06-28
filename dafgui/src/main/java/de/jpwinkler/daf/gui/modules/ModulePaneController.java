@@ -65,6 +65,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -306,34 +307,51 @@ public final class ModulePaneController extends ApplicationPartController<Module
     }
 
     private void updateColumns() {
-        contentTableView.getColumns().clear();
-        for (final ColumnDefinition columnDefinition : currentView.getColumns()) {
-            if (!columnDefinition.isVisible()) {
-                continue;
-            }
-
-            final TableColumn<DoorsObject, DoorsObject> c = new TableColumn<>(columnDefinition.getTitle());
-            c.setSortable(false);
-            c.setPrefWidth(columnDefinition.getWidth());
-            c.widthProperty().addListener((obs, oldValue, newValue) -> {
-                columnDefinition.setWidth(newValue.doubleValue());
-                ModulePanePreferences.VIEWS.store(this.views);
-            });
-
-            BiConsumer<DoorsObject, String> edit = (it, newValue) -> {
-                executeCommand(new EditObjectAttributeCommand(it, columnDefinition.getAttributeName(), newValue));
-                contentTableView.requestFocus();
-                contentTableView.getFocusModel().focusNext();
+        this.filteredModule.getObjectAttributesAsync(super.getBackgroundTaskExecutor())
+                .thenAccept(cols -> Platform.runLater(() -> {
+            contentTableView.getColumns().clear();
+            Set<String> displayedAttributes = new HashSet<>();
+            BiFunction<String, String, TableColumn<DoorsObject, DoorsObject>> columnFactory = (attributeName, title) -> {
+                final TableColumn<DoorsObject, DoorsObject> c = new TableColumn<>(title);
+                c.setSortable(false);
+                BiConsumer<DoorsObject, String> edit = (it, newValue) -> {
+                    executeCommand(new EditObjectAttributeCommand(it, attributeName, newValue));
+                    contentTableView.requestFocus();
+                    contentTableView.getFocusModel().focusNext();
+                };
+                if (attributeName == null) {
+                    c.setCellFactory(tc -> new CombinedTextHeadingCell(tc,
+                            it -> it.getText(), edit));
+                } else {
+                    c.setCellFactory(tc -> new CustomTextFieldTableCell<>(tc,
+                            it -> it.getAttributes().get(attributeName), edit));
+                }
+                displayedAttributes.add(attributeName);
+                return c;
             };
-            if (columnDefinition.getAttributeName() == null) {
-                c.setCellFactory(tc -> new CombinedTextHeadingCell(tc,
-                        it -> it.getText(), edit));
-            } else {
-                c.setCellFactory(tc -> new CustomTextFieldTableCell<>(tc,
-                        it -> it.getAttributes().get(columnDefinition.getAttributeName()), edit));
+
+            for (final ColumnDefinition columnDefinition : currentView.getColumns()) {
+                if (!columnDefinition.isVisible()) {
+                    continue;
+                }
+
+                TableColumn<DoorsObject, DoorsObject> c = columnFactory.apply(columnDefinition.getAttributeName(), columnDefinition.getTitle());
+                c.setPrefWidth(columnDefinition.getWidth());
+                c.widthProperty().addListener((obs, oldValue, newValue) -> {
+                    columnDefinition.setWidth(newValue.doubleValue());
+                    ModulePanePreferences.VIEWS.store(this.views);
+                });
+                contentTableView.getColumns().add(c);
             }
-            contentTableView.getColumns().add(c);
-        }
+
+            cols.stream()
+                    .distinct()
+                    .filter(an -> !displayedAttributes.contains(an))
+                    .peek(displayedAttributes::add)
+                    .map(an -> columnFactory.apply(an, an))
+                    .peek(c -> c.setPrefWidth(150))
+                    .forEach(contentTableView.getColumns()::add);
+        }));
     }
 
     private void fixObjectLevel(final DoorsTreeNode object, final int level) {
@@ -383,7 +401,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
             Set<String> moduleAttrs = new HashSet<>(this.filteredModule.getObjectAttributes());
             moduleAttrs.add(DoorsAttributes.OBJECT_LEVEL.getKey());
-            this.currentView.getColumns().forEach(cd -> moduleAttrs.add(cd.getAttributeName()));
+            this.currentView.getColumns().stream().filter(cd -> cd != null).forEach(cd -> moduleAttrs.add(cd.getAttributeName()));
             this.filteredModule.setObjectAttributes(new ArrayList<>(moduleAttrs));
 
             ModulePanePreferences.CURRENT_VIEW.store(viewsToggleGroup.getToggles().indexOf(viewsToggleGroup.getSelectedToggle()));

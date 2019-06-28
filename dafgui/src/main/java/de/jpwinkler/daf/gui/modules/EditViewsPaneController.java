@@ -104,6 +104,7 @@ public final class EditViewsPaneController extends AutoloadingPaneController<Edi
                 .flatMap(vd -> vd.getColumns().stream())
                 .map(cd -> cd.getAttributeName()))
                 .distinct()
+                .filter(an -> an != null)
                 .forEach(an -> this.knownAttributes.put(an, new ColumnAttribute(an)));
         this.knownAttributes.put("", new ColumnAttribute(""));
 

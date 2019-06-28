@@ -57,9 +57,7 @@ public interface DoorsModule extends DoorsTreeNode {
          * @return 
          * @generated NOT
          */
-        default CompletableFuture<List<String>> getObjectAttributesAsync(BackgroundTaskExecutor executor) {
-            return CompletableFuture.completedFuture(getObjectAttributes());
-        }
+        CompletableFuture<List<String>> getObjectAttributesAsync(BackgroundTaskExecutor executor);
 
 	/**
 	 * <!-- begin-user-doc -->

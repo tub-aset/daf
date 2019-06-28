@@ -22,6 +22,7 @@ package de.jpwinkler.daf.model.impl;
  * #L%
  */
 import static de.jpwinkler.daf.bridge.DoorsApplication.STANDARD_VIEW;
+import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import de.jpwinkler.daf.model.DoorsAttributes;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
@@ -32,6 +33,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
@@ -107,6 +109,17 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
 
         });
     }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated NOT
+     */
+    @Override
+    public CompletableFuture<List<String>> getObjectAttributesAsync(BackgroundTaskExecutor executor) {
+        return CompletableFuture.completedFuture(this.getObjectAttributes());
+    }
+    
+    
 
     /**
      * <!-- begin-user-doc -->
