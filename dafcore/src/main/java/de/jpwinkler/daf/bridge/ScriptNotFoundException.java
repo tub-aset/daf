@@ -27,7 +27,6 @@ public class ScriptNotFoundException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
     public ScriptNotFoundException() {
-        super();
     }
 
     public ScriptNotFoundException(final String message, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace) {

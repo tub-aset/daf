@@ -1,4 +1,4 @@
-package de.jpwinkler.daf.filter.objects;
+package de.jpwinkler.daf.filter;
 
 /*-
  * #%L
@@ -22,20 +22,23 @@ package de.jpwinkler.daf.filter.objects;
  * #L%
  */
 
-import de.jpwinkler.daf.model.DoorsObject;
+import de.jpwinkler.daf.model.DoorsTreeNode;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-public class CascadingFilter extends DoorsObjectFilter {
+class OrFilter extends DoorsTreeNodeFilter {
 
-    private final DoorsObjectFilter filter;
+    private final List<DoorsTreeNodeFilter> filters = new ArrayList<>();
 
-    public CascadingFilter(final DoorsObjectFilter filter) {
-        super();
-        this.filter = filter;
+    public OrFilter(final DoorsTreeNodeFilter... filters) {
+        this.filters.addAll(Arrays.asList(filters));
     }
 
+
     @Override
-    public boolean checkObject(final DoorsObject object) {
-        return filter.checkObject(object) || (object.getParent() instanceof DoorsObject && checkObject((DoorsObject) object.getParent()));
+    public boolean test(final DoorsTreeNode object) {
+        return filters.stream().anyMatch(filter -> filter.test(object));
     }
 
 }

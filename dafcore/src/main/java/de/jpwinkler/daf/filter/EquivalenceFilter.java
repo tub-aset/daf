@@ -1,4 +1,4 @@
-package de.jpwinkler.daf.filter.modules;
+package de.jpwinkler.daf.filter;
 
 /*-
  * #%L
@@ -22,20 +22,26 @@ package de.jpwinkler.daf.filter.modules;
  * #L%
  */
 
-import de.jpwinkler.daf.model.DoorsModule;
+import de.jpwinkler.daf.model.DoorsTreeNode;
 
-public class NotSearchExpression extends SearchExpression {
+/**
+ *
+ * @author fwiesweg
+ */
+class EquivalenceFilter extends DoorsTreeNodeFilter {
 
-    private final SearchExpression nestedExpression;
+    private final DoorsTreeNodeFilter f1;
+    private final DoorsTreeNodeFilter f2;
+    
 
-    public NotSearchExpression(final SearchExpression nestedExpression) {
-        super();
-        this.nestedExpression = nestedExpression;
+    public EquivalenceFilter(final DoorsTreeNodeFilter f1, DoorsTreeNodeFilter f2) {
+        this.f1 = f1;
+        this.f2 = f2;
     }
+
 
     @Override
-    public boolean matches(final DoorsModule module) {
-        return !nestedExpression.matches(module);
+    public boolean test(final DoorsTreeNode object) {
+        return f1.test(object) == f2.test(object);
     }
-
 }

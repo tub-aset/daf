@@ -1,4 +1,4 @@
-package de.jpwinkler.daf.filter.objects;
+package de.jpwinkler.daf.filter;
 
 /*-
  * #%L
@@ -22,19 +22,24 @@ package de.jpwinkler.daf.filter.objects;
  * #L%
  */
 
-import de.jpwinkler.daf.model.DoorsObject;
+import de.jpwinkler.daf.model.DoorsTreeNode;
 
-public class ObjectTextAndHeadingFilter extends DoorsObjectFilter {
+/**
+ *
+ * @author fwiesweg
+ */
+class ImplicationFilter extends DoorsTreeNodeFilter {
 
-    private final DoorsObjectFilter filter;
+    private final DoorsTreeNodeFilter f1;
+    private final DoorsTreeNodeFilter f2;
 
-    public ObjectTextAndHeadingFilter(final String filter, final boolean exactMatch, final boolean regexp) {
-        this.filter = new CompositeOrFilter(new AttributeFilter("Object Text", filter, exactMatch, regexp), new AttributeFilter("Object Heading", filter, exactMatch, regexp));
+    public ImplicationFilter(final DoorsTreeNodeFilter f1, DoorsTreeNodeFilter f2) {
+        this.f1 = f1;
+        this.f2 = f2;
     }
 
     @Override
-    public boolean checkObject(final DoorsObject object) {
-        return filter.checkObject(object);
+    public boolean test(final DoorsTreeNode object) {
+        return f1.test(object) ? f2.test(object) : true;
     }
-
 }

@@ -23,10 +23,6 @@ package de.jpwinkler.daf.gui.modules;
  */
 import de.jpwinkler.daf.bridge.DoorsApplicationImpl;
 import de.jpwinkler.daf.db.DatabaseInterface;
-import de.jpwinkler.daf.filter.objects.CascadingFilter;
-import de.jpwinkler.daf.filter.objects.DoorsObjectFilter;
-import de.jpwinkler.daf.filter.objects.ObjectTextAndHeadingFilter;
-import de.jpwinkler.daf.filter.objects.ReverseCascadingFilter;
 import de.jpwinkler.daf.gui.ApplicationPaneController;
 import de.jpwinkler.daf.gui.ApplicationPartController;
 import de.jpwinkler.daf.gui.ApplicationPartFactoryRegistry.ApplicationPart;
@@ -55,7 +51,6 @@ import de.jpwinkler.daf.gui.modules.commands.SwapObjectHeadingAndTextCommand;
 import de.jpwinkler.daf.gui.modules.commands.UnwrapChildrenCommand;
 import de.jpwinkler.daf.model.DoorsAttributes;
 import de.jpwinkler.daf.model.DoorsFolder;
-import de.jpwinkler.daf.model.DoorsModelUtil;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
@@ -220,7 +215,6 @@ public final class ModulePaneController extends ApplicationPartController<Module
     private DoorsModule module;
 
     private ViewDefinition currentView;
-    private final Set<DoorsObject> filteredObjects = new HashSet<>();
 
     private final ExtensionPane<ModulePaneExtension> sideExtensionPane = new ExtensionPane<>(
             () -> super.getExtensions(ModulePaneExtension.class), e -> e.getSidePanes(), (e, n) -> e.getPaneName(n),
@@ -294,9 +288,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
             @Override
             public boolean visitPreTraverse(final DoorsObject object) {
                 Platform.runLater(() -> {
-                    if (!filteredObjects.contains(object)) {
-                        contentTableView.getItems().add(object);
-                    }
+                    contentTableView.getItems().add(object);
                 });
                 return true;
             }
@@ -422,7 +414,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
     private void updateFilter(final String text, final boolean includeParents, final boolean includeChildren, final boolean isExpression) {
 
-        DoorsObjectFilter filter = isExpression ? DoorsObjectFilter.compile(text) : new ObjectTextAndHeadingFilter(text, false, false);
+        /*DoorsObjectFilter filter = isExpression ? DoorsObjectFilter.compile(text) : new ObjectTextAndHeadingFilter(text, false, false);
         if (includeChildren) {
             filter = new CascadingFilter(filter);
         }
@@ -443,6 +435,9 @@ public final class ModulePaneController extends ApplicationPartController<Module
                 return true;
             }
         });
+        
+        // check if object is visible:
+        filteredObjects.contains(object)
 
         updateGui(ModuleUpdateAction.UPDATE_CONTENT_VIEW);
 
@@ -450,7 +445,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
         final int visibleObjects = totalObjects - filteredObjects.size();
 
         this.setStatus(visibleObjects < totalObjects
-                ? String.format("Showing %d out of %d objects.", visibleObjects, totalObjects) : "");
+                ? String.format("Showing %d out of %d objects.", visibleObjects, totalObjects) : "");*/
     }
 
     private DoorsObject getCurrentObject() {
@@ -566,7 +561,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
     public void showBottomPaneClicked() {
         bottomExtensionPane.selectFirst();
     }
-    
+
     @FXML
     public void showDatabaseClicked() {
         this.open(this.getPath().withPath(""), DatabaseInterface.OpenFlag.OPEN_ONLY);

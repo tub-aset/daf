@@ -1,4 +1,4 @@
-package de.jpwinkler.daf.filter.modules;
+package de.jpwinkler.daf.filter;
 
 /*-
  * #%L
@@ -22,21 +22,19 @@ package de.jpwinkler.daf.filter.modules;
  * #L%
  */
 
-import de.jpwinkler.daf.model.DoorsModule;
-import java.util.Arrays;
-import java.util.List;
+import de.jpwinkler.daf.model.DoorsTreeNode;
 
-public class HasTagsSearchExpression extends SearchExpression {
+class NotFilter extends DoorsTreeNodeFilter {
 
-    private final List<String> tags;
+    private final DoorsTreeNodeFilter filter;
 
-    public HasTagsSearchExpression(final String... tags) {
-        this.tags = Arrays.asList(tags);
+    public NotFilter(final DoorsTreeNodeFilter filter) {
+        this.filter = filter;
     }
 
     @Override
-    public boolean matches(final DoorsModule module) {
-        return tags.stream().allMatch(tag -> module.hasTag(tag));
+    public boolean test(final DoorsTreeNode object) {
+        return !filter.test(object);
     }
 
 }

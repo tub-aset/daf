@@ -35,7 +35,6 @@ public class DoorsRuntimeException extends RuntimeException {
     }
 
     public DoorsRuntimeException() {
-        super();
     }
 
 }

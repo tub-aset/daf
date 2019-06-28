@@ -1,4 +1,9 @@
-package de.jpwinkler.daf.filter.objects;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package de.jpwinkler.daf.filter.model;
 
 /*-
  * #%L
@@ -22,20 +27,18 @@ package de.jpwinkler.daf.filter.objects;
  * #L%
  */
 
-import de.jpwinkler.daf.model.DoorsObject;
+import de.jpwinkler.daf.model.DoorsFolder;
+import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.util.function.Predicate;
 
-public class PredicateFilter extends DoorsObjectFilter {
+/**
+ *
+ * @author fwiesweg
+ */
+public class DoorsFolderImpl extends DoorsTreeNodeImpl<DoorsFolder> implements DoorsFolder {
 
-    private final Predicate<DoorsObject> p;
-
-    public PredicateFilter(final Predicate<DoorsObject> p) {
-        this.p = p;
-    }
-
-    @Override
-    public boolean checkObject(final DoorsObject object) {
-        return p.test(object);
+    public DoorsFolderImpl(DoorsFolder self, Predicate<DoorsTreeNode> filter) {
+        super(self, filter);
     }
 
 }

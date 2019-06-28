@@ -106,7 +106,7 @@ public class FolderDatabaseInterface implements DatabaseInterface {
         this.databaseRoot.setName(new File(databasePath.getDatabasePath()).getName());
         databaseRoot.accept(new DoorsTreeNodeVisitor<DoorsFolder>(DoorsFolder.class) {
             @Override
-            protected void visitPostTraverse(DoorsFolder f) {
+            public void visitPostTraverse(DoorsFolder f) {
                 try {
                     Path modulePath = Paths.get(Paths.get(databasePath.getDatabasePath()).getParent().toAbsolutePath().toString(), f.getFullNameSegments().toArray(new String[0]));
                     Files.createDirectories(modulePath);
@@ -120,7 +120,7 @@ public class FolderDatabaseInterface implements DatabaseInterface {
 
         databaseRoot.accept(new DoorsTreeNodeVisitor<DoorsModule>(DoorsModule.class) {
             @Override
-            protected void visitPostTraverse(DoorsModule m) {
+            public void visitPostTraverse(DoorsModule m) {
                 try {
                     Path folderPath = Paths.get(Paths.get(databasePath.getDatabasePath()).getParent().toAbsolutePath().toString(), m.getParent().getFullNameSegments().toArray(new String[0]));
                     ModuleCSV.write(

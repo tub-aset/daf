@@ -1,4 +1,4 @@
-package de.jpwinkler.daf.filter.modules;
+package de.jpwinkler.daf.filter;
 
 /*-
  * #%L
@@ -21,22 +21,22 @@ package de.jpwinkler.daf.filter.modules;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
+import de.jpwinkler.daf.model.DoorsTreeNode;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import de.jpwinkler.daf.model.DoorsModule;
+class ExclusiveOrFilter extends DoorsTreeNodeFilter {
 
-public class AttributeSearchExpression extends SearchExpression {
+    private final List<DoorsTreeNodeFilter> filters = new ArrayList<>();
 
-    private final String attributeName;
-    private final String attributeValue;
-
-    public AttributeSearchExpression(final String attributeName, final String attributeValue) {
-        this.attributeName = attributeName;
-        this.attributeValue = attributeValue;
+    public ExclusiveOrFilter(final DoorsTreeNodeFilter... filters) {
+        this.filters.addAll(Arrays.asList(filters));
     }
 
     @Override
-    public boolean matches(final DoorsModule module) {
-        return module.getAttributes().containsKey(attributeName) && module.getAttributes().get(attributeName).contains(attributeValue);
+    public boolean test(final DoorsTreeNode object) {
+        return filters.stream().filter(f -> f.test(object)).count() == 1;
     }
 
 }

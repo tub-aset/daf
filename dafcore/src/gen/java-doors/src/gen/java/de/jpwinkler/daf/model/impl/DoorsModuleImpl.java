@@ -96,7 +96,7 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
                 .collect(Collectors.toList()));
         this.accept(new DoorsTreeNodeVisitor(DoorsObject.class) {
             @Override
-            protected void visitPostTraverse(DoorsTreeNode object) {
+            public void visitPostTraverse(DoorsTreeNode object) {
                 objectAttrs.addAll(object.getAttributes().keySet());
             }
 
@@ -112,7 +112,7 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
     public void setObjectAttributes(List<String> attrs) {
         this.accept(new DoorsTreeNodeVisitor(DoorsObject.class) {
             @Override
-            protected void visitPostTraverse(DoorsTreeNode object) {
+            public void visitPostTraverse(DoorsTreeNode object) {
                 attrs.stream()
                         .filter(a -> !object.getAttributes().containsKey(a))
                         .forEach(a -> object.getAttributes().put(a, ""));

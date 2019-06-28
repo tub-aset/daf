@@ -1,4 +1,4 @@
-package de.jpwinkler.daf.filter.objects;
+package de.jpwinkler.daf.filter;
 
 /*-
  * #%L
@@ -22,19 +22,22 @@ package de.jpwinkler.daf.filter.objects;
  * #L%
  */
 
-import de.jpwinkler.daf.model.DoorsObject;
+import de.jpwinkler.daf.model.DoorsTreeNode;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-public class ReverseCascadingFilter extends DoorsObjectFilter {
+class AndFilter extends DoorsTreeNodeFilter {
 
-    private final DoorsObjectFilter filter;
+    private final List<DoorsTreeNodeFilter> filters = new ArrayList<>();
 
-    public ReverseCascadingFilter(final DoorsObjectFilter filter) {
-        this.filter = filter;
+    public AndFilter(final DoorsTreeNodeFilter... filters) {
+        this.filters.addAll(Arrays.asList(filters));
     }
 
     @Override
-    public boolean checkObject(final DoorsObject object) {
-        return filter.checkObject(object) || object.getChildren().stream().anyMatch(n -> n instanceof DoorsObject && checkObject((DoorsObject) n));
+    public boolean test(final DoorsTreeNode object) {
+        return filters.stream().allMatch(filter -> filter.test(object));
     }
 
 }

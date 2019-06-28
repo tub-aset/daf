@@ -21,21 +21,15 @@ package de.jpwinkler.daf.db;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
-import de.jpwinkler.daf.filter.modules.SearchExpression;
-import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsTreeNode;
-import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
  * @author fwiesweg
  */
 public interface DatabaseInterface {
-    
+
     public static enum OpenFlag {
         CREATE_IF_INEXISTENT,
         ERASE_IF_EXISTS,
@@ -47,29 +41,15 @@ public interface DatabaseInterface {
     default void flush() throws IOException {
         throw new UnsupportedOperationException("Not supported");
     }
-    
+
     default boolean isReadOnly() {
         return false;
     }
 
-    default List<DoorsModule> getModules(final SearchExpression e) {
-        final List<DoorsModule> result = new ArrayList<>();
-        getDatabaseRoot().accept(new DoorsTreeNodeVisitor<DoorsModule>(DoorsModule.class) {
-
-            @Override
-            public void visitPostTraverse(final DoorsModule module) {
-                if (e.matches(module)) {
-                    result.add(module);
-                }
-            }
-        });
-        return result;
-    }
-
     DoorsTreeNode getDatabaseRoot();
-    
+
     DatabaseFactory getFactory();
-    
+
     default void close() {
     }
 }

@@ -47,11 +47,11 @@ public abstract class DoorsTreeNodeVisitor<T extends DoorsTreeNode> {
         }
     }
 
-    protected boolean visitPreTraverse(final T object) {
+    public boolean visitPreTraverse(final T object) {
         return true;
     }
 
-    protected void visitPostTraverse(final T object) {
+    public void visitPostTraverse(final T object) {
 
     }
 
