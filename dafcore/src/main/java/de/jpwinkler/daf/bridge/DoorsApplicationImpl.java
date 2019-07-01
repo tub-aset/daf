@@ -209,9 +209,9 @@ public class DoorsApplicationImpl implements DoorsApplication {
     @Override
     public String runScript(final Consumer<DoorsScriptBuilder> prepareScriptBuilder) {
         try {
-            DoorsScriptBuilder innerScriptBuilder = new DoorsScriptBuilder().beginScope();
-            prepareScriptBuilder.accept(innerScriptBuilder);
-            return executeSript(innerScriptBuilder.endScope());
+            DoorsScriptBuilder scriptBuilder = new DoorsScriptBuilder();
+            prepareScriptBuilder.accept(scriptBuilder);
+            return executeSript(scriptBuilder);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
@@ -247,6 +247,9 @@ public class DoorsApplicationImpl implements DoorsApplication {
             }
 
             final String dxl = scriptBuilder.build();
+            System.out.println("################## DXL START ##################");
+            System.out.println(dxl);
+            System.out.println("################### DXL END ###################");
             if (silentMode) {
                 executeDxlSilent(dxl);
             } else {

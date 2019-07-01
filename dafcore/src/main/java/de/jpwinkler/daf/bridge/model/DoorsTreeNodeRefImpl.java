@@ -166,8 +166,10 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNode {
     public String getDoorsPath() {
         if(this.type == DoorsItemType.PROJECT) {
             return "/" + this.getName();
-        } else if(this.type == DoorsItemType.FOLDER) {
+        } else if( (this.type == DoorsItemType.FOLDER || this.type == DoorsItemType.FORMAL) && this.parent != null) {
             return ((DoorsTreeNodeRefImpl)this.parent).getDoorsPath() + "/" + this.getName();
+        } else if(this.type == DoorsItemType.FOLDER && this.parent == null) {
+        	return "/";
         } else {
             throw new AssertionError();
         }

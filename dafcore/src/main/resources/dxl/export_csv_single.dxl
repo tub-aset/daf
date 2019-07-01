@@ -1,4 +1,4 @@
-Module m = myRead("$$url$$", "$$name$$", false)
+Module m = myRead("$$url$$", "$$name$$", true)
 if (load(m, view "$$view$$")) {
 	exportModuleToCSV(m, "$$file$$")
 	Stream mmd = write("$$file$$.mmd", CP_UTF8)

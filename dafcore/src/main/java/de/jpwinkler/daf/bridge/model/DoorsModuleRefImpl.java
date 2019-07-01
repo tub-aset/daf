@@ -71,9 +71,11 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
             String result = doorsApplication.runScript(builder -> {
                 builder.addLibrary(DXLScript.fromResource("lib/utils.dxl"));
                 builder.addLibrary(DXLScript.fromResource("lib/export_mmd.dxl"));
+                builder = builder.beginScope();
                 builder.addScript(DXLScript.fromResource("get_module_attributes.dxl"));
                 builder.setVariable("url", null);
                 builder.setVariable("name", this.getDoorsPath());
+                builder = builder.endScope();
             });
 
             try (ByteArrayInputStream bis = new ByteArrayInputStream(result.getBytes(ModuleCSV.CHARSET))) {
@@ -96,18 +98,24 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
                     builder.addLibrary(DXLScript.fromResource("lib/utils.dxl"));
                     builder.addLibrary(DXLScript.fromResource("lib/export_csv.dxl"));
                     builder.addLibrary(DXLScript.fromResource("lib/export_mmd.dxl"));
+                    
+                    builder = builder.beginScope();
                     builder.addScript(DXLScript.fromResource("export_csv_single.dxl"));
                     builder.setVariable("url", null);
                     builder.setVariable("name", this.getDoorsPath());
                     builder.setVariable("view", view);
                     builder.setVariable("file", tempFile.toAbsolutePath().toString());
+                    builder = builder.endScope();
                 });
 
                 doorsApplication.runScript(builder -> {
                     builder.addLibrary(DXLScript.fromResource("lib/utils.dxl"));
+
+                    builder = builder.beginScope();
                     builder.addScript(DXLScript.fromResource("close_module.dxl"));
                     builder.setVariable("url", null);
                     builder.setVariable("name", this.getDoorsPath());
+                    builder = builder.endScope();
                 });
 
                 DoorsModule loadedModule = ModuleCSV.readModule(new DatabaseFactory() {
