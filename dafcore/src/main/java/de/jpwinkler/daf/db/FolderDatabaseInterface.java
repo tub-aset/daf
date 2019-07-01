@@ -21,7 +21,6 @@ package de.jpwinkler.daf.db;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsPackage;
@@ -38,6 +37,8 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -49,6 +50,8 @@ public class FolderDatabaseInterface implements DatabaseInterface {
         Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("*", new XMIResourceFactoryImpl());
         DoorsPackage.eINSTANCE.eClass();
     }
+
+    private static final Logger LOG = Logger.getLogger(FolderDatabaseInterface.class.getName());
 
     private DoorsFolder databaseRoot;
     private DatabasePath databasePath;
@@ -78,7 +81,11 @@ public class FolderDatabaseInterface implements DatabaseInterface {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 if ("csv".equals(FilenameUtils.getExtension(file.toString()))) {
-                    folders.get(file.getParent().toAbsolutePath().toString()).getChildren().add(ModuleCSV.read(factory, file.toFile()));
+                    try {
+                        folders.get(file.getParent().toAbsolutePath().toString()).getChildren().add(ModuleCSV.read(factory, file.toFile()));
+                    } catch (IOException ex) {
+                        LOG.log(Level.SEVERE, "Failed reading module: " + file.toAbsolutePath().toString(), ex);
+                    }
                 }
 
                 return super.visitFile(file, attrs);
@@ -91,8 +98,13 @@ public class FolderDatabaseInterface implements DatabaseInterface {
                     databaseRoot = folder;
                 }
 
-                folder.getAttributes().putAll(ModuleCSV.readMetaData(factory, dir.resolve("__folder__.mmd").toFile()));
-                folders.put(dir.toAbsolutePath().toString(), folder);
+                try {
+                    folder.getAttributes().putAll(ModuleCSV.readMetaData(factory, dir.resolve("__folder__.mmd").toFile()));
+                    folders.put(dir.toAbsolutePath().toString(), folder);
+                } catch (IOException ex) {
+                    LOG.log(Level.SEVERE, "Failed reading folder metadata: " + dir.resolve("__folder__.mmd").toAbsolutePath().toString(), ex);
+                    return FileVisitResult.SKIP_SUBTREE;
+                }
 
                 return super.preVisitDirectory(dir, attrs);
             }
