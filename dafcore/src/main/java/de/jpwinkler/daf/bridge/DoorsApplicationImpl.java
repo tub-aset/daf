@@ -247,9 +247,6 @@ public class DoorsApplicationImpl implements DoorsApplication {
             }
 
             final String dxl = scriptBuilder.build();
-            System.out.println("################## DXL START ##################");
-            System.out.println(dxl);
-            System.out.println("################### DXL END ###################");
             if (silentMode) {
                 executeDxlSilent(dxl);
             } else {
