@@ -183,19 +183,12 @@ public final class ModulePaneController extends ApplicationPartController<Module
         this.contentTableView.setPlaceholder(new ProgressBar());
 
         super.getDatabaseInterface().getDatabaseRoot().getChildAsync(super.getBackgroundTaskExecutor().withPriority(BackgroundTask.PRIORITY_MODULE_CONTENT), super.getApplicationPart().getDatabasePath().getPath())
-                .exceptionally(t -> {
-                    Platform.runLater(() -> {
-
-                        Button retryButton = new Button("Retry");
-                        retryButton.setOnAction(ev -> this.loadContent());
-                        this.contentTableView.setPlaceholder(retryButton);
-
-                    });
-                    throw new RuntimeException(t);
-                })
-                .thenAccept(module -> {
+                .thenCompose(module -> {
                     DoorsModule dm = (DoorsModule) module;
-                    dm.getObjectAttributesAsync(super.getBackgroundTaskExecutor().withPriority(BackgroundTask.PRIORITY_MODULE_CONTENT)).thenAccept(objectAttrs -> Platform.runLater(() -> {
+                    return dm.getObjectAttributesAsync(super.getBackgroundTaskExecutor().withPriority(BackgroundTask.PRIORITY_MODULE_CONTENT))
+                            .thenApply(attrs -> dm);
+                }).thenAccept(dm -> {
+                    Platform.runLater(() -> {
                         this.contentTableView.setPlaceholder(null);
 
                         this.actualModule = dm;
@@ -209,7 +202,14 @@ public final class ModulePaneController extends ApplicationPartController<Module
                         this.filteredModule = actualModule;
                         updateGui(ModuleUpdateAction.UPDATE_VIEWS, ModuleUpdateAction.UPDATE_COLUMNS, ModuleUpdateAction.UPDATE_CONTENT_VIEW, ModuleUpdateAction.UPDATE_OUTLINE_VIEW);
                         traverseTreeItem(outlineTreeView.getRoot(), ti -> ti.setExpanded(true));
-                    }));
+                    });
+                }).exceptionally(t -> {
+                    Platform.runLater(() -> {
+                        Button retryButton = new Button("Retry");
+                        retryButton.setOnAction(ev -> this.loadContent());
+                        this.contentTableView.setPlaceholder(retryButton);
+                    });
+                    return null;
                 });
     }
 

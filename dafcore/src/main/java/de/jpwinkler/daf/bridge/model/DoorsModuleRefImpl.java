@@ -24,6 +24,7 @@ package de.jpwinkler.daf.bridge.model;
 import de.jpwinkler.daf.bridge.DXLScript;
 import de.jpwinkler.daf.bridge.DoorsApplication;
 import de.jpwinkler.daf.bridge.DoorsItemType;
+import de.jpwinkler.daf.bridge.DoorsRuntimeException;
 import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import de.jpwinkler.daf.db.DatabaseFactory;
 import de.jpwinkler.daf.db.ModuleCSV;
@@ -42,13 +43,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
 
     private final AtomicReference<CompletableFuture<List<DoorsTreeNode>>> children = new AtomicReference<>();
-
     private final AtomicReference<CompletableFuture<Map<String, String>>> moduleAttributes = new AtomicReference<>();
-    private final CompletableFuture<List<String>> objectAttributes = new CompletableFuture<>();
+    private final AtomicReference<List<String>> objectAttributes = new AtomicReference<>();
+
+    private static final Logger LOG = Logger.getLogger(DoorsModuleRefImpl.class.getName());
 
     public DoorsModuleRefImpl(final DoorsApplication DoorsApplication, final DoorsTreeNode parent, final String name) {
         super(DoorsApplication, DoorsItemType.FORMAL, parent, name);
@@ -98,7 +102,7 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
                     builder.addPreamble(DXLScript.fromResource("lib/utils.dxl"));
                     builder.addPreamble(DXLScript.fromResource("lib/export_csv.dxl"));
                     builder.addPreamble(DXLScript.fromResource("lib/export_mmd.dxl"));
-                    
+
                     builder = builder.beginScope();
                     builder.addScript(DXLScript.fromResource("export_csv_single.dxl"));
                     builder.setVariable("url", null);
@@ -108,15 +112,19 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
                     builder = builder.endScope();
                 });
 
-                doorsApplication.runScript(builder -> {
-                    builder.addPreamble(DXLScript.fromResource("lib/utils.dxl"));
+                try {
+                    doorsApplication.runScript(builder -> {
+                        builder.addPreamble(DXLScript.fromResource("lib/utils.dxl"));
 
-                    builder = builder.beginScope();
-                    builder.addScript(DXLScript.fromResource("close_module.dxl"));
-                    builder.setVariable("url", null);
-                    builder.setVariable("name", this.getDoorsPath());
-                    builder = builder.endScope();
-                });
+                        builder = builder.beginScope();
+                        builder.addScript(DXLScript.fromResource("close_module.dxl"));
+                        builder.setVariable("url", null);
+                        builder.setVariable("name", this.getDoorsPath());
+                        builder = builder.endScope();
+                    });
+                } catch (DoorsRuntimeException ex) {
+                    LOG.log(Level.WARNING, "Failed closing module " + this.getDoorsPath(), ex);
+                }
 
                 DoorsModule loadedModule = ModuleCSV.readModule(new DatabaseFactory() {
                     @Override
@@ -166,7 +174,10 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
                 }, tempFile.toFile());
                 List<DoorsTreeNode> result = loadedModule.getChildren();
                 result.forEach(c -> c.setParent(this));
-                this.objectAttributes.complete(loadedModule.getObjectAttributes());
+
+                if (!objectAttributes.compareAndSet(null, loadedModule.getObjectAttributes())) {
+                    throw new AssertionError();
+                }
 
                 return result;
             } catch (IOException ex) {
@@ -177,14 +188,14 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
 
     @Override
     public boolean isChildrenLoaded() {
-         CompletableFuture<List<DoorsTreeNode>> childrenFuture = children.get();
-         return childrenFuture != null && childrenFuture.isDone();
+        CompletableFuture<List<DoorsTreeNode>> childrenFuture = children.get();
+        return childrenFuture != null && childrenFuture.isDone();
     }
 
     @Override
     public List<String> getObjectAttributes() {
         try {
-            return objectAttributes.get();
+            return getObjectAttributesAsync(BackgroundTaskExecutor.SYNCHRONOUS).get();
         } catch (InterruptedException ex) {
             throw new RuntimeException(ex);
         } catch (Throwable ex) {
@@ -194,11 +205,7 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
 
     @Override
     public CompletableFuture<List<String>> getObjectAttributesAsync(BackgroundTaskExecutor executor) {
-        if (!objectAttributes.isDone()) {
-            this.getChildrenAsync(executor);
-        }
-
-        return objectAttributes;
+        return getChildrenAsync(executor).thenApply(children -> objectAttributes.get());
     }
 
     @Override
