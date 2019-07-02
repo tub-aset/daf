@@ -53,7 +53,7 @@ class DoorsFolderRefImpl extends DoorsTreeNodeRefImpl implements DoorsFolder {
     public CompletableFuture<List<DoorsTreeNode>> getChildrenAsync(BackgroundTaskExecutor executor) {
         return executor.runBackgroundTask("Load node children", this.children, i -> {
             final String resultString = doorsApplication.runScript(builder -> {
-            	builder.beginScope();
+                builder = builder.beginScope();
                 builder.addScript(DXLScript.fromResource("get_children.dxl"));
                 builder.setVariable("folder", this.getDoorsPath());
                 builder.endScope();

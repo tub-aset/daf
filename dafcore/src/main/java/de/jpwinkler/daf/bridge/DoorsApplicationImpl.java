@@ -207,17 +207,17 @@ public class DoorsApplicationImpl implements DoorsApplication {
      * @throws DoorsRuntimeException If the script fails or executes 'throw()'
      */
     @Override
-    public String runScript(final Consumer<DoorsScriptBuilder> prepareScriptBuilder) {
+    public String runScript(final Consumer<DXLScriptBuilder> prepareScriptBuilder) {
         try {
-            DoorsScriptBuilder scriptBuilder = new DoorsScriptBuilder();
+            DXLScriptBuilder scriptBuilder = new DXLScriptBuilder();
             prepareScriptBuilder.accept(scriptBuilder);
-            return executeSript(scriptBuilder);
+            return executeScript(scriptBuilder);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
     }
 
-    private String executeSript(DoorsScriptBuilder scriptBuilder) throws IOException {
+    private String executeScript(DXLScriptBuilder scriptBuilder) throws IOException {
 
         final boolean redirectOutput = outputStream != null;
 

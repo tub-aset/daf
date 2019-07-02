@@ -60,6 +60,6 @@ public interface DoorsApplication {
      * script with.
      * @throws DoorsRuntimeException If the script fails or executes 'throw()'
      */
-    String runScript(final Consumer<DoorsScriptBuilder> prepareScriptBuilder);
+    String runScript(final Consumer<DXLScriptBuilder> prepareScriptBuilder);
 
 }

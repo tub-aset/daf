@@ -69,8 +69,8 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
     public CompletableFuture<Map<String, String>> getAttributesAsync(BackgroundTaskExecutor executor) {
         return executor.runBackgroundTask("Load attributes", this.moduleAttributes, i -> {
             String result = doorsApplication.runScript(builder -> {
-                builder.addLibrary(DXLScript.fromResource("lib/utils.dxl"));
-                builder.addLibrary(DXLScript.fromResource("lib/export_mmd.dxl"));
+                builder.addPreamble(DXLScript.fromResource("lib/utils.dxl"));
+                builder.addPreamble(DXLScript.fromResource("lib/export_mmd.dxl"));
                 builder = builder.beginScope();
                 builder.addScript(DXLScript.fromResource("get_module_attributes.dxl"));
                 builder.setVariable("url", null);
@@ -95,9 +95,9 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
                 Path tempFile = Files.createTempFile(null, null);
 
                 doorsApplication.runScript(builder -> {
-                    builder.addLibrary(DXLScript.fromResource("lib/utils.dxl"));
-                    builder.addLibrary(DXLScript.fromResource("lib/export_csv.dxl"));
-                    builder.addLibrary(DXLScript.fromResource("lib/export_mmd.dxl"));
+                    builder.addPreamble(DXLScript.fromResource("lib/utils.dxl"));
+                    builder.addPreamble(DXLScript.fromResource("lib/export_csv.dxl"));
+                    builder.addPreamble(DXLScript.fromResource("lib/export_mmd.dxl"));
                     
                     builder = builder.beginScope();
                     builder.addScript(DXLScript.fromResource("export_csv_single.dxl"));
@@ -109,7 +109,7 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
                 });
 
                 doorsApplication.runScript(builder -> {
-                    builder.addLibrary(DXLScript.fromResource("lib/utils.dxl"));
+                    builder.addPreamble(DXLScript.fromResource("lib/utils.dxl"));
 
                     builder = builder.beginScope();
                     builder.addScript(DXLScript.fromResource("close_module.dxl"));

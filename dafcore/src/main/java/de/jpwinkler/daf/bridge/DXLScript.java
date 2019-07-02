@@ -21,46 +21,45 @@ package de.jpwinkler.daf.bridge;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.function.Supplier;
+import java.nio.charset.Charset;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
-public class DXLScript {
+public abstract class DXLScript {
 
-    private final Supplier<String> dxlSupplier;
     private final URI source;
 
-    private DXLScript(final Supplier<String> dxlSupplier, URI source) {
-        this.dxlSupplier = dxlSupplier;
+    public DXLScript() {
+        this(null);
+    }
+
+    protected DXLScript(URI source) {
         this.source = source;
     }
 
-    public String getDXL() {
-        return dxlSupplier.get();
-    }
+    public abstract String build();
 
     public URI getSource() {
         return source;
     }
 
-    public static DXLScript fromBuilder(DoorsScriptBuilder scopeBuilder) {
-        return new DXLScript(() -> scopeBuilder.build(), null);
-    }
-
     public static DXLScript fromFile(File dxlFile) {
-        return new DXLScript(() -> {
-            try {
-                return FileUtils.readFileToString(dxlFile);
-            } catch (IOException ex) {
-                throw new ScriptNotFoundException(ex);
+        return new DXLScript(dxlFile.toPath().toUri()) {
+            @Override
+            public String build() {
+                try {
+                    return FileUtils.readFileToString(dxlFile);
+                } catch (IOException ex) {
+                    throw new ScriptNotFoundException(ex);
+                }
             }
-        }, dxlFile.toPath().toUri());
+
+        };
     }
 
     public static DXLScript fromResource(String resourceName) {
@@ -70,23 +69,34 @@ public class DXLScript {
     public static DXLScript fromResource(ClassLoader cl, String resourceNameIn) {
         String resourceName = "dxl/" + resourceNameIn;
         try {
-            return new DXLScript(() -> {
-                try {
-                    final InputStream resourceAsStream = cl.getResourceAsStream(resourceName);
-                    if (resourceAsStream == null) {
-                        throw new ScriptNotFoundException("Could not read script " + resourceName + " (stream was null)");
+            URI uri = cl.getResource(resourceName).toURI();
+            return new DXLScript(uri) {
+                @Override
+                public String build() {
+                    try {
+                        final InputStream resourceAsStream = cl.getResourceAsStream(resourceName);
+                        if (resourceAsStream == null) {
+                            throw new ScriptNotFoundException("Could not read script " + resourceName + " (stream was null)");
+                        }
+                        return IOUtils.toString(resourceAsStream, Charset.forName("UTF-8"));
+                    } catch (IOException ex) {
+                        throw new ScriptNotFoundException(ex);
                     }
-                    return IOUtils.toString(resourceAsStream);
-                } catch (IOException ex) {
-                    throw new ScriptNotFoundException(ex);
                 }
-            }, cl.getResource(resourceName).toURI());
+
+            };
         } catch (URISyntaxException ex) {
             throw new RuntimeException(ex);
         }
     }
 
     public static DXLScript fromString(String script) {
-        return new DXLScript(() -> script, null);
+        return new DXLScript((URI) null) {
+            @Override
+            public String build() {
+                return script;
+            }
+
+        };
     }
 }

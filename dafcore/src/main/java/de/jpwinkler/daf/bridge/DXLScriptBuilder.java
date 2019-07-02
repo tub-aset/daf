@@ -21,68 +21,72 @@ package de.jpwinkler.daf.bridge;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
+import java.util.stream.Stream;
+import org.apache.commons.lang3.tuple.Pair;
 
-public class DoorsScriptBuilder {
+public class DXLScriptBuilder extends DXLScript {
 
-    private final List<DXLScript> preamble = new ArrayList<>();
-    private final Set<DXLScript> libraries = new LinkedHashSet<>();
+    private final List<DXLScript> preambles = new ArrayList<>();
     private final List<DXLScript> scripts = new ArrayList<>();
     private final Map<String, String> variables = new HashMap<>();
 
-    private DoorsScriptBuilder parentBuilder;
+    private DXLScriptBuilder parentBuilder;
 
-    public DoorsScriptBuilder() {
+    public DXLScriptBuilder() {
         this(null);
     }
 
-    public DoorsScriptBuilder(DoorsScriptBuilder parentBuilder) {
+    public DXLScriptBuilder(DXLScriptBuilder parentBuilder) {
         this.parentBuilder = parentBuilder;
     }
 
-    public DoorsScriptBuilder beginScope() {
-        DoorsScriptBuilder scopeBuilder = new DoorsScriptBuilder(this);
-        scripts.add(DXLScript.fromBuilder(scopeBuilder));
-        return scopeBuilder;
+    @Override
+    public URI getSource() {
+        return this.scripts.isEmpty() ? null : this.scripts.get(0).getSource();
     }
 
-    public DoorsScriptBuilder endScope() {
+    public DXLScriptBuilder beginScope() {
+        DXLScriptBuilder builder = new DXLScriptBuilder(this);
+        scripts.add(builder);
+        return builder;
+    }
+
+    public DXLScriptBuilder endScope() {
         return parentBuilder;
     }
 
-    public DoorsScriptBuilder addPreamble(final DXLScript script) {
-        preamble.add(script);
+    public DXLScriptBuilder addPreamble(DXLScript library) {
+        preambles.add(library);
         return this;
     }
 
-    public DoorsScriptBuilder addLibrary(final DXLScript library) {
-        libraries.add(library);
-        return this;
-    }
-
-    public DoorsScriptBuilder addScript(final DXLScript script) {
+    public DXLScriptBuilder addScript(DXLScript script) {
         scripts.add(script);
         return this;
     }
 
-    public DoorsScriptBuilder setVariable(final String variable, final String value) {
+    public DXLScriptBuilder setVariable(String variable, String value) {
         variables.put(variable, value);
         return this;
     }
 
-    List<DXLScript> getPreamble() {
-        return preamble;
+    Stream<Pair<DXLScriptBuilder, String>> getVariable(String variable) {
+        return Stream.concat(
+                Stream.concat(this.preambles.stream(), this.scripts.stream())
+                        .filter(scr -> scr instanceof DXLScriptBuilder)
+                        .map(scr -> (DXLScriptBuilder) scr)
+                        .flatMap(scr -> scr.getVariable(variable)),
+                variables.containsKey(variable) ? Stream.of(Pair.of(this, variables.get(variable))) : Stream.empty());
     }
 
-    Set<DXLScript> getLibraries() {
-        return libraries;
+    List<DXLScript> getPreambles() {
+        return preambles;
     }
 
     List<DXLScript> getScripts() {
@@ -90,31 +94,27 @@ public class DoorsScriptBuilder {
     }
 
     Map<String, String> getVariables() {
-        DoorsScriptBuilder currentBuilder = this;
-        List<DoorsScriptBuilder> builders = new ArrayList<>();
+        DXLScriptBuilder currentBuilder = this;
+        List<DXLScriptBuilder> builders = new ArrayList<>();
         do {
             builders.add(0, currentBuilder);
             currentBuilder = currentBuilder.parentBuilder;
         } while (currentBuilder != null);
 
         HashMap<String, String> variables = new HashMap<>();
-        for (DoorsScriptBuilder bd : builders) {
+        for (DXLScriptBuilder bd : builders) {
             variables.putAll(bd.variables);
         }
-        
+
         return variables;
     }
 
+    @Override
     public String build() {
         final StringBuilder builder = new StringBuilder();
 
-        for (final DXLScript script : preamble) {
-            builder.append(script.getDXL());
-            builder.append("\n");
-        }
-
-        for (final DXLScript library : libraries) {
-            builder.append(library.getDXL());
+        for (final DXLScript preamble : preambles) {
+            builder.append(preamble.build());
             builder.append("\n");
         }
 
@@ -123,7 +123,7 @@ public class DoorsScriptBuilder {
             // script and avoid name clashes. That would happen if the same
             // script is used multiple times.
             builder.append("{");
-            builder.append(script.getDXL());
+            builder.append(script.build());
             builder.append("}");
             builder.append("\n");
         }

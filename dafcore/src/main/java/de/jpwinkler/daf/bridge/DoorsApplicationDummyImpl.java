@@ -26,12 +26,11 @@ import de.jpwinkler.daf.db.DatabaseFactory;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import org.apache.commons.io.IOUtils;
 
 /**
@@ -40,16 +39,19 @@ import org.apache.commons.io.IOUtils;
  */
 public class DoorsApplicationDummyImpl implements DoorsApplication {
 
-    private final HashMap<Predicate<URI>, Function<DoorsScriptBuilder, String>> dataFakers = new HashMap<>();
+    private final ArrayList<Function<DXLScriptBuilder, String>> dataFakers = new ArrayList<>();
 
     private static final Random ERROR_RANDOM = new Random(0);
     private final double errorProbability;
 
     public DoorsApplicationDummyImpl(double errorProbability) {
         this.errorProbability = errorProbability;
-        dataFakers.put(uri -> uri.toString().endsWith("dxl/get_children.dxl"), b -> {
+        dataFakers.add(bld -> {
+            if (bld.getSource() == null || !bld.getSource().toString().endsWith("dxl/get_children.dxl")) {
+                return null;
+            }
 
-            switch (b.getVariables().get("folder")) {
+            switch (bld.getVariable("folder").findFirst().map(p -> p.getRight()).orElse(null)) {
                 case "/":
                     return "Project:test\r\nProject:test 2";
                 case "/test":
@@ -61,9 +63,19 @@ public class DoorsApplicationDummyImpl implements DoorsApplication {
 
             }
         });
-        dataFakers.put(uri -> uri.toString().endsWith("dxl/get_module_attributes.dxl"), b -> "\"__view__\",\"" + DoorsApplication.STANDARD_VIEW + "\"\r\n\"Description\",\"Some random module\"");
-        dataFakers.put(uri -> uri.toString().endsWith("dxl/export_csv_single.dxl"), b -> {
-            try (FileOutputStream fos = new FileOutputStream(b.getVariables().get("file"));
+        dataFakers.add(bld -> {
+            if (bld.getSource() == null || !bld.getSource().toString().endsWith("dxl/get_module_attributes.dxl")) {
+                return null;
+            }
+
+            return "\"__view__\",\"" + DoorsApplication.STANDARD_VIEW + "\"\r\n\"Description\",\"Some random module\"";
+        });
+        dataFakers.add(bld -> {
+            if (bld.getSource() == null || !bld.getSource().toString().endsWith("dxl/export_csv_single.dxl")) {
+                return null;
+            }
+
+            try (FileOutputStream fos = new FileOutputStream(bld.getVariable("file").findFirst().map(p -> p.getRight()).orElse(null));
                     InputStream is = DoorsApplicationDummyImpl.class.getClassLoader().getResourceAsStream("dummy.csv")) {
 
                 IOUtils.copy(is, fos);
@@ -98,13 +110,10 @@ public class DoorsApplicationDummyImpl implements DoorsApplication {
     }
 
     @Override
-    public String runScript(Consumer<DoorsScriptBuilder> prepareScriptBuilder) {
+    public String runScript(Consumer<DXLScriptBuilder> prepareScriptBuilder) {
         if (errorProbability > 0 && ERROR_RANDOM.nextDouble() < errorProbability) {
-            throw new RuntimeException();
+            throw new DoorsRuntimeException("Random failure injection");
         }
-
-        DoorsScriptBuilder builder = new DoorsScriptBuilder();
-        prepareScriptBuilder.accept(builder);
 
         try {
             Thread.sleep(2000);
@@ -112,13 +121,14 @@ public class DoorsApplicationDummyImpl implements DoorsApplication {
             throw new RuntimeException();
         }
 
-        return dataFakers.entrySet().stream()
-                .flatMap(entry -> builder.getScripts().stream()
-                .map(sc -> sc.getSource())
-                .filter(entry.getKey())
-                .peek(uri -> System.out.println("Faking " + uri.toString()))
-                .map(uri -> entry.getValue().apply(builder)))
-                .findAny().orElse("");
+        DXLScriptBuilder scriptBuilder = new DXLScriptBuilder();
+        prepareScriptBuilder.accept(scriptBuilder);
+
+        return dataFakers.stream()
+                .map(f -> f.apply(scriptBuilder))
+                .filter(m -> m != null)
+                .findAny()
+                .orElseThrow(() -> new UnsupportedOperationException("Script " + Objects.toString(scriptBuilder.getSource()) + " not implemented"));
     }
 
 }
