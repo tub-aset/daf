@@ -24,7 +24,6 @@ package de.jpwinkler.daf.bridge.model;
 import de.jpwinkler.daf.bridge.DXLScript;
 import de.jpwinkler.daf.bridge.DoorsApplication;
 import de.jpwinkler.daf.bridge.DoorsItemType;
-import de.jpwinkler.daf.bridge.DoorsRuntimeException;
 import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import de.jpwinkler.daf.db.DatabaseFactory;
 import de.jpwinkler.daf.db.ModuleCSV;
@@ -43,7 +42,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
@@ -111,20 +109,6 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
                     builder.setVariable("file", tempFile.toAbsolutePath().toString());
                     builder = builder.endScope();
                 });
-
-                try {
-                    doorsApplication.runScript(builder -> {
-                        builder.addPreamble(DXLScript.fromResource("lib/utils.dxl"));
-
-                        builder = builder.beginScope();
-                        builder.addScript(DXLScript.fromResource("close_module.dxl"));
-                        builder.setVariable("url", null);
-                        builder.setVariable("name", this.getDoorsPath());
-                        builder = builder.endScope();
-                    });
-                } catch (DoorsRuntimeException ex) {
-                    LOG.log(Level.WARNING, "Failed closing module " + this.getDoorsPath(), ex);
-                }
 
                 DoorsModule loadedModule = ModuleCSV.readModule(new DatabaseFactory() {
                     @Override

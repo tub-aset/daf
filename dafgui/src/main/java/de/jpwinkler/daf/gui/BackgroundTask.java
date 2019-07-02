@@ -110,6 +110,10 @@ public class BackgroundTask<T> {
 
     public Double getCurrentProgress() {
         Pair<Long, Long> existingTaskProgress = this.taskProgress.get();
+        if(existingTaskProgress.getLeft() == 0 && existingTaskProgress.getRight() == 1) {
+            return -1d;
+        }
+        
         return (double) existingTaskProgress.getLeft() / (double) existingTaskProgress.getRight();
     }
 
