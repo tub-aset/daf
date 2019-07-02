@@ -38,6 +38,7 @@ import java.util.stream.Stream;
 public enum DoorsAttributes {
     TAGS(List.class, LIST_PARSER, LIST_WRITER),
     MODULE_DESCRIPTION("Description", DoorsModule.class),
+    MODULE_VIEW("__view__", String.class, IDENTITY, IDENTITY, DoorsModule.class),
     OBJECT_LEVEL("Object Level", Integer.class, INT_PARSER, INT_WRITER, DoorsObject.class),
     OBJECT_IDENTIFIER("Object Identifier", DoorsObject.class),
     OBJECT_TEXT("Object Text", DoorsObject.class),
@@ -47,9 +48,13 @@ public enum DoorsAttributes {
     ABSOLUTE_NUMBER("Absolute Number", Integer.class, INT_PARSER, INT_WRITER, DoorsObject.class),
     DATABASE_COPIED_FROM("Copied From", DoorsFolder.class),
     DATABASE_COPIED_AT("Copied At", DoorsFolder.class);
+    
+    <T> DoorsAttributes(Class<T> type, Class<? extends DoorsTreeNode>... appliesTo) {
+        this(null, IDENTITY, IDENTITY, appliesTo);
+    }
 
     <T> DoorsAttributes(Class<T> type, Function<String, T> parser, Function<T, String> writer, Class<? extends DoorsTreeNode>... appliesTo) {
-        this(null, type, parser, writer);
+        this(null, type, parser, writer, appliesTo);
     }
 
     <T> DoorsAttributes(String key, Class<? extends DoorsTreeNode>... appliesTo) {

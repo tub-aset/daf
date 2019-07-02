@@ -43,9 +43,11 @@ public class DoorsApplicationDummyImpl implements DoorsApplication {
 
     private static final Random ERROR_RANDOM = new Random(0);
     private final double errorProbability;
+    private String databaseView;
 
-    public DoorsApplicationDummyImpl(double errorProbability) {
+    public DoorsApplicationDummyImpl(double errorProbability, String databaseView) {
         this.errorProbability = errorProbability;
+        this.databaseView = databaseView;
         dataFakers.add(bld -> {
             if (bld.getSource() == null || !bld.getSource().toString().endsWith("dxl/get_children.dxl")) {
                 return null;
@@ -85,6 +87,7 @@ public class DoorsApplicationDummyImpl implements DoorsApplication {
 
             return "";
         });
+        this.databaseView = databaseView;
     }
 
     @Override
@@ -129,6 +132,15 @@ public class DoorsApplicationDummyImpl implements DoorsApplication {
                 .filter(m -> m != null)
                 .findAny()
                 .orElseThrow(() -> new UnsupportedOperationException("Script " + Objects.toString(scriptBuilder.getSource()) + " not implemented"));
+    }
+
+    @Override
+    public String getDatabaseView() {
+        return databaseView;
+    }
+
+    public void setDatabaseView(String databaseView) {
+        this.databaseView = databaseView;
     }
 
 }

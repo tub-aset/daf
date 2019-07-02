@@ -21,7 +21,6 @@ package de.jpwinkler.daf.model.impl;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-import static de.jpwinkler.daf.bridge.DoorsApplication.STANDARD_VIEW;
 import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import de.jpwinkler.daf.model.DoorsAttributes;
 import de.jpwinkler.daf.model.DoorsModule;
@@ -70,7 +69,7 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
      */
     @Override
     public String getView() {
-        return STANDARD_VIEW;
+        return DoorsAttributes.MODULE_VIEW.getValue(String.class, this);
     }
 
     /**

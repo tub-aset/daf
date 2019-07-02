@@ -21,8 +21,6 @@ package de.jpwinkler.daf.db;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
-import de.jpwinkler.daf.bridge.DoorsApplication;
 import de.jpwinkler.daf.bridge.DoorsApplicationImpl;
 import de.jpwinkler.daf.model.DoorsFolder;
 
@@ -32,17 +30,20 @@ import de.jpwinkler.daf.model.DoorsFolder;
  */
 public class DoorsApplicationDatabaseInterface implements DatabaseInterface {
 
-    private final DoorsApplication doorsApplication = new DoorsApplicationImpl();
+    private final DoorsApplicationImpl doorsApplication;
     private final DoorsFolder root;
     private final DatabasePath databasePath;
 
     public DoorsApplicationDatabaseInterface(DatabasePath databasePath, OpenFlag openFlag) {
-        if (!databasePath.getDatabasePath().isEmpty() || !databasePath.getPath().isEmpty()) {
-            throw new IllegalArgumentException("databasePath must be fully empty for the doors bridge");
+        if (!databasePath.getPath().isEmpty()) {
+            throw new IllegalArgumentException("databasePath must not have a path segment here");
         }
         if (openFlag != OpenFlag.OPEN_ONLY) {
             throw new IllegalArgumentException("Only OpenFlag.OPEN_ONLY is allowed");
         }
+
+        this.doorsApplication = new DoorsApplicationImpl();
+        this.doorsApplication.setDatabaseView(databasePath.getDatabasePath());
 
         this.root = doorsApplication.getDatabaseFactory().createFolder(null, "Doors Application");
         this.databasePath = databasePath;

@@ -21,7 +21,6 @@ package de.jpwinkler.daf.db;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collections;
@@ -36,14 +35,6 @@ public class DatabasePath implements Serializable {
 
     public DatabasePath(Class<? extends DatabaseInterface> databaseInterface, String databasePath, String path) {
         this(databaseInterface.getCanonicalName(), databasePath, path);
-    }
-
-    public DatabasePath(Class<? extends DatabaseInterface> databaseInterface, String fullPath) {
-        this(databaseInterface.getCanonicalName(), fullPath);
-    }
-
-    public DatabasePath(String databaseInterface, String fullPath) {
-        this(databaseInterface, fullPath.split(":", 2)[0], fullPath.split(":", 2)[1]);
     }
 
     public DatabasePath(String databaseInterface, String databasePath, String path) {
@@ -102,7 +93,7 @@ public class DatabasePath implements Serializable {
         }
         return true;
     }
-    
+
     public List<String> getDatabasePathSegments() {
         return databasePath == null || databasePath.isEmpty() ? Collections.emptyList() : Arrays.asList(databasePath.split("/"));
     }
@@ -110,7 +101,7 @@ public class DatabasePath implements Serializable {
     public List<String> getPathSegments() {
         return path == null || path.isEmpty() ? Collections.emptyList() : Arrays.asList(path.split("/"));
     }
-    
+
     public boolean isRoot() {
         return path == null || path.isEmpty() || "/".equals(path);
     }
@@ -120,7 +111,7 @@ public class DatabasePath implements Serializable {
         String shortName = this.databaseInterface;
         shortName = shortName.substring(shortName.lastIndexOf('.') + 1);
 
-        return shortName + ": " + this.databasePath + (this.path == null || this.path.isEmpty() ? "" : (":" + this.path));
+        return shortName + ":" + this.databasePath + (this.path == null || this.path.isEmpty() ? "" : (":" + this.path));
     }
 
 }

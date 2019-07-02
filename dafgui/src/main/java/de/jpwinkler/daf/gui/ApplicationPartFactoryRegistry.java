@@ -202,9 +202,7 @@ public final class ApplicationPartFactoryRegistry {
             return this.getDatabasePathFactory().create(window, this, true, proposedName).map(this::openPath);
         }
 
-        protected DatabasePathFactory getDatabasePathFactory() {
-            return ApplicationPartFactories.genericSelector();
-        }
+        protected abstract DatabasePathFactory getDatabasePathFactory();
 
         protected ApplicationPartControllerFactory getApplicationPartControllerFactory() {
             return ApplicationPartFactories::dynamicPartConstructor;

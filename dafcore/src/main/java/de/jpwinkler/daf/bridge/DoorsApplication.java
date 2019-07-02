@@ -62,4 +62,6 @@ public interface DoorsApplication {
      */
     String runScript(final Consumer<DXLScriptBuilder> prepareScriptBuilder);
 
+    String getDatabaseView();
+
 }

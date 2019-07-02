@@ -21,6 +21,7 @@ package de.jpwinkler.daf.gui;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
+import de.jpwinkler.daf.bridge.DoorsApplication;
 import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.db.DoorsApplicationDatabaseInterface;
 import de.jpwinkler.daf.db.DoorsApplicationDummyDatabaseInterface;
@@ -54,11 +55,31 @@ public final class ApplicationPartFactories {
     }
 
     public static void registerDefault(ApplicationPartFactoryRegistry registry) {
+        registry.register(DoorsApplicationStandardViewPartFactory.class);
         registry.register(DoorsApplicationPartFactory.class);
+        registry.register(DoorsDummyApplicationStandardViewPartFactory.class);
         registry.register(DoorsDummyApplicationPartFactory.class);
         registry.register(LocalFolderApplicationPartFactory.class);
         registry.register(LocalXmiApplicationPartFactory.class);
         registry.register(LocalModuleApplicationPartFactory.class);
+    }
+
+    public static final class DoorsApplicationStandardViewPartFactory extends ApplicationPartFactory {
+
+        public DoorsApplicationStandardViewPartFactory() {
+            super("Doors Bridge (standard view)", DoorsApplicationDatabaseInterface.class, false);
+        }
+
+        @Override
+        protected ApplicationPartFactoryRegistry.DatabasePathFactory getDatabasePathFactory() {
+            return defaultSelector(DoorsApplication.STANDARD_VIEW, null);
+        }
+
+        @Override
+        public boolean canStore(DoorsTreeNode databaseRoot) {
+            return false;
+        }
+
     }
 
     public static final class DoorsApplicationPartFactory extends ApplicationPartFactory {
@@ -69,7 +90,25 @@ public final class ApplicationPartFactories {
 
         @Override
         protected ApplicationPartFactoryRegistry.DatabasePathFactory getDatabasePathFactory() {
-            return defaultSelector("", null);
+            return genericSelector(save -> "Please enter a view name.");
+        }
+
+        @Override
+        public boolean canStore(DoorsTreeNode databaseRoot) {
+            return false;
+        }
+
+    }
+
+    public static final class DoorsDummyApplicationStandardViewPartFactory extends ApplicationPartFactory {
+
+        public DoorsDummyApplicationStandardViewPartFactory() {
+            super("Doors Bridge Dummy (standard view)", DoorsApplicationDummyDatabaseInterface.class, false);
+        }
+
+        @Override
+        protected ApplicationPartFactoryRegistry.DatabasePathFactory getDatabasePathFactory() {
+            return defaultSelector(DoorsApplication.STANDARD_VIEW, null);
         }
 
         @Override
@@ -87,9 +126,9 @@ public final class ApplicationPartFactories {
 
         @Override
         protected ApplicationPartFactoryRegistry.DatabasePathFactory getDatabasePathFactory() {
-            return defaultSelector("", null);
+            return genericSelector(save -> "Please enter a view name.");
         }
-        
+
         @Override
         public boolean canStore(DoorsTreeNode databaseRoot) {
             return false;
@@ -107,7 +146,7 @@ public final class ApplicationPartFactories {
         protected ApplicationPartFactoryRegistry.DatabasePathFactory getDatabasePathFactory() {
             return localFolderDatabaseSelector();
         }
-        
+
         @Override
         public boolean canStore(DoorsTreeNode databaseRoot) {
             return databaseRoot instanceof DoorsFolder;
@@ -124,7 +163,7 @@ public final class ApplicationPartFactories {
         protected ApplicationPartFactoryRegistry.DatabasePathFactory getDatabasePathFactory() {
             return fileChooserSelector(new FileChooser.ExtensionFilter("XMI", "*.xmi"));
         }
-        
+
         @Override
         public boolean canStore(DoorsTreeNode databaseRoot) {
             return databaseRoot instanceof DoorsFolder;
@@ -141,7 +180,7 @@ public final class ApplicationPartFactories {
         protected ApplicationPartFactoryRegistry.DatabasePathFactory getDatabasePathFactory() {
             return fileChooserSelector(f -> FilenameUtils.removeExtension(f.getAbsolutePath()), new FileChooser.ExtensionFilter("CSV/MMD", "*.csv", "*.mmd"));
         }
-        
+
         @Override
         public boolean canStore(DoorsTreeNode databaseRoot) {
             return databaseRoot instanceof DoorsModule;
@@ -189,13 +228,16 @@ public final class ApplicationPartFactories {
         };
     }
 
-    public static DatabasePathFactory genericSelector() {
+    public static DatabasePathFactory genericSelector(Function<Boolean, String> headerGenerator) {
         return (window, partFactory, save, proposedName) -> {
             TextInputDialog dialog = new TextInputDialog();
             dialog.setTitle((save ? "Save a " : "Open a ") + partFactory.getName());
-            dialog.setHeaderText("Please enter a URI to " + (save ? "save." : "open."));
+            dialog.setHeaderText(headerGenerator.apply(save));
             dialog.setContentText(partFactory + ":" + proposedName != null ? proposedName : null);
-            return Main.asStream(dialog.showAndWait()).map((s) -> new DatabasePath(partFactory.getDatabaseInterface(), s));
+            return Main.asStream(dialog.showAndWait())
+                    .map((s) -> s.split(":"))
+                    .filter(s -> s.length <= 2)
+                    .map(s -> new DatabasePath(partFactory.getDatabaseInterface(), s[0], s.length == 1 ? "" : s[1]));
         };
     }
 

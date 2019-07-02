@@ -27,6 +27,7 @@ import de.jpwinkler.daf.bridge.DoorsItemType;
 import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import de.jpwinkler.daf.db.DatabaseFactory;
 import de.jpwinkler.daf.db.ModuleCSV;
+import de.jpwinkler.daf.model.DoorsAttributes;
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
@@ -81,7 +82,9 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
             });
 
             try (ByteArrayInputStream bis = new ByteArrayInputStream(result.getBytes(ModuleCSV.CHARSET))) {
-                return ModuleCSV.readMetaData(doorsApplication.getDatabaseFactory(), bis);
+                Map<String, String> attributes = ModuleCSV.readMetaData(doorsApplication.getDatabaseFactory(), bis);
+                attributes.put(DoorsAttributes.MODULE_VIEW.getKey(), this.doorsApplication.getDatabaseView());
+                return attributes;
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
@@ -91,8 +94,6 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
     @Override
     public CompletableFuture<List<DoorsTreeNode>> getChildrenAsync(BackgroundTaskExecutor executor) {
         return executor.runBackgroundTask("Load module", this.children, i -> {
-            String view = this.getAttributes().get("__view__");
-
             try {
                 Path tempFile = Files.createTempFile(null, null);
 
@@ -105,7 +106,7 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
                     builder.addScript(DXLScript.fromResource("export_csv_single.dxl"));
                     builder.setVariable("url", null);
                     builder.setVariable("name", this.getDoorsPath());
-                    builder.setVariable("view", view);
+                    builder.setVariable("view", this.doorsApplication.getDatabaseView());
                     builder.setVariable("file", tempFile.toAbsolutePath().toString());
                     builder = builder.endScope();
                 });
@@ -156,6 +157,7 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
                     }
 
                 }, tempFile.toFile());
+
                 List<DoorsTreeNode> result = loadedModule.getChildren();
                 result.forEach(c -> c.setParent(this));
 
@@ -198,6 +200,6 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
 
     @Override
     public String getView() {
-        return getAttributes().get("__view__");
+        return DoorsAttributes.MODULE_VIEW.getValue(String.class, this);
     }
 }

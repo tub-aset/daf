@@ -31,18 +31,19 @@ import de.jpwinkler.daf.model.DoorsFolder;
  */
 public class DoorsApplicationDummyDatabaseInterface implements DatabaseInterface {
 
-    private final DoorsApplication doorsApplication = new DoorsApplicationDummyImpl(0.1);
+    private final DoorsApplication doorsApplication;
     private final DoorsFolder root;
     private final DatabasePath databasePath;
 
     public DoorsApplicationDummyDatabaseInterface(DatabasePath databasePath, OpenFlag openFlag) {
-        if (!databasePath.getDatabasePath().isEmpty() || !databasePath.getPath().isEmpty()) {
-            throw new IllegalArgumentException("databasePath must be fully empty for the doors bridge");
+        if (!databasePath.getPath().isEmpty()) {
+            throw new IllegalArgumentException("databasePath must not have a path segment here");
         }
         if (openFlag != OpenFlag.OPEN_ONLY) {
             throw new IllegalArgumentException("Only OpenFlag.OPEN_ONLY is allowed");
         }
 
+        this.doorsApplication = new DoorsApplicationDummyImpl(0.1, databasePath.getDatabasePath());
         this.root = doorsApplication.getDatabaseFactory().createFolder(null, "Doors Application");
         this.databasePath = databasePath;
     }

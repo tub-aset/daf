@@ -21,7 +21,6 @@ package de.jpwinkler.daf.gui.modules;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-import de.jpwinkler.daf.bridge.DoorsApplicationImpl;
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.filter.ExpressionFilter;
 import de.jpwinkler.daf.filter.model.FilteredDoorsTreeNode;
@@ -194,9 +193,6 @@ public final class ModulePaneController extends ApplicationPartController<Module
                         this.actualModule = dm;
                         if (this.actualModule == null) {
                             throw new RuntimeException("No such module: " + super.getApplicationPart().getDatabasePath().toString());
-                        }
-                        if (!DoorsApplicationImpl.STANDARD_VIEW.equals(this.actualModule.getView())) {
-                            setStatus("Warning: This module's view is not the standard view.");
                         }
 
                         this.filteredModule = actualModule;

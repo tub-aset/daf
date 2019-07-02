@@ -128,6 +128,8 @@ public class DoorsApplicationImpl implements DoorsApplication {
     private final String doorsServer;
     private final String user;
     private final String password;
+    
+    private String databaseView = STANDARD_VIEW;
 
     private final DatabaseFactory databaseFactory = new DoorsBridgeDatabaseFactory(this);
 
@@ -275,6 +277,15 @@ public class DoorsApplicationImpl implements DoorsApplication {
     @Override
     public final void close() {
         doorsApplication.set(null);
+    }
+
+    @Override
+    public String getDatabaseView() {
+        return databaseView;
+    }
+
+    public void setDatabaseView(String databaseView) {
+        this.databaseView = databaseView;
     }
 
     private static class FileForwarder implements Runnable {
