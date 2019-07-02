@@ -1,4 +1,0 @@
-Module m = myRead("$$url$$", "$$name$$", true)
-if (null m) {
-	throw("Cannot load module $$url$$$$name$$.")
-}

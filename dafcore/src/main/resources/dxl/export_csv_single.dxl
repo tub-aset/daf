@@ -7,3 +7,4 @@ if (load(m, view "$$view$$")) {
 } else {
 	throw("Cannot find view $$view$$ in module " name(m) ".")
 }
+close m
