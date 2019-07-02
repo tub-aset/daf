@@ -21,7 +21,6 @@ package de.jpwinkler.daf.db;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
 import de.jpwinkler.daf.model.DoorsAttributes;
 import de.jpwinkler.daf.model.DoorsModule;
@@ -177,44 +176,8 @@ public class ModuleCSV {
     }
 
     public static DoorsModule readModule(DatabaseFactory factory, final InputStream csvStream, String moduleName) throws IOException {
-        return buildModuleModel(factory, new CSVParser(new InputStreamReader(csvStream, CHARSET), READ_FORMAT), moduleName);
-    }
+        CSVParser csvParser = new CSVParser(new InputStreamReader(csvStream, CHARSET), READ_FORMAT);
 
-    public static Map<String, String> readMetaData(DatabaseFactory factory, final File mmdFile) throws IOException {
-        try (InputStream mmdStream = new FileInputStream(mmdFile)) {
-            return readMetaData(factory, mmdStream);
-        }
-    }
-
-    public static Map<String, String> readMetaData(DatabaseFactory factory, final InputStream mmdStream) throws IOException {
-        CSVParser parser = new CSVParser(new InputStreamReader(mmdStream, CHARSET), MMD_FORMAT);
-        final Map<String, String> metadata = new HashMap<>();
-        for (final CSVRecord record : parser.getRecords()) {
-            metadata.put(record.get(0), record.get(1));
-        }
-
-        return metadata;
-    }
-
-    private static final CSVFormat WRITE_FORMAT = CSVFormat.newFormat(',')
-            .withQuote('"')
-            .withEscape('\\')
-            .withIgnoreSurroundingSpaces()
-            .withRecordSeparator("\r\n");
-    private static final CSVFormat READ_FORMAT = CSVFormat.newFormat(',')
-            .withQuote('"')
-            .withHeader()
-            .withEscape('\\')
-            .withIgnoreSurroundingSpaces()
-            .withQuoteMode(QuoteMode.ALL)
-            .withRecordSeparator("\r\n");
-    private static final CSVFormat MMD_FORMAT = CSVFormat.newFormat(',')
-            .withQuote('"')
-            .withEscape('\\')
-            .withIgnoreSurroundingSpaces()
-            .withRecordSeparator("\r\n");
-
-    private static DoorsModule buildModuleModel(DatabaseFactory factory, final CSVParser csvParser, String moduleName) throws NumberFormatException, IOException {
         final DoorsModule module = factory.createModule(null, moduleName);
 
         DoorsTreeNode current = module;
@@ -252,5 +215,40 @@ public class ModuleCSV {
 
         return module;
     }
+
+    public static Map<String, String> readMetaData(DatabaseFactory factory, final File mmdFile) throws IOException {
+        try (InputStream mmdStream = new FileInputStream(mmdFile)) {
+            return readMetaData(factory, mmdStream);
+        }
+    }
+
+    public static Map<String, String> readMetaData(DatabaseFactory factory, final InputStream mmdStream) throws IOException {
+        CSVParser parser = new CSVParser(new InputStreamReader(mmdStream, CHARSET), MMD_FORMAT);
+        final Map<String, String> metadata = new HashMap<>();
+        for (final CSVRecord record : parser.getRecords()) {
+            metadata.put(record.get(0), record.get(1));
+        }
+
+        return metadata;
+    }
+
+    private static final CSVFormat WRITE_FORMAT = CSVFormat.newFormat(',')
+            .withQuote('"')
+            .withEscape('\\')
+            .withIgnoreSurroundingSpaces()
+            .withRecordSeparator("\r\n")
+            .withQuoteMode(QuoteMode.NON_NUMERIC);
+    private static final CSVFormat READ_FORMAT = CSVFormat.newFormat(',')
+            .withQuote('"')
+            .withEscape('\\')
+            .withIgnoreSurroundingSpaces()
+            .withRecordSeparator("\r\n")
+            .withQuoteMode(QuoteMode.NON_NUMERIC)
+            .withHeader();
+    private static final CSVFormat MMD_FORMAT = CSVFormat.newFormat(',')
+            .withQuote('"')
+            .withEscape('\\')
+            .withIgnoreSurroundingSpaces()
+            .withRecordSeparator("\r\n");
 
 }
