@@ -483,9 +483,6 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             part.getCommandStack().setSavePoint();
         } catch (Throwable ex) {
             ex.printStackTrace();
-            while (ex.getCause() != null) {
-                ex = ex.getCause();
-            }
 
             this.setStatus("Save: Failed to save file; " + getMessage(ex));
             return false;
@@ -558,14 +555,10 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             } finally {
                 applicationPartFactoryRegistry.closeDatabase(destinationPath);
             }
-        }).handleAsync((val, exo) -> {
+        }).handleAsync((val, ex) -> {
             Platform.runLater(() -> {
-                if (exo != null) {
-                    Throwable ex = exo;
+                if (ex != null) {
                     ex.printStackTrace();
-                    while (ex.getCause() != null) {
-                        ex = ex.getCause();
-                    }
 
                     this.setStatus("Snapshot failed; " + getMessage(ex));
                 }
