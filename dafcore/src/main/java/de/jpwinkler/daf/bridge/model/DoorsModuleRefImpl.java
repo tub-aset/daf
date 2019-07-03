@@ -167,7 +167,7 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
 
                 return result;
             } catch (IOException ex) {
-                throw new RuntimeException(ex);
+                throw new RuntimeException("error exporting module " + this.getDoorsPath(), ex)    ;
             }
         });
     }

@@ -1,3 +1,7 @@
 Module m = myRead("$$url$$", "$$name$$", false)
-
-returnToJava(exportModuleMetaData(m))
+if (null m) {
+	throw("Cannot load module $$url$$$$name$$.")
+} else {
+	returnToJava(exportModuleMetaData(m))
+	close m
+}

@@ -425,9 +425,6 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             return controller;
         } catch (Throwable ex) {
             ex.printStackTrace();
-            while (ex.getCause() != null) {
-                ex = ex.getCause();
-            }
 
             setStatus("Open: Failed to open database; " + getMessage(ex));
             return null;

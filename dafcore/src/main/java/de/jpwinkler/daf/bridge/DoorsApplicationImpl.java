@@ -209,22 +209,12 @@ public class DoorsApplicationImpl implements DoorsApplication {
      * @throws DoorsRuntimeException If the script fails or executes 'throw()'
      */
     @Override
-    public String runScript(final Consumer<DXLScriptBuilder> prepareScriptBuilder) {
-        try {
-            DXLScriptBuilder scriptBuilder = new DXLScriptBuilder();
-            prepareScriptBuilder.accept(scriptBuilder);
-            return executeScript(scriptBuilder);
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    private String executeScript(DXLScriptBuilder scriptBuilder) throws IOException {
+    public String runScript(Consumer<DXLScriptBuilder> prepareScriptBuilder) {
 
         final boolean redirectOutput = outputStream != null;
 
         try (TempFile exceptionFile = new TempFile(); TempFile returnFile = new TempFile()) {
-
+            DXLScriptBuilder scriptBuilder = new DXLScriptBuilder();
             scriptBuilder.addPreamble(DXLScript.fromResource("pre/exception_handling.dxl"));
             scriptBuilder.setVariable("exceptionFilename", exceptionFile.getAbsolutePath());
 
@@ -234,6 +224,8 @@ public class DoorsApplicationImpl implements DoorsApplication {
             if (redirectOutput) {
                 scriptBuilder.addPreamble(DXLScript.fromResource("pre/redirect_output.dxl"));
             }
+            
+            prepareScriptBuilder.accept(scriptBuilder);
 
             FileForwarder t = null;
             if (redirectOutput) {
@@ -271,6 +263,8 @@ public class DoorsApplicationImpl implements DoorsApplication {
             } else {
                 return null;
             }
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
     }
 

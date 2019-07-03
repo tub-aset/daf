@@ -1,10 +1,14 @@
 Module m = myRead("$$url$$", "$$name$$", true)
-if (load(m, view "$$view$$")) {
-	exportModuleToCSV(m, "$$file$$")
-	Stream mmd = write("$$file$$.mmd", CP_UTF8)
-	mmd << exportModuleMetaData(m)
-	close(mmd)
+if (null m) {
+	throw("Cannot load module $$url$$$$name$$.")
 } else {
-	throw("Cannot find view $$view$$ in module " name(m) ".")
+	if (load(m, view "$$view$$")) {
+		exportModuleToCSV(m, "$$file$$")
+		Stream mmd = write("$$file$$.mmd", CP_UTF8)
+		mmd << exportModuleMetaData(m)
+		close(mmd)
+	} else {
+		throw("Cannot find view $$view$$ in module $$url$$$$name$$.")
+	}
+	close m
 }
-close m
