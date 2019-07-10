@@ -34,7 +34,6 @@ import java.util.List;
  * </p>
  * <ul>
  *   <li>{@link de.jpwinkler.daf.model.DoorsObject#getObjectIdentifier <em>Object Identifier</em>}</li>
- *   <li>{@link de.jpwinkler.daf.model.DoorsObject#getObjectLevel <em>Object Level</em>}</li>
  *   <li>{@link de.jpwinkler.daf.model.DoorsObject#getObjectNumber <em>Object Number</em>}</li>
  *   <li>{@link de.jpwinkler.daf.model.DoorsObject#getAbsoluteNumber <em>Absolute Number</em>}</li>
  *   <li>{@link de.jpwinkler.daf.model.DoorsObject#getObjectText <em>Object Text</em>}</li>
@@ -74,26 +73,12 @@ public interface DoorsObject extends DoorsTreeNode {
 	void setObjectIdentifier(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Object Level</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Object Level</em>' attribute.
-	 * @see #setObjectLevel(int)
-	 * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsObject_ObjectLevel()
-	 * @model unique="false" transient="true" volatile="true" derived="true"
+	 * @model kind="operation"
 	 * @generated
 	 */
 	int getObjectLevel();
-
-	/**
-	 * Sets the value of the '{@link de.jpwinkler.daf.model.DoorsObject#getObjectLevel <em>Object Level</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Object Level</em>' attribute.
-	 * @see #getObjectLevel()
-	 * @generated
-	 */
-	void setObjectLevel(int value);
 
 	/**
 	 * Returns the value of the '<em><b>Object Number</b></em>' attribute.

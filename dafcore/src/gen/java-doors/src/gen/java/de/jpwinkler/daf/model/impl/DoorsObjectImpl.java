@@ -47,7 +47,6 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * </p>
  * <ul>
  *   <li>{@link de.jpwinkler.daf.model.impl.DoorsObjectImpl#getObjectIdentifier <em>Object Identifier</em>}</li>
- *   <li>{@link de.jpwinkler.daf.model.impl.DoorsObjectImpl#getObjectLevel <em>Object Level</em>}</li>
  *   <li>{@link de.jpwinkler.daf.model.impl.DoorsObjectImpl#getObjectNumber <em>Object Number</em>}</li>
  *   <li>{@link de.jpwinkler.daf.model.impl.DoorsObjectImpl#getAbsoluteNumber <em>Absolute Number</em>}</li>
  *   <li>{@link de.jpwinkler.daf.model.impl.DoorsObjectImpl#getObjectText <em>Object Text</em>}</li>
@@ -71,16 +70,6 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 	 * @ordered
 	 */
     protected static final String OBJECT_IDENTIFIER_EDEFAULT = "";
-
-    /**
-	 * The default value of the '{@link #getObjectLevel() <em>Object Level</em>}' attribute.
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @see #getObjectLevel()
-	 * @generated
-	 * @ordered
-	 */
-    protected static final int OBJECT_LEVEL_EDEFAULT = 0;
 
     /**
 	 * The default value of the '{@link #getObjectNumber() <em>Object Number</em>}' attribute.
@@ -206,17 +195,7 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
      */
     @Override
     public int getObjectLevel() {
-        return DoorsAttributes.OBJECT_LEVEL.getValue(Integer.class, this);
-    }
-
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     *
-     * @generated NOT
-     */
-    @Override
-    public void setObjectLevel(final int newObjectLevel) {
-        DoorsAttributes.OBJECT_LEVEL.setValue(Integer.class, this, newObjectLevel);
+        return this.getParent() instanceof DoorsObject ? ((DoorsObject)this.getParent()).getObjectLevel() + 1 : 1;
     }
 
     /**
@@ -416,8 +395,6 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 		switch (featureID) {
 			case DoorsPackage.DOORS_OBJECT__OBJECT_IDENTIFIER:
 				return getObjectIdentifier();
-			case DoorsPackage.DOORS_OBJECT__OBJECT_LEVEL:
-				return getObjectLevel();
 			case DoorsPackage.DOORS_OBJECT__OBJECT_NUMBER:
 				return getObjectNumber();
 			case DoorsPackage.DOORS_OBJECT__ABSOLUTE_NUMBER:
@@ -448,9 +425,6 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 		switch (featureID) {
 			case DoorsPackage.DOORS_OBJECT__OBJECT_IDENTIFIER:
 				setObjectIdentifier((String)newValue);
-				return;
-			case DoorsPackage.DOORS_OBJECT__OBJECT_LEVEL:
-				setObjectLevel((Integer)newValue);
 				return;
 			case DoorsPackage.DOORS_OBJECT__OBJECT_NUMBER:
 				setObjectNumber((String)newValue);
@@ -492,9 +466,6 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 			case DoorsPackage.DOORS_OBJECT__OBJECT_IDENTIFIER:
 				setObjectIdentifier(OBJECT_IDENTIFIER_EDEFAULT);
 				return;
-			case DoorsPackage.DOORS_OBJECT__OBJECT_LEVEL:
-				setObjectLevel(OBJECT_LEVEL_EDEFAULT);
-				return;
 			case DoorsPackage.DOORS_OBJECT__OBJECT_NUMBER:
 				setObjectNumber(OBJECT_NUMBER_EDEFAULT);
 				return;
@@ -532,8 +503,6 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 		switch (featureID) {
 			case DoorsPackage.DOORS_OBJECT__OBJECT_IDENTIFIER:
 				return OBJECT_IDENTIFIER_EDEFAULT == null ? getObjectIdentifier() != null : !OBJECT_IDENTIFIER_EDEFAULT.equals(getObjectIdentifier());
-			case DoorsPackage.DOORS_OBJECT__OBJECT_LEVEL:
-				return getObjectLevel() != OBJECT_LEVEL_EDEFAULT;
 			case DoorsPackage.DOORS_OBJECT__OBJECT_NUMBER:
 				return OBJECT_NUMBER_EDEFAULT == null ? getObjectNumber() != null : !OBJECT_NUMBER_EDEFAULT.equals(getObjectNumber());
 			case DoorsPackage.DOORS_OBJECT__ABSOLUTE_NUMBER:
@@ -562,6 +531,8 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 		switch (operationID) {
 			case DoorsPackage.DOORS_OBJECT___IS_HEADING:
 				return isHeading();
+			case DoorsPackage.DOORS_OBJECT___GET_OBJECT_LEVEL:
+				return getObjectLevel();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

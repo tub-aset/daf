@@ -695,22 +695,13 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_OBJECT__OBJECT_IDENTIFIER = DOORS_TREE_NODE_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Object Level</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DOORS_OBJECT__OBJECT_LEVEL = DOORS_TREE_NODE_FEATURE_COUNT + 1;
-
-	/**
 	 * The feature id for the '<em><b>Object Number</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_OBJECT__OBJECT_NUMBER = DOORS_TREE_NODE_FEATURE_COUNT + 2;
+	int DOORS_OBJECT__OBJECT_NUMBER = DOORS_TREE_NODE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Absolute Number</b></em>' attribute.
@@ -719,7 +710,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_OBJECT__ABSOLUTE_NUMBER = DOORS_TREE_NODE_FEATURE_COUNT + 3;
+	int DOORS_OBJECT__ABSOLUTE_NUMBER = DOORS_TREE_NODE_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Object Text</b></em>' attribute.
@@ -728,7 +719,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_OBJECT__OBJECT_TEXT = DOORS_TREE_NODE_FEATURE_COUNT + 4;
+	int DOORS_OBJECT__OBJECT_TEXT = DOORS_TREE_NODE_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Object Short Text</b></em>' attribute.
@@ -737,7 +728,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_OBJECT__OBJECT_SHORT_TEXT = DOORS_TREE_NODE_FEATURE_COUNT + 5;
+	int DOORS_OBJECT__OBJECT_SHORT_TEXT = DOORS_TREE_NODE_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Object Heading</b></em>' attribute.
@@ -746,7 +737,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_OBJECT__OBJECT_HEADING = DOORS_TREE_NODE_FEATURE_COUNT + 6;
+	int DOORS_OBJECT__OBJECT_HEADING = DOORS_TREE_NODE_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Text</b></em>' attribute.
@@ -755,7 +746,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_OBJECT__TEXT = DOORS_TREE_NODE_FEATURE_COUNT + 7;
+	int DOORS_OBJECT__TEXT = DOORS_TREE_NODE_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Outgoing Links</b></em>' containment reference list.
@@ -764,7 +755,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_OBJECT__OUTGOING_LINKS = DOORS_TREE_NODE_FEATURE_COUNT + 8;
+	int DOORS_OBJECT__OUTGOING_LINKS = DOORS_TREE_NODE_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Incoming Links</b></em>' reference list.
@@ -773,7 +764,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_OBJECT__INCOMING_LINKS = DOORS_TREE_NODE_FEATURE_COUNT + 9;
+	int DOORS_OBJECT__INCOMING_LINKS = DOORS_TREE_NODE_FEATURE_COUNT + 8;
 
 	/**
 	 * The number of structural features of the '<em>Object</em>' class.
@@ -782,7 +773,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_OBJECT_FEATURE_COUNT = DOORS_TREE_NODE_FEATURE_COUNT + 10;
+	int DOORS_OBJECT_FEATURE_COUNT = DOORS_TREE_NODE_FEATURE_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Accept</em>' operation.
@@ -884,13 +875,22 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_OBJECT___IS_HEADING = DOORS_TREE_NODE_OPERATION_COUNT + 0;
 
 	/**
+	 * The operation id for the '<em>Get Object Level</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_OBJECT___GET_OBJECT_LEVEL = DOORS_TREE_NODE_OPERATION_COUNT + 1;
+
+	/**
 	 * The number of operations of the '<em>Object</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_OBJECT_OPERATION_COUNT = DOORS_TREE_NODE_OPERATION_COUNT + 1;
+	int DOORS_OBJECT_OPERATION_COUNT = DOORS_TREE_NODE_OPERATION_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link de.jpwinkler.daf.model.impl.AttributeMapImpl <em>Attribute Map</em>}' class.
@@ -1420,17 +1420,6 @@ public interface DoorsPackage extends EPackage {
 	EAttribute getDoorsObject_ObjectIdentifier();
 
 	/**
-	 * Returns the meta object for the attribute '{@link de.jpwinkler.daf.model.DoorsObject#getObjectLevel <em>Object Level</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Object Level</em>'.
-	 * @see de.jpwinkler.daf.model.DoorsObject#getObjectLevel()
-	 * @see #getDoorsObject()
-	 * @generated
-	 */
-	EAttribute getDoorsObject_ObjectLevel();
-
-	/**
 	 * Returns the meta object for the attribute '{@link de.jpwinkler.daf.model.DoorsObject#getObjectNumber <em>Object Number</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1527,6 +1516,16 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getDoorsObject__IsHeading();
+
+	/**
+	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsObject#getObjectLevel() <em>Get Object Level</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Object Level</em>' operation.
+	 * @see de.jpwinkler.daf.model.DoorsObject#getObjectLevel()
+	 * @generated
+	 */
+	EOperation getDoorsObject__GetObjectLevel();
 
 	/**
 	 * Returns the meta object for class '{@link java.util.Map.Entry <em>Attribute Map</em>}'.
@@ -1924,14 +1923,6 @@ public interface DoorsPackage extends EPackage {
 		EAttribute DOORS_OBJECT__OBJECT_IDENTIFIER = eINSTANCE.getDoorsObject_ObjectIdentifier();
 
 		/**
-		 * The meta object literal for the '<em><b>Object Level</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute DOORS_OBJECT__OBJECT_LEVEL = eINSTANCE.getDoorsObject_ObjectLevel();
-
-		/**
 		 * The meta object literal for the '<em><b>Object Number</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2002,6 +1993,14 @@ public interface DoorsPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation DOORS_OBJECT___IS_HEADING = eINSTANCE.getDoorsObject__IsHeading();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Object Level</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation DOORS_OBJECT___GET_OBJECT_LEVEL = eINSTANCE.getDoorsObject__GetObjectLevel();
 
 		/**
 		 * The meta object literal for the '{@link de.jpwinkler.daf.model.impl.AttributeMapImpl <em>Attribute Map</em>}' class.

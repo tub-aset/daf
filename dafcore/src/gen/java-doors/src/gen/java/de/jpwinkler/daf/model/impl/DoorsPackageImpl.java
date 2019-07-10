@@ -432,7 +432,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getDoorsObject_ObjectLevel() {
+	public EAttribute getDoorsObject_ObjectNumber() {
 		return (EAttribute)doorsObjectEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -442,7 +442,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getDoorsObject_ObjectNumber() {
+	public EAttribute getDoorsObject_AbsoluteNumber() {
 		return (EAttribute)doorsObjectEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -452,7 +452,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getDoorsObject_AbsoluteNumber() {
+	public EAttribute getDoorsObject_ObjectText() {
 		return (EAttribute)doorsObjectEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -462,7 +462,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getDoorsObject_ObjectText() {
+	public EAttribute getDoorsObject_ObjectShortText() {
 		return (EAttribute)doorsObjectEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -472,7 +472,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getDoorsObject_ObjectShortText() {
+	public EAttribute getDoorsObject_ObjectHeading() {
 		return (EAttribute)doorsObjectEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -482,7 +482,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getDoorsObject_ObjectHeading() {
+	public EAttribute getDoorsObject_Text() {
 		return (EAttribute)doorsObjectEClass.getEStructuralFeatures().get(6);
 	}
 
@@ -492,18 +492,8 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getDoorsObject_Text() {
-		return (EAttribute)doorsObjectEClass.getEStructuralFeatures().get(7);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EReference getDoorsObject_OutgoingLinks() {
-		return (EReference)doorsObjectEClass.getEStructuralFeatures().get(8);
+		return (EReference)doorsObjectEClass.getEStructuralFeatures().get(7);
 	}
 
 	/**
@@ -513,7 +503,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 */
 	@Override
 	public EReference getDoorsObject_IncomingLinks() {
-		return (EReference)doorsObjectEClass.getEStructuralFeatures().get(9);
+		return (EReference)doorsObjectEClass.getEStructuralFeatures().get(8);
 	}
 
 	/**
@@ -524,6 +514,16 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	@Override
 	public EOperation getDoorsObject__IsHeading() {
 		return doorsObjectEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getDoorsObject__GetObjectLevel() {
+		return doorsObjectEClass.getEOperations().get(1);
 	}
 
 	/**
@@ -742,7 +742,6 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 
 		doorsObjectEClass = createEClass(DOORS_OBJECT);
 		createEAttribute(doorsObjectEClass, DOORS_OBJECT__OBJECT_IDENTIFIER);
-		createEAttribute(doorsObjectEClass, DOORS_OBJECT__OBJECT_LEVEL);
 		createEAttribute(doorsObjectEClass, DOORS_OBJECT__OBJECT_NUMBER);
 		createEAttribute(doorsObjectEClass, DOORS_OBJECT__ABSOLUTE_NUMBER);
 		createEAttribute(doorsObjectEClass, DOORS_OBJECT__OBJECT_TEXT);
@@ -752,6 +751,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		createEReference(doorsObjectEClass, DOORS_OBJECT__OUTGOING_LINKS);
 		createEReference(doorsObjectEClass, DOORS_OBJECT__INCOMING_LINKS);
 		createEOperation(doorsObjectEClass, DOORS_OBJECT___IS_HEADING);
+		createEOperation(doorsObjectEClass, DOORS_OBJECT___GET_OBJECT_LEVEL);
 
 		attributeMapEClass = createEClass(ATTRIBUTE_MAP);
 		createEAttribute(attributeMapEClass, ATTRIBUTE_MAP__KEY);
@@ -860,7 +860,6 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 
 		initEClass(doorsObjectEClass, DoorsObject.class, "DoorsObject", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getDoorsObject_ObjectIdentifier(), ecorePackage.getEString(), "objectIdentifier", "", 0, 1, DoorsObject.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
-		initEAttribute(getDoorsObject_ObjectLevel(), ecorePackage.getEInt(), "objectLevel", null, 0, 1, DoorsObject.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		initEAttribute(getDoorsObject_ObjectNumber(), ecorePackage.getEString(), "objectNumber", null, 0, 1, DoorsObject.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		initEAttribute(getDoorsObject_AbsoluteNumber(), ecorePackage.getEInt(), "absoluteNumber", null, 0, 1, DoorsObject.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		initEAttribute(getDoorsObject_ObjectText(), ecorePackage.getEString(), "objectText", null, 0, 1, DoorsObject.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, IS_DERIVED, IS_ORDERED);
@@ -871,6 +870,8 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		initEReference(getDoorsObject_IncomingLinks(), this.getResolvedLink(), this.getResolvedLink_Target(), "incomingLinks", null, 0, -1, DoorsObject.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getDoorsObject__IsHeading(), ecorePackage.getEBoolean(), "isHeading", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getDoorsObject__GetObjectLevel(), ecorePackage.getEInt(), "getObjectLevel", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(attributeMapEClass, Map.Entry.class, "AttributeMap", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getAttributeMap_Key(), ecorePackage.getEString(), "key", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

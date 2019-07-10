@@ -43,14 +43,6 @@ public class EmfDatabaseFactory extends DatabaseFactory {
     @Override
     public DoorsObject createObject(DoorsTreeNode parent, String objectText) {
         DoorsObject object = create(parent, DoorsFactory.eINSTANCE.createDoorsObject(), null);
-        if (parent instanceof DoorsModule) {
-            object.setObjectLevel(1);
-        } else if (parent instanceof DoorsObject) {
-            object.setObjectLevel(((DoorsObject) parent).getObjectLevel() + 1);
-        } else if (parent instanceof DoorsFolder) {
-            throw new IllegalArgumentException("parent");
-        }
-
         object.setObjectText(objectText);
         object.setObjectHeading("");
         return object;

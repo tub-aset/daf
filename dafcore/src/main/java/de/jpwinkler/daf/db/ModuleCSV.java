@@ -22,7 +22,6 @@ package de.jpwinkler.daf.db;
  * #L%
  */
 import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
-import de.jpwinkler.daf.model.DoorsAttributes;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
@@ -182,12 +181,12 @@ public class ModuleCSV {
 
         DoorsTreeNode current = module;
         int currentLevel = 0;
-        if (!csvParser.getHeaderMap().containsKey(DoorsAttributes.OBJECT_LEVEL.getKey())) {
+        if (!csvParser.getHeaderMap().containsKey("Object Level")) {
             throw new IOException("This is no DOORS CSV file: Object Level missing");
         }
 
         for (final CSVRecord record : csvParser.getRecords()) {
-            final int objectLevel = Integer.parseInt(record.get(DoorsAttributes.OBJECT_LEVEL.getKey()));
+            final int objectLevel = Integer.parseInt(record.get("Object Level"));
 
             while (objectLevel <= currentLevel) {
                 currentLevel--;

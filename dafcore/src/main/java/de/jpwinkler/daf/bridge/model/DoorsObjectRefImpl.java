@@ -81,12 +81,7 @@ class DoorsObjectRefImpl extends DoorsTreeNodeRefImpl implements DoorsObject {
 
     @Override
     public int getObjectLevel() {
-        return DoorsAttributes.OBJECT_LEVEL.getValue(Integer.class, this);
-    }
-
-    @Override
-    public void setObjectLevel(int value) {
-        throw new UnsupportedOperationException("Not supported");
+        return this.getParent() instanceof DoorsObject ? ((DoorsObject) this.getParent()).getObjectLevel() + 1 : 1;
     }
 
     @Override

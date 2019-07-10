@@ -187,26 +187,26 @@ public final class ModulePaneController extends ApplicationPartController<Module
                     return dm.getObjectAttributesAsync(super.getBackgroundTaskExecutor().withPriority(BackgroundTask.PRIORITY_MODULE_CONTENT))
                             .thenApply(attrs -> dm);
                 }).thenAccept(dm -> {
-                    Platform.runLater(() -> {
-                        this.contentTableView.setPlaceholder(null);
+            Platform.runLater(() -> {
+                this.contentTableView.setPlaceholder(null);
 
-                        this.actualModule = dm;
-                        if (this.actualModule == null) {
-                            throw new RuntimeException("No such module: " + super.getApplicationPart().getDatabasePath().toString());
-                        }
+                this.actualModule = dm;
+                if (this.actualModule == null) {
+                    throw new RuntimeException("No such module: " + super.getApplicationPart().getDatabasePath().toString());
+                }
 
-                        this.filteredModule = actualModule;
-                        updateGui(ModuleUpdateAction.UPDATE_VIEWS, ModuleUpdateAction.UPDATE_COLUMNS, ModuleUpdateAction.UPDATE_CONTENT_VIEW, ModuleUpdateAction.UPDATE_OUTLINE_VIEW);
-                        traverseTreeItem(outlineTreeView.getRoot(), ti -> ti.setExpanded(true));
-                    });
-                }).exceptionally(t -> {
-                    Platform.runLater(() -> {
-                        Button retryButton = new Button("Retry");
-                        retryButton.setOnAction(ev -> this.loadContent());
-                        this.contentTableView.setPlaceholder(retryButton);
-                    });
-                    return null;
-                });
+                this.filteredModule = actualModule;
+                updateGui(ModuleUpdateAction.UPDATE_VIEWS, ModuleUpdateAction.UPDATE_COLUMNS, ModuleUpdateAction.UPDATE_CONTENT_VIEW, ModuleUpdateAction.UPDATE_OUTLINE_VIEW);
+                traverseTreeItem(outlineTreeView.getRoot(), ti -> ti.setExpanded(true));
+            });
+        }).exceptionally(t -> {
+            Platform.runLater(() -> {
+                Button retryButton = new Button("Retry");
+                retryButton.setOnAction(ev -> this.loadContent());
+                this.contentTableView.setPlaceholder(retryButton);
+            });
+            return null;
+        });
     }
 
     private final List<DoorsObject> clipboard = new ArrayList<>();
@@ -350,16 +350,14 @@ public final class ModulePaneController extends ApplicationPartController<Module
         }));
     }
 
-    private void fixObjectLevel(final DoorsTreeNode object, final int level) {
+    private void fixObjectLevel(final DoorsTreeNode object) {
         if (object instanceof DoorsObject) {
-            ((DoorsObject) object).setObjectLevel(level);
+            DoorsAttributes.OBJECT_LEVEL.setValue(Integer.class, object, ((DoorsObject) object).getObjectLevel());
         }
-
-        for (final DoorsTreeNode child : object.getChildren()) {
-            if (child instanceof DoorsObject) {
-                fixObjectLevel((DoorsObject) child, level + 1);
-            }
-        }
+        
+        object.getChildren().stream()
+                .filter(c -> c instanceof DoorsObject)
+                .forEach(this::fixObjectLevel);
     }
 
     private void fixObjectNumbers(final DoorsTreeNode object, final String parentObjectNumber) {
@@ -592,7 +590,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
     }
 
     public static enum ModuleUpdateAction implements UpdateAction<ModulePaneController> {
-        FIX_OBJECT_LEVELS(t -> t.fixObjectLevel(t.filteredModule, 0)),
+        FIX_OBJECT_LEVELS(t -> t.fixObjectLevel(t.filteredModule)),
         FIX_OBJECT_NUMBERS(t -> t.fixObjectNumbers(t.filteredModule, "")),
         UPDATE_CONTENT_VIEW(t -> t.updateContentView()),
         UPDATE_OUTLINE_VIEW(t -> t.updateOutlineView(t.filteredModule)),

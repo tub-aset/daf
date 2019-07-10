@@ -60,11 +60,6 @@ class FilteredDoorsObject extends FilteredDoorsTreeNode<DoorsObject> implements 
     }
 
     @Override
-    public void setObjectLevel(int value) {
-        self.setObjectLevel(value);
-    }
-
-    @Override
     public String getObjectNumber() {
         return self.getObjectNumber();
     }

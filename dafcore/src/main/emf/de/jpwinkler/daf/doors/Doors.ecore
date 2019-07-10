@@ -24,11 +24,9 @@
                 <details key="body" value="return getObjectHeading() != null &amp;&amp; !getObjectHeading().isEmpty();"/>
             </eAnnotations>
         </eOperations>
+        <eOperations name="getObjectLevel" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="objectIdentifier" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
                              volatile="true" transient="true" defaultValueLiteral="" derived="true"/>
-        <eStructuralFeatures xsi:type="ecore:EAttribute" name="objectLevel" unique="false"
-                             eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" volatile="true"
-                             transient="true" derived="true"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="objectNumber" unique="false"
                              eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" volatile="true"
                              transient="true" derived="true"/>

@@ -64,7 +64,6 @@
         
         <genClasses ecoreClass="Doors.ecore#//DoorsObject">
             <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//DoorsObject/objectIdentifier"/>
-            <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//DoorsObject/objectLevel"/>
             <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//DoorsObject/objectNumber"/>
             <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//DoorsObject/absoluteNumber"/>
             <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//DoorsObject/objectText"/>
@@ -74,6 +73,7 @@
             <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Doors.ecore#//DoorsObject/outgoingLinks"/>
             <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Doors.ecore#//DoorsObject/incomingLinks"/>
             <genOperations ecoreOperation="Doors.ecore#//DoorsObject/isHeading"/>
+            <genOperations ecoreOperation="Doors.ecore#//DoorsObject/getObjectLevel"/>
         </genClasses>
         
         <genClasses ecoreClass="Doors.ecore#//AttributeMap">
