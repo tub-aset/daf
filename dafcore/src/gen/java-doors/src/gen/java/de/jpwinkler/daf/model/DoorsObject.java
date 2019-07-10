@@ -76,9 +76,11 @@ public interface DoorsObject extends DoorsTreeNode {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation"
-	 * @generated
+	 * @generated NOT
 	 */
-	int getObjectLevel();
+        default int getObjectLevel() {
+            return this.getParent() instanceof DoorsObject ? ((DoorsObject) this.getParent()).getObjectLevel() + 1 : 1;
+        }
 
 	/**
 	 * Returns the value of the '<em><b>Object Number</b></em>' attribute.

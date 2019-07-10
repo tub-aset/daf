@@ -194,16 +194,6 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
      * @generated NOT
      */
     @Override
-    public int getObjectLevel() {
-        return this.getParent() instanceof DoorsObject ? ((DoorsObject)this.getParent()).getObjectLevel() + 1 : 1;
-    }
-
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     *
-     * @generated NOT
-     */
-    @Override
     public String getObjectNumber() {
         return DoorsAttributes.OBJECT_NUMBER.getValue(String.class, this);
     }
@@ -354,8 +344,20 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
     public boolean isHeading() {
 		return getObjectHeading() != null && !getObjectHeading().isEmpty();
 	}
-
+    
     /**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	@Override
+	public int getObjectLevel() {
+             return DoorsObject.super.getObjectLevel(); //To change body of generated methods, choose Tools | Templates. 
+	}
+
+    
+
+				/**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc --> @generated
      */

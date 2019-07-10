@@ -81,6 +81,7 @@ public class DoorsFactoryImpl extends EFactoryImpl implements DoorsFactory {
 			case DoorsPackage.DOORS_FOLDER: return (EObject)createDoorsFolder();
 			case DoorsPackage.DOORS_MODULE: return (EObject)createDoorsModule();
 			case DoorsPackage.DOORS_OBJECT: return (EObject)createDoorsObject();
+			case DoorsPackage.DOORS_TABLE_ROW: return (EObject)createDoorsTableRow();
 			case DoorsPackage.ATTRIBUTE_MAP: return (EObject)createAttributeMap();
 			case DoorsPackage.RESOLVED_LINK: return (EObject)createResolvedLink();
 			case DoorsPackage.UNRESOLVED_LINK: return (EObject)createUnresolvedLink();
@@ -162,6 +163,17 @@ public class DoorsFactoryImpl extends EFactoryImpl implements DoorsFactory {
 	public DoorsObject createDoorsObject() {
 		DoorsObjectImpl doorsObject = new DoorsObjectImpl();
 		return doorsObject;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public DoorsTableRow createDoorsTableRow() {
+		DoorsTableRowImpl doorsTableRow = new DoorsTableRowImpl();
+		return doorsTableRow;
 	}
 
 	/**

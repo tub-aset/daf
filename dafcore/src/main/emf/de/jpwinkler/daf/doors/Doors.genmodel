@@ -76,6 +76,8 @@
             <genOperations ecoreOperation="Doors.ecore#//DoorsObject/getObjectLevel"/>
         </genClasses>
         
+        <genClasses ecoreClass="Doors.ecore#//DoorsTableRow"></genClasses>
+        
         <genClasses ecoreClass="Doors.ecore#//AttributeMap">
             <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//AttributeMap/key"/>
             <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//AttributeMap/value"/>

@@ -49,6 +49,8 @@
         <eStructuralFeatures xsi:type="ecore:EReference" name="incomingLinks" upperBound="-1"
                              eType="#//ResolvedLink" eOpposite="#//ResolvedLink/target"/>
     </eClassifiers>
+    
+    <eClassifiers xsi:type="ecore:EClass" name="DoorsTableRow" eSuperTypes="#//DoorsObject"></eClassifiers>
   
     <eClassifiers xsi:type="ecore:EClass" name="AttributeMap" instanceClassName="java.util.Map$Entry">
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" unique="false" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

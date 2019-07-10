@@ -31,6 +31,7 @@ import de.jpwinkler.daf.model.DoorsAttributes;
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
+import de.jpwinkler.daf.model.DoorsTableRow;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.RuntimeExecutionException;
 import de.jpwinkler.daf.model.UnresolvedLink;
@@ -149,6 +150,11 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
                     @Override
                     public DoorsObject createObject(DoorsTreeNode parent, String objectText) {
                         return doorsApplication.getDatabaseFactory().createObject(parent, objectText);
+                    }
+
+                    @Override
+                    public DoorsTableRow createTableRow(DoorsTreeNode parent) {
+                        return doorsApplication.getDatabaseFactory().createTableRow(parent);
                     }
 
                     @Override

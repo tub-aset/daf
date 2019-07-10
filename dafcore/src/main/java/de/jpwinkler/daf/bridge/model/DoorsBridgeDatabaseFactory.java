@@ -28,6 +28,7 @@ import de.jpwinkler.daf.db.DatabaseFactory;
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
+import de.jpwinkler.daf.model.DoorsTableRow;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.UnresolvedLink;
 
@@ -56,6 +57,11 @@ public class DoorsBridgeDatabaseFactory extends DatabaseFactory {
     @Override
     public DoorsObject createObject(DoorsTreeNode parent, String objectText) {
         return new DoorsObjectRefImpl(doorsApplication, parent);
+    }
+    
+    @Override
+    public DoorsTableRow createTableRow(DoorsTreeNode parent) {
+        return new DoorsTableRowRefImpl(doorsApplication, parent);
     }
 
     @Override

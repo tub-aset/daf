@@ -24,6 +24,7 @@ package de.jpwinkler.daf.db;
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
+import de.jpwinkler.daf.model.DoorsTableRow;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.RuntimeExecutionException;
 import de.jpwinkler.daf.model.UnresolvedLink;
@@ -41,12 +42,16 @@ public abstract class DatabaseFactory {
     public abstract DoorsModule createModule(DoorsTreeNode parent, String name);
 
     public abstract DoorsObject createObject(DoorsTreeNode parent, String objectText);
+    
+    public abstract DoorsTableRow createTableRow(DoorsTreeNode parent);
 
     public abstract UnresolvedLink createLink(DoorsObject source, String targetModule, String targetObject);
 
     public final <T extends DoorsTreeNode> T createCopy(T source, DoorsTreeNode newParent, boolean resilient) {
         T copy;
-        if (source instanceof DoorsObject) {
+        if(source instanceof DoorsTableRow) {
+            copy = (T) this.createTableRow(newParent);
+        } else if (source instanceof DoorsObject) {
             copy = (T) this.createObject(newParent, null);
         } else if (source instanceof DoorsModule) {
             copy = (T) this.createModule(newParent, null);

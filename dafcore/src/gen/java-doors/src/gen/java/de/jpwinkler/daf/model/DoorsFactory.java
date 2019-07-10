@@ -69,6 +69,15 @@ public interface DoorsFactory extends EFactory {
 	DoorsObject createDoorsObject();
 
 	/**
+	 * Returns a new object of class '<em>Table Row</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Table Row</em>'.
+	 * @generated
+	 */
+	DoorsTableRow createDoorsTableRow();
+
+	/**
 	 * Returns a new object of class '<em>Resolved Link</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

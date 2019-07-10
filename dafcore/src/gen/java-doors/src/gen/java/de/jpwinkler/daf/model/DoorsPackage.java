@@ -893,6 +893,277 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_OBJECT_OPERATION_COUNT = DOORS_TREE_NODE_OPERATION_COUNT + 2;
 
 	/**
+	 * The meta object id for the '{@link de.jpwinkler.daf.model.impl.DoorsTableRowImpl <em>Table Row</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see de.jpwinkler.daf.model.impl.DoorsTableRowImpl
+	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getDoorsTableRow()
+	 * @generated
+	 */
+	int DOORS_TABLE_ROW = 4;
+
+	/**
+	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TABLE_ROW__CHILDREN = DOORS_OBJECT__CHILDREN;
+
+	/**
+	 * The feature id for the '<em><b>Parent</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TABLE_ROW__PARENT = DOORS_OBJECT__PARENT;
+
+	/**
+	 * The feature id for the '<em><b>Attributes</b></em>' map.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TABLE_ROW__ATTRIBUTES = DOORS_OBJECT__ATTRIBUTES;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TABLE_ROW__NAME = DOORS_OBJECT__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Full Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TABLE_ROW__FULL_NAME = DOORS_OBJECT__FULL_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Full Name Segments</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TABLE_ROW__FULL_NAME_SEGMENTS = DOORS_OBJECT__FULL_NAME_SEGMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Object Identifier</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TABLE_ROW__OBJECT_IDENTIFIER = DOORS_OBJECT__OBJECT_IDENTIFIER;
+
+	/**
+	 * The feature id for the '<em><b>Object Number</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TABLE_ROW__OBJECT_NUMBER = DOORS_OBJECT__OBJECT_NUMBER;
+
+	/**
+	 * The feature id for the '<em><b>Absolute Number</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TABLE_ROW__ABSOLUTE_NUMBER = DOORS_OBJECT__ABSOLUTE_NUMBER;
+
+	/**
+	 * The feature id for the '<em><b>Object Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TABLE_ROW__OBJECT_TEXT = DOORS_OBJECT__OBJECT_TEXT;
+
+	/**
+	 * The feature id for the '<em><b>Object Short Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TABLE_ROW__OBJECT_SHORT_TEXT = DOORS_OBJECT__OBJECT_SHORT_TEXT;
+
+	/**
+	 * The feature id for the '<em><b>Object Heading</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TABLE_ROW__OBJECT_HEADING = DOORS_OBJECT__OBJECT_HEADING;
+
+	/**
+	 * The feature id for the '<em><b>Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TABLE_ROW__TEXT = DOORS_OBJECT__TEXT;
+
+	/**
+	 * The feature id for the '<em><b>Outgoing Links</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TABLE_ROW__OUTGOING_LINKS = DOORS_OBJECT__OUTGOING_LINKS;
+
+	/**
+	 * The feature id for the '<em><b>Incoming Links</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TABLE_ROW__INCOMING_LINKS = DOORS_OBJECT__INCOMING_LINKS;
+
+	/**
+	 * The number of structural features of the '<em>Table Row</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TABLE_ROW_FEATURE_COUNT = DOORS_OBJECT_FEATURE_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Accept</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TABLE_ROW___ACCEPT__DOORSTREENODEVISITOR = DOORS_OBJECT___ACCEPT__DOORSTREENODEVISITOR;
+
+	/**
+	 * The operation id for the '<em>Has Tag</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TABLE_ROW___HAS_TAG__STRING = DOORS_OBJECT___HAS_TAG__STRING;
+
+	/**
+	 * The operation id for the '<em>Has Tag</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TABLE_ROW___HAS_TAG__PATTERN = DOORS_OBJECT___HAS_TAG__PATTERN;
+
+	/**
+	 * The operation id for the '<em>Get Tags</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TABLE_ROW___GET_TAGS = DOORS_OBJECT___GET_TAGS;
+
+	/**
+	 * The operation id for the '<em>Set Tag</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TABLE_ROW___SET_TAG__STRING = DOORS_OBJECT___SET_TAG__STRING;
+
+	/**
+	 * The operation id for the '<em>Remove Tag</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TABLE_ROW___REMOVE_TAG__STRING = DOORS_OBJECT___REMOVE_TAG__STRING;
+
+	/**
+	 * The operation id for the '<em>Remove Tag</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TABLE_ROW___REMOVE_TAG__PATTERN = DOORS_OBJECT___REMOVE_TAG__PATTERN;
+
+	/**
+	 * The operation id for the '<em>Can Copy From</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TABLE_ROW___CAN_COPY_FROM__DOORSTREENODE = DOORS_OBJECT___CAN_COPY_FROM__DOORSTREENODE;
+
+	/**
+	 * The operation id for the '<em>Get Child</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TABLE_ROW___GET_CHILD__STRING = DOORS_OBJECT___GET_CHILD__STRING;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TABLE_ROW___TO_STRING = DOORS_OBJECT___TO_STRING;
+
+	/**
+	 * The operation id for the '<em>Is Heading</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TABLE_ROW___IS_HEADING = DOORS_OBJECT___IS_HEADING;
+
+	/**
+	 * The operation id for the '<em>Get Object Level</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TABLE_ROW___GET_OBJECT_LEVEL = DOORS_OBJECT___GET_OBJECT_LEVEL;
+
+	/**
+	 * The number of operations of the '<em>Table Row</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_TABLE_ROW_OPERATION_COUNT = DOORS_OBJECT_OPERATION_COUNT + 0;
+
+	/**
 	 * The meta object id for the '{@link de.jpwinkler.daf.model.impl.AttributeMapImpl <em>Attribute Map</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -900,7 +1171,7 @@ public interface DoorsPackage extends EPackage {
 	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getAttributeMap()
 	 * @generated
 	 */
-	int ATTRIBUTE_MAP = 4;
+	int ATTRIBUTE_MAP = 5;
 
 	/**
 	 * The feature id for the '<em><b>Key</b></em>' attribute.
@@ -946,7 +1217,7 @@ public interface DoorsPackage extends EPackage {
 	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getLink()
 	 * @generated
 	 */
-	int LINK = 5;
+	int LINK = 6;
 
 	/**
 	 * The feature id for the '<em><b>Source</b></em>' container reference.
@@ -1001,7 +1272,7 @@ public interface DoorsPackage extends EPackage {
 	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getResolvedLink()
 	 * @generated
 	 */
-	int RESOLVED_LINK = 6;
+	int RESOLVED_LINK = 7;
 
 	/**
 	 * The feature id for the '<em><b>Source</b></em>' container reference.
@@ -1065,7 +1336,7 @@ public interface DoorsPackage extends EPackage {
 	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getUnresolvedLink()
 	 * @generated
 	 */
-	int UNRESOLVED_LINK = 7;
+	int UNRESOLVED_LINK = 8;
 
 	/**
 	 * The feature id for the '<em><b>Source</b></em>' container reference.
@@ -1138,7 +1409,7 @@ public interface DoorsPackage extends EPackage {
 	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getDoorsTreeNodeVisitor()
 	 * @generated
 	 */
-	int DOORS_TREE_NODE_VISITOR = 8;
+	int DOORS_TREE_NODE_VISITOR = 9;
 
 	/**
 	 * The meta object id for the '<em>Pattern</em>' data type.
@@ -1148,7 +1419,7 @@ public interface DoorsPackage extends EPackage {
 	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getPattern()
 	 * @generated
 	 */
-	int PATTERN = 9;
+	int PATTERN = 10;
 
 	/**
 	 * The meta object id for the '<em>Collection</em>' data type.
@@ -1158,7 +1429,7 @@ public interface DoorsPackage extends EPackage {
 	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getCollection()
 	 * @generated
 	 */
-	int COLLECTION = 10;
+	int COLLECTION = 11;
 
 
 	/**
@@ -1169,7 +1440,7 @@ public interface DoorsPackage extends EPackage {
 	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getNodeFilter()
 	 * @generated
 	 */
-	int NODE_FILTER = 11;
+	int NODE_FILTER = 12;
 
 
 	/**
@@ -1526,6 +1797,16 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getDoorsObject__GetObjectLevel();
+
+	/**
+	 * Returns the meta object for class '{@link de.jpwinkler.daf.model.DoorsTableRow <em>Table Row</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Table Row</em>'.
+	 * @see de.jpwinkler.daf.model.DoorsTableRow
+	 * @generated
+	 */
+	EClass getDoorsTableRow();
 
 	/**
 	 * Returns the meta object for class '{@link java.util.Map.Entry <em>Attribute Map</em>}'.
@@ -2001,6 +2282,16 @@ public interface DoorsPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation DOORS_OBJECT___GET_OBJECT_LEVEL = eINSTANCE.getDoorsObject__GetObjectLevel();
+
+		/**
+		 * The meta object literal for the '{@link de.jpwinkler.daf.model.impl.DoorsTableRowImpl <em>Table Row</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see de.jpwinkler.daf.model.impl.DoorsTableRowImpl
+		 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getDoorsTableRow()
+		 * @generated
+		 */
+		EClass DOORS_TABLE_ROW = eINSTANCE.getDoorsTableRow();
 
 		/**
 		 * The meta object literal for the '{@link de.jpwinkler.daf.model.impl.AttributeMapImpl <em>Attribute Map</em>}' class.

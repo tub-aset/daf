@@ -30,6 +30,7 @@ import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
+import de.jpwinkler.daf.model.DoorsTableRow;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import java.util.List;
@@ -64,11 +65,13 @@ public class FilteredDoorsTreeNode<T extends DoorsTreeNode> implements DoorsTree
 
             return matched;
         });
-        
+
         if (node instanceof DoorsFolder) {
             return new FilteredDoorsFolder((DoorsFolder) node, fullPredicate);
         } else if (node instanceof DoorsModule) {
             return new FilteredDoorsModule((DoorsModule) node, fullPredicate);
+        } else if (node instanceof DoorsTableRow) {
+            return new FilteredDoorsTableRow((DoorsObject) node, fullPredicate);
         } else if (node instanceof DoorsObject) {
             return new FilteredDoorsObject((DoorsObject) node, fullPredicate);
         } else {

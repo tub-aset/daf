@@ -38,8 +38,10 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Stream;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
@@ -87,21 +89,20 @@ public class ModuleCSV {
     }
 
     public static void writeModule(final OutputStream csvStream, final DoorsModule module) throws IOException {
-        final String[] header = module.getObjectAttributes().toArray(new String[module.getObjectAttributes().size()]);
+        List<String> header = new ArrayList<>(module.getObjectAttributes());
+        header.add(0, "Object Level");
 
         CSVPrinter printer = new CSVPrinter(new OutputStreamWriter(csvStream, CHARSET), WRITE_FORMAT);
-        printer.printRecord((Object[]) header);
+        printer.printRecord(header.toArray());
 
         module.accept(new DoorsTreeNodeVisitor<DoorsObject>(DoorsObject.class) {
             @Override
             public boolean visitPreTraverse(final DoorsObject object) {
-                final Object[] values = new Object[header.length];
-                for (int i = 0; i < header.length; i++) {
-                    final String attribute = header[i];
-                    values[i] = object.getAttributes().get(attribute);
-                }
                 try {
-                    printer.printRecord(values);
+                    printer.printRecord(() -> Stream.concat(
+                            Stream.of((Object) object.getObjectLevel()),
+                            header.stream().skip(1).map(h -> object.getAttributes().get(h))
+                    ).iterator());
                 } catch (final IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -187,22 +188,29 @@ public class ModuleCSV {
 
         for (final CSVRecord record : csvParser.getRecords()) {
             final int objectLevel = Integer.parseInt(record.get("Object Level"));
+            if (objectLevel <= 0) {
+                throw new IOException("Non-positive object level detected: " + objectLevel);
+            }
 
             while (objectLevel <= currentLevel) {
-                currentLevel--;
                 current = current.getParent();
+                currentLevel = current instanceof DoorsObject ? ((DoorsObject) current).getObjectLevel() : 0;
             }
 
-            while (objectLevel > currentLevel + 1) {
-                if (current.getChildren().isEmpty()) {
-                    final DoorsObject createDoorsObject = factory.createObject(current, "");
-                    current.getChildren().add(createDoorsObject);
-                }
+            while (objectLevel > currentLevel + 1 && !current.getChildren().isEmpty()) {
                 current = current.getChildren().get(current.getChildren().size() - 1);
-                currentLevel++;
+                currentLevel = current instanceof DoorsObject ? ((DoorsObject) current).getObjectLevel() : 0;
             }
 
-            final DoorsObject newObject = factory.createObject(current, "");
+            final DoorsObject newObject;
+            if (objectLevel == currentLevel + 1) {
+                newObject = factory.createObject(current, "");
+            } else if (objectLevel == currentLevel + 2) {
+                newObject = factory.createTableRow(current);
+            } else {
+                throw new IOException("Illegal jump in objet level");
+            }
+
             for (final Entry<String, String> e : record.toMap().entrySet()) {
                 newObject.getAttributes().put(e.getKey(), e.getValue());
             }

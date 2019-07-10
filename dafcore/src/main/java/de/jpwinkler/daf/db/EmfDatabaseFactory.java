@@ -26,6 +26,7 @@ import de.jpwinkler.daf.model.DoorsFactory;
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
+import de.jpwinkler.daf.model.DoorsTableRow;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.UnresolvedLink;
 public class EmfDatabaseFactory extends DatabaseFactory {
@@ -46,6 +47,11 @@ public class EmfDatabaseFactory extends DatabaseFactory {
         object.setObjectText(objectText);
         object.setObjectHeading("");
         return object;
+    }
+    
+    @Override
+    public DoorsTableRow createTableRow(DoorsTreeNode parent) {
+        return create(parent, DoorsFactory.eINSTANCE.createDoorsTableRow(), null);
     }
 
     @Override

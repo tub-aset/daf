@@ -27,6 +27,7 @@ import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsPackage;
+import de.jpwinkler.daf.model.DoorsTableRow;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.model.Link;
@@ -76,6 +77,12 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	private EClass doorsObjectEClass = null;
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass doorsTableRowEClass = null;
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -532,6 +539,16 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
+	public EClass getDoorsTableRow() {
+		return doorsTableRowEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getAttributeMap() {
 		return attributeMapEClass;
 	}
@@ -753,6 +770,8 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		createEOperation(doorsObjectEClass, DOORS_OBJECT___IS_HEADING);
 		createEOperation(doorsObjectEClass, DOORS_OBJECT___GET_OBJECT_LEVEL);
 
+		doorsTableRowEClass = createEClass(DOORS_TABLE_ROW);
+
 		attributeMapEClass = createEClass(ATTRIBUTE_MAP);
 		createEAttribute(attributeMapEClass, ATTRIBUTE_MAP__KEY);
 		createEAttribute(attributeMapEClass, ATTRIBUTE_MAP__VALUE);
@@ -807,6 +826,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		doorsFolderEClass.getESuperTypes().add(this.getDoorsTreeNode());
 		doorsModuleEClass.getESuperTypes().add(this.getDoorsTreeNode());
 		doorsObjectEClass.getESuperTypes().add(this.getDoorsTreeNode());
+		doorsTableRowEClass.getESuperTypes().add(this.getDoorsObject());
 		resolvedLinkEClass.getESuperTypes().add(this.getLink());
 		unresolvedLinkEClass.getESuperTypes().add(this.getLink());
 
@@ -872,6 +892,8 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		initEOperation(getDoorsObject__IsHeading(), ecorePackage.getEBoolean(), "isHeading", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getDoorsObject__GetObjectLevel(), ecorePackage.getEInt(), "getObjectLevel", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		initEClass(doorsTableRowEClass, DoorsTableRow.class, "DoorsTableRow", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(attributeMapEClass, Map.Entry.class, "AttributeMap", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getAttributeMap_Key(), ecorePackage.getEString(), "key", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
