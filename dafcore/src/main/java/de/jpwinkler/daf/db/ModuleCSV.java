@@ -38,7 +38,6 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Stream;
@@ -89,11 +88,12 @@ public class ModuleCSV {
     }
 
     public static void writeModule(final OutputStream csvStream, final DoorsModule module) throws IOException {
-        List<String> header = new ArrayList<>(module.getObjectAttributes());
-        header.add(0, "Object Level");
+        String[] header = Stream.concat(
+                Stream.of("Object Level"), 
+                module.getObjectAttributes().stream().filter(a -> !"Object Level".equals(a))).toArray(i -> new String[i]);
 
         CSVPrinter printer = new CSVPrinter(new OutputStreamWriter(csvStream, CHARSET), WRITE_FORMAT);
-        printer.printRecord(header.toArray());
+        printer.printRecord((Object[]) header);
 
         module.accept(new DoorsTreeNodeVisitor<DoorsObject>(DoorsObject.class) {
             @Override
@@ -101,7 +101,7 @@ public class ModuleCSV {
                 try {
                     printer.printRecord(() -> Stream.concat(
                             Stream.of((Object) object.getObjectLevel()),
-                            header.stream().skip(1).map(h -> object.getAttributes().get(h))
+                            Stream.of(header).skip(1).map(h -> object.getAttributes().get(h))
                     ).iterator());
                 } catch (final IOException e) {
                     throw new RuntimeException(e);
