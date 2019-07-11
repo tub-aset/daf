@@ -8,6 +8,8 @@
     <eClassifiers xsi:type="ecore:EDataType" name="NodeFilter" instanceTypeName="java.util.function.Predicate&lt;de.jpwinkler.daf.model.DoorsTreeNode&gt;"/>
     
     <eClassifiers xsi:type="ecore:EClass" name="DoorsFolder" eSuperTypes="#//DoorsTreeNode">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="project" unique="false"
+                             eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     </eClassifiers>
       
     <eClassifiers xsi:type="ecore:EClass" name="DoorsModule" eSuperTypes="#//DoorsTreeNode">

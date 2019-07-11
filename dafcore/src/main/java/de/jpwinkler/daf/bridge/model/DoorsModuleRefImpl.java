@@ -23,7 +23,6 @@ package de.jpwinkler.daf.bridge.model;
  */
 import de.jpwinkler.daf.bridge.DXLScript;
 import de.jpwinkler.daf.bridge.DoorsApplication;
-import de.jpwinkler.daf.bridge.DoorsItemType;
 import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import de.jpwinkler.daf.db.DatabaseFactory;
 import de.jpwinkler.daf.db.ModuleCSV;
@@ -55,7 +54,7 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
     private static final Logger LOG = Logger.getLogger(DoorsModuleRefImpl.class.getName());
 
     public DoorsModuleRefImpl(final DoorsApplication DoorsApplication, final DoorsTreeNode parent, final String name) {
-        super(DoorsApplication, DoorsItemType.FORMAL, parent, name);
+        super(DoorsApplication, parent, name);
     }
 
     @Override
@@ -114,7 +113,7 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
 
                 DoorsModule loadedModule = ModuleCSV.readModule(new DatabaseFactory() {
                     @Override
-                    public DoorsFolder createFolder(DoorsTreeNode parent, String name) {
+                    public DoorsFolder createFolder(DoorsTreeNode parent, String name, boolean project) {
                         throw new UnsupportedOperationException("Not supported.");
                     }
 

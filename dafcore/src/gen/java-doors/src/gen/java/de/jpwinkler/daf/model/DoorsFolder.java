@@ -28,10 +28,38 @@ package de.jpwinkler.daf.model;
  * A representation of the model object '<em><b>Folder</b></em>'.
  * <!-- end-user-doc -->
  *
+ * <p>
+ * The following features are supported:
+ * </p>
+ * <ul>
+ *   <li>{@link de.jpwinkler.daf.model.DoorsFolder#isProject <em>Project</em>}</li>
+ * </ul>
  *
  * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsFolder()
  * @model
  * @generated
  */
 public interface DoorsFolder extends DoorsTreeNode {
+
+	/**
+	 * Returns the value of the '<em><b>Project</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Project</em>' attribute.
+	 * @see #setProject(boolean)
+	 * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsFolder_Project()
+	 * @model unique="false"
+	 * @generated
+	 */
+	boolean isProject();
+
+	/**
+	 * Sets the value of the '{@link de.jpwinkler.daf.model.DoorsFolder#isProject <em>Project</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Project</em>' attribute.
+	 * @see #isProject()
+	 * @generated
+	 */
+	void setProject(boolean value);
 } // DoorsFolder

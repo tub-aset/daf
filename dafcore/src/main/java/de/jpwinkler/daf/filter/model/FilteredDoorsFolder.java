@@ -41,4 +41,14 @@ class FilteredDoorsFolder extends FilteredDoorsTreeNode<DoorsFolder> implements 
         super(self, filter);
     }
 
+    @Override
+    public boolean isProject() {
+        return self.isProject();
+    }
+
+    @Override
+    public void setProject(boolean value) {
+        self.setProject(value);
+    }
+
 }

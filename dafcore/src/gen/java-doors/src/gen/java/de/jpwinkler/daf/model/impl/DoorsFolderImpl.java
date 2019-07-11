@@ -24,16 +24,44 @@ package de.jpwinkler.daf.model.impl;
 
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsPackage;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Folder</b></em>'.
  * <!-- end-user-doc -->
+ * <p>
+ * The following features are implemented:
+ * </p>
+ * <ul>
+ *   <li>{@link de.jpwinkler.daf.model.impl.DoorsFolderImpl#isProject <em>Project</em>}</li>
+ * </ul>
  *
  * @generated
  */
 public class DoorsFolderImpl extends DoorsTreeNodeImpl implements DoorsFolder {
+	/**
+	 * The default value of the '{@link #isProject() <em>Project</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isProject()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean PROJECT_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isProject() <em>Project</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isProject()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean project = PROJECT_EDEFAULT;
+
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -51,6 +79,103 @@ public class DoorsFolderImpl extends DoorsTreeNodeImpl implements DoorsFolder {
 	@Override
 	protected EClass eStaticClass() {
 		return DoorsPackage.Literals.DOORS_FOLDER;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isProject() {
+		return project;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setProject(boolean newProject) {
+		boolean oldProject = project;
+		project = newProject;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, DoorsPackage.DOORS_FOLDER__PROJECT, oldProject, project));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
+			case DoorsPackage.DOORS_FOLDER__PROJECT:
+				return isProject();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
+			case DoorsPackage.DOORS_FOLDER__PROJECT:
+				setProject((Boolean)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void eUnset(int featureID) {
+		switch (featureID) {
+			case DoorsPackage.DOORS_FOLDER__PROJECT:
+				setProject(PROJECT_EDEFAULT);
+				return;
+		}
+		super.eUnset(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
+			case DoorsPackage.DOORS_FOLDER__PROJECT:
+				return project != PROJECT_EDEFAULT;
+		}
+		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		if (eIsProxy()) return super.toString();
+
+		StringBuilder result = new StringBuilder(super.toString());
+		result.append(" (project: ");
+		result.append(project);
+		result.append(')');
+		return result.toString();
 	}
 
 } //DoorsFolderImpl

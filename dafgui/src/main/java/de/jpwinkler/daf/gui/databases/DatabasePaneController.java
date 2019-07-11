@@ -40,6 +40,7 @@ import de.jpwinkler.daf.gui.databases.commands.DeleteCommand;
 import de.jpwinkler.daf.gui.databases.commands.EditAttributesCommand;
 import de.jpwinkler.daf.gui.databases.commands.NewFolderCommand;
 import de.jpwinkler.daf.gui.databases.commands.NewModuleCommand;
+import de.jpwinkler.daf.gui.databases.commands.NewProjectCommand;
 import de.jpwinkler.daf.gui.databases.commands.PasteCommand;
 import de.jpwinkler.daf.gui.databases.commands.RemoveTagCommand;
 import de.jpwinkler.daf.gui.databases.commands.RenameAttributesCommand;
@@ -321,6 +322,12 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     public void newFolderClicked() {
         databaseTreeView.getSelectionModel().getSelectedItems().stream()
                 .forEach(it -> executeCommand(new NewFolderCommand(super.getDatabaseInterface().getFactory(), it.getValue())));
+    }
+    
+    @FXML
+    public void newProjectClicked() {
+        databaseTreeView.getSelectionModel().getSelectedItems().stream()
+                .forEach(it -> executeCommand(new NewProjectCommand(super.getDatabaseInterface().getFactory(), it.getValue())));
     }
 
     @FXML

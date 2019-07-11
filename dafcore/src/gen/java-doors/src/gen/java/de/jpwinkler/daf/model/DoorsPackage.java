@@ -315,13 +315,22 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_FOLDER__FULL_NAME_SEGMENTS = DOORS_TREE_NODE__FULL_NAME_SEGMENTS;
 
 	/**
+	 * The feature id for the '<em><b>Project</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_FOLDER__PROJECT = DOORS_TREE_NODE_FEATURE_COUNT + 0;
+
+	/**
 	 * The number of structural features of the '<em>Folder</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_FOLDER_FEATURE_COUNT = DOORS_TREE_NODE_FEATURE_COUNT + 0;
+	int DOORS_FOLDER_FEATURE_COUNT = DOORS_TREE_NODE_FEATURE_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Accept</em>' operation.
@@ -1630,6 +1639,17 @@ public interface DoorsPackage extends EPackage {
 	EClass getDoorsFolder();
 
 	/**
+	 * Returns the meta object for the attribute '{@link de.jpwinkler.daf.model.DoorsFolder#isProject <em>Project</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Project</em>'.
+	 * @see de.jpwinkler.daf.model.DoorsFolder#isProject()
+	 * @see #getDoorsFolder()
+	 * @generated
+	 */
+	EAttribute getDoorsFolder_Project();
+
+	/**
 	 * Returns the meta object for class '{@link de.jpwinkler.daf.model.DoorsModule <em>Module</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2150,6 +2170,14 @@ public interface DoorsPackage extends EPackage {
 		 * @generated
 		 */
 		EClass DOORS_FOLDER = eINSTANCE.getDoorsFolder();
+
+		/**
+		 * The meta object literal for the '<em><b>Project</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute DOORS_FOLDER__PROJECT = eINSTANCE.getDoorsFolder_Project();
 
 		/**
 		 * The meta object literal for the '{@link de.jpwinkler.daf.model.impl.DoorsModuleImpl <em>Module</em>}' class.

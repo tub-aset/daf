@@ -52,6 +52,7 @@
         </genClasses>
         
         <genClasses ecoreClass="Doors.ecore#//DoorsFolder">
+            <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//DoorsFolder/project"/>
         </genClasses>
         
         <genClasses ecoreClass="Doors.ecore#//DoorsModule">

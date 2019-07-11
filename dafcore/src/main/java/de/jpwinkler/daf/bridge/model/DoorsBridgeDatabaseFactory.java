@@ -23,7 +23,6 @@ package de.jpwinkler.daf.bridge.model;
  */
 
 import de.jpwinkler.daf.bridge.DoorsApplication;
-import de.jpwinkler.daf.bridge.DoorsItemType;
 import de.jpwinkler.daf.db.DatabaseFactory;
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
@@ -45,8 +44,8 @@ public class DoorsBridgeDatabaseFactory extends DatabaseFactory {
     }
 
     @Override
-    public DoorsFolder createFolder(DoorsTreeNode parent, String name) {
-        return new DoorsFolderRefImpl(doorsApplication, DoorsItemType.FOLDER, parent, name);
+    public DoorsFolder createFolder(DoorsTreeNode parent, String name, boolean project) {
+        return new DoorsFolderRefImpl(doorsApplication, parent, name, project);
     }
 
     @Override

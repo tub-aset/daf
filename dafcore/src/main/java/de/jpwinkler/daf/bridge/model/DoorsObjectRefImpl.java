@@ -22,7 +22,6 @@ package de.jpwinkler.daf.bridge.model;
  * #L%
  */
 import de.jpwinkler.daf.bridge.DoorsApplication;
-import de.jpwinkler.daf.bridge.DoorsItemType;
 import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import de.jpwinkler.daf.model.DoorsAttributes;
 import de.jpwinkler.daf.model.DoorsObject;
@@ -43,7 +42,7 @@ import java.util.concurrent.CompletableFuture;
 class DoorsObjectRefImpl extends DoorsTreeNodeRefImpl implements DoorsObject {
 
     public DoorsObjectRefImpl(DoorsApplication DoorsApplication, DoorsTreeNode parent) {
-        super(DoorsApplication, DoorsItemType.OBJECT, parent, null);
+        super(DoorsApplication, parent, null);
     }
 
     private final Map<String, String> attributes = Collections.synchronizedMap(new HashMap<>());

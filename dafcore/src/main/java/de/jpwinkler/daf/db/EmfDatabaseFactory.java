@@ -32,8 +32,10 @@ import de.jpwinkler.daf.model.UnresolvedLink;
 public class EmfDatabaseFactory extends DatabaseFactory {
 
     @Override
-    public DoorsFolder createFolder(DoorsTreeNode parent, String name) {
-        return create(parent, DoorsFactory.eINSTANCE.createDoorsFolder(), name);
+    public DoorsFolder createFolder(DoorsTreeNode parent, String name, boolean project) {
+        DoorsFolder folder = create(parent, DoorsFactory.eINSTANCE.createDoorsFolder(), name);
+        folder.setProject(project);
+        return folder;
     }
 
     @Override

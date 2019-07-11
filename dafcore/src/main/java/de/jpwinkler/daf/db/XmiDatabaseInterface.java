@@ -30,7 +30,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collections;
-import java.util.List;
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -56,13 +55,13 @@ public class XmiDatabaseInterface implements DatabaseInterface {
 
         File databaseFile = new File(databasePath.getDatabasePath());
         if (openFlag == OpenFlag.CREATE_IF_INEXISTENT && !databaseFile.exists()) {
-            this.databaseRoot = factory.createFolder(null, FilenameUtils.getBaseName(databaseFile.getAbsolutePath()));
+            this.databaseRoot = factory.createFolder(null, FilenameUtils.getBaseName(databaseFile.getAbsolutePath()), false);
             this.flush();
         } else if (openFlag == OpenFlag.ERASE_IF_EXISTS) {
             if (databaseFile.exists()) {
                 databaseFile.delete();
             }
-            this.databaseRoot = factory.createFolder(null, FilenameUtils.getBaseName(databaseFile.getAbsolutePath()));
+            this.databaseRoot = factory.createFolder(null, FilenameUtils.getBaseName(databaseFile.getAbsolutePath()), false);
             this.flush();
         } else if (openFlag == OpenFlag.OPEN_ONLY && databaseFile.isFile()) {
             final Resource resource = new ResourceSetImpl().getResource(URI.createFileURI(databaseFile.toString()), true);
@@ -92,25 +91,5 @@ public class XmiDatabaseInterface implements DatabaseInterface {
     @Override
     public DatabaseFactory getFactory() {
         return factory;
-    }
-
-    private DoorsTreeNode ensureDatabasePath(final DoorsTreeNode path) {
-        return ensureDatabasePath(databaseRoot, path.getFullNameSegments());
-    }
-
-    private DoorsTreeNode ensureDatabasePath(final DoorsTreeNode parent, final List<String> path) {
-        if (path.size() > 0) {
-            DoorsTreeNode node = parent.getChild(path.get(0));
-            if (node == null) {
-                node = factory.createFolder(parent, path.get(0));
-            }
-            if (path.size() > 1) {
-                return ensureDatabasePath(parent.getChild(path.get(0)), path.subList(1, path.size()));
-            } else {
-                return node;
-            }
-        } else {
-            return null;
-        }
     }
 }

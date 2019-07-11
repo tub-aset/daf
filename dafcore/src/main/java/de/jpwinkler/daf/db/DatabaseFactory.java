@@ -37,26 +37,26 @@ import java.util.logging.Logger;
  */
 public abstract class DatabaseFactory {
 
-    public abstract DoorsFolder createFolder(DoorsTreeNode parent, String name);
+    public abstract DoorsFolder createFolder(DoorsTreeNode parent, String name, boolean project);
 
     public abstract DoorsModule createModule(DoorsTreeNode parent, String name);
 
     public abstract DoorsObject createObject(DoorsTreeNode parent, String objectText);
-    
+
     public abstract DoorsTableRow createTableRow(DoorsTreeNode parent);
 
     public abstract UnresolvedLink createLink(DoorsObject source, String targetModule, String targetObject);
 
     public final <T extends DoorsTreeNode> T createCopy(T source, DoorsTreeNode newParent, boolean resilient) {
         T copy;
-        if(source instanceof DoorsTableRow) {
+        if (source instanceof DoorsTableRow) {
             copy = (T) this.createTableRow(newParent);
         } else if (source instanceof DoorsObject) {
             copy = (T) this.createObject(newParent, null);
         } else if (source instanceof DoorsModule) {
             copy = (T) this.createModule(newParent, null);
         } else if (source instanceof DoorsFolder) {
-            copy = (T) this.createFolder(newParent, null);
+            copy = (T) this.createFolder(newParent, null, ((DoorsFolder) source).isProject());
         } else {
             throw new AssertionError();
         }

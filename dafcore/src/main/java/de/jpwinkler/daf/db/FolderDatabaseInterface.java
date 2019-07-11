@@ -24,7 +24,6 @@ package de.jpwinkler.daf.db;
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsPackage;
-import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -36,7 +35,6 @@ import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
@@ -93,7 +91,10 @@ public class FolderDatabaseInterface implements DatabaseInterface {
 
             @Override
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-                DoorsFolder folder = factory.createFolder(folders.get(dir.getParent().toAbsolutePath().toString()), FilenameUtils.getBaseName(dir.toFile().getAbsolutePath()));
+                DoorsFolder folder = factory.createFolder(
+                        folders.get(dir.getParent().toAbsolutePath().toString()),
+                        FilenameUtils.getBaseName(dir.toFile().getAbsolutePath()),
+                        Files.exists(dir.resolve("__project__")));
                 if (folder.getParent() == null) {
                     databaseRoot = folder;
                 }
@@ -124,6 +125,11 @@ public class FolderDatabaseInterface implements DatabaseInterface {
                     Files.createDirectories(modulePath);
 
                     ModuleCSV.writeMetaData(modulePath.resolve("__folder__.mmd").toFile(), f.getAttributes());
+                    if(f.isProject()) {
+                        Files.createFile(modulePath.resolve("__project__"));
+                    } else {
+                        Files.deleteIfExists(modulePath.resolve("__project__"));
+                    }
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -158,25 +164,5 @@ public class FolderDatabaseInterface implements DatabaseInterface {
     @Override
     public DatabaseFactory getFactory() {
         return factory;
-    }
-
-    private DoorsTreeNode ensureDatabasePath(final DoorsTreeNode path) {
-        return ensureDatabasePath(databaseRoot, path.getFullNameSegments());
-    }
-
-    private DoorsTreeNode ensureDatabasePath(final DoorsTreeNode parent, final List<String> path) {
-        if (path.size() > 0) {
-            DoorsTreeNode node = parent.getChild(path.get(0));
-            if (node == null) {
-                node = factory.createFolder(parent, path.get(0));
-            }
-            if (path.size() > 1) {
-                return ensureDatabasePath(parent.getChild(path.get(0)), path.subList(1, path.size()));
-            } else {
-                return node;
-            }
-        } else {
-            return null;
-        }
     }
 }

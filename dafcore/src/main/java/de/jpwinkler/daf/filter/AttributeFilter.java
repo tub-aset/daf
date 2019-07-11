@@ -21,6 +21,7 @@ package de.jpwinkler.daf.filter;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
+import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.util.Objects;
@@ -51,6 +52,9 @@ class AttributeFilter implements Predicate<DoorsTreeNode> {
                 break;
             case "__text__":
                 testString = (object instanceof DoorsObject) ? ((DoorsObject) object).getText() : null;
+                break;
+            case "__project__":
+                testString = (object instanceof DoorsFolder) ? Boolean.toString(((DoorsFolder) object).isProject()) : null;
                 break;
             default:
                 testString = object.getAttributes().get(attribute);

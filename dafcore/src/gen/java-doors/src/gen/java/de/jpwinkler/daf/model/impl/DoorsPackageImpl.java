@@ -379,6 +379,16 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
+	public EAttribute getDoorsFolder_Project() {
+		return (EAttribute)doorsFolderEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getDoorsModule() {
 		return doorsModuleEClass;
 	}
@@ -751,6 +761,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___TO_STRING);
 
 		doorsFolderEClass = createEClass(DOORS_FOLDER);
+		createEAttribute(doorsFolderEClass, DOORS_FOLDER__PROJECT);
 
 		doorsModuleEClass = createEClass(DOORS_MODULE);
 		createEOperation(doorsModuleEClass, DOORS_MODULE___GET_VIEW);
@@ -868,6 +879,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		initEOperation(getDoorsTreeNode__ToString(), ecorePackage.getEString(), "toString", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(doorsFolderEClass, DoorsFolder.class, "DoorsFolder", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getDoorsFolder_Project(), ecorePackage.getEBoolean(), "project", null, 0, 1, DoorsFolder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(doorsModuleEClass, DoorsModule.class, "DoorsModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

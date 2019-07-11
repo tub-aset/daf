@@ -23,7 +23,6 @@ package de.jpwinkler.daf.bridge.model;
  */
 import de.jpwinkler.daf.bridge.DXLScript;
 import de.jpwinkler.daf.bridge.DoorsApplication;
-import de.jpwinkler.daf.bridge.DoorsItemType;
 import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsTreeNode;
@@ -41,8 +40,11 @@ import java.util.logging.Logger;
  */
 class DoorsFolderRefImpl extends DoorsTreeNodeRefImpl implements DoorsFolder {
 
-    public DoorsFolderRefImpl(DoorsApplication DoorsApplication, DoorsItemType type, DoorsTreeNode parent, String name) {
-        super(DoorsApplication, type, parent, name);
+    private final boolean project;
+
+    public DoorsFolderRefImpl(DoorsApplication DoorsApplication, DoorsTreeNode parent, String name, boolean project) {
+        super(DoorsApplication, parent, name);
+        this.project = project;
     }
 
     private static final Logger LOGGER = Logger.getLogger(DoorsTreeNodeRefImpl.class.getName());
@@ -74,18 +76,19 @@ class DoorsFolderRefImpl extends DoorsTreeNodeRefImpl implements DoorsFolder {
                     LOGGER.severe(String.format("Invalid result format: %s.", line));
                     continue;
                 }
-                final DoorsItemType itemType = DoorsItemType.getType(split[0]);
-                switch (itemType) {
-                    case FORMAL:
+                switch (split[0]) {
+                    case "Formal":
                         result.add(new DoorsModuleRefImpl(doorsApplication, this, split[1]));
                         break;
-                    case FOLDER:
-                    case PROJECT:
-                        result.add(new DoorsFolderRefImpl(doorsApplication, itemType, this, split[1]));
+                    case "Folder":
+                        result.add(new DoorsFolderRefImpl(doorsApplication, this, split[1], false));
                         break;
-                    case LINK:
-                    case DESCRIPTIVE:
-                        LOGGER.log(Level.WARNING, "Item type not supported: {0}", itemType);
+                    case "Project":
+                        result.add(new DoorsFolderRefImpl(doorsApplication, this, split[1], true));
+                        break;
+                    case "Link":
+                    case "Descriptive":
+                        LOGGER.log(Level.WARNING, "Item type not supported: {0}", split[0]);
                         break;
                     default:
                         throw new UnsupportedOperationException("unknown type: " + split[0]);
@@ -104,5 +107,15 @@ class DoorsFolderRefImpl extends DoorsTreeNodeRefImpl implements DoorsFolder {
     @Override
     public CompletableFuture<Map<String, String>> getAttributesAsync(BackgroundTaskExecutor executor) {
         return CompletableFuture.completedFuture(this.getAttributes());
+    }
+
+    @Override
+    public boolean isProject() {
+        return project;
+    }
+
+    @Override
+    public void setProject(boolean value) {
+        throw new UnsupportedOperationException("Not supported");
     }
 }

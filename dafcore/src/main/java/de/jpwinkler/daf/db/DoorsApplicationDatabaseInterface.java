@@ -45,7 +45,7 @@ public class DoorsApplicationDatabaseInterface implements DatabaseInterface {
         this.doorsApplication = new DoorsApplicationImpl();
         this.doorsApplication.setDatabaseView(databasePath.getDatabasePath());
 
-        this.root = doorsApplication.getDatabaseFactory().createFolder(null, "Doors Application");
+        this.root = doorsApplication.getDatabaseFactory().createFolder(null, "Doors Application", false);
         this.databasePath = databasePath;
     }
 

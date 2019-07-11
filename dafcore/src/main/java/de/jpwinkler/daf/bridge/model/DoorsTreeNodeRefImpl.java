@@ -22,8 +22,9 @@ package de.jpwinkler.daf.bridge.model;
  * #L%
  */
 import de.jpwinkler.daf.bridge.DoorsApplication;
-import de.jpwinkler.daf.bridge.DoorsItemType;
 import de.jpwinkler.daf.db.BackgroundTaskExecutor;
+import de.jpwinkler.daf.model.DoorsFolder;
+import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import de.jpwinkler.daf.model.RuntimeExecutionException;
@@ -43,11 +44,9 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNode {
     private DoorsTreeNode parent;
 
     private final List<String> pathSegments;
-    private final DoorsItemType type;
 
-    public DoorsTreeNodeRefImpl(final DoorsApplication DoorsApplication, final DoorsItemType type, final DoorsTreeNode parent, String name) {
+    public DoorsTreeNodeRefImpl(final DoorsApplication DoorsApplication, final DoorsTreeNode parent, String name) {
         this.doorsApplication = DoorsApplication;
-        this.type = type;
         // make sure root does not show up in the path
         this.pathSegments = parent == null ? Collections.emptyList() : Stream.concat(parent.getFullNameSegments().stream(), Stream.of(name)).collect(Collectors.toList());
         this.parent = parent;
@@ -162,14 +161,14 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNode {
     public String toString() {
         return getName();
     }
-    
+
     public String getDoorsPath() {
-        if(this.type == DoorsItemType.PROJECT) {
+        if ((this instanceof DoorsFolder) && ((DoorsFolder) this).isProject()) {
             return "/" + this.getName();
-        } else if( (this.type == DoorsItemType.FOLDER || this.type == DoorsItemType.FORMAL) && this.parent != null) {
-            return ((DoorsTreeNodeRefImpl)this.parent).getDoorsPath() + "/" + this.getName();
-        } else if(this.type == DoorsItemType.FOLDER && this.parent == null) {
-        	return "/";
+        } else if ((((this instanceof DoorsFolder) && !((DoorsFolder) this).isProject()) || this instanceof DoorsModule) && this.parent != null) {
+            return ((DoorsTreeNodeRefImpl) this.parent).getDoorsPath() + "/" + this.getName();
+        } else if (((this instanceof DoorsFolder) && !((DoorsFolder) this).isProject()) && this.parent == null) {
+            return "/";
         } else {
             throw new AssertionError();
         }

@@ -41,9 +41,9 @@ public class PluginDatabaseInterface implements DatabaseInterface {
     public PluginDatabaseInterface(DatabasePath databasePath, DatabaseInterface.OpenFlag openFlag) throws IOException {
         this.databasePath = databasePath;
         DatabaseFactory factory = new EmfDatabaseFactory();
-        this.databaseRoot = factory.createFolder(null, "Test plugin root folder");
-        factory.createFolder(databaseRoot, "Test plugin folder 1");
-        factory.createFolder(databaseRoot, "Test plugin folder 2");
+        this.databaseRoot = factory.createFolder(null, "Test plugin root folder", false);
+        factory.createFolder(databaseRoot, "Test plugin folder 1", false);
+        factory.createFolder(databaseRoot, "Test plugin folder 2", false);
     }
 
     @Override

@@ -56,7 +56,9 @@ public enum ApplicationIcons {
             return ApplicationIcons.DATABASE;
         } else if (value instanceof DoorsModule) {
             return ApplicationIcons.FORMAL;
-        } else if (value instanceof DoorsFolder) {
+        } else if (value instanceof DoorsFolder && ((DoorsFolder) value).isProject()) {
+            return ApplicationIcons.PROJECT;
+        } else if (value instanceof DoorsFolder && !((DoorsFolder) value).isProject()) {
             return ApplicationIcons.FOLDER;
         } else if (value instanceof DoorsObject) {
             return ApplicationIcons.OBJECT;

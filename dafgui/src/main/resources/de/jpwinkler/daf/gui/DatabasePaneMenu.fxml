@@ -24,6 +24,11 @@
                     <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                 </accelerator>
             </MenuItem>
+         <MenuItem mnemonicParsing="false" onAction="#newProjectClicked" text="New project">
+            <accelerator>
+               <KeyCodeCombination alt="UP" code="P" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+            </accelerator>
+         </MenuItem>
             <MenuItem mnemonicParsing="false" onAction="#newModuleClicked" text="New module">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="M" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />

@@ -34,21 +34,21 @@ import de.jpwinkler.daf.model.DoorsTreeNode;
  *
  * @author fwiesweg
  */
-public class NewFolderCommand extends AbstractCommand {
+public class NewProjectCommand extends AbstractCommand {
 
     private final DatabaseFactory factory;
     private final DoorsTreeNode parent;
 
-    private DoorsTreeNode newFolder;
+    private DoorsTreeNode newProject;
 
-    public NewFolderCommand(DatabaseFactory factory, DoorsTreeNode parent) {
+    public NewProjectCommand(DatabaseFactory factory, DoorsTreeNode parent) {
         this.factory = factory;
         this.parent = parent;
     }
 
     @Override
     public String getName() {
-        return "New folder";
+        return "New project";
     }
 
     @Override
@@ -58,18 +58,18 @@ public class NewFolderCommand extends AbstractCommand {
 
     @Override
     public void apply() {
-        newFolder = factory.createFolder(null, "New folder", false);
+        newProject = factory.createFolder(null, "New project", true);
         redo();
     }
 
     @Override
     public void redo() {
-        parent.getChildren().add(parent.getChildren().indexOf(parent) + 1, newFolder);
+        parent.getChildren().add(parent.getChildren().indexOf(parent) + 1, newProject);
     }
 
     @Override
     public void undo() {
-        parent.getChildren().remove(newFolder);
+        parent.getChildren().remove(newProject);
     }
 
     @Override

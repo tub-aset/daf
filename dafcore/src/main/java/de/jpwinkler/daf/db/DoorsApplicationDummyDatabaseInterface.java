@@ -44,7 +44,7 @@ public class DoorsApplicationDummyDatabaseInterface implements DatabaseInterface
         }
 
         this.doorsApplication = new DoorsApplicationDummyImpl(0.1, databasePath.getDatabasePath());
-        this.root = doorsApplication.getDatabaseFactory().createFolder(null, "Doors Application");
+        this.root = doorsApplication.getDatabaseFactory().createFolder(null, "Doors Application", false);
         this.databasePath = databasePath;
     }
 
