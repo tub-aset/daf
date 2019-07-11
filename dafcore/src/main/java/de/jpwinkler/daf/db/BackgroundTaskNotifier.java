@@ -32,4 +32,25 @@ public interface BackgroundTaskNotifier {
     void incrementProgress(long increment, long maxProgressIncrement);
 
     boolean isCancelled();
+    
+    default void throwIfCancelled() {
+        if(this.isCancelled()) {
+            throw new BackgroundTaskAbortedException(this);
+        }
+    }
+    
+    public static final BackgroundTaskNotifier SYNCHRONOUS = new BackgroundTaskNotifier() {
+        @Override
+        public void incrementProgress(long increment) {
+        }
+
+        @Override
+        public void incrementProgress(long increment, long maxProgressIncrement) {
+        }
+
+        @Override
+        public boolean isCancelled() {
+            return false;
+        }
+    };
 }

@@ -21,6 +21,7 @@ package de.jpwinkler.daf.gui;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
+import de.jpwinkler.daf.db.BackgroundTaskAbortedException;
 import de.jpwinkler.daf.db.BackgroundTaskNotifier;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -137,12 +138,12 @@ public class BackgroundTask<T> {
         private final CompletableFuture<T> taskFuture = new CompletableFuture<T>() {
             @Override
             public boolean cancel(boolean bln) {
-                return this.completeExceptionally(new RuntimeException("Task cancelled"));
+                return this.completeExceptionally(new BackgroundTaskAbortedException(BackgroundTaskNotifierImpl.this));
             }
 
             @Override
             public boolean completeExceptionally(Throwable t) {
-                if (!this.completeTask(null)) {
+                if (!this.completeTask(t)) {
                     return false;
                 }
 

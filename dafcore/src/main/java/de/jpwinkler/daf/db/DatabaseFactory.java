@@ -48,6 +48,12 @@ public abstract class DatabaseFactory {
     public abstract UnresolvedLink createLink(DoorsObject source, String targetModule, String targetObject);
 
     public final <T extends DoorsTreeNode> T createCopy(T source, DoorsTreeNode newParent, boolean resilient) {
+        return this.createCopy(source, newParent, resilient, BackgroundTaskNotifier.SYNCHRONOUS);
+    }
+
+    public final <T extends DoorsTreeNode> T createCopy(T source, DoorsTreeNode newParent, boolean resilient, BackgroundTaskNotifier btNotifier) {
+        btNotifier.throwIfCancelled();
+
         T copy;
         if (source instanceof DoorsTableRow) {
             copy = (T) this.createTableRow(newParent);
@@ -61,16 +67,19 @@ public abstract class DatabaseFactory {
             throw new AssertionError();
         }
 
-        return this.copy(source, copy, resilient);
+        return this.copy(source, copy, resilient, btNotifier);
     }
 
     public final <T extends DoorsTreeNode> T copy(T source, T destination, boolean resilient) {
+        return this.copy(source, destination, resilient, BackgroundTaskNotifier.SYNCHRONOUS);
+    }
 
+    public final <T extends DoorsTreeNode> T copy(T source, T destination, boolean resilient, BackgroundTaskNotifier btNotifier) {
         if (!destination.canCopyFrom(source)) {
             throw new IllegalArgumentException("Cannot copy from a " + source.getClass().getSimpleName() + " to a " + destination.getClass().getSimpleName());
         }
-
         do {
+            btNotifier.throwIfCancelled();
             try {
                 destination.setName(source.getName());
                 destination.getAttributes().clear();
@@ -78,7 +87,7 @@ public abstract class DatabaseFactory {
 
                 destination.getChildren().clear();
                 source.getChildren().stream()
-                        .map(c -> this.createCopy(c, destination, resilient))
+                        .map(c -> this.createCopy(c, destination, resilient, btNotifier))
                         .filter(c -> c != null)
                         .forEach(destination.getChildren()::add);
 

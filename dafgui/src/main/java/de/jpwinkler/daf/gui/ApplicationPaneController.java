@@ -542,7 +542,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         return this.getBackgroundTaskExecutor().runBackgroundTask("Creating snapshot", i -> {
             DatabaseInterface destinationDB = applicationPartFactoryRegistry.openDatabase(destinationPath, OpenFlag.ERASE_IF_EXISTS).getLeft();
             try {
-                destinationDB.getFactory().copy(FilteredDoorsTreeNode.createFilteredTree(copyRoot, include, false), destinationDB.getDatabaseRoot(), true);
+                destinationDB.getFactory().copy(FilteredDoorsTreeNode.createFilteredTree(copyRoot, include, false), destinationDB.getDatabaseRoot(), true, i);
                 DoorsAttributes.DATABASE_COPIED_FROM.setValue(String.class,
                         destinationDB.getDatabaseRoot(), sourceDB.getPath().toString());
                 DoorsAttributes.DATABASE_COPIED_AT.setValue(String.class,
@@ -559,8 +559,6 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             Platform.runLater(() -> {
                 if (ex != null) {
                     ex.printStackTrace();
-
-                    this.setStatus("Snapshot failed; " + getMessage(ex));
                 }
             });
             return val;
