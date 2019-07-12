@@ -179,13 +179,14 @@ public class ModuleCSV {
         CSVParser csvParser = new CSVParser(new InputStreamReader(csvStream, CHARSET), READ_FORMAT);
 
         final DoorsModule module = factory.createModule(null, moduleName);
-
         DoorsTreeNode current = module;
+        
         int currentLevel = 0;
         if (!csvParser.getHeaderMap().containsKey("Object Level")) {
             throw new IOException("This is no DOORS CSV file: Object Level missing");
         }
 
+        boolean inTable = false;
         for (final CSVRecord record : csvParser.getRecords()) {
             final int objectLevel = Integer.parseInt(record.get("Object Level"));
             if (objectLevel <= 0) {
@@ -197,7 +198,8 @@ public class ModuleCSV {
                 currentLevel = current instanceof DoorsObject ? ((DoorsObject) current).getObjectLevel() : 0;
             }
 
-            while (objectLevel > currentLevel + 1 && !current.getChildren().isEmpty()) {
+            while (objectLevel > currentLevel + (inTable ? 2 : 1) 
+                    && !current.getChildren().isEmpty()) {
                 current = current.getChildren().get(current.getChildren().size() - 1);
                 currentLevel = current instanceof DoorsObject ? ((DoorsObject) current).getObjectLevel() : 0;
             }
@@ -205,8 +207,10 @@ public class ModuleCSV {
             final DoorsObject newObject;
             if (objectLevel == currentLevel + 1) {
                 newObject = factory.createObject(current, "");
+                inTable = false;
             } else if (objectLevel == currentLevel + 2) {
                 newObject = factory.createTableRow(current);
+                inTable = true;
             } else {
                 throw new IOException("Illegal jump in objet level");
             }
