@@ -36,6 +36,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.util.StringConverter;
 
 public final class EditViewsPaneController extends AutoloadingPaneController<EditViewsPaneController> {
 
@@ -124,6 +125,18 @@ public final class EditViewsPaneController extends AutoloadingPaneController<Edi
             if (currentCol != null) {
                 currentCol.setTitle(newValue);
                 colListView.refresh();
+            }
+        });
+
+        colAttributeComboBox.setConverter(new StringConverter<ColumnAttribute>() {
+            @Override
+            public String toString(ColumnAttribute t) {
+                return t == null ? null : t.toString();
+            }
+
+            @Override
+            public ColumnAttribute fromString(String string) {
+                return new ColumnAttribute(string);
             }
         });
         colAttributeComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
