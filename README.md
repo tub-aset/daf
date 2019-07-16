@@ -1,9 +1,11 @@
 # DOORS Access Framework Overview
 
+Developed by TU Berlin ASET: Florian Wiesweg and Jonas Winkler (2019)
+
 The DOORS Access Framework (DAF) provides simple access to existing IBM DOORS databases and simple editing and snapshotting capabilites. In addition, it is extensible with plugins to allow more complex calculations on the data (i.e. NLP, ML, etc.). The project is split into three components:
 
 * dafcore: The central database access and management library. Can be used to develop one's own GUI, or CLI applications.
-* dafgui: An extensible JavaFX-based GUI developped on top of dafcore.
+* dafgui: An extensible JavaFX-based GUI developed on top of dafcore.
 * dafplugin: An example plugin showing how to extend dafgui.
 
 ## dafcore

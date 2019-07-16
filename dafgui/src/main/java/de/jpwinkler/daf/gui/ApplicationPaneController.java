@@ -698,7 +698,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             text = IOUtils.readLines(is, Charset.forName("UTF-8")).stream().collect(Collectors.joining("\n"));
         }
 
-        MultiLineTextInputDialog controller = new MultiLineTextInputDialog("Developped by TU Berlin ASET\n\nThe following dependencies are bundled with this software.\n" + text);
+        MultiLineTextInputDialog controller = new MultiLineTextInputDialog("Developed by TU Berlin ASET\nFlorian Wiesweg and Jonas Winkler (2019)\n\nThe following dependencies are bundled with this software.\n" + text);
         Dialog dialog = controller.asDialog(tabPane.getScene().getWindow(), "About " + ((Stage) tabPane.getScene().getWindow()).getTitle(), ButtonType.OK);
         controller.getTextArea().setEditable(false);
         dialog.setHeaderText("About " + ((Stage) tabPane.getScene().getWindow()).getTitle());
