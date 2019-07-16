@@ -33,7 +33,7 @@ public enum ApplicationIcons {
     FOLDER("icons/folder.svg.png"),
     FORMAL("icons/files.svg.png"),
     LINK("icons/link.svg.png"),
-    PROJECT("icons/folder-zip.svg.png"),
+    PROJECT("icons/inbox.svg.png"),
     OBJECT("icons/file.svg.png"),
     LOADING("icons/refresh.svg.png"),
     ERROR("icons/close-rectangle.svg.png");
