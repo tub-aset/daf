@@ -340,13 +340,15 @@ public final class ModulePaneController extends ApplicationPartController<Module
                 contentTableView.getColumns().add(c);
             }
 
-            cols.stream()
-                    .distinct()
-                    .filter(an -> !displayedAttributes.contains(an))
-                    .peek(displayedAttributes::add)
-                    .map(an -> columnFactory.apply(an, an))
-                    .peek(c -> c.setPrefWidth(150))
-                    .forEach(contentTableView.getColumns()::add);
+            if (currentView.isDisplayRemainingColumns()) {
+                cols.stream()
+                        .distinct()
+                        .filter(an -> !displayedAttributes.contains(an))
+                        .peek(displayedAttributes::add)
+                        .map(an -> columnFactory.apply(an, an))
+                        .peek(c -> c.setPrefWidth(150))
+                        .forEach(contentTableView.getColumns()::add);
+            }
         }));
     }
 
@@ -354,7 +356,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
         if (object instanceof DoorsObject) {
             DoorsAttributes.OBJECT_LEVEL.setValue(Integer.class, object, ((DoorsObject) object).getObjectLevel());
         }
-        
+
         object.getChildren().stream()
                 .filter(c -> c instanceof DoorsObject)
                 .forEach(this::fixObjectLevel);
