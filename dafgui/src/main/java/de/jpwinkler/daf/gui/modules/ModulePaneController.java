@@ -30,16 +30,15 @@ import de.jpwinkler.daf.gui.ApplicationPartFactoryRegistry.ApplicationPart;
 import de.jpwinkler.daf.gui.BackgroundTask;
 import de.jpwinkler.daf.gui.commands.MultiCommand;
 import de.jpwinkler.daf.gui.commands.UpdateAction;
-import de.jpwinkler.daf.gui.controls.CustomTextAreaTableCell;
 import de.jpwinkler.daf.gui.controls.CustomTextFieldTreeCell;
 import de.jpwinkler.daf.gui.controls.DoorsTreeItem;
 import de.jpwinkler.daf.gui.controls.ExtensionPane;
 import de.jpwinkler.daf.gui.controls.FixedSingleSelectionModel;
 import de.jpwinkler.daf.gui.controls.ForwardingMultipleSelectionModel;
 import de.jpwinkler.daf.gui.modules.ViewDefinition.ColumnDefinition;
+import de.jpwinkler.daf.gui.modules.ViewDefinition.ColumnType;
 import de.jpwinkler.daf.gui.modules.commands.DeleteObjectCommand;
 import de.jpwinkler.daf.gui.modules.commands.DemoteObjectCommand;
-import de.jpwinkler.daf.gui.modules.commands.EditObjectAttributeCommand;
 import de.jpwinkler.daf.gui.modules.commands.FlattenCommand;
 import de.jpwinkler.daf.gui.modules.commands.NewObjectAfterCommand;
 import de.jpwinkler.daf.gui.modules.commands.NewObjectBelowCommand;
@@ -63,8 +62,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.WeakHashMap;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -74,7 +71,6 @@ import java.util.stream.Stream;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
@@ -99,11 +95,10 @@ public final class ModulePaneController extends ApplicationPartController<Module
     private static final ViewDefinition STANDARD_VIEW = new ViewDefinition("Standard");
 
     static {
-        ColumnDefinition columnDefinition = new ColumnDefinition("Object Heading/Text");
+        ColumnDefinition columnDefinition = new ColumnDefinition(ColumnType.COMBINED_TEXT_HEADING, "Object Heading/Text");
         columnDefinition.setWidth(700);
         columnDefinition.setVisible(true);
         STANDARD_VIEW.getColumns().add(columnDefinition);
-
         STANDARD_VIEW.setDisplayRemainingColumns(false);
     }
 
@@ -176,6 +171,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
         });
 
         this.loadContent();
+        this.updateGui(ModuleUpdateAction.UPDATE_VIEWS);
     }
 
     private void loadContent() {
@@ -196,7 +192,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
                 }
 
                 this.filteredModule = actualModule;
-                updateGui(ModuleUpdateAction.UPDATE_VIEWS, ModuleUpdateAction.UPDATE_COLUMNS, ModuleUpdateAction.UPDATE_CONTENT_VIEW, ModuleUpdateAction.UPDATE_OUTLINE_VIEW);
+                updateGui(ModuleUpdateAction.UPDATE_COLUMNS, ModuleUpdateAction.UPDATE_CONTENT_VIEW, ModuleUpdateAction.UPDATE_OUTLINE_VIEW);
                 traverseTreeItem(outlineTreeView.getRoot(), ti -> ti.setExpanded(true));
             });
         }).exceptionally(t -> {
@@ -307,22 +303,14 @@ public final class ModulePaneController extends ApplicationPartController<Module
                 .thenAccept(cols -> Platform.runLater(() -> {
             contentTableView.getColumns().clear();
             Set<String> displayedAttributes = new HashSet<>();
-            BiFunction<String, String, TableColumn<DoorsObject, DoorsObject>> columnFactory = (attributeName, title) -> {
-                final TableColumn<DoorsObject, DoorsObject> c = new TableColumn<>(title);
+            Function<ColumnDefinition, TableColumn<DoorsObject, DoorsObject>> columnFactory = (colDef) -> {
+                final TableColumn<DoorsObject, DoorsObject> c = new TableColumn<>(colDef.getTitle());
                 c.setSortable(false);
-                BiConsumer<DoorsObject, String> edit = (it, newValue) -> {
-                    executeCommand(new EditObjectAttributeCommand(it, attributeName, newValue));
-                    contentTableView.requestFocus();
-                    contentTableView.getFocusModel().focusNext();
-                };
-                if (attributeName == null) {
-                    c.setCellFactory(tc -> new CombinedTextHeadingCell(tc,
-                            it -> it.getText(), edit));
-                } else {
-                    c.setCellFactory(tc -> new CustomTextAreaTableCell<>(tc,
-                            it -> it.getAttributes().get(attributeName), edit));
+                c.setCellFactory(colDef.getCellFactory(super.getDatabaseInterface().getFactory(), this::executeCommand));
+
+                if (colDef.getAttributeName() != null) {
+                    displayedAttributes.add(colDef.getAttributeName());
                 }
-                displayedAttributes.add(attributeName);
                 return c;
             };
 
@@ -331,7 +319,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
                     continue;
                 }
 
-                TableColumn<DoorsObject, DoorsObject> c = columnFactory.apply(columnDefinition.getAttributeName(), columnDefinition.getTitle());
+                TableColumn<DoorsObject, DoorsObject> c = columnFactory.apply(columnDefinition);
                 c.setPrefWidth(columnDefinition.getWidth());
                 c.widthProperty().addListener((obs, oldValue, newValue) -> {
                     columnDefinition.setWidth(newValue.doubleValue());
@@ -345,7 +333,11 @@ public final class ModulePaneController extends ApplicationPartController<Module
                         .distinct()
                         .filter(an -> !displayedAttributes.contains(an))
                         .peek(displayedAttributes::add)
-                        .map(an -> columnFactory.apply(an, an))
+                        .map(an -> {
+                            ColumnDefinition colDef = new ColumnDefinition(ColumnType.ATTRIBUTE, an);
+                            colDef.setAttributeName(an);
+                            return columnFactory.apply(colDef);
+                        })
                         .peek(c -> c.setPrefWidth(150))
                         .forEach(contentTableView.getColumns()::add);
             }
@@ -445,7 +437,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
         setStatus("Filter applied");
 
-        updateGui(ModuleUpdateAction.UPDATE_VIEWS, ModuleUpdateAction.UPDATE_COLUMNS, ModuleUpdateAction.UPDATE_CONTENT_VIEW, ModuleUpdateAction.UPDATE_OUTLINE_VIEW);
+        updateGui(ModuleUpdateAction.UPDATE_COLUMNS, ModuleUpdateAction.UPDATE_CONTENT_VIEW, ModuleUpdateAction.UPDATE_OUTLINE_VIEW);
     }
 
     private DoorsObject getCurrentObject() {
@@ -483,13 +475,12 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
     @FXML
     public void newObjectAfterClicked() {
-        getCurrentObject().getOutgoingLinks().iterator().next().getTarget();
         executeCommand(new NewObjectAfterCommand(super.getDatabaseInterface().getFactory(), getCurrentObject()));
     }
 
     @FXML
     public void editViewsClicked() {
-        new EditViewsPaneController(this.views, filteredModule.getObjectAttributes().stream())
+        new EditViewsPaneController(this.views, filteredModule == null ? Stream.empty() : filteredModule.getObjectAttributes().stream())
                 .showDialog(outlineTreeView.getScene().getWindow(), "Edit views", ButtonType.CANCEL, ButtonType.OK)
                 .filter(r -> r.buttonType == ButtonType.OK)
                 .map(r -> r.result.getViews())
@@ -609,41 +600,6 @@ public final class ModulePaneController extends ApplicationPartController<Module
         @Override
         public void update(ModulePaneController ctrl) {
             updateFun.accept(ctrl);
-        }
-
-    }
-
-    private class CombinedTextHeadingCell extends CustomTextAreaTableCell<DoorsObject> {
-
-        public CombinedTextHeadingCell(TableColumn<DoorsObject, DoorsObject> tc, Function<DoorsObject, String> toString, BiConsumer<DoorsObject, String> editCommand) {
-            super(tc, toString, editCommand);
-        }
-
-        @Override
-        public void updateItem(final DoorsObject item, final boolean empty) {
-            super.updateItem(item, empty);
-            String style = "";
-            if (!empty && getTableRow() != null) {
-                if (item.isHeading()) {
-                    style += "-fx-font-weight: bold;";
-                    if (item.getObjectLevel() <= 2) {
-                        style += "-fx-font-size: 140%;";
-                    } else if (item.getObjectLevel() == 3) {
-                        style += "-fx-font-size: 130%;";
-                    } else if (item.getObjectLevel() == 4) {
-                        style += "-fx-font-size: 120%;";
-                    } else if (item.getObjectLevel() == 5) {
-                        style += "-fx-font-size: 110%;";
-                    }
-
-                    setText(item.getObjectNumber() + " " + item.getObjectHeading());
-                } else {
-                    setText(item.getObjectText());
-                }
-
-                setPadding(new Insets(0, 0, 0, (item.getObjectLevel() - 1) * 10));
-            }
-            setStyle(style);
         }
 
     }

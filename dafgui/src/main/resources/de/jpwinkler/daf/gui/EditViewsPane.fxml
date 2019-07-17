@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
@@ -81,6 +82,7 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" />
           <RowConstraints minHeight="10.0" prefHeight="30.0" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
@@ -132,13 +134,19 @@
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" top="5.0" />
                </GridPane.margin></TextField>
-            <Label text="Attribute" GridPane.rowIndex="7" />
-            <ComboBox fx:id="colAttributeComboBox" disable="true" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="7">
+            <Label text="Type" GridPane.rowIndex="7" />
+            <ChoiceBox fx:id="colTypeChoiceBox" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="7">
+               <GridPane.margin>
+                  <Insets bottom="5.0" left="5.0" top="5.0" />
+               </GridPane.margin>
+            </ChoiceBox>
+            <Label text="Attribute" GridPane.rowIndex="8" />
+            <ComboBox fx:id="colAttributeComboBox" disable="true" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="8">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" top="5.0" />
                </GridPane.margin></ComboBox>
-            <Label text="Position" GridPane.rowIndex="8" />
-            <HBox fx:id="colPositionHbox" alignment="CENTER" disable="true" fillHeight="false" GridPane.columnIndex="1" GridPane.rowIndex="8">
+            <Label text="Position" GridPane.rowIndex="9" />
+            <HBox fx:id="colPositionHbox" alignment="CENTER" disable="true" fillHeight="false" GridPane.columnIndex="1" GridPane.rowIndex="9">
                <children>
                   <Button minWidth="35.0" mnemonicParsing="false" onAction="#colTopClicked" prefWidth="35.0" text="⇈" textAlignment="CENTER">
                      <HBox.margin>
@@ -161,8 +169,8 @@
                   <Insets bottom="5.0" left="5.0" top="5.0" />
                </GridPane.margin>
             </HBox>
-            <Label text="Visible" GridPane.rowIndex="9" />
-            <CheckBox fx:id="colVisibleCheckBox" disable="true" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="9">
+            <Label text="Visible" GridPane.rowIndex="10" />
+            <CheckBox fx:id="colVisibleCheckBox" disable="true" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="10">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" top="5.0" />
                </GridPane.margin>
