@@ -36,6 +36,7 @@ import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import java.util.WeakHashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -67,25 +68,27 @@ public class FilteredDoorsTreeNode<T extends DoorsTreeNode> implements DoorsTree
         });
 
         if (node instanceof DoorsFolder) {
-            return new FilteredDoorsFolder((DoorsFolder) node, fullPredicate);
+            return new FilteredDoorsFolder((DoorsFolder) node, fullPredicate, new WeakHashMap<>());
         } else if (node instanceof DoorsModule) {
-            return new FilteredDoorsModule((DoorsModule) node, fullPredicate);
+            return new FilteredDoorsModule((DoorsModule) node, fullPredicate, new WeakHashMap<>());
         } else if (node instanceof DoorsTableRow) {
-            return new FilteredDoorsTableRow((DoorsObject) node, fullPredicate);
+            return new FilteredDoorsTableRow((DoorsObject) node, fullPredicate, new WeakHashMap<>());
         } else if (node instanceof DoorsObject) {
-            return new FilteredDoorsObject((DoorsObject) node, fullPredicate);
+            return new FilteredDoorsObject((DoorsObject) node, fullPredicate, new WeakHashMap<>());
         } else {
             throw new AssertionError();
         }
     }
 
     protected final T self;
+    private final WeakHashMap<DoorsTreeNode, FilteredDoorsTreeNode<?>> nodeMap;
     private final ForwardingChildrenList children;
 
-    FilteredDoorsTreeNode(T self, Predicate<DoorsTreeNode> filter) {
+    FilteredDoorsTreeNode(T self, Predicate<DoorsTreeNode> filter, WeakHashMap<DoorsTreeNode, FilteredDoorsTreeNode<?>> nodeMap) {
         this.self = self;
         this.children = new ForwardingChildrenList(
-                DoorsTreeNode.class, () -> self.getChildren(), filter);
+                DoorsTreeNode.class, () -> self.getChildren(), filter, nodeMap);
+        this.nodeMap = nodeMap;
     }
 
     public T getSelf() {

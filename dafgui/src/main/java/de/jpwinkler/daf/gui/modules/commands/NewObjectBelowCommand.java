@@ -41,6 +41,13 @@ public class NewObjectBelowCommand extends AbstractCommand {
     }
 
     @Override
+    public boolean isApplicable() {
+        return factory != null && parent != null;
+    }
+    
+    
+
+    @Override
     public String getName() {
         return "New Object Below";
     }

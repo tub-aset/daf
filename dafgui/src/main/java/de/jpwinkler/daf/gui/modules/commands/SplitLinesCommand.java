@@ -48,7 +48,7 @@ public class SplitLinesCommand extends AbstractCommand {
 
     @Override
     public boolean isApplicable() {
-        return true;
+        return factory != null;
     }
 
     @Override

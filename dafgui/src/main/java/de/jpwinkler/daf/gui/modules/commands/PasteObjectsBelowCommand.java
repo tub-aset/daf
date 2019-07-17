@@ -46,7 +46,7 @@ public class PasteObjectsBelowCommand extends AbstractCommand {
 
     @Override
     public boolean isApplicable() {
-        return reference != null && !objectsToCopy.isEmpty();
+        return factory != null && reference != null && !objectsToCopy.isEmpty();
     }
 
     @Override

@@ -21,7 +21,6 @@ package de.jpwinkler.daf.gui.modules.commands;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.db.DatabaseFactory;
 import de.jpwinkler.daf.gui.commands.AbstractCommand;
 import de.jpwinkler.daf.gui.commands.UpdateAction;
@@ -36,8 +35,7 @@ public class PasteObjectsAfterCommand extends AbstractCommand {
     private final DatabaseFactory factory;
     private final DoorsObject reference;
     private final List<DoorsObject> objectsToCopy;
-    
-    
+
     private List<DoorsObject> copiedObjects;
 
     public PasteObjectsAfterCommand(DatabaseFactory factory, DoorsObject reference, List<DoorsObject> objectsToCopy) {
@@ -48,7 +46,7 @@ public class PasteObjectsAfterCommand extends AbstractCommand {
 
     @Override
     public boolean isApplicable() {
-        return reference != null && !objectsToCopy.isEmpty();
+        return factory != null && reference != null && !objectsToCopy.isEmpty();
     }
 
     @Override
@@ -76,7 +74,7 @@ public class PasteObjectsAfterCommand extends AbstractCommand {
 
     @Override
     public UpdateAction[] getUpdateActions() {
-        return new UpdateAction[] { ModuleUpdateAction.FIX_OBJECT_LEVELS, ModuleUpdateAction.FIX_OBJECT_NUMBERS, ModuleUpdateAction.UPDATE_CONTENT_VIEW, ModuleUpdateAction.UPDATE_OUTLINE_VIEW };
+        return new UpdateAction[]{ModuleUpdateAction.FIX_OBJECT_LEVELS, ModuleUpdateAction.FIX_OBJECT_NUMBERS, ModuleUpdateAction.UPDATE_CONTENT_VIEW, ModuleUpdateAction.UPDATE_OUTLINE_VIEW};
     }
 
 }

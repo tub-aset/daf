@@ -63,7 +63,7 @@ public class PluginDatabaseInterface implements DatabaseInterface {
 
     @Override
     public DatabaseFactory getFactory() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return null;
     }
 
 }

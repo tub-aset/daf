@@ -46,31 +46,44 @@ class ForwardingChildrenList implements List<DoorsTreeNode> {
     private final Class<DoorsTreeNode> clz;
     private final Supplier<List<DoorsTreeNode>> listSupplier;
     final Predicate<DoorsTreeNode> predicate;
+    private final WeakHashMap<DoorsTreeNode, FilteredDoorsTreeNode<?>> nodeMap;
 
-    private final WeakHashMap<DoorsTreeNode, FilteredDoorsTreeNode<?>> childrenMap = new WeakHashMap<>();
-
-    public ForwardingChildrenList(Class<DoorsTreeNode> clz, Supplier<List<DoorsTreeNode>> listSupplier, Predicate<DoorsTreeNode> predicate) {
+    public ForwardingChildrenList(Class<DoorsTreeNode> clz, Supplier<List<DoorsTreeNode>> listSupplier, Predicate<DoorsTreeNode> predicate, WeakHashMap<DoorsTreeNode, FilteredDoorsTreeNode<?>> nodeMap) {
         this.clz = clz;
         this.listSupplier = listSupplier;
         this.predicate = predicate;
+        this.nodeMap = nodeMap;
     }
 
-    DoorsTreeNode wrap(DoorsTreeNode node) {
-        if (node instanceof FilteredDoorsTreeNode && childrenMap.containsValue((FilteredDoorsTreeNode<?>) node)) {
+    static DoorsTreeNode wrap(WeakHashMap<DoorsTreeNode, FilteredDoorsTreeNode<?>> nodeMap, Predicate<DoorsTreeNode> predicate, DoorsTreeNode node) {
+        if(node == null) {
+            return null;
+        } else if (node instanceof FilteredDoorsTreeNode && nodeMap.containsValue((FilteredDoorsTreeNode<?>) node)) {
             return node;
-        } else if (!childrenMap.containsKey(node)) {
-            childrenMap.put(node, FilteredDoorsTreeNode.createFilteredTree(node, predicate, false)); // if we already have a recursing predicate, no need to create it again
+        } else if (!nodeMap.containsKey(node)) {
+            // if we already have a recursing predicate, no need to create it again
+            nodeMap.put(node, FilteredDoorsTreeNode.createFilteredTree(node, predicate, false));
         }
 
-        return childrenMap.get(node);
+        return nodeMap.get(node);
     }
 
-    <T> T unwrap(T node) {
-        if (node instanceof FilteredDoorsTreeNode) {
+    static <T> T unwrap(WeakHashMap<DoorsTreeNode, FilteredDoorsTreeNode<?>> nodeMap, T node) {
+        if(node == null) {
+            return null;
+        } else if (node instanceof FilteredDoorsTreeNode) {
             return (T) ((FilteredDoorsTreeNode) node).getSelf();
         } else {
             return node;
         }
+    }
+
+    private DoorsTreeNode wrap(DoorsTreeNode node) {
+        return wrap(nodeMap, predicate, node);
+    }
+
+    private <T> T unwrap(T node) {
+        return unwrap(nodeMap, node);
     }
 
     private boolean classMatch(Object o) {

@@ -155,7 +155,7 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
 
                     @Override
                     public DoorsLink createLink(DoorsObject source, String targetModule, String targetObject) {
-                        throw new UnsupportedOperationException("Not supported.");
+                        return doorsApplication.getDatabaseFactory().createLink(source, targetModule, targetObject);
                     }
 
                 }, tempFile.toFile());

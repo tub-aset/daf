@@ -483,6 +483,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
     @FXML
     public void newObjectAfterClicked() {
+        getCurrentObject().getOutgoingLinks().iterator().next().getTarget();
         executeCommand(new NewObjectAfterCommand(super.getDatabaseInterface().getFactory(), getCurrentObject()));
     }
 

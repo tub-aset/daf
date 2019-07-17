@@ -228,7 +228,7 @@ public class ModuleCSV {
                                 String targetModule;
                                 String targetObject;
 
-                                if (colonIndex != -1) {
+                                if (colonIndex == -1) {
                                     targetModule = line;
                                     targetObject = "1";
                                 } else {
@@ -236,9 +236,11 @@ public class ModuleCSV {
                                     targetObject = line.substring(colonIndex + 1);
                                 }
 
-                                return factory.createLink(newObject, targetModule, targetObject);
+                                return targetModule.isEmpty() ? null : factory.createLink(newObject, targetModule, targetObject);
                             })
+                            .filter(o -> o != null)
                             .forEach(newObject.getOutgoingLinks()::add);
+                    continue;
                 }
 
                 newObject.getAttributes().put(e.getKey(), e.getValue());

@@ -47,7 +47,7 @@ public class NewObjectAfterCommand extends AbstractCommand {
 
     @Override
     public boolean isApplicable() {
-        return object != null;
+        return factory != null && object != null;
     }
 
     @Override

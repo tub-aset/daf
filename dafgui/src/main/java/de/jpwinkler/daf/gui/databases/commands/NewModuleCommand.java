@@ -53,7 +53,7 @@ public class NewModuleCommand extends AbstractCommand {
 
     @Override
     public boolean isApplicable() {
-        return parent != null && !(parent instanceof DoorsModule) && !(parent instanceof DoorsObject);
+        return factory != null && parent != null && !(parent instanceof DoorsModule) && !(parent instanceof DoorsObject);
     }
 
     @Override

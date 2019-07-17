@@ -26,7 +26,6 @@ package de.jpwinkler.daf.bridge.model;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.filter.model.FilteredDoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsLink;
 import de.jpwinkler.daf.model.DoorsModule;
@@ -74,6 +73,10 @@ public class DoorsLinkRefImpl implements DoorsLink {
         }
 
         DoorsTreeNode pathTreeNode = root.getChild(targetModule);
+        if (pathTreeNode == null) {
+            throw new IllegalStateException("Target module not found");
+        }
+
         if (!(pathTreeNode instanceof DoorsModule)) {
             throw new IllegalStateException("Target module is not a DoorsModule");
         }
@@ -85,13 +88,13 @@ public class DoorsLinkRefImpl implements DoorsLink {
             throw new IllegalStateException("Target object points to more than one DoorsTreeNode");
         }
 
-        DoorsTreeNode targetObject = pathModule.getChildren().get(0);
-        if (!(targetObject instanceof DoorsObject)) {
+        DoorsTreeNode tg = ((FilteredDoorsTreeNode) pathModule.getChildren().get(0)).getSelf();
+        if (!(tg instanceof DoorsObject)) {
             throw new IllegalStateException("Target object is no DoorsObject");
         }
 
-        this.target = (DoorsObject) targetObject;
-        ((DoorsObject) targetObject).getIncomingLinks().add(this);
+        this.target = (DoorsObject) tg;
+        ((DoorsObject) tg).getIncomingLinks().add(this);
         return this.target;
     }
 

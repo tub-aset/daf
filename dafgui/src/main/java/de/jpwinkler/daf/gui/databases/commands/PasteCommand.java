@@ -47,7 +47,7 @@ public class PasteCommand extends AbstractCommand {
 
     @Override
     public boolean isApplicable() {
-        return parent != null && !objectsToCopy.isEmpty();
+        return factory != null && parent != null && !objectsToCopy.isEmpty();
     }
 
     @Override

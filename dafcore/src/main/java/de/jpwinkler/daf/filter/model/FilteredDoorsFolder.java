@@ -29,6 +29,7 @@ package de.jpwinkler.daf.filter.model;
 
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsTreeNode;
+import java.util.WeakHashMap;
 import java.util.function.Predicate;
 
 /**
@@ -37,8 +38,8 @@ import java.util.function.Predicate;
  */
 class FilteredDoorsFolder extends FilteredDoorsTreeNode<DoorsFolder> implements DoorsFolder {
 
-    FilteredDoorsFolder(DoorsFolder self, Predicate<DoorsTreeNode> filter) {
-        super(self, filter);
+    FilteredDoorsFolder(DoorsFolder self, Predicate<DoorsTreeNode> filter, WeakHashMap<DoorsTreeNode, FilteredDoorsTreeNode<?>> nodeMap) {
+        super(self, filter, nodeMap);
     }
 
     @Override

@@ -30,6 +30,7 @@ import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.util.List;
+import java.util.WeakHashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 
@@ -39,8 +40,8 @@ import java.util.function.Predicate;
  */
 class FilteredDoorsModule extends FilteredDoorsTreeNode<DoorsModule> implements DoorsModule {
 
-    FilteredDoorsModule(DoorsModule self, Predicate<DoorsTreeNode> filter) {
-        super(self, filter);
+    FilteredDoorsModule(DoorsModule self, Predicate<DoorsTreeNode> filter, WeakHashMap<DoorsTreeNode, FilteredDoorsTreeNode<?>> nodeMap) {
+        super(self, filter, nodeMap);
     }
 
     @Override
