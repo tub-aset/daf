@@ -27,6 +27,7 @@ package de.jpwinkler.daf.bridge.model;
  * #L%
  */
 import de.jpwinkler.daf.model.DoorsLink;
+import de.jpwinkler.daf.model.DoorsLinkStatus;
 import de.jpwinkler.daf.model.DoorsModelUtil;
 import de.jpwinkler.daf.model.DoorsObject;
 
@@ -44,6 +45,7 @@ public class DoorsLinkRefImpl implements DoorsLink {
 
     private final DoorsObject source;
     private DoorsObject target;
+    private DoorsLinkStatus targetStatus = DoorsLinkStatus.UNRESOLVED;
 
     private final String targetModule;
     private final String targetObject;
@@ -60,8 +62,14 @@ public class DoorsLinkRefImpl implements DoorsLink {
 
     @Override
     public DoorsObject resolve() {
-        if (!this.isResolved()) {
-            this.target = DoorsModelUtil.resolve(this);
+        if (targetStatus != DoorsLinkStatus.RESOLVED) {
+            try {
+                this.target = DoorsModelUtil.resolve(this);
+                this.targetStatus = DoorsLinkStatus.RESOLVED;
+            } catch (IllegalStateException ex) {
+                this.targetStatus = DoorsLinkStatus.RESOLVE_FAILED;
+                throw new RuntimeException(ex);
+            }
         }
         return target;
     }
@@ -87,8 +95,8 @@ public class DoorsLinkRefImpl implements DoorsLink {
     }
 
     @Override
-    public boolean isResolved() {
-        return target != null;
+    public DoorsLinkStatus getLinkStatus() {
+        return targetStatus;
     }
 
 }

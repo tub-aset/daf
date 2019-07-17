@@ -386,6 +386,10 @@ public final class ModulePaneController extends ApplicationPartController<Module
             }
 
             this.currentView = (ViewDefinition) newValue.getUserData();
+            
+            if(this.filteredModule == null) {
+                return;
+            }
 
             Set<String> moduleAttrs = new HashSet<>(this.filteredModule.getObjectAttributes());
             moduleAttrs.add(DoorsAttributes.OBJECT_LEVEL.getKey());

@@ -26,6 +26,7 @@ import de.jpwinkler.daf.db.ModuleCSV;
 import de.jpwinkler.daf.gui.commands.AbstractCommand;
 import de.jpwinkler.daf.gui.controls.CombinedTextHeadingCell;
 import de.jpwinkler.daf.gui.controls.CustomTextAreaTableCell;
+import de.jpwinkler.daf.gui.controls.LinksTableCell;
 import de.jpwinkler.daf.gui.modules.commands.EditLinksCommand;
 import de.jpwinkler.daf.gui.modules.commands.EditObjectAttributeCommand;
 import de.jpwinkler.daf.model.DoorsAttributes;
@@ -111,8 +112,7 @@ public class ViewDefinition implements Serializable {
                 tc.getTableView().getFocusModel().focusNext();
             };
 
-            return new CustomTextAreaTableCell<>(tc, it -> it.getOutgoingLinks().stream().map(
-                    ol -> ol.getTargetModule() + ":" + ol.getTargetObject()).collect(Collectors.joining("\n")), edit);
+            return new LinksTableCell<>(tc, edit);
         });
 
         private final QuadFunction<ColumnDefinition, TableColumn<DoorsObject, DoorsObject>, DatabaseFactory, Consumer<AbstractCommand>, TableCell<DoorsObject, DoorsObject>> cellCreator;

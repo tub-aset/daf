@@ -26,8 +26,8 @@ package de.jpwinkler.daf.filter.model;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.model.DoorsLink;
+import de.jpwinkler.daf.model.DoorsLinkStatus;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.util.WeakHashMap;
@@ -38,7 +38,7 @@ import java.util.function.Predicate;
  * @author fwiesweg
  */
 public class FilteredDoorsLink implements DoorsLink {
-    
+
     private final DoorsLink self;
     private final Predicate<DoorsTreeNode> predicate;
     private final WeakHashMap<DoorsTreeNode, FilteredDoorsTreeNode<?>> nodeMap;
@@ -48,7 +48,6 @@ public class FilteredDoorsLink implements DoorsLink {
         this.predicate = predicate;
         this.nodeMap = nodeMap;
     }
-    
 
     @Override
     public DoorsObject getSource() {
@@ -63,10 +62,10 @@ public class FilteredDoorsLink implements DoorsLink {
     @Override
     public DoorsObject resolve() {
         DoorsObject target = self.resolve();
-        if(!predicate.test(target)) {
+        if (!predicate.test(target)) {
             return null;
         }
-        
+
         return (DoorsObject) ForwardingChildrenList.wrap(nodeMap, predicate, target);
     }
 
@@ -91,8 +90,13 @@ public class FilteredDoorsLink implements DoorsLink {
     }
 
     @Override
-    public boolean isResolved() {
-        return self.isResolved() && predicate.test(self.resolve());
+    public DoorsLinkStatus getLinkStatus() {
+        DoorsLinkStatus status = self.getLinkStatus();
+        if (status == DoorsLinkStatus.RESOLVED) {
+            return predicate.test(self.resolve()) ? DoorsLinkStatus.RESOLVED : DoorsLinkStatus.RESOLVE_FAILED;
+        } else {
+            return status;
+        }
     }
-    
+
 }

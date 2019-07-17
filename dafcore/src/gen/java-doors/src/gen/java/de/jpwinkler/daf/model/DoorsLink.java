@@ -69,6 +69,14 @@ public interface DoorsLink {
 	void setSource(DoorsObject value);
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" dataType="de.jpwinkler.daf.model.DoorsLinkStatus"
+	 * @generated
+	 */
+	DoorsLinkStatus getLinkStatus();
+
+	/**
 	 * Returns the value of the '<em><b>Target Module</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -111,14 +119,6 @@ public interface DoorsLink {
 	 * @generated
 	 */
 	void setTargetObject(String value);
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model kind="operation"
-	 * @generated
-	 */
-	boolean isResolved();
 
 	/**
 	 * <!-- begin-user-doc -->

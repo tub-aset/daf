@@ -8,6 +8,7 @@
     <foreignModel>Doors.ecore</foreignModel>
     <genPackages prefix="Doors" basePackage="de.jpwinkler.daf" ecorePackage="Doors.ecore#/" classPackageSuffix="impl" disposableProviderFactory="true" adapterFactory="false">
         <genDataTypes ecoreDataType="Doors.ecore#//DoorsTreeNodeVisitor"/>
+        <genDataTypes ecoreDataType="Doors.ecore#//DoorsLinkStatus"/>
         <genDataTypes ecoreDataType="Doors.ecore#//Pattern"/>
         <genDataTypes ecoreDataType="Doors.ecore#//Collection"/>
         <genDataTypes ecoreDataType="Doors.ecore#//NodeFilter"/>
@@ -85,7 +86,7 @@
         </genClasses>
         
         <genClasses image="false" ecoreClass="Doors.ecore#//DoorsLink">
-            <genOperations ecoreOperation="Doors.ecore#//DoorsLink/isResolved"/>
+            <genOperations ecoreOperation="Doors.ecore#//DoorsLink/getLinkStatus"/>
             <genOperations ecoreOperation="Doors.ecore#//DoorsLink/resolve"/>
             
             <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//DoorsLink/targetModule"/>

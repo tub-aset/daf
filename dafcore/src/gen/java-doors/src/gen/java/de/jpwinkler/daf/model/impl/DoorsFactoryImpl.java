@@ -99,6 +99,8 @@ public class DoorsFactoryImpl extends EFactoryImpl implements DoorsFactory {
 		switch (eDataType.getClassifierID()) {
 			case DoorsPackage.DOORS_TREE_NODE_VISITOR:
 				return createDoorsTreeNodeVisitorFromString(eDataType, initialValue);
+			case DoorsPackage.DOORS_LINK_STATUS:
+				return createDoorsLinkStatusFromString(eDataType, initialValue);
 			case DoorsPackage.PATTERN:
 				return createPatternFromString(eDataType, initialValue);
 			case DoorsPackage.COLLECTION:
@@ -120,6 +122,8 @@ public class DoorsFactoryImpl extends EFactoryImpl implements DoorsFactory {
 		switch (eDataType.getClassifierID()) {
 			case DoorsPackage.DOORS_TREE_NODE_VISITOR:
 				return convertDoorsTreeNodeVisitorToString(eDataType, instanceValue);
+			case DoorsPackage.DOORS_LINK_STATUS:
+				return convertDoorsLinkStatusToString(eDataType, instanceValue);
 			case DoorsPackage.PATTERN:
 				return convertPatternToString(eDataType, instanceValue);
 			case DoorsPackage.COLLECTION:
@@ -211,6 +215,24 @@ public class DoorsFactoryImpl extends EFactoryImpl implements DoorsFactory {
 	 * @generated
 	 */
 	public String convertDoorsTreeNodeVisitorToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public DoorsLinkStatus createDoorsLinkStatusFromString(EDataType eDataType, String initialValue) {
+		return (DoorsLinkStatus)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertDoorsLinkStatusToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(eDataType, instanceValue);
 	}
 

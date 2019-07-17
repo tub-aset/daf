@@ -1249,13 +1249,13 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_LINK_FEATURE_COUNT = 3;
 
 	/**
-	 * The operation id for the '<em>Is Resolved</em>' operation.
+	 * The operation id for the '<em>Get Link Status</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_LINK___IS_RESOLVED = 0;
+	int DOORS_LINK___GET_LINK_STATUS = 0;
 
 	/**
 	 * The operation id for the '<em>Resolve</em>' operation.
@@ -1286,6 +1286,16 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_TREE_NODE_VISITOR = 7;
 
 	/**
+	 * The meta object id for the '<em>Link Status</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see de.jpwinkler.daf.model.DoorsLinkStatus
+	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getDoorsLinkStatus()
+	 * @generated
+	 */
+	int DOORS_LINK_STATUS = 8;
+
+	/**
 	 * The meta object id for the '<em>Pattern</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1293,7 +1303,7 @@ public interface DoorsPackage extends EPackage {
 	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getPattern()
 	 * @generated
 	 */
-	int PATTERN = 8;
+	int PATTERN = 9;
 
 	/**
 	 * The meta object id for the '<em>Collection</em>' data type.
@@ -1303,7 +1313,7 @@ public interface DoorsPackage extends EPackage {
 	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getCollection()
 	 * @generated
 	 */
-	int COLLECTION = 9;
+	int COLLECTION = 10;
 
 	/**
 	 * The meta object id for the '<em>Node Filter</em>' data type.
@@ -1313,7 +1323,7 @@ public interface DoorsPackage extends EPackage {
 	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getNodeFilter()
 	 * @generated
 	 */
-	int NODE_FILTER = 10;
+	int NODE_FILTER = 11;
 
 
 	/**
@@ -1726,17 +1736,6 @@ public interface DoorsPackage extends EPackage {
 	EClass getDoorsLink();
 
 	/**
-	 * Returns the meta object for the reference '{@link de.jpwinkler.daf.model.DoorsLink#getSource <em>Source</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Source</em>'.
-	 * @see de.jpwinkler.daf.model.DoorsLink#getSource()
-	 * @see #getDoorsLink()
-	 * @generated
-	 */
-	EReference getDoorsLink_Source();
-
-	/**
 	 * Returns the meta object for the attribute '{@link de.jpwinkler.daf.model.DoorsLink#getTargetModule <em>Target Module</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1759,14 +1758,25 @@ public interface DoorsPackage extends EPackage {
 	EAttribute getDoorsLink_TargetObject();
 
 	/**
-	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsLink#isResolved() <em>Is Resolved</em>}' operation.
+	 * Returns the meta object for the reference '{@link de.jpwinkler.daf.model.DoorsLink#getSource <em>Source</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Is Resolved</em>' operation.
-	 * @see de.jpwinkler.daf.model.DoorsLink#isResolved()
+	 * @return the meta object for the reference '<em>Source</em>'.
+	 * @see de.jpwinkler.daf.model.DoorsLink#getSource()
+	 * @see #getDoorsLink()
 	 * @generated
 	 */
-	EOperation getDoorsLink__IsResolved();
+	EReference getDoorsLink_Source();
+
+	/**
+	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsLink#getLinkStatus() <em>Get Link Status</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Link Status</em>' operation.
+	 * @see de.jpwinkler.daf.model.DoorsLink#getLinkStatus()
+	 * @generated
+	 */
+	EOperation getDoorsLink__GetLinkStatus();
 
 	/**
 	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsLink#resolve() <em>Resolve</em>}' operation.
@@ -1788,6 +1798,17 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 */
 	EDataType getDoorsTreeNodeVisitor();
+
+	/**
+	 * Returns the meta object for data type '{@link de.jpwinkler.daf.model.DoorsLinkStatus <em>Link Status</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Link Status</em>'.
+	 * @see de.jpwinkler.daf.model.DoorsLinkStatus
+	 * @model instanceClass="de.jpwinkler.daf.model.DoorsLinkStatus"
+	 * @generated
+	 */
+	EDataType getDoorsLinkStatus();
 
 	/**
 	 * Returns the meta object for data type '{@link java.util.regex.Pattern <em>Pattern</em>}'.
@@ -2172,14 +2193,6 @@ public interface DoorsPackage extends EPackage {
 		EClass DOORS_LINK = eINSTANCE.getDoorsLink();
 
 		/**
-		 * The meta object literal for the '<em><b>Source</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference DOORS_LINK__SOURCE = eINSTANCE.getDoorsLink_Source();
-
-		/**
 		 * The meta object literal for the '<em><b>Target Module</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2196,12 +2209,20 @@ public interface DoorsPackage extends EPackage {
 		EAttribute DOORS_LINK__TARGET_OBJECT = eINSTANCE.getDoorsLink_TargetObject();
 
 		/**
-		 * The meta object literal for the '<em><b>Is Resolved</b></em>' operation.
+		 * The meta object literal for the '<em><b>Source</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation DOORS_LINK___IS_RESOLVED = eINSTANCE.getDoorsLink__IsResolved();
+		EReference DOORS_LINK__SOURCE = eINSTANCE.getDoorsLink_Source();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Link Status</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation DOORS_LINK___GET_LINK_STATUS = eINSTANCE.getDoorsLink__GetLinkStatus();
 
 		/**
 		 * The meta object literal for the '<em><b>Resolve</b></em>' operation.
@@ -2220,6 +2241,16 @@ public interface DoorsPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType DOORS_TREE_NODE_VISITOR = eINSTANCE.getDoorsTreeNodeVisitor();
+
+		/**
+		 * The meta object literal for the '<em>Link Status</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see de.jpwinkler.daf.model.DoorsLinkStatus
+		 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getDoorsLinkStatus()
+		 * @generated
+		 */
+		EDataType DOORS_LINK_STATUS = eINSTANCE.getDoorsLinkStatus();
 
 		/**
 		 * The meta object literal for the '<em>Pattern</em>' data type.

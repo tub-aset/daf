@@ -24,6 +24,7 @@ package de.jpwinkler.daf.model.impl;
  * #L%
  */
 import de.jpwinkler.daf.model.DoorsLink;
+import de.jpwinkler.daf.model.DoorsLinkStatus;
 import de.jpwinkler.daf.model.DoorsModelUtil;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsPackage;
@@ -179,7 +180,7 @@ public class DoorsLinkImpl extends MinimalEObjectImpl.Container implements Doors
 			eNotify(new ENotificationImpl(this, Notification.SET, DoorsPackage.DOORS_LINK__SOURCE, newSource, newSource));
 	}
 
-    /**
+				/**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc --> @generated
      */
@@ -225,15 +226,20 @@ public class DoorsLinkImpl extends MinimalEObjectImpl.Container implements Doors
      * @generated NOT
      */
     private DoorsObject target;
-
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc --> @generated NOT
+     * @generated NOT
      */
-    @Override
-    public boolean isResolved() {
-        return target != null;
-    }
+    private DoorsLinkStatus targetStatus = DoorsLinkStatus.UNRESOLVED;
+    
+    /**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	@Override
+	public DoorsLinkStatus getLinkStatus() {
+		return targetStatus;
+	}
 
     /**
      * <!-- begin-user-doc -->
@@ -241,8 +247,14 @@ public class DoorsLinkImpl extends MinimalEObjectImpl.Container implements Doors
      */
     @Override
     public DoorsObject resolve() {
-        if (!this.isResolved()) {
+        if (targetStatus != DoorsLinkStatus.RESOLVED) {
+            try {
             this.target = DoorsModelUtil.resolve(this);
+            this.targetStatus = DoorsLinkStatus.RESOLVED;
+            } catch(IllegalStateException ex) {
+                this.targetStatus = DoorsLinkStatus.RESOLVE_FAILED;
+                throw new RuntimeException(ex);
+            }
         }
         return target;
     }
@@ -357,8 +369,8 @@ public class DoorsLinkImpl extends MinimalEObjectImpl.Container implements Doors
     @Override
     public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
-			case DoorsPackage.DOORS_LINK___IS_RESOLVED:
-				return isResolved();
+			case DoorsPackage.DOORS_LINK___GET_LINK_STATUS:
+				return getLinkStatus();
 			case DoorsPackage.DOORS_LINK___RESOLVE:
 				return resolve();
 		}
