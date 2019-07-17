@@ -132,9 +132,9 @@ public class DoorsModelUtil {
     }
 
     // Defined here to prevent forward references in DoorsSystemAttributes
-    static final Function<String, List> LIST_PARSER = s -> (s == null || s.isEmpty()) ? Collections.emptyList() : Arrays.asList(s.split(","));
+    static final Function<String, List> LIST_PARSER = s -> (s == null || s.isEmpty()) ? Collections.emptyList() : Arrays.asList(s.split("\n"));
     static final Function<List, String> LIST_WRITER = l -> (l == null) ? null : (String) l.stream()
-            .filter(s1 -> s1 != null).map(s1 -> s1.toString()).reduce((s1, s2) -> s1 + "," + s2).orElse(null);
+            .filter(s1 -> s1 != null).map(s1 -> s1.toString()).reduce((s1, s2) -> s1 + "\n" + s2).orElse(null);
 
     static final Function<String, Integer> INT_PARSER = s -> (s == null || s.isEmpty()) ? 0 : Integer.parseInt(s);
     static final Function<Integer, String> INT_WRITER = i -> (i == null) ? null : Integer.toString(i);

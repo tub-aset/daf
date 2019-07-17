@@ -90,6 +90,7 @@ public abstract class DatabaseFactory {
                         .map(c -> this.createCopy(c, destination, resilient, btNotifier))
                         .filter(c -> c != null)
                         .forEach(destination.getChildren()::add);
+                source.getTags().forEach(destination::setTag);
 
                 if (source instanceof DoorsObject) {
                     DoorsObject sourceObj = (DoorsObject) source;

@@ -25,9 +25,11 @@ import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * <!-- begin-user-doc -->
@@ -67,16 +69,14 @@ public interface DoorsTreeNode {
     List<DoorsTreeNode> getChildren();
 
     /**
-     * @return 
-     * @generated NOT
+     * @return @generated NOT
      */
     CompletableFuture<List<DoorsTreeNode>> getChildrenAsync(BackgroundTaskExecutor executor);
-    
+
     /**
-     * @return 
-     * @generated NOT
+     * @return @generated NOT
      */
-     boolean isChildrenLoaded();
+    boolean isChildrenLoaded();
 
     /**
 	 * Returns the value of the '<em><b>Parent</b></em>' container reference.
@@ -169,56 +169,95 @@ public interface DoorsTreeNode {
      * <!-- begin-user-doc -->
      * <!-- end-user-doc --> @model
      * visitorDataType="de.jpwinkler.daf.model.DoorsTreeNodeVisitor"
+     *
      * @generated
      */
     void accept(DoorsTreeNodeVisitor visitor);
 
     /**
-     * 
+     *
      * @generated NOT
      */
     CompletableFuture<Void> acceptAsync(BackgroundTaskExecutor executor, DoorsTreeNodeVisitor visitor);
 
     /**
      * <!-- begin-user-doc -->
-     * <!-- end-user-doc --> @model @generated
+     * <!-- end-user-doc --> @model
+     *
+     * @generated NOT
      */
-    boolean hasTag(String tag);
+    default boolean hasTag(String tag) {
+        return Stream.of(getAttributes().getOrDefault("DOORS_TAGS", "").split(","))
+                .filter(t -> Objects.equals(tag, t))
+                .findAny().isPresent();
+    }
 
     /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc --> @model
      * patternDataType="de.jpwinkler.daf.model.Pattern"
-     * @generated
+     *
+     * @generated NOT
      */
-    boolean hasTag(Pattern pattern);
+    default boolean hasTag(Pattern pattern) {
+        return Stream.of(getAttributes().getOrDefault("DOORS_TAGS", "").split(","))
+                .filter(t -> pattern.matcher(t).matches())
+                .findAny().isPresent();
+    }
 
     /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc --> @model kind="operation"
-     * @generated
+     *
+     * @generated NOT
      */
-    List<String> getTags();
+    default List<String> getTags() {
+        return Arrays.asList(getAttributes().getOrDefault("DOORS_TAGS", "").split(","));
+    }
 
     /**
      * <!-- begin-user-doc -->
-     * <!-- end-user-doc --> @model @generated
+     * <!-- end-user-doc --> @model
+     *
+     * @generated NOT
      */
-    void setTag(String tag);
+    default void setTag(String tag) {
+        if (this.hasTag(tag)) {
+            return;
+        }
+
+        String newValue = Stream.concat(
+                Stream.of(getAttributes().getOrDefault("DOORS_TAGS", "").split(",")),
+                Stream.of(tag)).collect(Collectors.joining(","));
+        this.getAttributes().put("DOORS_TAGS", newValue);
+    }
 
     /**
      * <!-- begin-user-doc -->
-     * <!-- end-user-doc --> @model @generated
+     * <!-- end-user-doc --> @model
+     *
+     * @generated NOT
      */
-    void removeTag(String tag);
+    default void removeTag(String tag) {
+        String newValue = Stream.of(getAttributes().getOrDefault("DOORS_TAGS", "").split(","))
+                .filter(t -> !Objects.equals(t, tag))
+                .collect(Collectors.joining(","));
+        this.getAttributes().put("DOORS_TAGS", newValue);
+    }
 
     /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc --> @model
      * patternDataType="de.jpwinkler.daf.model.Pattern"
-     * @generated
+     *
+     * @generated NOT
      */
-    void removeTag(Pattern pattern);
+    default void removeTag(Pattern pattern) {
+        String newValue = Stream.of(getAttributes().getOrDefault("DOORS_TAGS", "").split(","))
+                .filter(t -> pattern.matcher(t).matches())
+                .collect(Collectors.joining(","));
+        this.getAttributes().put("DOORS_TAGS", newValue);
+    }
 
     /**
      * <!-- begin-user-doc -->

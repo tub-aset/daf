@@ -21,22 +21,18 @@ package de.jpwinkler.daf.model;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import static de.jpwinkler.daf.model.DoorsModelUtil.IDENTITY;
 import static de.jpwinkler.daf.model.DoorsModelUtil.INT_PARSER;
 import static de.jpwinkler.daf.model.DoorsModelUtil.INT_WRITER;
-import static de.jpwinkler.daf.model.DoorsModelUtil.LIST_PARSER;
-import static de.jpwinkler.daf.model.DoorsModelUtil.LIST_WRITER;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 public enum DoorsAttributes {
-    TAGS(List.class, LIST_PARSER, LIST_WRITER),
     MODULE_DESCRIPTION("Description", DoorsModule.class),
     MODULE_VIEW("__view__", String.class, IDENTITY, IDENTITY, DoorsModule.class),
     OBJECT_LEVEL("Object Level", Integer.class, INT_PARSER, INT_WRITER, DoorsObject.class),
@@ -48,7 +44,7 @@ public enum DoorsAttributes {
     ABSOLUTE_NUMBER("Absolute Number", Integer.class, INT_PARSER, INT_WRITER, DoorsObject.class),
     DATABASE_COPIED_FROM("Copied From", DoorsFolder.class),
     DATABASE_COPIED_AT("Copied At", DoorsFolder.class);
-    
+
     <T> DoorsAttributes(Class<T> type, Class<? extends DoorsTreeNode>... appliesTo) {
         this(null, IDENTITY, IDENTITY, appliesTo);
     }
@@ -83,11 +79,7 @@ public enum DoorsAttributes {
     private final Class<? extends DoorsTreeNode>[] appliesTo;
 
     public String getKey() {
-        return key == null ? "__SYSTEM__" + this.name() : key;
-    }
-
-    public boolean isSystemKey() {
-        return key == null;
+        return key;
     }
 
     public <T> T getValue(Class<T> expectedType, DoorsTreeNode node) {

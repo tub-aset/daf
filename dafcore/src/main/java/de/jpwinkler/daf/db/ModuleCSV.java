@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -89,7 +90,7 @@ public class ModuleCSV {
 
     public static void writeModule(final OutputStream csvStream, final DoorsModule module) throws IOException {
         String[] header = Stream.concat(
-                Stream.of("Object Level"), 
+                Stream.of("Object Level", "DOORS_LINKS"),
                 module.getObjectAttributes().stream().filter(a -> !"Object Level".equals(a))).toArray(i -> new String[i]);
 
         CSVPrinter printer = new CSVPrinter(new OutputStreamWriter(csvStream, CHARSET), WRITE_FORMAT);
@@ -100,7 +101,11 @@ public class ModuleCSV {
             public boolean visitPreTraverse(final DoorsObject object) {
                 try {
                     printer.printRecord(() -> Stream.concat(
-                            Stream.of((Object) object.getObjectLevel()),
+                            Stream.of(
+                                    (Object) object.getObjectLevel(),
+                                    object.getOutgoingLinks().stream()
+                                            .map(lnk -> lnk.getTargetModule() + ":" + lnk.getTargetObject())
+                                            .collect(Collectors.joining("\n"))),
                             Stream.of(header).skip(1).map(h -> object.getAttributes().get(h))
                     ).iterator());
                 } catch (final IOException e) {
@@ -180,7 +185,7 @@ public class ModuleCSV {
 
         final DoorsModule module = factory.createModule(null, moduleName);
         DoorsTreeNode current = module;
-        
+
         int currentLevel = 0;
         if (!csvParser.getHeaderMap().containsKey("Object Level")) {
             throw new IOException("This is no DOORS CSV file: Object Level missing");
@@ -198,7 +203,7 @@ public class ModuleCSV {
                 currentLevel = current instanceof DoorsObject ? ((DoorsObject) current).getObjectLevel() : 0;
             }
 
-            while (objectLevel > currentLevel + (inTable ? 2 : 1) 
+            while (objectLevel > currentLevel + (inTable ? 2 : 1)
                     && !current.getChildren().isEmpty()) {
                 current = current.getChildren().get(current.getChildren().size() - 1);
                 currentLevel = current instanceof DoorsObject ? ((DoorsObject) current).getObjectLevel() : 0;
@@ -216,6 +221,26 @@ public class ModuleCSV {
             }
 
             for (final Entry<String, String> e : record.toMap().entrySet()) {
+                if (e.getKey().equals("DOORS_LINKS")) {
+                    Stream.of(e.getValue().split("\n"))
+                            .map(line -> {
+                                int colonIndex = line.lastIndexOf(":");
+                                String targetModule;
+                                String targetObject;
+
+                                if (colonIndex != -1) {
+                                    targetModule = line;
+                                    targetObject = "1";
+                                } else {
+                                    targetModule = line.substring(0, colonIndex);
+                                    targetObject = line.substring(colonIndex + 1);
+                                }
+
+                                return factory.createLink(newObject, targetModule, targetObject);
+                            })
+                            .forEach(newObject.getOutgoingLinks()::add);
+                }
+
                 newObject.getAttributes().put(e.getKey(), e.getValue());
             }
 

@@ -79,7 +79,6 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
     @Override
     public List<String> getObjectAttributes() {
         LinkedHashSet<String> objectAttrs = new LinkedHashSet<>(DoorsAttributes.valuesFor(DoorsObject.class)
-                .filter(v -> !v.isSystemKey())
                 .map(a -> a.getKey())
                 .collect(Collectors.toList()));
         this.accept(new DoorsTreeNodeVisitor(DoorsObject.class) {

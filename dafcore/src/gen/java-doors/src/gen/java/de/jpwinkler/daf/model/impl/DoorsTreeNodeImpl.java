@@ -23,7 +23,6 @@ package de.jpwinkler.daf.model.impl;
  */
 
 import de.jpwinkler.daf.db.BackgroundTaskExecutor;
-import de.jpwinkler.daf.model.DoorsAttributes;
 import de.jpwinkler.daf.model.DoorsPackage;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
@@ -34,8 +33,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.BasicEList;
@@ -260,63 +257,78 @@ public abstract class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container imp
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc --> @generated NOT
-     */
-    @Override
-    public boolean hasTag(String tag) {
-        return DoorsAttributes.TAGS.getValue(List.class, this).contains(tag);
-    }
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean hasTag(String tag) {
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
+	}
 
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc --> @generated NOT
-     */
-    @Override
-    public boolean hasTag(Pattern pattern) {
-        return DoorsAttributes.TAGS.getValue(List.class, this).stream().anyMatch(s -> pattern.matcher((String) s).matches());
-    }
+				/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean hasTag(Pattern pattern) {
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
+	}
 
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc --> @generated NOT
-     */
-    @Override
-    public List<String> getTags() {
-        return DoorsAttributes.TAGS.getValue(List.class, this);
-    }
+				/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public List<String> getTags() {
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
+	}
 
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc --> @generated NOT
-     */
-    @Override
-    public void setTag(String tag) {
-        List<String> l = DoorsAttributes.TAGS.getValue(List.class, this);
-        DoorsAttributes.TAGS.setValue(List.class, this, Stream.concat(Stream.of(tag), l.stream()).distinct().collect(Collectors.toList()));
-    }
+				/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setTag(String tag) {
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
+	}
 
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc --> @generated NOT
-     */
-    @Override
-    public void removeTag(String tag) {
-        List<String> l = DoorsAttributes.TAGS.getValue(List.class, this);
-        DoorsAttributes.TAGS.setValue(List.class, this, l.stream().filter(t -> !tag.equals(t)).collect(Collectors.toList()));
-    }
+				/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void removeTag(String tag) {
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
+	}
 
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc --> @generated NOT
-     */
-    @Override
-    public void removeTag(Pattern pattern) {
-        List<String> l = DoorsAttributes.TAGS.getValue(List.class, this);
-        DoorsAttributes.TAGS.setValue(List.class, this, l.stream().filter(s -> !pattern.matcher(s).matches()).collect(Collectors.toList()));
-    }
+				/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void removeTag(Pattern pattern) {
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
+	}
 
-    /**
+				/**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc --> @generated NOT
      */

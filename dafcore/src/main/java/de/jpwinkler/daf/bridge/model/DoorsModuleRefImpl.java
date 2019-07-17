@@ -43,15 +43,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.logging.Logger;
 
 class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
 
     private final AtomicReference<CompletableFuture<List<DoorsTreeNode>>> children = new AtomicReference<>();
     private final AtomicReference<CompletableFuture<Map<String, String>>> moduleAttributes = new AtomicReference<>();
     private final AtomicReference<List<String>> objectAttributes = new AtomicReference<>();
-
-    private static final Logger LOG = Logger.getLogger(DoorsModuleRefImpl.class.getName());
 
     public DoorsModuleRefImpl(final DoorsApplication DoorsApplication, final DoorsTreeNode parent, final String name) {
         super(DoorsApplication, parent, name);

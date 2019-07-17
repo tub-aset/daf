@@ -650,9 +650,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         }).thenAccept(attr -> Platform.runLater(() -> {
             ctrl.attributesTableView.setPlaceholder(null);
             ctrl.attributesTableView.getItems().clear();
-            ctrl.attributesTableView.getItems().addAll(attr.entrySet().stream()
-                    .filter(it -> DoorsAttributes.getForKey(it.getKey()).map(v -> !v.isSystemKey()).orElse(true))
-                    .collect(Collectors.toList()));
+            ctrl.attributesTableView.getItems().addAll(attr.entrySet());
             ctrl.attributesTableView.sort();
         })))
                 .limit(1)
