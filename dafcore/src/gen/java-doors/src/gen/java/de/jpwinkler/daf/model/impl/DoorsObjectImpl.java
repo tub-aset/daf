@@ -52,7 +52,6 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link de.jpwinkler.daf.model.impl.DoorsObjectImpl#getObjectHeading <em>Object Heading</em>}</li>
  *   <li>{@link de.jpwinkler.daf.model.impl.DoorsObjectImpl#getText <em>Text</em>}</li>
  *   <li>{@link de.jpwinkler.daf.model.impl.DoorsObjectImpl#getOutgoingLinks <em>Outgoing Links</em>}</li>
- *   <li>{@link de.jpwinkler.daf.model.impl.DoorsObjectImpl#getIncomingLinks <em>Incoming Links</em>}</li>
  * </ul>
  *
  * @generated
@@ -138,16 +137,6 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 	 * @ordered
 	 */
     protected EList<DoorsLink> outgoingLinks;
-
-    /**
-	 * The cached value of the '{@link #getIncomingLinks() <em>Incoming Links</em>}' reference list.
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @see #getIncomingLinks()
-	 * @generated
-	 * @ordered
-	 */
-    protected EList<DoorsLink> incomingLinks;
 
     /**
      * <!-- begin-user-doc -->
@@ -327,18 +316,6 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
      * <!-- end-user-doc --> @generated
      */
     @Override
-    public List<DoorsLink> getIncomingLinks() {
-		if (incomingLinks == null) {
-			incomingLinks = new EObjectWithInverseResolvingEList<DoorsLink>(DoorsLink.class, this, DoorsPackage.DOORS_OBJECT__INCOMING_LINKS, DoorsPackage.DOORS_LINK__TARGET);
-		}
-		return incomingLinks;
-	}
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc --> @generated
-     */
-    @Override
     public boolean isHeading() {
 		return getObjectHeading() != null && !getObjectHeading().isEmpty();
 	}
@@ -365,8 +342,6 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 		switch (featureID) {
 			case DoorsPackage.DOORS_OBJECT__OUTGOING_LINKS:
 				return ((InternalEList<InternalEObject>)(InternalEList<?>)getOutgoingLinks()).basicAdd(otherEnd, msgs);
-			case DoorsPackage.DOORS_OBJECT__INCOMING_LINKS:
-				return ((InternalEList<InternalEObject>)(InternalEList<?>)getIncomingLinks()).basicAdd(otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -380,8 +355,6 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 		switch (featureID) {
 			case DoorsPackage.DOORS_OBJECT__OUTGOING_LINKS:
 				return ((InternalEList<?>)getOutgoingLinks()).basicRemove(otherEnd, msgs);
-			case DoorsPackage.DOORS_OBJECT__INCOMING_LINKS:
-				return ((InternalEList<?>)getIncomingLinks()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -409,8 +382,6 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 				return getText();
 			case DoorsPackage.DOORS_OBJECT__OUTGOING_LINKS:
 				return getOutgoingLinks();
-			case DoorsPackage.DOORS_OBJECT__INCOMING_LINKS:
-				return getIncomingLinks();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -448,10 +419,6 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 				getOutgoingLinks().clear();
 				getOutgoingLinks().addAll((Collection<? extends DoorsLink>)newValue);
 				return;
-			case DoorsPackage.DOORS_OBJECT__INCOMING_LINKS:
-				getIncomingLinks().clear();
-				getIncomingLinks().addAll((Collection<? extends DoorsLink>)newValue);
-				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -487,9 +454,6 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 			case DoorsPackage.DOORS_OBJECT__OUTGOING_LINKS:
 				getOutgoingLinks().clear();
 				return;
-			case DoorsPackage.DOORS_OBJECT__INCOMING_LINKS:
-				getIncomingLinks().clear();
-				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -517,8 +481,6 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 				return TEXT_EDEFAULT == null ? getText() != null : !TEXT_EDEFAULT.equals(getText());
 			case DoorsPackage.DOORS_OBJECT__OUTGOING_LINKS:
 				return outgoingLinks != null && !outgoingLinks.isEmpty();
-			case DoorsPackage.DOORS_OBJECT__INCOMING_LINKS:
-				return incomingLinks != null && !incomingLinks.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

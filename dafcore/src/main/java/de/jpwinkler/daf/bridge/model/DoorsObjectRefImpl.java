@@ -146,11 +146,6 @@ class DoorsObjectRefImpl extends DoorsTreeNodeRefImpl implements DoorsObject {
     }
 
     @Override
-    public List<DoorsLink> getIncomingLinks() {
-        return incomingLinks;
-    }
-
-    @Override
     public boolean isHeading() {
         return getObjectHeading() != null && !getObjectHeading().isEmpty();
     }

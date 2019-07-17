@@ -769,22 +769,13 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_OBJECT__OUTGOING_LINKS = DOORS_TREE_NODE_FEATURE_COUNT + 7;
 
 	/**
-	 * The feature id for the '<em><b>Incoming Links</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DOORS_OBJECT__INCOMING_LINKS = DOORS_TREE_NODE_FEATURE_COUNT + 8;
-
-	/**
 	 * The number of structural features of the '<em>Object</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_OBJECT_FEATURE_COUNT = DOORS_TREE_NODE_FEATURE_COUNT + 9;
+	int DOORS_OBJECT_FEATURE_COUNT = DOORS_TREE_NODE_FEATURE_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Accept</em>' operation.
@@ -1038,15 +1029,6 @@ public interface DoorsPackage extends EPackage {
 	 * @ordered
 	 */
 	int DOORS_TABLE_ROW__OUTGOING_LINKS = DOORS_OBJECT__OUTGOING_LINKS;
-
-	/**
-	 * The feature id for the '<em><b>Incoming Links</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DOORS_TABLE_ROW__INCOMING_LINKS = DOORS_OBJECT__INCOMING_LINKS;
 
 	/**
 	 * The number of structural features of the '<em>Table Row</em>' class.
@@ -1670,17 +1652,6 @@ public interface DoorsPackage extends EPackage {
 	EReference getDoorsObject_OutgoingLinks();
 
 	/**
-	 * Returns the meta object for the reference list '{@link de.jpwinkler.daf.model.DoorsObject#getIncomingLinks <em>Incoming Links</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Incoming Links</em>'.
-	 * @see de.jpwinkler.daf.model.DoorsObject#getIncomingLinks()
-	 * @see #getDoorsObject()
-	 * @generated
-	 */
-	EReference getDoorsObject_IncomingLinks();
-
-	/**
 	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsObject#isHeading() <em>Is Heading</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2138,14 +2109,6 @@ public interface DoorsPackage extends EPackage {
 		 * @generated
 		 */
 		EReference DOORS_OBJECT__OUTGOING_LINKS = eINSTANCE.getDoorsObject_OutgoingLinks();
-
-		/**
-		 * The meta object literal for the '<em><b>Incoming Links</b></em>' reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference DOORS_OBJECT__INCOMING_LINKS = eINSTANCE.getDoorsObject_IncomingLinks();
 
 		/**
 		 * The meta object literal for the '<em><b>Is Heading</b></em>' operation.

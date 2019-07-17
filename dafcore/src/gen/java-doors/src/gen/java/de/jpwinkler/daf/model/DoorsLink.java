@@ -71,14 +71,12 @@ public interface DoorsLink {
 
 	/**
 	 * Returns the value of the '<em><b>Target</b></em>' reference.
-	 * It is bidirectional and its opposite is '{@link de.jpwinkler.daf.model.DoorsObject#getIncomingLinks <em>Incoming Links</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Target</em>' reference.
 	 * @see #setTarget(DoorsObject)
 	 * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsLink_Target()
-	 * @see de.jpwinkler.daf.model.DoorsObject#getIncomingLinks
-	 * @model opposite="incomingLinks"
+	 * @model
 	 * @generated
 	 */
 	DoorsObject getTarget();

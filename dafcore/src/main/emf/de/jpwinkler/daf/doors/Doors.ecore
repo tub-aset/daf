@@ -49,8 +49,6 @@
         
         <eStructuralFeatures xsi:type="ecore:EReference" name="outgoingLinks" upperBound="-1"
                              eType="#//DoorsLink" eOpposite="#//DoorsLink/source"/>
-        <eStructuralFeatures xsi:type="ecore:EReference" name="incomingLinks" upperBound="-1"
-                             eType="#//DoorsLink" eOpposite="#//DoorsLink/target"/>
     </eClassifiers>
     
     <eClassifiers xsi:type="ecore:EClass" name="DoorsTableRow" eSuperTypes="#//DoorsObject"></eClassifiers>
@@ -68,8 +66,7 @@
         
         <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="#//DoorsObject"
                              eOpposite="#//DoorsObject/outgoingLinks"/>        
-        <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//DoorsObject"
-                             eOpposite="#//DoorsObject/incomingLinks"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//DoorsObject"/>
     </eClassifiers>
   
     <eClassifiers xsi:type="ecore:EClass" name="DoorsTreeNode" abstract="true">

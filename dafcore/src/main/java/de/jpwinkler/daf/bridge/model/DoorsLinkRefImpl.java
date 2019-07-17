@@ -94,7 +94,6 @@ public class DoorsLinkRefImpl implements DoorsLink {
         }
 
         this.target = (DoorsObject) tg;
-        ((DoorsObject) tg).getIncomingLinks().add(this);
         return this.target;
     }
 

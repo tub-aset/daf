@@ -41,7 +41,6 @@ import java.util.List;
  *   <li>{@link de.jpwinkler.daf.model.DoorsObject#getObjectHeading <em>Object Heading</em>}</li>
  *   <li>{@link de.jpwinkler.daf.model.DoorsObject#getText <em>Text</em>}</li>
  *   <li>{@link de.jpwinkler.daf.model.DoorsObject#getOutgoingLinks <em>Outgoing Links</em>}</li>
- *   <li>{@link de.jpwinkler.daf.model.DoorsObject#getIncomingLinks <em>Incoming Links</em>}</li>
  * </ul>
  *
  * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsObject()
@@ -228,20 +227,6 @@ public interface DoorsObject extends DoorsTreeNode {
 	 * @generated
 	 */
 	List<DoorsLink> getOutgoingLinks();
-
-	/**
-	 * Returns the value of the '<em><b>Incoming Links</b></em>' reference list.
-	 * The list contents are of type {@link de.jpwinkler.daf.model.DoorsLink}.
-	 * It is bidirectional and its opposite is '{@link de.jpwinkler.daf.model.DoorsLink#getTarget <em>Target</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Incoming Links</em>' reference list.
-	 * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsObject_IncomingLinks()
-	 * @see de.jpwinkler.daf.model.DoorsLink#getTarget
-	 * @model opposite="target"
-	 * @generated
-	 */
-	List<DoorsLink> getIncomingLinks();
 
 	/**
 	 * <!-- begin-user-doc -->

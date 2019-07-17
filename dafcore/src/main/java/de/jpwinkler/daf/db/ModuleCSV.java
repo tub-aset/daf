@@ -22,6 +22,7 @@ package de.jpwinkler.daf.db;
  * #L%
  */
 import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
+import de.jpwinkler.daf.model.DoorsLink;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
@@ -102,11 +103,7 @@ public class ModuleCSV {
             public boolean visitPreTraverse(final DoorsObject object) {
                 try {
                     printer.printRecord(() -> Stream.concat(
-                            Stream.of(
-                                    (Object) object.getObjectLevel(),
-                                    object.getOutgoingLinks().stream()
-                                            .map(lnk -> lnk.getTargetModule() + ":" + lnk.getTargetObject())
-                                            .collect(Collectors.joining("\n"))),
+                            Stream.of((Object) object.getObjectLevel(), serializeLinks(object)),
                             Stream.of(header).skip(2).map(h -> object.getAttributes().get(h))
                     ).iterator());
                 } catch (final IOException e) {
@@ -224,23 +221,7 @@ public class ModuleCSV {
 
             for (final Entry<String, String> e : record.toMap().entrySet()) {
                 if (e.getKey().equals("DOORS_LINKS")) {
-                    Stream.of(e.getValue().split("\n"))
-                            .map(line -> {
-                                int colonIndex = line.lastIndexOf(":");
-                                String targetModule;
-                                String targetObject;
-
-                                if (colonIndex == -1) {
-                                    targetModule = line;
-                                    targetObject = "1";
-                                } else {
-                                    targetModule = line.substring(0, colonIndex);
-                                    targetObject = line.substring(colonIndex + 1);
-                                }
-
-                                return targetModule.isEmpty() ? null : factory.createLink(newObject, targetModule, targetObject);
-                            })
-                            .filter(o -> o != null)
+                    parseLinks(e.getValue(), factory, newObject)
                             .forEach(newObject.getOutgoingLinks()::add);
                     continue;
                 }
@@ -290,5 +271,31 @@ public class ModuleCSV {
             .withEscape('\\')
             .withIgnoreSurroundingSpaces()
             .withRecordSeparator("\r\n");
+
+    public static final String serializeLinks(DoorsObject o) {
+        return o.getOutgoingLinks().stream()
+                .map(lnk -> lnk.getTargetModule() + ":" + lnk.getTargetObject())
+                .collect(Collectors.joining("\n"));
+    }
+
+    public static final Stream<DoorsLink> parseLinks(String value, DatabaseFactory factory, final DoorsObject sourceObject) {
+        return Stream.of(value.split("\n"))
+                .map(line -> {
+                    int colonIndex = line.lastIndexOf(":");
+                    String targetModule;
+                    String targetObject;
+
+                    if (colonIndex == -1) {
+                        targetModule = line;
+                        targetObject = "1";
+                    } else {
+                        targetModule = line.substring(0, colonIndex);
+                        targetObject = line.substring(colonIndex + 1);
+                    }
+
+                    return targetModule.isEmpty() ? null : factory.createLink(sourceObject, targetModule, targetObject);
+                })
+                .filter(o -> o != null);
+    }
 
 }

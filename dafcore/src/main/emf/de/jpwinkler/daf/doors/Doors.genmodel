@@ -75,7 +75,6 @@
             <genOperations ecoreOperation="Doors.ecore#//DoorsObject/getObjectLevel"/>
             
             <genFeatures createChild="false" ecoreFeature="ecore:EReference Doors.ecore#//DoorsObject/outgoingLinks"/>
-            <genFeatures createChild="false" ecoreFeature="ecore:EReference Doors.ecore#//DoorsObject/incomingLinks"/>
         </genClasses>
         
         <genClasses ecoreClass="Doors.ecore#//DoorsTableRow"></genClasses>

@@ -232,34 +232,12 @@ public class DoorsLinkImpl extends MinimalEObjectImpl.Container implements Doors
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetTarget(DoorsObject newTarget, NotificationChain msgs) {
-		DoorsObject oldTarget = target;
-		target = newTarget;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, DoorsPackage.DOORS_LINK__TARGET, oldTarget, newTarget);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	@Override
 	public void setTarget(DoorsObject newTarget) {
-		if (newTarget != target) {
-			NotificationChain msgs = null;
-			if (target != null)
-				msgs = ((InternalEObject)target).eInverseRemove(this, DoorsPackage.DOORS_OBJECT__INCOMING_LINKS, DoorsObject.class, msgs);
-			if (newTarget != null)
-				msgs = ((InternalEObject)newTarget).eInverseAdd(this, DoorsPackage.DOORS_OBJECT__INCOMING_LINKS, DoorsObject.class, msgs);
-			msgs = basicSetTarget(newTarget, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DoorsPackage.DOORS_LINK__TARGET, newTarget, newTarget));
+		DoorsObject oldTarget = target;
+		target = newTarget;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, DoorsPackage.DOORS_LINK__TARGET, oldTarget, target));
 	}
 
 	/**
@@ -332,10 +310,6 @@ public class DoorsLinkImpl extends MinimalEObjectImpl.Container implements Doors
 				if (source != null)
 					msgs = ((InternalEObject)source).eInverseRemove(this, DoorsPackage.DOORS_OBJECT__OUTGOING_LINKS, DoorsObject.class, msgs);
 				return basicSetSource((DoorsObject)otherEnd, msgs);
-			case DoorsPackage.DOORS_LINK__TARGET:
-				if (target != null)
-					msgs = ((InternalEObject)target).eInverseRemove(this, DoorsPackage.DOORS_OBJECT__INCOMING_LINKS, DoorsObject.class, msgs);
-				return basicSetTarget((DoorsObject)otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -350,8 +324,6 @@ public class DoorsLinkImpl extends MinimalEObjectImpl.Container implements Doors
 		switch (featureID) {
 			case DoorsPackage.DOORS_LINK__SOURCE:
 				return basicSetSource(null, msgs);
-			case DoorsPackage.DOORS_LINK__TARGET:
-				return basicSetTarget(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}

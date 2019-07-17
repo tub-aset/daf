@@ -125,11 +125,6 @@ class FilteredDoorsObject extends FilteredDoorsTreeNode<DoorsObject> implements 
     }
 
     @Override
-    public List<DoorsLink> getIncomingLinks() {
-        return self.getIncomingLinks();
-    }
-
-    @Override
     public boolean isHeading() {
         return self.isHeading();
     }
