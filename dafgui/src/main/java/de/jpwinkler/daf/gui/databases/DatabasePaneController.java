@@ -27,6 +27,7 @@ import de.jpwinkler.daf.gui.ApplicationPartController;
 import de.jpwinkler.daf.gui.ApplicationPartFactoryRegistry.ApplicationPart;
 import de.jpwinkler.daf.gui.BackgroundTask;
 import de.jpwinkler.daf.gui.commands.UpdateAction;
+import de.jpwinkler.daf.gui.controls.CustomTextAreaTableCell;
 import de.jpwinkler.daf.gui.controls.CustomTextFieldTableCell;
 import de.jpwinkler.daf.gui.controls.CustomTextFieldTreeCell;
 import de.jpwinkler.daf.gui.controls.DoorsTreeItem;
@@ -134,7 +135,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                 it -> it.getName(),
                 (it, newName) -> this.executeCommand(new RenameNodeCommand(it, newName)),
                 it -> this.open(this.getPath().withPath(it.getFullName()), OpenFlag.OPEN_ONLY)));
-        moduleDescriptionColumn.setCellFactory(tc -> new CustomTextFieldTableCell<>(tc,
+        moduleDescriptionColumn.setCellFactory(tc -> new CustomTextAreaTableCell<>(tc,
                 it -> {
                     CompletableFuture<Map<String, String>> future = it.getAttributesAsync(super.getBackgroundTaskExecutor().withPriority(BackgroundTask.PRIORITY_ATTRIBUTES));
                     if (future.isDone()) {
@@ -181,7 +182,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
             DatabasePanePreferences.ATTRIBUTENAME_WIDTH.store(newValue.doubleValue());
         });
 
-        attributeValueColumn.setCellFactory(tc -> new CustomTextFieldTableCell<>(tc,
+        attributeValueColumn.setCellFactory(tc -> new CustomTextAreaTableCell<>(tc,
                 it -> it.getValue(),
                 (it, newValue) -> {
                     this.modulesTableView.getSelectionModel().getSelectedItems().stream()

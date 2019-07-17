@@ -21,17 +21,25 @@ package de.jpwinkler.daf.db;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
+import de.jpwinkler.daf.model.DoorsPackage;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 /**
  *
  * @author fwiesweg
  */
 public class DatabasePath implements Serializable {
+
+    static {
+        Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("*", new XMIResourceFactoryImpl());
+        DoorsPackage.eINSTANCE.eClass();
+    }
 
     public DatabasePath(Class<? extends DatabaseInterface> databaseInterface, String databasePath, String path) {
         this(databaseInterface.getCanonicalName(), databasePath, path);

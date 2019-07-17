@@ -30,7 +30,7 @@ import de.jpwinkler.daf.gui.ApplicationPartFactoryRegistry.ApplicationPart;
 import de.jpwinkler.daf.gui.BackgroundTask;
 import de.jpwinkler.daf.gui.commands.MultiCommand;
 import de.jpwinkler.daf.gui.commands.UpdateAction;
-import de.jpwinkler.daf.gui.controls.CustomTextFieldTableCell;
+import de.jpwinkler.daf.gui.controls.CustomTextAreaTableCell;
 import de.jpwinkler.daf.gui.controls.CustomTextFieldTreeCell;
 import de.jpwinkler.daf.gui.controls.DoorsTreeItem;
 import de.jpwinkler.daf.gui.controls.ExtensionPane;
@@ -319,7 +319,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
                     c.setCellFactory(tc -> new CombinedTextHeadingCell(tc,
                             it -> it.getText(), edit));
                 } else {
-                    c.setCellFactory(tc -> new CustomTextFieldTableCell<>(tc,
+                    c.setCellFactory(tc -> new CustomTextAreaTableCell<>(tc,
                             it -> it.getAttributes().get(attributeName), edit));
                 }
                 displayedAttributes.add(attributeName);
@@ -613,7 +613,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
     }
 
-    private class CombinedTextHeadingCell extends CustomTextFieldTableCell<DoorsObject> {
+    private class CombinedTextHeadingCell extends CustomTextAreaTableCell<DoorsObject> {
 
         public CombinedTextHeadingCell(TableColumn<DoorsObject, DoorsObject> tc, Function<DoorsObject, String> toString, BiConsumer<DoorsObject, String> editCommand) {
             super(tc, toString, editCommand);
