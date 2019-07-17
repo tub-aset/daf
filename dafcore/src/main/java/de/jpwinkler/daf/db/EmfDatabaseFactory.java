@@ -61,7 +61,7 @@ public class EmfDatabaseFactory extends DatabaseFactory {
         DoorsLink lnk = DoorsFactory.eINSTANCE.createDoorsLink();
         lnk.setSource(source);
         lnk.setTargetModule(targetModule);
-        lnk.setTargetObject(targetModule);
+        lnk.setTargetObject(targetObject);
         return lnk;
     }
 

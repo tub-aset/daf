@@ -60,13 +60,13 @@
     
     <eClassifiers xsi:type="ecore:EClass" name="DoorsLink">
         <eOperations name="isResolved" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+        <eOperations name="resolve" eType="#//DoorsObject"/>
         
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="targetModule" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="targetObject" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         
         <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="#//DoorsObject"
                              eOpposite="#//DoorsObject/outgoingLinks"/>        
-        <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//DoorsObject"/>
     </eClassifiers>
   
     <eClassifiers xsi:type="ecore:EClass" name="DoorsTreeNode" abstract="true">

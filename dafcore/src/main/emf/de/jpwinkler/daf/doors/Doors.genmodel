@@ -86,12 +86,12 @@
         
         <genClasses image="false" ecoreClass="Doors.ecore#//DoorsLink">
             <genOperations ecoreOperation="Doors.ecore#//DoorsLink/isResolved"/>
+            <genOperations ecoreOperation="Doors.ecore#//DoorsLink/resolve"/>
             
             <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//DoorsLink/targetModule"/>
             <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//DoorsLink/targetObject"/>
             
             <genFeatures createChild="false" ecoreFeature="ecore:EReference Doors.ecore#//DoorsLink/source"/>
-            <genFeatures createChild="false" ecoreFeature="ecore:EReference Doors.ecore#//DoorsLink/target"/>
         </genClasses>
     </genPackages>
 </genmodel:GenModel>

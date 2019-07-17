@@ -23,22 +23,17 @@ package de.jpwinkler.daf.model.impl;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.model.DoorsLink;
+import de.jpwinkler.daf.model.DoorsModelUtil;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsPackage;
-
 import java.lang.reflect.InvocationTargetException;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
@@ -53,98 +48,85 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *   <li>{@link de.jpwinkler.daf.model.impl.DoorsLinkImpl#getTargetModule <em>Target Module</em>}</li>
  *   <li>{@link de.jpwinkler.daf.model.impl.DoorsLinkImpl#getTargetObject <em>Target Object</em>}</li>
  *   <li>{@link de.jpwinkler.daf.model.impl.DoorsLinkImpl#getSource <em>Source</em>}</li>
- *   <li>{@link de.jpwinkler.daf.model.impl.DoorsLinkImpl#getTarget <em>Target</em>}</li>
  * </ul>
  *
  * @generated
  */
 public class DoorsLinkImpl extends MinimalEObjectImpl.Container implements DoorsLink {
-	/**
+
+    /**
 	 * The default value of the '{@link #getTargetModule() <em>Target Module</em>}' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @see #getTargetModule()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String TARGET_MODULE_EDEFAULT = null;
+    protected static final String TARGET_MODULE_EDEFAULT = null;
 
-	/**
+    /**
 	 * The cached value of the '{@link #getTargetModule() <em>Target Module</em>}' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @see #getTargetModule()
 	 * @generated
 	 * @ordered
 	 */
-	protected String targetModule = TARGET_MODULE_EDEFAULT;
+    protected String targetModule = TARGET_MODULE_EDEFAULT;
 
-	/**
+    /**
 	 * The default value of the '{@link #getTargetObject() <em>Target Object</em>}' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @see #getTargetObject()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String TARGET_OBJECT_EDEFAULT = null;
+    protected static final String TARGET_OBJECT_EDEFAULT = null;
 
-	/**
+    /**
 	 * The cached value of the '{@link #getTargetObject() <em>Target Object</em>}' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @see #getTargetObject()
 	 * @generated
 	 * @ordered
 	 */
-	protected String targetObject = TARGET_OBJECT_EDEFAULT;
+    protected String targetObject = TARGET_OBJECT_EDEFAULT;
 
-	/**
+    /**
 	 * The cached value of the '{@link #getSource() <em>Source</em>}' reference.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @see #getSource()
 	 * @generated
 	 * @ordered
 	 */
-	protected DoorsObject source;
+    protected DoorsObject source;
 
-	/**
-	 * The cached value of the '{@link #getTarget() <em>Target</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getTarget()
-	 * @generated
-	 * @ordered
-	 */
-	protected DoorsObject target;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected DoorsLinkImpl() {
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated
+     */
+    protected DoorsLinkImpl() {
 		super();
 	}
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	protected EClass eStaticClass() {
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated
+     */
+    @Override
+    protected EClass eStaticClass() {
 		return DoorsPackage.Literals.DOORS_LINK;
 	}
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public DoorsObject getSource() {
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated
+     */
+    @Override
+    public DoorsObject getSource() {
 		if (source != null && ((EObject)source).eIsProxy()) {
 			InternalEObject oldSource = (InternalEObject)source;
 			source = (DoorsObject)eResolveProxy(oldSource);
@@ -156,21 +138,19 @@ public class DoorsLinkImpl extends MinimalEObjectImpl.Container implements Doors
 		return source;
 	}
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public DoorsObject basicGetSource() {
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated
+     */
+    public DoorsObject basicGetSource() {
 		return source;
 	}
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public NotificationChain basicSetSource(DoorsObject newSource, NotificationChain msgs) {
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated
+     */
+    public NotificationChain basicSetSource(DoorsObject newSource, NotificationChain msgs) {
 		DoorsObject oldSource = source;
 		source = newSource;
 		if (eNotificationRequired()) {
@@ -180,13 +160,12 @@ public class DoorsLinkImpl extends MinimalEObjectImpl.Container implements Doors
 		return msgs;
 	}
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setSource(DoorsObject newSource) {
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated
+     */
+    @Override
+    public void setSource(DoorsObject newSource) {
 		if (newSource != source) {
 			NotificationChain msgs = null;
 			if (source != null)
@@ -200,111 +179,80 @@ public class DoorsLinkImpl extends MinimalEObjectImpl.Container implements Doors
 			eNotify(new ENotificationImpl(this, Notification.SET, DoorsPackage.DOORS_LINK__SOURCE, newSource, newSource));
 	}
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public DoorsObject getTarget() {
-		if (target != null && ((EObject)target).eIsProxy()) {
-			InternalEObject oldTarget = (InternalEObject)target;
-			target = (DoorsObject)eResolveProxy(oldTarget);
-			if (target != oldTarget) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, DoorsPackage.DOORS_LINK__TARGET, oldTarget, target));
-			}
-		}
-		return target;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public DoorsObject basicGetTarget() {
-		return target;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setTarget(DoorsObject newTarget) {
-		DoorsObject oldTarget = target;
-		target = newTarget;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DoorsPackage.DOORS_LINK__TARGET, oldTarget, target));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String getTargetModule() {
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated
+     */
+    @Override
+    public String getTargetModule() {
 		return targetModule;
 	}
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setTargetModule(String newTargetModule) {
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated
+     */
+    @Override
+    public void setTargetModule(String newTargetModule) {
 		String oldTargetModule = targetModule;
 		targetModule = newTargetModule;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, DoorsPackage.DOORS_LINK__TARGET_MODULE, oldTargetModule, targetModule));
 	}
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String getTargetObject() {
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated
+     */
+    @Override
+    public String getTargetObject() {
 		return targetObject;
 	}
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setTargetObject(String newTargetObject) {
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated
+     */
+    @Override
+    public void setTargetObject(String newTargetObject) {
 		String oldTargetObject = targetObject;
 		targetObject = newTargetObject;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, DoorsPackage.DOORS_LINK__TARGET_OBJECT, oldTargetObject, targetObject));
 	}
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public boolean isResolved() {
-		// TODO: implement this method
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * @generated NOT
+     */
+    private DoorsObject target;
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated NOT
+     */
+    @Override
+    public boolean isResolved() {
+        return target != null;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated NOT
+     */
+    @Override
+    public DoorsObject resolve() {
+        if (!this.isResolved()) {
+            this.target = DoorsModelUtil.resolve(this);
+        }
+        return target;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated
+     */
+    @Override
+    public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case DoorsPackage.DOORS_LINK__SOURCE:
 				if (source != null)
@@ -314,13 +262,12 @@ public class DoorsLinkImpl extends MinimalEObjectImpl.Container implements Doors
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated
+     */
+    @Override
+    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case DoorsPackage.DOORS_LINK__SOURCE:
 				return basicSetSource(null, msgs);
@@ -328,13 +275,12 @@ public class DoorsLinkImpl extends MinimalEObjectImpl.Container implements Doors
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated
+     */
+    @Override
+    public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case DoorsPackage.DOORS_LINK__TARGET_MODULE:
 				return getTargetModule();
@@ -343,20 +289,16 @@ public class DoorsLinkImpl extends MinimalEObjectImpl.Container implements Doors
 			case DoorsPackage.DOORS_LINK__SOURCE:
 				if (resolve) return getSource();
 				return basicGetSource();
-			case DoorsPackage.DOORS_LINK__TARGET:
-				if (resolve) return getTarget();
-				return basicGetTarget();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void eSet(int featureID, Object newValue) {
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated
+     */
+    @Override
+    public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case DoorsPackage.DOORS_LINK__TARGET_MODULE:
 				setTargetModule((String)newValue);
@@ -367,20 +309,16 @@ public class DoorsLinkImpl extends MinimalEObjectImpl.Container implements Doors
 			case DoorsPackage.DOORS_LINK__SOURCE:
 				setSource((DoorsObject)newValue);
 				return;
-			case DoorsPackage.DOORS_LINK__TARGET:
-				setTarget((DoorsObject)newValue);
-				return;
 		}
 		super.eSet(featureID, newValue);
 	}
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void eUnset(int featureID) {
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated
+     */
+    @Override
+    public void eUnset(int featureID) {
 		switch (featureID) {
 			case DoorsPackage.DOORS_LINK__TARGET_MODULE:
 				setTargetModule(TARGET_MODULE_EDEFAULT);
@@ -391,20 +329,16 @@ public class DoorsLinkImpl extends MinimalEObjectImpl.Container implements Doors
 			case DoorsPackage.DOORS_LINK__SOURCE:
 				setSource((DoorsObject)null);
 				return;
-			case DoorsPackage.DOORS_LINK__TARGET:
-				setTarget((DoorsObject)null);
-				return;
 		}
 		super.eUnset(featureID);
 	}
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public boolean eIsSet(int featureID) {
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated
+     */
+    @Override
+    public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case DoorsPackage.DOORS_LINK__TARGET_MODULE:
 				return TARGET_MODULE_EDEFAULT == null ? targetModule != null : !TARGET_MODULE_EDEFAULT.equals(targetModule);
@@ -412,33 +346,31 @@ public class DoorsLinkImpl extends MinimalEObjectImpl.Container implements Doors
 				return TARGET_OBJECT_EDEFAULT == null ? targetObject != null : !TARGET_OBJECT_EDEFAULT.equals(targetObject);
 			case DoorsPackage.DOORS_LINK__SOURCE:
 				return source != null;
-			case DoorsPackage.DOORS_LINK__TARGET:
-				return target != null;
 		}
 		return super.eIsSet(featureID);
 	}
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated
+     */
+    @Override
+    public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
 			case DoorsPackage.DOORS_LINK___IS_RESOLVED:
 				return isResolved();
+			case DoorsPackage.DOORS_LINK___RESOLVE:
+				return resolve();
 		}
 		return super.eInvoke(operationID, arguments);
 	}
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString() {
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated
+     */
+    @Override
+    public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());

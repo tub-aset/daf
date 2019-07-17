@@ -37,7 +37,6 @@ package de.jpwinkler.daf.model;
  *   <li>{@link de.jpwinkler.daf.model.DoorsLink#getTargetModule <em>Target Module</em>}</li>
  *   <li>{@link de.jpwinkler.daf.model.DoorsLink#getTargetObject <em>Target Object</em>}</li>
  *   <li>{@link de.jpwinkler.daf.model.DoorsLink#getSource <em>Source</em>}</li>
- *   <li>{@link de.jpwinkler.daf.model.DoorsLink#getTarget <em>Target</em>}</li>
  * </ul>
  *
  * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsLink()
@@ -68,28 +67,6 @@ public interface DoorsLink {
 	 * @generated
 	 */
 	void setSource(DoorsObject value);
-
-	/**
-	 * Returns the value of the '<em><b>Target</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Target</em>' reference.
-	 * @see #setTarget(DoorsObject)
-	 * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsLink_Target()
-	 * @model
-	 * @generated
-	 */
-	DoorsObject getTarget();
-
-	/**
-	 * Sets the value of the '{@link de.jpwinkler.daf.model.DoorsLink#getTarget <em>Target</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Target</em>' reference.
-	 * @see #getTarget()
-	 * @generated
-	 */
-	void setTarget(DoorsObject value);
 
 	/**
 	 * Returns the value of the '<em><b>Target Module</b></em>' attribute.
@@ -142,5 +119,13 @@ public interface DoorsLink {
 	 * @generated
 	 */
 	boolean isResolved();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated
+	 */
+	DoorsObject resolve();
 
 } // DoorsLink

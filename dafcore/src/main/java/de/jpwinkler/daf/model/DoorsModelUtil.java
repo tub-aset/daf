@@ -21,7 +21,7 @@ package de.jpwinkler.daf.model;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
+import de.jpwinkler.daf.filter.model.FilteredDoorsTreeNode;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.function.Function;
 
 public class DoorsModelUtil {
@@ -140,4 +141,34 @@ public class DoorsModelUtil {
     static final Function<Integer, String> INT_WRITER = i -> (i == null) ? null : Integer.toString(i);
 
     static final Function<String, String> IDENTITY = s -> s;
+
+    public static DoorsObject resolve(DoorsLink link) {
+        DoorsTreeNode root = link.getSource();
+        while (root.getParent() != null && !Objects.equals(root.getFullName(), link.getTargetModule())) {
+            root = root.getParent();
+        }
+
+        DoorsTreeNode pathTreeNode = Objects.equals(root.getFullName(), link.getTargetModule()) ? root : root.getChild(link.getTargetModule());
+        if (pathTreeNode == null) {
+            throw new IllegalStateException("Target module not found");
+        }
+
+        if (!(pathTreeNode instanceof DoorsModule)) {
+            throw new IllegalStateException("Target module is not a DoorsModule");
+        }
+
+        DoorsModule pathModule = (DoorsModule) FilteredDoorsTreeNode.createFilteredTree(pathTreeNode,
+                tn -> Objects.equals(link.getTargetObject(), tn.getAttributes().get("Absolute Number")), true);
+
+        if (pathModule.getChildren().size() != 1) {
+            throw new IllegalStateException("Target object points to more than one DoorsTreeNode");
+        }
+
+        DoorsTreeNode tg = ((FilteredDoorsTreeNode) pathModule.getChildren().get(0)).getSelf();
+        if (!(tg instanceof DoorsObject)) {
+            throw new IllegalStateException("Target object is no DoorsObject");
+        }
+
+        return (DoorsObject) tg;
+    }
 }

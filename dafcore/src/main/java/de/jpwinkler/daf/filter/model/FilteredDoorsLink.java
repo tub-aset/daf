@@ -61,18 +61,13 @@ public class FilteredDoorsLink implements DoorsLink {
     }
 
     @Override
-    public DoorsObject getTarget() {
-        DoorsObject target = self.getTarget();
+    public DoorsObject resolve() {
+        DoorsObject target = self.resolve();
         if(!predicate.test(target)) {
             return null;
         }
         
         return (DoorsObject) ForwardingChildrenList.wrap(nodeMap, predicate, target);
-    }
-
-    @Override
-    public void setTarget(DoorsObject value) {
-        self.setTarget(ForwardingChildrenList.unwrap(nodeMap, value));
     }
 
     @Override
@@ -97,7 +92,7 @@ public class FilteredDoorsLink implements DoorsLink {
 
     @Override
     public boolean isResolved() {
-        return self.isResolved() && predicate.test(self.getTarget());
+        return self.isResolved() && predicate.test(self.resolve());
     }
     
 }

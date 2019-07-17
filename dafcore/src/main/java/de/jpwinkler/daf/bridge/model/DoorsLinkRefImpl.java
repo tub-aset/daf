@@ -26,12 +26,9 @@ package de.jpwinkler.daf.bridge.model;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-import de.jpwinkler.daf.filter.model.FilteredDoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsLink;
-import de.jpwinkler.daf.model.DoorsModule;
+import de.jpwinkler.daf.model.DoorsModelUtil;
 import de.jpwinkler.daf.model.DoorsObject;
-import de.jpwinkler.daf.model.DoorsTreeNode;
-import java.util.Objects;
 
 /**
  *
@@ -62,44 +59,11 @@ public class DoorsLinkRefImpl implements DoorsLink {
     }
 
     @Override
-    public DoorsObject getTarget() {
-        if (this.isResolved()) {
-            return target;
+    public DoorsObject resolve() {
+        if (!this.isResolved()) {
+            this.target = DoorsModelUtil.resolve(this);
         }
-
-        DoorsTreeNode root = source;
-        while (root.getParent() != null) {
-            root = root.getParent();
-        }
-
-        DoorsTreeNode pathTreeNode = root.getChild(targetModule);
-        if (pathTreeNode == null) {
-            throw new IllegalStateException("Target module not found");
-        }
-
-        if (!(pathTreeNode instanceof DoorsModule)) {
-            throw new IllegalStateException("Target module is not a DoorsModule");
-        }
-
-        DoorsModule pathModule = (DoorsModule) FilteredDoorsTreeNode.createFilteredTree(pathTreeNode,
-                tn -> Objects.equals(targetObject, tn.getAttributes().get("Absolute Number")), true);
-
-        if (pathModule.getChildren().size() != 1) {
-            throw new IllegalStateException("Target object points to more than one DoorsTreeNode");
-        }
-
-        DoorsTreeNode tg = ((FilteredDoorsTreeNode) pathModule.getChildren().get(0)).getSelf();
-        if (!(tg instanceof DoorsObject)) {
-            throw new IllegalStateException("Target object is no DoorsObject");
-        }
-
-        this.target = (DoorsObject) tg;
-        return this.target;
-    }
-
-    @Override
-    public void setTarget(DoorsObject value) {
-        throw new UnsupportedOperationException("Not supported");
+        return target;
     }
 
     @Override

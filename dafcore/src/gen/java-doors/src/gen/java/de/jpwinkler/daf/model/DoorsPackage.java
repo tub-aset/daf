@@ -1240,22 +1240,13 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_LINK__SOURCE = 2;
 
 	/**
-	 * The feature id for the '<em><b>Target</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DOORS_LINK__TARGET = 3;
-
-	/**
 	 * The number of structural features of the '<em>Link</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_LINK_FEATURE_COUNT = 4;
+	int DOORS_LINK_FEATURE_COUNT = 3;
 
 	/**
 	 * The operation id for the '<em>Is Resolved</em>' operation.
@@ -1267,13 +1258,22 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_LINK___IS_RESOLVED = 0;
 
 	/**
+	 * The operation id for the '<em>Resolve</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_LINK___RESOLVE = 1;
+
+	/**
 	 * The number of operations of the '<em>Link</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_LINK_OPERATION_COUNT = 1;
+	int DOORS_LINK_OPERATION_COUNT = 2;
 
 	/**
 	 * The meta object id for the '<em>Tree Node Visitor</em>' data type.
@@ -1737,17 +1737,6 @@ public interface DoorsPackage extends EPackage {
 	EReference getDoorsLink_Source();
 
 	/**
-	 * Returns the meta object for the reference '{@link de.jpwinkler.daf.model.DoorsLink#getTarget <em>Target</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Target</em>'.
-	 * @see de.jpwinkler.daf.model.DoorsLink#getTarget()
-	 * @see #getDoorsLink()
-	 * @generated
-	 */
-	EReference getDoorsLink_Target();
-
-	/**
 	 * Returns the meta object for the attribute '{@link de.jpwinkler.daf.model.DoorsLink#getTargetModule <em>Target Module</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1778,6 +1767,16 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getDoorsLink__IsResolved();
+
+	/**
+	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsLink#resolve() <em>Resolve</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Resolve</em>' operation.
+	 * @see de.jpwinkler.daf.model.DoorsLink#resolve()
+	 * @generated
+	 */
+	EOperation getDoorsLink__Resolve();
 
 	/**
 	 * Returns the meta object for data type '{@link de.jpwinkler.daf.model.DoorsTreeNodeVisitor <em>Tree Node Visitor</em>}'.
@@ -2181,14 +2180,6 @@ public interface DoorsPackage extends EPackage {
 		EReference DOORS_LINK__SOURCE = eINSTANCE.getDoorsLink_Source();
 
 		/**
-		 * The meta object literal for the '<em><b>Target</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference DOORS_LINK__TARGET = eINSTANCE.getDoorsLink_Target();
-
-		/**
 		 * The meta object literal for the '<em><b>Target Module</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2211,6 +2202,14 @@ public interface DoorsPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation DOORS_LINK___IS_RESOLVED = eINSTANCE.getDoorsLink__IsResolved();
+
+		/**
+		 * The meta object literal for the '<em><b>Resolve</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation DOORS_LINK___RESOLVE = eINSTANCE.getDoorsLink__Resolve();
 
 		/**
 		 * The meta object literal for the '<em>Tree Node Visitor</em>' data type.
