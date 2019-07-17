@@ -38,6 +38,7 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
@@ -106,7 +107,7 @@ public class ModuleCSV {
                                     object.getOutgoingLinks().stream()
                                             .map(lnk -> lnk.getTargetModule() + ":" + lnk.getTargetObject())
                                             .collect(Collectors.joining("\n"))),
-                            Stream.of(header).skip(1).map(h -> object.getAttributes().get(h))
+                            Stream.of(header).skip(2).map(h -> object.getAttributes().get(h))
                     ).iterator());
                 } catch (final IOException e) {
                     throw new RuntimeException(e);
@@ -192,6 +193,7 @@ public class ModuleCSV {
         }
 
         boolean inTable = false;
+        LinkedHashSet<String> objectAttributes = new LinkedHashSet<>();
         for (final CSVRecord record : csvParser.getRecords()) {
             final int objectLevel = Integer.parseInt(record.get("Object Level"));
             if (objectLevel <= 0) {
@@ -243,14 +245,14 @@ public class ModuleCSV {
                     continue;
                 }
 
+                objectAttributes.add(e.getKey());
                 newObject.getAttributes().put(e.getKey(), e.getValue());
             }
 
             current.getChildren().add(newObject);
         }
 
-        module.setObjectAttributes(new ArrayList<>(csvParser.getHeaderMap().keySet()));
-
+        module.setObjectAttributes(new ArrayList<>(objectAttributes));
         return module;
     }
 

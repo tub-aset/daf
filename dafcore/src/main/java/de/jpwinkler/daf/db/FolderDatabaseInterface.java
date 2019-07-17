@@ -23,7 +23,6 @@ package de.jpwinkler.daf.db;
  */
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
-import de.jpwinkler.daf.model.DoorsPackage;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -39,15 +38,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 public class FolderDatabaseInterface implements DatabaseInterface {
-
-    static {
-        Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("*", new XMIResourceFactoryImpl());
-        DoorsPackage.eINSTANCE.eClass();
-    }
 
     private static final Logger LOG = Logger.getLogger(FolderDatabaseInterface.class.getName());
 

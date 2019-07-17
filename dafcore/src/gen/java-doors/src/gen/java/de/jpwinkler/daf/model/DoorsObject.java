@@ -216,15 +216,15 @@ public interface DoorsObject extends DoorsTreeNode {
 	void setText(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Outgoing Links</b></em>' containment reference list.
+	 * Returns the value of the '<em><b>Outgoing Links</b></em>' reference list.
 	 * The list contents are of type {@link de.jpwinkler.daf.model.DoorsLink}.
 	 * It is bidirectional and its opposite is '{@link de.jpwinkler.daf.model.DoorsLink#getSource <em>Source</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Outgoing Links</em>' containment reference list.
+	 * @return the value of the '<em>Outgoing Links</em>' reference list.
 	 * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsObject_OutgoingLinks()
 	 * @see de.jpwinkler.daf.model.DoorsLink#getSource
-	 * @model opposite="source" containment="true"
+	 * @model opposite="source"
 	 * @generated
 	 */
 	List<DoorsLink> getOutgoingLinks();

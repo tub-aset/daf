@@ -33,7 +33,6 @@ import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -131,7 +130,7 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
     protected static final String TEXT_EDEFAULT = "";
 
     /**
-	 * The cached value of the '{@link #getOutgoingLinks() <em>Outgoing Links</em>}' containment reference list.
+	 * The cached value of the '{@link #getOutgoingLinks() <em>Outgoing Links</em>}' reference list.
 	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
 	 * @see #getOutgoingLinks()
@@ -318,7 +317,7 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
     @Override
     public List<DoorsLink> getOutgoingLinks() {
 		if (outgoingLinks == null) {
-			outgoingLinks = new EObjectContainmentWithInverseEList<DoorsLink>(DoorsLink.class, this, DoorsPackage.DOORS_OBJECT__OUTGOING_LINKS, DoorsPackage.DOORS_LINK__SOURCE);
+			outgoingLinks = new EObjectWithInverseResolvingEList<DoorsLink>(DoorsLink.class, this, DoorsPackage.DOORS_OBJECT__OUTGOING_LINKS, DoorsPackage.DOORS_LINK__SOURCE);
 		}
 		return outgoingLinks;
 	}

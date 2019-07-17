@@ -34,10 +34,10 @@ package de.jpwinkler.daf.model;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link de.jpwinkler.daf.model.DoorsLink#getSource <em>Source</em>}</li>
- *   <li>{@link de.jpwinkler.daf.model.DoorsLink#getTarget <em>Target</em>}</li>
  *   <li>{@link de.jpwinkler.daf.model.DoorsLink#getTargetModule <em>Target Module</em>}</li>
  *   <li>{@link de.jpwinkler.daf.model.DoorsLink#getTargetObject <em>Target Object</em>}</li>
+ *   <li>{@link de.jpwinkler.daf.model.DoorsLink#getSource <em>Source</em>}</li>
+ *   <li>{@link de.jpwinkler.daf.model.DoorsLink#getTarget <em>Target</em>}</li>
  * </ul>
  *
  * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsLink()
@@ -46,24 +46,24 @@ package de.jpwinkler.daf.model;
  */
 public interface DoorsLink {
 	/**
-	 * Returns the value of the '<em><b>Source</b></em>' container reference.
+	 * Returns the value of the '<em><b>Source</b></em>' reference.
 	 * It is bidirectional and its opposite is '{@link de.jpwinkler.daf.model.DoorsObject#getOutgoingLinks <em>Outgoing Links</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Source</em>' container reference.
+	 * @return the value of the '<em>Source</em>' reference.
 	 * @see #setSource(DoorsObject)
 	 * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsLink_Source()
 	 * @see de.jpwinkler.daf.model.DoorsObject#getOutgoingLinks
-	 * @model opposite="outgoingLinks" transient="false"
+	 * @model opposite="outgoingLinks"
 	 * @generated
 	 */
 	DoorsObject getSource();
 
 	/**
-	 * Sets the value of the '{@link de.jpwinkler.daf.model.DoorsLink#getSource <em>Source</em>}' container reference.
+	 * Sets the value of the '{@link de.jpwinkler.daf.model.DoorsLink#getSource <em>Source</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Source</em>' container reference.
+	 * @param value the new value of the '<em>Source</em>' reference.
 	 * @see #getSource()
 	 * @generated
 	 */

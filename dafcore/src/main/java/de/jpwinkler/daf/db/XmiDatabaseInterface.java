@@ -23,7 +23,6 @@ package de.jpwinkler.daf.db;
  */
 
 import de.jpwinkler.daf.model.DoorsFolder;
-import de.jpwinkler.daf.model.DoorsPackage;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.impl.DoorsFolderImpl;
 import java.io.File;
@@ -34,14 +33,8 @@ import org.apache.commons.io.FilenameUtils;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 public class XmiDatabaseInterface implements DatabaseInterface {
-
-    static {
-        Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("*", new XMIResourceFactoryImpl());
-        DoorsPackage.eINSTANCE.eClass();
-    }
 
     private final DoorsFolder databaseRoot;
     private final DatabasePath databasePath;
