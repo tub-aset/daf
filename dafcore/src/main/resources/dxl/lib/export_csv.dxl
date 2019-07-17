@@ -55,7 +55,7 @@ void exportModuleToCSV(Module m, string fileName) {
 		for outLink in o -> "*" do {
 			ModName_ t_name = target(outLink)
 			int t_id = targetAbsNo(outLink)
-			outFile << (firstLink?"":"\n") fullName(t_name) ":" t_id ""
+			outFile << (firstLink?"":"\n") completePath(t_name) ":" t_id ""
 			firstLink = false
 		}
 
