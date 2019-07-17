@@ -24,10 +24,9 @@ package de.jpwinkler.daf.bridge.model;
 import de.jpwinkler.daf.bridge.DoorsApplication;
 import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import de.jpwinkler.daf.model.DoorsAttributes;
+import de.jpwinkler.daf.model.DoorsLink;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
-import de.jpwinkler.daf.model.Link;
-import de.jpwinkler.daf.model.ResolvedLink;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -47,10 +46,13 @@ class DoorsObjectRefImpl extends DoorsTreeNodeRefImpl implements DoorsObject {
 
     private final Map<String, String> attributes = Collections.synchronizedMap(new HashMap<>());
     private final List<DoorsTreeNode> dumbChildrenHolder = new ArrayList<>();
+    
+    private final List<DoorsLink> outgoingLinks = new ArrayList<>();
+    private final List<DoorsLink> incomingLinks = new ArrayList<>();
 
     @Override
     public CompletableFuture<DoorsTreeNode> getChildAsync(BackgroundTaskExecutor executor, String name) {
-        return super.getChildAsync(executor, name); //To change body of generated methods, choose Tools | Templates.
+        return super.getChildAsync(executor, name);
     }
 
     @Override
@@ -139,13 +141,13 @@ class DoorsObjectRefImpl extends DoorsTreeNodeRefImpl implements DoorsObject {
     }
 
     @Override
-    public List<Link> getOutgoingLinks() {
-        return Collections.emptyList();
+    public List<DoorsLink> getOutgoingLinks() {
+        return outgoingLinks;
     }
 
     @Override
-    public List<ResolvedLink> getIncomingLinks() {
-        return Collections.emptyList();
+    public List<DoorsLink> getIncomingLinks() {
+        return incomingLinks;
     }
 
     @Override

@@ -47,9 +47,9 @@
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="text" unique="false" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
                              volatile="true" transient="true" defaultValueLiteral="" derived="true"/>
         <eStructuralFeatures xsi:type="ecore:EReference" name="outgoingLinks" upperBound="-1"
-                             eType="#//Link" containment="true" eOpposite="#//Link/source"/>
+                             eType="#//DoorsLink" containment="true" eOpposite="#//DoorsLink/source"/>
         <eStructuralFeatures xsi:type="ecore:EReference" name="incomingLinks" upperBound="-1"
-                             eType="#//ResolvedLink" eOpposite="#//ResolvedLink/target"/>
+                             eType="#//DoorsLink" eOpposite="#//DoorsLink/target"/>
     </eClassifiers>
     
     <eClassifiers xsi:type="ecore:EClass" name="DoorsTableRow" eSuperTypes="#//DoorsObject"></eClassifiers>
@@ -59,19 +59,16 @@
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" unique="false" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eClassifiers>
     
-    <eClassifiers xsi:type="ecore:EClass" name="Link" abstract="true">
-        <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="#//DoorsObject"
-                             eOpposite="#//DoorsObject/outgoingLinks"/>
-        <eOperations name="getTargetModule" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" abstract="true"/>
-        <eOperations name="getTargetObject" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" abstract="true"/>
-    </eClassifiers>  
-    <eClassifiers xsi:type="ecore:EClass" name="ResolvedLink" eSuperTypes="#//Link">
-        <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//DoorsObject"
-                             eOpposite="#//DoorsObject/incomingLinks"/>
-    </eClassifiers>
-    <eClassifiers xsi:type="ecore:EClass" name="UnresolvedLink" eSuperTypes="#//Link">
+    <eClassifiers xsi:type="ecore:EClass" name="DoorsLink">
+        <eOperations name="isResolved" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+        
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="targetModule" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="targetObject" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        
+        <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="#//DoorsObject"
+                             eOpposite="#//DoorsObject/outgoingLinks"/>        
+        <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//DoorsObject"
+                             eOpposite="#//DoorsObject/incomingLinks"/>
     </eClassifiers>
   
     <eClassifiers xsi:type="ecore:EClass" name="DoorsTreeNode" abstract="true">

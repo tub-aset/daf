@@ -84,17 +84,14 @@
             <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//AttributeMap/value"/>
         </genClasses>
         
-        <genClasses image="false" ecoreClass="Doors.ecore#//Link">
-            <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Doors.ecore#//Link/source"/>
-            <genOperations ecoreOperation="Doors.ecore#//Link/getTargetModule"/>
-            <genOperations ecoreOperation="Doors.ecore#//Link/getTargetObject"/>
-        </genClasses>
-        <genClasses ecoreClass="Doors.ecore#//ResolvedLink">
-            <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Doors.ecore#//ResolvedLink/target"/>
-        </genClasses>
-        <genClasses ecoreClass="Doors.ecore#//UnresolvedLink">
-            <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//UnresolvedLink/targetModule"/>
-            <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//UnresolvedLink/targetObject"/>
+        <genClasses image="false" ecoreClass="Doors.ecore#//DoorsLink">
+            <genOperations ecoreOperation="Doors.ecore#//DoorsLink/isResolved"/>
+            
+            <genFeatures createChild="false" ecoreFeature="ecore:EReference Doors.ecore#//DoorsLink/source"/>
+            <genFeatures createChild="false" ecoreFeature="ecore:EReference Doors.ecore#//DoorsLink/target"/>
+            
+            <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//DoorsLink/targetModule"/>
+            <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//DoorsLink/targetObject"/>
         </genClasses>
     </genPackages>
 </genmodel:GenModel>

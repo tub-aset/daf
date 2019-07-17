@@ -78,22 +78,13 @@ public interface DoorsFactory extends EFactory {
 	DoorsTableRow createDoorsTableRow();
 
 	/**
-	 * Returns a new object of class '<em>Resolved Link</em>'.
+	 * Returns a new object of class '<em>Link</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Resolved Link</em>'.
+	 * @return a new object of class '<em>Link</em>'.
 	 * @generated
 	 */
-	ResolvedLink createResolvedLink();
-
-	/**
-	 * Returns a new object of class '<em>Unresolved Link</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Unresolved Link</em>'.
-	 * @generated
-	 */
-	UnresolvedLink createUnresolvedLink();
+	DoorsLink createDoorsLink();
 
 	/**
 	 * Returns the package supported by this factory.

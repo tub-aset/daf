@@ -217,31 +217,31 @@ public interface DoorsObject extends DoorsTreeNode {
 
 	/**
 	 * Returns the value of the '<em><b>Outgoing Links</b></em>' containment reference list.
-	 * The list contents are of type {@link de.jpwinkler.daf.model.Link}.
-	 * It is bidirectional and its opposite is '{@link de.jpwinkler.daf.model.Link#getSource <em>Source</em>}'.
+	 * The list contents are of type {@link de.jpwinkler.daf.model.DoorsLink}.
+	 * It is bidirectional and its opposite is '{@link de.jpwinkler.daf.model.DoorsLink#getSource <em>Source</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Outgoing Links</em>' containment reference list.
 	 * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsObject_OutgoingLinks()
-	 * @see de.jpwinkler.daf.model.Link#getSource
+	 * @see de.jpwinkler.daf.model.DoorsLink#getSource
 	 * @model opposite="source" containment="true"
 	 * @generated
 	 */
-	List<Link> getOutgoingLinks();
+	List<DoorsLink> getOutgoingLinks();
 
 	/**
 	 * Returns the value of the '<em><b>Incoming Links</b></em>' reference list.
-	 * The list contents are of type {@link de.jpwinkler.daf.model.ResolvedLink}.
-	 * It is bidirectional and its opposite is '{@link de.jpwinkler.daf.model.ResolvedLink#getTarget <em>Target</em>}'.
+	 * The list contents are of type {@link de.jpwinkler.daf.model.DoorsLink}.
+	 * It is bidirectional and its opposite is '{@link de.jpwinkler.daf.model.DoorsLink#getTarget <em>Target</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Incoming Links</em>' reference list.
 	 * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsObject_IncomingLinks()
-	 * @see de.jpwinkler.daf.model.ResolvedLink#getTarget
+	 * @see de.jpwinkler.daf.model.DoorsLink#getTarget
 	 * @model opposite="target"
 	 * @generated
 	 */
-	List<ResolvedLink> getIncomingLinks();
+	List<DoorsLink> getIncomingLinks();
 
 	/**
 	 * <!-- begin-user-doc -->

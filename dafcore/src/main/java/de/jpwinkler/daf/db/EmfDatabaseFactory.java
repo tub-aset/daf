@@ -21,14 +21,14 @@ package de.jpwinkler.daf.db;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.model.DoorsFactory;
 import de.jpwinkler.daf.model.DoorsFolder;
+import de.jpwinkler.daf.model.DoorsLink;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTableRow;
 import de.jpwinkler.daf.model.DoorsTreeNode;
-import de.jpwinkler.daf.model.UnresolvedLink;
+
 public class EmfDatabaseFactory extends DatabaseFactory {
 
     @Override
@@ -50,15 +50,15 @@ public class EmfDatabaseFactory extends DatabaseFactory {
         object.setObjectHeading("");
         return object;
     }
-    
+
     @Override
     public DoorsTableRow createTableRow(DoorsTreeNode parent) {
         return create(parent, DoorsFactory.eINSTANCE.createDoorsTableRow(), null);
     }
 
     @Override
-    public UnresolvedLink createLink(DoorsObject source, String targetModule, String targetObject) {
-        UnresolvedLink lnk = DoorsFactory.eINSTANCE.createUnresolvedLink();
+    public DoorsLink createLink(DoorsObject source, String targetModule, String targetObject) {
+        DoorsLink lnk = DoorsFactory.eINSTANCE.createDoorsLink();
         lnk.setSource(source);
         lnk.setTargetModule(targetModule);
         lnk.setTargetObject(targetModule);

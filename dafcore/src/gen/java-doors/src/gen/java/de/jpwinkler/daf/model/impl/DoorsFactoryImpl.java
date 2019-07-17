@@ -83,8 +83,7 @@ public class DoorsFactoryImpl extends EFactoryImpl implements DoorsFactory {
 			case DoorsPackage.DOORS_OBJECT: return (EObject)createDoorsObject();
 			case DoorsPackage.DOORS_TABLE_ROW: return (EObject)createDoorsTableRow();
 			case DoorsPackage.ATTRIBUTE_MAP: return (EObject)createAttributeMap();
-			case DoorsPackage.RESOLVED_LINK: return (EObject)createResolvedLink();
-			case DoorsPackage.UNRESOLVED_LINK: return (EObject)createUnresolvedLink();
+			case DoorsPackage.DOORS_LINK: return (EObject)createDoorsLink();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -192,20 +191,9 @@ public class DoorsFactoryImpl extends EFactoryImpl implements DoorsFactory {
 	 * @generated
 	 */
 	@Override
-	public ResolvedLink createResolvedLink() {
-		ResolvedLinkImpl resolvedLink = new ResolvedLinkImpl();
-		return resolvedLink;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public UnresolvedLink createUnresolvedLink() {
-		UnresolvedLinkImpl unresolvedLink = new UnresolvedLinkImpl();
-		return unresolvedLink;
+	public DoorsLink createDoorsLink() {
+		DoorsLinkImpl doorsLink = new DoorsLinkImpl();
+		return doorsLink;
 	}
 
 	/**

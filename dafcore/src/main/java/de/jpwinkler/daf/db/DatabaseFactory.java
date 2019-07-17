@@ -22,12 +22,12 @@ package de.jpwinkler.daf.db;
  * #L%
  */
 import de.jpwinkler.daf.model.DoorsFolder;
+import de.jpwinkler.daf.model.DoorsLink;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTableRow;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.RuntimeExecutionException;
-import de.jpwinkler.daf.model.UnresolvedLink;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -45,7 +45,7 @@ public abstract class DatabaseFactory {
 
     public abstract DoorsTableRow createTableRow(DoorsTreeNode parent);
 
-    public abstract UnresolvedLink createLink(DoorsObject source, String targetModule, String targetObject);
+    public abstract DoorsLink createLink(DoorsObject source, String targetModule, String targetObject);
 
     public final <T extends DoorsTreeNode> T createCopy(T source, DoorsTreeNode newParent, boolean resilient) {
         return this.createCopy(source, newParent, resilient, BackgroundTaskNotifier.SYNCHRONOUS);
@@ -93,12 +93,12 @@ public abstract class DatabaseFactory {
 
                 if (source instanceof DoorsObject) {
                     DoorsObject sourceObj = (DoorsObject) source;
-                    DoorsObject copyObj = (DoorsObject) destination;
+                    DoorsObject destinationObject = (DoorsObject) destination;
 
-                    sourceObj.getOutgoingLinks().clear();
-                    copyObj.getOutgoingLinks().stream()
-                            .map(l -> this.createLink(copyObj, l.getTargetModule(), l.getTargetObject()))
-                            .forEach(sourceObj.getOutgoingLinks()::add);
+                    destinationObject.getOutgoingLinks().clear();
+                    sourceObj.getOutgoingLinks().stream()
+                            .map(l -> this.createLink(destinationObject, l.getTargetModule(), l.getTargetObject()))
+                            .forEach(destinationObject.getOutgoingLinks()::add);
                 }
                 return destination;
             } catch (RuntimeExecutionException ex) {

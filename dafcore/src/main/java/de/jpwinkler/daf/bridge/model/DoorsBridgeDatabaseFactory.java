@@ -25,11 +25,11 @@ package de.jpwinkler.daf.bridge.model;
 import de.jpwinkler.daf.bridge.DoorsApplication;
 import de.jpwinkler.daf.db.DatabaseFactory;
 import de.jpwinkler.daf.model.DoorsFolder;
+import de.jpwinkler.daf.model.DoorsLink;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTableRow;
 import de.jpwinkler.daf.model.DoorsTreeNode;
-import de.jpwinkler.daf.model.UnresolvedLink;
 
 /**
  *
@@ -64,7 +64,7 @@ public class DoorsBridgeDatabaseFactory extends DatabaseFactory {
     }
 
     @Override
-    public UnresolvedLink createLink(DoorsObject source, String targetModule, String targetObject) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public DoorsLink createLink(DoorsObject source, String targetModule, String targetObject) {
+        return new DoorsLinkRefImpl(source, targetModule, targetObject);
     }
 }

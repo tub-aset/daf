@@ -27,10 +27,9 @@ package de.jpwinkler.daf.filter.model;
  * #L%
  */
 
+import de.jpwinkler.daf.model.DoorsLink;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
-import de.jpwinkler.daf.model.Link;
-import de.jpwinkler.daf.model.ResolvedLink;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -120,12 +119,12 @@ class FilteredDoorsObject extends FilteredDoorsTreeNode<DoorsObject> implements 
     }
 
     @Override
-    public List<Link> getOutgoingLinks() {
+    public List<DoorsLink> getOutgoingLinks() {
         return self.getOutgoingLinks();
     }
 
     @Override
-    public List<ResolvedLink> getIncomingLinks() {
+    public List<DoorsLink> getIncomingLinks() {
         return self.getIncomingLinks();
     }
 

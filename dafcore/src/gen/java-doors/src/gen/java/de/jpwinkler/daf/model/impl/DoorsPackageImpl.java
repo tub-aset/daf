@@ -24,15 +24,13 @@ package de.jpwinkler.daf.model.impl;
 
 import de.jpwinkler.daf.model.DoorsFactory;
 import de.jpwinkler.daf.model.DoorsFolder;
+import de.jpwinkler.daf.model.DoorsLink;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsPackage;
 import de.jpwinkler.daf.model.DoorsTableRow;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
-import de.jpwinkler.daf.model.Link;
-import de.jpwinkler.daf.model.ResolvedLink;
-import de.jpwinkler.daf.model.UnresolvedLink;
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -94,19 +92,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass linkEClass = null;
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass resolvedLinkEClass = null;
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass unresolvedLinkEClass = null;
+	private EClass doorsLinkEClass = null;
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -589,8 +575,8 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
-	public EClass getLink() {
-		return linkEClass;
+	public EClass getDoorsLink() {
+		return doorsLinkEClass;
 	}
 
 	/**
@@ -599,8 +585,8 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getLink_Source() {
-		return (EReference)linkEClass.getEStructuralFeatures().get(0);
+	public EReference getDoorsLink_Source() {
+		return (EReference)doorsLinkEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -609,8 +595,8 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getLink__GetTargetModule() {
-		return linkEClass.getEOperations().get(0);
+	public EReference getDoorsLink_Target() {
+		return (EReference)doorsLinkEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -619,8 +605,8 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getLink__GetTargetObject() {
-		return linkEClass.getEOperations().get(1);
+	public EAttribute getDoorsLink_TargetModule() {
+		return (EAttribute)doorsLinkEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -629,8 +615,8 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
-	public EClass getResolvedLink() {
-		return resolvedLinkEClass;
+	public EAttribute getDoorsLink_TargetObject() {
+		return (EAttribute)doorsLinkEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -639,38 +625,8 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getResolvedLink_Target() {
-		return (EReference)resolvedLinkEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EClass getUnresolvedLink() {
-		return unresolvedLinkEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EAttribute getUnresolvedLink_TargetModule() {
-		return (EAttribute)unresolvedLinkEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EAttribute getUnresolvedLink_TargetObject() {
-		return (EAttribute)unresolvedLinkEClass.getEStructuralFeatures().get(1);
+	public EOperation getDoorsLink__IsResolved() {
+		return doorsLinkEClass.getEOperations().get(0);
 	}
 
 	/**
@@ -787,17 +743,12 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		createEAttribute(attributeMapEClass, ATTRIBUTE_MAP__KEY);
 		createEAttribute(attributeMapEClass, ATTRIBUTE_MAP__VALUE);
 
-		linkEClass = createEClass(LINK);
-		createEReference(linkEClass, LINK__SOURCE);
-		createEOperation(linkEClass, LINK___GET_TARGET_MODULE);
-		createEOperation(linkEClass, LINK___GET_TARGET_OBJECT);
-
-		resolvedLinkEClass = createEClass(RESOLVED_LINK);
-		createEReference(resolvedLinkEClass, RESOLVED_LINK__TARGET);
-
-		unresolvedLinkEClass = createEClass(UNRESOLVED_LINK);
-		createEAttribute(unresolvedLinkEClass, UNRESOLVED_LINK__TARGET_MODULE);
-		createEAttribute(unresolvedLinkEClass, UNRESOLVED_LINK__TARGET_OBJECT);
+		doorsLinkEClass = createEClass(DOORS_LINK);
+		createEReference(doorsLinkEClass, DOORS_LINK__SOURCE);
+		createEReference(doorsLinkEClass, DOORS_LINK__TARGET);
+		createEAttribute(doorsLinkEClass, DOORS_LINK__TARGET_MODULE);
+		createEAttribute(doorsLinkEClass, DOORS_LINK__TARGET_OBJECT);
+		createEOperation(doorsLinkEClass, DOORS_LINK___IS_RESOLVED);
 
 		// Create data types
 		doorsTreeNodeVisitorEDataType = createEDataType(DOORS_TREE_NODE_VISITOR);
@@ -838,8 +789,6 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		doorsModuleEClass.getESuperTypes().add(this.getDoorsTreeNode());
 		doorsObjectEClass.getESuperTypes().add(this.getDoorsTreeNode());
 		doorsTableRowEClass.getESuperTypes().add(this.getDoorsObject());
-		resolvedLinkEClass.getESuperTypes().add(this.getLink());
-		unresolvedLinkEClass.getESuperTypes().add(this.getLink());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(doorsTreeNodeEClass, DoorsTreeNode.class, "DoorsTreeNode", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -898,8 +847,8 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		initEAttribute(getDoorsObject_ObjectShortText(), ecorePackage.getEString(), "objectShortText", null, 0, 1, DoorsObject.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		initEAttribute(getDoorsObject_ObjectHeading(), ecorePackage.getEString(), "objectHeading", null, 0, 1, DoorsObject.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		initEAttribute(getDoorsObject_Text(), ecorePackage.getEString(), "text", "", 0, 1, DoorsObject.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, IS_DERIVED, IS_ORDERED);
-		initEReference(getDoorsObject_OutgoingLinks(), this.getLink(), this.getLink_Source(), "outgoingLinks", null, 0, -1, DoorsObject.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getDoorsObject_IncomingLinks(), this.getResolvedLink(), this.getResolvedLink_Target(), "incomingLinks", null, 0, -1, DoorsObject.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getDoorsObject_OutgoingLinks(), this.getDoorsLink(), this.getDoorsLink_Source(), "outgoingLinks", null, 0, -1, DoorsObject.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getDoorsObject_IncomingLinks(), this.getDoorsLink(), this.getDoorsLink_Target(), "incomingLinks", null, 0, -1, DoorsObject.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getDoorsObject__IsHeading(), ecorePackage.getEBoolean(), "isHeading", 0, 1, IS_UNIQUE, IS_ORDERED);
 
@@ -911,19 +860,13 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		initEAttribute(getAttributeMap_Key(), ecorePackage.getEString(), "key", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getAttributeMap_Value(), ecorePackage.getEString(), "value", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(linkEClass, Link.class, "Link", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getLink_Source(), this.getDoorsObject(), this.getDoorsObject_OutgoingLinks(), "source", null, 0, 1, Link.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(doorsLinkEClass, DoorsLink.class, "DoorsLink", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getDoorsLink_Source(), this.getDoorsObject(), this.getDoorsObject_OutgoingLinks(), "source", null, 0, 1, DoorsLink.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getDoorsLink_Target(), this.getDoorsObject(), this.getDoorsObject_IncomingLinks(), "target", null, 0, 1, DoorsLink.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getDoorsLink_TargetModule(), ecorePackage.getEString(), "targetModule", null, 0, 1, DoorsLink.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getDoorsLink_TargetObject(), ecorePackage.getEString(), "targetObject", null, 0, 1, DoorsLink.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEOperation(getLink__GetTargetModule(), ecorePackage.getEString(), "getTargetModule", 0, 1, IS_UNIQUE, IS_ORDERED);
-
-		initEOperation(getLink__GetTargetObject(), ecorePackage.getEString(), "getTargetObject", 0, 1, IS_UNIQUE, IS_ORDERED);
-
-		initEClass(resolvedLinkEClass, ResolvedLink.class, "ResolvedLink", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getResolvedLink_Target(), this.getDoorsObject(), this.getDoorsObject_IncomingLinks(), "target", null, 0, 1, ResolvedLink.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEClass(unresolvedLinkEClass, UnresolvedLink.class, "UnresolvedLink", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getUnresolvedLink_TargetModule(), ecorePackage.getEString(), "targetModule", null, 0, 1, UnresolvedLink.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getUnresolvedLink_TargetObject(), ecorePackage.getEString(), "targetObject", null, 0, 1, UnresolvedLink.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEOperation(getDoorsLink__IsResolved(), ecorePackage.getEBoolean(), "isResolved", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		// Initialize data types
 		initEDataType(doorsTreeNodeVisitorEDataType, DoorsTreeNodeVisitor.class, "DoorsTreeNodeVisitor", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);

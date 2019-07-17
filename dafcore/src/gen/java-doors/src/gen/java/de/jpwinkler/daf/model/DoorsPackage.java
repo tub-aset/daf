@@ -1219,14 +1219,14 @@ public interface DoorsPackage extends EPackage {
 	int ATTRIBUTE_MAP_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link de.jpwinkler.daf.model.impl.LinkImpl <em>Link</em>}' class.
+	 * The meta object id for the '{@link de.jpwinkler.daf.model.impl.DoorsLinkImpl <em>Link</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see de.jpwinkler.daf.model.impl.LinkImpl
-	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getLink()
+	 * @see de.jpwinkler.daf.model.impl.DoorsLinkImpl
+	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getDoorsLink()
 	 * @generated
 	 */
-	int LINK = 6;
+	int DOORS_LINK = 6;
 
 	/**
 	 * The feature id for the '<em><b>Source</b></em>' container reference.
@@ -1235,62 +1235,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LINK__SOURCE = 0;
-
-	/**
-	 * The number of structural features of the '<em>Link</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int LINK_FEATURE_COUNT = 1;
-
-	/**
-	 * The operation id for the '<em>Get Target Module</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int LINK___GET_TARGET_MODULE = 0;
-
-	/**
-	 * The operation id for the '<em>Get Target Object</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int LINK___GET_TARGET_OBJECT = 1;
-
-	/**
-	 * The number of operations of the '<em>Link</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int LINK_OPERATION_COUNT = 2;
-
-	/**
-	 * The meta object id for the '{@link de.jpwinkler.daf.model.impl.ResolvedLinkImpl <em>Resolved Link</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see de.jpwinkler.daf.model.impl.ResolvedLinkImpl
-	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getResolvedLink()
-	 * @generated
-	 */
-	int RESOLVED_LINK = 7;
-
-	/**
-	 * The feature id for the '<em><b>Source</b></em>' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RESOLVED_LINK__SOURCE = LINK__SOURCE;
+	int DOORS_LINK__SOURCE = 0;
 
 	/**
 	 * The feature id for the '<em><b>Target</b></em>' reference.
@@ -1299,62 +1244,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int RESOLVED_LINK__TARGET = LINK_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>Resolved Link</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RESOLVED_LINK_FEATURE_COUNT = LINK_FEATURE_COUNT + 1;
-
-	/**
-	 * The operation id for the '<em>Get Target Module</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RESOLVED_LINK___GET_TARGET_MODULE = LINK___GET_TARGET_MODULE;
-
-	/**
-	 * The operation id for the '<em>Get Target Object</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RESOLVED_LINK___GET_TARGET_OBJECT = LINK___GET_TARGET_OBJECT;
-
-	/**
-	 * The number of operations of the '<em>Resolved Link</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RESOLVED_LINK_OPERATION_COUNT = LINK_OPERATION_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link de.jpwinkler.daf.model.impl.UnresolvedLinkImpl <em>Unresolved Link</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see de.jpwinkler.daf.model.impl.UnresolvedLinkImpl
-	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getUnresolvedLink()
-	 * @generated
-	 */
-	int UNRESOLVED_LINK = 8;
-
-	/**
-	 * The feature id for the '<em><b>Source</b></em>' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int UNRESOLVED_LINK__SOURCE = LINK__SOURCE;
+	int DOORS_LINK__TARGET = 1;
 
 	/**
 	 * The feature id for the '<em><b>Target Module</b></em>' attribute.
@@ -1363,7 +1253,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int UNRESOLVED_LINK__TARGET_MODULE = LINK_FEATURE_COUNT + 0;
+	int DOORS_LINK__TARGET_MODULE = 2;
 
 	/**
 	 * The feature id for the '<em><b>Target Object</b></em>' attribute.
@@ -1372,43 +1262,34 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int UNRESOLVED_LINK__TARGET_OBJECT = LINK_FEATURE_COUNT + 1;
+	int DOORS_LINK__TARGET_OBJECT = 3;
 
 	/**
-	 * The number of structural features of the '<em>Unresolved Link</em>' class.
+	 * The number of structural features of the '<em>Link</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int UNRESOLVED_LINK_FEATURE_COUNT = LINK_FEATURE_COUNT + 2;
+	int DOORS_LINK_FEATURE_COUNT = 4;
 
 	/**
-	 * The operation id for the '<em>Get Target Module</em>' operation.
+	 * The operation id for the '<em>Is Resolved</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int UNRESOLVED_LINK___GET_TARGET_MODULE = LINK___GET_TARGET_MODULE;
+	int DOORS_LINK___IS_RESOLVED = 0;
 
 	/**
-	 * The operation id for the '<em>Get Target Object</em>' operation.
+	 * The number of operations of the '<em>Link</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int UNRESOLVED_LINK___GET_TARGET_OBJECT = LINK___GET_TARGET_OBJECT;
-
-	/**
-	 * The number of operations of the '<em>Unresolved Link</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int UNRESOLVED_LINK_OPERATION_COUNT = LINK_OPERATION_COUNT + 0;
+	int DOORS_LINK_OPERATION_COUNT = 1;
 
 	/**
 	 * The meta object id for the '<em>Tree Node Visitor</em>' data type.
@@ -1418,7 +1299,7 @@ public interface DoorsPackage extends EPackage {
 	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getDoorsTreeNodeVisitor()
 	 * @generated
 	 */
-	int DOORS_TREE_NODE_VISITOR = 9;
+	int DOORS_TREE_NODE_VISITOR = 7;
 
 	/**
 	 * The meta object id for the '<em>Pattern</em>' data type.
@@ -1428,7 +1309,7 @@ public interface DoorsPackage extends EPackage {
 	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getPattern()
 	 * @generated
 	 */
-	int PATTERN = 10;
+	int PATTERN = 8;
 
 	/**
 	 * The meta object id for the '<em>Collection</em>' data type.
@@ -1438,7 +1319,7 @@ public interface DoorsPackage extends EPackage {
 	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getCollection()
 	 * @generated
 	 */
-	int COLLECTION = 11;
+	int COLLECTION = 9;
 
 
 	/**
@@ -1449,7 +1330,7 @@ public interface DoorsPackage extends EPackage {
 	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getNodeFilter()
 	 * @generated
 	 */
-	int NODE_FILTER = 12;
+	int NODE_FILTER = 10;
 
 
 	/**
@@ -1863,98 +1744,68 @@ public interface DoorsPackage extends EPackage {
 	EAttribute getAttributeMap_Value();
 
 	/**
-	 * Returns the meta object for class '{@link de.jpwinkler.daf.model.Link <em>Link</em>}'.
+	 * Returns the meta object for class '{@link de.jpwinkler.daf.model.DoorsLink <em>Link</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Link</em>'.
-	 * @see de.jpwinkler.daf.model.Link
+	 * @see de.jpwinkler.daf.model.DoorsLink
 	 * @generated
 	 */
-	EClass getLink();
+	EClass getDoorsLink();
 
 	/**
-	 * Returns the meta object for the container reference '{@link de.jpwinkler.daf.model.Link#getSource <em>Source</em>}'.
+	 * Returns the meta object for the container reference '{@link de.jpwinkler.daf.model.DoorsLink#getSource <em>Source</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the container reference '<em>Source</em>'.
-	 * @see de.jpwinkler.daf.model.Link#getSource()
-	 * @see #getLink()
+	 * @see de.jpwinkler.daf.model.DoorsLink#getSource()
+	 * @see #getDoorsLink()
 	 * @generated
 	 */
-	EReference getLink_Source();
+	EReference getDoorsLink_Source();
 
 	/**
-	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.Link#getTargetModule() <em>Get Target Module</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Target Module</em>' operation.
-	 * @see de.jpwinkler.daf.model.Link#getTargetModule()
-	 * @generated
-	 */
-	EOperation getLink__GetTargetModule();
-
-	/**
-	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.Link#getTargetObject() <em>Get Target Object</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Target Object</em>' operation.
-	 * @see de.jpwinkler.daf.model.Link#getTargetObject()
-	 * @generated
-	 */
-	EOperation getLink__GetTargetObject();
-
-	/**
-	 * Returns the meta object for class '{@link de.jpwinkler.daf.model.ResolvedLink <em>Resolved Link</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Resolved Link</em>'.
-	 * @see de.jpwinkler.daf.model.ResolvedLink
-	 * @generated
-	 */
-	EClass getResolvedLink();
-
-	/**
-	 * Returns the meta object for the reference '{@link de.jpwinkler.daf.model.ResolvedLink#getTarget <em>Target</em>}'.
+	 * Returns the meta object for the reference '{@link de.jpwinkler.daf.model.DoorsLink#getTarget <em>Target</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Target</em>'.
-	 * @see de.jpwinkler.daf.model.ResolvedLink#getTarget()
-	 * @see #getResolvedLink()
+	 * @see de.jpwinkler.daf.model.DoorsLink#getTarget()
+	 * @see #getDoorsLink()
 	 * @generated
 	 */
-	EReference getResolvedLink_Target();
+	EReference getDoorsLink_Target();
 
 	/**
-	 * Returns the meta object for class '{@link de.jpwinkler.daf.model.UnresolvedLink <em>Unresolved Link</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Unresolved Link</em>'.
-	 * @see de.jpwinkler.daf.model.UnresolvedLink
-	 * @generated
-	 */
-	EClass getUnresolvedLink();
-
-	/**
-	 * Returns the meta object for the attribute '{@link de.jpwinkler.daf.model.UnresolvedLink#getTargetModule <em>Target Module</em>}'.
+	 * Returns the meta object for the attribute '{@link de.jpwinkler.daf.model.DoorsLink#getTargetModule <em>Target Module</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Target Module</em>'.
-	 * @see de.jpwinkler.daf.model.UnresolvedLink#getTargetModule()
-	 * @see #getUnresolvedLink()
+	 * @see de.jpwinkler.daf.model.DoorsLink#getTargetModule()
+	 * @see #getDoorsLink()
 	 * @generated
 	 */
-	EAttribute getUnresolvedLink_TargetModule();
+	EAttribute getDoorsLink_TargetModule();
 
 	/**
-	 * Returns the meta object for the attribute '{@link de.jpwinkler.daf.model.UnresolvedLink#getTargetObject <em>Target Object</em>}'.
+	 * Returns the meta object for the attribute '{@link de.jpwinkler.daf.model.DoorsLink#getTargetObject <em>Target Object</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Target Object</em>'.
-	 * @see de.jpwinkler.daf.model.UnresolvedLink#getTargetObject()
-	 * @see #getUnresolvedLink()
+	 * @see de.jpwinkler.daf.model.DoorsLink#getTargetObject()
+	 * @see #getDoorsLink()
 	 * @generated
 	 */
-	EAttribute getUnresolvedLink_TargetObject();
+	EAttribute getDoorsLink_TargetObject();
+
+	/**
+	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsLink#isResolved() <em>Is Resolved</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Resolved</em>' operation.
+	 * @see de.jpwinkler.daf.model.DoorsLink#isResolved()
+	 * @generated
+	 */
+	EOperation getDoorsLink__IsResolved();
 
 	/**
 	 * Returns the meta object for data type '{@link de.jpwinkler.daf.model.DoorsTreeNodeVisitor <em>Tree Node Visitor</em>}'.
@@ -2348,14 +2199,14 @@ public interface DoorsPackage extends EPackage {
 		EAttribute ATTRIBUTE_MAP__VALUE = eINSTANCE.getAttributeMap_Value();
 
 		/**
-		 * The meta object literal for the '{@link de.jpwinkler.daf.model.impl.LinkImpl <em>Link</em>}' class.
+		 * The meta object literal for the '{@link de.jpwinkler.daf.model.impl.DoorsLinkImpl <em>Link</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see de.jpwinkler.daf.model.impl.LinkImpl
-		 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getLink()
+		 * @see de.jpwinkler.daf.model.impl.DoorsLinkImpl
+		 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getDoorsLink()
 		 * @generated
 		 */
-		EClass LINK = eINSTANCE.getLink();
+		EClass DOORS_LINK = eINSTANCE.getDoorsLink();
 
 		/**
 		 * The meta object literal for the '<em><b>Source</b></em>' container reference feature.
@@ -2363,33 +2214,7 @@ public interface DoorsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference LINK__SOURCE = eINSTANCE.getLink_Source();
-
-		/**
-		 * The meta object literal for the '<em><b>Get Target Module</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation LINK___GET_TARGET_MODULE = eINSTANCE.getLink__GetTargetModule();
-
-		/**
-		 * The meta object literal for the '<em><b>Get Target Object</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation LINK___GET_TARGET_OBJECT = eINSTANCE.getLink__GetTargetObject();
-
-		/**
-		 * The meta object literal for the '{@link de.jpwinkler.daf.model.impl.ResolvedLinkImpl <em>Resolved Link</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see de.jpwinkler.daf.model.impl.ResolvedLinkImpl
-		 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getResolvedLink()
-		 * @generated
-		 */
-		EClass RESOLVED_LINK = eINSTANCE.getResolvedLink();
+		EReference DOORS_LINK__SOURCE = eINSTANCE.getDoorsLink_Source();
 
 		/**
 		 * The meta object literal for the '<em><b>Target</b></em>' reference feature.
@@ -2397,17 +2222,7 @@ public interface DoorsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference RESOLVED_LINK__TARGET = eINSTANCE.getResolvedLink_Target();
-
-		/**
-		 * The meta object literal for the '{@link de.jpwinkler.daf.model.impl.UnresolvedLinkImpl <em>Unresolved Link</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see de.jpwinkler.daf.model.impl.UnresolvedLinkImpl
-		 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getUnresolvedLink()
-		 * @generated
-		 */
-		EClass UNRESOLVED_LINK = eINSTANCE.getUnresolvedLink();
+		EReference DOORS_LINK__TARGET = eINSTANCE.getDoorsLink_Target();
 
 		/**
 		 * The meta object literal for the '<em><b>Target Module</b></em>' attribute feature.
@@ -2415,7 +2230,7 @@ public interface DoorsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute UNRESOLVED_LINK__TARGET_MODULE = eINSTANCE.getUnresolvedLink_TargetModule();
+		EAttribute DOORS_LINK__TARGET_MODULE = eINSTANCE.getDoorsLink_TargetModule();
 
 		/**
 		 * The meta object literal for the '<em><b>Target Object</b></em>' attribute feature.
@@ -2423,7 +2238,15 @@ public interface DoorsPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute UNRESOLVED_LINK__TARGET_OBJECT = eINSTANCE.getUnresolvedLink_TargetObject();
+		EAttribute DOORS_LINK__TARGET_OBJECT = eINSTANCE.getDoorsLink_TargetObject();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Resolved</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation DOORS_LINK___IS_RESOLVED = eINSTANCE.getDoorsLink__IsResolved();
 
 		/**
 		 * The meta object literal for the '<em>Tree Node Visitor</em>' data type.

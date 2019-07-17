@@ -23,10 +23,9 @@ package de.jpwinkler.daf.model.impl;
  */
 
 import de.jpwinkler.daf.model.DoorsAttributes;
+import de.jpwinkler.daf.model.DoorsLink;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsPackage;
-import de.jpwinkler.daf.model.Link;
-import de.jpwinkler.daf.model.ResolvedLink;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.List;
@@ -139,7 +138,7 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 	 * @generated
 	 * @ordered
 	 */
-    protected EList<Link> outgoingLinks;
+    protected EList<DoorsLink> outgoingLinks;
 
     /**
 	 * The cached value of the '{@link #getIncomingLinks() <em>Incoming Links</em>}' reference list.
@@ -149,7 +148,7 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 	 * @generated
 	 * @ordered
 	 */
-    protected EList<ResolvedLink> incomingLinks;
+    protected EList<DoorsLink> incomingLinks;
 
     /**
      * <!-- begin-user-doc -->
@@ -317,9 +316,9 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
      * <!-- end-user-doc --> @generated
      */
     @Override
-    public List<Link> getOutgoingLinks() {
+    public List<DoorsLink> getOutgoingLinks() {
 		if (outgoingLinks == null) {
-			outgoingLinks = new EObjectContainmentWithInverseEList<Link>(Link.class, this, DoorsPackage.DOORS_OBJECT__OUTGOING_LINKS, DoorsPackage.LINK__SOURCE);
+			outgoingLinks = new EObjectContainmentWithInverseEList<DoorsLink>(DoorsLink.class, this, DoorsPackage.DOORS_OBJECT__OUTGOING_LINKS, DoorsPackage.DOORS_LINK__SOURCE);
 		}
 		return outgoingLinks;
 	}
@@ -329,9 +328,9 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
      * <!-- end-user-doc --> @generated
      */
     @Override
-    public List<ResolvedLink> getIncomingLinks() {
+    public List<DoorsLink> getIncomingLinks() {
 		if (incomingLinks == null) {
-			incomingLinks = new EObjectWithInverseResolvingEList<ResolvedLink>(ResolvedLink.class, this, DoorsPackage.DOORS_OBJECT__INCOMING_LINKS, DoorsPackage.RESOLVED_LINK__TARGET);
+			incomingLinks = new EObjectWithInverseResolvingEList<DoorsLink>(DoorsLink.class, this, DoorsPackage.DOORS_OBJECT__INCOMING_LINKS, DoorsPackage.DOORS_LINK__TARGET);
 		}
 		return incomingLinks;
 	}
@@ -448,11 +447,11 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 				return;
 			case DoorsPackage.DOORS_OBJECT__OUTGOING_LINKS:
 				getOutgoingLinks().clear();
-				getOutgoingLinks().addAll((Collection<? extends Link>)newValue);
+				getOutgoingLinks().addAll((Collection<? extends DoorsLink>)newValue);
 				return;
 			case DoorsPackage.DOORS_OBJECT__INCOMING_LINKS:
 				getIncomingLinks().clear();
-				getIncomingLinks().addAll((Collection<? extends ResolvedLink>)newValue);
+				getIncomingLinks().addAll((Collection<? extends DoorsLink>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);

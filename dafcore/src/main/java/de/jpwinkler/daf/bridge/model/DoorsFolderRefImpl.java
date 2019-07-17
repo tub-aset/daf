@@ -42,8 +42,8 @@ class DoorsFolderRefImpl extends DoorsTreeNodeRefImpl implements DoorsFolder {
 
     private final boolean project;
 
-    public DoorsFolderRefImpl(DoorsApplication DoorsApplication, DoorsTreeNode parent, String name, boolean project) {
-        super(DoorsApplication, parent, name);
+    public DoorsFolderRefImpl(DoorsApplication doorsApplication, DoorsTreeNode parent, String name, boolean project) {
+        super(doorsApplication, parent, name);
         this.project = project;
     }
 
@@ -87,6 +87,8 @@ class DoorsFolderRefImpl extends DoorsTreeNodeRefImpl implements DoorsFolder {
                         result.add(new DoorsFolderRefImpl(doorsApplication, this, split[1], true));
                         break;
                     case "Link":
+                        // ignore link type, we get them from inside a module
+                        break;
                     case "Descriptive":
                         LOGGER.log(Level.WARNING, "Item type not supported: {0}", split[0]);
                         break;

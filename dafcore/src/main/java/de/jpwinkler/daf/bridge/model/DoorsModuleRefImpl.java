@@ -28,12 +28,12 @@ import de.jpwinkler.daf.db.DatabaseFactory;
 import de.jpwinkler.daf.db.ModuleCSV;
 import de.jpwinkler.daf.model.DoorsAttributes;
 import de.jpwinkler.daf.model.DoorsFolder;
+import de.jpwinkler.daf.model.DoorsLink;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTableRow;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.RuntimeExecutionException;
-import de.jpwinkler.daf.model.UnresolvedLink;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -157,7 +157,7 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
                     }
 
                     @Override
-                    public UnresolvedLink createLink(DoorsObject source, String targetModule, String targetObject) {
+                    public DoorsLink createLink(DoorsObject source, String targetModule, String targetObject) {
                         throw new UnsupportedOperationException("Not supported.");
                     }
 
