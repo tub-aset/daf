@@ -67,6 +67,8 @@ public class LinksTableCell<T extends DoorsObject> extends CustomTextAreaTableCe
                     })
                     .forEach(contextMenu.getItems()::add);
         });
+        this.setWrapText(false);
+        this.setStyle("-fx-text-overrun: center-ellipsis");
     }
 
     @Override
@@ -77,18 +79,18 @@ public class LinksTableCell<T extends DoorsObject> extends CustomTextAreaTableCe
         }
 
         this.setText(item.getOutgoingLinks().stream()
-                .map(ol -> ol.getTargetModule() + ":" + ol.getTargetObject() + " (" + toDisplayString(ol.getLinkStatus()) + ")")
+                .map(ol -> toDisplayString(ol.getLinkStatus()) + " " + ol.getTargetModule() + ":" + ol.getTargetObject())
                 .collect(Collectors.joining("\n")));
     }
 
     public static String toDisplayString(DoorsLinkStatus linkStatus) {
         switch (linkStatus) {
             case UNRESOLVED:
-                return "unresolved";
+                return "?";
             case RESOLVED:
-                return "resolved";
+                return "✔";
             case RESOLVE_FAILED:
-                return "not found";
+                return "‼";
             default:
                 throw new AssertionError(linkStatus.name());
 

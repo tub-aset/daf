@@ -65,7 +65,7 @@ public class CustomTextFieldTableCell<T> extends TextFieldTableCell<T, T> {
                 super.getTableView().edit(this.getTableRow().getIndex(), this.getTableColumn());
                 editAllowed = false;
                 eh.consume();
-            } else if (eh.getClickCount() == 1 && eh.getButton() == MouseButton.SECONDARY) {
+            } else if(!this.isEditing() && eh.getClickCount() == 1 && eh.getButton() == MouseButton.SECONDARY && this.getItem() != null) {
                 opener.accept(this.getItem());
                 eh.consume();
             }

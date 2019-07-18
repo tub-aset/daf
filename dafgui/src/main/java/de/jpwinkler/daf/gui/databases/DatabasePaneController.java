@@ -149,7 +149,9 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                 (it, newValue) -> {
                     this.executeCommand(new EditAttributesCommand(DoorsAttributes.MODULE_DESCRIPTION.getKey(), newValue, it));
                 },
-                (cell, it) -> this.open(this.getPath().withPath(it.getFullName()), OpenFlag.OPEN_ONLY)));
+                (cell, it) -> {
+                    this.open(this.getPath().withPath(it.getFullName()), OpenFlag.OPEN_ONLY);
+                }));
         snapshotListsColumn.setCellFactory(tc -> new CustomTextFieldTableCell<>(tc,
                 it -> it == null ? "" : getSnapshotLists(it),
                 (it, newLists) -> {
@@ -324,7 +326,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         databaseTreeView.getSelectionModel().getSelectedItems().stream()
                 .forEach(it -> executeCommand(new NewFolderCommand(super.getDatabaseInterface().getFactory(), it.getValue())));
     }
-    
+
     @FXML
     public void newProjectClicked() {
         databaseTreeView.getSelectionModel().getSelectedItems().stream()

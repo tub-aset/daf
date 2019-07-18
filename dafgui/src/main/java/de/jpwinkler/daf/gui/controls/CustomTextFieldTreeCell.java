@@ -58,7 +58,7 @@ public class CustomTextFieldTreeCell<T> extends TextFieldTreeCell<T> {
                 super.getTreeView().edit(this.getTreeItem());
                 editAllowed = false;
                 eh.consume();
-            } else if (eh.getClickCount() == 1 && eh.getButton() == MouseButton.SECONDARY) {
+            } else if (!this.isEditing() && eh.getClickCount() == 1 && eh.getButton() == MouseButton.SECONDARY && this.getItem() != null) {
                 opener.accept(this.getItem());
                 eh.consume();
             }
