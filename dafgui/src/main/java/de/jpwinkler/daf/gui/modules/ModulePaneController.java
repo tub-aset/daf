@@ -89,6 +89,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
+import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.pf4j.PluginWrapper;
 
 public final class ModulePaneController extends ApplicationPartController<ModulePaneController> {
@@ -102,11 +103,14 @@ public final class ModulePaneController extends ApplicationPartController<Module
         }
 
         contentTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        MutableBoolean contentTableSelectionFlag = new MutableBoolean(false);
         contentTableView.getSelectionModel().selectedItemProperty().addListener((ChangeListener<DoorsObject>) (observable, oldValue, newValue) -> {
             traverseTreeItem(outlineTreeView.getRoot(), item -> {
                 if (item != null && item.getValue() != null && Objects.equals(item.getValue(), newValue)) {
+                    contentTableSelectionFlag.setTrue();
                     outlineTreeView.getSelectionModel().select(item);
                     outlineTreeView.scrollTo(outlineTreeView.getSelectionModel().getSelectedIndex());
+                    contentTableSelectionFlag.setFalse();
                 }
             });
         });
@@ -141,7 +145,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
         ));
         outlineTreeView.getSelectionModel().selectedItemProperty().addListener((ChangeListener<TreeItem<DoorsTreeNode>>) (observable, oldValue, newValue) -> {
             contentTableView.getItems().forEach(c -> {
-                if (newValue.getValue() != null && newValue.getValue() == c) {
+                if (contentTableSelectionFlag.isFalse() && newValue.getValue() != null && newValue.getValue() == c) {
                     contentTableView.scrollTo(c);
                 }
             });
