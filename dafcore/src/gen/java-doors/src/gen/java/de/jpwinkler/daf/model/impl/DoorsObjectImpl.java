@@ -319,18 +319,6 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
     public boolean isHeading() {
 		return getObjectHeading() != null && !getObjectHeading().isEmpty();
 	}
-    
-    /**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated NOT
-	 */
-	@Override
-	public int getObjectLevel() {
-             return DoorsObject.super.getObjectLevel(); //To change body of generated methods, choose Tools | Templates. 
-	}
-
-    
 
 				/**
      * <!-- begin-user-doc -->
@@ -493,8 +481,6 @@ public class DoorsObjectImpl extends DoorsTreeNodeImpl implements DoorsObject {
 		switch (operationID) {
 			case DoorsPackage.DOORS_OBJECT___IS_HEADING:
 				return isHeading();
-			case DoorsPackage.DOORS_OBJECT___GET_OBJECT_LEVEL:
-				return getObjectLevel();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

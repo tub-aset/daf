@@ -841,22 +841,13 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_OBJECT___IS_HEADING = DOORS_TREE_NODE_OPERATION_COUNT + 0;
 
 	/**
-	 * The operation id for the '<em>Get Object Level</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DOORS_OBJECT___GET_OBJECT_LEVEL = DOORS_TREE_NODE_OPERATION_COUNT + 1;
-
-	/**
 	 * The number of operations of the '<em>Object</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_OBJECT_OPERATION_COUNT = DOORS_TREE_NODE_OPERATION_COUNT + 2;
+	int DOORS_OBJECT_OPERATION_COUNT = DOORS_TREE_NODE_OPERATION_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link de.jpwinkler.daf.model.impl.DoorsTableRowImpl <em>Table Row</em>}' class.
@@ -1092,15 +1083,6 @@ public interface DoorsPackage extends EPackage {
 	 * @ordered
 	 */
 	int DOORS_TABLE_ROW___IS_HEADING = DOORS_OBJECT___IS_HEADING;
-
-	/**
-	 * The operation id for the '<em>Get Object Level</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DOORS_TABLE_ROW___GET_OBJECT_LEVEL = DOORS_OBJECT___GET_OBJECT_LEVEL;
 
 	/**
 	 * The number of operations of the '<em>Table Row</em>' class.
@@ -1627,16 +1609,6 @@ public interface DoorsPackage extends EPackage {
 	EOperation getDoorsObject__IsHeading();
 
 	/**
-	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsObject#getObjectLevel() <em>Get Object Level</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Object Level</em>' operation.
-	 * @see de.jpwinkler.daf.model.DoorsObject#getObjectLevel()
-	 * @generated
-	 */
-	EOperation getDoorsObject__GetObjectLevel();
-
-	/**
 	 * Returns the meta object for class '{@link de.jpwinkler.daf.model.DoorsTableRow <em>Table Row</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2095,14 +2067,6 @@ public interface DoorsPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation DOORS_OBJECT___IS_HEADING = eINSTANCE.getDoorsObject__IsHeading();
-
-		/**
-		 * The meta object literal for the '<em><b>Get Object Level</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation DOORS_OBJECT___GET_OBJECT_LEVEL = eINSTANCE.getDoorsObject__GetObjectLevel();
 
 		/**
 		 * The meta object literal for the '{@link de.jpwinkler.daf.model.impl.DoorsTableRowImpl <em>Table Row</em>}' class.

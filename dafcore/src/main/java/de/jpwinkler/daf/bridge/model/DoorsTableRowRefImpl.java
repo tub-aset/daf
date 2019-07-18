@@ -35,4 +35,11 @@ public class DoorsTableRowRefImpl extends DoorsObjectRefImpl implements DoorsTab
     public DoorsTableRowRefImpl(DoorsApplication DoorsApplication, DoorsTreeNode parent) {
         super(DoorsApplication, parent);
     }
+
+    @Override
+    public int getObjectLevel() {
+        return super.getObjectLevel() + 1;
+    }
+    
+    
 }

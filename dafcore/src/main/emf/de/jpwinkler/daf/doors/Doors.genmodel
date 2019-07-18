@@ -71,7 +71,6 @@
             <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//DoorsObject/objectHeading"/>
             <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//DoorsObject/text"/>
             <genOperations ecoreOperation="Doors.ecore#//DoorsObject/isHeading"/>
-            <genOperations ecoreOperation="Doors.ecore#//DoorsObject/getObjectLevel"/>
             
             <genFeatures createChild="false" ecoreFeature="ecore:EReference Doors.ecore#//DoorsObject/outgoingLinks"/>
         </genClasses>

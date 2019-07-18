@@ -26,8 +26,8 @@ package de.jpwinkler.daf.filter.model;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.model.DoorsObject;
+import de.jpwinkler.daf.model.DoorsTableRow;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.util.WeakHashMap;
 import java.util.function.Predicate;
@@ -36,10 +36,15 @@ import java.util.function.Predicate;
  *
  * @author fwiesweg
  */
-public class FilteredDoorsTableRow extends FilteredDoorsObject {
+public class FilteredDoorsTableRow extends FilteredDoorsObject implements DoorsTableRow {
 
     public FilteredDoorsTableRow(DoorsObject self, Predicate<DoorsTreeNode> filter, WeakHashMap<DoorsTreeNode, FilteredDoorsTreeNode<?>> nodeMap) {
         super(self, filter, nodeMap);
+    }
+
+    @Override
+    public int getObjectLevel() {
+        return super.getObjectLevel() + 1;
     }
 
 }

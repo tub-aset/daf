@@ -26,7 +26,6 @@ package de.jpwinkler.daf.model.impl;
 
 import de.jpwinkler.daf.model.DoorsPackage;
 import de.jpwinkler.daf.model.DoorsTableRow;
-
 import org.eclipse.emf.ecore.EClass;
 
 /**
@@ -55,5 +54,15 @@ public class DoorsTableRowImpl extends DoorsObjectImpl implements DoorsTableRow 
 	protected EClass eStaticClass() {
 		return DoorsPackage.Literals.DOORS_TABLE_ROW;
 	}
+        
+        /**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+        @Override
+        public int getObjectLevel() {
+            return super.getObjectLevel() + 1;
+        }
 
 } //DoorsTableRowImpl

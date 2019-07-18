@@ -36,15 +36,6 @@ package de.jpwinkler.daf.model;
  * @generated
  */
 public interface DoorsTableRow extends DoorsObject {
-
-    /**
-     * @generated NOT
-     * @return 
-     */
-    @Override
-    default int getObjectLevel() {
-        return DoorsObject.super.getObjectLevel() + 1;
-    }
     
     
 } // DoorsTableRow

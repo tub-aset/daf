@@ -537,16 +537,6 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getDoorsObject__GetObjectLevel() {
-		return doorsObjectEClass.getEOperations().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EClass getDoorsTableRow() {
 		return doorsTableRowEClass;
 	}
@@ -765,7 +755,6 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		createEAttribute(doorsObjectEClass, DOORS_OBJECT__TEXT);
 		createEReference(doorsObjectEClass, DOORS_OBJECT__OUTGOING_LINKS);
 		createEOperation(doorsObjectEClass, DOORS_OBJECT___IS_HEADING);
-		createEOperation(doorsObjectEClass, DOORS_OBJECT___GET_OBJECT_LEVEL);
 
 		doorsTableRowEClass = createEClass(DOORS_TABLE_ROW);
 
@@ -879,8 +868,6 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		initEReference(getDoorsObject_OutgoingLinks(), this.getDoorsLink(), this.getDoorsLink_Source(), "outgoingLinks", null, 0, -1, DoorsObject.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getDoorsObject__IsHeading(), ecorePackage.getEBoolean(), "isHeading", 0, 1, IS_UNIQUE, IS_ORDERED);
-
-		initEOperation(getDoorsObject__GetObjectLevel(), ecorePackage.getEInt(), "getObjectLevel", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(doorsTableRowEClass, DoorsTableRow.class, "DoorsTableRow", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
