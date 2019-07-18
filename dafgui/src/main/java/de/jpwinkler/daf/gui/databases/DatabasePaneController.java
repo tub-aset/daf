@@ -557,6 +557,11 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         return new EmptySelectionModel<>();
     }
 
+    @Override
+    public void selectLinkTarget(DoorsObject linkTarget) {
+        throw new UnsupportedOperationException("Not supported");
+    }
+
     @FXML
     public void showSidePaneClicked() {
         sideExtensionPane.selectFirst();

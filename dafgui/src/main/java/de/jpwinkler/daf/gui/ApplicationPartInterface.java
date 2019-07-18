@@ -62,5 +62,7 @@ public interface ApplicationPartInterface {
     SelectionModel<DoorsModule> getCurrentModuleSelectionModel();
 
     SelectionModel<DoorsObject> getCurrentObjectSelectionModel();
+    
+    void selectLinkTarget(DoorsObject linkTarget);
 
 }

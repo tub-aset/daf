@@ -381,8 +381,8 @@ public final class ModulePaneController extends ApplicationPartController<Module
             }
 
             this.currentView = (ViewDefinition) newValue.getUserData();
-            
-            if(this.filteredModule == null) {
+
+            if (this.filteredModule == null) {
                 return;
             }
 
@@ -541,6 +541,27 @@ public final class ModulePaneController extends ApplicationPartController<Module
     @Override
     public SelectionModel<DoorsObject> getCurrentObjectSelectionModel() {
         return new ForwardingMultipleSelectionModel<>(this.contentTableView.getSelectionModel(), x -> x, y -> y);
+    }
+
+    @Override
+    public void selectLinkTarget(DoorsObject linkTarget) {
+        DoorsObject localLinkTarget = this.filteredModule.accept(new DoorsTreeNodeVisitor<DoorsObject, DoorsObject>(DoorsObject.class) {
+            @Override
+            public boolean visitPreTraverse(DoorsObject object) {
+                if (object.getAbsoluteNumber() == linkTarget.getAbsoluteNumber()) {
+                    setResult(object);
+                    return false;
+                }
+
+                return true;
+            }
+        });
+        if (localLinkTarget == null) {
+            return;
+        }
+
+        this.contentTableView.getSelectionModel().clearSelection();
+        this.contentTableView.getSelectionModel().select(localLinkTarget);
     }
 
     @FXML

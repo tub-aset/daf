@@ -149,8 +149,7 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
         }
 
         ApplicationPartInterface appPartInterface = applicationController.open(applicationPart.getDatabasePath().withPath(dl.getTargetModule()), openFlag);
-        appPartInterface.getCurrentObjectSelectionModel().clearSelection();
-        appPartInterface.getCurrentObjectSelectionModel().select(linkTarget);
+        appPartInterface.selectLinkTarget(linkTarget);
         return appPartInterface;
     }
 
