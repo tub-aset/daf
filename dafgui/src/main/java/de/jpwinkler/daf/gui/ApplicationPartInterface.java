@@ -29,6 +29,7 @@ import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.gui.ApplicationPartFactoryRegistry.ApplicationPart;
 import de.jpwinkler.daf.gui.commands.AbstractCommand;
 import de.jpwinkler.daf.model.DoorsFolder;
+import de.jpwinkler.daf.model.DoorsLink;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
@@ -53,6 +54,8 @@ public interface ApplicationPartInterface {
     ApplicationPartInterface open(DatabasePath dbPath, OpenFlag openFlag);
     
     ApplicationPartInterface open(ApplicationPart part, OpenFlag openFlag);
+    
+    ApplicationPartInterface open(DoorsLink dl, OpenFlag openFlag);
 
     SelectionModel<DoorsFolder> getCurrentFolderSelectionModel();
 

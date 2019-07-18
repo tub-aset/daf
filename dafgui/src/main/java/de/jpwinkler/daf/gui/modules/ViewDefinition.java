@@ -21,9 +21,9 @@ package de.jpwinkler.daf.gui.modules;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-import de.jpwinkler.daf.db.DatabaseFactory;
+import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.ModuleCSV;
-import de.jpwinkler.daf.gui.commands.AbstractCommand;
+import de.jpwinkler.daf.gui.ApplicationPartInterface;
 import de.jpwinkler.daf.gui.controls.CombinedTextHeadingCell;
 import de.jpwinkler.daf.gui.controls.CustomTextAreaTableCell;
 import de.jpwinkler.daf.gui.controls.LinksTableCell;
@@ -35,13 +35,41 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
 
 public class ViewDefinition implements Serializable {
+    
+    public static final ViewDefinition STANDARD_VIEW = new ViewDefinition("Standard");
+
+    static {
+        ColumnDefinition cd;
+        cd = new ColumnDefinition(ColumnType.ATTRIBUTE, "Object Level");
+        cd.setAttributeName("Object Level");
+        cd.setWidth(100);
+        cd.setVisible(true);
+        STANDARD_VIEW.getColumns().add(cd);
+        
+        cd = new ColumnDefinition(ColumnType.ATTRIBUTE, "Absolute Number");
+        cd.setAttributeName("Absolute Number");
+        cd.setWidth(100);
+        cd.setVisible(true);
+        STANDARD_VIEW.getColumns().add(cd);
+        
+        cd = new ColumnDefinition(ColumnType.COMBINED_TEXT_HEADING, "Object Heading/Text");
+        cd.setWidth(700);
+        cd.setVisible(true);
+        STANDARD_VIEW.getColumns().add(cd);
+        
+        cd = new ColumnDefinition(ColumnType.LINKS, "Links (right-click to navigate)");
+        cd.setWidth(200);
+        cd.setVisible(true);
+        STANDARD_VIEW.getColumns().add(cd);
+        
+        STANDARD_VIEW.setDisplayRemainingColumns(false);
+    }
 
     public ViewDefinition(String name) {
         this.name = name;
@@ -87,39 +115,41 @@ public class ViewDefinition implements Serializable {
     }
 
     public static enum ColumnType {
-        ATTRIBUTE(true, (cd, tc, f, exec) -> {
+        ATTRIBUTE(true, (cd, tc, i) -> {
             BiConsumer<DoorsObject, String> edit = (it, newValue) -> {
-                exec.accept(new EditObjectAttributeCommand(it, cd.getAttributeName(), newValue));
+                i.executeCommand(new EditObjectAttributeCommand(it, cd.getAttributeName(), newValue));
                 tc.getTableView().requestFocus();
                 tc.getTableView().getFocusModel().focusNext();
             };
 
             return new CustomTextAreaTableCell<>(tc, it -> it.getAttributes().get(cd.getAttributeName()), edit);
         }),
-        COMBINED_TEXT_HEADING(false, (cd, tc, f, exec) -> {
+        COMBINED_TEXT_HEADING(false, (cd, tc, i) -> {
             BiConsumer<DoorsObject, String> edit = (it, newValue) -> {
-                exec.accept(new EditObjectAttributeCommand(it, it.isHeading() ? DoorsAttributes.OBJECT_HEADING.getKey() : DoorsAttributes.OBJECT_TEXT.getKey(), newValue));
+                i.executeCommand(new EditObjectAttributeCommand(it, it.isHeading() ? DoorsAttributes.OBJECT_HEADING.getKey() : DoorsAttributes.OBJECT_TEXT.getKey(), newValue));
                 tc.getTableView().requestFocus();
                 tc.getTableView().getFocusModel().focusNext();
             };
 
             return new CombinedTextHeadingCell<>(tc, it -> it.getText(), edit);
         }),
-        LINKS(false, (cd, tc, f, exec) -> {
+        LINKS(false, (cd, tc, i) -> {
             BiConsumer<DoorsObject, String> edit = (it, newValue) -> {
-                exec.accept(new EditLinksCommand(it, ModuleCSV.parseLinks(newValue, f, it).collect(Collectors.toList())));
+                i.executeCommand(new EditLinksCommand(it, ModuleCSV.parseLinks(newValue, i.getDatabaseInterface().getFactory(), it).collect(Collectors.toList())));
                 tc.getTableView().requestFocus();
                 tc.getTableView().getFocusModel().focusNext();
             };
 
-            return new LinksTableCell<>(tc, edit);
+            return new LinksTableCell<>(tc, edit, dl -> {
+                i.open(dl, DatabaseInterface.OpenFlag.OPEN_ONLY);
+            });
         });
 
-        private final QuadFunction<ColumnDefinition, TableColumn<DoorsObject, DoorsObject>, DatabaseFactory, Consumer<AbstractCommand>, TableCell<DoorsObject, DoorsObject>> cellCreator;
+        private final QuadFunction<ColumnDefinition, TableColumn<DoorsObject, DoorsObject>, ApplicationPartInterface, TableCell<DoorsObject, DoorsObject>> cellCreator;
         private final boolean usesAttributeName;
 
         private ColumnType(boolean usesAttributeName,
-                QuadFunction<ColumnDefinition, TableColumn<DoorsObject, DoorsObject>, DatabaseFactory, Consumer<AbstractCommand>, TableCell<DoorsObject, DoorsObject>> cellCreator) {
+                QuadFunction<ColumnDefinition, TableColumn<DoorsObject, DoorsObject>, ApplicationPartInterface, TableCell<DoorsObject, DoorsObject>> cellCreator) {
             this.usesAttributeName = usesAttributeName;
             this.cellCreator = cellCreator;
         }
@@ -128,14 +158,14 @@ public class ViewDefinition implements Serializable {
             return usesAttributeName;
         }
 
-        private TableCell<DoorsObject, DoorsObject> createCell(ColumnDefinition colDef, TableColumn<DoorsObject, DoorsObject> col, DatabaseFactory factory, Consumer<AbstractCommand> cmdExecutor) {
-            return this.cellCreator.apply(colDef, col, factory, cmdExecutor);
+        private TableCell<DoorsObject, DoorsObject> createCell(ColumnDefinition colDef, TableColumn<DoorsObject, DoorsObject> col, ApplicationPartInterface appPartInterface) {
+            return this.cellCreator.apply(colDef, col, appPartInterface);
         }
     }
 
-    public static interface QuadFunction<A, B, C, D, E> {
+    public static interface QuadFunction<A, B, C, E> {
 
-        E apply(A a, B b, C c, D d);
+        E apply(A a, B b, C c);
     }
 
     public static class ColumnDefinition implements Serializable {
@@ -199,9 +229,9 @@ public class ViewDefinition implements Serializable {
             return title;
         }
 
-        public Callback<TableColumn<DoorsObject, DoorsObject>, TableCell<DoorsObject, DoorsObject>> getCellFactory(DatabaseFactory factory, Consumer<AbstractCommand> cmdExecutor) {
+        public Callback<TableColumn<DoorsObject, DoorsObject>, TableCell<DoorsObject, DoorsObject>> getCellFactory(ApplicationPartInterface appPartInterface) {
             return c -> {
-                return this.columnType.createCell(this, c, factory, cmdExecutor);
+                return this.columnType.createCell(this, c, appPartInterface);
             };
 
         }

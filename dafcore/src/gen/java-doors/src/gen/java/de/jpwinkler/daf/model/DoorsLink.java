@@ -123,9 +123,9 @@ public interface DoorsLink {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @model
+	 * @model exceptions="de.jpwinkler.daf.model.DoorsLinkResolveException"
 	 * @generated
 	 */
-	DoorsObject resolve();
+	DoorsObject resolve() throws DoorsLinkResolveException;
 
 } // DoorsLink

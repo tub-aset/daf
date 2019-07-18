@@ -21,7 +21,6 @@ package de.jpwinkler.daf.gui;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
 import de.jpwinkler.daf.db.DatabasePath;
@@ -29,6 +28,9 @@ import de.jpwinkler.daf.gui.ApplicationPartFactoryRegistry.ApplicationPart;
 import de.jpwinkler.daf.gui.commands.AbstractCommand;
 import de.jpwinkler.daf.gui.commands.UpdateAction;
 import de.jpwinkler.daf.gui.controls.ExtensionPane;
+import de.jpwinkler.daf.model.DoorsLink;
+import de.jpwinkler.daf.model.DoorsLinkResolveException;
+import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.io.IOException;
 import java.net.URL;
@@ -134,6 +136,21 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
     @Override
     public final ApplicationPartInterface open(DatabasePath path, OpenFlag openFlag) {
         return applicationController.open(path, openFlag);
+    }
+
+    @Override
+    public ApplicationPartInterface open(DoorsLink dl, OpenFlag openFlag) {
+        DoorsObject linkTarget;
+        try {
+            linkTarget = dl.resolve();
+        } catch (DoorsLinkResolveException ex) {
+            setStatus(ex.getMessage());
+            return null;
+        }
+
+        ApplicationPartInterface appPartInterface = applicationController.open(applicationPart.getDatabasePath().withPath(dl.getTargetModule()), openFlag);
+        appPartInterface.getCurrentObjectSelectionModel().select(linkTarget);
+        return appPartInterface;
     }
 
     @Override

@@ -166,19 +166,16 @@ public interface DoorsTreeNode {
     List<String> getFullNameSegments();
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc --> @model
-     * visitorDataType="de.jpwinkler.daf.model.DoorsTreeNodeVisitor"
      *
-     * @generated
+     * @generated NOT
      */
-    void accept(DoorsTreeNodeVisitor visitor);
+    <T extends DoorsTreeNode, U> U accept(DoorsTreeNodeVisitor<T, U> visitor);
 
     /**
      *
      * @generated NOT
      */
-    CompletableFuture<Void> acceptAsync(BackgroundTaskExecutor executor, DoorsTreeNodeVisitor visitor);
+    <T extends DoorsTreeNode, U> CompletableFuture<U> acceptAsync(BackgroundTaskExecutor executor, DoorsTreeNodeVisitor<T, U> visitor);
 
     /**
      * <!-- begin-user-doc -->

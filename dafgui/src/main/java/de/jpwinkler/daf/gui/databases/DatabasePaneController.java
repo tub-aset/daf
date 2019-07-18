@@ -149,7 +149,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                 (it, newValue) -> {
                     this.executeCommand(new EditAttributesCommand(DoorsAttributes.MODULE_DESCRIPTION.getKey(), newValue, it));
                 },
-                it -> this.open(this.getPath().withPath(it.getFullName()), OpenFlag.OPEN_ONLY)));
+                (cell, it) -> this.open(this.getPath().withPath(it.getFullName()), OpenFlag.OPEN_ONLY)));
         snapshotListsColumn.setCellFactory(tc -> new CustomTextFieldTableCell<>(tc,
                 it -> it == null ? "" : getSnapshotLists(it),
                 (it, newLists) -> {

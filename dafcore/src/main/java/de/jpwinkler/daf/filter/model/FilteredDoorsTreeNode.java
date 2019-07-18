@@ -147,13 +147,13 @@ public class FilteredDoorsTreeNode<T extends DoorsTreeNode> implements DoorsTree
     }
 
     @Override
-    public void accept(DoorsTreeNodeVisitor visitor) {
-        self.accept(new ForwardingVisitor(visitor, children.predicate));
+    public <T extends DoorsTreeNode, U> U accept(DoorsTreeNodeVisitor<T, U> visitor) {
+        return self.accept(new ForwardingVisitor<>(visitor, children.predicate));
     }
 
     @Override
-    public CompletableFuture<Void> acceptAsync(BackgroundTaskExecutor executor, DoorsTreeNodeVisitor visitor) {
-        return self.acceptAsync(executor, new ForwardingVisitor(visitor, children.predicate));
+    public <T extends DoorsTreeNode, U> CompletableFuture<U> acceptAsync(BackgroundTaskExecutor executor, DoorsTreeNodeVisitor<T,U> visitor) {
+        return self.acceptAsync(executor, new ForwardingVisitor<>(visitor, children.predicate));
     }
 
     @Override

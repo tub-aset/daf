@@ -37,6 +37,7 @@ import de.jpwinkler.daf.gui.controls.FixedSingleSelectionModel;
 import de.jpwinkler.daf.gui.controls.ForwardingMultipleSelectionModel;
 import de.jpwinkler.daf.gui.modules.ViewDefinition.ColumnDefinition;
 import de.jpwinkler.daf.gui.modules.ViewDefinition.ColumnType;
+import static de.jpwinkler.daf.gui.modules.ViewDefinition.STANDARD_VIEW;
 import de.jpwinkler.daf.gui.modules.commands.DeleteObjectCommand;
 import de.jpwinkler.daf.gui.modules.commands.DemoteObjectCommand;
 import de.jpwinkler.daf.gui.modules.commands.FlattenCommand;
@@ -91,16 +92,6 @@ import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.pf4j.PluginWrapper;
 
 public final class ModulePaneController extends ApplicationPartController<ModulePaneController> {
-
-    private static final ViewDefinition STANDARD_VIEW = new ViewDefinition("Standard");
-
-    static {
-        ColumnDefinition columnDefinition = new ColumnDefinition(ColumnType.COMBINED_TEXT_HEADING, "Object Heading/Text");
-        columnDefinition.setWidth(700);
-        columnDefinition.setVisible(true);
-        STANDARD_VIEW.getColumns().add(columnDefinition);
-        STANDARD_VIEW.setDisplayRemainingColumns(false);
-    }
 
     public ModulePaneController(ApplicationPaneController applicationController, ApplicationPart part) {
         super(applicationController, part, ModulePaneExtension.class);
@@ -278,7 +269,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
         final TablePosition<?, ?> focusedCell = contentTableView.getFocusModel().getFocusedCell();
         final List<Integer> selected = new ArrayList<>(contentTableView.getSelectionModel().getSelectedIndices());
         contentTableView.getItems().clear();
-        filteredModule.accept(new DoorsTreeNodeVisitor<DoorsObject>(DoorsObject.class) {
+        filteredModule.accept(new DoorsTreeNodeVisitor<DoorsObject, Void>(DoorsObject.class) {
             @Override
             public boolean visitPreTraverse(final DoorsObject object) {
                 Platform.runLater(() -> {
@@ -306,7 +297,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
             Function<ColumnDefinition, TableColumn<DoorsObject, DoorsObject>> columnFactory = (colDef) -> {
                 final TableColumn<DoorsObject, DoorsObject> c = new TableColumn<>(colDef.getTitle());
                 c.setSortable(false);
-                c.setCellFactory(colDef.getCellFactory(super.getDatabaseInterface().getFactory(), this::executeCommand));
+                c.setCellFactory(colDef.getCellFactory(this));
 
                 if (colDef.getAttributeName() != null) {
                     displayedAttributes.add(colDef.getAttributeName());

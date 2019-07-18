@@ -9,6 +9,7 @@
     <genPackages prefix="Doors" basePackage="de.jpwinkler.daf" ecorePackage="Doors.ecore#/" classPackageSuffix="impl" disposableProviderFactory="true" adapterFactory="false">
         <genDataTypes ecoreDataType="Doors.ecore#//DoorsTreeNodeVisitor"/>
         <genDataTypes ecoreDataType="Doors.ecore#//DoorsLinkStatus"/>
+        <genDataTypes ecoreDataType="Doors.ecore#//DoorsLinkResolveException"/>
         <genDataTypes ecoreDataType="Doors.ecore#//Pattern"/>
         <genDataTypes ecoreDataType="Doors.ecore#//Collection"/>
         <genDataTypes ecoreDataType="Doors.ecore#//NodeFilter"/>
@@ -20,9 +21,6 @@
             <genFeatures createChild="false" ecoreFeature="ecore:EReference Doors.ecore#//DoorsTreeNode/name"/>
             <genFeatures property="Readonly" ecoreFeature="ecore:EReference Doors.ecore#//DoorsTreeNode/fullName"/>
             <genFeatures property="Readonly" ecoreFeature="ecore:EReference Doors.ecore#//DoorsTreeNode/fullNameSegments"/>
-            <genOperations ecoreOperation="Doors.ecore#//DoorsTreeNode/accept">
-                <genParameters ecoreParameter="Doors.ecore#//DoorsTreeNode/accept/visitor"/>
-            </genOperations>
             
             <genOperations ecoreOperation="Doors.ecore#//DoorsTreeNode/hasTag">
                 <genParameters ecoreParameter="Doors.ecore#//DoorsTreeNode/hasTag/tag"/>

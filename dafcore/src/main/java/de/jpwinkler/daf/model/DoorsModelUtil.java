@@ -21,7 +21,6 @@ package de.jpwinkler.daf.model;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-import de.jpwinkler.daf.filter.model.FilteredDoorsTreeNode;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -76,7 +75,7 @@ public class DoorsModelUtil {
         final Map<String, DoorsObject> leftObjects = new HashMap<>();
         final Map<String, DoorsObject> rightObjects = new HashMap<>();
 
-        left.accept(new DoorsTreeNodeVisitor<DoorsObject>(DoorsObject.class) {
+        left.accept(new DoorsTreeNodeVisitor<DoorsObject, Void>(DoorsObject.class) {
             @Override
             public boolean visitPreTraverse(final DoorsObject object) {
                 leftObjects.put(object.getObjectIdentifier(), object);
@@ -84,7 +83,7 @@ public class DoorsModelUtil {
             }
         });
 
-        right.accept(new DoorsTreeNodeVisitor<DoorsObject>(DoorsObject.class) {
+        right.accept(new DoorsTreeNodeVisitor<DoorsObject, Void>(DoorsObject.class) {
             @Override
             public boolean visitPreTraverse(final DoorsObject object) {
                 rightObjects.put(object.getObjectIdentifier(), object);
@@ -142,7 +141,7 @@ public class DoorsModelUtil {
 
     static final Function<String, String> IDENTITY = s -> s;
 
-    public static DoorsObject resolve(DoorsLink link) {
+    public static DoorsObject resolve(DoorsLink link) throws DoorsLinkResolveException {
         DoorsTreeNode root = link.getSource();
         while (root.getParent() != null && !Objects.equals(root.getFullName(), link.getTargetModule())) {
             root = root.getParent();
@@ -150,25 +149,23 @@ public class DoorsModelUtil {
 
         DoorsTreeNode pathTreeNode = Objects.equals(root.getFullName(), link.getTargetModule()) ? root : root.getChild(link.getTargetModule());
         if (pathTreeNode == null) {
-            throw new IllegalStateException("Target module not found");
+            throw new DoorsLinkResolveException(link, "Target module not found");
         }
 
         if (!(pathTreeNode instanceof DoorsModule)) {
-            throw new IllegalStateException("Target module is not a DoorsModule");
+            throw new DoorsLinkResolveException(link, "Target module is not a DoorsModule");
         }
 
-        DoorsModule pathModule = (DoorsModule) FilteredDoorsTreeNode.createFilteredTree(pathTreeNode,
-                tn -> Objects.equals(link.getTargetObject(), tn.getAttributes().get("Absolute Number")), true);
-
-        if (pathModule.getChildren().size() != 1) {
-            throw new IllegalStateException("Target object points to more than one DoorsTreeNode");
-        }
-
-        DoorsTreeNode tg = ((FilteredDoorsTreeNode) pathModule.getChildren().get(0)).getSelf();
-        if (!(tg instanceof DoorsObject)) {
-            throw new IllegalStateException("Target object is no DoorsObject");
-        }
-
-        return (DoorsObject) tg;
+        return pathTreeNode.accept(new DoorsTreeNodeVisitor<DoorsObject, DoorsObject>(DoorsObject.class) {
+            @Override
+            public boolean visitPreTraverse(DoorsObject object) {
+                if(Objects.equals(link.getTargetObject(), object.getAttributes().get("Absolute Number"))) {
+                    this.setResult(object);
+                    return false;
+                }
+                return true;
+            }
+            
+        });
     }
 }

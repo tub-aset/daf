@@ -2,9 +2,32 @@
  */
 package de.jpwinkler.daf.model.impl;
 
+/*-
+ * #%L
+ * dafcore
+ * %%
+ * Copyright (C) 2019 TU Berlin ASET
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #L%
+ */
+
 import de.jpwinkler.daf.model.DoorsFactory;
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsLink;
+import de.jpwinkler.daf.model.DoorsLinkResolveException;
 import de.jpwinkler.daf.model.DoorsLinkStatus;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
@@ -98,6 +121,13 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	private EDataType doorsLinkStatusEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType doorsLinkResolveExceptionEDataType = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -257,87 +287,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getDoorsTreeNode__Accept__DoorsTreeNodeVisitor() {
-		return doorsTreeNodeEClass.getEOperations().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EOperation getDoorsTreeNode__HasTag__String() {
-		return doorsTreeNodeEClass.getEOperations().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getDoorsTreeNode__HasTag__Pattern() {
-		return doorsTreeNodeEClass.getEOperations().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getDoorsTreeNode__GetTags() {
-		return doorsTreeNodeEClass.getEOperations().get(4);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getDoorsTreeNode__SetTag__String() {
-		return doorsTreeNodeEClass.getEOperations().get(5);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getDoorsTreeNode__RemoveTag__String() {
-		return doorsTreeNodeEClass.getEOperations().get(6);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getDoorsTreeNode__RemoveTag__Pattern() {
-		return doorsTreeNodeEClass.getEOperations().get(6);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getDoorsTreeNode__CanCopyFrom__DoorsTreeNode() {
-		return doorsTreeNodeEClass.getEOperations().get(8);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getDoorsTreeNode__GetChild__String() {
 		return doorsTreeNodeEClass.getEOperations().get(1);
 	}
 
@@ -347,8 +297,78 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
+	public EOperation getDoorsTreeNode__HasTag__Pattern() {
+		return doorsTreeNodeEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getDoorsTreeNode__GetTags() {
+		return doorsTreeNodeEClass.getEOperations().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getDoorsTreeNode__SetTag__String() {
+		return doorsTreeNodeEClass.getEOperations().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getDoorsTreeNode__RemoveTag__String() {
+		return doorsTreeNodeEClass.getEOperations().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getDoorsTreeNode__RemoveTag__Pattern() {
+		return doorsTreeNodeEClass.getEOperations().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getDoorsTreeNode__CanCopyFrom__DoorsTreeNode() {
+		return doorsTreeNodeEClass.getEOperations().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getDoorsTreeNode__GetChild__String() {
+		return doorsTreeNodeEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EOperation getDoorsTreeNode__ToString() {
-		return doorsTreeNodeEClass.getEOperations().get(9);
+		return doorsTreeNodeEClass.getEOperations().get(8);
 	}
 
 	/**
@@ -647,6 +667,16 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
+	public EDataType getDoorsLinkResolveException() {
+		return doorsLinkResolveExceptionEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EDataType getPattern() {
 		return patternEDataType;
 	}
@@ -707,7 +737,6 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		createEAttribute(doorsTreeNodeEClass, DOORS_TREE_NODE__NAME);
 		createEAttribute(doorsTreeNodeEClass, DOORS_TREE_NODE__FULL_NAME);
 		createEAttribute(doorsTreeNodeEClass, DOORS_TREE_NODE__FULL_NAME_SEGMENTS);
-		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___ACCEPT__DOORSTREENODEVISITOR);
 		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___HAS_TAG__STRING);
 		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___HAS_TAG__PATTERN);
 		createEOperation(doorsTreeNodeEClass, DOORS_TREE_NODE___GET_TAGS);
@@ -754,6 +783,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		// Create data types
 		doorsTreeNodeVisitorEDataType = createEDataType(DOORS_TREE_NODE_VISITOR);
 		doorsLinkStatusEDataType = createEDataType(DOORS_LINK_STATUS);
+		doorsLinkResolveExceptionEDataType = createEDataType(DOORS_LINK_RESOLVE_EXCEPTION);
 		patternEDataType = createEDataType(PATTERN);
 		collectionEDataType = createEDataType(COLLECTION);
 		nodeFilterEDataType = createEDataType(NODE_FILTER);
@@ -801,10 +831,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		initEAttribute(getDoorsTreeNode_FullName(), ecorePackage.getEString(), "fullName", null, 0, 1, DoorsTreeNode.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		initEAttribute(getDoorsTreeNode_FullNameSegments(), ecorePackage.getEString(), "fullNameSegments", null, 0, -1, DoorsTreeNode.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 
-		EOperation op = initEOperation(getDoorsTreeNode__Accept__DoorsTreeNodeVisitor(), null, "accept", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, this.getDoorsTreeNodeVisitor(), "visitor", 0, 1, IS_UNIQUE, IS_ORDERED);
-
-		op = initEOperation(getDoorsTreeNode__HasTag__String(), ecorePackage.getEBoolean(), "hasTag", 0, 1, IS_UNIQUE, IS_ORDERED);
+		EOperation op = initEOperation(getDoorsTreeNode__HasTag__String(), ecorePackage.getEBoolean(), "hasTag", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEString(), "tag", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		op = initEOperation(getDoorsTreeNode__HasTag__Pattern(), ecorePackage.getEBoolean(), "hasTag", 0, 1, IS_UNIQUE, IS_ORDERED);
@@ -868,11 +895,13 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 
 		initEOperation(getDoorsLink__GetLinkStatus(), this.getDoorsLinkStatus(), "getLinkStatus", 0, 1, IS_UNIQUE, IS_ORDERED);
 
-		initEOperation(getDoorsLink__Resolve(), this.getDoorsObject(), "resolve", 0, 1, IS_UNIQUE, IS_ORDERED);
+		op = initEOperation(getDoorsLink__Resolve(), this.getDoorsObject(), "resolve", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEException(op, this.getDoorsLinkResolveException());
 
 		// Initialize data types
 		initEDataType(doorsTreeNodeVisitorEDataType, DoorsTreeNodeVisitor.class, "DoorsTreeNodeVisitor", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(doorsLinkStatusEDataType, DoorsLinkStatus.class, "DoorsLinkStatus", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(doorsLinkResolveExceptionEDataType, DoorsLinkResolveException.class, "DoorsLinkResolveException", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(patternEDataType, Pattern.class, "Pattern", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(collectionEDataType, Collection.class, "Collection", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(nodeFilterEDataType, Predicate.class, "NodeFilter", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS, "java.util.function.Predicate<de.jpwinkler.daf.model.DoorsTreeNode>");

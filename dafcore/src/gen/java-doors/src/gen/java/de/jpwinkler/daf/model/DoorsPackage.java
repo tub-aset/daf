@@ -154,13 +154,13 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_TREE_NODE_FEATURE_COUNT = 6;
 
 	/**
-	 * The operation id for the '<em>Accept</em>' operation.
+	 * The operation id for the '<em>Has Tag</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_TREE_NODE___ACCEPT__DOORSTREENODEVISITOR = 0;
+	int DOORS_TREE_NODE___HAS_TAG__STRING = 0;
 
 	/**
 	 * The operation id for the '<em>Has Tag</em>' operation.
@@ -169,16 +169,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_TREE_NODE___HAS_TAG__STRING = 1;
-
-	/**
-	 * The operation id for the '<em>Has Tag</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DOORS_TREE_NODE___HAS_TAG__PATTERN = 2;
+	int DOORS_TREE_NODE___HAS_TAG__PATTERN = 1;
 
 	/**
 	 * The operation id for the '<em>Get Tags</em>' operation.
@@ -187,7 +178,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_TREE_NODE___GET_TAGS = 3;
+	int DOORS_TREE_NODE___GET_TAGS = 2;
 
 	/**
 	 * The operation id for the '<em>Set Tag</em>' operation.
@@ -196,7 +187,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_TREE_NODE___SET_TAG__STRING = 4;
+	int DOORS_TREE_NODE___SET_TAG__STRING = 3;
 
 	/**
 	 * The operation id for the '<em>Remove Tag</em>' operation.
@@ -205,7 +196,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_TREE_NODE___REMOVE_TAG__STRING = 5;
+	int DOORS_TREE_NODE___REMOVE_TAG__STRING = 4;
 
 	/**
 	 * The operation id for the '<em>Remove Tag</em>' operation.
@@ -214,7 +205,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_TREE_NODE___REMOVE_TAG__PATTERN = 6;
+	int DOORS_TREE_NODE___REMOVE_TAG__PATTERN = 5;
 
 	/**
 	 * The operation id for the '<em>Can Copy From</em>' operation.
@@ -223,7 +214,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_TREE_NODE___CAN_COPY_FROM__DOORSTREENODE = 7;
+	int DOORS_TREE_NODE___CAN_COPY_FROM__DOORSTREENODE = 6;
 
 	/**
 	 * The operation id for the '<em>Get Child</em>' operation.
@@ -232,7 +223,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_TREE_NODE___GET_CHILD__STRING = 8;
+	int DOORS_TREE_NODE___GET_CHILD__STRING = 7;
 
 	/**
 	 * The operation id for the '<em>To String</em>' operation.
@@ -241,7 +232,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_TREE_NODE___TO_STRING = 9;
+	int DOORS_TREE_NODE___TO_STRING = 8;
 
 	/**
 	 * The number of operations of the '<em>Tree Node</em>' class.
@@ -250,7 +241,7 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_TREE_NODE_OPERATION_COUNT = 10;
+	int DOORS_TREE_NODE_OPERATION_COUNT = 9;
 
 	/**
 	 * The meta object id for the '{@link de.jpwinkler.daf.model.impl.DoorsFolderImpl <em>Folder</em>}' class.
@@ -333,15 +324,6 @@ public interface DoorsPackage extends EPackage {
 	 * @ordered
 	 */
 	int DOORS_FOLDER_FEATURE_COUNT = DOORS_TREE_NODE_FEATURE_COUNT + 1;
-
-	/**
-	 * The operation id for the '<em>Accept</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DOORS_FOLDER___ACCEPT__DOORSTREENODEVISITOR = DOORS_TREE_NODE___ACCEPT__DOORSTREENODEVISITOR;
 
 	/**
 	 * The operation id for the '<em>Has Tag</em>' operation.
@@ -505,15 +487,6 @@ public interface DoorsPackage extends EPackage {
 	 * @ordered
 	 */
 	int DOORS_MODULE_FEATURE_COUNT = DOORS_TREE_NODE_FEATURE_COUNT + 0;
-
-	/**
-	 * The operation id for the '<em>Accept</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DOORS_MODULE___ACCEPT__DOORSTREENODEVISITOR = DOORS_TREE_NODE___ACCEPT__DOORSTREENODEVISITOR;
 
 	/**
 	 * The operation id for the '<em>Has Tag</em>' operation.
@@ -778,15 +751,6 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_OBJECT_FEATURE_COUNT = DOORS_TREE_NODE_FEATURE_COUNT + 8;
 
 	/**
-	 * The operation id for the '<em>Accept</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DOORS_OBJECT___ACCEPT__DOORSTREENODEVISITOR = DOORS_TREE_NODE___ACCEPT__DOORSTREENODEVISITOR;
-
-	/**
 	 * The operation id for the '<em>Has Tag</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1040,15 +1004,6 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_TABLE_ROW_FEATURE_COUNT = DOORS_OBJECT_FEATURE_COUNT + 0;
 
 	/**
-	 * The operation id for the '<em>Accept</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DOORS_TABLE_ROW___ACCEPT__DOORSTREENODEVISITOR = DOORS_OBJECT___ACCEPT__DOORSTREENODEVISITOR;
-
-	/**
 	 * The operation id for the '<em>Has Tag</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1296,6 +1251,16 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_LINK_STATUS = 8;
 
 	/**
+	 * The meta object id for the '<em>Link Resolve Exception</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see de.jpwinkler.daf.model.DoorsLinkResolveException
+	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getDoorsLinkResolveException()
+	 * @generated
+	 */
+	int DOORS_LINK_RESOLVE_EXCEPTION = 9;
+
+	/**
 	 * The meta object id for the '<em>Pattern</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1303,7 +1268,7 @@ public interface DoorsPackage extends EPackage {
 	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getPattern()
 	 * @generated
 	 */
-	int PATTERN = 9;
+	int PATTERN = 10;
 
 	/**
 	 * The meta object id for the '<em>Collection</em>' data type.
@@ -1313,7 +1278,7 @@ public interface DoorsPackage extends EPackage {
 	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getCollection()
 	 * @generated
 	 */
-	int COLLECTION = 10;
+	int COLLECTION = 11;
 
 	/**
 	 * The meta object id for the '<em>Node Filter</em>' data type.
@@ -1323,7 +1288,7 @@ public interface DoorsPackage extends EPackage {
 	 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getNodeFilter()
 	 * @generated
 	 */
-	int NODE_FILTER = 11;
+	int NODE_FILTER = 12;
 
 
 	/**
@@ -1401,16 +1366,6 @@ public interface DoorsPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getDoorsTreeNode_FullNameSegments();
-
-	/**
-	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsTreeNode#accept(de.jpwinkler.daf.model.DoorsTreeNodeVisitor) <em>Accept</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Accept</em>' operation.
-	 * @see de.jpwinkler.daf.model.DoorsTreeNode#accept(de.jpwinkler.daf.model.DoorsTreeNodeVisitor)
-	 * @generated
-	 */
-	EOperation getDoorsTreeNode__Accept__DoorsTreeNodeVisitor();
 
 	/**
 	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsTreeNode#hasTag(java.lang.String) <em>Has Tag</em>}' operation.
@@ -1811,6 +1766,17 @@ public interface DoorsPackage extends EPackage {
 	EDataType getDoorsLinkStatus();
 
 	/**
+	 * Returns the meta object for data type '{@link de.jpwinkler.daf.model.DoorsLinkResolveException <em>Link Resolve Exception</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Link Resolve Exception</em>'.
+	 * @see de.jpwinkler.daf.model.DoorsLinkResolveException
+	 * @model instanceClass="de.jpwinkler.daf.model.DoorsLinkResolveException"
+	 * @generated
+	 */
+	EDataType getDoorsLinkResolveException();
+
+	/**
 	 * Returns the meta object for data type '{@link java.util.regex.Pattern <em>Pattern</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1923,14 +1889,6 @@ public interface DoorsPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute DOORS_TREE_NODE__FULL_NAME_SEGMENTS = eINSTANCE.getDoorsTreeNode_FullNameSegments();
-
-		/**
-		 * The meta object literal for the '<em><b>Accept</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation DOORS_TREE_NODE___ACCEPT__DOORSTREENODEVISITOR = eINSTANCE.getDoorsTreeNode__Accept__DoorsTreeNodeVisitor();
 
 		/**
 		 * The meta object literal for the '<em><b>Has Tag</b></em>' operation.
@@ -2251,6 +2209,16 @@ public interface DoorsPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType DOORS_LINK_STATUS = eINSTANCE.getDoorsLinkStatus();
+
+		/**
+		 * The meta object literal for the '<em>Link Resolve Exception</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see de.jpwinkler.daf.model.DoorsLinkResolveException
+		 * @see de.jpwinkler.daf.model.impl.DoorsPackageImpl#getDoorsLinkResolveException()
+		 * @generated
+		 */
+		EDataType DOORS_LINK_RESOLVE_EXCEPTION = eINSTANCE.getDoorsLinkResolveException();
 
 		/**
 		 * The meta object literal for the '<em>Pattern</em>' data type.

@@ -22,7 +22,7 @@ package de.jpwinkler.daf.model;
  * #L%
  */
 
-public abstract class DoorsTreeNodeVisitor<T extends DoorsTreeNode> {
+public abstract class DoorsTreeNodeVisitor<T extends DoorsTreeNode, U> {
     public DoorsTreeNodeVisitor() {
         this.visitedNodeCls = null;
     }
@@ -32,12 +32,13 @@ public abstract class DoorsTreeNodeVisitor<T extends DoorsTreeNode> {
     }
 
     private final Class<T> visitedNodeCls;
+    private U result;
 
     public Class<T> getVisitedNodeClass() {
         return visitedNodeCls;
     }
 
-    public final void traverse(final DoorsTreeNode node) {
+    public final U traverse(final DoorsTreeNode node) {
         boolean classMatch = visitedNodeCls == null || visitedNodeCls.isAssignableFrom(node.getClass());
 
         if (!classMatch || visitPreTraverse((T) node)) {
@@ -49,6 +50,8 @@ public abstract class DoorsTreeNodeVisitor<T extends DoorsTreeNode> {
         if (classMatch) {
             visitPostTraverse((T) node);
         }
+        
+        return result;
     }
 
     public boolean visitPreTraverse(final T object) {
@@ -58,5 +61,15 @@ public abstract class DoorsTreeNodeVisitor<T extends DoorsTreeNode> {
     public void visitPostTraverse(final T object) {
 
     }
+
+    public final U getResult() {
+        return result;
+    }
+
+    protected final void setResult(U result) {
+        this.result = result;
+    }
+    
+    
 
 }

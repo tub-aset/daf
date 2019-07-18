@@ -26,10 +26,14 @@ package de.jpwinkler.daf.gui.controls;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
+import de.jpwinkler.daf.model.DoorsLink;
 import de.jpwinkler.daf.model.DoorsLinkStatus;
 import de.jpwinkler.daf.model.DoorsObject;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 
 /**
@@ -38,17 +42,37 @@ import javafx.scene.control.TableColumn;
  */
 public class LinksTableCell<T extends DoorsObject> extends CustomTextAreaTableCell<T> {
 
-    public LinksTableCell(TableColumn<T, T> tc, BiConsumer<T, String> editCommand) {
+    public LinksTableCell(TableColumn<T, T> tc, BiConsumer<T, String> editCommand, Consumer<DoorsLink> linkOpener) {
         super(tc, it -> it.getOutgoingLinks().stream()
                 .map(ol -> ol.getTargetModule() + ":" + ol.getTargetObject())
                 .collect(Collectors.joining("\n")),
-                editCommand);
+                editCommand, (cell, it) -> {
+                });
+
+        ContextMenu contextMenu = new ContextMenu();
+        contextMenu.getItems().add(new MenuItem("test"));
+        this.setContextMenu(contextMenu);
+
+        contextMenu.setOnShowing(ev -> {
+            contextMenu.getItems().clear();
+            this.getItem().getOutgoingLinks()
+                    .stream()
+                    .map(ol -> {
+                        MenuItem mi = new MenuItem("Go to " + ol.getTargetModule() + ":" + ol.getTargetObject());
+                        mi.setOnAction(e -> {
+                            linkOpener.accept(ol);
+                            this.updateItem(getItem(), false);
+                        });
+                        return mi;
+                    })
+                    .forEach(contextMenu.getItems()::add);
+        });
     }
 
     @Override
     public void updateItem(final T item, final boolean empty) {
         super.updateItem(item, empty);
-        if(item == null) {
+        if (item == null) {
             return;
         }
 

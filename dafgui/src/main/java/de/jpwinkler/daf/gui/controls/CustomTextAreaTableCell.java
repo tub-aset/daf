@@ -22,7 +22,6 @@ package de.jpwinkler.daf.gui.controls;
  * #L%
  */
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -30,7 +29,6 @@ import javafx.scene.Node;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -44,25 +42,26 @@ public class CustomTextAreaTableCell<T> extends TableCell<T, T> {
     private boolean editAllowed = false;
     private final Function<T, String> toStringFun;
     private final BiConsumer<T, String> editCommand;
+    private TextArea textArea;
 
     public CustomTextAreaTableCell(TableColumn<T, T> tc, Function<T, String> toString, BiConsumer<T, String> editCommand) {
-        this(tc, toString, editCommand, (x) -> {
+        this(tc, toString, editCommand, (x, y) -> {
         });
     }
 
-    public CustomTextAreaTableCell(TableColumn<T, T> tc, Function<T, String> toString, BiConsumer<T, String> editCommand, Consumer<T> opener) {
+    public CustomTextAreaTableCell(TableColumn<T, T> tc, Function<T, String> toString, BiConsumer<T, String> editCommand, BiConsumer<CustomTextAreaTableCell<T>, T> opener) {
         tc.setCellValueFactory((it) -> new ReadOnlyObjectWrapper<>(it.getValue()));
         this.toStringFun = toString;
         this.editCommand = editCommand;
 
         this.addEventFilter(MouseEvent.MOUSE_CLICKED, (eh) -> {
             if (!this.isEditing() && eh.getClickCount() >= 2 && eh.getButton() == MouseButton.PRIMARY) {
-                opener.accept(this.getItem());
-                eh.consume();
-            } else if (eh.getClickCount() == 1 && eh.getButton() == MouseButton.SECONDARY) {
                 editAllowed = true;
                 super.getTableView().edit(this.getTableRow().getIndex(), this.getTableColumn());
                 editAllowed = false;
+                eh.consume();
+            } else if (eh.getClickCount() == 1 && eh.getButton() == MouseButton.SECONDARY) {
+                opener.accept(this, this.getItem());
                 eh.consume();
             }
         });
@@ -92,8 +91,6 @@ public class CustomTextAreaTableCell<T> extends TableCell<T, T> {
         });
         return textArea;
     }
-
-    private TextArea textArea;
 
     @Override
     public void startEdit() {
@@ -137,7 +134,6 @@ public class CustomTextAreaTableCell<T> extends TableCell<T, T> {
         if (this.isEmpty()) {
             this.setText(null);
             this.setGraphic(null);
-            this.setTooltip(null);
 
         } else {
             if (this.isEditing()) {
@@ -146,15 +142,9 @@ public class CustomTextAreaTableCell<T> extends TableCell<T, T> {
                 }
                 this.setText(null);
                 this.setGraphic(textArea);
-                this.setTooltip(null);
             } else {
                 this.setText(getItemText());
                 this.setGraphic(null);
-
-                Tooltip tooltip = new Tooltip(getItemText());
-                tooltip.setWrapText(true);
-                tooltip.prefWidthProperty().bind(this.widthProperty());
-                this.setTooltip(tooltip);
             }
         }
     }

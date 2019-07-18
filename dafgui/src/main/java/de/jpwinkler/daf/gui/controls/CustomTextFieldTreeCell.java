@@ -54,12 +54,12 @@ public class CustomTextFieldTreeCell<T> extends TextFieldTreeCell<T> {
         });
         this.addEventFilter(MouseEvent.MOUSE_CLICKED, (eh) -> {
             if (!this.isEditing() && eh.getClickCount() >= 2 && eh.getButton() == MouseButton.PRIMARY) {
-                opener.accept(this.getItem());
-                eh.consume();
-            } else if (eh.getClickCount() == 1 && eh.getButton() == MouseButton.SECONDARY) {
                 editAllowed = true;
                 super.getTreeView().edit(this.getTreeItem());
                 editAllowed = false;
+                eh.consume();
+            } else if (eh.getClickCount() == 1 && eh.getButton() == MouseButton.SECONDARY) {
+                opener.accept(this.getItem());
                 eh.consume();
             }
         });

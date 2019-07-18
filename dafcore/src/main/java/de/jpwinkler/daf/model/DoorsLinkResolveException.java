@@ -1,3 +1,8 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package de.jpwinkler.daf.model;
 
 /*-
@@ -22,28 +27,19 @@ package de.jpwinkler.daf.model;
  * #L%
  */
 
-public class FindObjectVisitor extends DoorsTreeNodeVisitor<DoorsObject> {
+/**
+ *
+ * @author fwiesweg
+ */
+public class DoorsLinkResolveException extends Exception {
+    private final DoorsLink doorsLink;
 
-    private final String objectIdentifier;
-
-    private DoorsObject object;
-
-    public FindObjectVisitor(final String objectIdentifier) {
-        super(DoorsObject.class);
-        this.objectIdentifier = objectIdentifier;
+    public DoorsLinkResolveException(DoorsLink doorsLink, String message) {
+        super(message);
+        this.doorsLink = doorsLink;
     }
 
-    @Override
-    public boolean visitPreTraverse(final DoorsObject object) {
-        if (object.getObjectIdentifier() != null && object.getObjectIdentifier().equals(objectIdentifier)) {
-            this.object = object;
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    public DoorsObject getObject() {
-        return object;
+    public DoorsLink getDoorsLink() {
+        return doorsLink;
     }
 }

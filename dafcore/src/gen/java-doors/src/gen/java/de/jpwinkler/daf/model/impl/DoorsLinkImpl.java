@@ -24,6 +24,7 @@ package de.jpwinkler.daf.model.impl;
  * #L%
  */
 import de.jpwinkler.daf.model.DoorsLink;
+import de.jpwinkler.daf.model.DoorsLinkResolveException;
 import de.jpwinkler.daf.model.DoorsLinkStatus;
 import de.jpwinkler.daf.model.DoorsModelUtil;
 import de.jpwinkler.daf.model.DoorsObject;
@@ -246,14 +247,14 @@ public class DoorsLinkImpl extends MinimalEObjectImpl.Container implements Doors
      * <!-- end-user-doc --> @generated NOT
      */
     @Override
-    public DoorsObject resolve() {
+    public DoorsObject resolve() throws DoorsLinkResolveException {
         if (targetStatus != DoorsLinkStatus.RESOLVED) {
             try {
-            this.target = DoorsModelUtil.resolve(this);
-            this.targetStatus = DoorsLinkStatus.RESOLVED;
-            } catch(IllegalStateException ex) {
+                this.target = DoorsModelUtil.resolve(this);
+                this.targetStatus = DoorsLinkStatus.RESOLVED;
+            } catch(DoorsLinkResolveException ex) {
                 this.targetStatus = DoorsLinkStatus.RESOLVE_FAILED;
-                throw new RuntimeException(ex);
+                throw ex;
             }
         }
         return target;
@@ -372,7 +373,12 @@ public class DoorsLinkImpl extends MinimalEObjectImpl.Container implements Doors
 			case DoorsPackage.DOORS_LINK___GET_LINK_STATUS:
 				return getLinkStatus();
 			case DoorsPackage.DOORS_LINK___RESOLVE:
-				return resolve();
+				try {
+					return resolve();
+				}
+				catch (Throwable throwable) {
+					throw new InvocationTargetException(throwable);
+				}
 		}
 		return super.eInvoke(operationID, arguments);
 	}

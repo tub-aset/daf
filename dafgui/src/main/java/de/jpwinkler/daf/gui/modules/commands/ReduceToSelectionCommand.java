@@ -59,7 +59,7 @@ public class ReduceToSelectionCommand extends AbstractCommand {
 
     @Override
     public void apply() {
-        module.accept(new DoorsTreeNodeVisitor<DoorsObject>(DoorsObject.class) {
+        module.accept(new DoorsTreeNodeVisitor<DoorsObject, Void>(DoorsObject.class) {
             @Override
             public void visitPostTraverse(DoorsObject object) {
                 if (!retainedObjects.contains(object)) {

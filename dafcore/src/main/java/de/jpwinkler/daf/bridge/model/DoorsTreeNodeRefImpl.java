@@ -99,15 +99,14 @@ abstract class DoorsTreeNodeRefImpl implements DoorsTreeNode {
     }
 
     @Override
-    public void accept(DoorsTreeNodeVisitor visitor) {
-        visitor.traverse(this);
+    public <T extends DoorsTreeNode, U> U accept(DoorsTreeNodeVisitor<T, U> visitor) {
+        return visitor.traverse(this);
     }
 
     @Override
-    public CompletableFuture<Void> acceptAsync(BackgroundTaskExecutor executor, DoorsTreeNodeVisitor visitor) {
+    public <T extends DoorsTreeNode, U> CompletableFuture<U> acceptAsync(BackgroundTaskExecutor executor, DoorsTreeNodeVisitor<T, U> visitor) {
         return executor.runBackgroundTask("Visiting nodes", i -> {
-            this.accept(visitor);
-            return null;
+            return this.accept(visitor);
         });
     }
 

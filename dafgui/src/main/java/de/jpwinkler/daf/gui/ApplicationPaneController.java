@@ -390,45 +390,48 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
     @Override
     public ApplicationPartController open(ApplicationPart part, OpenFlag openFlag) {
-        if (tabPane.getTabs().stream()
+        Tab tab = tabPane.getTabs().stream()
                 .filter(t -> part.equals((ApplicationPart) t.getUserData()))
                 .findAny()
                 .map(t -> {
+                    if (openFlag == OpenFlag.ERASE_IF_EXISTS) {
+                        setStatus("Database " + part.getDatabasePath().toString() + " could not be created: already open");
+                        return null;
+                    }
+
                     addToRecentMenu(part);
                     tabPane.getSelectionModel().select(t);
                     return t;
-                }).isPresent()) {
+                })
+                .orElseGet(() -> {
+                    try {
+                        final ApplicationPartController controller = part.start(this, openFlag);
+                        final Parent modulePane = controller.getNode();
 
-            if (openFlag == OpenFlag.ERASE_IF_EXISTS) {
-                setStatus("Database " + part.getDatabasePath().toString() + " could not be created: already open");
-            }
+                        final Tab newTab = new Tab(part.toString(), modulePane);
+                        newTab.setTooltip(new Tooltip(part.toString()));
 
-            addToRecentMenu(part);
-            return getApplicationPartController(tabPane.getSelectionModel().getSelectedItem());
-        }
+                        newTab.setUserData(part);
+                        applicationPartControllers.put(part, controller);
 
-        try {
-            final ApplicationPartController controller = part.start(this, openFlag);
-            final Parent modulePane = controller.getNode();
+                        newTab.setClosable(true);
+                        tabPane.getTabs().add(newTab);
+                        return newTab;
+                    } catch (Throwable ex) {
+                        ex.printStackTrace();
 
-            final Tab selectedTab = new Tab(part.toString(), modulePane);
-            selectedTab.setTooltip(new Tooltip(part.toString()));
+                        setStatus("Open: Failed to open database; " + getMessage(ex));
+                        return null;
+                    }
+                });
 
-            selectedTab.setUserData(part);
-            applicationPartControllers.put(part, controller);
-
-            selectedTab.setClosable(true);
-            tabPane.getTabs().add(selectedTab);
-
-            tabPane.getSelectionModel().select(selectedTab);
-            addToRecentMenu(part);
-            return controller;
-        } catch (Throwable ex) {
-            ex.printStackTrace();
-
-            setStatus("Open: Failed to open database; " + getMessage(ex));
+        if (tab == null) {
             return null;
         }
+
+        addToRecentMenu(part);
+        tabPane.getSelectionModel().select(tab);
+        return getApplicationPartController(tabPane.getSelectionModel().getSelectedItem());
     }
 
     public static String getMessage(Throwable t) {

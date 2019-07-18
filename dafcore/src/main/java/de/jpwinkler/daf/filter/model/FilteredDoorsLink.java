@@ -27,6 +27,7 @@ package de.jpwinkler.daf.filter.model;
  * #L%
  */
 import de.jpwinkler.daf.model.DoorsLink;
+import de.jpwinkler.daf.model.DoorsLinkResolveException;
 import de.jpwinkler.daf.model.DoorsLinkStatus;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
@@ -60,7 +61,7 @@ public class FilteredDoorsLink implements DoorsLink {
     }
 
     @Override
-    public DoorsObject resolve() {
+    public DoorsObject resolve() throws DoorsLinkResolveException {
         DoorsObject target = self.resolve();
         if (!predicate.test(target)) {
             return null;
@@ -93,7 +94,14 @@ public class FilteredDoorsLink implements DoorsLink {
     public DoorsLinkStatus getLinkStatus() {
         DoorsLinkStatus status = self.getLinkStatus();
         if (status == DoorsLinkStatus.RESOLVED) {
-            return predicate.test(self.resolve()) ? DoorsLinkStatus.RESOLVED : DoorsLinkStatus.RESOLVE_FAILED;
+            DoorsObject linkTarget;
+            try {
+                linkTarget = self.resolve();
+            } catch (DoorsLinkResolveException ex) {
+                throw new AssertionError(ex);
+            }
+
+            return predicate.test(linkTarget) ? DoorsLinkStatus.RESOLVED : DoorsLinkStatus.RESOLVE_FAILED;
         } else {
             return status;
         }

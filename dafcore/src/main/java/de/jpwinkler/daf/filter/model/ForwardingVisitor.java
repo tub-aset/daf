@@ -35,12 +35,12 @@ import java.util.function.Predicate;
  *
  * @author fwiesweg
  */
-class ForwardingVisitor<T extends DoorsTreeNode> extends DoorsTreeNodeVisitor<T> {
+class ForwardingVisitor<T extends DoorsTreeNode, U> extends DoorsTreeNodeVisitor<T, U> {
     
-    private DoorsTreeNodeVisitor<T> self;
+    private DoorsTreeNodeVisitor<T, U> self;
     private Predicate<DoorsTreeNode> filter;
 
-    public ForwardingVisitor(DoorsTreeNodeVisitor<T> self, Predicate<DoorsTreeNode> filter) {
+    public ForwardingVisitor(DoorsTreeNodeVisitor<T, U> self, Predicate<DoorsTreeNode> filter) {
         super(self.getVisitedNodeClass());
         this.self = self;
         this.filter = filter;

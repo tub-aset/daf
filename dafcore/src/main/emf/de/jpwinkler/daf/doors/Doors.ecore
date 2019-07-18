@@ -4,6 +4,7 @@
     
     <eClassifiers xsi:type="ecore:EDataType" name="DoorsTreeNodeVisitor" instanceClassName="de.jpwinkler.daf.model.DoorsTreeNodeVisitor"/>
     <eClassifiers xsi:type="ecore:EDataType" name="DoorsLinkStatus" instanceClassName="de.jpwinkler.daf.model.DoorsLinkStatus"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="DoorsLinkResolveException" instanceClassName="de.jpwinkler.daf.model.DoorsLinkResolveException"/>
     <eClassifiers xsi:type="ecore:EDataType" name="Pattern" instanceClassName="java.util.regex.Pattern"/>
     <eClassifiers xsi:type="ecore:EDataType" name="Collection" instanceClassName="java.util.Collection"/>
     <eClassifiers xsi:type="ecore:EDataType" name="NodeFilter" instanceTypeName="java.util.function.Predicate&lt;de.jpwinkler.daf.model.DoorsTreeNode&gt;"/>
@@ -61,7 +62,7 @@
     
     <eClassifiers xsi:type="ecore:EClass" name="DoorsLink">
         <eOperations name="getLinkStatus" eType="#//DoorsLinkStatus"/>
-        <eOperations name="resolve" eType="#//DoorsObject"/>
+        <eOperations name="resolve" eType="#//DoorsObject" eExceptions="#//DoorsLinkResolveException"/>
         
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="targetModule" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="targetObject" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -71,9 +72,6 @@
     </eClassifiers>
   
     <eClassifiers xsi:type="ecore:EClass" name="DoorsTreeNode" abstract="true">
-        <eOperations name="accept">
-            <eParameters name="visitor" eType="#//DoorsTreeNodeVisitor"/>
-        </eOperations>
         <eStructuralFeatures xsi:type="ecore:EReference" name="children" upperBound="-1"
                              eType="#//DoorsTreeNode" containment="true" resolveProxies="false" eOpposite="#//DoorsTreeNode/parent"/>
         <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//DoorsTreeNode"

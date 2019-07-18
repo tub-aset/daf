@@ -109,7 +109,7 @@ public class FolderDatabaseInterface implements DatabaseInterface {
     public final void flush() throws IOException {
         FileUtils.deleteDirectory(new File(databasePath.getDatabasePath()));
         this.databaseRoot.setName(new File(databasePath.getDatabasePath()).getName());
-        databaseRoot.accept(new DoorsTreeNodeVisitor<DoorsFolder>(DoorsFolder.class) {
+        databaseRoot.accept(new DoorsTreeNodeVisitor<DoorsFolder, Void>(DoorsFolder.class) {
             @Override
             public void visitPostTraverse(DoorsFolder f) {
                 try {
@@ -128,7 +128,7 @@ public class FolderDatabaseInterface implements DatabaseInterface {
             }
         });
 
-        databaseRoot.accept(new DoorsTreeNodeVisitor<DoorsModule>(DoorsModule.class) {
+        databaseRoot.accept(new DoorsTreeNodeVisitor<DoorsModule, Void>(DoorsModule.class) {
             @Override
             public void visitPostTraverse(DoorsModule m) {
                 try {

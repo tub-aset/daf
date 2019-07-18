@@ -21,7 +21,6 @@ package de.jpwinkler.daf.gui.controls;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -37,7 +36,7 @@ import javafx.util.StringConverter;
  * @author fwiesweg
  */
 public class CustomTextFieldTableCell<T> extends TextFieldTableCell<T, T> {
-    
+
     private boolean editAllowed = false;
 
     public CustomTextFieldTableCell(TableColumn<T, T> tc, Function<T, String> toString, BiConsumer<T, String> editCommand) {
@@ -62,12 +61,12 @@ public class CustomTextFieldTableCell<T> extends TextFieldTableCell<T, T> {
         });
         this.addEventFilter(MouseEvent.MOUSE_CLICKED, (eh) -> {
             if (!this.isEditing() && eh.getClickCount() >= 2 && eh.getButton() == MouseButton.PRIMARY) {
-                opener.accept(this.getItem());
-                eh.consume();
-            } else if (eh.getClickCount() == 1 && eh.getButton() == MouseButton.SECONDARY) {
                 editAllowed = true;
                 super.getTableView().edit(this.getTableRow().getIndex(), this.getTableColumn());
                 editAllowed = false;
+                eh.consume();
+            } else if (eh.getClickCount() == 1 && eh.getButton() == MouseButton.SECONDARY) {
+                opener.accept(this.getItem());
                 eh.consume();
             }
         });
@@ -79,5 +78,5 @@ public class CustomTextFieldTableCell<T> extends TextFieldTableCell<T, T> {
             super.startEdit();
         }
     }
-    
+
 }

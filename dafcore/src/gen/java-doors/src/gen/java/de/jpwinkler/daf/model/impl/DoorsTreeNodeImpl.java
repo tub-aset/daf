@@ -247,16 +247,6 @@ public abstract class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container imp
     }
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     *
-     * @generated NOT
-     */
-    @Override
-    public void accept(final DoorsTreeNodeVisitor visitor) {
-        visitor.traverse(this);
-    }
-
-    /**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated NOT
@@ -483,9 +473,6 @@ public abstract class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container imp
     @SuppressWarnings("unchecked")
     public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
-			case DoorsPackage.DOORS_TREE_NODE___ACCEPT__DOORSTREENODEVISITOR:
-				accept((DoorsTreeNodeVisitor)arguments.get(0));
-				return null;
 			case DoorsPackage.DOORS_TREE_NODE___HAS_TAG__STRING:
 				return hasTag((String)arguments.get(0));
 			case DoorsPackage.DOORS_TREE_NODE___HAS_TAG__PATTERN:
@@ -552,9 +539,19 @@ public abstract class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container imp
      * <!-- end-user-doc --> @generated NOT
      */
     @Override
-    public CompletableFuture<Void> acceptAsync(BackgroundTaskExecutor executor, DoorsTreeNodeVisitor visitor) {
-        this.accept(visitor);
-        return CompletableFuture.completedFuture(null);
+    public <T extends DoorsTreeNode, U> U accept(DoorsTreeNodeVisitor<T, U> visitor) {
+        return visitor.traverse(this);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated NOT
+     */
+    @Override
+    public <T extends DoorsTreeNode, U> CompletableFuture<U> acceptAsync(BackgroundTaskExecutor executor, DoorsTreeNodeVisitor<T,U> visitor) {
+        return executor.runBackgroundTask("Visiting nodes", i -> {
+            return this.accept(visitor);
+        });
     }
 
     /**
