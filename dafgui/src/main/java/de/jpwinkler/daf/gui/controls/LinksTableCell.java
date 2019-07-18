@@ -58,7 +58,8 @@ public class LinksTableCell<T extends DoorsObject> extends CustomTextAreaTableCe
             this.getItem().getOutgoingLinks()
                     .stream()
                     .map(ol -> {
-                        MenuItem mi = new MenuItem("Go to " + ol.getTargetModule() + ":" + ol.getTargetObject());
+                        MenuItem mi = new MenuItem(("Go to " + ol.getTargetModule() + ":" + ol.getTargetObject()).trim());
+                        mi.setMnemonicParsing(false);
                         mi.setOnAction(e -> {
                             linkOpener.accept(ol);
                             this.updateItem(getItem(), false);
