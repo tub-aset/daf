@@ -63,6 +63,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -189,6 +190,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
                 this.filteredModule = actualModule;
                 updateGui(ModuleUpdateAction.UPDATE_COLUMNS, ModuleUpdateAction.UPDATE_CONTENT_VIEW, ModuleUpdateAction.UPDATE_OUTLINE_VIEW);
                 traverseTreeItem(outlineTreeView.getRoot(), ti -> ti.setExpanded(true));
+                loadingDone.complete(null);
             });
         }).exceptionally(t -> {
             Platform.runLater(() -> {
@@ -205,6 +207,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
     private final Map<DoorsTreeNode, Boolean> expanded = new WeakHashMap<>();
     private DoorsModule filteredModule;
     private DoorsModule actualModule;
+    private CompletableFuture<Void> loadingDone = new CompletableFuture<>();
 
     private ViewDefinition currentView;
 
@@ -545,23 +548,25 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
     @Override
     public void selectLinkTarget(DoorsObject linkTarget) {
-        DoorsObject localLinkTarget = this.filteredModule.accept(new DoorsTreeNodeVisitor<DoorsObject, DoorsObject>(DoorsObject.class) {
-            @Override
-            public boolean visitPreTraverse(DoorsObject object) {
-                if (object.getAbsoluteNumber() == linkTarget.getAbsoluteNumber()) {
-                    setResult(object);
-                    return false;
+        loadingDone.thenRun(() -> Platform.runLater( () -> {
+            DoorsObject localLinkTarget = this.filteredModule.accept(new DoorsTreeNodeVisitor<DoorsObject, DoorsObject>(DoorsObject.class) {
+                @Override
+                public boolean visitPreTraverse(DoorsObject object) {
+                    if (object.getAbsoluteNumber() == linkTarget.getAbsoluteNumber()) {
+                        setResult(object);
+                        return false;
+                    }
+
+                    return true;
                 }
-
-                return true;
+            });
+            if (localLinkTarget == null) {
+                return;
             }
-        });
-        if (localLinkTarget == null) {
-            return;
-        }
 
-        this.contentTableView.getSelectionModel().clearSelection();
-        this.contentTableView.getSelectionModel().select(localLinkTarget);
+            this.contentTableView.getSelectionModel().clearSelection();
+            this.contentTableView.getSelectionModel().select(localLinkTarget);
+        }));
     }
 
     @FXML
