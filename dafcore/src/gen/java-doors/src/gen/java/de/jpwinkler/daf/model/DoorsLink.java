@@ -2,6 +2,9 @@
  */
 package de.jpwinkler.daf.model;
 
+import de.jpwinkler.daf.db.BackgroundTaskExecutor;
+import java.util.concurrent.CompletableFuture;
+
 /*-
  * #%L
  * dafcore
@@ -127,5 +130,14 @@ public interface DoorsLink {
 	 * @generated
 	 */
 	DoorsObject resolve() throws DoorsLinkResolveException;
+        
+        /**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+        default CompletableFuture<DoorsObject> resolveAsync(BackgroundTaskExecutor exec) {
+            return exec.runBackgroundTask("Resolve link", i -> this.resolve());
+        }
 
 } // DoorsLink

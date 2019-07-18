@@ -29,8 +29,6 @@ import de.jpwinkler.daf.gui.commands.AbstractCommand;
 import de.jpwinkler.daf.gui.commands.UpdateAction;
 import de.jpwinkler.daf.gui.controls.ExtensionPane;
 import de.jpwinkler.daf.model.DoorsLink;
-import de.jpwinkler.daf.model.DoorsLinkResolveException;
-import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.io.IOException;
 import java.net.URL;
@@ -139,18 +137,25 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
     }
 
     @Override
-    public ApplicationPartInterface open(DoorsLink dl, OpenFlag openFlag) {
-        DoorsObject linkTarget;
-        try {
-            linkTarget = dl.resolve();
-        } catch (DoorsLinkResolveException ex) {
-            setStatus(ex.getMessage());
-            return null;
-        }
+    public CompletableFuture<ApplicationPartInterface> open(DoorsLink dl, OpenFlag openFlag) {
+        return dl.resolveAsync(applicationController.getBackgroundTaskExecutor())
+                .handle((linkTarget, ex) -> {
+                    if (ex != null) {
+                        Platform.runLater(() -> setStatus(ex.getMessage()));
+                        return null;
+                    }
 
-        ApplicationPartInterface appPartInterface = applicationController.open(applicationPart.getDatabasePath().withPath(dl.getTargetModule()), openFlag);
-        appPartInterface.selectLinkTarget(linkTarget);
-        return appPartInterface;
+                    return linkTarget;
+                })
+                .thenCompose(linkTarget -> {
+                    CompletableFuture<ApplicationPartInterface> appPartInterfaceFuture = new CompletableFuture<>();
+                    Platform.runLater(() -> {
+                        ApplicationPartInterface appPartInterface = applicationController.open(applicationPart.getDatabasePath().withPath(dl.getTargetModule()), openFlag);
+                        appPartInterface.selectLinkTarget(linkTarget);
+                        appPartInterfaceFuture.complete(appPartInterface);
+                    });
+                    return appPartInterfaceFuture;
+                });
     }
 
     @Override

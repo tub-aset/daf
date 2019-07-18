@@ -31,7 +31,7 @@ package de.jpwinkler.daf.model;
  *
  * @author fwiesweg
  */
-public class DoorsLinkResolveException extends Exception {
+public class DoorsLinkResolveException extends RuntimeException {
     private final DoorsLink doorsLink;
 
     public DoorsLinkResolveException(DoorsLink doorsLink, String message) {

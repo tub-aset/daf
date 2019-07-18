@@ -55,7 +55,7 @@ public interface ApplicationPartInterface {
     
     ApplicationPartInterface open(ApplicationPart part, OpenFlag openFlag);
     
-    ApplicationPartInterface open(DoorsLink dl, OpenFlag openFlag);
+    CompletableFuture<ApplicationPartInterface> open(DoorsLink dl, OpenFlag openFlag);
 
     SelectionModel<DoorsFolder> getCurrentFolderSelectionModel();
 
