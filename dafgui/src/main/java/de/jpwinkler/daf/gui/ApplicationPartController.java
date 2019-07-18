@@ -139,15 +139,12 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
     @Override
     public CompletableFuture<ApplicationPartInterface> open(DoorsLink dl, OpenFlag openFlag) {
         return dl.resolveAsync(applicationController.getBackgroundTaskExecutor())
-                .handle((linkTarget, ex) -> {
+                .whenComplete( (linkTarget, ex) -> {
                     if (ex != null) {
                         Platform.runLater(() -> setStatus(ex.getMessage()));
-                        return null;
                     }
-
-                    return linkTarget;
                 })
-                .thenCompose(linkTarget -> {
+                .thenCompose(linkTarget -> {                    
                     CompletableFuture<ApplicationPartInterface> appPartInterfaceFuture = new CompletableFuture<>();
                     Platform.runLater(() -> {
                         ApplicationPartInterface appPartInterface = applicationController.open(applicationPart.getDatabasePath().withPath(dl.getTargetModule()), openFlag);

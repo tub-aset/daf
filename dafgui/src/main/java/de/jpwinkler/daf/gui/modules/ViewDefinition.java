@@ -21,7 +21,6 @@ package de.jpwinkler.daf.gui.modules;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.ModuleCSV;
 import de.jpwinkler.daf.gui.ApplicationPartInterface;
 import de.jpwinkler.daf.gui.controls.CombinedTextHeadingCell;
@@ -41,7 +40,7 @@ import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
 
 public class ViewDefinition implements Serializable {
-    
+
     public static final ViewDefinition STANDARD_VIEW = new ViewDefinition("Standard");
 
     static {
@@ -51,23 +50,23 @@ public class ViewDefinition implements Serializable {
         cd.setWidth(100);
         cd.setVisible(true);
         STANDARD_VIEW.getColumns().add(cd);
-        
+
         cd = new ColumnDefinition(ColumnType.ATTRIBUTE, "Absolute Number");
         cd.setAttributeName("Absolute Number");
         cd.setWidth(100);
         cd.setVisible(true);
         STANDARD_VIEW.getColumns().add(cd);
-        
+
         cd = new ColumnDefinition(ColumnType.COMBINED_TEXT_HEADING, "Object Heading/Text");
         cd.setWidth(700);
         cd.setVisible(true);
         STANDARD_VIEW.getColumns().add(cd);
-        
+
         cd = new ColumnDefinition(ColumnType.LINKS, "Links (right-click to navigate)");
         cd.setWidth(200);
         cd.setVisible(true);
         STANDARD_VIEW.getColumns().add(cd);
-        
+
         STANDARD_VIEW.setDisplayRemainingColumns(false);
     }
 
@@ -140,9 +139,7 @@ public class ViewDefinition implements Serializable {
                 tc.getTableView().getFocusModel().focusNext();
             };
 
-            return new LinksTableCell<>(tc, edit, dl -> {
-                i.open(dl, DatabaseInterface.OpenFlag.OPEN_ONLY);
-            });
+            return new LinksTableCell<>(tc, edit, i);
         });
 
         private final QuadFunction<ColumnDefinition, TableColumn<DoorsObject, DoorsObject>, ApplicationPartInterface, TableCell<DoorsObject, DoorsObject>> cellCreator;
@@ -179,7 +176,7 @@ public class ViewDefinition implements Serializable {
 
         private String title;
         private ColumnType columnType;
-        
+
         private String attributeName;
         private double width;
         private boolean visible;

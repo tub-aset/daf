@@ -142,6 +142,13 @@ public class DoorsModelUtil {
     static final Function<String, String> IDENTITY = s -> s;
 
     public static DoorsObject resolve(DoorsLink link) throws DoorsLinkResolveException {
+        int targetAbsoluteNumber;
+        try {
+            targetAbsoluteNumber = Integer.parseInt(link.getTargetObject());
+        } catch (NumberFormatException ex) {
+            throw new DoorsLinkResolveException(link, "Illegal target number");
+        }
+
         DoorsTreeNode root = link.getSource();
         while (root.getParent() != null && !Objects.equals(root.getFullName(), link.getTargetModule())) {
             root = root.getParent();
@@ -156,16 +163,21 @@ public class DoorsModelUtil {
             throw new DoorsLinkResolveException(link, "Target module is not a DoorsModule");
         }
 
-        return pathTreeNode.accept(new DoorsTreeNodeVisitor<DoorsObject, DoorsObject>(DoorsObject.class) {
+        DoorsObject object = pathTreeNode.accept(new DoorsTreeNodeVisitor<DoorsObject, DoorsObject>(DoorsObject.class) {
             @Override
             public boolean visitPreTraverse(DoorsObject object) {
-                if(Objects.equals(link.getTargetObject(), object.getAttributes().get("Absolute Number"))) {
+                if (targetAbsoluteNumber == object.getAbsoluteNumber()) {
                     this.setResult(object);
                     return false;
                 }
                 return true;
             }
-            
+
         });
+        if (object == null) {
+            throw new DoorsLinkResolveException(link, "Target object not found: no such absolute number");
+        }
+
+        return object;
     }
 }
