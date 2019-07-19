@@ -566,6 +566,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
             this.contentTableView.getSelectionModel().clearSelection();
             this.contentTableView.getSelectionModel().select(localLinkTarget);
+            this.contentTableView.scrollTo(localLinkTarget);
         }));
     }
 
