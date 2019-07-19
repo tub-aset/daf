@@ -35,9 +35,9 @@ import de.jpwinkler.daf.gui.controls.DoorsTreeItem;
 import de.jpwinkler.daf.gui.controls.ExtensionPane;
 import de.jpwinkler.daf.gui.controls.FixedSingleSelectionModel;
 import de.jpwinkler.daf.gui.controls.ForwardingMultipleSelectionModel;
+import static de.jpwinkler.daf.gui.modules.ModulePanePreferences.STANDARD_VIEW;
 import de.jpwinkler.daf.gui.modules.ViewDefinition.ColumnDefinition;
 import de.jpwinkler.daf.gui.modules.ViewDefinition.ColumnType;
-import static de.jpwinkler.daf.gui.modules.ViewDefinition.STANDARD_VIEW;
 import de.jpwinkler.daf.gui.modules.commands.DeleteObjectCommand;
 import de.jpwinkler.daf.gui.modules.commands.DemoteObjectCommand;
 import de.jpwinkler.daf.gui.modules.commands.FlattenCommand;
@@ -322,6 +322,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
                 c.widthProperty().addListener((obs, oldValue, newValue) -> {
                     columnDefinition.setWidth(newValue.doubleValue());
                     ModulePanePreferences.VIEWS.store(this.views);
+                    ModulePanePreferences.STANDARD_VIEW.store(standardView);
                 });
                 contentTableView.getColumns().add(c);
             }
@@ -374,6 +375,8 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
         }
     }
+    
+    private final ViewDefinition standardView = STANDARD_VIEW.retrieve();
 
     private void updateViews() {
         this.viewsMenuButton.getItems().removeIf(mi -> mi instanceof RadioMenuItem);
@@ -398,9 +401,9 @@ public final class ModulePaneController extends ApplicationPartController<Module
             updateGui(ModuleUpdateAction.UPDATE_COLUMNS);
         });
 
-        RadioMenuItem standardRmi = new RadioMenuItem(STANDARD_VIEW.getName());
+        RadioMenuItem standardRmi = new RadioMenuItem(standardView.getName());
         this.viewsMenuButton.getItems().add(0, standardRmi);
-        standardRmi.setUserData(STANDARD_VIEW);
+        standardRmi.setUserData(standardView);
         standardRmi.setToggleGroup(viewsToggleGroup);
 
         Stream.concat(views.stream(), super.getExtensions(ModulePaneExtension.class).stream()

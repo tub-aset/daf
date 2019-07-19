@@ -41,35 +41,6 @@ import javafx.util.Callback;
 
 public class ViewDefinition implements Serializable {
 
-    public static final ViewDefinition STANDARD_VIEW = new ViewDefinition("Standard");
-
-    static {
-        ColumnDefinition cd;
-        cd = new ColumnDefinition(ColumnType.ATTRIBUTE, "Object Level");
-        cd.setAttributeName("Object Level");
-        cd.setWidth(100);
-        cd.setVisible(true);
-        STANDARD_VIEW.getColumns().add(cd);
-
-        cd = new ColumnDefinition(ColumnType.ATTRIBUTE, "Absolute Number");
-        cd.setAttributeName("Absolute Number");
-        cd.setWidth(100);
-        cd.setVisible(true);
-        STANDARD_VIEW.getColumns().add(cd);
-
-        cd = new ColumnDefinition(ColumnType.COMBINED_TEXT_HEADING, "Object Heading/Text");
-        cd.setWidth(700);
-        cd.setVisible(true);
-        STANDARD_VIEW.getColumns().add(cd);
-
-        cd = new ColumnDefinition(ColumnType.LINKS, "Links (right-click to navigate)");
-        cd.setWidth(200);
-        cd.setVisible(true);
-        STANDARD_VIEW.getColumns().add(cd);
-
-        STANDARD_VIEW.setDisplayRemainingColumns(false);
-    }
-
     public ViewDefinition(String name) {
         this.name = name;
     }

@@ -50,6 +50,37 @@ class ModulePanePreferences<T extends Serializable> extends ApplicationPreferenc
     public static final ApplicationPreference<ArrayList<ViewDefinition>> VIEWS = new ModulePanePreferences<>("VIEWS", ArrayList.class, new ArrayList<>());
     public static final ApplicationPreference<Integer> CURRENT_VIEW = new ModulePanePreferences<>("CURRENT_VIEW", Integer.class, -1);
 
+    public static final ApplicationPreference<ViewDefinition> STANDARD_VIEW = new ModulePanePreferences<>("STANDARD_VIEW", ViewDefinition.class, generateDefaultViewDefinition());
+    private static ViewDefinition generateDefaultViewDefinition() {
+        ViewDefinition viewDef = new ViewDefinition("Standard");
+
+        ViewDefinition.ColumnDefinition cd;
+        cd = new ViewDefinition.ColumnDefinition(ViewDefinition.ColumnType.ATTRIBUTE, "Object Level");
+        cd.setAttributeName("Object Level");
+        cd.setWidth(100);
+        cd.setVisible(true);
+        viewDef.getColumns().add(cd);
+
+        cd = new ViewDefinition.ColumnDefinition(ViewDefinition.ColumnType.ATTRIBUTE, "Absolute Number");
+        cd.setAttributeName("Absolute Number");
+        cd.setWidth(100);
+        cd.setVisible(true);
+        viewDef.getColumns().add(cd);
+
+        cd = new ViewDefinition.ColumnDefinition(ViewDefinition.ColumnType.COMBINED_TEXT_HEADING, "Object Heading/Text");
+        cd.setWidth(700);
+        cd.setVisible(true);
+        viewDef.getColumns().add(cd);
+
+        cd = new ViewDefinition.ColumnDefinition(ViewDefinition.ColumnType.LINKS, "Links (right-click to navigate)");
+        cd.setWidth(200);
+        cd.setVisible(true);
+        viewDef.getColumns().add(cd);
+
+        viewDef.setDisplayRemainingColumns(false);
+        return viewDef;
+    }
+
     public ModulePanePreferences(String name, Class<? super T> valueType, T defaultValue) {
         super(name, valueType, defaultValue);
     }
