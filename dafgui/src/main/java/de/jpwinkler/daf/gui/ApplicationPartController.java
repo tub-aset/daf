@@ -100,7 +100,10 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
     protected static void setupDividerStorage(SplitPane splitPane, ApplicationPreference SPLITPOS, ExtensionPane<?> extensionPane) {
         HashMap<Integer, double[]> dividerPos = (HashMap<Integer, double[]>) SPLITPOS.retrieve();
         if (dividerPos.containsKey(splitPane.getDividers().size())) {
-            Platform.runLater(() -> splitPane.setDividerPositions(dividerPos.get(splitPane.getDividers().size())));
+        	double[] positions = dividerPos.get(splitPane.getDividers().size());
+            Platform.runLater(() -> {
+				splitPane.setDividerPositions(positions);
+			});
         }
 
         Consumer<SplitPane.Divider> dividerChangeRunnable = d -> d.positionProperty().addListener((obs, oldValue, newValue) -> {
