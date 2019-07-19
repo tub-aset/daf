@@ -55,8 +55,14 @@ class DatabasePanePreferences<T extends Serializable> extends ApplicationPrefere
 
     public static final ApplicationPreference<String> SIDE_EXTENSION = new DatabasePanePreferences("SIDE_EXTENSION", String.class, null);
     public static final ApplicationPreference<String> BOTTOM_EXTENSION = new DatabasePanePreferences("BOTTOM_EXTENSION", String.class, null);
+    
     public static final ApplicationPreference<Double> ATTRIBUTENAME_WIDTH = new DatabasePanePreferences("ATTRIBUTENAME_WIDTH", Double.class, 100d);
     public static final ApplicationPreference<Double> ATTRIBUTEVALUE_WIDTH = new DatabasePanePreferences("ATTRIBUTEVALUE_WIDTH", Double.class, 300d);
+    
+    public static final ApplicationPreference<Double> MODULENAME_WIDTH = new DatabasePanePreferences("MODULENAME_WIDTH", Double.class, 200d);
+    public static final ApplicationPreference<Double> MODULEDESC_WIDTH = new DatabasePanePreferences("MODULEDESC_WIDTH", Double.class, 400d);
+    public static final ApplicationPreference<Double> MODULESNAPLIST_WIDTH = new DatabasePanePreferences("MODULELIST_WIDTH", Double.class, 150d);
+    
     public static final ApplicationPreference<TreeMap<String, TreeSet<String>>> SNAPSHOT_LISTS = new DatabasePanePreferences("SNAPSHOT_LISTS", TreeMap.class, new TreeMap<String, TreeSet<String>>());
 
     public DatabasePanePreferences(String name, Class<? super T> valueType, T defaultValue) {

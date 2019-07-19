@@ -50,6 +50,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.TableColumn;
 import org.pf4j.PluginWrapper;
 
 /**
@@ -88,8 +89,15 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
         };
         this.extensionClass = extensionClass;
     }
+    
+    protected static void setupColumnWidthStorage(TableColumn<?, ?> col, ApplicationPreference<Double> pref) {
+        col.setPrefWidth((double) pref.retrieve());
+        col.widthProperty().addListener((obs, oldValue, newValue) -> {
+            pref.store(newValue.doubleValue());
+        });
+    }
 
-    public static void setupDividerStorage(SplitPane splitPane, ApplicationPreference SPLITPOS, ExtensionPane<?> extensionPane) {
+    protected static void setupDividerStorage(SplitPane splitPane, ApplicationPreference SPLITPOS, ExtensionPane<?> extensionPane) {
         HashMap<Integer, double[]> dividerPos = (HashMap<Integer, double[]>) SPLITPOS.retrieve();
         if (dividerPos.containsKey(splitPane.getDividers().size())) {
             Platform.runLater(() -> splitPane.setDividerPositions(dividerPos.get(splitPane.getDividers().size())));

@@ -32,9 +32,6 @@
                                 <TableColumn fx:id="moduleDescriptionColumn" maxWidth="3000.0" minWidth="150.0" prefWidth="450.0" text="Description" />
                                 <TableColumn fx:id="snapshotListsColumn" maxWidth="1000.0" minWidth="150.0" prefWidth="225.0" text="Snapshot lists" />
                             </columns>
-                            <columnResizePolicy>
-                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                            </columnResizePolicy>
                         </TableView>
                   <VBox>
                      <children>

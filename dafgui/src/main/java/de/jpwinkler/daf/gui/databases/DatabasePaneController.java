@@ -179,11 +179,6 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                             .map(module -> new RenameAttributesCommand(it.getKey(), newKey, module))
                             .forEach(this::executeCommand);
                 }));
-        attributeNameColumn.setPrefWidth((double) DatabasePanePreferences.ATTRIBUTENAME_WIDTH.retrieve());
-        attributeNameColumn.widthProperty().addListener((obs, oldValue, newValue) -> {
-            DatabasePanePreferences.ATTRIBUTENAME_WIDTH.store(newValue.doubleValue());
-        });
-
         attributeValueColumn.setCellFactory(tc -> new CustomTextAreaTableCell<>(tc,
                 it -> it.getValue(),
                 (it, newValue) -> {
@@ -191,10 +186,11 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                             .map(module -> new EditAttributesCommand(it.getKey(), newValue, module))
                             .forEach(this::executeCommand);
                 }));
-        attributeValueColumn.setPrefWidth((double) DatabasePanePreferences.ATTRIBUTEVALUE_WIDTH.retrieve());
-        attributeValueColumn.widthProperty().addListener((obs, oldValue, newValue) -> {
-            DatabasePanePreferences.ATTRIBUTEVALUE_WIDTH.store(newValue.doubleValue());
-        });
+        setupColumnWidthStorage(attributeNameColumn, DatabasePanePreferences.ATTRIBUTENAME_WIDTH);
+        setupColumnWidthStorage(attributeValueColumn, DatabasePanePreferences.ATTRIBUTEVALUE_WIDTH);
+        setupColumnWidthStorage(moduleNameColumn, DatabasePanePreferences.MODULENAME_WIDTH);
+        setupColumnWidthStorage(moduleDescriptionColumn, DatabasePanePreferences.MODULEDESC_WIDTH);
+        setupColumnWidthStorage(snapshotListsColumn, DatabasePanePreferences.MODULESNAPLIST_WIDTH);
 
         DatabasePanePreferences.SNAPSHOT_LISTS.addOnChangedHandler(t -> this.populateSnapshotMenu(((Map<String, ?>) t).keySet(), createSnapshotsMenu.getItems(), this::createSnapshotFromListClicked));
         DatabasePanePreferences.SNAPSHOT_LISTS.addOnChangedHandler(t -> this.populateSnapshotMenu(((Map<String, ?>) t).keySet(), deleteSnapshotListMenu.getItems(), this::deleteSnapshotListClicked));
