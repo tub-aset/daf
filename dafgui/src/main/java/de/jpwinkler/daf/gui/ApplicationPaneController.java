@@ -264,6 +264,13 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         ApplicationPartFactories.registerDefault(applicationPartFactoryRegistry);
 
         ((ArrayList<ApplicationPart>) ApplicationPreferences.EXIT_FILES.retrieve()).forEach(part -> this.open(part, OpenFlag.OPEN_ONLY));
+        ApplicationPart lastSelectedPart = ApplicationPreferences.LAST_SELECTED_FILE.retrieve();
+        if (lastSelectedPart != null) {
+            Tab tab = tabPane.getTabs().stream()
+                    .filter(t -> lastSelectedPart.equals((ApplicationPart) t.getUserData()))
+                    .findAny().orElse(null);
+            this.tabPane.getSelectionModel().select(tab);
+        }
     }
 
     private void addPluginMenuEntries(PluginWrapper plugin) {
@@ -590,12 +597,14 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
                 .map(t -> getApplicationPartController(t))
                 .map(pc -> pc.getApplicationPart())
                 .collect(Collectors.toCollection(() -> new ArrayList<>()));
+        ApplicationPart lastSelectedPart = getApplicationPartController(tabPane.getSelectionModel().getSelectedItem()).getApplicationPart();
         tabPane.getTabs().clear();
         if (!applicationPartControllers.isEmpty()) {
             return false;
         }
 
         ApplicationPreferences.EXIT_FILES.store(exitParts);
+        ApplicationPreferences.LAST_SELECTED_FILE.store(lastSelectedPart);
         return true;
     }
 

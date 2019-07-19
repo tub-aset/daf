@@ -36,6 +36,8 @@ import javafx.geometry.Rectangle2D;
 class ApplicationPreferences<T extends Serializable> extends ApplicationPreference<T> {
 
     public static final ApplicationPreference<ArrayList<ApplicationPart>> EXIT_FILES = new ApplicationPreferences<>("EXIT_FILES", ArrayList.class, new ArrayList<ApplicationPart>(0));
+    public static final ApplicationPreference<ApplicationPart> LAST_SELECTED_FILE = new ApplicationPreferences<>("LAST_SELECTED_FILE", ApplicationPart.class, null);
+    
     public static final ApplicationPreference<TreeMap<Long, ApplicationPart>> RECENT_FILES = new ApplicationPreferences<>("RECENT_FILES", TreeMap.class, new TreeMap<Long, ApplicationPart>());
     public static final ApplicationPreference<File> SAVE_DIRECTORY = new ApplicationPreferences<>("SAVE_DIRECTORY", File.class, new File(System.getProperty("user.home")).getAbsoluteFile(), ApplicationPreferences::isDir);
     public static final ApplicationPreference<File> OPEN_DIRECTORY = new ApplicationPreferences<>("OPEN_DIRECTORY", File.class, new File(System.getProperty("user.home")).getAbsoluteFile(), ApplicationPreferences::isDir);
