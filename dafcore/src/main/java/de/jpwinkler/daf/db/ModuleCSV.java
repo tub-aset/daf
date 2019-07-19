@@ -293,7 +293,7 @@ public class ModuleCSV {
                         targetObject = line.substring(colonIndex + 1);
                     }
 
-                    return targetModule.isEmpty() ? null : factory.createLink(sourceObject, targetModule, targetObject);
+                    return targetModule.isEmpty() ? null : factory.createLink(sourceObject, targetModule.trim(), targetObject.trim());
                 })
                 .filter(o -> o != null);
     }
