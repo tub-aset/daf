@@ -21,7 +21,6 @@ package de.jpwinkler.daf.gui;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
 import de.jpwinkler.daf.db.DatabasePath;
@@ -84,7 +83,11 @@ public final class ApplicationPartFactoryRegistry {
                         })
                         .filter(cls -> cls != null)
                         .filter(cls -> DatabaseInterface.class.isAssignableFrom(cls))
-                        .map(cls -> (Class<? extends DatabaseInterface>) cls)
+                        .map(cls -> {
+                            @SuppressWarnings("unchecked")
+                            Class<? extends DatabaseInterface> ret = (Class<? extends DatabaseInterface>) cls;
+                            return ret;
+                        })
                         .findFirst().orElseThrow(() -> new ClassNotFoundException("Database interface missing: " + databasePath.getDatabaseInterface()));
 
                 databaseInterface = dbInterface.getConstructor(DatabasePath.class, OpenFlag.class).newInstance(databasePath, openFlag);
@@ -215,7 +218,7 @@ public final class ApplicationPartFactoryRegistry {
 
             return new ApplicationPart(this.getClass().getCanonicalName(), path);
         }
-        
+
         public abstract boolean canStore(DoorsTreeNode databaseRoot);
     }
 

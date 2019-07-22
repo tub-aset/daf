@@ -71,7 +71,7 @@ public class BackgroundTask<T> {
         return notifier.taskFuture;
     }
 
-    private final class ComparableRunnable implements Comparable<Runnable>, Runnable {
+    private final class ComparableRunnable implements Comparable<ComparableRunnable>, Runnable {
 
         private final Runnable runnable;
         private final int priority;
@@ -82,8 +82,8 @@ public class BackgroundTask<T> {
         }
 
         @Override
-        public int compareTo(Runnable t) {
-            return Integer.compare(priority, ((ComparableRunnable) t).priority);
+        public int compareTo(ComparableRunnable t) {
+            return Integer.compare(priority, t.priority);
         }
 
         @Override

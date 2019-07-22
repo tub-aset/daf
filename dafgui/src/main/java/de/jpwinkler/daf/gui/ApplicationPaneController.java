@@ -182,6 +182,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     public ApplicationPaneController() {
         tabPane.getSelectionModel().selectedItemProperty().addListener(tabChangeListener);
         try {
+            @SuppressWarnings("unchecked")
             Class<? extends Enum> tdPolicy = (Class<? extends Enum>) Class.forName("javafx.scene.control.TabPane$TabDragPolicy", true, TabPane.class.getClassLoader());
             Enum[] enumConstants = tdPolicy.getEnumConstants();
             Enum constant = Stream.of(enumConstants)

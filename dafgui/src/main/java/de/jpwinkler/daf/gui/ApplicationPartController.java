@@ -97,7 +97,7 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
         });
     }
 
-    protected static void setupDividerStorage(SplitPane splitPane, ApplicationPreference SPLITPOS, ExtensionPane<?> extensionPane) {
+    protected static void setupDividerStorage(SplitPane splitPane, ApplicationPreference<HashMap<Integer, double[]>> SPLITPOS, ExtensionPane<?> extensionPane) {
         HashMap<Integer, double[]> dividerPos = (HashMap<Integer, double[]>) SPLITPOS.retrieve();
         if (dividerPos.containsKey(splitPane.getDividers().size())) {
             double[] positions = dividerPos.get(splitPane.getDividers().size());
@@ -175,7 +175,11 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
     protected final <T extends ApplicationPartExtension> List<T> getExtensions(Class<T> cls) {
         return extensions.stream()
                 .filter(e -> cls.isAssignableFrom(e.getClass()))
-                .map(e -> (T) e)
+                .map(e -> {
+                    @SuppressWarnings("unchecked")
+                    T ret = (T) e;
+                    return ret;
+                })
                 .collect(Collectors.toList());
     }
 
@@ -196,8 +200,9 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
         updateGui(command.getUpdateActions());
     }
 
+    @SuppressWarnings("unchecked")
     public final void updateGui(UpdateAction... actions) {
-        Stream.of(actions).forEach(a -> a.update(this));
+        Stream.of(actions).forEach(a -> a.update((THIS) this));
     }
 
     @FXML

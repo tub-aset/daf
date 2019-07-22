@@ -77,10 +77,10 @@ public class ApplicationPreference<T extends Serializable> {
     private final Class<? super T> valueType;
     private final T defaultValue;
     private final Consumer<T> validator;
-    private final HashSet<Consumer<Object>> onChangedHandlers = new HashSet<>();
+    private final HashSet<Consumer<T>> onChangedHandlers = new HashSet<>();
     private final Preferences prefs;
 
-    public final <T extends Serializable> void store(T object) {
+    public final void store(T object) {
         if (object != null && !valueType.isAssignableFrom(object.getClass())) {
             throw new IllegalArgumentException("Object must be null or a " + valueType.getCanonicalName());
         }
@@ -92,9 +92,10 @@ public class ApplicationPreference<T extends Serializable> {
             throw new RuntimeException(ex);
         }
 
-        this.onChangedHandlers.forEach(h -> h.accept(object));
+        this.onChangedHandlers.forEach(h -> h.accept((T) object));
     }
 
+    @SuppressWarnings("unchecked")
     public final T retrieve() {
         String data = prefs.get(this.name, null);
         if (data == null) {
@@ -113,11 +114,11 @@ public class ApplicationPreference<T extends Serializable> {
         }
     }
 
-    public final void addOnChangedHandler(Consumer<Object> handler) {
+    public final void addOnChangedHandler(Consumer<T> handler) {
         this.onChangedHandlers.add(handler);
     }
 
-    public final void removeOnChangedHandler(Consumer<Object> handler) {
+    public final void removeOnChangedHandler(Consumer<T> handler) {
         this.onChangedHandlers.remove(handler);
     }
 }

@@ -445,7 +445,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     }
 
     public void deleteSnapshotListClicked(String snapshotList) {
-        TreeMap<String, ?> snapshotLists = DatabasePanePreferences.SNAPSHOT_LISTS.retrieve();
+        TreeMap<String, TreeSet<String>> snapshotLists = DatabasePanePreferences.SNAPSHOT_LISTS.retrieve();
         snapshotLists.remove(snapshotList);
         DatabasePanePreferences.SNAPSHOT_LISTS.store(snapshotLists);
     }
@@ -474,8 +474,9 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     private void editSnapshotListClicked(String snapshotList) {
         TreeMap<String, TreeSet<String>> snapshotLists = DatabasePanePreferences.SNAPSHOT_LISTS.retrieve();
 
-        MultiLineTextInputDialog editor = new MultiLineTextInputDialog<>(snapshotLists.get(snapshotList).stream().collect(Collectors.joining("\n")));
-        if (editor.showDialog(this.databaseTreeView.getScene().getWindow(), "Snapshot list " + snapshotList, ButtonType.CANCEL, ButtonType.OK).orElse(ButtonType.CANCEL) == ButtonType.CANCEL) {
+        MultiLineTextInputDialog editor = new MultiLineTextInputDialog(snapshotLists.get(snapshotList).stream().collect(Collectors.joining("\n")));
+        if (editor.showDialog(this.databaseTreeView.getScene().getWindow(), 
+                "Snapshot list " + snapshotList, ButtonType.CANCEL, ButtonType.OK).orElse(editor.resultOf(ButtonType.CANCEL)).buttonType == ButtonType.CANCEL) {
             return;
         }
 

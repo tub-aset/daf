@@ -53,8 +53,8 @@ public class BackgroundTaskExecutorImpl implements BackgroundTaskExecutor {
     private final Map<BackgroundTaskNotifier, Consumer<BackgroundTask>> taskSpecificListeners = Collections.synchronizedMap(new WeakHashMap<>());
     private final AtomicReference<Pair<Long, Long>> totalProgress = new AtomicReference<>(Pair.of(0l, 0l));
 
-    private final ExecutorService executor = new ThreadPoolExecutor(2, Runtime.getRuntime().availableProcessors(), 5, TimeUnit.SECONDS,
-            new PriorityBlockingQueue(), r -> {
+    private final ExecutorService executor = new ThreadPoolExecutor(2, Runtime.getRuntime().availableProcessors(), 5l, TimeUnit.SECONDS,
+            new PriorityBlockingQueue<>(), r -> {
                 Thread t = new Thread(r);
                 t.setDaemon(true);
                 return t;

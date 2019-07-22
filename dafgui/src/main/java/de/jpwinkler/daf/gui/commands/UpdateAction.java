@@ -22,9 +22,7 @@ package de.jpwinkler.daf.gui.commands;
  * #L%
  */
 
-import de.jpwinkler.daf.gui.ApplicationPartInterface;
-
-public interface UpdateAction<T extends ApplicationPartInterface> {
+public interface UpdateAction<T> {
 
     void update(T ctrl);
 

@@ -21,7 +21,6 @@ package de.jpwinkler.daf.gui;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import java.io.IOException;
 import java.util.Optional;
 import javafx.fxml.FXML;
@@ -60,7 +59,8 @@ public abstract class AutoloadingPaneController<THIS extends AutoloadingPaneCont
     public Parent getNode() {
         return node;
     }
-    
+
+    @SuppressWarnings("unchecked")
     public Optional<DialogResult> showDialog(Window owner, String title, ButtonType... buttonTypes) {
         return asDialog(owner, title, buttonTypes).showAndWait().map(bt -> new DialogResult(bt, (THIS) this));
     }
@@ -77,12 +77,16 @@ public abstract class AutoloadingPaneController<THIS extends AutoloadingPaneCont
 
         dialog.setResultConverter(bt -> bt);
         return dialog;
-        
+    }
+    
+    @SuppressWarnings("unchecked")
+    public final DialogResult resultOf(ButtonType buttonType) {
+        return new DialogResult(buttonType, (THIS) this);
     }
 
     public final class DialogResult {
 
-        public DialogResult(ButtonType buttonType, THIS result) {
+        private DialogResult(ButtonType buttonType, THIS result) {
             this.buttonType = buttonType;
             this.result = result;
         }

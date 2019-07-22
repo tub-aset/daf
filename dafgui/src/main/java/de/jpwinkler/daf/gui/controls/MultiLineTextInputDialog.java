@@ -30,7 +30,7 @@ import javafx.scene.control.TextArea;
  *
  * @author fwiesweg
  */
-public class MultiLineTextInputDialog<THIS extends MultiLineTextInputDialog> extends AutoloadingPaneController<THIS> {
+public class MultiLineTextInputDialog extends AutoloadingPaneController<MultiLineTextInputDialog> {
 
     public MultiLineTextInputDialog(String initialText) {
         textArea.setText(initialText);

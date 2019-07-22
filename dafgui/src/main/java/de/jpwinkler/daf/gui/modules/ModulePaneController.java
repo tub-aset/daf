@@ -250,7 +250,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
     @FXML
     public void swapObjectHeadingAndTextClicked() {
-        executeCommand(new MultiCommand(getCurrentObjects().stream().map(o -> new SwapObjectHeadingAndTextCommand(o)).collect(Collectors.toList())));
+        executeCommand(new MultiCommand<>(getCurrentObjects().stream().map(o -> new SwapObjectHeadingAndTextCommand(o)).collect(Collectors.toList())));
     }
 
     private void updateOutlineView(final DoorsModule module) {
@@ -459,12 +459,12 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
     @FXML
     public void demoteObjectClicked() {
-        executeCommand(new MultiCommand(getCurrentObjects().stream().map(o -> new DemoteObjectCommand(o)).collect(Collectors.toList())));
+        executeCommand(new MultiCommand<>(getCurrentObjects().stream().map(o -> new DemoteObjectCommand(o)).collect(Collectors.toList())));
     }
 
     @FXML
     public void promoteObjectClicked() {
-        executeCommand(new MultiCommand(getCurrentObjects().stream().map(o -> new PromoteObjectCommand(o)).collect(Collectors.toList())));
+        executeCommand(new MultiCommand<>(getCurrentObjects().stream().map(o -> new PromoteObjectCommand(o)).collect(Collectors.toList())));
     }
 
     @FXML
