@@ -139,6 +139,9 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     private ProgressBar backgroundTaskStatusProgressBar;
 
     @FXML
+    private ProgressBar statusMessageProgressBar;
+
+    @FXML
     private MenuBar mainMenuBar;
 
     @FXML
@@ -370,8 +373,14 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     }
 
     public void setStatus(final String status) {
-        this.setStatus(status, 15000);
+        this.setStatus(status, 10000);
     }
+
+    private TimerTask statusTimerTask = new TimerTask() {
+        @Override
+        public void run() {
+        }
+    };
 
     public void setStatus(final String status, int timeout) {
         if (statusMenuButton.getItems().isEmpty() || !status.equals(statusMenuButton.getItems().get(statusMenuButton.getItems().size() - 1).getText())) {
@@ -383,13 +392,28 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         }
 
         statusBarLabel.setText(status);
-        generalTimer.schedule(new TimerTask() {
+        statusMessageProgressBar.setProgress(1);
+        statusMessageProgressBar.setVisible(true);
+        long startTime = System.currentTimeMillis();
+
+        this.statusTimerTask.cancel();
+        this.statusTimerTask = new TimerTask() {
             @Override
             public void run() {
-                Platform.runLater(() -> statusBarLabel.setText(""));
+                double progress = (System.currentTimeMillis() - (double) startTime) / timeout;
+                if (progress >= 1d) {
+                    this.cancel();
+                    Platform.runLater(() -> {
+                        statusBarLabel.setText("");
+                        statusMessageProgressBar.setVisible(false);
+                    });
+                } else {
+                    Platform.runLater(() -> statusMessageProgressBar.setProgress(1 - progress));
+                }
             }
+        };
 
-        }, 15000);
+        generalTimer.scheduleAtFixedRate(statusTimerTask, 100, 100);
     }
 
     @Override

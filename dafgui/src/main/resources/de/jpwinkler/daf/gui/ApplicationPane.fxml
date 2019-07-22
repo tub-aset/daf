@@ -58,10 +58,15 @@
                   <Insets left="5.0" right="5.0" />
                </HBox.margin>
             </MenuButton>
-                  <Label fx:id="statusBarLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" textOverrun="LEADING_ELLIPSIS" HBox.hgrow="ALWAYS" />
-                  <ProgressBar fx:id="backgroundTaskStatusProgressBar" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="100.0" progress="1.0">
+            <ProgressBar fx:id="statusMessageProgressBar" maxHeight="10.0" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="50.0" progress="1.0" visible="false">
                <HBox.margin>
-                  <Insets left="5.0" right="5.0" />
+                  <Insets right="5.0" top="5.0" />
+               </HBox.margin>
+            </ProgressBar>
+                  <Label fx:id="statusBarLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" textOverrun="LEADING_ELLIPSIS" HBox.hgrow="ALWAYS" />
+                  <ProgressBar fx:id="backgroundTaskStatusProgressBar" maxHeight="10.0" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="100.0" progress="1.0">
+               <HBox.margin>
+                  <Insets left="5.0" right="5.0" top="5.0" />
                </HBox.margin>
             </ProgressBar>
             <MenuButton fx:id="backgroundTaskMenuButton" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" popupSide="TOP" prefHeight="20.0" prefWidth="28.0" />
