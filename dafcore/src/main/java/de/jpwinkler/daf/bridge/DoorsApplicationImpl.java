@@ -153,7 +153,7 @@ public class DoorsApplicationImpl implements DoorsApplication {
 
     private void executeDxlSilent(final String dxl) throws IOException {
         try (TempFile dxlFile = new TempFile()) {
-            FileUtils.write(dxlFile, dxl);
+            FileUtils.write(dxlFile, dxl, Charset.forName("UTF-8"));
 
             final String[] cmdLine = new String[]{doorsPath, "-b", dxlFile.getAbsolutePath(), "-d", doorsServer, "-u", user, "-P", "xxxx"};
 

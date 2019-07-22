@@ -51,6 +51,7 @@ public abstract class DatabaseFactory {
         return this.createCopy(source, newParent, resilient, BackgroundTaskNotifier.SYNCHRONOUS);
     }
 
+    @SuppressWarnings("unchecked")
     public final <T extends DoorsTreeNode> T createCopy(T source, DoorsTreeNode newParent, boolean resilient, BackgroundTaskNotifier btNotifier) {
         btNotifier.throwIfCancelled();
 

@@ -31,6 +31,7 @@ class OrFilter implements Predicate<DoorsTreeNode> {
 
     private final List<Predicate<DoorsTreeNode>> filters = new ArrayList<>();
 
+    @SafeVarargs
     public OrFilter(final Predicate<DoorsTreeNode>... filters) {
         this.filters.addAll(Arrays.asList(filters));
     }

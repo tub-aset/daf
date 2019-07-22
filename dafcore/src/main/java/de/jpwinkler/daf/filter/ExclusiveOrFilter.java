@@ -29,6 +29,7 @@ class ExclusiveOrFilter implements Predicate<DoorsTreeNode> {
 
     private final Predicate<DoorsTreeNode>[] filters;
 
+    @SafeVarargs
     public ExclusiveOrFilter(final Predicate<DoorsTreeNode>... filters) {
         this.filters = filters;
     }

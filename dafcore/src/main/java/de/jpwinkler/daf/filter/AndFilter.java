@@ -29,6 +29,7 @@ class AndFilter implements Predicate<DoorsTreeNode> {
 
     private final Predicate<DoorsTreeNode>[] filters;
 
+    @SafeVarargs
     public AndFilter(final Predicate<DoorsTreeNode>... filters) {
         this.filters = filters;
     }

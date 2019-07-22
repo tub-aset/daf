@@ -53,7 +53,7 @@ public abstract class DXLScript {
             @Override
             public String build() {
                 try {
-                    return FileUtils.readFileToString(dxlFile);
+                    return FileUtils.readFileToString(dxlFile, Charset.forName("UTF-8"));
                 } catch (IOException ex) {
                     throw new ScriptNotFoundException(ex);
                 }

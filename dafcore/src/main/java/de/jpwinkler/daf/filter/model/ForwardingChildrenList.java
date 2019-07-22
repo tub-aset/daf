@@ -56,7 +56,7 @@ class ForwardingChildrenList implements List<DoorsTreeNode> {
     }
 
     static DoorsTreeNode wrap(WeakHashMap<DoorsTreeNode, FilteredDoorsTreeNode<?>> nodeMap, Predicate<DoorsTreeNode> predicate, DoorsTreeNode node) {
-        if(node == null) {
+        if (node == null) {
             return null;
         } else if (node instanceof FilteredDoorsTreeNode && nodeMap.containsValue((FilteredDoorsTreeNode<?>) node)) {
             return node;
@@ -68,8 +68,9 @@ class ForwardingChildrenList implements List<DoorsTreeNode> {
         return nodeMap.get(node);
     }
 
+    @SuppressWarnings("unchecked")
     static <T> T unwrap(WeakHashMap<DoorsTreeNode, FilteredDoorsTreeNode<?>> nodeMap, T node) {
-        if(node == null) {
+        if (node == null) {
             return null;
         } else if (node instanceof FilteredDoorsTreeNode) {
             return (T) ((FilteredDoorsTreeNode) node).getSelf();
@@ -122,6 +123,7 @@ class ForwardingChildrenList implements List<DoorsTreeNode> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <DoorsTreeNode> DoorsTreeNode[] toArray(DoorsTreeNode[] ts) {
         return listSupplier.get().stream().filter(predicate).map(this::wrap).toArray(size -> {
             try {

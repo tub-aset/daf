@@ -48,7 +48,7 @@ import java.util.regex.Pattern;
 public class FilteredDoorsTreeNode<T extends DoorsTreeNode> implements DoorsTreeNode {
 
     public static FilteredDoorsTreeNode<?> createFilteredTree(DoorsTreeNode node, Predicate<DoorsTreeNode> predicate, boolean recursing) {
-        Predicate fullPredicate = !recursing ? predicate : predicate.or(t -> {
+        Predicate<DoorsTreeNode> fullPredicate = !recursing ? predicate : predicate.or(t -> {
             boolean matched = false;
             Stack<DoorsTreeNode> tbd = new Stack<>();
             tbd.push(t);

@@ -26,7 +26,6 @@ import de.jpwinkler.daf.model.DoorsAttributes;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsPackage;
-import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -81,9 +80,9 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
         LinkedHashSet<String> objectAttrs = new LinkedHashSet<>(DoorsAttributes.valuesFor(DoorsObject.class)
                 .map(a -> a.getKey())
                 .collect(Collectors.toList()));
-        this.accept(new DoorsTreeNodeVisitor(DoorsObject.class) {
+        this.accept(new DoorsTreeNodeVisitor<DoorsObject, Void>(DoorsObject.class) {
             @Override
-            public void visitPostTraverse(DoorsTreeNode object) {
+            public void visitPostTraverse(DoorsObject object) {
                 objectAttrs.addAll(object.getAttributes().keySet());
             }
 
@@ -97,9 +96,9 @@ public class DoorsModuleImpl extends DoorsTreeNodeImpl implements DoorsModule {
      */
     @Override
     public void setObjectAttributes(List<String> attrs) {
-        this.accept(new DoorsTreeNodeVisitor(DoorsObject.class) {
+        this.accept(new DoorsTreeNodeVisitor<DoorsObject, Void>(DoorsObject.class) {
             @Override
-            public void visitPostTraverse(DoorsTreeNode object) {
+            public void visitPostTraverse(DoorsObject object) {
                 attrs.stream()
                         .filter(a -> !object.getAttributes().containsKey(a))
                         .forEach(a -> object.getAttributes().put(a, ""));

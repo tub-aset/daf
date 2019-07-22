@@ -21,8 +21,8 @@ package de.jpwinkler.daf.model;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 public abstract class DoorsTreeNodeVisitor<T extends DoorsTreeNode, U> {
+
     public DoorsTreeNodeVisitor() {
         this.visitedNodeCls = null;
     }
@@ -39,18 +39,25 @@ public abstract class DoorsTreeNodeVisitor<T extends DoorsTreeNode, U> {
     }
 
     public final U traverse(final DoorsTreeNode node) {
-        boolean classMatch = visitedNodeCls == null || visitedNodeCls.isAssignableFrom(node.getClass());
+        boolean traverseChildren = visitedNodeCls == null || visitedNodeCls.isAssignableFrom(node.getClass());
+        if (!traverseChildren) {
+            @SuppressWarnings("unchecked")
+            T nodeCast = (T) node;
+            traverseChildren = visitPreTraverse(nodeCast);
+        }
 
-        if (!classMatch || visitPreTraverse((T) node)) {
+        if (!traverseChildren) {
             for (final DoorsTreeNode child : node.getChildren()) {
                 child.accept(this);
             }
         }
 
-        if (classMatch) {
-            visitPostTraverse((T) node);
+        if (traverseChildren) {
+            @SuppressWarnings("unchecked")
+            T nodeCast = (T) node;
+            visitPostTraverse(nodeCast);
         }
-        
+
         return result;
     }
 
@@ -69,7 +76,5 @@ public abstract class DoorsTreeNodeVisitor<T extends DoorsTreeNode, U> {
     protected final void setResult(U result) {
         this.result = result;
     }
-    
-    
 
 }

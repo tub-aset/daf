@@ -45,23 +45,21 @@ public enum DoorsAttributes {
     DATABASE_COPIED_FROM("Copied From", DoorsFolder.class),
     DATABASE_COPIED_AT("Copied At", DoorsFolder.class);
 
-    <T> DoorsAttributes(Class<T> type, Class<? extends DoorsTreeNode>... appliesTo) {
-        this(null, IDENTITY, IDENTITY, appliesTo);
-    }
-
-    <T> DoorsAttributes(Class<T> type, Function<String, T> parser, Function<T, String> writer, Class<? extends DoorsTreeNode>... appliesTo) {
+    <T> DoorsAttributes(Class<T> type, Function<String, T> parser, Function<T, String> writer, Class<? extends DoorsTreeNode> appliesTo) {
         this(null, type, parser, writer, appliesTo);
     }
 
-    <T> DoorsAttributes(String key, Class<? extends DoorsTreeNode>... appliesTo) {
+    <T> DoorsAttributes(String key, Class<? extends DoorsTreeNode> appliesTo) {
         this(key, String.class, IDENTITY, IDENTITY, appliesTo);
     }
 
-    <T> DoorsAttributes(String key, Class<T> type, Function<String, T> parser, Function<T, String> writer, Class<? extends DoorsTreeNode>... appliesTo) {
+    <T> DoorsAttributes(String key, Class<T> type, Function<String, T> parser, Function<T, String> writer, Class<? extends DoorsTreeNode> appliesTo) {
         this.key = key;
         this.type = type;
         this.parser = parser;
-        this.writer = (Function<Object, String>) writer;
+        @SuppressWarnings("unchecked")
+        Function<Object, String> localWriter = (Function<Object, String>) writer;
+        this.writer = localWriter;
         this.appliesTo = appliesTo;
     }
 
@@ -76,18 +74,20 @@ public enum DoorsAttributes {
     private final Class<?> type;
     private final Function<String, ?> parser;
     private final Function<Object, String> writer;
-    private final Class<? extends DoorsTreeNode>[] appliesTo;
+    private final Class<? extends DoorsTreeNode> appliesTo;
 
     public String getKey() {
         return key;
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T getValue(Class<T> expectedType, DoorsTreeNode node) {
         if (!expectedType.isAssignableFrom(type)) {
             throw new IllegalArgumentException();
         }
 
-        return (T) this.parser.apply(node.getAttributes().get(this.getKey()));
+        T value = (T) this.parser.apply(node.getAttributes().get(this.getKey()));
+        return value;
     }
 
     public <T> CompletableFuture<T> getValueAsync(BackgroundTaskExecutor executor, Class<T> expectedType, DoorsTreeNode node) {
@@ -97,7 +97,11 @@ public enum DoorsAttributes {
 
         return node.getAttributesAsync(executor)
                 .thenApply(m -> m.get(this.getKey()))
-                .thenApply(v -> (T) this.parser.apply(v));
+                .thenApply(v -> {
+                    @SuppressWarnings("unchecked")
+                    T value = (T) this.parser.apply(v);
+                    return value;
+                });
     }
 
     public <T> void setValue(Class<T> expectedType, DoorsTreeNode node, T value) {
@@ -110,6 +114,6 @@ public enum DoorsAttributes {
 
     public static Stream<DoorsAttributes> valuesFor(Class<? extends DoorsTreeNode> cls) {
         return Stream.of(DoorsAttributes.values())
-                .filter(v -> v.appliesTo.length == 0 || Stream.of(v.appliesTo).anyMatch(c -> c.isAssignableFrom(cls)));
+                .filter(v -> v.appliesTo == null || v.appliesTo.isAssignableFrom(cls));
     }
 }
