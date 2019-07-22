@@ -89,7 +89,7 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
         };
         this.extensionClass = extensionClass;
     }
-    
+
     protected static void setupColumnWidthStorage(TableColumn<?, ?> col, ApplicationPreference<Double> pref) {
         col.setPrefWidth((double) pref.retrieve());
         col.widthProperty().addListener((obs, oldValue, newValue) -> {
@@ -100,10 +100,10 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
     protected static void setupDividerStorage(SplitPane splitPane, ApplicationPreference SPLITPOS, ExtensionPane<?> extensionPane) {
         HashMap<Integer, double[]> dividerPos = (HashMap<Integer, double[]>) SPLITPOS.retrieve();
         if (dividerPos.containsKey(splitPane.getDividers().size())) {
-        	double[] positions = dividerPos.get(splitPane.getDividers().size());
+            double[] positions = dividerPos.get(splitPane.getDividers().size());
             Platform.runLater(() -> {
-				splitPane.setDividerPositions(positions);
-			});
+                splitPane.setDividerPositions(positions);
+            });
         }
 
         Consumer<SplitPane.Divider> dividerChangeRunnable = d -> d.positionProperty().addListener((obs, oldValue, newValue) -> {
@@ -116,7 +116,8 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
                 change.getAddedSubList().forEach(dividerChangeRunnable);
 
                 if (change.getAddedSize() != 0 || change.getRemovedSize() != 0 && dividerPos.containsKey(splitPane.getDividers().size())) {
-                    Platform.runLater(() -> splitPane.setDividerPositions(dividerPos.get(splitPane.getDividers().size())));
+                    double[] positions = dividerPos.get(splitPane.getDividers().size());
+                    Platform.runLater(() -> splitPane.setDividerPositions(positions));
                 }
             }
         });
@@ -150,12 +151,12 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
     @Override
     public CompletableFuture<ApplicationPartInterface> open(DoorsLink dl, OpenFlag openFlag) {
         return dl.resolveAsync(applicationController.getBackgroundTaskExecutor())
-                .whenComplete( (linkTarget, ex) -> {
+                .whenComplete((linkTarget, ex) -> {
                     if (ex != null) {
                         Platform.runLater(() -> setStatus(ex.getMessage()));
                     }
                 })
-                .thenCompose(linkTarget -> {                    
+                .thenCompose(linkTarget -> {
                     CompletableFuture<ApplicationPartInterface> appPartInterfaceFuture = new CompletableFuture<>();
                     Platform.runLater(() -> {
                         ApplicationPartInterface appPartInterface = applicationController.open(applicationPart.getDatabasePath().withPath(dl.getTargetModule()), openFlag);
