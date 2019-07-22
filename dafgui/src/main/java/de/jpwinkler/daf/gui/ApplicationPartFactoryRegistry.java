@@ -35,6 +35,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 import javafx.stage.Window;
@@ -232,6 +233,7 @@ public final class ApplicationPartFactoryRegistry {
         private transient DatabaseInterface databaseInterface;
         private transient CommandStack commandStack;
         private transient ApplicationPartController controller;
+        private transient Consumer<Boolean> dirtyListenerRef;
 
         private ApplicationPart(String partFactoryClass, DatabasePath databasePath) {
             this.partFactoryClass = partFactoryClass;
@@ -263,7 +265,8 @@ public final class ApplicationPartFactoryRegistry {
             Pair<DatabaseInterface, CommandStack> db = registry.openDatabase(databasePath, openFlag);
             this.databaseInterface = db.getLeft();
             this.commandStack = db.getRight();
-            this.commandStack.addDirtyListener(this::dirtyListener);
+            this.dirtyListenerRef = this::dirtyListener;
+            this.commandStack.addDirtyListener(this.dirtyListenerRef);
 
             this.controller = appController.getApplicationPartFactoryRegistry().getPartFactory(this.partFactoryClass).getApplicationPartControllerFactory().construct(appController, this);
             this.registry.pluginSupplier.get().forEach(controller::addPlugin);
@@ -280,7 +283,7 @@ public final class ApplicationPartFactoryRegistry {
             this.registry.closeDatabase(databasePath);
             this.controller = null;
 
-            this.commandStack.removeDirtyListener(this::dirtyListener);
+            this.commandStack.removeDirtyListener(this.dirtyListenerRef);
             this.commandStack = null;
             this.databaseInterface = null;
             this.registry = null;
