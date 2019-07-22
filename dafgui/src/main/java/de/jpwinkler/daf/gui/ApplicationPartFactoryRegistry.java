@@ -38,6 +38,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
+import javafx.application.Platform;
 import javafx.stage.Window;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.tuple.Pair;
@@ -252,10 +253,6 @@ public final class ApplicationPartFactoryRegistry {
             return this.databaseInterface != null && this.commandStack != null;
         }
 
-        private void dirtyListener(boolean dirty) {
-            this.registry.dirtyListener.accept(this, dirty);
-        }
-
         public ApplicationPartController start(ApplicationPaneController appController, OpenFlag openFlag) {
             if (this.isStarted()) {
                 throw new IllegalStateException("Already started");
@@ -265,8 +262,9 @@ public final class ApplicationPartFactoryRegistry {
             Pair<DatabaseInterface, CommandStack> db = registry.openDatabase(databasePath, openFlag);
             this.databaseInterface = db.getLeft();
             this.commandStack = db.getRight();
-            this.dirtyListenerRef = this::dirtyListener;
+            this.dirtyListenerRef = dirty -> this.registry.dirtyListener.accept(this, dirty);
             this.commandStack.addDirtyListener(this.dirtyListenerRef);
+            Platform.runLater(() -> this.dirtyListenerRef.accept(commandStack.isDirty()));
 
             this.controller = appController.getApplicationPartFactoryRegistry().getPartFactory(this.partFactoryClass).getApplicationPartControllerFactory().construct(appController, this);
             this.registry.pluginSupplier.get().forEach(controller::addPlugin);
@@ -284,6 +282,7 @@ public final class ApplicationPartFactoryRegistry {
             this.controller = null;
 
             this.commandStack.removeDirtyListener(this.dirtyListenerRef);
+            this.dirtyListenerRef = null;
             this.commandStack = null;
             this.databaseInterface = null;
             this.registry = null;

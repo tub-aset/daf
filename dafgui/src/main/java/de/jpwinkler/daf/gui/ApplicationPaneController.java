@@ -612,24 +612,35 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
     public boolean tryClose() {
         if (backgroundTaskExecutor.hasRunningTasks()) {
-            Alert alert = new Alert(AlertType.CONFIRMATION, "There are running background tasks. Are you sure you want to close the application? You might lose their state.", ButtonType.CANCEL, ButtonType.OK);
+            Alert alert = new Alert(AlertType.CONFIRMATION, "There are running background tasks. "
+                    + "Are you sure you want to close the application? You might lose their state.", ButtonType.NO, ButtonType.YES);
             alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-            if (alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.CANCEL) {
+            if (alert.showAndWait().orElse(ButtonType.NO) == ButtonType.NO) {
                 return false;
             }
         }
 
+        ApplicationPart lastSelectedPart = getApplicationPartController(tabPane.getSelectionModel().getSelectedItem()).getApplicationPart();
         ArrayList<ApplicationPart> exitParts = tabPane.getTabs().stream()
                 .map(t -> getApplicationPartController(t))
                 .map(pc -> pc.getApplicationPart())
                 .collect(Collectors.toCollection(() -> new ArrayList<>()));
 
-        ApplicationPart lastSelectedPart = getApplicationPartController(tabPane.getSelectionModel().getSelectedItem()).getApplicationPart();
-        tabPane.getTabs().clear();
-        if (!applicationPartControllers.isEmpty()) {
-            return false;
+        String dirtyDatabases = exitParts.stream()
+                .filter(p -> p.getCommandStack().isDirty())
+                .map(p -> p.getDatabasePath().withPath("").toString())
+                .sorted()
+                .collect(Collectors.joining());
+        if (!dirtyDatabases.isEmpty()) {
+            Alert alert = new Alert(AlertType.CONFIRMATION, "There unsaved changes in the following databases:\n\n" + dirtyDatabases
+                    + "\n\nAre you sure you want to close the application? You will lose those changes.", ButtonType.NO, ButtonType.YES);
+            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+            if (alert.showAndWait().orElse(ButtonType.NO) == ButtonType.NO) {
+                return false;
+            }
         }
 
+        
         ApplicationPreferences.EXIT_FILES.store(exitParts);
         ApplicationPreferences.LAST_SELECTED_FILE.store(lastSelectedPart);
         return true;
@@ -657,9 +668,13 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             applicationPartControllers.remove(part.stop());
             return ButtonType.YES;
         }
+        if (!part.getController().isOpened(part.getDatabasePath())) {
+            // files for which there is another open view as well
+            return ButtonType.YES;
+        }
 
         // close if saving is not desired or we saved successfully
-        Alert alert = new Alert(AlertType.CONFIRMATION, "There are unsaved changes in " + part.toString() + ", do you want to save them?",
+        Alert alert = new Alert(AlertType.CONFIRMATION, "There are unsaved changes in:\n\n" + part.toString() + "\n\nDo you want to save them?",
                 ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
         alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         ButtonType response = alert.showAndWait().orElse(ButtonType.NO);
