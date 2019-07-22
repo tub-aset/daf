@@ -30,7 +30,7 @@ import de.jpwinkler.daf.gui.ApplicationPartFactoryRegistry.ApplicationPart;
 import de.jpwinkler.daf.gui.BackgroundTask;
 import de.jpwinkler.daf.gui.commands.MultiCommand;
 import de.jpwinkler.daf.gui.commands.UpdateAction;
-import de.jpwinkler.daf.gui.controls.CustomTextFieldTreeCell;
+import de.jpwinkler.daf.gui.controls.CustomTextTreeCell;
 import de.jpwinkler.daf.gui.controls.DoorsTreeItem;
 import de.jpwinkler.daf.gui.controls.ExtensionPane;
 import de.jpwinkler.daf.gui.controls.FixedSingleSelectionModel;
@@ -116,7 +116,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
             });
         });
 
-        outlineTreeView.setCellFactory(tv -> new CustomTextFieldTreeCell<>(
+        outlineTreeView.setCellFactory(tv -> new CustomTextTreeCell<>(
                 treeNode -> {
                     if (treeNode instanceof DoorsModule) {
                         return ((DoorsModule) treeNode).getName();
@@ -137,7 +137,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
                     } else {
                         return "";
                     }
-                }));
+                }, null));
         outlineTreeView.getSelectionModel().selectedItemProperty().addListener((ChangeListener<TreeItem<DoorsTreeNode>>) (observable, oldValue, newValue) -> {
             contentTableView.getItems().forEach(c -> {
                 if (contentTableSelectionFlag.isFalse() && newValue.getValue() != null && newValue.getValue() == c) {

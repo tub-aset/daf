@@ -21,7 +21,7 @@ package de.jpwinkler.daf.gui.controls;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import javafx.scene.control.cell.TextFieldTreeCell;
 import javafx.util.StringConverter;
@@ -30,9 +30,11 @@ import javafx.util.StringConverter;
  *
  * @author fwiesweg
  */
-public class CustomTextFieldTreeCell<T> extends TextFieldTreeCell<T> {
-    
-    public CustomTextFieldTreeCell(Function<T, String> toString) {
+public class CustomTextTreeCell<T> extends TextFieldTreeCell<T> {
+
+    public CustomTextTreeCell(Function<T, String> toString, BiFunction<T, String, Boolean> editCommand) {
+        this.setEditable(editCommand != null);
+
         this.setConverter(new StringConverter<T>() {
             @Override
             public String toString(T node) {
@@ -41,9 +43,9 @@ public class CustomTextFieldTreeCell<T> extends TextFieldTreeCell<T> {
 
             @Override
             public T fromString(String newName) {
-                throw new UnsupportedOperationException();
+                editCommand.apply(CustomTextTreeCell.this.getItem(), newName);
+                return CustomTextTreeCell.this.getItem();
             }
         });
-        this.setEditable(false);
-    }    
+    }
 }

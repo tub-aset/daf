@@ -30,7 +30,7 @@ import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.gui.ApplicationPartInterface;
 import de.jpwinkler.daf.model.DoorsLinkStatus;
 import de.jpwinkler.daf.model.DoorsObject;
-import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import javafx.application.Platform;
 import javafx.scene.control.ContextMenu;
@@ -41,14 +41,14 @@ import javafx.scene.control.TableColumn;
  *
  * @author fwiesweg
  */
-public class LinksTableCell<T extends DoorsObject> extends CustomTextAreaTableCell<T> {
+public class LinksTableCell<T extends DoorsObject> extends CustomTextTableCell<T> {
 
-    public LinksTableCell(TableColumn<T, T> tc, BiConsumer<T, String> editCommand, ApplicationPartInterface appPartInterface) {
+    public LinksTableCell(TableColumn<T, T> tc, BiFunction<T, String, Boolean> editCommand, ApplicationPartInterface appPartInterface) {
         super(tc, it -> it.getOutgoingLinks().stream()
                 .map(ol -> ol.getTargetModule() + ":" + ol.getTargetObject())
                 .collect(Collectors.joining("\n")),
                 editCommand, (cell, it) -> {
-                });
+                }, true);
 
         ContextMenu contextMenu = new ContextMenu();
         contextMenu.getItems().add(new MenuItem("test"));

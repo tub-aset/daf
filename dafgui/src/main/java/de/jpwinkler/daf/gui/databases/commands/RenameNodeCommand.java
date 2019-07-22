@@ -22,6 +22,8 @@ package de.jpwinkler.daf.gui.databases.commands;
  * #L%
  */
 
+import de.jpwinkler.daf.gui.ApplicationPartFactoryRegistry.ApplicationPart;
+import de.jpwinkler.daf.gui.WeakReference;
 import de.jpwinkler.daf.gui.commands.AbstractCommand;
 import de.jpwinkler.daf.gui.commands.UpdateAction;
 import de.jpwinkler.daf.gui.databases.DatabasePaneController;
@@ -36,8 +38,10 @@ public class RenameNodeCommand extends AbstractCommand {
     private final DoorsTreeNode node;
     private String oldName;
     private final String newName;
+    private final WeakReference<ApplicationPart> applicationPart;
 
-    public RenameNodeCommand(DoorsTreeNode node, String newName) {
+    public RenameNodeCommand(ApplicationPart applicationPart, DoorsTreeNode node, String newName) {
+        this.applicationPart = new WeakReference<>(applicationPart);
         this.node = node;
         this.newName = newName;
     }
@@ -48,8 +52,15 @@ public class RenameNodeCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean isApplicable() {
-        return node != null;
+    public String getNotApplicableReason() {
+        if(node == null) {
+            return "No node selected";
+        }
+        if(applicationPart.stream().map(ap -> ap.getController().isOpened(node)).findAny().orElse(false)) {
+            return "Node is opened in a different view";
+        }
+        
+        return null;
     }
 
     @Override

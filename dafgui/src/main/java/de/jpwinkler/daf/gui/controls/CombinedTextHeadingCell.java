@@ -28,7 +28,7 @@ package de.jpwinkler.daf.gui.controls;
  */
 
 import de.jpwinkler.daf.model.DoorsObject;
-import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import javafx.geometry.Insets;
 import javafx.scene.control.TableColumn;
@@ -37,10 +37,10 @@ import javafx.scene.control.TableColumn;
  *
  * @author fwiesweg
  */
-public class CombinedTextHeadingCell<T extends DoorsObject> extends CustomTextAreaTableCell<T> {
+public class CombinedTextHeadingCell<T extends DoorsObject> extends CustomTextTableCell<T> {
     
-    public CombinedTextHeadingCell(TableColumn<T, T> tc, Function<T, String> toString, BiConsumer<T, String> editCommand) {
-        super(tc, toString, editCommand);
+    public CombinedTextHeadingCell(TableColumn<T, T> tc, Function<T, String> toString, BiFunction<T, String, Boolean> editCommand) {
+        super(tc, toString, editCommand, true);
     }
 
     @Override

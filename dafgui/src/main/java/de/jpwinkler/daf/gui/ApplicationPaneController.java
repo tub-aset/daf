@@ -44,6 +44,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -361,7 +362,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     }
 
     private ApplicationPartController<?> getApplicationPartController(Tab tab) {
-        return getApplicationPartController((ApplicationPart) tab.getUserData());
+        return tab == null ? null : getApplicationPartController((ApplicationPart) tab.getUserData());
     }
 
     private ApplicationPartController<?> getApplicationPartController(ApplicationPart part) {
@@ -598,6 +599,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
                 .map(t -> getApplicationPartController(t))
                 .map(pc -> pc.getApplicationPart())
                 .collect(Collectors.toCollection(() -> new ArrayList<>()));
+
         ApplicationPart lastSelectedPart = getApplicationPartController(tabPane.getSelectionModel().getSelectedItem()).getApplicationPart();
         tabPane.getTabs().clear();
         if (!applicationPartControllers.isEmpty()) {
@@ -774,5 +776,9 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         pluginStateMenu.getItems().removeIf(mi -> Objects.equals(mi.getUserData(), pluginId));
 
         pluginManager.deletePlugin(pluginId);
+    }
+
+    public Collection<ApplicationPartController> getApplicationPartControllers() {
+        return Collections.unmodifiableCollection(this.applicationPartControllers.values());
     }
 }

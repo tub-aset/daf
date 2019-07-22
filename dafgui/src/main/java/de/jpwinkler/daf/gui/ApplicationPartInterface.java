@@ -43,7 +43,7 @@ import javafx.scene.control.SelectionModel;
  */
 public interface ApplicationPartInterface {
 
-    void executeCommand(final AbstractCommand command);
+    boolean executeCommand(final AbstractCommand command);
 
     DatabaseInterface getDatabaseInterface();
     

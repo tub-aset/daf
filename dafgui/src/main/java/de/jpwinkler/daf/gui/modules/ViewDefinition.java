@@ -24,7 +24,7 @@ package de.jpwinkler.daf.gui.modules;
 import de.jpwinkler.daf.db.ModuleCSV;
 import de.jpwinkler.daf.gui.ApplicationPartInterface;
 import de.jpwinkler.daf.gui.controls.CombinedTextHeadingCell;
-import de.jpwinkler.daf.gui.controls.CustomTextAreaTableCell;
+import de.jpwinkler.daf.gui.controls.CustomTextTableCell;
 import de.jpwinkler.daf.gui.controls.LinksTableCell;
 import de.jpwinkler.daf.gui.modules.commands.EditLinksCommand;
 import de.jpwinkler.daf.gui.modules.commands.EditObjectAttributeCommand;
@@ -33,7 +33,7 @@ import de.jpwinkler.daf.model.DoorsObject;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -86,28 +86,39 @@ public class ViewDefinition implements Serializable {
 
     public static enum ColumnType {
         ATTRIBUTE(true, (cd, tc, i) -> {
-            BiConsumer<DoorsObject, String> edit = (it, newValue) -> {
-                i.executeCommand(new EditObjectAttributeCommand(it, cd.getAttributeName(), newValue));
-                tc.getTableView().requestFocus();
-                tc.getTableView().getFocusModel().focusNext();
+            BiFunction<DoorsObject, String, Boolean> edit = (it, newValue) -> {
+                if (i.executeCommand(new EditObjectAttributeCommand(it, cd.getAttributeName(), newValue))) {
+                    tc.getTableView().requestFocus();
+                    tc.getTableView().getFocusModel().focusNext();
+                    return true;
+                }
+
+                return false;
             };
 
-            return new CustomTextAreaTableCell<>(tc, it -> it.getAttributes().get(cd.getAttributeName()), edit);
+            return new CustomTextTableCell<>(tc, it -> it.getAttributes().get(cd.getAttributeName()), edit, true);
         }),
         COMBINED_TEXT_HEADING(false, (cd, tc, i) -> {
-            BiConsumer<DoorsObject, String> edit = (it, newValue) -> {
-                i.executeCommand(new EditObjectAttributeCommand(it, it.isHeading() ? DoorsAttributes.OBJECT_HEADING.getKey() : DoorsAttributes.OBJECT_TEXT.getKey(), newValue));
-                tc.getTableView().requestFocus();
-                tc.getTableView().getFocusModel().focusNext();
+            BiFunction<DoorsObject, String, Boolean> edit = (it, newValue) -> {
+                if (i.executeCommand(new EditObjectAttributeCommand(it, it.isHeading() ? DoorsAttributes.OBJECT_HEADING.getKey() : DoorsAttributes.OBJECT_TEXT.getKey(), newValue))) {
+                    tc.getTableView().requestFocus();
+                    tc.getTableView().getFocusModel().focusNext();
+                    return true;
+                }
+                return false;
             };
 
             return new CombinedTextHeadingCell<>(tc, it -> it.getText(), edit);
         }),
         LINKS(false, (cd, tc, i) -> {
-            BiConsumer<DoorsObject, String> edit = (it, newValue) -> {
-                i.executeCommand(new EditLinksCommand(it, ModuleCSV.parseLinks(newValue, i.getDatabaseInterface().getFactory(), it).collect(Collectors.toList())));
-                tc.getTableView().requestFocus();
-                tc.getTableView().getFocusModel().focusNext();
+            BiFunction<DoorsObject, String, Boolean> edit = (it, newValue) -> {
+                if (i.executeCommand(new EditLinksCommand(it, ModuleCSV.parseLinks(newValue, i.getDatabaseInterface().getFactory(), it).collect(Collectors.toList())))) {
+                    tc.getTableView().requestFocus();
+                    tc.getTableView().getFocusModel().focusNext();
+                    return true;
+                }
+
+                return false;
             };
 
             return new LinksTableCell<>(tc, edit, i);

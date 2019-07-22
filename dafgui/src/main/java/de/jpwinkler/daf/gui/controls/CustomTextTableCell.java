@@ -22,6 +22,7 @@ package de.jpwinkler.daf.gui.controls;
  * #L%
  */
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -29,6 +30,8 @@ import javafx.scene.Node;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputControl;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -37,22 +40,25 @@ import javafx.scene.input.MouseEvent;
  *
  * @author fwiesweg
  */
-public class CustomTextAreaTableCell<T> extends TableCell<T, T> {
+public class CustomTextTableCell<T> extends TableCell<T, T> {
 
-    private boolean editAllowed = false;
+    private final boolean multiline;
     private final Function<T, String> toStringFun;
-    private final BiConsumer<T, String> editCommand;
-    private TextArea textArea;
+    private final BiFunction<T, String, Boolean> editCommand;
 
-    public CustomTextAreaTableCell(TableColumn<T, T> tc, Function<T, String> toString, BiConsumer<T, String> editCommand) {
+    private TextInputControl textInput;
+    private boolean editAllowed = false;
+
+    public CustomTextTableCell(TableColumn<T, T> tc, Function<T, String> toString, BiFunction<T, String, Boolean> editCommand, boolean multiline) {
         this(tc, toString, editCommand, (x, y) -> {
-        });
+        }, multiline);
     }
 
-    public CustomTextAreaTableCell(TableColumn<T, T> tc, Function<T, String> toString, BiConsumer<T, String> editCommand, BiConsumer<CustomTextAreaTableCell<T>, T> opener) {
+    public CustomTextTableCell(TableColumn<T, T> tc, Function<T, String> toString, BiFunction<T, String, Boolean> editCommand, BiConsumer<CustomTextTableCell<T>, T> opener, boolean multiline) {
         tc.setCellValueFactory((it) -> new ReadOnlyObjectWrapper<>(it.getValue()));
         this.toStringFun = toString;
         this.editCommand = editCommand;
+        this.multiline = multiline;
 
         this.addEventFilter(MouseEvent.MOUSE_CLICKED, (eh) -> {
             if (!this.isEditing() && eh.getClickCount() >= 2 && eh.getButton() == MouseButton.PRIMARY) {
@@ -71,25 +77,34 @@ public class CustomTextAreaTableCell<T> extends TableCell<T, T> {
         return toStringFun.apply(this.getItem());
     }
 
-    private TextArea createTextArea() {
-        TextArea textArea = new TextArea(getItemText());
-        textArea.setWrapText(true);
+    private TextInputControl createTextInput() {
+        TextInputControl textInput;
+        if (multiline) {
+            TextArea textArea = new TextArea(getItemText());
+            textArea.setWrapText(true);
+            textInput = textArea;
+        } else {
+            textInput = new TextField(getItemText());
+        }
 
-        textArea.setOnKeyPressed(t -> {
+        textInput.setOnKeyPressed(t -> {
             if (t.getCode() == KeyCode.ESCAPE) {
                 this.cancelEdit();
                 t.consume();
             } else if (t.getCode() == KeyCode.ENTER && t.isShiftDown()) {
                 t.consume();
-                textArea.insertText(textArea.getCaretPosition(), "\n");
+                textInput.insertText(textInput.getCaretPosition(), "\n");
             } else if (t.getCode() == KeyCode.ENTER) {
-                T it = CustomTextAreaTableCell.this.getItem();
-                editCommand.accept(it, textArea.getText());
-                this.commitEdit(it);
+                T it = CustomTextTableCell.this.getItem();
+                if (editCommand.apply(it, textInput.getText())) {
+                    this.commitEdit(it);
+                } else {
+                    this.cancelEdit();
+                }
                 t.consume();
             }
         });
-        return textArea;
+        return textInput;
     }
 
     @Override
@@ -101,22 +116,22 @@ public class CustomTextAreaTableCell<T> extends TableCell<T, T> {
         super.startEdit();
 
         if (isEditing()) {
-            if (textArea == null) {
-                textArea = createTextArea();
+            if (textInput == null) {
+                textInput = createTextInput();
             }
 
-            textArea.setText(getItemText());
+            textInput.setText(getItemText());
 
             this.setText(null);
-            this.setGraphic(textArea);
+            this.setGraphic(textInput);
 
-            Node text = textArea.lookup(".text");
-            textArea.prefHeightProperty().bind(Bindings.createDoubleBinding(()
-                    -> text.getBoundsInLocal().getHeight(), text.boundsInLocalProperty()).add(20)
-            );
+            Node text = textInput.lookup(".text");
+            if (text != null) {
+                textInput.prefHeightProperty().bind(Bindings.createDoubleBinding(() -> text.getBoundsInLocal().getHeight(), text.boundsInLocalProperty()).add(20));
+            }
 
-            textArea.selectAll();
-            textArea.requestFocus();
+            textInput.selectAll();
+            textInput.requestFocus();
         }
     }
 
@@ -137,11 +152,11 @@ public class CustomTextAreaTableCell<T> extends TableCell<T, T> {
 
         } else {
             if (this.isEditing()) {
-                if (textArea != null) {
-                    textArea.setText(getItemText());
+                if (textInput != null) {
+                    textInput.setText(getItemText());
                 }
                 this.setText(null);
-                this.setGraphic(textArea);
+                this.setGraphic(textInput);
             } else {
                 this.setText(getItemText());
                 this.setGraphic(null);

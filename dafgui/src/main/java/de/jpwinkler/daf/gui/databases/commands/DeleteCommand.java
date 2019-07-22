@@ -22,6 +22,8 @@ package de.jpwinkler.daf.gui.databases.commands;
  * #L%
  */
 
+import de.jpwinkler.daf.gui.ApplicationPartFactoryRegistry.ApplicationPart;
+import de.jpwinkler.daf.gui.WeakReference;
 import de.jpwinkler.daf.gui.commands.AbstractCommand;
 import de.jpwinkler.daf.gui.commands.UpdateAction;
 import de.jpwinkler.daf.gui.databases.DatabasePaneController;
@@ -33,11 +35,13 @@ import de.jpwinkler.daf.model.DoorsTreeNode;
  */
 public class DeleteCommand extends AbstractCommand {
 
+    private final WeakReference<ApplicationPart> applicationPart;
     private final DoorsTreeNode node;
     private final DoorsTreeNode parent;
     private int oldPos;
 
-    public DeleteCommand(final DoorsTreeNode node) {
+    public DeleteCommand(ApplicationPart applicationPart, DoorsTreeNode node) {
+        this.applicationPart = new WeakReference<>(applicationPart);
         this.node = node;
         this.parent = node.getParent();
     }
@@ -48,9 +52,21 @@ public class DeleteCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean isApplicable() {
-        return node != null && node.getParent() != null;
+    public String getNotApplicableReason() {
+        if(node == null) {
+            return "No node selected";
+        }
+        if(node.getParent() == null) {
+            return "Cannot delete root node";
+        }
+        if(applicationPart.stream().map(ap -> ap.getController().isOpened(node)).findAny().orElse(false)) {
+            return "Node is opened in a different view";
+        }
+        
+        return null;
     }
+    
+    
 
     @Override
     public void apply() {

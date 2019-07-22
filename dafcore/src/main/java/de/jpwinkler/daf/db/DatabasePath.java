@@ -102,6 +102,26 @@ public class DatabasePath implements Serializable {
         return true;
     }
 
+    public boolean isParent(DatabasePath possibleParent) {
+        if (!Objects.equals(this.databaseInterface, possibleParent.databaseInterface)) {
+            return false;
+        }
+        if (!Objects.equals(this.databasePath, possibleParent.databasePath)) {
+            return false;
+        }
+        if (this.path == null || possibleParent.path == null) {
+            return false;
+        }
+        if (Objects.equals(this.path, possibleParent.path)) {
+            return false;
+        }
+        if (!possibleParent.path.startsWith(this.path)) {
+            return false;
+        }
+
+        return true;
+    }
+
     public List<String> getDatabasePathSegments() {
         return databasePath == null || databasePath.isEmpty() ? Collections.emptyList() : Arrays.asList(databasePath.split("/"));
     }

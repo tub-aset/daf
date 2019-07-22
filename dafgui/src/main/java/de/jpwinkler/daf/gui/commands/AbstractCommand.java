@@ -34,6 +34,10 @@ public abstract class AbstractCommand {
     public boolean isApplicable() {
         return true;
     }
+    
+    public String getNotApplicableReason() {
+        return isApplicable() ? null : "Command not applicable";
+    }
 
     public abstract String getName();
 

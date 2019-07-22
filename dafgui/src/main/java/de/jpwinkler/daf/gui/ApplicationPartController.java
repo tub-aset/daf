@@ -184,20 +184,22 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
     }
 
     @Override
-    public final void executeCommand(final AbstractCommand command) {
+    public final boolean executeCommand(final AbstractCommand command) {
         if (getDatabaseInterface().isReadOnly()) {
             this.setStatus(command.getName() + ": Database is read-only.");
-            return;
+            return false;
         }
 
-        if (!command.isApplicable()) {
-            this.setStatus(command.getName() + ": Command is not applicable for this selection.");
-            return;
+        String notApplicableReason = command.getNotApplicableReason();
+        if (notApplicableReason != null) {
+            this.setStatus(command.getName() + ": " + notApplicableReason);
+            return false;
         }
 
         command.apply();
         applicationPart.getCommandStack().addCommand(this, command);
         updateGui(command.getUpdateActions());
+        return true;
     }
 
     @SuppressWarnings("unchecked")
@@ -270,6 +272,18 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
         extensions.clear();
         menus.removeAll(extensionMenus.keySet());
         extensionMenus.clear();
+    }
+
+    public boolean isOpened(DoorsTreeNode node) {
+        return this.isOpened(this.getPath().withPath(node.getFullName()));
+    }
+
+    public boolean isOpened(DatabasePath path) {
+        return this.applicationController.getApplicationPartControllers().stream()
+                .filter(apc -> apc != this)
+                .map(ap -> ap.getPath())
+                .filter(dbPath -> path.equals(dbPath) || path.isParent(dbPath))
+                .findAny().isPresent();
     }
 
 }

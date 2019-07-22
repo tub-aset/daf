@@ -26,10 +26,10 @@ import de.jpwinkler.daf.gui.ApplicationPaneController;
 import de.jpwinkler.daf.gui.ApplicationPartController;
 import de.jpwinkler.daf.gui.ApplicationPartFactoryRegistry.ApplicationPart;
 import de.jpwinkler.daf.gui.BackgroundTask;
+import de.jpwinkler.daf.gui.commands.MultiCommand;
 import de.jpwinkler.daf.gui.commands.UpdateAction;
-import de.jpwinkler.daf.gui.controls.CustomTextAreaTableCell;
-import de.jpwinkler.daf.gui.controls.CustomTextFieldTableCell;
-import de.jpwinkler.daf.gui.controls.CustomTextFieldTreeCell;
+import de.jpwinkler.daf.gui.controls.CustomTextTableCell;
+import de.jpwinkler.daf.gui.controls.CustomTextTreeCell;
 import de.jpwinkler.daf.gui.controls.DoorsTreeItem;
 import de.jpwinkler.daf.gui.controls.EmptySelectionModel;
 import de.jpwinkler.daf.gui.controls.ExtensionPane;
@@ -107,11 +107,12 @@ public final class DatabasePaneController extends ApplicationPartController<Data
             newTagComboBox.setDisable(true);
         }
 
-        databaseTreeView.setCellFactory(tv -> new CustomTextFieldTreeCell<>(
+        databaseTreeView.setCellFactory(tv -> new CustomTextTreeCell<>(
                 it -> {
                     knownTags.addAll(it.getTags());
                     return it.getName();
-                }));
+                },
+                (it, newName) -> this.executeCommand(new RenameNodeCommand(applicationPart, it, newName))));
 
         databaseTreeView.setRoot(new DoorsTreeItem(super.getBackgroundTaskExecutor(), (DoorsTreeNode) super.getDatabaseInterface().getDatabaseRoot(), node -> node instanceof DoorsFolder, treeNodeCache));
         databaseTreeView.getRoot().setExpanded(true);
@@ -128,11 +129,11 @@ public final class DatabasePaneController extends ApplicationPartController<Data
             updateGui(UpdateTagsView, UpdateAttributesView, UpdateNodeTitle);
         });
 
-        moduleNameColumn.setCellFactory(tc -> new CustomTextFieldTableCell<>(tc,
+        moduleNameColumn.setCellFactory(tc -> new CustomTextTableCell<>(tc,
                 it -> it.getName(),
-                (it, newName) -> this.executeCommand(new RenameNodeCommand(it, newName)),
-                it -> this.open(this.getPath().withPath(it.getFullName()), OpenFlag.OPEN_ONLY)));
-        moduleDescriptionColumn.setCellFactory(tc -> new CustomTextAreaTableCell<>(tc,
+                (it, newName) -> this.executeCommand(new RenameNodeCommand(this.getApplicationPart(), it, newName)),
+                (c, it) -> this.open(this.getPath().withPath(it.getFullName()), OpenFlag.OPEN_ONLY), false));
+        moduleDescriptionColumn.setCellFactory(tc -> new CustomTextTableCell<>(tc,
                 it -> {
                     CompletableFuture<Map<String, String>> future = it.getAttributesAsync(super.getBackgroundTaskExecutor().withPriority(BackgroundTask.PRIORITY_ATTRIBUTES));
                     if (future.isDone()) {
@@ -143,13 +144,9 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
                     return "Loading...";
                 },
-                (it, newValue) -> {
-                    this.executeCommand(new EditAttributesCommand(DoorsAttributes.MODULE_DESCRIPTION.getKey(), newValue, it));
-                },
-                (cell, it) -> {
-                    this.open(this.getPath().withPath(it.getFullName()), OpenFlag.OPEN_ONLY);
-                }));
-        snapshotListsColumn.setCellFactory(tc -> new CustomTextFieldTableCell<>(tc,
+                (it, newValue) -> this.executeCommand(new EditAttributesCommand(DoorsAttributes.MODULE_DESCRIPTION.getKey(), newValue, it)),
+                (c, it) -> this.open(this.getPath().withPath(it.getFullName()), OpenFlag.OPEN_ONLY), true));
+        snapshotListsColumn.setCellFactory(tc -> new CustomTextTableCell<>(tc,
                 it -> it == null ? "" : getSnapshotLists(it),
                 (it, newLists) -> {
                     TreeMap<String, TreeSet<String>> data = DatabasePanePreferences.SNAPSHOT_LISTS.retrieve();
@@ -166,23 +163,20 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                     });
                     DatabasePanePreferences.SNAPSHOT_LISTS.store(data);
                     modulesTableView.refresh();
+                    return true;
                 },
-                it -> this.open(this.getPath().withPath(it.getFullName()), OpenFlag.OPEN_ONLY)));
+                (c, it) -> this.open(this.getPath().withPath(it.getFullName()), OpenFlag.OPEN_ONLY), false));
 
-        attributeNameColumn.setCellFactory(tc -> new CustomTextFieldTableCell<>(tc,
+        attributeNameColumn.setCellFactory(tc -> new CustomTextTableCell<>(tc,
                 it -> it.getKey(),
-                (it, newKey) -> {
-                    getCurrentDoorsTreeNode()
-                            .map(module -> new RenameAttributesCommand(it.getKey(), newKey, module))
-                            .forEach(this::executeCommand);
-                }));
-        attributeValueColumn.setCellFactory(tc -> new CustomTextAreaTableCell<>(tc,
+                (it, newKey) -> this.executeCommand(new MultiCommand<>(getCurrentDoorsTreeNode()
+                        .map(module -> new RenameAttributesCommand(it.getKey(), newKey, module))
+                        .collect(Collectors.toList()))), false));
+        attributeValueColumn.setCellFactory(tc -> new CustomTextTableCell<>(tc,
                 it -> it.getValue(),
-                (it, newValue) -> {
-                    this.modulesTableView.getSelectionModel().getSelectedItems().stream()
-                            .map(module -> new EditAttributesCommand(it.getKey(), newValue, module))
-                            .forEach(this::executeCommand);
-                }));
+                (it, newValue) -> this.executeCommand(new MultiCommand<>(this.modulesTableView.getSelectionModel().getSelectedItems().stream()
+                        .map(module -> new EditAttributesCommand(it.getKey(), newValue, module)).collect(Collectors.toList()))),
+                true));
         setupColumnWidthStorage(attributeNameColumn, DatabasePanePreferences.ATTRIBUTENAME_WIDTH);
         setupColumnWidthStorage(attributeValueColumn, DatabasePanePreferences.ATTRIBUTEVALUE_WIDTH);
         setupColumnWidthStorage(moduleNameColumn, DatabasePanePreferences.MODULENAME_WIDTH);
@@ -364,12 +358,20 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
     @FXML
     public void copyClicked() {
+        List<DoorsTreeNode> nodeClipboard = null;
         if (databaseTreeView.isFocused()) {
             nodeClipboard = databaseTreeView.getSelectionModel().getSelectedItems().stream().map(it -> it.getValue()).collect(Collectors.toList());
         }
         if (modulesTableView.isFocused()) {
             nodeClipboard = modulesTableView.getSelectionModel().getSelectedItems().stream().collect(Collectors.toList());
         }
+
+        if (nodeClipboard != null && nodeClipboard.stream().anyMatch(this::isOpened)) {
+            setStatus("Cannot copy: at least one node has been opened elsewhere");
+        } else {
+            this.nodeClipboard = nodeClipboard;
+        }
+
         if (attributesTableView.isFocused()) {
             attributeClipboard = attributesTableView.getSelectionModel().getSelectedItems().stream().collect(Collectors.toList());
         }
@@ -407,14 +409,14 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         if (databaseTreeView.isFocused()) {
             databaseTreeView.getSelectionModel().getSelectedItems().stream()
                     .map(it -> it.getValue())
-                    .map(it -> new DeleteCommand(it))
+                    .map(it -> new DeleteCommand(this.getApplicationPart(), it))
                     .forEach(it -> {
                         Platform.runLater(() -> this.executeCommand(it));
                     });
         }
         if (modulesTableView.isFocused()) {
             modulesTableView.getSelectionModel().getSelectedItems().stream()
-                    .map(it -> new DeleteCommand(it))
+                    .map(it -> new DeleteCommand(this.getApplicationPart(), it))
                     .forEach(it -> {
                         Platform.runLater(() -> this.executeCommand(it));
                     });
@@ -475,7 +477,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         TreeMap<String, TreeSet<String>> snapshotLists = DatabasePanePreferences.SNAPSHOT_LISTS.retrieve();
 
         MultiLineTextInputDialog editor = new MultiLineTextInputDialog(snapshotLists.get(snapshotList).stream().collect(Collectors.joining("\n")));
-        if (editor.showDialog(this.databaseTreeView.getScene().getWindow(), 
+        if (editor.showDialog(this.databaseTreeView.getScene().getWindow(),
                 "Snapshot list " + snapshotList, ButtonType.CANCEL, ButtonType.OK).orElse(editor.resultOf(ButtonType.CANCEL)).buttonType == ButtonType.CANCEL) {
             return;
         }
