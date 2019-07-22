@@ -104,7 +104,9 @@ public class CustomTextTableCell<T> extends TableCell<T, T> {
                 textInput.insertText(textInput.getCaretPosition(), "\n");
             } else if (t.getCode() == KeyCode.ENTER) {
                 T it = CustomTextTableCell.this.getItem();
-                if (editCommand.apply(it, textInput.getText())) {
+                String text = textInput.getText().trim();
+                textInput.setText(text);
+                if (editCommand.apply(it, text)) {
                     this.commitEdit(it);
                 } else {
                     this.cancelEdit();
