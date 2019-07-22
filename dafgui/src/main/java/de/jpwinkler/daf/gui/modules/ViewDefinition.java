@@ -108,7 +108,7 @@ public class ViewDefinition implements Serializable {
                 return false;
             };
 
-            return new CombinedTextHeadingCell<>(tc, it -> it.getText(), edit);
+            return new CombinedTextHeadingCell<>(tc, edit);
         }),
         LINKS(false, (cd, tc, i) -> {
             BiFunction<DoorsObject, String, Boolean> edit = (it, newValue) -> {

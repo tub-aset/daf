@@ -26,11 +26,8 @@ package de.jpwinkler.daf.gui.controls;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.model.DoorsObject;
 import java.util.function.BiFunction;
-import java.util.function.Function;
-import javafx.geometry.Insets;
 import javafx.scene.control.TableColumn;
 
 /**
@@ -38,34 +35,40 @@ import javafx.scene.control.TableColumn;
  * @author fwiesweg
  */
 public class CombinedTextHeadingCell<T extends DoorsObject> extends CustomTextTableCell<T> {
-    
-    public CombinedTextHeadingCell(TableColumn<T, T> tc, Function<T, String> toString, BiFunction<T, String, Boolean> editCommand) {
-        super(tc, toString, editCommand, true);
+
+    public CombinedTextHeadingCell(TableColumn<T, T> tc, BiFunction<T, String, Boolean> editCommand) {
+        super(tc, it -> it.getText(), editCommand, true);
     }
 
     @Override
-    public void updateItem(final T item, final boolean empty) {
-        super.updateItem(item, empty);
-        String style = "";
-        if (!empty && getTableRow() != null) {
-            if (item.isHeading()) {
-                style += "-fx-font-weight: bold;";
-                if (item.getObjectLevel() <= 2) {
-                    style += "-fx-font-size: 140%;";
-                } else if (item.getObjectLevel() == 3) {
-                    style += "-fx-font-size: 130%;";
-                } else if (item.getObjectLevel() == 4) {
-                    style += "-fx-font-size: 120%;";
-                } else if (item.getObjectLevel() == 5) {
-                    style += "-fx-font-size: 110%;";
-                }
-                setText(item.getObjectNumber() + " " + item.getObjectHeading());
-            } else {
-                setText(item.getObjectText());
-            }
-            setPadding(new Insets(0, 0, 0, (item.getObjectLevel() - 1) * 10));
+    protected String getDisplayedItemText(T item, boolean empty) {
+        if (item == null || empty) {
+            return "";
         }
-        setStyle(style);
+
+        return item.isHeading() ? item.getObjectNumber() + " " + item.getObjectHeading() : item.getObjectText();
     }
-    
+
+    @Override
+    protected String getDisplayedStyle(T item, boolean empty) {
+        if (item == null || empty) {
+            return "";
+        }
+
+        String style = "-fx-padding: 0 0 0 " + (item.getObjectLevel() - 1) * 10 + ";";
+        if (item.isHeading()) {
+            style += "-fx-font-weight: bold;";
+            if (item.getObjectLevel() <= 2) {
+                style += "-fx-font-size: 140%;";
+            } else if (item.getObjectLevel() == 3) {
+                style += "-fx-font-size: 130%;";
+            } else if (item.getObjectLevel() == 4) {
+                style += "-fx-font-size: 120%;";
+            } else if (item.getObjectLevel() == 5) {
+                style += "-fx-font-size: 110%;";
+            }
+        }
+        return style;
+    }
+
 }

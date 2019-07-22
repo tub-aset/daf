@@ -73,15 +73,14 @@ public class LinksTableCell<T extends DoorsObject> extends CustomTextTableCell<T
     }
 
     @Override
-    public void updateItem(final T item, final boolean empty) {
-        super.updateItem(item, empty);
-        if (item == null) {
-            return;
+    protected String getDisplayedItemText(T item, boolean empty) {
+        if (item == null || empty) {
+            return "";
         }
 
-        this.setText(item.getOutgoingLinks().stream()
+        return item.getOutgoingLinks().stream()
                 .map(ol -> toDisplayString(ol.getLinkStatus()) + " " + ol.getTargetModule() + ":" + ol.getTargetObject())
-                .collect(Collectors.joining("\n")));
+                .collect(Collectors.joining("\n"));
     }
 
     public static String toDisplayString(DoorsLinkStatus linkStatus) {

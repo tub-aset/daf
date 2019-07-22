@@ -73,6 +73,14 @@ public class CustomTextTableCell<T> extends TableCell<T, T> {
         });
     }
 
+    protected String getDisplayedItemText(T item, boolean empty) {
+        return getItemText();
+    }
+
+    protected String getDisplayedStyle(T item, boolean empty) {
+        return "";
+    }
+
     private String getItemText() {
         return toStringFun.apply(this.getItem());
     }
@@ -108,7 +116,7 @@ public class CustomTextTableCell<T> extends TableCell<T, T> {
     }
 
     @Override
-    public void startEdit() {
+    public final void startEdit() {
         if (!editAllowed || !isEditable() || !getTableView().isEditable() || !getTableColumn().isEditable()) {
             return;
         }
@@ -136,15 +144,17 @@ public class CustomTextTableCell<T> extends TableCell<T, T> {
     }
 
     @Override
-    public void cancelEdit() {
+    public final void cancelEdit() {
         super.cancelEdit();
-        this.setText(getItemText());
+        this.setText(getDisplayedItemText(getItem(), false));
         this.setGraphic(null);
     }
 
     @Override
-    public void updateItem(T item, boolean empty) {
+    public final void updateItem(T item, boolean empty) {
         super.updateItem(item, empty);
+
+        this.setStyle(getDisplayedStyle(item, empty));
 
         if (this.isEmpty()) {
             this.setText(null);
@@ -158,7 +168,7 @@ public class CustomTextTableCell<T> extends TableCell<T, T> {
                 this.setText(null);
                 this.setGraphic(textInput);
             } else {
-                this.setText(getItemText());
+                this.setText(getDisplayedItemText(item, empty));
                 this.setGraphic(null);
             }
         }
