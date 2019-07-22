@@ -62,6 +62,7 @@ public class PluginMain extends Plugin {
      * @deprecated
      */
     @Deprecated
+    @SafeVarargs
     public static <T> List<T> List_of(T... args) {
         return new ArrayList<>(Arrays.asList(args));
     }

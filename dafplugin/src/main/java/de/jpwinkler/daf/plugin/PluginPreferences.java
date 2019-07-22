@@ -30,7 +30,7 @@ import java.io.Serializable;
  */
 public class PluginPreferences<T extends Serializable> extends ApplicationPreference<T> {
 
-    public static final ApplicationPreference<String> MENU_NAME = new PluginPreferences("MENU_NAME", String.class, "Application Part Extension Menu");
+    public static final ApplicationPreference<String> MENU_NAME = new PluginPreferences<>("MENU_NAME", String.class, "Application Part Extension Menu");
 
     public PluginPreferences(String name, Class<? super T> valueType, T defaultValue) {
         super(name, valueType, defaultValue);
