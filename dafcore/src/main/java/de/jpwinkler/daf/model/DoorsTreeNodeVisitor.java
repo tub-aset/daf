@@ -39,20 +39,22 @@ public abstract class DoorsTreeNodeVisitor<T extends DoorsTreeNode, U> {
     }
 
     public final U traverse(final DoorsTreeNode node) {
-        boolean traverseChildren = visitedNodeCls == null || visitedNodeCls.isAssignableFrom(node.getClass());
-        if (!traverseChildren) {
+        boolean traverseChildren = true;
+        if (visitedNodeCls == null || visitedNodeCls.isAssignableFrom(node.getClass())) {
             @SuppressWarnings("unchecked")
             T nodeCast = (T) node;
             traverseChildren = visitPreTraverse(nodeCast);
         }
 
         if (!traverseChildren) {
-            for (final DoorsTreeNode child : node.getChildren()) {
-                child.accept(this);
-            }
+            return result;
         }
 
-        if (traverseChildren) {
+        for (final DoorsTreeNode child : node.getChildren()) {
+            this.traverse(child);
+        }
+
+        if (visitedNodeCls == null || visitedNodeCls.isAssignableFrom(node.getClass())) {
             @SuppressWarnings("unchecked")
             T nodeCast = (T) node;
             visitPostTraverse(nodeCast);
