@@ -137,13 +137,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
                     } else {
                         return "";
                     }
-                },
-                (it, newName) -> {
-                    throw new UnsupportedOperationException();
-                },
-                it -> {
-                }
-        ));
+                }));
         outlineTreeView.getSelectionModel().selectedItemProperty().addListener((ChangeListener<TreeItem<DoorsTreeNode>>) (observable, oldValue, newValue) -> {
             contentTableView.getItems().forEach(c -> {
                 if (contentTableSelectionFlag.isFalse() && newValue.getValue() != null && newValue.getValue() == c) {
@@ -375,7 +369,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
         }
     }
-    
+
     private final ViewDefinition standardView = STANDARD_VIEW.retrieve();
 
     private void updateViews() {
@@ -551,7 +545,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
     @Override
     public void selectLinkTarget(DoorsObject linkTarget) {
-        loadingDone.thenRun(() -> Platform.runLater( () -> {
+        loadingDone.thenRun(() -> Platform.runLater(() -> {
             DoorsObject localLinkTarget = this.filteredModule.accept(new DoorsTreeNodeVisitor<DoorsObject, DoorsObject>(DoorsObject.class) {
                 @Override
                 public boolean visitPreTraverse(DoorsObject object) {

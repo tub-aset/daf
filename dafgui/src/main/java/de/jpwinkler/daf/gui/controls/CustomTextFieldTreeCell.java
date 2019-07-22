@@ -22,12 +22,8 @@ package de.jpwinkler.daf.gui.controls;
  * #L%
  */
 
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import javafx.scene.control.cell.TextFieldTreeCell;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.util.StringConverter;
 
 /**
@@ -36,9 +32,7 @@ import javafx.util.StringConverter;
  */
 public class CustomTextFieldTreeCell<T> extends TextFieldTreeCell<T> {
     
-    private boolean editAllowed = false;
-
-    public CustomTextFieldTreeCell(Function<T, String> toString, BiConsumer<T, String> editCommand, Consumer<T> opener) {
+    public CustomTextFieldTreeCell(Function<T, String> toString) {
         this.setConverter(new StringConverter<T>() {
             @Override
             public String toString(T node) {
@@ -47,29 +41,9 @@ public class CustomTextFieldTreeCell<T> extends TextFieldTreeCell<T> {
 
             @Override
             public T fromString(String newName) {
-                T node = CustomTextFieldTreeCell.this.getItem();
-                editCommand.accept(node, newName);
-                return node;
+                throw new UnsupportedOperationException();
             }
         });
-        this.addEventFilter(MouseEvent.MOUSE_CLICKED, (eh) -> {
-            if (!this.isEditing() && eh.getClickCount() >= 2 && eh.getButton() == MouseButton.PRIMARY) {
-                editAllowed = true;
-                super.getTreeView().edit(this.getTreeItem());
-                editAllowed = false;
-                eh.consume();
-            } else if (!this.isEditing() && eh.getClickCount() == 1 && eh.getButton() == MouseButton.SECONDARY && this.getItem() != null) {
-                opener.accept(this.getItem());
-                eh.consume();
-            }
-        });
-    }
-
-    @Override
-    public void startEdit() {
-        if (editAllowed) {
-            super.startEdit();
-        }
-    }
-    
+        this.setEditable(false);
+    }    
 }

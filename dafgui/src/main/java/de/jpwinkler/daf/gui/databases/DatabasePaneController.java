@@ -111,9 +111,6 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                 it -> {
                     knownTags.addAll(it.getTags());
                     return it.getName();
-                },
-                (it, newName) -> executeCommand(new RenameNodeCommand(it, newName)),
-                it -> {
                 }));
 
         databaseTreeView.setRoot(new DoorsTreeItem(super.getBackgroundTaskExecutor(), (DoorsTreeNode) super.getDatabaseInterface().getDatabaseRoot(), node -> node instanceof DoorsFolder, treeNodeCache));
