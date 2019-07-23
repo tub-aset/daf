@@ -175,16 +175,16 @@ public final class ModulePaneController extends ApplicationPartController<Module
         super.getDatabaseInterface().getDatabaseRoot().getChildAsync(super.getBackgroundTaskExecutor().withPriority(BackgroundTask.PRIORITY_MODULE_CONTENT), super.getApplicationPart().getDatabasePath().getPath())
                 .thenCompose(module -> {
                     DoorsModule dm = (DoorsModule) module;
+                    if (this.actualModule == null) {
+                        throw new RuntimeException("No such module: " + super.getApplicationPart().getDatabasePath().toString());
+                    }
+                    
                     return dm.getObjectAttributesAsync(super.getBackgroundTaskExecutor().withPriority(BackgroundTask.PRIORITY_MODULE_CONTENT))
                             .thenApply(attrs -> dm);
                 }).thenAccept(dm -> {
             Platform.runLater(() -> {
                 this.contentTableView.setPlaceholder(null);
-
                 this.actualModule = dm;
-                if (this.actualModule == null) {
-                    throw new RuntimeException("No such module: " + super.getApplicationPart().getDatabasePath().toString());
-                }
 
                 this.filteredModule = actualModule;
                 updateGui(ModuleUpdateAction.UPDATE_COLUMNS, ModuleUpdateAction.UPDATE_CONTENT_VIEW, ModuleUpdateAction.UPDATE_OUTLINE_VIEW);
@@ -192,7 +192,9 @@ public final class ModulePaneController extends ApplicationPartController<Module
                 loadingDone.complete(null);
             });
         }).exceptionally(t -> {
+            t.printStackTrace();
             Platform.runLater(() -> {
+                setStatus("Failed loading module: " + ApplicationPaneController.getMessage(t));
                 Button retryButton = new Button("Retry");
                 retryButton.setOnAction(ev -> this.loadContent());
                 this.contentTableView.setPlaceholder(retryButton);
