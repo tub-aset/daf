@@ -30,13 +30,20 @@ import de.jpwinkler.daf.gui.modules.commands.EditLinksCommand;
 import de.jpwinkler.daf.gui.modules.commands.EditObjectAttributeCommand;
 import de.jpwinkler.daf.model.DoorsAttributes;
 import de.jpwinkler.daf.model.DoorsObject;
+import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
+import javafx.scene.control.Cell;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.DataFormat;
 import javafx.util.Callback;
 
 public class ViewDefinition implements Serializable {
@@ -95,8 +102,9 @@ public class ViewDefinition implements Serializable {
 
                 return false;
             };
-
-            return new CustomTextTableCell<>(tc, it -> it.getAttributes().get(cd.getAttributeName()), edit, true);
+            CustomTextTableCell<DoorsObject> cell = new CustomTextTableCell<>(tc, it -> it.getAttributes().get(cd.getAttributeName()), edit, true);
+            cell.setContextMenu(new ContextMenu(createLinksContextMenu(cell)));
+            return cell;
         }),
         COMBINED_TEXT_HEADING(false, (cd, tc, i) -> {
             BiFunction<DoorsObject, String, Boolean> edit = (it, newValue) -> {
@@ -108,7 +116,9 @@ public class ViewDefinition implements Serializable {
                 return false;
             };
 
-            return new CombinedTextHeadingCell<>(tc, edit);
+            CustomTextTableCell<DoorsObject> cell = new CombinedTextHeadingCell<>(tc, edit);
+            cell.setContextMenu(new ContextMenu(createLinksContextMenu(cell)));
+            return cell;
         }),
         LINKS(false, (cd, tc, i) -> {
             BiFunction<DoorsObject, String, Boolean> edit = (it, newValue) -> {
@@ -140,6 +150,16 @@ public class ViewDefinition implements Serializable {
         private TableCell<DoorsObject, DoorsObject> createCell(ColumnDefinition colDef, TableColumn<DoorsObject, DoorsObject> col, ApplicationPartInterface appPartInterface) {
             return this.cellCreator.apply(colDef, col, appPartInterface);
         }
+    }
+
+    public static MenuItem[] createLinksContextMenu(Cell<? extends DoorsTreeNode> cell) {
+        MenuItem copyMenuItem = new MenuItem("Copy link to clipboard");
+        copyMenuItem.setOnAction(e -> {
+            Clipboard clipboard = Clipboard.getSystemClipboard();
+            clipboard.setContent(Collections.singletonMap(DataFormat.PLAIN_TEXT, cell.getItem().asLink()));
+        });
+
+        return new MenuItem[]{copyMenuItem};
     }
 
     public static interface QuadFunction<A, B, C, E> {

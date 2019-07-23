@@ -76,6 +76,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.RadioMenuItem;
@@ -116,28 +117,32 @@ public final class ModulePaneController extends ApplicationPartController<Module
             });
         });
 
-        outlineTreeView.setCellFactory(tv -> new CustomTextTreeCell<>(
-                treeNode -> {
-                    if (treeNode instanceof DoorsModule) {
-                        return ((DoorsModule) treeNode).getName();
-                    } else if (treeNode instanceof DoorsObject) {
+        outlineTreeView.setCellFactory(tv -> {
+            CustomTextTreeCell<DoorsTreeNode> cell = new CustomTextTreeCell<>(
+                    treeNode -> {
+                        if (treeNode instanceof DoorsModule) {
+                            return ((DoorsModule) treeNode).getName();
+                        } else if (treeNode instanceof DoorsObject) {
 
-                        String truncatedText = ((DoorsObject) treeNode).getText().replace("\n", "");
-                        if (truncatedText.length() > 50) {
-                            truncatedText = truncatedText.substring(0, 47) + "...";
-                        }
+                            String truncatedText = ((DoorsObject) treeNode).getText().replace("\n", "");
+                            if (truncatedText.length() > 50) {
+                                truncatedText = truncatedText.substring(0, 47) + "...";
+                            }
 
-                        if (((DoorsObject) treeNode).isHeading()) {
-                            return ((DoorsObject) treeNode).getObjectNumber() + " " + truncatedText;
+                            if (((DoorsObject) treeNode).isHeading()) {
+                                return ((DoorsObject) treeNode).getObjectNumber() + " " + truncatedText;
+                            } else {
+                                return truncatedText;
+                            }
+                        } else if (treeNode != null) {
+                            return treeNode.toString();
                         } else {
-                            return truncatedText;
+                            return "";
                         }
-                    } else if (treeNode != null) {
-                        return treeNode.toString();
-                    } else {
-                        return "";
-                    }
-                }, null));
+                    }, null);
+            cell.setContextMenu(new ContextMenu(ViewDefinition.createLinksContextMenu(cell)));
+            return cell;
+        });
         outlineTreeView.getSelectionModel().selectedItemProperty().addListener((ChangeListener<TreeItem<DoorsTreeNode>>) (observable, oldValue, newValue) -> {
             contentTableView.getItems().forEach(c -> {
                 if (contentTableSelectionFlag.isFalse() && newValue.getValue() != null && newValue.getValue() == c) {

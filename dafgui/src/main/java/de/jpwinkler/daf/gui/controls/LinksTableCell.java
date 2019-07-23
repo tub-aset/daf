@@ -28,6 +28,7 @@ package de.jpwinkler.daf.gui.controls;
  */
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.gui.ApplicationPartInterface;
+import de.jpwinkler.daf.gui.modules.ViewDefinition;
 import de.jpwinkler.daf.model.DoorsLinkStatus;
 import de.jpwinkler.daf.model.DoorsObject;
 import java.util.function.BiFunction;
@@ -35,6 +36,7 @@ import java.util.stream.Collectors;
 import javafx.application.Platform;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TableColumn;
 
 /**
@@ -56,6 +58,10 @@ public class LinksTableCell<T extends DoorsObject> extends CustomTextTableCell<T
 
         contextMenu.setOnShowing(ev -> {
             contextMenu.getItems().clear();
+            contextMenu.getItems().addAll(ViewDefinition.createLinksContextMenu(this));
+            if(!this.getItem().getOutgoingLinks().isEmpty())
+                contextMenu.getItems().add(new SeparatorMenuItem());
+            
             this.getItem().getOutgoingLinks()
                     .stream()
                     .map(ol -> {

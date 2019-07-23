@@ -288,5 +288,12 @@ public interface DoorsTreeNode {
      * <!-- end-user-doc --> @model @generated
      */
     String toString();
+    
+    /**
+     * @return @generated NOT
+     */
+    default String asLink() {
+        return this.getFullName();
+    }
 
 } // DoorsTreeNode
