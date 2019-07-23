@@ -28,6 +28,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  *
@@ -35,12 +36,12 @@ import java.util.stream.Collectors;
  */
 public abstract class AttributesCommand extends AbstractCommand {
 
-    protected final Collection<Entry<String, String>> attributes;
-    protected List<Entry<String, String>> oldAttributes;
+    protected final List<Pair<String, String>> attributes;
+    protected List<Pair<String, String>> oldAttributes;
     protected final DoorsTreeNode treeNode;
 
     public AttributesCommand(Collection<Entry<String, String>> attributes, DoorsTreeNode treeNode) {
-        this.attributes = attributes;
+        this.attributes = attributes.stream().map(e -> Pair.of(e.getKey(), e.getValue())).collect(Collectors.toList());
         this.treeNode = treeNode;
     }
 
@@ -51,7 +52,7 @@ public abstract class AttributesCommand extends AbstractCommand {
 
     @Override
     public final void apply() {
-        this.oldAttributes = treeNode.getAttributes().entrySet().stream().collect(Collectors.toList());
+        this.oldAttributes = treeNode.getAttributes().entrySet().stream().map(e -> Pair.of(e.getKey(), e.getValue())).collect(Collectors.toList());
         redo();
     }
 

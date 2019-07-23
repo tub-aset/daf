@@ -53,7 +53,7 @@ public class EditAttributesCommand extends AttributesCommand {
 
     @Override
     public UpdateAction[] getUpdateActions() {
-        return UpdateAction.of(DatabasePaneController.UpdateAttributesView);
+        return UpdateAction.of(DatabasePaneController.UpdateAttributesView, DatabasePaneController.UpdateModulesView);
     }
 
 }
