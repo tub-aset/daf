@@ -56,6 +56,7 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
+import java.util.WeakHashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -87,6 +88,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -123,6 +125,8 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             return new ManifestPluginDescriptorFinder();
         }
     };
+
+    private final WeakHashMap<DatabaseInterface, Color> databaseColors = new WeakHashMap<>();
 
     @FXML
     private TabPane tabPane;
@@ -451,6 +455,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
                         final Tab newTab = new Tab(part.toString(), modulePane);
                         newTab.setTooltip(new Tooltip(part.toString()));
+                        newTab.setStyle("-fx-background-color: " + getTabColor(controller.getDatabaseInterface()));
 
                         newTab.setUserData(part);
                         applicationPartControllers.put(part, controller);
@@ -826,5 +831,20 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
     public Collection<ApplicationPartController> getApplicationPartControllers() {
         return Collections.unmodifiableCollection(this.applicationPartControllers.values());
+    }
+
+    private int colorIndex = 0;
+    private Color[] colors = new Color[]{Color.AQUA, Color.LIGHTGREEN, Color.LIGHTSALMON, Color.LIGHTYELLOW, Color.LIGHTGREY};
+
+    private String getTabColor(DatabaseInterface db) {
+        Color color = this.databaseColors.get(db);
+        if (color == null) {
+            color = colors[colorIndex++ % colors.length];
+            this.databaseColors.put(db, color);
+        }
+        return String.format("#%02X%02X%02X",
+                (int) (color.getRed() * 255),
+                (int) (color.getGreen() * 255),
+                (int) (color.getBlue() * 255));
     }
 }
