@@ -33,10 +33,12 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Text;
 
 /**
  *
@@ -73,6 +75,22 @@ public class CustomTextTableCell<T> extends TableCell<T, T> {
                 eh.consume();
             }
         });
+
+        this.setTooltip(new Tooltip() {
+            @Override
+            protected void show() {
+                String originalString = CustomTextTableCell.this.getText();
+                Text textNode = (Text) CustomTextTableCell.this.lookup(".text"); // "text" is the style class of Text
+                String actualString = textNode.getText();
+
+                boolean clipped = !actualString.isEmpty() && !originalString.equals(actualString);
+                if (clipped) {
+                    this.setText(originalString);
+                    super.show();
+                }
+            }
+        });
+
     }
 
     protected String getDisplayedItemText(T item, boolean empty) {
@@ -101,10 +119,10 @@ public class CustomTextTableCell<T> extends TableCell<T, T> {
             if (t.getCode() == KeyCode.ESCAPE) {
                 this.cancelEdit();
                 t.consume();
-            } else if (t.getCode() == KeyCode.ENTER && t.isShiftDown()) {                
+            } else if (t.getCode() == KeyCode.ENTER && t.isShiftDown()) {
                 textInput.insertText(textInput.getCaretPosition(), "\n");
                 t.consume();
-            } else if (t.getCode() == KeyCode.ENTER) {                
+            } else if (t.getCode() == KeyCode.ENTER) {
                 T it = CustomTextTableCell.this.getItem();
                 String text = textInput.getText();
                 textInput.setText(text);
