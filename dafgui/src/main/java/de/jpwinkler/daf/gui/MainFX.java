@@ -38,6 +38,8 @@ public class MainFX extends Application {
         final ApplicationPaneController applicationPaneController = new ApplicationPaneController(
                 title -> primaryStage.setTitle("DOORS Access Framework" + (title == null ? "" : " – " + title)));
         final Scene applicationScene = new Scene(applicationPaneController.getNode());
+        
+        primaryStage.getIcons().add(ApplicationIcons.DOOR.toImage());
 
         primaryStage.setOnCloseRequest((WindowEvent event) -> {
             if (!applicationPaneController.tryClose()) {

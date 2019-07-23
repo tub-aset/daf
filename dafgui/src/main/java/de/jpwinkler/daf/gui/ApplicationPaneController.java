@@ -190,6 +190,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
     public ApplicationPaneController(Consumer<String> titleSetter) {
         this.titleSetter = titleSetter;
+        titleSetter.accept(null);
 
         tabPane.getSelectionModel().selectedItemProperty().addListener(tabChangeListener);
         try {

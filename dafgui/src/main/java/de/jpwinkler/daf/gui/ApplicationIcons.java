@@ -29,6 +29,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public enum ApplicationIcons {
+    DOOR("icons/door.svg.png"),
     DATABASE("icons/database.svg.png"),
     FOLDER("icons/folder.svg.png"),
     FORMAL("icons/files.svg.png"),
@@ -49,6 +50,10 @@ public enum ApplicationIcons {
 
     public ImageView toImageView() {
         return new ImageView(this.image);
+    }
+    
+    public Image toImage() {
+        return this.image;
     }
 
     public static ApplicationIcons getImage(DoorsTreeNode value) {
