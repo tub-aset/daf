@@ -33,6 +33,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
@@ -95,16 +96,16 @@ public class CustomTextTableCell<T> extends TableCell<T, T> {
             textInput = new TextField(getItemText());
         }
 
-        textInput.setOnKeyPressed(t -> {
+        textInput.addEventFilter(KeyEvent.KEY_PRESSED, t -> {
             if (t.getCode() == KeyCode.ESCAPE) {
                 this.cancelEdit();
                 t.consume();
-            } else if (t.getCode() == KeyCode.ENTER && t.isShiftDown()) {
-                t.consume();
+            } else if (t.getCode() == KeyCode.ENTER && t.isShiftDown()) {                
                 textInput.insertText(textInput.getCaretPosition(), "\n");
-            } else if (t.getCode() == KeyCode.ENTER) {
+                t.consume();
+            } else if (t.getCode() == KeyCode.ENTER) {                
                 T it = CustomTextTableCell.this.getItem();
-                String text = textInput.getText().trim();
+                String text = textInput.getText();
                 textInput.setText(text);
                 if (editCommand.apply(it, text)) {
                     this.commitEdit(it);
