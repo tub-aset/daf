@@ -174,11 +174,11 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
         super.getDatabaseInterface().getDatabaseRoot().getChildAsync(super.getBackgroundTaskExecutor().withPriority(BackgroundTask.PRIORITY_MODULE_CONTENT), super.getApplicationPart().getDatabasePath().getPath())
                 .thenCompose(module -> {
-                    DoorsModule dm = (DoorsModule) module;
-                    if (this.actualModule == null) {
+                    if (module == null) {
                         throw new RuntimeException("No such module: " + super.getApplicationPart().getDatabasePath().toString());
                     }
-                    
+
+                    DoorsModule dm = (DoorsModule) module;
                     return dm.getObjectAttributesAsync(super.getBackgroundTaskExecutor().withPriority(BackgroundTask.PRIORITY_MODULE_CONTENT))
                             .thenApply(attrs -> dm);
                 }).thenAccept(dm -> {
