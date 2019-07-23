@@ -38,6 +38,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * <!-- begin-user-doc -->
@@ -97,16 +98,6 @@ public class DoorsLinkImpl extends MinimalEObjectImpl.Container implements Doors
     protected String targetObject = TARGET_OBJECT_EDEFAULT;
 
     /**
-	 * The cached value of the '{@link #getSource() <em>Source</em>}' reference.
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @see #getSource()
-	 * @generated
-	 * @ordered
-	 */
-    protected DoorsObject source;
-
-    /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc --> @generated
      */
@@ -129,23 +120,8 @@ public class DoorsLinkImpl extends MinimalEObjectImpl.Container implements Doors
      */
     @Override
     public DoorsObject getSource() {
-		if (source != null && ((EObject)source).eIsProxy()) {
-			InternalEObject oldSource = (InternalEObject)source;
-			source = (DoorsObject)eResolveProxy(oldSource);
-			if (source != oldSource) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, DoorsPackage.DOORS_LINK__SOURCE, oldSource, source));
-			}
-		}
-		return source;
-	}
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc --> @generated
-     */
-    public DoorsObject basicGetSource() {
-		return source;
+		if (eContainerFeatureID() != DoorsPackage.DOORS_LINK__SOURCE) return null;
+		return (DoorsObject)eInternalContainer();
 	}
 
     /**
@@ -153,12 +129,7 @@ public class DoorsLinkImpl extends MinimalEObjectImpl.Container implements Doors
      * <!-- end-user-doc --> @generated
      */
     public NotificationChain basicSetSource(DoorsObject newSource, NotificationChain msgs) {
-		DoorsObject oldSource = source;
-		source = newSource;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, DoorsPackage.DOORS_LINK__SOURCE, oldSource, newSource);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
+		msgs = eBasicSetContainer((InternalEObject)newSource, DoorsPackage.DOORS_LINK__SOURCE, msgs);
 		return msgs;
 	}
 
@@ -168,10 +139,12 @@ public class DoorsLinkImpl extends MinimalEObjectImpl.Container implements Doors
      */
     @Override
     public void setSource(DoorsObject newSource) {
-		if (newSource != source) {
+		if (newSource != eInternalContainer() || (eContainerFeatureID() != DoorsPackage.DOORS_LINK__SOURCE && newSource != null)) {
+			if (EcoreUtil.isAncestor(this, (EObject)newSource))
+				throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
 			NotificationChain msgs = null;
-			if (source != null)
-				msgs = ((InternalEObject)source).eInverseRemove(this, DoorsPackage.DOORS_OBJECT__OUTGOING_LINKS, DoorsObject.class, msgs);
+			if (eInternalContainer() != null)
+				msgs = eBasicRemoveFromContainer(msgs);
 			if (newSource != null)
 				msgs = ((InternalEObject)newSource).eInverseAdd(this, DoorsPackage.DOORS_OBJECT__OUTGOING_LINKS, DoorsObject.class, msgs);
 			msgs = basicSetSource(newSource, msgs);
@@ -268,8 +241,8 @@ public class DoorsLinkImpl extends MinimalEObjectImpl.Container implements Doors
     public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case DoorsPackage.DOORS_LINK__SOURCE:
-				if (source != null)
-					msgs = ((InternalEObject)source).eInverseRemove(this, DoorsPackage.DOORS_OBJECT__OUTGOING_LINKS, DoorsObject.class, msgs);
+				if (eInternalContainer() != null)
+					msgs = eBasicRemoveFromContainer(msgs);
 				return basicSetSource((DoorsObject)otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
@@ -289,6 +262,20 @@ public class DoorsLinkImpl extends MinimalEObjectImpl.Container implements Doors
 	}
 
     /**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
+		switch (eContainerFeatureID()) {
+			case DoorsPackage.DOORS_LINK__SOURCE:
+				return eInternalContainer().eInverseRemove(this, DoorsPackage.DOORS_OBJECT__OUTGOING_LINKS, DoorsObject.class, msgs);
+		}
+		return super.eBasicRemoveFromContainerFeature(msgs);
+	}
+
+				/**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc --> @generated
      */
@@ -300,8 +287,7 @@ public class DoorsLinkImpl extends MinimalEObjectImpl.Container implements Doors
 			case DoorsPackage.DOORS_LINK__TARGET_OBJECT:
 				return getTargetObject();
 			case DoorsPackage.DOORS_LINK__SOURCE:
-				if (resolve) return getSource();
-				return basicGetSource();
+				return getSource();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -358,7 +344,7 @@ public class DoorsLinkImpl extends MinimalEObjectImpl.Container implements Doors
 			case DoorsPackage.DOORS_LINK__TARGET_OBJECT:
 				return TARGET_OBJECT_EDEFAULT == null ? targetObject != null : !TARGET_OBJECT_EDEFAULT.equals(targetObject);
 			case DoorsPackage.DOORS_LINK__SOURCE:
-				return source != null;
+				return getSource() != null;
 		}
 		return super.eIsSet(featureID);
 	}

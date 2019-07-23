@@ -49,7 +49,7 @@
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="text" unique="false" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
                              volatile="true" transient="true" defaultValueLiteral="" derived="true"/>
         
-        <eStructuralFeatures xsi:type="ecore:EReference" name="outgoingLinks" upperBound="-1"
+        <eStructuralFeatures xsi:type="ecore:EReference" name="outgoingLinks" upperBound="-1" containment="true"
                              eType="#//DoorsLink" eOpposite="#//DoorsLink/source"/>
     </eClassifiers>
     

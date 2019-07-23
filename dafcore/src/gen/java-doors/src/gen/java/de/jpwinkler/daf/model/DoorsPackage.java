@@ -733,7 +733,7 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_OBJECT__TEXT = DOORS_TREE_NODE_FEATURE_COUNT + 6;
 
 	/**
-	 * The feature id for the '<em><b>Outgoing Links</b></em>' reference list.
+	 * The feature id for the '<em><b>Outgoing Links</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -977,7 +977,7 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_TABLE_ROW__TEXT = DOORS_OBJECT__TEXT;
 
 	/**
-	 * The feature id for the '<em><b>Outgoing Links</b></em>' reference list.
+	 * The feature id for the '<em><b>Outgoing Links</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1168,7 +1168,7 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_LINK__TARGET_OBJECT = 1;
 
 	/**
-	 * The feature id for the '<em><b>Source</b></em>' reference.
+	 * The feature id for the '<em><b>Source</b></em>' container reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1588,10 +1588,10 @@ public interface DoorsPackage extends EPackage {
 	EAttribute getDoorsObject_Text();
 
 	/**
-	 * Returns the meta object for the reference list '{@link de.jpwinkler.daf.model.DoorsObject#getOutgoingLinks <em>Outgoing Links</em>}'.
+	 * Returns the meta object for the containment reference list '{@link de.jpwinkler.daf.model.DoorsObject#getOutgoingLinks <em>Outgoing Links</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Outgoing Links</em>'.
+	 * @return the meta object for the containment reference list '<em>Outgoing Links</em>'.
 	 * @see de.jpwinkler.daf.model.DoorsObject#getOutgoingLinks()
 	 * @see #getDoorsObject()
 	 * @generated
@@ -1685,10 +1685,10 @@ public interface DoorsPackage extends EPackage {
 	EAttribute getDoorsLink_TargetObject();
 
 	/**
-	 * Returns the meta object for the reference '{@link de.jpwinkler.daf.model.DoorsLink#getSource <em>Source</em>}'.
+	 * Returns the meta object for the container reference '{@link de.jpwinkler.daf.model.DoorsLink#getSource <em>Source</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Source</em>'.
+	 * @return the meta object for the container reference '<em>Source</em>'.
 	 * @see de.jpwinkler.daf.model.DoorsLink#getSource()
 	 * @see #getDoorsLink()
 	 * @generated
@@ -2053,7 +2053,7 @@ public interface DoorsPackage extends EPackage {
 		EAttribute DOORS_OBJECT__TEXT = eINSTANCE.getDoorsObject_Text();
 
 		/**
-		 * The meta object literal for the '<em><b>Outgoing Links</b></em>' reference list feature.
+		 * The meta object literal for the '<em><b>Outgoing Links</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -2131,7 +2131,7 @@ public interface DoorsPackage extends EPackage {
 		EAttribute DOORS_LINK__TARGET_OBJECT = eINSTANCE.getDoorsLink_TargetObject();
 
 		/**
-		 * The meta object literal for the '<em><b>Source</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Source</b></em>' container reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated

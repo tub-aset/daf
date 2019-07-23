@@ -48,24 +48,24 @@ import java.util.concurrent.CompletableFuture;
  */
 public interface DoorsLink {
 	/**
-	 * Returns the value of the '<em><b>Source</b></em>' reference.
+	 * Returns the value of the '<em><b>Source</b></em>' container reference.
 	 * It is bidirectional and its opposite is '{@link de.jpwinkler.daf.model.DoorsObject#getOutgoingLinks <em>Outgoing Links</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Source</em>' reference.
+	 * @return the value of the '<em>Source</em>' container reference.
 	 * @see #setSource(DoorsObject)
 	 * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsLink_Source()
 	 * @see de.jpwinkler.daf.model.DoorsObject#getOutgoingLinks
-	 * @model opposite="outgoingLinks"
+	 * @model opposite="outgoingLinks" transient="false"
 	 * @generated
 	 */
 	DoorsObject getSource();
 
 	/**
-	 * Sets the value of the '{@link de.jpwinkler.daf.model.DoorsLink#getSource <em>Source</em>}' reference.
+	 * Sets the value of the '{@link de.jpwinkler.daf.model.DoorsLink#getSource <em>Source</em>}' container reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Source</em>' reference.
+	 * @param value the new value of the '<em>Source</em>' container reference.
 	 * @see #getSource()
 	 * @generated
 	 */
