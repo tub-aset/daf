@@ -691,7 +691,8 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
                 .filter(p -> p.getCommandStack().isDirty())
                 .map(p -> p.getDatabasePath().withPath("").toString())
                 .sorted()
-                .collect(Collectors.joining());
+                .distinct()
+                .collect(Collectors.joining("\n"));
         if (!dirtyDatabases.isEmpty()) {
             Alert alert = new Alert(AlertType.CONFIRMATION, "There unsaved changes in the following databases:\n\n" + dirtyDatabases
                     + "\n\nAre you sure you want to close the application? You will lose those changes.", ButtonType.NO, ButtonType.YES);
