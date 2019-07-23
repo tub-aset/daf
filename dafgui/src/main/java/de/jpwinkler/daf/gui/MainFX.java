@@ -35,7 +35,8 @@ public class MainFX extends Application {
     public void start(final Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
 
-        final ApplicationPaneController applicationPaneController = new ApplicationPaneController();
+        final ApplicationPaneController applicationPaneController = new ApplicationPaneController(
+                title -> primaryStage.setTitle("DOORS Access Framework" + (title == null ? "" : " – " + title)));
         final Scene applicationScene = new Scene(applicationPaneController.getNode());
 
         primaryStage.setOnCloseRequest((WindowEvent event) -> {
@@ -55,7 +56,6 @@ public class MainFX extends Application {
         primaryStage.setMaximized(ApplicationPreferences.WINDOW_MAXIMIZED.retrieve());
 
         primaryStage.setScene(applicationScene);
-        primaryStage.setTitle("DOORS Access Framework – GUI");
         primaryStage.show();
     }
 

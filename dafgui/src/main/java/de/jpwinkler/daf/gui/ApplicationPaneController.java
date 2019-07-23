@@ -57,6 +57,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
@@ -168,6 +169,8 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             this.tabChangeListener.changed(tabPane.getSelectionModel().selectedItemProperty(), tabPane.getSelectionModel().getSelectedItem(), tabPane.getSelectionModel().getSelectedItem());
         }
     };
+
+    private Consumer<String> titleSetter;
     private final ChangeListener<Tab> tabChangeListener = (observable, oldValue, newValue) -> {
 
         if (oldValue != null) {
@@ -181,9 +184,13 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             partMenus.forEach(mainMenuBar.getMenus()::add);
             partMenus.addListener(partMenuChangeLister);
         }
+
+        titleSetter.accept(newValue != null ? newValue.getText() : null);
     };
 
-    public ApplicationPaneController() {
+    public ApplicationPaneController(Consumer<String> titleSetter) {
+        this.titleSetter = titleSetter;
+
         tabPane.getSelectionModel().selectedItemProperty().addListener(tabChangeListener);
         try {
             @SuppressWarnings("unchecked")
@@ -620,7 +627,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             }
         }
 
-        ApplicationPart lastSelectedPart = getApplicationPartController(tabPane.getSelectionModel().getSelectedItem()).getApplicationPart();
+        ApplicationPartController lastSelectedPartCtrl = getApplicationPartController(tabPane.getSelectionModel().getSelectedItem());
         ArrayList<ApplicationPart> exitParts = tabPane.getTabs().stream()
                 .map(t -> getApplicationPartController(t))
                 .map(pc -> pc.getApplicationPart())
@@ -640,9 +647,8 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             }
         }
 
-        
         ApplicationPreferences.EXIT_FILES.store(exitParts);
-        ApplicationPreferences.LAST_SELECTED_FILE.store(lastSelectedPart);
+        ApplicationPreferences.LAST_SELECTED_FILE.store(lastSelectedPartCtrl != null ? lastSelectedPartCtrl.getApplicationPart() : null);
         return true;
     }
 
