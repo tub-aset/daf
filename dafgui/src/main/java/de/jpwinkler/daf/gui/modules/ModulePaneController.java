@@ -336,9 +336,19 @@ public final class ModulePaneController extends ApplicationPartController<Module
                         .map(an -> {
                             ColumnDefinition colDef = new ColumnDefinition(ColumnType.ATTRIBUTE, an);
                             colDef.setAttributeName(an);
-                            return columnFactory.apply(colDef);
+                            colDef.setWidth(currentView.getRemainingColumnsWidths().getOrDefault(an, 250d));
+                            
+                            TableColumn<DoorsObject, DoorsObject> c = columnFactory.apply(colDef);
+                            c.setPrefWidth(colDef.getWidth());
+                            c.widthProperty().addListener((obs, oldValue, newValue) -> {
+                                currentView.getRemainingColumnsWidths().put(an, newValue.doubleValue());
+                                colDef.setWidth(newValue.doubleValue());
+                                ModulePanePreferences.VIEWS.store(this.views);
+                                ModulePanePreferences.STANDARD_VIEW.store(standardView);
+                            });
+
+                            return c;
                         })
-                        .peek(c -> c.setPrefWidth(150))
                         .forEach(contentTableView.getColumns()::add);
             }
         }));

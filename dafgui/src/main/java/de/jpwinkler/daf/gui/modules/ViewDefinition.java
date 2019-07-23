@@ -34,6 +34,7 @@ import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
@@ -54,6 +55,7 @@ public class ViewDefinition implements Serializable {
 
     private String name;
     private final List<ColumnDefinition> columns = new ArrayList<>();
+    private final HashMap<String, Double> remainingColumnsWidths = new HashMap<>();
     private boolean displayRemainingColumns;
 
     public String getName() {
@@ -74,6 +76,10 @@ public class ViewDefinition implements Serializable {
 
     public void setDisplayRemainingColumns(boolean displayRemainingColumns) {
         this.displayRemainingColumns = displayRemainingColumns;
+    }
+
+    public HashMap<String, Double> getRemainingColumnsWidths() {
+        return remainingColumnsWidths;
     }
 
     @Override
