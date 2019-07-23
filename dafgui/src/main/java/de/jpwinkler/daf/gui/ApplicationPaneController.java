@@ -34,12 +34,16 @@ import de.jpwinkler.daf.model.DoorsAttributes;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -56,7 +60,6 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
-import java.util.WeakHashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
@@ -131,8 +134,6 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             return new ManifestPluginDescriptorFinder();
         }
     };
-
-    private final WeakHashMap<DatabaseInterface, Color> databaseColors = new WeakHashMap<>();
 
     @FXML
     private TabPane tabPane;
@@ -494,7 +495,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
                         final Tab newTab = new Tab(part.toString(), modulePane);
                         newTab.setTooltip(new Tooltip(part.toString()));
-                        newTab.setStyle("-fx-background-color: " + getTabColor(controller.getDatabaseInterface()));
+                        newTab.setStyle("-fx-background-color: " + getTabColor(part.getDatabasePath()));
 
                         newTab.setUserData(part);
                         applicationPartControllers.put(part, controller);
@@ -881,18 +882,19 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         return Collections.unmodifiableCollection(this.applicationPartControllers.values());
     }
 
-    private int colorIndex = 0;
-    private Color[] colors = new Color[]{Color.AQUA, Color.LIGHTGREEN, Color.LIGHTSALMON, Color.LIGHTYELLOW, Color.LIGHTGREY};
+    private String getTabColor(DatabasePath path) {
+        try {
+            byte[] digest;
+            digest = MessageDigest.getInstance("MD5").digest(path.withPath("").toString().getBytes("UTF-8"));
+            ByteBuffer buffer = ByteBuffer.wrap(digest);
 
-    private String getTabColor(DatabaseInterface db) {
-        Color color = this.databaseColors.get(db);
-        if (color == null) {
-            color = colors[colorIndex++ % colors.length];
-            this.databaseColors.put(db, color);
+            Color color = Color.hsb(buffer.getDouble(), 0.3d, 0.8d);
+            return String.format("#%02X%02X%02X",
+                    (int) (color.getRed() * 255),
+                    (int) (color.getGreen() * 255),
+                    (int) (color.getBlue() * 255));
+        } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
         }
-        return String.format("#%02X%02X%02X",
-                (int) (color.getRed() * 255),
-                (int) (color.getGreen() * 255),
-                (int) (color.getBlue() * 255));
     }
 }
