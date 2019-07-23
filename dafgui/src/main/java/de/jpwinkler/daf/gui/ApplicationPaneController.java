@@ -79,6 +79,7 @@ import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuButton;
@@ -87,7 +88,11 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -156,13 +161,26 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     private Menu openMenu;
 
     @FXML
-    private Menu recentMenu;
-
-    @FXML
     private Menu pluginStateMenu;
 
     @FXML
     private Menu uninstallPluginMenu;
+
+    @FXML
+    private Menu recentMenu;
+
+    @FXML
+    private VBox recentFilesVbox;
+    private int tabPaneRecentFilesVboxPos;
+
+    @FXML
+    private VBox mainVbox;
+
+    @FXML
+    private ListView<ApplicationPart> recentFilesList;
+    
+    @FXML
+    private ImageView iconImageView;
 
     private final Timer generalTimer = new Timer(true);
 
@@ -176,6 +194,10 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
     private Consumer<String> titleSetter;
     private final ChangeListener<Tab> tabChangeListener = (observable, oldValue, newValue) -> {
+        tabPaneRecentFilesVboxPos = mainVbox.getChildren().indexOf(recentFilesVbox);
+        if (tabPaneRecentFilesVboxPos == -1) {
+            tabPaneRecentFilesVboxPos = mainVbox.getChildren().indexOf(tabPane);
+        }
 
         if (oldValue != null) {
             ObservableList<Menu> partMenus = getApplicationPartController(oldValue).getMenus();
@@ -187,14 +209,30 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             ObservableList<Menu> partMenus = getApplicationPartController(newValue).getMenus();
             partMenus.forEach(mainMenuBar.getMenus()::add);
             partMenus.addListener(partMenuChangeLister);
+            titleSetter.accept(newValue.getText());
+
+            mainVbox.getChildren().remove(recentFilesVbox);
+            if (!mainVbox.getChildren().contains(tabPane)) {
+                mainVbox.getChildren().add(tabPaneRecentFilesVboxPos, tabPane);
+            }
+
+        } else {
+            mainVbox.getChildren().remove(tabPane);
+            if (!mainVbox.getChildren().contains(recentFilesVbox)) {
+                mainVbox.getChildren().add(tabPaneRecentFilesVboxPos, recentFilesVbox);
+            }
+
+            titleSetter.accept(null);
         }
 
-        titleSetter.accept(newValue != null ? newValue.getText() : null);
     };
 
     public ApplicationPaneController(Consumer<String> titleSetter) {
         this.titleSetter = titleSetter;
         titleSetter.accept(null);
+        tabChangeListener.changed(null, null, null);
+        
+        this.iconImageView.setImage(ApplicationIcons.DOOR_BIG.toImage());
 
         tabPane.getSelectionModel().selectedItemProperty().addListener(tabChangeListener);
         try {
@@ -241,7 +279,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
                 MenuItem it = new MenuItem(added.getName());
                 it.setUserData(added);
                 it.setOnAction(ev -> {
-                    added.openWithSelector(tabPane.getScene().getWindow()).forEach(
+                    added.openWithSelector(getNode().getScene().getWindow()).forEach(
                             path -> open(path, OpenFlag.OPEN_ONLY));
                 });
 
@@ -250,7 +288,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
                     it = new MenuItem(added.getName());
                     it.setUserData(added);
                     it.setOnAction(ev -> {
-                        added.saveWithSelector(tabPane.getScene().getWindow(), "").forEach(
+                        added.saveWithSelector(getNode().getScene().getWindow(), "").forEach(
                                 path -> open(path, OpenFlag.ERASE_IF_EXISTS));
                     });
                     newMenu.getItems().add(it);
@@ -505,6 +543,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         ApplicationPreferences.RECENT_FILES.store(recentFiles);
 
         recentMenu.getItems().clear();
+        recentFilesList.getItems().clear();
 
         if (recentFiles.isEmpty()) {
             MenuItem recentMenuItem = new MenuItem("No valid files available");
@@ -518,6 +557,15 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             recentMenuItem.setUserData(recentFile);
             recentMenu.getItems().add(recentMenuItem);
             recentMenuItem.setOnAction(ev -> this.open((ApplicationPart) ((MenuItem) ev.getTarget()).getUserData(), OpenFlag.OPEN_ONLY));
+
+            recentFilesList.getItems().add(recentFile);
+        }
+    }
+
+    @FXML
+    public void recentFilesListClicked(MouseEvent me) {
+        if (me.getButton() == MouseButton.PRIMARY && me.getClickCount() == 2) {
+            this.open(this.recentFilesList.getSelectionModel().getSelectedItem(), OpenFlag.OPEN_ONLY);
         }
     }
 
@@ -575,7 +623,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             applicationPartChooser.setTitle("Create snapshot");
             applicationPartChooser.setHeaderText("Select a destination database type");
             destinationPathArg = Main.asStream(applicationPartChooser.showAndWait())
-                    .flatMap(part -> part.saveWithSelector(tabPane.getScene().getWindow(), proposedName))
+                    .flatMap(part -> part.saveWithSelector(getNode().getScene().getWindow(), proposedName))
                     .map(part -> part.getDatabasePath())
                     .findAny().orElse(null);
 
@@ -660,7 +708,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
     @FXML
     public void exitClicked() {
-        this.tabPane.getScene().getWindow().fireEvent(new WindowEvent(this.tabPane.getScene().getWindow(), WindowEvent.WINDOW_CLOSE_REQUEST));
+        this.getNode().getScene().getWindow().fireEvent(new WindowEvent(this.getNode().getScene().getWindow(), WindowEvent.WINDOW_CLOSE_REQUEST));
     }
 
     private ButtonType closeTabs(Collection<Tab> closedTabs) {
@@ -712,7 +760,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         fileChooser.setInitialDirectory(ApplicationPreferences.PLUGIN_DIRECTORY.retrieve());
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("DAF plugin", "*.jar"));
 
-        Stream.of(fileChooser.showOpenDialog(tabPane.getScene().getWindow()))
+        Stream.of(fileChooser.showOpenDialog(getNode().getScene().getWindow()))
                 .filter(f -> f != null)
                 .peek(f -> ApplicationPreferences.PLUGIN_DIRECTORY.store(f.getParentFile().getAbsoluteFile()))
                 .forEach(f -> {
@@ -765,9 +813,9 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         }
 
         MultiLineTextInputDialog controller = new MultiLineTextInputDialog("Developed by TU Berlin ASET\nFlorian Wiesweg and Jonas Winkler (2019)\n\nThe following dependencies are bundled with this software.\n" + text);
-        Dialog dialog = controller.asDialog(tabPane.getScene().getWindow(), "About " + ((Stage) tabPane.getScene().getWindow()).getTitle(), ButtonType.OK);
+        Dialog dialog = controller.asDialog(getNode().getScene().getWindow(), "About " + ((Stage) getNode().getScene().getWindow()).getTitle(), ButtonType.OK);
         controller.getTextArea().setEditable(false);
-        dialog.setHeaderText("About " + ((Stage) tabPane.getScene().getWindow()).getTitle());
+        dialog.setHeaderText("About " + ((Stage) getNode().getScene().getWindow()).getTitle());
         dialog.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         dialog.getDialogPane().setMinWidth(800);
         dialog.showAndWait();

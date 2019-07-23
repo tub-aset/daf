@@ -24,6 +24,7 @@ package de.jpwinkler.daf.gui;
 import de.jpwinkler.daf.gui.ApplicationPreferences.SerializableRectangle2D;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -34,18 +35,19 @@ public class MainFX extends Application {
     @Override
     public void start(final Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
-
         final ApplicationPaneController applicationPaneController = new ApplicationPaneController(
                 title -> primaryStage.setTitle("DOORS Access Framework" + (title == null ? "" : " – " + title)));
         final Scene applicationScene = new Scene(applicationPaneController.getNode());
         
         primaryStage.getIcons().add(ApplicationIcons.DOOR.toImage());
-
         primaryStage.setOnCloseRequest((WindowEvent event) -> {
             if (!applicationPaneController.tryClose()) {
                 event.consume();
             }
         });
+        
+        primaryStage.setMinHeight(((Region)applicationPaneController.getNode()).getMinHeight());
+        primaryStage.setMinWidth(((Region)applicationPaneController.getNode()).getMinWidth());
 
         SerializableRectangle2D storedRectangle = ApplicationPreferences.WINDOW_RECTANGLE.retrieve();
         if (storedRectangle != null) {

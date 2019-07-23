@@ -30,6 +30,7 @@ import javafx.scene.image.ImageView;
 
 public enum ApplicationIcons {
     DOOR("icons/door.svg.png"),
+    DOOR_BIG("icons/door-big.svg.png"),
     DATABASE("icons/database.svg.png"),
     FOLDER("icons/folder.svg.png"),
     FORMAL("icons/files.svg.png"),
@@ -42,7 +43,7 @@ public enum ApplicationIcons {
     private final Image image;
 
     private ApplicationIcons(String resourceName) {
-        this.image = new Image(MainFX.class.getResource(resourceName).toString(), 20, 20, true, true);
+        this.image = new Image(MainFX.class.getResource(resourceName).toString());
         if (this.image.getException() != null) {
             throw new RuntimeException(this.image.getException());
         }
