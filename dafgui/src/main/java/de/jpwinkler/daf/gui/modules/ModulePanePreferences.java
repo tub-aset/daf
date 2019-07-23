@@ -53,22 +53,27 @@ class ModulePanePreferences<T extends Serializable> extends ApplicationPreferenc
     public static final ApplicationPreference<ViewDefinition> STANDARD_VIEW = new ModulePanePreferences<>("STANDARD_VIEW", ViewDefinition.class, generateDefaultViewDefinition());
     private static ViewDefinition generateDefaultViewDefinition() {
         ViewDefinition viewDef = new ViewDefinition("Standard");
-
         ViewDefinition.ColumnDefinition cd;
-        cd = new ViewDefinition.ColumnDefinition(ViewDefinition.ColumnType.ATTRIBUTE, "Object Level");
-        cd.setAttributeName("Object Level");
-        cd.setWidth(100);
-        cd.setVisible(true);
-        viewDef.getColumns().add(cd);
 
         cd = new ViewDefinition.ColumnDefinition(ViewDefinition.ColumnType.ATTRIBUTE, "Absolute Number");
         cd.setAttributeName("Absolute Number");
         cd.setWidth(100);
         cd.setVisible(true);
         viewDef.getColumns().add(cd);
+        
+        cd = new ViewDefinition.ColumnDefinition(ViewDefinition.ColumnType.ATTRIBUTE, "Object Identifier");
+        cd.setAttributeName("Object Identifier");
+        cd.setWidth(100);
+        cd.setVisible(true);
+        viewDef.getColumns().add(cd);
 
         cd = new ViewDefinition.ColumnDefinition(ViewDefinition.ColumnType.COMBINED_TEXT_HEADING, "Object Heading/Text");
         cd.setWidth(700);
+        cd.setVisible(true);
+        viewDef.getColumns().add(cd);
+        
+        cd = new ViewDefinition.ColumnDefinition(ViewDefinition.ColumnType.ATTRIBUTE, "Object Type");
+        cd.setWidth(200);
         cd.setVisible(true);
         viewDef.getColumns().add(cd);
 
