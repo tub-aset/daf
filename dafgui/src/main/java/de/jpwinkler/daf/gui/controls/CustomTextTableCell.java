@@ -21,6 +21,7 @@ package de.jpwinkler.daf.gui.controls;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
+import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -107,7 +108,7 @@ public class CustomTextTableCell<T> extends TableCell<T, T> {
                 T it = CustomTextTableCell.this.getItem();
                 String text = textInput.getText();
                 textInput.setText(text);
-                if (editCommand.apply(it, text)) {
+                if (!Objects.equals(text, getItemText()) && editCommand.apply(it, text)) {
                     this.commitEdit(it);
                 } else {
                     this.cancelEdit();
