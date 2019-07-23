@@ -395,7 +395,9 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
             Set<String> moduleAttrs = new HashSet<>(this.filteredModule.getObjectAttributes());
             moduleAttrs.add(DoorsAttributes.OBJECT_LEVEL.getKey());
-            this.currentView.getColumns().stream().filter(cd -> cd != null).forEach(cd -> moduleAttrs.add(cd.getAttributeName()));
+            this.currentView.getColumns().stream()
+                    .filter(cd -> cd != null && cd.getAttributeName() != null && !cd.getAttributeName().isEmpty())
+                    .forEach(cd -> moduleAttrs.add(cd.getAttributeName()));
             this.filteredModule.setObjectAttributes(new ArrayList<>(moduleAttrs));
 
             ModulePanePreferences.CURRENT_VIEW.store(viewsToggleGroup.getToggles().indexOf(viewsToggleGroup.getSelectedToggle()));
