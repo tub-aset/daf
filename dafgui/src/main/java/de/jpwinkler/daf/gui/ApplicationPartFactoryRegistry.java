@@ -21,6 +21,7 @@ package de.jpwinkler.daf.gui;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
+import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
 import de.jpwinkler.daf.db.DatabasePath;
@@ -51,12 +52,14 @@ import org.pf4j.PluginWrapper;
  */
 public final class ApplicationPartFactoryRegistry {
 
-    public ApplicationPartFactoryRegistry(Supplier<Stream<PluginWrapper>> pluginSupplier, BiConsumer<ApplicationPart, Boolean> dirtyListener) {
+    public ApplicationPartFactoryRegistry(BackgroundTaskExecutorImpl backgroundTaskExecutor, Supplier<Stream<PluginWrapper>> pluginSupplier, BiConsumer<ApplicationPart, Boolean> dirtyListener) {
+        this.backgroundTaskExecutor = backgroundTaskExecutor;
         this.dirtyListener = dirtyListener;
         this.pluginSupplier = pluginSupplier;
     }
     private final BiConsumer<ApplicationPart, Boolean> dirtyListener;
     private final Supplier<Stream<PluginWrapper>> pluginSupplier;
+    private final BackgroundTaskExecutorImpl backgroundTaskExecutor;
 
     private final LinkedHashMap<String, ApplicationPartFactory> REGISTRY = new LinkedHashMap<>();
     private final HashSet<BiConsumer<ApplicationPartFactory, ApplicationPartFactory>> listeners = new HashSet<>();
@@ -92,7 +95,7 @@ public final class ApplicationPartFactoryRegistry {
                         })
                         .findFirst().orElseThrow(() -> new ClassNotFoundException("Database interface missing: " + databasePath.getDatabaseInterface()));
 
-                databaseInterface = dbInterface.getConstructor(DatabasePath.class, OpenFlag.class).newInstance(databasePath, openFlag);
+                databaseInterface = dbInterface.getConstructor(BackgroundTaskExecutor.class, DatabasePath.class, OpenFlag.class).newInstance(backgroundTaskExecutor, databasePath, openFlag);
             } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                 throw new RuntimeException(ex);
             }

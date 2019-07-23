@@ -58,6 +58,7 @@ import java.util.TimerTask;
 import java.util.TreeMap;
 import java.util.WeakHashMap;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.jar.Manifest;
@@ -116,7 +117,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             (bt, p) -> Platform.runLater(() -> this.onBackgroundTaskUpdate(bt, p)),
             (bt, t) -> Platform.runLater(() -> this.setStatus("Error in task " + bt.getName() + ": " + getMessage(t))));
 
-    private final ApplicationPartFactoryRegistry applicationPartFactoryRegistry = new ApplicationPartFactoryRegistry(
+    private final ApplicationPartFactoryRegistry applicationPartFactoryRegistry = new ApplicationPartFactoryRegistry(backgroundTaskExecutor,
             () -> this.pluginManager.getPlugins(PluginState.STARTED).stream().distinct(),
             (part, dirty) -> this.tabPane.getTabs().stream()
                     .filter(t -> ((ApplicationPart) t.getUserData()) == part)
@@ -178,7 +179,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
     @FXML
     private ListView<ApplicationPart> recentFilesList;
-    
+
     @FXML
     private ImageView iconImageView;
 
@@ -231,7 +232,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         this.titleSetter = titleSetter;
         titleSetter.accept(null);
         tabChangeListener.changed(null, null, null);
-        
+
         this.iconImageView.setImage(ApplicationIcons.DOOR_BIG.toImage());
 
         tabPane.getSelectionModel().selectedItemProperty().addListener(tabChangeListener);
@@ -576,7 +577,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
     private boolean save(ApplicationPart part) {
         try {
-            part.getDatabaseInterface().flush();
+            part.getDatabaseInterface().flushAsync().get();
             part.getCommandStack().setSavePoint();
         } catch (Throwable ex) {
             ex.printStackTrace();
@@ -603,62 +604,60 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
     @Override
     public CompletableFuture<DatabasePath> createSnapshot(DatabaseInterface sourceDB, DatabasePath sourcePath, Predicate<DoorsTreeNode> include, DatabasePath destinationPathArg) {
-        DatabasePath destinationPath;
-        DoorsTreeNode copyRoot = sourceDB.getDatabaseRoot().getChild(sourcePath.getPath());
-        if (destinationPathArg == null) {
-            String proposedName;
-            if (!sourcePath.getPathSegments().isEmpty()) {
-                proposedName = sourcePath.getPathSegments().get(sourcePath.getPathSegments().size() - 1);
-            } else if (!sourcePath.getDatabasePathSegments().isEmpty()) {
-                proposedName = sourcePath.getDatabasePathSegments().get(sourcePath.getDatabasePathSegments().size() - 1);
-            } else {
-                proposedName = "";
-            }
-
-            ChoiceDialog<ApplicationPartFactory> applicationPartChooser = new ChoiceDialog<>(null, applicationPartFactoryRegistry.registry().stream()
-                    .filter(p -> p.isAllowNew())
-                    .filter(p -> p.canStore(copyRoot))
-                    .sorted((p1, p2) -> Objects.compare(p1.getName(), p2.getName(), Comparator.naturalOrder()))
-                    .collect(Collectors.toList()));
-            applicationPartChooser.setTitle("Create snapshot");
-            applicationPartChooser.setHeaderText("Select a destination database type");
-            destinationPathArg = Main.asStream(applicationPartChooser.showAndWait())
-                    .flatMap(part -> part.saveWithSelector(getNode().getScene().getWindow(), proposedName))
-                    .map(part -> part.getDatabasePath())
-                    .findAny().orElse(null);
-
-            if (destinationPathArg == null) {
-                return CompletableFuture.completedFuture(null);
-            }
-
-            destinationPath = destinationPathArg;
-        } else {
-            destinationPath = destinationPathArg;
-        }
-
         return this.getBackgroundTaskExecutor().runBackgroundTask("Creating snapshot", i -> {
+            DatabasePath destinationPath = destinationPathArg;
+            DoorsTreeNode copyRoot;
+            try {
+                copyRoot = sourceDB.getDatabaseRootAsync().get().getChild(sourcePath.getPath());
+                if (destinationPathArg == null) {
+                    String proposedName;
+                    if (!sourcePath.getPathSegments().isEmpty()) {
+                        proposedName = sourcePath.getPathSegments().get(sourcePath.getPathSegments().size() - 1);
+                    } else if (!sourcePath.getDatabasePathSegments().isEmpty()) {
+                        proposedName = sourcePath.getDatabasePathSegments().get(sourcePath.getDatabasePathSegments().size() - 1);
+                    } else {
+                        proposedName = "";
+                    }
+
+                    CompletableFuture<DatabasePath> destinationPathFuture = new CompletableFuture<>();
+                    Platform.runLater(() -> {
+                        ChoiceDialog<ApplicationPartFactory> applicationPartChooser = new ChoiceDialog<>(null, applicationPartFactoryRegistry.registry().stream()
+                                .filter(p -> p.isAllowNew())
+                                .filter(p -> p.canStore(copyRoot))
+                                .sorted((p1, p2) -> Objects.compare(p1.getName(), p2.getName(), Comparator.naturalOrder()))
+                                .collect(Collectors.toList()));
+                        applicationPartChooser.setTitle("Create snapshot");
+                        applicationPartChooser.setHeaderText("Select a destination database type");
+                        destinationPathFuture.complete(Main.asStream(applicationPartChooser.showAndWait())
+                                .flatMap(part -> part.saveWithSelector(getNode().getScene().getWindow(), proposedName))
+                                .map(part -> part.getDatabasePath())
+                                .findAny().orElse(null));
+                    });
+
+                    destinationPath = destinationPathFuture.get();
+                    if (destinationPath == null) {
+                        return null;
+                    }
+                }
+            } catch (InterruptedException | ExecutionException ex) {
+                throw new RuntimeException(ex);
+            }
+
             DatabaseInterface destinationDB = applicationPartFactoryRegistry.openDatabase(destinationPath, OpenFlag.ERASE_IF_EXISTS).getLeft();
             try {
-                destinationDB.getFactory().copy(FilteredDoorsTreeNode.createFilteredTree(copyRoot, include, false), destinationDB.getDatabaseRoot(), true, i);
+                destinationDB.getFactory().copy(FilteredDoorsTreeNode.createFilteredTree(copyRoot, include, false), destinationDB.getDatabaseRootAsync().get(), true, i);
                 DoorsAttributes.DATABASE_COPIED_FROM.setValue(String.class,
-                        destinationDB.getDatabaseRoot(), sourceDB.getPath().toString());
+                        destinationDB.getDatabaseRootAsync().get(), sourceDB.getPath().toString());
                 DoorsAttributes.DATABASE_COPIED_AT.setValue(String.class,
-                        destinationDB.getDatabaseRoot(), ZonedDateTime.now(ZoneOffset.UTC).toString());
+                        destinationDB.getDatabaseRootAsync().get(), ZonedDateTime.now(ZoneOffset.UTC).toString());
 
-                destinationDB.flush();
+                destinationDB.flushAsync().get();
                 return destinationPath;
-            } catch (IOException ex) {
+            } catch (InterruptedException | ExecutionException ex) {
                 throw new RuntimeException(ex);
             } finally {
                 applicationPartFactoryRegistry.closeDatabase(destinationPath);
             }
-        }).handleAsync((val, ex) -> {
-            Platform.runLater(() -> {
-                if (ex != null) {
-                    ex.printStackTrace();
-                }
-            });
-            return val;
         });
     }
 

@@ -172,7 +172,8 @@ public final class ModulePaneController extends ApplicationPartController<Module
     private void loadContent() {
         this.contentTableView.setPlaceholder(new ProgressBar());
 
-        super.getDatabaseInterface().getDatabaseRoot().getChildAsync(super.getBackgroundTaskExecutor().withPriority(BackgroundTask.PRIORITY_MODULE_CONTENT), super.getApplicationPart().getDatabasePath().getPath())
+        super.getDatabaseInterface().getDatabaseRootAsync()
+                .thenCompose(root -> root.getChildAsync(super.getBackgroundTaskExecutor().withPriority(BackgroundTask.PRIORITY_MODULE_CONTENT), super.getApplicationPart().getDatabasePath().getPath()))
                 .thenCompose(module -> {
                     if (module == null) {
                         throw new RuntimeException("No such module: " + super.getApplicationPart().getDatabasePath().toString());

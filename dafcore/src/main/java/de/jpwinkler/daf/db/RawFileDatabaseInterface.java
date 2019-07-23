@@ -21,25 +21,32 @@ package de.jpwinkler.daf.db;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.model.DoorsModule;
+import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
+
 public class RawFileDatabaseInterface implements DatabaseInterface {
 
-    private DoorsModule databaseRoot;
+    private CompletableFuture<DoorsModule> databaseRoot;
     private final DatabasePath databasePath;
     private final DatabaseFactory factory = new EmfDatabaseFactory();
 
-    public RawFileDatabaseInterface(DatabasePath databasePath, OpenFlag openFlag) throws IOException {
+    public RawFileDatabaseInterface(BackgroundTaskExecutor executor, DatabasePath databasePath, OpenFlag openFlag) throws IOException {
         if (!databasePath.getPath().isEmpty()) {
             throw new IllegalArgumentException("databasePath must not have a path segment here");
         }
 
         this.databasePath = databasePath;
-
-        File dbFile = new File(databasePath.getDatabasePath());
-        databaseRoot = ModuleCSV.read(factory, dbFile, openFlag);
+        databaseRoot = executor.runBackgroundTask("Load raw file database", i -> {
+            File dbFile = new File(databasePath.getDatabasePath());
+            try {
+                return ModuleCSV.read(factory, dbFile, openFlag);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
     }
 
     @Override
@@ -48,15 +55,27 @@ public class RawFileDatabaseInterface implements DatabaseInterface {
     }
 
     @Override
-    public void flush() throws IOException {
-        ModuleCSV.write(new File(databasePath.getDatabasePath()), this.databaseRoot);
+    public CompletableFuture<Void> flushAsync() {
+        return this.databaseRoot.thenAccept(root -> {
+            try {
+                ModuleCSV.write(new File(databasePath.getDatabasePath()), root);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
     }
 
     @Override
-    public DoorsModule getDatabaseRoot() {
+    public CompletableFuture<DoorsModule> getDatabaseRootAsync() {
         return databaseRoot;
     }
     
+    @Override
+    public Class<? extends DoorsTreeNode> getDatabaseRootClass() {
+        return DoorsModule.class;
+    }
+    
+
     @Override
     public DatabaseFactory getFactory() {
         return factory;

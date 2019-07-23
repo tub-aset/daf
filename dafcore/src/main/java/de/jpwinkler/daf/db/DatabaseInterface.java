@@ -22,7 +22,7 @@ package de.jpwinkler.daf.db;
  * #L%
  */
 import de.jpwinkler.daf.model.DoorsTreeNode;
-import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 
 /**
  *
@@ -38,7 +38,7 @@ public interface DatabaseInterface {
 
     DatabasePath getPath();
 
-    default void flush() throws IOException {
+    default CompletableFuture<Void> flushAsync() {
         throw new UnsupportedOperationException("Not supported");
     }
 
@@ -46,7 +46,9 @@ public interface DatabaseInterface {
         return false;
     }
 
-    DoorsTreeNode getDatabaseRoot();
+    CompletableFuture<? extends DoorsTreeNode> getDatabaseRootAsync();
+    
+    Class<? extends DoorsTreeNode> getDatabaseRootClass();
 
     DatabaseFactory getFactory();
 

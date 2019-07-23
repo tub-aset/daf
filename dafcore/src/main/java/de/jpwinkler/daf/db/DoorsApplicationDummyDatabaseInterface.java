@@ -24,6 +24,8 @@ package de.jpwinkler.daf.db;
 import de.jpwinkler.daf.bridge.DoorsApplication;
 import de.jpwinkler.daf.bridge.DoorsApplicationDummyImpl;
 import de.jpwinkler.daf.model.DoorsFolder;
+import de.jpwinkler.daf.model.DoorsTreeNode;
+import java.util.concurrent.CompletableFuture;
 
 /**
  *
@@ -32,10 +34,10 @@ import de.jpwinkler.daf.model.DoorsFolder;
 public class DoorsApplicationDummyDatabaseInterface implements DatabaseInterface {
 
     private final DoorsApplication doorsApplication;
-    private final DoorsFolder root;
+    private final CompletableFuture<DoorsFolder> root;
     private final DatabasePath databasePath;
 
-    public DoorsApplicationDummyDatabaseInterface(DatabasePath databasePath, OpenFlag openFlag) {
+    public DoorsApplicationDummyDatabaseInterface(BackgroundTaskExecutor executor, DatabasePath databasePath, OpenFlag openFlag) {
         if (!databasePath.getPath().isEmpty()) {
             throw new IllegalArgumentException("databasePath must not have a path segment here");
         }
@@ -44,7 +46,7 @@ public class DoorsApplicationDummyDatabaseInterface implements DatabaseInterface
         }
 
         this.doorsApplication = new DoorsApplicationDummyImpl(0.1, databasePath.getDatabasePath());
-        this.root = doorsApplication.getDatabaseFactory().createFolder(null, "Doors Application", false);
+        this.root = CompletableFuture.completedFuture(doorsApplication.getDatabaseFactory().createFolder(null, "Doors Application", false));
         this.databasePath = databasePath;
     }
 
@@ -54,8 +56,13 @@ public class DoorsApplicationDummyDatabaseInterface implements DatabaseInterface
     }
 
     @Override
-    public DoorsFolder getDatabaseRoot() {
+    public CompletableFuture<DoorsFolder> getDatabaseRootAsync() {
         return root;
+    }
+
+    @Override
+    public Class<? extends DoorsTreeNode> getDatabaseRootClass() {
+        return DoorsFolder.class;
     }
 
     @Override

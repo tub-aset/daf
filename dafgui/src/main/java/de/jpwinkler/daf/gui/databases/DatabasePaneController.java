@@ -114,7 +114,9 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                 },
                 (it, newName) -> this.executeCommand(new RenameNodeCommand(applicationPart, it, newName))));
 
-        databaseTreeView.setRoot(new DoorsTreeItem(super.getBackgroundTaskExecutor(), (DoorsTreeNode) super.getDatabaseInterface().getDatabaseRoot(), node -> node instanceof DoorsFolder, treeNodeCache));
+        super.getDatabaseInterface().getDatabaseRootAsync().thenAccept(root -> {
+            databaseTreeView.setRoot(new DoorsTreeItem(super.getBackgroundTaskExecutor(), root, node -> node instanceof DoorsFolder, treeNodeCache));
+        });
         databaseTreeView.getRoot().setExpanded(true);
         databaseTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             updateGui(UpdateModulesView, UpdateTagsView, UpdateAttributesView, UpdateNodeTitle);

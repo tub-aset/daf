@@ -246,7 +246,7 @@ public final class ApplicationPartFactories {
     }
 
     public static ApplicationPartController dynamicPartConstructor(ApplicationPaneController appController, ApplicationPart part) {
-        if (part.getDatabasePath().isRoot() && part.getDatabaseInterface().getDatabaseRoot() instanceof DoorsFolder) {
+        if (part.getDatabasePath().isRoot() && DoorsFolder.class.isAssignableFrom(part.getDatabaseInterface().getDatabaseRootClass())) {
             return new DatabasePaneController(appController, part);
         } else {
             return new ModulePaneController(appController, part);

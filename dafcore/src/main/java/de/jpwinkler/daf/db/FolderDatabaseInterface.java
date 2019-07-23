@@ -23,6 +23,7 @@ package de.jpwinkler.daf.db;
  */
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
+import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -34,111 +35,131 @@ import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.mutable.MutableObject;
 
 public class FolderDatabaseInterface implements DatabaseInterface {
 
     private static final Logger LOG = Logger.getLogger(FolderDatabaseInterface.class.getName());
 
-    private DoorsFolder databaseRoot;
+    private CompletableFuture<DoorsFolder> databaseRoot;
     private DatabasePath databasePath;
     private final DatabaseFactory factory = new EmfDatabaseFactory();
 
-    public FolderDatabaseInterface(DatabasePath databasePath, OpenFlag openFlag) throws IOException {
+    public FolderDatabaseInterface(BackgroundTaskExecutor executor, DatabasePath databasePath, OpenFlag openFlag) throws IOException {
         if (!databasePath.getPath().isEmpty()) {
             throw new IllegalArgumentException("databasePath must not have a path segment here");
         }
 
         this.databasePath = databasePath;
-        File databaseFile = new File(databasePath.getDatabasePath());
+        this.databaseRoot = executor.runBackgroundTask("Loading folder database", i -> {
+            MutableObject<DoorsFolder> root = new MutableObject<>();
+            try {
+                File databaseFile = new File(databasePath.getDatabasePath());
 
-        if (openFlag == OpenFlag.CREATE_IF_INEXISTENT && !databaseFile.isDirectory()) {
-            Files.createDirectories(databaseFile.toPath());
-        } else if (openFlag == OpenFlag.ERASE_IF_EXISTS && databaseFile.exists()) {
-            FileUtils.deleteDirectory(databaseFile);
-            Files.createDirectories(databaseFile.toPath());
-            new File(databaseFile, "__folder__.mmd").createNewFile();
-        } else if (openFlag == OpenFlag.OPEN_ONLY && !databaseFile.isDirectory()) {
-            throw new FileNotFoundException(databaseFile.getAbsolutePath());
-        }
+                if (openFlag == OpenFlag.CREATE_IF_INEXISTENT && !databaseFile.isDirectory()) {
+                    Files.createDirectories(databaseFile.toPath());
+                } else if (openFlag == OpenFlag.ERASE_IF_EXISTS && databaseFile.exists()) {
+                    FileUtils.deleteDirectory(databaseFile);
+                    Files.createDirectories(databaseFile.toPath());
+                    new File(databaseFile, "__folder__.mmd").createNewFile();
+                } else if (openFlag == OpenFlag.OPEN_ONLY && !databaseFile.isDirectory()) {
+                    throw new FileNotFoundException(databaseFile.getAbsolutePath());
+                }
 
-        Files.walkFileTree(databaseFile.toPath(), new SimpleFileVisitor<Path>() {
-            private final HashMap<String, DoorsFolder> folders = new HashMap<>();
+                Files.walkFileTree(databaseFile.toPath(), new SimpleFileVisitor<Path>() {
+                    private final HashMap<String, DoorsFolder> folders = new HashMap<>();
 
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                if ("csv".equals(FilenameUtils.getExtension(file.toString()))) {
-                    try {
-                        folders.get(file.getParent().toAbsolutePath().toString()).getChildren().add(ModuleCSV.read(factory, file.toFile()));
-                    } catch (IOException ex) {
-                        LOG.log(Level.SEVERE, "Failed reading module: " + file.toAbsolutePath().toString(), ex);
+                    @Override
+                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                        if ("csv".equals(FilenameUtils.getExtension(file.toString()))) {
+                            try {
+                                folders.get(file.getParent().toAbsolutePath().toString()).getChildren().add(ModuleCSV.read(factory, file.toFile()));
+                            } catch (IOException ex) {
+                                LOG.log(Level.SEVERE, "Failed reading module: " + file.toAbsolutePath().toString(), ex);
+                            }
+                        }
+
+                        return super.visitFile(file, attrs);
                     }
-                }
 
-                return super.visitFile(file, attrs);
+                    @Override
+                    public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                        DoorsFolder folder = factory.createFolder(
+                                folders.get(dir.getParent().toAbsolutePath().toString()),
+                                FilenameUtils.getBaseName(dir.toFile().getAbsolutePath()),
+                                Files.exists(dir.resolve("__project__")));
+                        if (folder.getParent() == null) {
+                            root.setValue(folder);
+                        }
+
+                        try {
+                            folder.getAttributes().putAll(ModuleCSV.readMetaData(factory, dir.resolve("__folder__.mmd").toFile()));
+                            folders.put(dir.toAbsolutePath().toString(), folder);
+                        } catch (IOException ex) {
+                            LOG.log(Level.SEVERE, "Failed reading folder metadata: " + dir.resolve("__folder__.mmd").toAbsolutePath().toString(), ex);
+                            return FileVisitResult.SKIP_SUBTREE;
+                        }
+
+                        return super.preVisitDirectory(dir, attrs);
+                    }
+
+                });
+
+                if (root.getValue() == null) {
+                    throw new IOException("No root node found");
+                }
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
             }
-
-            @Override
-            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-                DoorsFolder folder = factory.createFolder(
-                        folders.get(dir.getParent().toAbsolutePath().toString()),
-                        FilenameUtils.getBaseName(dir.toFile().getAbsolutePath()),
-                        Files.exists(dir.resolve("__project__")));
-                if (folder.getParent() == null) {
-                    databaseRoot = folder;
-                }
-
-                try {
-                    folder.getAttributes().putAll(ModuleCSV.readMetaData(factory, dir.resolve("__folder__.mmd").toFile()));
-                    folders.put(dir.toAbsolutePath().toString(), folder);
-                } catch (IOException ex) {
-                    LOG.log(Level.SEVERE, "Failed reading folder metadata: " + dir.resolve("__folder__.mmd").toAbsolutePath().toString(), ex);
-                    return FileVisitResult.SKIP_SUBTREE;
-                }
-
-                return super.preVisitDirectory(dir, attrs);
-            }
-
+            return root.getValue();
         });
     }
 
     @Override
-    public final void flush() throws IOException {
-        FileUtils.deleteDirectory(new File(databasePath.getDatabasePath()));
-        this.databaseRoot.setName(new File(databasePath.getDatabasePath()).getName());
-        databaseRoot.accept(new DoorsTreeNodeVisitor<DoorsFolder, Void>(DoorsFolder.class) {
-            @Override
-            public void visitPostTraverse(DoorsFolder f) {
-                try {
-                    Path modulePath = Paths.get(Paths.get(databasePath.getDatabasePath()).getParent().toAbsolutePath().toString(), f.getFullNameSegments().toArray(new String[0]));
-                    Files.createDirectories(modulePath);
+    public final CompletableFuture<Void> flushAsync() {
+        return this.databaseRoot.thenAccept(root -> {
+            try {
+                FileUtils.deleteDirectory(new File(databasePath.getDatabasePath()));
+                root.setName(new File(databasePath.getDatabasePath()).getName());
+                root.accept(new DoorsTreeNodeVisitor<DoorsFolder, Void>(DoorsFolder.class) {
+                    @Override
+                    public void visitPostTraverse(DoorsFolder f) {
+                        try {
+                            Path modulePath = Paths.get(Paths.get(databasePath.getDatabasePath()).getParent().toAbsolutePath().toString(), f.getFullNameSegments().toArray(new String[0]));
+                            Files.createDirectories(modulePath);
 
-                    ModuleCSV.writeMetaData(modulePath.resolve("__folder__.mmd").toFile(), f.getAttributes());
-                    if(f.isProject()) {
-                        Files.createFile(modulePath.resolve("__project__"));
-                    } else {
-                        Files.deleteIfExists(modulePath.resolve("__project__"));
+                            ModuleCSV.writeMetaData(modulePath.resolve("__folder__.mmd").toFile(), f.getAttributes());
+                            if (f.isProject()) {
+                                Files.createFile(modulePath.resolve("__project__"));
+                            } else {
+                                Files.deleteIfExists(modulePath.resolve("__project__"));
+                            }
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
                     }
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-            }
-        });
+                });
 
-        databaseRoot.accept(new DoorsTreeNodeVisitor<DoorsModule, Void>(DoorsModule.class) {
-            @Override
-            public void visitPostTraverse(DoorsModule m) {
-                try {
-                    Path folderPath = Paths.get(Paths.get(databasePath.getDatabasePath()).getParent().toAbsolutePath().toString(), m.getParent().getFullNameSegments().toArray(new String[0]));
-                    ModuleCSV.write(
-                            folderPath.resolve(m.getName() + ".csv").toFile(),
-                            folderPath.resolve(m.getName() + ".mmd").toFile(), m);
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
+                root.accept(new DoorsTreeNodeVisitor<DoorsModule, Void>(DoorsModule.class) {
+                    @Override
+                    public void visitPostTraverse(DoorsModule m) {
+                        try {
+                            Path folderPath = Paths.get(Paths.get(databasePath.getDatabasePath()).getParent().toAbsolutePath().toString(), m.getParent().getFullNameSegments().toArray(new String[0]));
+                            ModuleCSV.write(
+                                    folderPath.resolve(m.getName() + ".csv").toFile(),
+                                    folderPath.resolve(m.getName() + ".mmd").toFile(), m);
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    }
+                });
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
             }
         });
     }
@@ -149,8 +170,13 @@ public class FolderDatabaseInterface implements DatabaseInterface {
     }
 
     @Override
-    public DoorsFolder getDatabaseRoot() {
+    public CompletableFuture<DoorsFolder> getDatabaseRootAsync() {
         return databaseRoot;
+    }
+
+    @Override
+    public Class<? extends DoorsTreeNode> getDatabaseRootClass() {
+        return DoorsFolder.class;
     }
 
     @Override

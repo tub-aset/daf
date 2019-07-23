@@ -23,6 +23,8 @@ package de.jpwinkler.daf.db;
  */
 import de.jpwinkler.daf.bridge.DoorsApplicationImpl;
 import de.jpwinkler.daf.model.DoorsFolder;
+import de.jpwinkler.daf.model.DoorsTreeNode;
+import java.util.concurrent.CompletableFuture;
 
 /**
  *
@@ -31,7 +33,7 @@ import de.jpwinkler.daf.model.DoorsFolder;
 public class DoorsApplicationDatabaseInterface implements DatabaseInterface {
 
     private final DoorsApplicationImpl doorsApplication;
-    private final DoorsFolder root;
+    private final CompletableFuture<DoorsFolder> root;
     private final DatabasePath databasePath;
 
     public DoorsApplicationDatabaseInterface(DatabasePath databasePath, OpenFlag openFlag) {
@@ -45,7 +47,7 @@ public class DoorsApplicationDatabaseInterface implements DatabaseInterface {
         this.doorsApplication = new DoorsApplicationImpl();
         this.doorsApplication.setDatabaseView(databasePath.getDatabasePath());
 
-        this.root = doorsApplication.getDatabaseFactory().createFolder(null, "Doors Application", false);
+        this.root = CompletableFuture.completedFuture(doorsApplication.getDatabaseFactory().createFolder(null, "Doors Application", false));
         this.databasePath = databasePath;
     }
 
@@ -55,8 +57,13 @@ public class DoorsApplicationDatabaseInterface implements DatabaseInterface {
     }
 
     @Override
-    public DoorsFolder getDatabaseRoot() {
+    public CompletableFuture<DoorsFolder> getDatabaseRootAsync() {
         return root;
+    }
+
+    @Override
+    public Class<? extends DoorsTreeNode> getDatabaseRootClass() {
+        return DoorsFolder.class;
     }
 
     @Override
