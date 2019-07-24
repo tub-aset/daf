@@ -99,44 +99,19 @@ public class ViewDefinition implements Serializable {
 
     public static enum ColumnType {
         ATTRIBUTE(true, (cd, tc, i) -> {
-            BiFunction<DoorsObject, String, Boolean> edit = (it, newValue) -> {
-                if (i.executeCommand(new EditObjectAttributeCommand(it, cd.getAttributeName(), newValue))) {
-                    tc.getTableView().requestFocus();
-                    tc.getTableView().getFocusModel().focusNext();
-                    return true;
-                }
-
-                return false;
-            };
+            BiFunction<DoorsObject, String, Boolean> edit = (it, newValue) -> i.executeCommand(new EditObjectAttributeCommand(it, cd.getAttributeName(), newValue));
             CustomTextTableCell<DoorsObject> cell = new CustomTextTableCell<>(tc, it -> it.getAttributes().get(cd.getAttributeName()), edit, true);
             cell.setContextMenu(new ContextMenu(createLinksContextMenu(cell)));
             return cell;
         }),
         COMBINED_TEXT_HEADING(false, (cd, tc, i) -> {
-            BiFunction<DoorsObject, String, Boolean> edit = (it, newValue) -> {
-                if (i.executeCommand(new EditObjectAttributeCommand(it, it.isHeading() ? DoorsAttributes.OBJECT_HEADING.getKey() : DoorsAttributes.OBJECT_TEXT.getKey(), newValue))) {
-                    tc.getTableView().requestFocus();
-                    tc.getTableView().getFocusModel().focusNext();
-                    return true;
-                }
-                return false;
-            };
-
+            BiFunction<DoorsObject, String, Boolean> edit = (it, newValue) -> i.executeCommand(new EditObjectAttributeCommand(it, it.isHeading() ? DoorsAttributes.OBJECT_HEADING.getKey() : DoorsAttributes.OBJECT_TEXT.getKey(), newValue));
             CustomTextTableCell<DoorsObject> cell = new CombinedTextHeadingCell<>(tc, edit);
             cell.setContextMenu(new ContextMenu(createLinksContextMenu(cell)));
             return cell;
         }),
         LINKS(false, (cd, tc, i) -> {
-            BiFunction<DoorsObject, String, Boolean> edit = (it, newValue) -> {
-                if (i.executeCommand(new EditLinksCommand(it, ModuleCSV.parseLinks(newValue, i.getDatabaseInterface().getFactory(), it).collect(Collectors.toList())))) {
-                    tc.getTableView().requestFocus();
-                    tc.getTableView().getFocusModel().focusNext();
-                    return true;
-                }
-
-                return false;
-            };
-
+            BiFunction<DoorsObject, String, Boolean> edit = (it, newValue) -> i.executeCommand(new EditLinksCommand(it, ModuleCSV.parseLinks(newValue, i.getDatabaseInterface().getFactory(), it).collect(Collectors.toList())));
             return new LinksTableCell<>(tc, edit, i);
         });
 
