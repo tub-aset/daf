@@ -110,6 +110,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.mutable.MutableBoolean;
+import org.apache.commons.lang3.tuple.Triple;
 import org.pf4j.DefaultPluginManager;
 import org.pf4j.ManifestPluginDescriptorFinder;
 import org.pf4j.PluginDescriptorFinder;
@@ -1013,7 +1014,10 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     @FXML
     public void sortTabsClicked() {
         this.tabPane.getTabs().sort(
-                Comparator.comparing(t -> getApplicationPartController(t).getApplicationPart().getDatabasePath().toString()));
+                Comparator.comparing(t -> {
+                    DatabasePath path = getApplicationPartController(t).getApplicationPart().getDatabasePath();
+                    return Triple.of(path.getDatabaseInterface(), path.getDatabasePath(), path.getPath());
+                }));
     }
 
     private void startPlugin(String pluginId) {
