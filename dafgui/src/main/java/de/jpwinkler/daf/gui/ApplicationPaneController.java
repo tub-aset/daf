@@ -80,6 +80,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.Dialog;
@@ -186,6 +187,9 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     private VBox mainVbox;
 
     @FXML
+    private CheckMenuItem keepTabsSortedCheckItem;
+
+    @FXML
     private ListView<ApplicationPart> recentFilesList;
 
     @FXML
@@ -255,18 +259,6 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         this.iconImageView.setImage(ApplicationIcons.DOOR_BIG.toImage());
 
         tabPane.getSelectionModel().selectedItemProperty().addListener(tabChangeListener);
-        try {
-            @SuppressWarnings("unchecked")
-            Class<? extends Enum> tdPolicy = (Class<? extends Enum>) Class.forName("javafx.scene.control.TabPane$TabDragPolicy", true, TabPane.class.getClassLoader());
-            Enum[] enumConstants = tdPolicy.getEnumConstants();
-            Enum constant = Stream.of(enumConstants)
-                    .filter(e -> "REORDER".equals(e.name()))
-                    .findAny().orElseThrow(() -> new ClassNotFoundException("Missing enum constant: REORDER"));
-
-            tabPane.getClass().getMethod("setTabDragPolicy", tdPolicy).invoke(tabPane, constant);
-        } catch (ClassNotFoundException | ClassCastException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-            Logger.getLogger(ApplicationPaneController.class.getName()).log(Level.WARNING, "Running below Java 10, tab reordering not available", ex);
-        }
 
         tabPane.getTabs().addListener((ListChangeListener<Tab>) (change) -> {
             Set<Tab> closedTabs = new HashSet<>();
@@ -440,6 +432,36 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
             };
         });
+
+        keepTabsSortedCheckItem.setSelected(ApplicationPreferences.KEEP_TABS_SORTED.retrieve());
+        setTagsDraggable();
+        keepTabsSortedCheckItem.selectedProperty().addListener((ov, oldValue, newValue) -> {
+            ApplicationPreferences.KEEP_TABS_SORTED.store(newValue);
+            setTagsDraggable();
+        });
+    }
+
+    public void setTagsDraggable() {
+        String target;
+        if (ApplicationPreferences.KEEP_TABS_SORTED.retrieve()) {
+            sortTabsClicked();
+            target = "FIXED";
+        } else {
+            target = "REORDER";
+        }
+
+        try {
+            @SuppressWarnings("unchecked")
+            Class<? extends Enum> tdPolicy = (Class<? extends Enum>) Class.forName("javafx.scene.control.TabPane$TabDragPolicy", true, TabPane.class.getClassLoader());
+            Enum[] enumConstants = tdPolicy.getEnumConstants();
+            Enum constant = Stream.of(enumConstants)
+                    .filter(e -> target.equals(e.name()))
+                    .findAny().orElseThrow(() -> new ClassNotFoundException("Missing enum constant: " + target));
+
+            tabPane.getClass().getMethod("setTabDragPolicy", tdPolicy).invoke(tabPane, constant);
+        } catch (ClassNotFoundException | ClassCastException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            Logger.getLogger(ApplicationPaneController.class.getName()).log(Level.WARNING, "Running below Java 10, tab reordering not available", ex);
+        }
     }
 
     private void addPluginMenuEntries(PluginWrapper plugin) {
@@ -614,6 +636,10 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
                         newTab.setClosable(true);
                         tabPane.getTabs().add(newTab);
+
+                        if (ApplicationPreferences.KEEP_TABS_SORTED.retrieve()) {
+                            sortTabsClicked();
+                        }
                         return newTab;
                     } catch (Throwable ex) {
                         ex.printStackTrace();
@@ -932,6 +958,12 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         dialog.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         dialog.getDialogPane().setMinWidth(800);
         dialog.showAndWait();
+    }
+
+    @FXML
+    public void sortTabsClicked() {
+        this.tabPane.getTabs().sort(
+                Comparator.comparing(t -> getApplicationPartController(t).getApplicationPart().getDatabasePath().toString()));
     }
 
     private void startPlugin(String pluginId) {

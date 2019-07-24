@@ -44,6 +44,8 @@ class ApplicationPreferences<T extends Serializable> extends ApplicationPreferen
     public static final ApplicationPreference<File> PLUGIN_DIRECTORY = new ApplicationPreferences<>("PLUGIN_DIRECTORY", File.class, new File(System.getProperty("user.home")).getAbsoluteFile(), ApplicationPreferences::isDir);
     public static final ApplicationPreference<Boolean> WINDOW_MAXIMIZED = new ApplicationPreferences<>("WINDOW_MAXIMIZED", Boolean.class, false);
     public static final ApplicationPreference<SerializableRectangle2D> WINDOW_RECTANGLE = new ApplicationPreferences<>("WINDOW_RECTANGLE", SerializableRectangle2D.class, null);
+    
+    public static final ApplicationPreference<Boolean> KEEP_TABS_SORTED = new ApplicationPreferences<>("KEEP_TABS_SORTED", Boolean.class, false);
 
     public ApplicationPreferences(String name, Class<? super T> valueType, T defaultValue, Consumer<T> validator) {
         super(name, valueType, defaultValue, validator);

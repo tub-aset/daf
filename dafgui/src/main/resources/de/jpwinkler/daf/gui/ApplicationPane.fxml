@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.CheckMenuItem?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
@@ -16,7 +17,6 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-
 
 <StackPane minHeight="800.0" minWidth="800.0" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
@@ -40,6 +40,14 @@
                                       <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                                   </accelerator>
                               </MenuItem>
+                              <MenuItem mnemonicParsing="false" onAction="#closeClicked" text="Close file">
+                                  <accelerator>
+                                      <KeyCodeCombination alt="UP" code="W" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                                  </accelerator>
+                              </MenuItem>
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#sortTabsClicked" text="Sort tabs" />
+                        <CheckMenuItem fx:id="keepTabsSortedCheckItem" mnemonicParsing="false" text="Keep tabs sorted" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                       <MenuItem mnemonicParsing="false" onAction="#installPluginClicked" text="Install plugin" />
                         <Menu fx:id="pluginStateMenu" mnemonicParsing="false" text="Enable/disable plugin" />
@@ -47,11 +55,6 @@
                         <SeparatorMenuItem mnemonicParsing="false" />
                       <MenuItem mnemonicParsing="false" onAction="#showLicensesClicked" text="About..." />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                              <MenuItem mnemonicParsing="false" onAction="#closeClicked" text="Close">
-                                  <accelerator>
-                                      <KeyCodeCombination alt="UP" code="W" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                                  </accelerator>
-                              </MenuItem>
                               <MenuItem mnemonicParsing="false" onAction="#exitClicked" text="Exit" />
                           </items>
                       </Menu>
