@@ -36,9 +36,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigInteger;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -53,6 +53,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -83,18 +84,23 @@ import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.SelectionModel;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -114,6 +120,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
     private static final int MAX_STATUS_MENU_ITEMS = 10;
     private static final int MAX_RECENT_FILES = 10;
+    private static final int MAX_SELECTED_FILES_HISTORY = 100;
 
     private final Map<ApplicationPart, ApplicationPartController> applicationPartControllers = new HashMap<>();
     private final BackgroundTaskExecutorImpl backgroundTaskExecutor = new BackgroundTaskExecutorImpl(
@@ -184,9 +191,17 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     @FXML
     private ImageView iconImageView;
 
+    @FXML
+    private Pane tabSwitchPane;
+
+    @FXML
+    private ListView<ApplicationPart> tabSwitchListView;
+    private final List<ApplicationPart> tabHistory = new LinkedList<>();
+
     private final Timer generalTimer = new Timer(true);
 
     private final TreeMap<Long, ApplicationPart> recentFiles = ApplicationPreferences.RECENT_FILES.retrieve();
+
     private final ListChangeListener<Menu> partMenuChangeLister = (change) -> {
         while (change.next()) {
             change.getRemoved().forEach(this.mainMenuBar.getMenus()::remove);
@@ -208,7 +223,8 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         }
 
         if (newValue != null) {
-            ObservableList<Menu> partMenus = getApplicationPartController(newValue).getMenus();
+            ApplicationPart appPart = getApplicationPartController(newValue).getApplicationPart();
+            ObservableList<Menu> partMenus = getApplicationPartController(appPart).getMenus();
             partMenus.forEach(mainMenuBar.getMenus()::add);
             partMenus.addListener(partMenuChangeLister);
             titleSetter.accept(newValue.getText());
@@ -218,6 +234,9 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
                 mainVbox.getChildren().add(tabPaneRecentFilesVboxPos, tabPane);
             }
 
+            if (!this.tabSwitchListView.isVisible()) {
+                addToHistory(appPart);
+            }
         } else {
             mainVbox.getChildren().remove(tabPane);
             if (!mainVbox.getChildren().contains(recentFilesVbox)) {
@@ -226,7 +245,6 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
             titleSetter.accept(null);
         }
-
     };
 
     public ApplicationPaneController(Consumer<String> titleSetter) {
@@ -328,6 +346,100 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
                     .findAny().orElse(null);
             this.tabPane.getSelectionModel().select(tab);
         }
+
+        this.getNode().addEventFilter(KeyEvent.KEY_PRESSED, e -> {
+            if (!this.tabSwitchListView.isVisible() && (e.isControlDown() && e.getCode() == KeyCode.TAB
+                    || e.isAltDown() && e.getCode() == KeyCode.LEFT
+                    || e.isAltDown() && e.getCode() == KeyCode.RIGHT
+                    || e.isAltDown() && e.getCode() == KeyCode.UP
+                    || e.isAltDown() && e.getCode() == KeyCode.DOWN)) {
+
+                if (e.isAltDown()) {
+                    this.tabSwitchListView.getItems().addAll(tabHistory);
+                } else if (e.isControlDown()) {
+                    this.tabHistory.stream()
+                            .filter(a -> this.applicationPartControllers.containsKey(a))
+                            .distinct()
+                            .forEach(this.tabSwitchListView.getItems()::add);
+                }
+
+                if (!this.tabSwitchListView.getItems().isEmpty()) {
+                    this.tabSwitchPane.setVisible(true);
+                    this.tabSwitchListView.setVisible(true);
+
+                    this.tabSwitchListView.requestFocus();
+                    this.tabSwitchListView.getSelectionModel().selectFirst();
+                }
+                e.consume();
+            } else if (this.tabSwitchListView.isVisible() && (e.isControlDown() && e.getCode() == KeyCode.TAB
+                    || e.isAltDown() && e.getCode() == KeyCode.LEFT
+                    || e.isAltDown() && e.getCode() == KeyCode.RIGHT
+                    || e.isAltDown() && e.getCode() == KeyCode.UP
+                    || e.isAltDown() && e.getCode() == KeyCode.DOWN)) {
+                SelectionModel<ApplicationPart> selMod = this.tabSwitchListView.getSelectionModel();
+                boolean next = (e.getCode() == KeyCode.TAB && !e.isShiftDown()) || (e.getCode() == KeyCode.RIGHT || e.getCode() == KeyCode.DOWN);
+                if (selMod.isEmpty() && next) {
+                    selMod.selectFirst();
+                } else if (selMod.isEmpty() && !next) {
+                    selMod.selectLast();
+                } else if (next) {
+                    if (selMod.getSelectedIndex() == this.tabSwitchListView.getItems().size() - 1) {
+                        selMod.selectFirst();
+                    } else {
+                        selMod.select(selMod.getSelectedIndex() + 1);
+                    }
+                } else {
+                    if (selMod.getSelectedIndex() == 0) {
+                        selMod.selectLast();
+                    } else {
+                        selMod.select(selMod.getSelectedIndex() - 1);
+                    }
+                }
+
+                if (this.applicationPartControllers.containsKey(selMod.getSelectedItem())) {
+                    this.open(selMod.getSelectedItem(), OpenFlag.OPEN_ONLY);
+                }
+                e.consume();
+            } else if (e.isControlDown() && e.getCode() == KeyCode.TAB) {
+                e.consume();
+            }
+        });
+
+        this.getNode().addEventFilter(KeyEvent.KEY_RELEASED, e -> {
+            if (this.tabSwitchListView.isVisible() && (e.getCode() == KeyCode.CONTROL || e.getCode() == KeyCode.ALT)) {
+                this.tabSwitchPane.setVisible(false);
+                this.tabSwitchListView.setVisible(false);
+
+                ApplicationPart selectedPart = tabSwitchListView.getSelectionModel().getSelectedItem();
+                addToHistory(selectedPart);
+                if (!this.applicationPartControllers.containsKey(selectedPart)) {
+                    this.open(selectedPart, OpenFlag.OPEN_ONLY);
+                }
+                this.tabSwitchListView.getItems().clear();
+                e.consume();
+            }
+        });
+
+        this.tabSwitchListView.setCellFactory(lv -> {
+            return new ListCell<ApplicationPart>() {
+                @Override
+                protected void updateItem(ApplicationPart t, boolean empty) {
+                    super.updateItem(t, empty);
+                    if (t != null && !empty) {
+                        setText(t.toString());
+
+                        if (!ApplicationPaneController.this.applicationPartControllers.containsKey(t)) {
+                            setStyle("-fx-text-fill: lightgrey");
+                        } else {
+                            setStyle("");
+                        }
+                    } else {
+                        setText(null);
+                    }
+                }
+
+            };
+        });
     }
 
     private void addPluginMenuEntries(PluginWrapper plugin) {
@@ -884,17 +996,24 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
     private String getTabColor(DatabasePath path) {
         try {
-            byte[] digest;
-            digest = MessageDigest.getInstance("MD5").digest(path.withPath("").toString().getBytes("UTF-8"));
-            ByteBuffer buffer = ByteBuffer.wrap(digest);
-
-            Color color = Color.hsb(buffer.getDouble(), 0.3d, 0.8d);
+            byte[] digest = MessageDigest.getInstance("MD5").digest(path.withPath("").toString().getBytes("UTF-8"));
+            Color color = Color.hsb(new BigInteger(digest).doubleValue(), 0.3d, 0.8d);
             return String.format("#%02X%02X%02X",
                     (int) (color.getRed() * 255),
                     (int) (color.getGreen() * 255),
                     (int) (color.getBlue() * 255));
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private void addToHistory(ApplicationPart appPart) {
+        if (tabHistory.isEmpty() || !tabHistory.get(0).equals(appPart)) {
+            tabHistory.add(0, appPart);
+
+            while (tabHistory.size() > MAX_SELECTED_FILES_HISTORY) {
+                tabHistory.remove(tabHistory.size() - 1);
+            }
         }
     }
 }
