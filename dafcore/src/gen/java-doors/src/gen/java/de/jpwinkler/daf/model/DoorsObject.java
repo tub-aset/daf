@@ -237,14 +237,11 @@ public interface DoorsObject extends DoorsTreeNode {
     /**
      * @return @generated NOT
      */
+    @Override
     default String asLink() {
-        DoorsTreeNode node = this;
-        while (node != null && !(node instanceof DoorsModule)) {
-            node = node.getParent();
-        }
-
-        if (node != null) {
-            return node.getFullName() + ":" + this.getAbsoluteNumber();
+        DoorsModule module = this.getParent(DoorsModule.class);
+        if (module != null) {
+            return module.getFullName() + ":" + this.getAbsoluteNumber();
         }
 
         return null;

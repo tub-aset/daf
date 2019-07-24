@@ -63,6 +63,6 @@ public interface ApplicationPartInterface {
 
     SelectionModel<DoorsObject> getCurrentObjectSelectionModel();
     
-    void selectLinkTarget(DoorsObject linkTarget);
+    void select(DoorsTreeNode node);
 
 }

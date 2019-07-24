@@ -160,7 +160,7 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
                     CompletableFuture<ApplicationPartInterface> appPartInterfaceFuture = new CompletableFuture<>();
                     Platform.runLater(() -> {
                         ApplicationPartInterface appPartInterface = applicationController.open(applicationPart.getDatabasePath().withPath(dl.getTargetModule()), openFlag);
-                        appPartInterface.selectLinkTarget(linkTarget);
+                        appPartInterface.select(linkTarget);
                         appPartInterfaceFuture.complete(appPartInterface);
                     });
                     return appPartInterfaceFuture;

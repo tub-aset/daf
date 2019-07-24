@@ -81,7 +81,7 @@ public class DoorsTreeItem extends TreeItem<DoorsTreeNode> implements Comparable
         childrenLoaded = true;
     }
 
-    public void updateChildren() {
+    public CompletableFuture<ObservableList<TreeItem<DoorsTreeNode>>> updateChildren() {
         childrenLoadingStarted = true;
 
         this.setGraphic(ApplicationIcons.LOADING.toImageView());
@@ -90,19 +90,25 @@ public class DoorsTreeItem extends TreeItem<DoorsTreeNode> implements Comparable
         if (promise.isDone()) {
             try {
                 this.loadChildren(promise.get());
+                return CompletableFuture.completedFuture(super.getChildren());
             } catch (InterruptedException | ExecutionException ex) {
                 throw new RuntimeException(ex);
             }
         } else {
-            promise.exceptionally(t -> {
+            return promise.exceptionally(t -> {
                 Platform.runLater(() -> {
                     this.setGraphic(ApplicationIcons.ERROR.toImageView());
                     childrenLoadingStarted = false;
                 });
                 throw new RuntimeException(t);
-            }).thenAccept((children) -> Platform.runLater(() -> {
-                this.loadChildren(children);
-            }));
+            }).thenCompose((children) -> {
+                CompletableFuture<ObservableList<TreeItem<DoorsTreeNode>>> childrenPromise = new CompletableFuture<>();
+                Platform.runLater(() -> {
+                    this.loadChildren(children);
+                    childrenPromise.complete(super.getChildren());
+                });
+                return childrenPromise;
+            });
         }
     }
 

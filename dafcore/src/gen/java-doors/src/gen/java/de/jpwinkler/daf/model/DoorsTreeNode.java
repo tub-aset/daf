@@ -295,5 +295,17 @@ public interface DoorsTreeNode {
     default String asLink() {
         return this.getFullName();
     }
+    
+    /**
+     * @return @generated NOT
+     */
+    default <T> T getParent(Class<T> parentClass) {
+        DoorsTreeNode node = this;
+        while (node != null && !(parentClass.isAssignableFrom(node.getClass()))) {
+            node = node.getParent();
+        }
+
+        return node == null ? null : parentClass.cast(node);
+    }
 
 } // DoorsTreeNode

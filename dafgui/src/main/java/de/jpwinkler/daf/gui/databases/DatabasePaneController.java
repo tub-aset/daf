@@ -96,6 +96,8 @@ import org.pf4j.PluginWrapper;
 
 public final class DatabasePaneController extends ApplicationPartController<DatabasePaneController> {
 
+    private final CompletableFuture<DoorsTreeItem> databaseRoot;
+
     public DatabasePaneController(ApplicationPaneController applicationController, ApplicationPart applicationPart) {
         super(applicationController, applicationPart, DatabasePaneExtension.class);
 
@@ -114,10 +116,15 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                 },
                 (it, newName) -> this.executeCommand(new RenameNodeCommand(applicationPart, it, newName))));
 
-        super.getDatabaseInterface().getDatabaseRootAsync().thenAccept(root -> Platform.runLater(() -> {
-            databaseTreeView.setRoot(new DoorsTreeItem(super.getBackgroundTaskExecutor(), root, node -> node instanceof DoorsFolder, treeNodeCache));
-            databaseTreeView.getRoot().setExpanded(true);
-        }));
+        this.databaseRoot = super.getDatabaseInterface().getDatabaseRootAsync().thenCompose(rootNode -> {
+            CompletableFuture<DoorsTreeItem> rootFuture = new CompletableFuture<>();
+            Platform.runLater(() -> {
+                databaseTreeView.setRoot(new DoorsTreeItem(super.getBackgroundTaskExecutor(), rootNode, node -> node instanceof DoorsFolder, treeNodeCache));
+                databaseTreeView.getRoot().setExpanded(true);
+                rootFuture.complete((DoorsTreeItem) databaseTreeView.getRoot());
+            });
+            return rootFuture;
+        });
         databaseTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             updateGui(UpdateModulesView, UpdateTagsView, UpdateAttributesView, UpdateNodeTitle);
         });
@@ -555,9 +562,63 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         return new EmptySelectionModel<>();
     }
 
+    private static class NextChildFinder {
+
+        private final List<DoorsTreeNode> path;
+        private DoorsTreeItem result;
+
+        public NextChildFinder(List<DoorsTreeNode> path) {
+            this.path = path;
+        }
+
+        public CompletableFuture<TreeItem<DoorsTreeNode>> find(DoorsTreeItem parent) {
+            if(path.isEmpty()) {
+                throw new IllegalStateException("Search already started");
+            }
+            
+            return findNextChild(parent.getChildren())
+                    .thenApply(a -> this.result);
+        }
+
+        private CompletableFuture<ObservableList<TreeItem<DoorsTreeNode>>> findNextChild(ObservableList<TreeItem<DoorsTreeNode>> children) {
+            DoorsTreeItem it = (DoorsTreeItem) children.stream()
+                    .filter(c -> c.getValue().equals(path.get(path.size() - 1)))
+                    .findFirst().orElse(null);
+            path.remove(path.size() - 1);
+            if(it == null || path.isEmpty()) {
+                this.result = it;
+                return CompletableFuture.completedFuture(null);
+            }
+            
+            it.setExpanded(true);
+            return it.updateChildren().thenCompose(this::findNextChild);
+        }
+    }
+
     @Override
-    public void selectLinkTarget(DoorsObject linkTarget) {
-        throw new UnsupportedOperationException("Not supported");
+    public void select(DoorsTreeNode node) {
+        this.databaseRoot.thenAccept(rootItem -> {
+            DoorsModule moduleToSelect = node.getParent(DoorsModule.class);
+            DoorsFolder folderToSelect = node.getParent(DoorsFolder.class);
+
+            ArrayList<DoorsTreeNode> path = new ArrayList<>();
+            DoorsTreeNode currentPosition = folderToSelect;
+            while (currentPosition != null) {
+                path.add(currentPosition);
+                currentPosition = currentPosition.getParent();
+            }
+
+            DoorsTreeItem searchStart = currentPosition == null ? rootItem : this.treeNodeCache.get(currentPosition);
+            new NextChildFinder(path).find(searchStart)
+                    .thenAccept(child -> {
+                        databaseTreeView.getSelectionModel().clearSelection();
+                        databaseTreeView.getSelectionModel().select(this.treeNodeCache.get(folderToSelect));
+                        if (moduleToSelect != null) {
+                            modulesTableView.getSelectionModel().clearSelection();
+                            modulesTableView.getSelectionModel().select(moduleToSelect);
+                        }
+                    });
+        });
     }
 
     @FXML

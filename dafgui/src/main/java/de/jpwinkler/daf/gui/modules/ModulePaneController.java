@@ -27,6 +27,7 @@ import de.jpwinkler.daf.filter.model.FilteredDoorsTreeNode;
 import de.jpwinkler.daf.gui.ApplicationPaneController;
 import de.jpwinkler.daf.gui.ApplicationPartController;
 import de.jpwinkler.daf.gui.ApplicationPartFactoryRegistry.ApplicationPart;
+import de.jpwinkler.daf.gui.ApplicationPartInterface;
 import de.jpwinkler.daf.gui.BackgroundTask;
 import de.jpwinkler.daf.gui.commands.MultiCommand;
 import de.jpwinkler.daf.gui.commands.UpdateAction;
@@ -564,12 +565,16 @@ public final class ModulePaneController extends ApplicationPartController<Module
     }
 
     @Override
-    public void selectLinkTarget(DoorsObject linkTarget) {
+    public void select(DoorsTreeNode node) {
+        if (!(node instanceof DoorsObject)) {
+            return;
+        }
+
         loadingDone.thenRun(() -> Platform.runLater(() -> {
             DoorsObject localLinkTarget = this.filteredModule.accept(new DoorsTreeNodeVisitor<DoorsObject, DoorsObject>(DoorsObject.class) {
                 @Override
                 public boolean visitPreTraverse(DoorsObject object) {
-                    if (object.getAbsoluteNumber() == linkTarget.getAbsoluteNumber()) {
+                    if (object.getAbsoluteNumber() == ((DoorsObject) node).getAbsoluteNumber()) {
                         setResult(object);
                         return false;
                     }
@@ -599,7 +604,8 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
     @FXML
     public void showDatabaseClicked() {
-        this.open(this.getPath().withPath(""), DatabaseInterface.OpenFlag.OPEN_ONLY);
+        ApplicationPartInterface target = this.open(this.getPath().withPath(""), DatabaseInterface.OpenFlag.OPEN_ONLY);
+        target.select(this.actualModule);
     }
 
     @Override
