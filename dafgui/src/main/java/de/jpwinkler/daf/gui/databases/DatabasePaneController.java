@@ -71,6 +71,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -576,7 +577,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                 throw new IllegalStateException("Search already started");
             }
             
-            return findNextChild(parent.getChildren())
+            return findNextChild(FXCollections.singletonObservableList(parent))
                     .thenApply(a -> this.result);
         }
 
@@ -608,8 +609,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                 currentPosition = currentPosition.getParent();
             }
 
-            DoorsTreeItem searchStart = currentPosition == null ? rootItem : this.treeNodeCache.get(currentPosition);
-            new NextChildFinder(path).find(searchStart)
+            new NextChildFinder(path).find(rootItem)
                     .thenAccept(child -> {
                         databaseTreeView.getSelectionModel().clearSelection();
                         databaseTreeView.getSelectionModel().select(this.treeNodeCache.get(folderToSelect));
