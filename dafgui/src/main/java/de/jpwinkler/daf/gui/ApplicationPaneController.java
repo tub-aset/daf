@@ -201,6 +201,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     @FXML
     private ListView<ApplicationPart> tabSwitchListView;
     private final List<ApplicationPart> tabHistory = new LinkedList<>();
+    private Integer tabHistoryPosition;
 
     private final Timer generalTimer = new Timer(true);
 
@@ -339,20 +340,27 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             this.tabPane.getSelectionModel().select(tab);
         }
 
-        this.getNode().addEventFilter(KeyEvent.KEY_PRESSED, e -> {
-            if (!this.tabSwitchListView.isVisible() && (e.isControlDown() && e.getCode() == KeyCode.TAB
-                    || e.isAltDown() && e.getCode() == KeyCode.LEFT
-                    || e.isAltDown() && e.getCode() == KeyCode.RIGHT
-                    || e.isAltDown() && e.getCode() == KeyCode.UP
-                    || e.isAltDown() && e.getCode() == KeyCode.DOWN)) {
+        this.tabSwitchListView.addEventFilter(MouseEvent.ANY, t -> t.consume());
+        this.tabSwitchListView.addEventFilter(KeyEvent.ANY, t -> t.consume());
 
-                if (e.isAltDown()) {
-                    this.tabSwitchListView.getItems().addAll(tabHistory);
-                } else if (e.isControlDown()) {
+        this.getNode().addEventFilter(KeyEvent.KEY_PRESSED, e -> {
+            boolean isCtrlTab = e.isControlDown() && e.getCode() == KeyCode.TAB;
+            boolean isAltLeftRight = e.isAltDown() && (e.getCode() == KeyCode.LEFT
+                    || e.getCode() == KeyCode.RIGHT
+                    || e.getCode() == KeyCode.UP
+                    || e.getCode() == KeyCode.DOWN);
+            boolean next = (isCtrlTab && !e.isShiftDown()) || (isAltLeftRight && (e.getCode() == KeyCode.LEFT || e.getCode() == KeyCode.DOWN));
+            SelectionModel<ApplicationPart> selMod = this.tabSwitchListView.getSelectionModel();
+
+            if (!this.tabSwitchListView.isVisible() && (isCtrlTab || isAltLeftRight)) {
+                // initial selection
+                if (isCtrlTab) {
                     this.tabHistory.stream()
                             .filter(a -> this.applicationPartControllers.containsKey(a))
                             .distinct()
                             .forEach(this.tabSwitchListView.getItems()::add);
+                } else if (isAltLeftRight) {
+                    this.tabSwitchListView.getItems().addAll(tabHistory);
                 }
 
                 if (!this.tabSwitchListView.getItems().isEmpty()) {
@@ -360,18 +368,35 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
                     this.tabSwitchListView.setVisible(true);
 
                     this.tabSwitchListView.requestFocus();
-                    this.tabSwitchListView.getSelectionModel().selectFirst();
+
+                    if (this.tabSwitchListView.getItems().size() == 1) {
+                        selMod.selectFirst();
+                    } else if (next && (isCtrlTab || this.tabHistoryPosition == null)) {
+                        selMod.select(1);
+                    } else if (!next && (isCtrlTab || this.tabHistoryPosition == null)) {
+                        selMod.selectLast();
+                    } else if (next && isAltLeftRight) {
+                        selMod.select(this.tabHistoryPosition + 1);
+                    } else if (!next && isAltLeftRight) {
+                        selMod.select(this.tabHistoryPosition - 1);
+                    }
+
+                    this.tabSwitchListView.scrollTo(selMod.getSelectedIndex());
+                    if (isAltLeftRight) {
+                        tabHistoryPosition = selMod.getSelectedIndex();
+                    }
                 }
+
+                tabPane.getTabs().stream()
+                        .filter(t -> Objects.equals(selMod.getSelectedItem(), ((ApplicationPart) t.getUserData())))
+                        .findFirst()
+                        .ifPresent(t -> this.tabPane.getSelectionModel().select(t));
                 e.consume();
-            } else if (this.tabSwitchListView.isVisible() && (e.isControlDown() && e.getCode() == KeyCode.TAB
-                    || e.isAltDown() && e.getCode() == KeyCode.LEFT
-                    || e.isAltDown() && e.getCode() == KeyCode.RIGHT
-                    || e.isAltDown() && e.getCode() == KeyCode.UP
-                    || e.isAltDown() && e.getCode() == KeyCode.DOWN)) {
-                SelectionModel<ApplicationPart> selMod = this.tabSwitchListView.getSelectionModel();
-                boolean next = (e.getCode() == KeyCode.TAB && !e.isShiftDown()) || (e.getCode() == KeyCode.RIGHT || e.getCode() == KeyCode.DOWN);
+            } else if (this.tabSwitchListView.isVisible() && (isCtrlTab || isAltLeftRight)) {
+                // following selections
+
                 if (selMod.isEmpty() && next) {
-                    selMod.selectFirst();
+                    selMod.select(2);
                 } else if (selMod.isEmpty() && !next) {
                     selMod.selectLast();
                 } else if (next) {
@@ -388,8 +413,12 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
                     }
                 }
 
-                if (this.applicationPartControllers.containsKey(selMod.getSelectedItem())) {
-                    this.open(selMod.getSelectedItem(), OpenFlag.OPEN_ONLY);
+                this.tabSwitchListView.scrollTo(selMod.getSelectedIndex());
+                if (isAltLeftRight) {
+                    tabHistoryPosition = selMod.getSelectedIndex();
+                    if (this.applicationPartControllers.containsKey(selMod.getSelectedItem())) {
+                        this.open(selMod.getSelectedItem(), OpenFlag.OPEN_ONLY);
+                    }
                 }
                 e.consume();
             } else if (e.isControlDown() && e.getCode() == KeyCode.TAB) {
@@ -397,16 +426,29 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             }
         });
 
-        this.getNode().addEventFilter(KeyEvent.KEY_RELEASED, e -> {
-            if (this.tabSwitchListView.isVisible() && (e.getCode() == KeyCode.CONTROL || e.getCode() == KeyCode.ALT)) {
+        Platform.runLater(() -> this.getNode().getScene().getWindow().focusedProperty().addListener((ov, t, t1) -> {
+            if (!t1) {
                 this.tabSwitchPane.setVisible(false);
                 this.tabSwitchListView.setVisible(false);
 
+                this.tabSwitchListView.getItems().clear();
+            }
+        }));
+
+        this.getNode().addEventFilter(KeyEvent.KEY_RELEASED, e -> {
+            if (this.tabSwitchListView.isVisible() && (e.getCode() == KeyCode.CONTROL || e.getCode() == KeyCode.ALT)) {
                 ApplicationPart selectedPart = tabSwitchListView.getSelectionModel().getSelectedItem();
-                addToHistory(selectedPart);
-                if (!this.applicationPartControllers.containsKey(selectedPart)) {
+                if (e.getCode() == KeyCode.ALT && !this.applicationPartControllers.containsKey(selectedPart)) {
                     this.open(selectedPart, OpenFlag.OPEN_ONLY);
+                } else {
+                    if (e.getCode() != KeyCode.ALT) {
+                        addToHistory(selectedPart);
+                    }
                 }
+
+                this.tabSwitchPane.setVisible(false);
+                this.tabSwitchListView.setVisible(false);
+
                 this.tabSwitchListView.getItems().clear();
                 e.consume();
             }
@@ -609,6 +651,14 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
 
     @Override
     public ApplicationPartController open(ApplicationPart part, OpenFlag openFlag) {
+        if (!tabSwitchListView.isVisible() && tabHistoryPosition != null) {
+            int targetSize = tabHistory.size() - tabHistoryPosition;
+            while (tabHistory.size() > targetSize) {
+                tabHistory.remove(0);
+            }
+            tabHistoryPosition = null;
+        }
+
         Tab tab = tabPane.getTabs().stream()
                 .filter(t -> part.equals((ApplicationPart) t.getUserData()))
                 .findAny()
