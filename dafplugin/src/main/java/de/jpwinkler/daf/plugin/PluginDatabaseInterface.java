@@ -27,7 +27,9 @@ import de.jpwinkler.daf.db.DatabaseInterface;
 import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.db.EmfDatabaseFactory;
 import de.jpwinkler.daf.model.DoorsFolder;
+import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 
 /**
  *
@@ -52,11 +54,6 @@ public class PluginDatabaseInterface implements DatabaseInterface {
     }
 
     @Override
-    public DoorsFolder getDatabaseRoot() {
-        return databaseRoot;
-    }
-
-    @Override
     public boolean isReadOnly() {
         return true;
     }
@@ -66,4 +63,15 @@ public class PluginDatabaseInterface implements DatabaseInterface {
         return null;
     }
 
+    @Override
+    public CompletableFuture<? extends DoorsTreeNode> getDatabaseRootAsync() {
+        return CompletableFuture.completedFuture(databaseRoot);
+    }
+
+    @Override
+    public Class<? extends DoorsTreeNode> getDatabaseRootClass() {
+        return DoorsFolder.class;
+    }
+    
+    
 }
