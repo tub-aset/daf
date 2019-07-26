@@ -52,7 +52,6 @@ import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -64,7 +63,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.TreeSet;
 import java.util.WeakHashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -94,7 +92,6 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import org.apache.commons.lang3.tuple.Pair;
 import org.pf4j.PluginWrapper;
 
 public final class DatabasePaneController extends ApplicationPartController<DatabasePaneController> {
@@ -161,11 +158,11 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         snapshotListsColumn.setCellFactory(tc -> new CustomTextTableCell<>(tc,
                 it -> it == null ? "" : getSnapshotLists(it),
                 (it, newLists) -> {
-                    TreeMap<String, TreeSet<String>> data = DatabasePanePreferences.SNAPSHOT_LISTS.retrieve();
                     Set<String> newValueSet = Stream.of(newLists.split(","))
                             .map(v -> v.trim())
                             .collect(Collectors.toSet());
 
+                    TreeMap<String, SnapshotList> data = DatabasePanePreferences.SNAPSHOT_LISTS.retrieve();
                     data.entrySet().forEach(e -> {
                         if (newValueSet.contains(e.getKey())) {
                             e.getValue().add(it.getFullName());
@@ -208,76 +205,14 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     }
 
     private static String getSnapshotLists(DoorsTreeNode node) {
-        return ((Map<String, TreeSet<String>>) DatabasePanePreferences.SNAPSHOT_LISTS.retrieve())
+        return ((Map<String, SnapshotList>) DatabasePanePreferences.SNAPSHOT_LISTS.retrieve())
                 .entrySet().stream()
-                .map(e -> Pair.of(e.getKey(), parseSnapshotList(e.getValue())))
                 .filter(e -> e.getValue().includes(node.getFullNameSegments()))
                 .map(e -> e.getKey())
                 .sorted()
                 .collect(Collectors.joining(", "));
     }
 
-    private static SnapshotListNode parseSnapshotList(TreeSet<String> list) {
-        SnapshotListNode root = new SnapshotListNode(null, "", false);
-
-        for (String path : list) {
-            root.assertIncluded(path);
-        }
-
-        return root;
-    }
-
-    private static class SnapshotListNode implements Serializable {
-
-        public SnapshotListNode(SnapshotListNode parent, String name, boolean includeChildren) {
-            this.parent = parent;
-            this.includeChildren = includeChildren;
-        }
-
-        private final SnapshotListNode parent;
-        private boolean includeChildren;
-
-        private final HashMap<String, SnapshotListNode> children = new HashMap<>();
-
-        public void assertIncluded(String path) {
-            // skip the first slash
-            this.assertIncluded(List.of(path.substring(1).split("/")));
-        }
-
-        public void assertIncluded(List<String> path) {
-            SnapshotListNode current = this;
-            for (String el : path) {
-                if (!current.children.containsKey(el)) {
-                    current.children.put(el, new SnapshotListNode(current, el, false));
-                }
-                current = current.children.get(el);
-                // abort if all children are included anyway
-                if (current.includeChildren) {
-                    break;
-                }
-            }
-            current.includeChildren = true;
-        }
-
-        public boolean includes(String path) {
-            return this.includes(List.of(path.split("/")));
-        }
-
-        public boolean includes(List<String> path) {
-            SnapshotListNode current = this;
-            for (String el : path) {
-                if (current.includeChildren) {
-                    return true;
-                }
-                current = current.children.get(el);
-                if (current == null) {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-    }
 
     @FXML
     private SplitPane bottomSplitPane;
@@ -480,14 +415,14 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         dialog.setHeaderText("Please enter a name for your list");
 
         dialog.showAndWait().ifPresent(ln -> {
-            TreeMap<String, TreeSet<String>> snapshotLists = DatabasePanePreferences.SNAPSHOT_LISTS.retrieve();
-            snapshotLists.putIfAbsent(ln, new TreeSet<>());
+            TreeMap<String, SnapshotList> snapshotLists = DatabasePanePreferences.SNAPSHOT_LISTS.retrieve();
+            snapshotLists.putIfAbsent(ln, new SnapshotList());
             DatabasePanePreferences.SNAPSHOT_LISTS.store(snapshotLists);
         });
     }
 
     public void deleteSnapshotListClicked(String snapshotList) {
-        TreeMap<String, TreeSet<String>> snapshotLists = DatabasePanePreferences.SNAPSHOT_LISTS.retrieve();
+        TreeMap<String, SnapshotList> snapshotLists = DatabasePanePreferences.SNAPSHOT_LISTS.retrieve();
         snapshotLists.remove(snapshotList);
         DatabasePanePreferences.SNAPSHOT_LISTS.store(snapshotLists);
     }
@@ -498,9 +433,8 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     }
 
     private void createSnapshotFromListClicked(String snapshotListName) {
-        TreeSet<String> sl = ((TreeMap<String, TreeSet<String>>) DatabasePanePreferences.SNAPSHOT_LISTS.retrieve()).get(snapshotListName);
-        SnapshotListNode snapshotList = parseSnapshotList(sl);
-        this.createSnapshot(node -> snapshotList.includes(node.getFullNameSegments()));
+        SnapshotList sl = ((TreeMap<String, SnapshotList>) DatabasePanePreferences.SNAPSHOT_LISTS.retrieve()).get(snapshotListName);
+        this.createSnapshot(node -> sl.includes(node.getFullNameSegments()));
     }
 
     private void createSnapshot(Predicate<DoorsTreeNode> include) {
@@ -515,21 +449,22 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     }
 
     private void editSnapshotListClicked(String snapshotList) {
-        TreeMap<String, TreeSet<String>> snapshotLists = DatabasePanePreferences.SNAPSHOT_LISTS.retrieve();
+        TreeMap<String, SnapshotList> snapshotLists = DatabasePanePreferences.SNAPSHOT_LISTS.retrieve();
+        SnapshotList sl = snapshotLists.get(snapshotList);
 
-        MultiLineTextInputDialog editor = new MultiLineTextInputDialog(snapshotLists.get(snapshotList).stream().collect(Collectors.joining("\n")));
+        MultiLineTextInputDialog editor = new MultiLineTextInputDialog(sl.getList().stream().collect(Collectors.joining("\n")));
         if (editor.showDialog(this.databaseTreeView.getScene().getWindow(),
                 "Snapshot list " + snapshotList, ButtonType.CANCEL, ButtonType.OK).orElse(editor.resultOf(ButtonType.CANCEL)).buttonType == ButtonType.CANCEL) {
             return;
         }
-
-        snapshotLists.put(snapshotList, new TreeSet<>(Arrays.asList(editor.getText().split("\n"))));
+        
+        sl.replace(Arrays.asList(editor.getText().split("\n")));
         DatabasePanePreferences.SNAPSHOT_LISTS.store(snapshotLists);
         this.updateGui(DatabasePaneController.RefreshModulesView);
     }
 
     private void addToSnapshotListClicked(String t) {
-        TreeMap<String, TreeSet<String>> snapshotLists = DatabasePanePreferences.SNAPSHOT_LISTS.retrieve();
+        TreeMap<String, SnapshotList> snapshotLists = DatabasePanePreferences.SNAPSHOT_LISTS.retrieve();
         if (!this.getCurrentDoorsTreeNode().peek(n -> snapshotLists.get(t).add(n.getFullName())).findFirst().isPresent()) {
             setStatus("No module or folder has been selected.");
         }

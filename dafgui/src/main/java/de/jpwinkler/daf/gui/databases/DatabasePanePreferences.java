@@ -25,7 +25,6 @@ import de.jpwinkler.daf.gui.ApplicationPreference;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 /**
  *
@@ -63,7 +62,7 @@ class DatabasePanePreferences<T extends Serializable> extends ApplicationPrefere
     public static final ApplicationPreference<Double> MODULEDESC_WIDTH = new DatabasePanePreferences<>("MODULEDESC_WIDTH", Double.class, 400d);
     public static final ApplicationPreference<Double> MODULESNAPLIST_WIDTH = new DatabasePanePreferences<>("MODULELIST_WIDTH", Double.class, 150d);
     
-    public static final ApplicationPreference<TreeMap<String, TreeSet<String>>> SNAPSHOT_LISTS = new DatabasePanePreferences<>("SNAPSHOT_LISTS", TreeMap.class, new TreeMap<String, TreeSet<String>>());
+    public static final ApplicationPreference<TreeMap<String, SnapshotList>> SNAPSHOT_LISTS = new DatabasePanePreferences<>("SNAPSHOT_LISTS", TreeMap.class, new TreeMap<String, SnapshotList>());
 
     public DatabasePanePreferences(String name, Class<? super T> valueType, T defaultValue) {
         super(name, valueType, defaultValue);
