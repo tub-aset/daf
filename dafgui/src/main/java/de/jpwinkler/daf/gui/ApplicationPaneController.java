@@ -919,6 +919,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             return ButtonType.YES;
         }
         if (!part.getController().isOpened(part.getDatabasePath())) {
+            applicationPartControllers.remove(part.stop());
             // files for which there is another open view as well
             return ButtonType.YES;
         }
