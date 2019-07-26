@@ -21,7 +21,6 @@ package de.jpwinkler.daf.gui.databases.commands;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.db.DatabaseFactory;
 import de.jpwinkler.daf.gui.commands.AbstractCommand;
 import de.jpwinkler.daf.gui.commands.UpdateAction;
@@ -58,7 +57,13 @@ public class NewFolderCommand extends AbstractCommand {
 
     @Override
     public void apply() {
-        newFolder = factory.createFolder(null, "New folder", false);
+        int counter = 0;
+        String name = "New folder";
+        while (this.parent.getChild(name + " " + counter) != null) {
+            counter++;
+        }
+
+        newFolder = factory.createFolder(null, name + " " + counter, false);
         redo();
     }
 

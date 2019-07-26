@@ -59,6 +59,10 @@ public class RenameNodeCommand extends AbstractCommand {
             return "Node is opened in a different view";
         }
 
+        if (node.getParent() != null && node.getParent().getChild(newName) != null) {
+            return "A node with the name \"" + newName + "\" does already exist";
+        }
+
         return null;
     }
 
@@ -80,7 +84,7 @@ public class RenameNodeCommand extends AbstractCommand {
 
     @Override
     public UpdateAction[] getUpdateActions() {
-        return UpdateAction.of(DatabasePaneController.UpdateNodeTitle);
+        return UpdateAction.of(DatabasePaneController.UpdateNodeTitle, DatabasePaneController.RefreshModulesView);
     }
 
 }

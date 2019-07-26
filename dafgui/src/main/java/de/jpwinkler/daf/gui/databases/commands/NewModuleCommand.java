@@ -58,7 +58,13 @@ public class NewModuleCommand extends AbstractCommand {
 
     @Override
     public void apply() {
-        newModule = factory.createModule(null, "New module");
+        int counter = 0;
+        String name = "New module";
+        while (this.parent.getChild(name + " " + counter) != null) {
+            counter++;
+        }
+        
+        newModule = factory.createModule(null, name + " " + counter);
         redo();
     }
 
