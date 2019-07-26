@@ -39,6 +39,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 /**
  *
@@ -90,6 +91,7 @@ public class CustomTextTableCell<T> extends TableCell<T, T> {
                 }
             }
         });
+        this.getTooltip().setShowDuration(Duration.INDEFINITE);
 
     }
 
