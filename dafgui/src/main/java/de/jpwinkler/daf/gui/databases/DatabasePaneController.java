@@ -36,13 +36,14 @@ import de.jpwinkler.daf.gui.controls.EmptySelectionModel;
 import de.jpwinkler.daf.gui.controls.ExtensionPane;
 import de.jpwinkler.daf.gui.controls.ForwardingMultipleSelectionModel;
 import de.jpwinkler.daf.gui.controls.MultiLineTextInputDialog;
-import de.jpwinkler.daf.gui.databases.commands.AddTagCommand;
 import de.jpwinkler.daf.gui.databases.commands.DeleteAttributesCommand;
 import de.jpwinkler.daf.gui.databases.commands.DeleteCommand;
 import de.jpwinkler.daf.gui.databases.commands.EditAttributesCommand;
+import de.jpwinkler.daf.gui.databases.commands.NewAttributesCommand;
 import de.jpwinkler.daf.gui.databases.commands.NewFolderCommand;
 import de.jpwinkler.daf.gui.databases.commands.NewModuleCommand;
 import de.jpwinkler.daf.gui.databases.commands.NewProjectCommand;
+import de.jpwinkler.daf.gui.databases.commands.NewTagCommand;
 import de.jpwinkler.daf.gui.databases.commands.PasteCommand;
 import de.jpwinkler.daf.gui.databases.commands.RemoveTagCommand;
 import de.jpwinkler.daf.gui.databases.commands.RenameAttributesCommand;
@@ -302,7 +303,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
     @FXML
     public void newAttributeClicked() {
-        getCurrentDoorsTreeNode().forEach(it -> executeCommand(new EditAttributesCommand("New attribute", "", it)));
+        getCurrentDoorsTreeNode().forEach(it -> executeCommand(new NewAttributesCommand("New attribute", "", it)));
     }
 
     @FXML
@@ -313,7 +314,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
             return;
         }
 
-        getCurrentDoorsTreeNode().forEach(it -> executeCommand(new AddTagCommand(it, Collections.singleton(value.trim()), knownTags)));
+        getCurrentDoorsTreeNode().forEach(it -> executeCommand(new NewTagCommand(it, Collections.singleton(value.trim()), knownTags)));
         ev.consume();
     }
 
@@ -374,7 +375,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         }
         if (tagsListView.isFocused()) {
             getCurrentDoorsTreeNode()
-                    .map(it -> new AddTagCommand(it, tagsClipboard, knownTags))
+                    .map(it -> new NewTagCommand(it, tagsClipboard, knownTags))
                     .forEach(this::executeCommand);
         }
     }

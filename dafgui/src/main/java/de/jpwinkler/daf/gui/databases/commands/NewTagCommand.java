@@ -34,14 +34,14 @@ import java.util.Set;
  *
  * @author fwiesweg
  */
-public class AddTagCommand extends AbstractCommand {
+public class NewTagCommand extends AbstractCommand {
 
     private final DoorsTreeNode node;
     private final Collection<String> tag;
     private final Set<String> previouslyKnownTags;
     private final Set<String> currentlyKnownTags;
 
-    public AddTagCommand(DoorsTreeNode node, Collection<String> tag, Set<String> knownTags) {
+    public NewTagCommand(DoorsTreeNode node, Collection<String> tag, Set<String> knownTags) {
         this.node = node;
         this.tag = tag;
         this.previouslyKnownTags = new HashSet<>(knownTags);

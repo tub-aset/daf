@@ -71,8 +71,7 @@ public class SnapshotList implements Serializable {
         for (String path : list) {
             this.assertIncluded(path);
         }
-        this.root = root;
-        return root;
+        return this.root;
     }
 
     private void assertIncluded(String pathStr) {
