@@ -52,12 +52,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
@@ -110,6 +108,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.mutable.MutableBoolean;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.pf4j.DefaultPluginManager;
 import org.pf4j.ManifestPluginDescriptorFinder;
@@ -263,11 +262,10 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         tabPane.getSelectionModel().selectedItemProperty().addListener(tabChangeListener);
 
         tabPane.getTabs().addListener((ListChangeListener<Tab>) (change) -> {
-            Set<Tab> closedTabs = new HashSet<>();
-
+            List<Pair<Integer, Tab>> closedTabs = new ArrayList<>();
             while (change.next()) {
                 for (Tab selectedTab : change.getRemoved()) {
-                    closedTabs.add(selectedTab);
+                    closedTabs.add(Pair.of(change.getFrom(), selectedTab));
                 }
             }
 
@@ -901,12 +899,12 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         this.getNode().getScene().getWindow().fireEvent(new WindowEvent(this.getNode().getScene().getWindow(), WindowEvent.WINDOW_CLOSE_REQUEST));
     }
 
-    private ButtonType closeTabs(Collection<Tab> closedTabs) {
+    private ButtonType closeTabs(Collection<Pair<Integer, Tab>> closedTabs) {
         ButtonType cancelled = ButtonType.YES;
-        for (Tab t : closedTabs) {
-            if (cancelled == ButtonType.CANCEL || closeTab((ApplicationPart) t.getUserData()) == ButtonType.CANCEL) {
+        for (Pair<Integer, Tab> t : closedTabs) {
+            if (cancelled == ButtonType.CANCEL || closeTab((ApplicationPart) t.getRight().getUserData()) == ButtonType.CANCEL) {
                 cancelled = ButtonType.CANCEL;
-                Platform.runLater(() -> tabPane.getTabs().add(t));
+                Platform.runLater(() -> tabPane.getTabs().add(t.getLeft(), t.getRight()));
             }
         }
         return cancelled;
@@ -918,9 +916,10 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             applicationPartControllers.remove(part.stop());
             return ButtonType.YES;
         }
-        if (!part.getController().isOpened(part.getDatabasePath())) {
+        
+        // files for which there is another open view as well
+        if (part.getController().isOpened(part.getDatabasePath().withPath(""))) {
             applicationPartControllers.remove(part.stop());
-            // files for which there is another open view as well
             return ButtonType.YES;
         }
 
