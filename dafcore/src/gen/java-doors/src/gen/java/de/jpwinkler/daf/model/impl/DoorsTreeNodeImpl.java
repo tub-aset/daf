@@ -239,7 +239,8 @@ public abstract class DoorsTreeNodeImpl extends MinimalEObjectImpl.Container imp
     public EList<String> getFullNameSegments() {
         DoorsTreeNode parent = this;
         EList<String> fullName = new BasicEList<>();
-        while (parent != null) {
+        // make sure root does not show up in path
+        while (parent != null && parent.getParent() != null) {
             fullName.add(0, parent.getName());
             parent = parent.getParent();
         }

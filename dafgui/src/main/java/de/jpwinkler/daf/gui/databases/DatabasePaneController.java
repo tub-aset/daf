@@ -52,6 +52,7 @@ import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -61,7 +62,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -94,6 +94,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import org.apache.commons.lang3.tuple.Pair;
 import org.pf4j.PluginWrapper;
 
 public final class DatabasePaneController extends ApplicationPartController<DatabasePaneController> {
@@ -209,46 +210,73 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     private static String getSnapshotLists(DoorsTreeNode node) {
         return ((Map<String, TreeSet<String>>) DatabasePanePreferences.SNAPSHOT_LISTS.retrieve())
                 .entrySet().stream()
-                .filter(e -> isInSnapshotList(e.getValue(), node))
+                .map(e -> Pair.of(e.getKey(), parseSnapshotList(e.getValue())))
+                .filter(e -> e.getValue().includes(node.getFullNameSegments()))
                 .map(e -> e.getKey())
                 .sorted()
                 .collect(Collectors.joining(", "));
     }
 
-    private static boolean isInSnapshotList(TreeSet<String> list, DoorsTreeNode node) {
-        if (node == null) {
-            return false;
-        } else if (node instanceof DoorsObject) {
-            return true;
+    private static SnapshotListNode parseSnapshotList(TreeSet<String> list) {
+        SnapshotListNode root = new SnapshotListNode(null, "", false);
+
+        for (String path : list) {
+            root.assertIncluded(path);
         }
 
-        String name = node.getFullName();
-        String floor = list.floor(name);
-        String ceil = list.ceiling(name);
-        if (floor == null && ceil == null) {
-            return false;
-        } else if (Objects.equals(floor, ceil)) {
-            return true;
+        return root;
+    }
+
+    private static class SnapshotListNode implements Serializable {
+
+        public SnapshotListNode(SnapshotListNode parent, String name, boolean includeChildren) {
+            this.parent = parent;
+            this.includeChildren = includeChildren;
         }
 
-        // match children
-        // add slash to make sure only children are matched, not same level nodes with similar name
-        if (floor != null && name.startsWith(floor.charAt(floor.length() - 1) != '/' ? floor + "/" : floor)) {
-            return true;
+        private final SnapshotListNode parent;
+        private boolean includeChildren;
+
+        private final HashMap<String, SnapshotListNode> children = new HashMap<>();
+
+        public void assertIncluded(String path) {
+            // skip the first slash
+            this.assertIncluded(List.of(path.substring(1).split("/")));
         }
 
-        // match parents if there is a matching child and we're a parent
-        if (ceil != null && ceil.startsWith(name.charAt(name.length() - 1) != '/' ? name + "/" : name)) {
-            DoorsTreeNode root = node;
-            while (root.getParent() != null) {
-                root = root.getParent();
+        public void assertIncluded(List<String> path) {
+            SnapshotListNode current = this;
+            for (String el : path) {
+                if (!current.children.containsKey(el)) {
+                    current.children.put(el, new SnapshotListNode(current, el, false));
+                }
+                current = current.children.get(el);
+                // abort if all children are included anyway
+                if (current.includeChildren) {
+                    break;
+                }
+            }
+            current.includeChildren = true;
+        }
+
+        public boolean includes(String path) {
+            return this.includes(List.of(path.split("/")));
+        }
+
+        public boolean includes(List<String> path) {
+            SnapshotListNode current = this;
+            for (String el : path) {
+                if (current.includeChildren) {
+                    return true;
+                }
+                current = current.children.get(el);
+                if (current == null) {
+                    return false;
+                }
             }
 
-            if (root.getChild(ceil) != null) {
-                return true;
-            }
+            return true;
         }
-        return false;
     }
 
     @FXML
@@ -469,9 +497,10 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         this.createSnapshot(x -> true);
     }
 
-    private void createSnapshotFromListClicked(String snapshotList) {
-        TreeSet<String> sl = ((TreeMap<String, TreeSet<String>>) DatabasePanePreferences.SNAPSHOT_LISTS.retrieve()).get(snapshotList);
-        this.createSnapshot(node -> isInSnapshotList(sl, node));
+    private void createSnapshotFromListClicked(String snapshotListName) {
+        TreeSet<String> sl = ((TreeMap<String, TreeSet<String>>) DatabasePanePreferences.SNAPSHOT_LISTS.retrieve()).get(snapshotListName);
+        SnapshotListNode snapshotList = parseSnapshotList(sl);
+        this.createSnapshot(node -> snapshotList.includes(node.getFullNameSegments()));
     }
 
     private void createSnapshot(Predicate<DoorsTreeNode> include) {
