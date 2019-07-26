@@ -185,6 +185,7 @@ public interface DoorsTreeNode {
      */
     default boolean hasTag(String tag) {
         return Stream.of(getAttributes().getOrDefault("DOORS_TAGS", "").split(","))
+                .filter(t -> !t.isEmpty())
                 .filter(t -> Objects.equals(tag, t))
                 .findAny().isPresent();
     }
@@ -198,6 +199,7 @@ public interface DoorsTreeNode {
      */
     default boolean hasTag(Pattern pattern) {
         return Stream.of(getAttributes().getOrDefault("DOORS_TAGS", "").split(","))
+                .filter(t -> !t.isEmpty())
                 .filter(t -> pattern.matcher(t).matches())
                 .findAny().isPresent();
     }
@@ -209,7 +211,9 @@ public interface DoorsTreeNode {
      * @generated NOT
      */
     default List<String> getTags() {
-        return Arrays.asList(getAttributes().getOrDefault("DOORS_TAGS", "").split(","));
+        return Stream.of(getAttributes().getOrDefault("DOORS_TAGS", "").split(","))
+                .filter(t -> !t.isEmpty())
+                .collect(Collectors.toList());
     }
 
     /**
@@ -224,8 +228,10 @@ public interface DoorsTreeNode {
         }
 
         String newValue = Stream.concat(
-                Stream.of(getAttributes().getOrDefault("DOORS_TAGS", "").split(",")),
-                Stream.of(tag)).collect(Collectors.joining(","));
+                Stream.of(getAttributes().getOrDefault("DOORS_TAGS", "").split(",")), Stream.of(tag))
+                .filter(t -> !t.isEmpty())
+                .sorted()
+                .collect(Collectors.joining(","));
         this.getAttributes().put("DOORS_TAGS", newValue);
     }
 
@@ -237,6 +243,7 @@ public interface DoorsTreeNode {
      */
     default void removeTag(String tag) {
         String newValue = Stream.of(getAttributes().getOrDefault("DOORS_TAGS", "").split(","))
+                .filter(t -> !t.isEmpty())
                 .filter(t -> !Objects.equals(t, tag))
                 .collect(Collectors.joining(","));
         this.getAttributes().put("DOORS_TAGS", newValue);
@@ -251,6 +258,7 @@ public interface DoorsTreeNode {
      */
     default void removeTag(Pattern pattern) {
         String newValue = Stream.of(getAttributes().getOrDefault("DOORS_TAGS", "").split(","))
+                .filter(t -> !t.isEmpty())
                 .filter(t -> pattern.matcher(t).matches())
                 .collect(Collectors.joining(","));
         this.getAttributes().put("DOORS_TAGS", newValue);
