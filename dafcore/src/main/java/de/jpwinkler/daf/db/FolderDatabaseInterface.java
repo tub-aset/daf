@@ -135,7 +135,7 @@ public class FolderDatabaseInterface implements DatabaseInterface {
 
                             ModuleCSV.writeMetaData(modulePath.resolve("__folder__.mmd").toFile(), f.getAttributes());
                             if (f.isProject()) {
-                                Files.createFile(modulePath.resolve("__project__"));
+                                modulePath.resolve("__project__").toFile().createNewFile();
                             } else {
                                 Files.deleteIfExists(modulePath.resolve("__project__"));
                             }
