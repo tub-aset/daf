@@ -21,7 +21,6 @@ package de.jpwinkler.daf.gui.modules.commands;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.db.DatabaseFactory;
 import de.jpwinkler.daf.gui.commands.AbstractCommand;
 import de.jpwinkler.daf.gui.commands.UpdateAction;
@@ -29,17 +28,19 @@ import de.jpwinkler.daf.gui.modules.ModulePaneController.ModuleUpdateAction;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.HashSet;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SplitLinesCommand extends AbstractCommand {
 
     private final DatabaseFactory factory;
-    private final Map<DoorsObject, List<DoorsObject>> newObjects = new HashMap<>();
     private final DoorsModule module;
+    private final HashMap<DoorsObject, String[]> originalObjects = new HashMap<>();
+    private final Set<DoorsObject> newObjects = new HashSet<>();
 
     public SplitLinesCommand(DatabaseFactory factory, DoorsModule module) {
         this.factory = factory;
@@ -64,13 +65,9 @@ public class SplitLinesCommand extends AbstractCommand {
                 if (object.getText() != null) {
                     final String[] lines = object.getText().split("\n");
                     if (lines.length > 1) {
-                        object.setText(lines[0]);
-                        for (int i = lines.length - 1; i > 0; i--) {
-                            newObjectAfter(object, i, lines[i]);
-                        }
+                        originalObjects.put(object, lines);
                     }
                 }
-
                 return true;
             }
 
@@ -80,31 +77,31 @@ public class SplitLinesCommand extends AbstractCommand {
 
     @Override
     public void redo() {
-        for (final Entry<DoorsObject, List<DoorsObject>> e : newObjects.entrySet()) {
-            e.getKey().getParent().getChildren().addAll(e.getKey().getParent().getChildren().indexOf(e.getKey()), e.getValue());
-        }
-    }
+        for (final Entry<DoorsObject, String[]> e : originalObjects.entrySet()) {
+            DoorsObject object = e.getKey();
+            int objectIndex = e.getKey().getParent().getChildren().indexOf(e.getKey());
+            for (int i = e.getValue().length - 1; i >= 0; i--) {
+                if (e.getValue()[i].trim().isEmpty()) {
+                    continue;
+                }
 
-    private void newObjectAfter(final DoorsObject object, final int i, final String string) {
-        final DoorsObject newObject = factory.createCopy(object, object.getParent(), false);
-        newObject.setObjectIdentifier(object.getObjectIdentifier() + "-" + i);
-        newObject.setText(string);
+                DoorsObject newObject = i == 0 ? object : factory.createCopy(object, null, false);
+                newObject.setText(e.getValue()[i]);
 
-        if (!newObjects.containsKey(object)) {
-            newObjects.put(object, new ArrayList<>());
+                if (i > 0) {
+                    newObjects.add(newObject);
+                    object.getParent().getChildren().add(objectIndex + 1, newObject);
+                }
+            }
         }
-        newObjects.get(object).add(newObject);
     }
 
     @Override
     public void undo() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean canUndo() {
-        return false;
+        for (final Entry<DoorsObject, String[]> e : originalObjects.entrySet()) {
+            e.getKey().setText(Stream.of(e.getValue()).collect(Collectors.joining("\n")));
+            e.getKey().getParent().getChildren().removeIf(newObjects::contains);
+        }
     }
 
     @Override
