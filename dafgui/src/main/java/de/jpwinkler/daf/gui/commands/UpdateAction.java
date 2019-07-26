@@ -24,6 +24,12 @@ package de.jpwinkler.daf.gui.commands;
 
 public interface UpdateAction<T> {
 
+    default void preUpdate(T ctrl) {
+    }
+    
+    default void postUpdate(T ctrl) {
+    }
+    
     void update(T ctrl);
 
     default UpdateAction[] asArray() {

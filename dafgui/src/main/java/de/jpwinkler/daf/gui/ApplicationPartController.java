@@ -204,7 +204,9 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
 
     @SuppressWarnings("unchecked")
     public final void updateGui(UpdateAction... actions) {
+        Stream.of(actions).forEach(a -> a.preUpdate((THIS)this));
         Stream.of(actions).forEach(a -> a.update((THIS) this));
+        Stream.of(actions).forEach(a -> a.postUpdate((THIS)this));
     }
 
     @FXML

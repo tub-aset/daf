@@ -27,6 +27,7 @@ import de.jpwinkler.daf.gui.ApplicationPartController;
 import de.jpwinkler.daf.gui.ApplicationPartFactoryRegistry.ApplicationPart;
 import de.jpwinkler.daf.gui.BackgroundTask;
 import de.jpwinkler.daf.gui.commands.MultiCommand;
+import de.jpwinkler.daf.gui.commands.SelectionRetainingUpdateAction;
 import de.jpwinkler.daf.gui.commands.UpdateAction;
 import de.jpwinkler.daf.gui.controls.CustomTextTableCell;
 import de.jpwinkler.daf.gui.controls.CustomTextTreeCell;
@@ -495,7 +496,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
         snapshotLists.put(snapshotList, new TreeSet<>(Arrays.asList(editor.getText().split("\n"))));
         DatabasePanePreferences.SNAPSHOT_LISTS.store(snapshotLists);
-        this.updateGui(DatabasePaneController.UpdateModulesView);
+        this.updateGui(DatabasePaneController.RefreshModulesView);
     }
 
     private void addToSnapshotListClicked(String t) {
@@ -505,7 +506,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         }
 
         DatabasePanePreferences.SNAPSHOT_LISTS.store(snapshotLists);
-        this.updateGui(DatabasePaneController.UpdateModulesView);
+        this.updateGui(DatabasePaneController.RefreshModulesView);
 
     }
 
@@ -574,10 +575,10 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         }
 
         public CompletableFuture<TreeItem<DoorsTreeNode>> find(DoorsTreeItem parent) {
-            if(path.isEmpty()) {
+            if (path.isEmpty()) {
                 throw new IllegalStateException("Search already started");
             }
-            
+
             return findNextChild(FXCollections.singletonObservableList(parent))
                     .thenApply(a -> this.result);
         }
@@ -587,11 +588,11 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                     .filter(c -> c.getValue().equals(path.get(path.size() - 1)))
                     .findFirst().orElse(null);
             path.remove(path.size() - 1);
-            if(it == null || path.isEmpty()) {
+            if (it == null || path.isEmpty()) {
                 this.result = it;
                 return CompletableFuture.completedFuture(null);
             }
-            
+
             it.setExpanded(true);
             return it.updateChildren().thenCompose(this::findNextChild);
         }
@@ -658,33 +659,39 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                 .ifPresent(n -> ctrl.currentNodeLabel.setText(n.getFullName()));
     };
 
-    public static final UpdateAction<DatabasePaneController> UpdateModulesView = ctrl -> {
-        ctrl.modulesTableView.getItems().clear();
-
-        ctrl.databaseTreeView.getSelectionModel().getSelectedItems().stream()
-                .filter(it -> it != null)
-                .map(it -> it.getValue().getChildrenAsync(ctrl.getBackgroundTaskExecutor().withPriority(BackgroundTask.PRIORITY_FOLDERS)))
-                .peek(ft -> ft.exceptionally(t -> {
-            Platform.runLater(() -> {
-                Button retryButton = new Button("Retry");
-                retryButton.setOnAction(ev -> ctrl.updateGui(ctrl.UpdateModulesView));
-                ctrl.modulesTableView.setPlaceholder(retryButton);
-
-            });
-            throw new RuntimeException(t);
-        }).thenAccept(children -> Platform.runLater(() -> {
-            ctrl.modulesTableView.setPlaceholder(null);
+    public static final SelectionRetainingUpdateAction<DatabasePaneController> UpdateModulesView = new SelectionRetainingUpdateAction<DatabasePaneController>(
+            ctrl -> List.of(ctrl.modulesTableView.getSelectionModel(), ctrl.attributesTableView.getSelectionModel())) {
+        @Override
+        public void update(DatabasePaneController ctrl) {
             ctrl.modulesTableView.getItems().clear();
-            ctrl.modulesTableView.getItems().addAll(children.stream()
-                    .filter(it -> it instanceof DoorsModule)
-                    .map(it -> (DoorsModule) it)
-                    .peek(it -> ctrl.knownTags.addAll(it.getTags()))
-                    .collect(Collectors.toList()));
-            ctrl.modulesTableView.sort();
-        })))
-                .limit(1)
-                .forEach(ft -> ctrl.modulesTableView.setPlaceholder(new ProgressBar()));
+
+            ctrl.databaseTreeView.getSelectionModel().getSelectedItems().stream()
+                    .filter(it -> it != null)
+                    .map(it -> it.getValue().getChildrenAsync(ctrl.getBackgroundTaskExecutor().withPriority(BackgroundTask.PRIORITY_FOLDERS)))
+                    .peek(ft -> ft.exceptionally(t -> {
+                Platform.runLater(() -> {
+                    Button retryButton = new Button("Retry");
+                    retryButton.setOnAction(ev -> ctrl.updateGui(ctrl.UpdateModulesView));
+                    ctrl.modulesTableView.setPlaceholder(retryButton);
+
+                });
+                throw new RuntimeException(t);
+            }).thenAccept(children -> Platform.runLater(() -> {
+                ctrl.modulesTableView.setPlaceholder(null);
+                ctrl.modulesTableView.getItems().clear();
+                ctrl.modulesTableView.getItems().addAll(children.stream()
+                        .filter(it -> it instanceof DoorsModule)
+                        .map(it -> (DoorsModule) it)
+                        .peek(it -> ctrl.knownTags.addAll(it.getTags()))
+                        .collect(Collectors.toList()));
+                ctrl.modulesTableView.sort();
+            })))
+                    .limit(1)
+                    .forEach(ft -> ctrl.modulesTableView.setPlaceholder(new ProgressBar()));
+        }
     };
+
+    public static final UpdateAction<DatabasePaneController> RefreshModulesView = ctrl -> ctrl.modulesTableView.refresh();
 
     public static final UpdateAction<DatabasePaneController> UpdateTagsView = ctrl -> {
         final String oldValue = ctrl.newTagComboBox.getValue();
@@ -702,27 +709,32 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                 .forEach(ctrl.tagsListView.getItems()::add);
     };
 
-    public static final UpdateAction<DatabasePaneController> UpdateAttributesView = ctrl -> {
-        ctrl.attributesTableView.getItems().clear();
+    public static final SelectionRetainingUpdateAction<DatabasePaneController> UpdateAttributesView = new SelectionRetainingUpdateAction<DatabasePaneController>(
+            ctrl -> List.of(ctrl.attributesTableView.getSelectionModel())) {
 
-        ctrl.getCurrentDoorsTreeNode()
-                .map(it -> it.getAttributesAsync(ctrl.getBackgroundTaskExecutor().withPriority(BackgroundTask.PRIORITY_ATTRIBUTES)))
-                .peek(ft -> ft.exceptionally(t -> {
-            Platform.runLater(() -> {
-                Button retryButton = new Button("Retry");
-                retryButton.setOnAction(ev -> ctrl.updateGui(ctrl.UpdateAttributesView));
-                ctrl.attributesTableView.setPlaceholder(retryButton);
-
-            });
-            throw new RuntimeException(t);
-        }).thenAccept(attr -> Platform.runLater(() -> {
-            ctrl.attributesTableView.setPlaceholder(null);
+        @Override
+        public void update(DatabasePaneController ctrl) {
             ctrl.attributesTableView.getItems().clear();
-            ctrl.attributesTableView.getItems().addAll(attr.entrySet());
-            ctrl.attributesTableView.sort();
-        })))
-                .limit(1)
-                .forEach(ft -> ctrl.attributesTableView.setPlaceholder(new ProgressBar()));
+
+            ctrl.getCurrentDoorsTreeNode()
+                    .map(it -> it.getAttributesAsync(ctrl.getBackgroundTaskExecutor().withPriority(BackgroundTask.PRIORITY_ATTRIBUTES)))
+                    .peek(ft -> ft.exceptionally(t -> {
+                Platform.runLater(() -> {
+                    Button retryButton = new Button("Retry");
+                    retryButton.setOnAction(ev -> ctrl.updateGui(ctrl.UpdateAttributesView.dontRetainSelection()));
+                    ctrl.attributesTableView.setPlaceholder(retryButton);
+
+                });
+                throw new RuntimeException(t);
+            }).thenAccept(attr -> Platform.runLater(() -> {
+                ctrl.attributesTableView.setPlaceholder(null);
+                ctrl.attributesTableView.getItems().clear();
+                ctrl.attributesTableView.getItems().addAll(attr.entrySet());
+                ctrl.attributesTableView.sort();
+            })))
+                    .limit(1)
+                    .forEach(ft -> ctrl.attributesTableView.setPlaceholder(new ProgressBar()));
+        }
     };
 
 }

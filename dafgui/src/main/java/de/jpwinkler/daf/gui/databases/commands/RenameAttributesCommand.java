@@ -56,7 +56,7 @@ public class RenameAttributesCommand extends AttributesCommand {
 
     @Override
     public UpdateAction[] getUpdateActions() {
-        return UpdateAction.of(DatabasePaneController.UpdateAttributesView);
+        return UpdateAction.of(DatabasePaneController.UpdateTagsView, DatabasePaneController.UpdateAttributesView, DatabasePaneController.RefreshModulesView);
     }
 
 }
