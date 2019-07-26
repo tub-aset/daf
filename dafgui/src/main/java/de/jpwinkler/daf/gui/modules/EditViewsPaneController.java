@@ -305,6 +305,13 @@ public final class EditViewsPaneController extends AutoloadingPaneController<Edi
             this.viewListView.getItems().remove(vd);
         }
     }
+    
+    @FXML
+    public void copyViewButtonClicked() {
+        this.viewListView.getSelectionModel().getSelectedItems().stream()
+                .map(vd -> vd.copy())
+                .forEach(this.viewListView.getItems()::add);
+    }
 
     @FXML
     public void addColumnClicked() {

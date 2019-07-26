@@ -39,6 +39,11 @@
                      </HBox.margin>
                   </Button>
                   <Button mnemonicParsing="false" onAction="#addViewClicked" prefWidth="29.0" text="+" />
+                  <Button mnemonicParsing="false" onAction="#copyViewButtonClicked" text="Copy">
+                     <HBox.margin>
+                        <Insets left="5.0" />
+                     </HBox.margin>
+                  </Button>
                </children>
             </HBox>
          </children>
