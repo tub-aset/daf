@@ -73,6 +73,7 @@ class ModulePanePreferences<T extends Serializable> extends ApplicationPreferenc
         viewDef.getColumns().add(cd);
         
         cd = new ViewDefinition.ColumnDefinition(ViewDefinition.ColumnType.ATTRIBUTE, "Object Type");
+        cd.setAttributeName("Object Type");
         cd.setWidth(200);
         cd.setVisible(true);
         viewDef.getColumns().add(cd);
