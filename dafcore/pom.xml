@@ -14,13 +14,14 @@
     </parent>
 
     <build>
-        <plugins>            
+        <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
                 <version>1.9.1</version>
                 <executions>
                     <execution>
+                        <id>src</id>
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>add-source</goal>
@@ -29,6 +30,20 @@
                             <sources>
                                 <source>${project.basedir}/src/gen/java-doors/src/gen/java</source>
                             </sources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>res</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>add-resource</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}/src/main/antlr4</directory>
+                                </resource>
+                            </resources>
                         </configuration>
                     </execution>
                 </executions>

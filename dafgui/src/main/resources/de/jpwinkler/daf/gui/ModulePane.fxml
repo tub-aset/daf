@@ -29,7 +29,7 @@
                         </MenuButton>
                         <MenuButton mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" text="Filter options">
                           <items>
-                              <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
+                              <CustomMenuItem hideOnClick="false" mnemonicParsing="false">
                                 <content>
                                   <CheckBox fx:id="filterExpressionCheckBox" text="Filter expression" />
                                 </content>
@@ -39,6 +39,7 @@
                                     <CheckBox fx:id="caseSensitiveCheckbox" text="Case sensitive" />
                                  </content>
                               </CustomMenuItem>
+                              <MenuItem mnemonicParsing="false" onAction="#showExpressionGrammarClicked" text="Show expression grammar" />
                           </items>
                         </MenuButton>
                               <TextField fx:id="filterTextField" nodeOrientation="LEFT_TO_RIGHT" prefWidth="250.0" promptText="Quick Filter" />

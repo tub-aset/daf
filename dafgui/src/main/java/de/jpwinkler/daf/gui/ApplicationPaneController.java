@@ -104,7 +104,6 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.mutable.MutableBoolean;
@@ -1003,9 +1002,9 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         }
 
         MultiLineTextInputDialog controller = new MultiLineTextInputDialog("Developed by TU Berlin ASET\nFlorian Wiesweg and Jonas Winkler (2019)\n\nThe following dependencies are bundled with this software.\n" + text);
-        Dialog dialog = controller.asDialog(getNode().getScene().getWindow(), "About " + ((Stage) getNode().getScene().getWindow()).getTitle(), ButtonType.OK);
+        Dialog dialog = controller.asDialog(getNode().getScene().getWindow(), "About DOORS Access Framework", ButtonType.OK);
         controller.getTextArea().setEditable(false);
-        dialog.setHeaderText("About " + ((Stage) getNode().getScene().getWindow()).getTitle());
+        dialog.setHeaderText("About DOORS Access Framework");
         dialog.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         dialog.getDialogPane().setMinWidth(800);
         dialog.showAndWait();

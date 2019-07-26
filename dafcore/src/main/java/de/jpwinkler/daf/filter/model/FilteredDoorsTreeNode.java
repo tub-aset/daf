@@ -27,12 +27,16 @@ package de.jpwinkler.daf.filter.model;
  * #L%
  */
 import de.jpwinkler.daf.db.BackgroundTaskExecutor;
+import de.jpwinkler.daf.filter.ExpressionFilter;
 import de.jpwinkler.daf.model.DoorsFolder;
 import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTableRow;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -40,6 +44,8 @@ import java.util.WeakHashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import org.apache.commons.io.IOUtils;
 
 /**
  *
@@ -77,6 +83,12 @@ public class FilteredDoorsTreeNode<T extends DoorsTreeNode> implements DoorsTree
             return new FilteredDoorsObject((DoorsObject) node, fullPredicate, new WeakHashMap<>());
         } else {
             throw new AssertionError();
+        }
+    }
+
+    public static String getGrammar() throws IOException {
+        try (InputStream is = ExpressionFilter.class.getResourceAsStream("DoorsTreeNodeFilter.g4")) {
+            return IOUtils.readLines(is, Charset.forName("UTF-8")).stream().collect(Collectors.joining("\n"));
         }
     }
 
@@ -152,7 +164,7 @@ public class FilteredDoorsTreeNode<T extends DoorsTreeNode> implements DoorsTree
     }
 
     @Override
-    public <T extends DoorsTreeNode, U> CompletableFuture<U> acceptAsync(BackgroundTaskExecutor executor, DoorsTreeNodeVisitor<T,U> visitor) {
+    public <T extends DoorsTreeNode, U> CompletableFuture<U> acceptAsync(BackgroundTaskExecutor executor, DoorsTreeNodeVisitor<T, U> visitor) {
         return self.acceptAsync(executor, new ForwardingVisitor<>(visitor, children.predicate));
     }
 

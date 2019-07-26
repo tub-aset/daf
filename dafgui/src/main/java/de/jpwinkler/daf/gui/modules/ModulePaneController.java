@@ -36,6 +36,7 @@ import de.jpwinkler.daf.gui.controls.DoorsTreeItem;
 import de.jpwinkler.daf.gui.controls.ExtensionPane;
 import de.jpwinkler.daf.gui.controls.FixedSingleSelectionModel;
 import de.jpwinkler.daf.gui.controls.ForwardingMultipleSelectionModel;
+import de.jpwinkler.daf.gui.controls.MultiLineTextInputDialog;
 import static de.jpwinkler.daf.gui.modules.ModulePanePreferences.STANDARD_VIEW;
 import de.jpwinkler.daf.gui.modules.ViewDefinition.ColumnDefinition;
 import de.jpwinkler.daf.gui.modules.ViewDefinition.ColumnType;
@@ -57,6 +58,7 @@ import de.jpwinkler.daf.model.DoorsModule;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -78,6 +80,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.RadioMenuItem;
@@ -91,6 +94,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.layout.Region;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.pf4j.PluginWrapper;
@@ -606,6 +610,17 @@ public final class ModulePaneController extends ApplicationPartController<Module
     public void showDatabaseClicked() {
         ApplicationPartInterface target = this.open(this.getPath().withPath(""), DatabaseInterface.OpenFlag.OPEN_ONLY);
         target.select(this.actualModule);
+    }
+
+    @FXML
+    public void showExpressionGrammarClicked() throws IOException {
+        MultiLineTextInputDialog controller = new MultiLineTextInputDialog(FilteredDoorsTreeNode.getGrammar());
+        Dialog dialog = controller.asDialog(getNode().getScene().getWindow(), "Expression grammar", ButtonType.OK);
+        controller.getTextArea().setEditable(false);
+        dialog.setHeaderText("Expression grammar");
+        dialog.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+        dialog.getDialogPane().setMinWidth(800);
+        dialog.showAndWait();
     }
 
     @Override

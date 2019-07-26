@@ -2,7 +2,7 @@ grammar DoorsTreeNodeFilter;
 
 /**
   *
-  * The following is the Anltr grammar for the filter language implemented by dafcore.
+  * This is the Antlr grammar for the filter language implemented by dafcore.
   * If such a filter is applied to a tree of folders, projects and objects, only
   * entities matching the filter (or entities which are parents of entities matching
   * the filter) will be accessible.

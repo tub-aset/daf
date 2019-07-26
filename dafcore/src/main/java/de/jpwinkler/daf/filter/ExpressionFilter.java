@@ -21,9 +21,6 @@ package de.jpwinkler.daf.filter;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-import de.jpwinkler.daf.filter.objects.DoorsTreeNodeFilterBaseListener;
-import de.jpwinkler.daf.filter.objects.DoorsTreeNodeFilterLexer;
-import de.jpwinkler.daf.filter.objects.DoorsTreeNodeFilterParser;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.util.Deque;
 import java.util.LinkedList;
