@@ -35,7 +35,7 @@ import de.jpwinkler.daf.gui.controls.CustomTextTreeCell;
 import de.jpwinkler.daf.gui.controls.DoorsTreeItem;
 import de.jpwinkler.daf.gui.controls.ExtensionPane;
 import de.jpwinkler.daf.gui.controls.FixedSingleSelectionModel;
-import de.jpwinkler.daf.gui.controls.ForwardingMultipleSelectionModel;
+import de.jpwinkler.daf.gui.controls.ForwardingSelectionModel;
 import de.jpwinkler.daf.gui.controls.MultiLineTextInputDialog;
 import static de.jpwinkler.daf.gui.modules.ModulePanePreferences.STANDARD_VIEW;
 import de.jpwinkler.daf.gui.modules.ViewDefinition.ColumnDefinition;
@@ -66,7 +66,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.WeakHashMap;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -195,7 +194,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
                 this.filteredModule = actualModule;
                 updateGui(ModuleUpdateAction.UPDATE_COLUMNS, ModuleUpdateAction.UPDATE_CONTENT_VIEW, ModuleUpdateAction.UPDATE_OUTLINE_VIEW);
                 traverseTreeItem(outlineTreeView.getRoot(), ti -> ti.setExpanded(true));
-                loadingDone.complete(null);
+                loadingDone();
             });
         }).exceptionally(t -> {
             t.printStackTrace();
@@ -204,6 +203,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
                 Button retryButton = new Button("Retry");
                 retryButton.setOnAction(ev -> this.loadContent());
                 this.contentTableView.setPlaceholder(retryButton);
+                loadingFailed(t);
             });
             return null;
         });
@@ -214,7 +214,6 @@ public final class ModulePaneController extends ApplicationPartController<Module
     private final Map<DoorsTreeNode, Boolean> expanded = new WeakHashMap<>();
     private DoorsModule filteredModule;
     private DoorsModule actualModule;
-    private CompletableFuture<Void> loadingDone = new CompletableFuture<>();
 
     private ViewDefinition currentView;
 
@@ -565,7 +564,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
     @Override
     public SelectionModel<DoorsObject> getCurrentObjectSelectionModel() {
-        return new ForwardingMultipleSelectionModel<>(this.contentTableView.getSelectionModel(), x -> x, y -> y);
+        return new ForwardingSelectionModel<>(this.contentTableView.getSelectionModel(), x -> x, y -> y);
     }
 
     @Override
@@ -574,7 +573,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
             return;
         }
 
-        loadingDone.thenRun(() -> Platform.runLater(() -> {
+        getLoadingFuture().thenRun(() -> Platform.runLater(() -> {
             DoorsObject localLinkTarget = this.filteredModule.accept(new DoorsTreeNodeVisitor<DoorsObject, DoorsObject>(DoorsObject.class) {
                 @Override
                 public boolean visitPreTraverse(DoorsObject object) {

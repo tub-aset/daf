@@ -68,6 +68,8 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
     private final Map<Menu, PluginWrapper> extensionMenus = new HashMap<>();
     private final Class<? extends ApplicationPartExtension> extensionClass;
 
+    private final CompletableFuture<Void> loadingDone = new CompletableFuture<>();
+
     public ApplicationPartController(ApplicationPaneController applicationController, ApplicationPart applicationPart, Class<? extends ApplicationPartExtension> extensionClass) {
         this.applicationController = applicationController;
         this.applicationPart = applicationPart;
@@ -88,6 +90,18 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
             }
         };
         this.extensionClass = extensionClass;
+    }
+
+    protected void loadingDone() {
+        this.loadingDone.complete(null);
+    }
+
+    protected void loadingFailed(Throwable t) {
+        this.loadingDone.completeExceptionally(t);
+    }
+
+    public CompletableFuture<Void> getLoadingFuture() {
+        return CompletableFuture.allOf(this.loadingDone);
     }
 
     protected static void setupColumnWidthStorage(TableColumn<?, ?> col, ApplicationPreference<Double> pref) {
@@ -204,9 +218,9 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
 
     @SuppressWarnings("unchecked")
     public final void updateGui(UpdateAction... actions) {
-        Stream.of(actions).forEach(a -> a.preUpdate((THIS)this));
+        Stream.of(actions).forEach(a -> a.preUpdate((THIS) this));
         Stream.of(actions).forEach(a -> a.update((THIS) this));
-        Stream.of(actions).forEach(a -> a.postUpdate((THIS)this));
+        Stream.of(actions).forEach(a -> a.postUpdate((THIS) this));
     }
 
     @FXML
@@ -243,22 +257,26 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
     }
 
     public void addPlugin(PluginWrapper plugin) {
-        List<? extends ApplicationPartExtension> newExts = plugin.getPluginManager().getExtensions(extensionClass, plugin.getPluginId());
-        newExts.forEach(e -> e.initialise(this));
+        loadingDone.thenRun(() -> {
+            List<? extends ApplicationPartExtension> newExts = plugin.getPluginManager().getExtensions(extensionClass, plugin.getPluginId());
+            newExts.forEach(e -> e.initialise(this));
 
-        extensions.addAll(newExts);
-        newExts.stream()
-                .flatMap(e -> e.getMenus().stream())
-                .peek(m -> extensionMenus.put(m, plugin))
-                .forEach(menus::add);
+            extensions.addAll(newExts);
+            newExts.stream()
+                    .flatMap(e -> e.getMenus().stream())
+                    .peek(m -> extensionMenus.put(m, plugin))
+                    .forEach(menus::add);
+        });
     }
 
     public void removePlugin(PluginWrapper plugin) {
-        extensions.removeIf(ext -> ext.getClass().getClassLoader() == plugin.getPluginClassLoader());
+        loadingDone.thenRun(() -> {
+            extensions.removeIf(ext -> ext.getClass().getClassLoader() == plugin.getPluginClassLoader());
 
-        List<MenuItem> extMenus = extensionMenus.entrySet().stream().filter(e -> e.getValue() == plugin).map(e -> e.getKey()).collect(Collectors.toList());
-        menus.removeAll(extMenus);
-        extMenus.forEach(extensionMenus::remove);
+            List<MenuItem> extMenus = extensionMenus.entrySet().stream().filter(e -> e.getValue() == plugin).map(e -> e.getKey()).collect(Collectors.toList());
+            menus.removeAll(extMenus);
+            extMenus.forEach(extensionMenus::remove);
+        });
     }
 
     public ApplicationPart getApplicationPart() {

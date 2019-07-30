@@ -32,6 +32,7 @@ public class FixedSingleSelectionModel<T> extends SelectionModel<T> {
 
     public FixedSingleSelectionModel(T selectedValue) {
         this.selectedValue = selectedValue;
+        super.setSelectedItem(selectedValue);
 
     }
 

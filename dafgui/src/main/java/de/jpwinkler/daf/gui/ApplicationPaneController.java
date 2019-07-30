@@ -915,7 +915,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             applicationPartControllers.remove(part.stop());
             return ButtonType.YES;
         }
-        
+
         // files for which there is another open view as well
         if (part.getController().isOpened(part.getDatabasePath().withPath(""))) {
             applicationPartControllers.remove(part.stop());
@@ -1072,11 +1072,8 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         uninstallPluginMenu.getItems().removeIf(mi -> Objects.equals(mi.getUserData(), pluginId));
         pluginStateMenu.getItems().removeIf(mi -> Objects.equals(mi.getUserData(), pluginId));
 
-        try {
-            Files.delete(pluginManager.getPlugin(pluginId).getPluginPath());
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
+        pluginManager.enablePlugin(pluginId);
+        pluginManager.deletePlugin(pluginId);
     }
 
     public Collection<ApplicationPartController> getApplicationPartControllers() {

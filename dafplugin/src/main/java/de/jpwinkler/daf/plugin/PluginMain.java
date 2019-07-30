@@ -112,6 +112,20 @@ public class PluginMain extends Plugin {
             this.applicationPartInterface = applicationPartInterface;
             this.sidePanes.forEach(sp -> sp.setUserData("Test Plugin SP"));
             this.bottomPanes.forEach(sp -> sp.setUserData("Test Plugin BP"));
+
+            System.out.println(applicationPartInterface.getCurrentModuleSelectionModel().getSelectedItem().getName());
+
+            if (applicationPartInterface.getCurrentFolderSelectionModel().getSelectedItem() != null) {
+                System.out.println(applicationPartInterface.getCurrentFolderSelectionModel().getSelectedItem().getName());
+            }
+            
+            applicationPartInterface.getCurrentObjectSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
+                if(newValue != null) {
+                    System.out.println(newValue.getText());
+                } else {
+                    System.out.println("no selection");
+                }
+            });
         }
 
         @Override

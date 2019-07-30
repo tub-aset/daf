@@ -34,7 +34,7 @@ import de.jpwinkler.daf.gui.controls.CustomTextTreeCell;
 import de.jpwinkler.daf.gui.controls.DoorsTreeItem;
 import de.jpwinkler.daf.gui.controls.EmptySelectionModel;
 import de.jpwinkler.daf.gui.controls.ExtensionPane;
-import de.jpwinkler.daf.gui.controls.ForwardingMultipleSelectionModel;
+import de.jpwinkler.daf.gui.controls.ForwardingSelectionModel;
 import de.jpwinkler.daf.gui.controls.MultiLineTextInputDialog;
 import de.jpwinkler.daf.gui.databases.commands.DeleteAttributesCommand;
 import de.jpwinkler.daf.gui.databases.commands.DeleteCommand;
@@ -517,12 +517,12 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
     @Override
     public SelectionModel<DoorsFolder> getCurrentFolderSelectionModel() {
-        return new ForwardingMultipleSelectionModel<>(databaseTreeView.getSelectionModel(), x -> treeNodeCache.get(x), y -> (DoorsFolder) y.getValue());
+        return new ForwardingSelectionModel<>(databaseTreeView.getSelectionModel(), x -> treeNodeCache.get(x), y -> (DoorsFolder) y.getValue());
     }
 
     @Override
     public SelectionModel<DoorsModule> getCurrentModuleSelectionModel() {
-        return new ForwardingMultipleSelectionModel<>(modulesTableView.getSelectionModel(), x -> x, y -> y);
+        return new ForwardingSelectionModel<>(modulesTableView.getSelectionModel(), x -> x, y -> y);
     }
 
     @Override

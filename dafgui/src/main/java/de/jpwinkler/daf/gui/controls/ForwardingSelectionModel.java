@@ -21,7 +21,6 @@ package de.jpwinkler.daf.gui.controls;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import java.util.function.Function;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -32,12 +31,24 @@ import javafx.scene.control.MultipleSelectionModel;
  *
  * @author fwiesweg
  */
-public class ForwardingMultipleSelectionModel<T, V> extends MultipleSelectionModel<T> {
+public class ForwardingSelectionModel<T, V> extends MultipleSelectionModel<T> {
 
-    public ForwardingMultipleSelectionModel(MultipleSelectionModel<V> sourceModel, Function<T, V> transformation, Function<V, T> inverseTransformation) {
+    public ForwardingSelectionModel(MultipleSelectionModel<V> sourceModel, Function<T, V> transformation, Function<V, T> inverseTransformation) {
         this.sourceModel = sourceModel;
         this.transformation = transformation;
         this.inverseTransformation = inverseTransformation;
+
+        sourceModel.selectedIndexProperty().addListener((ov, oldValue, newValue) -> {
+            super.setSelectedIndex(newValue.intValue());
+        });
+
+        sourceModel.selectedItemProperty().addListener((ov, oldValue, newValue) -> {
+            super.setSelectedItem(inverseTransformation.apply(newValue));
+        });
+        
+        sourceModel.selectionModeProperty().addListener((ov, oldValue, newValue) -> {
+            super.setSelectionMode(newValue);
+        });
     }
 
     private final MultipleSelectionModel<V> sourceModel;
@@ -61,13 +72,14 @@ public class ForwardingMultipleSelectionModel<T, V> extends MultipleSelectionMod
             public int getSourceIndex(int i) {
                 return i;
             }
-            
+
             /**
-             * This should have an @Override here for Java 11, but Java 8 does not
-             * have this method, causing a compiler error. Just leaving the @Override
-             * out makes sure it compiles with both JDKs.
+             * This should have an @Override here for Java 11, but Java 8 does
+             * not have this method, causing a compiler error. Just leaving the
+             * @Override out makes sure it compiles with both JDKs.
+             *
              * @param i
-             * @return 
+             * @return
              */
             public int getViewIndex(int i) {
                 return i;
