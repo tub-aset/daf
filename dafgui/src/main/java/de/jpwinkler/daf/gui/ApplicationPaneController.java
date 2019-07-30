@@ -707,7 +707,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
     }
 
     public static String getMessage(Throwable t) {
-        if (t.getMessage() == null && t.getCause() != null) {
+        if (t.getCause() != null) {
             return getMessage(t.getCause());
         } else if (t.getMessage() == null) {
             return t.toString();

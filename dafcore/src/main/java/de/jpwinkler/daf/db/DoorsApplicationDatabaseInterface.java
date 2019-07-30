@@ -36,7 +36,7 @@ public class DoorsApplicationDatabaseInterface implements DatabaseInterface {
     private final CompletableFuture<DoorsFolder> root;
     private final DatabasePath databasePath;
 
-    public DoorsApplicationDatabaseInterface(DatabasePath databasePath, OpenFlag openFlag) {
+    public DoorsApplicationDatabaseInterface(BackgroundTaskExecutor executor, DatabasePath databasePath, OpenFlag openFlag) {
         if (!databasePath.getPath().isEmpty()) {
             throw new IllegalArgumentException("databasePath must not have a path segment here");
         }
