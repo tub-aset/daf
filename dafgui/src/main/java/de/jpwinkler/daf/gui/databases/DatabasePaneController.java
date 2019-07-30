@@ -435,7 +435,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
     private void createSnapshotFromListClicked(String snapshotListName) {
         SnapshotList sl = ((TreeMap<String, SnapshotList>) DatabasePanePreferences.SNAPSHOT_LISTS.retrieve()).get(snapshotListName);
-        this.createSnapshot(node -> sl.includes(node.getFullNameSegments()));
+        this.createSnapshot(node -> node instanceof DoorsObject || (node != null && sl.includes(node.getFullNameSegments())));
     }
 
     private void createSnapshot(Predicate<DoorsTreeNode> include) {
