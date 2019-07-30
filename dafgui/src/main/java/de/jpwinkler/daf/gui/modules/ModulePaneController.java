@@ -631,17 +631,13 @@ public final class ModulePaneController extends ApplicationPartController<Module
     }
 
     @Override
-    public void removePlugin(PluginWrapper plugin) {
-        super.removePlugin(plugin);
-
+    public void onRemovePlugin(PluginWrapper plugin) {
         sideExtensionPane.removePlugin(plugin);
         bottomExtensionPane.removePlugin(plugin);
     }
 
     @Override
-    public void addPlugin(PluginWrapper plugin) {
-        super.addPlugin(plugin);
-
+    public void onAddPlugin(PluginWrapper plugin) {
         sideExtensionPane.addPlugin(plugin);
         bottomExtensionPane.addPlugin(plugin);
     }

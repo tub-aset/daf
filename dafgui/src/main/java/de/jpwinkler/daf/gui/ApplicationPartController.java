@@ -256,7 +256,7 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
         return applicationPart.getDatabaseInterface();
     }
 
-    public void addPlugin(PluginWrapper plugin) {
+    public final void addPlugin(PluginWrapper plugin) {
         loadingDone.thenRun(() -> {
             List<? extends ApplicationPartExtension> newExts = plugin.getPluginManager().getExtensions(extensionClass, plugin.getPluginId());
             newExts.forEach(e -> e.initialise(this));
@@ -266,18 +266,24 @@ public abstract class ApplicationPartController<THIS extends ApplicationPartCont
                     .flatMap(e -> e.getMenus().stream())
                     .peek(m -> extensionMenus.put(m, plugin))
                     .forEach(menus::add);
+            this.onAddPlugin(plugin);
         });
     }
 
-    public void removePlugin(PluginWrapper plugin) {
+    public final void removePlugin(PluginWrapper plugin) {
         loadingDone.thenRun(() -> {
             extensions.removeIf(ext -> ext.getClass().getClassLoader() == plugin.getPluginClassLoader());
 
             List<MenuItem> extMenus = extensionMenus.entrySet().stream().filter(e -> e.getValue() == plugin).map(e -> e.getKey()).collect(Collectors.toList());
             menus.removeAll(extMenus);
             extMenus.forEach(extensionMenus::remove);
+            this.onRemovePlugin(plugin);
         });
     }
+
+    protected abstract void onAddPlugin(PluginWrapper plugin);
+
+    protected abstract void onRemovePlugin(PluginWrapper plugin);
 
     public ApplicationPart getApplicationPart() {
         return applicationPart;

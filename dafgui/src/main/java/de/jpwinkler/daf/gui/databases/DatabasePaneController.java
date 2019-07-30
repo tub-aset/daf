@@ -117,15 +117,25 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                 },
                 (it, newName) -> this.executeCommand(new RenameNodeCommand(applicationPart, it, newName))));
 
-        this.databaseRoot = super.getDatabaseInterface().getDatabaseRootAsync().thenCompose(rootNode -> {
-            CompletableFuture<DoorsTreeItem> rootFuture = new CompletableFuture<>();
-            Platform.runLater(() -> {
-                databaseTreeView.setRoot(new DoorsTreeItem(super.getBackgroundTaskExecutor(), rootNode, node -> node instanceof DoorsFolder, treeNodeCache));
-                databaseTreeView.getRoot().setExpanded(true);
-                rootFuture.complete((DoorsTreeItem) databaseTreeView.getRoot());
-            });
-            return rootFuture;
+        this.databaseRoot = super.getDatabaseInterface().getDatabaseRootAsync()
+                .thenCompose(rootNode -> {
+                    CompletableFuture<DoorsTreeItem> rootFuture = new CompletableFuture<>();
+                    Platform.runLater(() -> {
+                        databaseTreeView.setRoot(new DoorsTreeItem(super.getBackgroundTaskExecutor(), rootNode, node -> node instanceof DoorsFolder, treeNodeCache));
+                        databaseTreeView.getRoot().setExpanded(true);
+                        rootFuture.complete((DoorsTreeItem) databaseTreeView.getRoot());
+                    });
+                    return rootFuture;
+                });
+        this.databaseRoot.handle((t, u) -> {
+            if (u != null) {
+                super.loadingFailed(u);
+            } else {
+                super.loadingDone();
+            }
+            return null;
         });
+
         databaseTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             updateGui(UpdateModulesView, UpdateTagsView, UpdateAttributesView, UpdateNodeTitle);
         });
@@ -213,7 +223,6 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                 .sorted()
                 .collect(Collectors.joining(", "));
     }
-
 
     @FXML
     private SplitPane bottomSplitPane;
@@ -458,7 +467,7 @@ public final class DatabasePaneController extends ApplicationPartController<Data
                 "Snapshot list " + snapshotList, ButtonType.CANCEL, ButtonType.OK).orElse(editor.resultOf(ButtonType.CANCEL)).buttonType == ButtonType.CANCEL) {
             return;
         }
-        
+
         sl.replace(Arrays.asList(editor.getText().split("\n")));
         DatabasePanePreferences.SNAPSHOT_LISTS.store(snapshotLists);
         this.updateGui(DatabasePaneController.RefreshModulesView);
@@ -500,17 +509,13 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     }
 
     @Override
-    public void removePlugin(PluginWrapper plugin) {
-        super.removePlugin(plugin);
-
+    public void onRemovePlugin(PluginWrapper plugin) {
         sideExtensionPane.removePlugin(plugin);
         bottomExtensionPane.removePlugin(plugin);
     }
 
     @Override
-    public void addPlugin(PluginWrapper plugin) {
-        super.addPlugin(plugin);
-
+    public void onAddPlugin(PluginWrapper plugin) {
         sideExtensionPane.addPlugin(plugin);
         bottomExtensionPane.addPlugin(plugin);
     }
