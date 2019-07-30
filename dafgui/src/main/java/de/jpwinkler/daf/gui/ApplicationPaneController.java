@@ -554,7 +554,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             }
         });
         pluginStateMenu.getItems().add(cmi);
-        pluginStateMenu.getItems().sort((mi1, mi2) -> mi1.getText().compareTo(mi2.getText()));
+        pluginStateMenu.getItems().sort((mi1, mi2) -> ((String) mi1.getUserData()).compareTo((String) mi2.getUserData()));
     }
 
     private void onBackgroundTaskUpdate(BackgroundTask t, Double totalProgress) {

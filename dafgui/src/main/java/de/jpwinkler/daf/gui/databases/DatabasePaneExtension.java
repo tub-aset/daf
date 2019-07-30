@@ -21,7 +21,6 @@ package de.jpwinkler.daf.gui.databases;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.gui.ApplicationPartExtension;
 import java.util.Collections;
 import java.util.List;
@@ -42,6 +41,11 @@ public interface DatabasePaneExtension extends ApplicationPartExtension {
     }
 
     default String getPaneName(Node node) {
+        if (node.getUserData() == null) {
+            throw new RuntimeException("No pane name associated with this extension pane. "
+                    + "Either associate it with node.setUserData() or override getPaneName in your extension.");
+        }
+
         return (String) node.getUserData();
     }
 }

@@ -46,6 +46,11 @@ public interface ModulePaneExtension extends ApplicationPartExtension {
     }
     
     default String getPaneName(Node node) {
+        if(node.getUserData() == null) {
+            throw new RuntimeException("No pane name associated with this extension pane. "
+                    + "Either associate it with node.setUserData() or override getPaneName in your extension.");
+        }
+        
         return (String) node.getUserData();
     }
 }
