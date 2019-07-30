@@ -1072,7 +1072,11 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         uninstallPluginMenu.getItems().removeIf(mi -> Objects.equals(mi.getUserData(), pluginId));
         pluginStateMenu.getItems().removeIf(mi -> Objects.equals(mi.getUserData(), pluginId));
 
-        pluginManager.deletePlugin(pluginId);
+        try {
+            Files.delete(pluginManager.getPlugin(pluginId).getPluginPath());
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     public Collection<ApplicationPartController> getApplicationPartControllers() {
