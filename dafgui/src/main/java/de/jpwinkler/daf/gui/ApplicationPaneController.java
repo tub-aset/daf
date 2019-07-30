@@ -59,6 +59,7 @@ import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
@@ -973,7 +974,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
                             this.uninstallPlugin(pluginId);
                         }
 
-                        Path destination = pluginManager.getPluginsRoot().toAbsolutePath().resolve(pluginId + ".jar");
+                        Path destination = pluginManager.getPluginsRoot().toAbsolutePath().resolve(UUID.randomUUID().toString() + ".jar");
                         if (!destination.equals(f.toPath().toAbsolutePath())) {
                             Files.copy(f.toPath(), destination);
                         }
