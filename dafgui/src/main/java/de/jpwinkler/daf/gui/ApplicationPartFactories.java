@@ -26,6 +26,7 @@ import de.jpwinkler.daf.db.DatabasePath;
 import de.jpwinkler.daf.db.DoorsApplicationDatabaseInterface;
 import de.jpwinkler.daf.db.DoorsApplicationDummyDatabaseInterface;
 import de.jpwinkler.daf.db.FolderDatabaseInterface;
+import static de.jpwinkler.daf.db.FolderDatabaseInterface.DOORS_DB_MMD;
 import de.jpwinkler.daf.db.RawFileDatabaseInterface;
 import de.jpwinkler.daf.db.XmiDatabaseInterface;
 import de.jpwinkler.daf.gui.ApplicationPartFactoryRegistry.ApplicationPart;
@@ -242,7 +243,7 @@ public final class ApplicationPartFactories {
     }
 
     public static DatabasePathFactory localFolderDatabaseSelector() {
-        return (window, partFactory, save, proposedName) -> save ? directorySelector().create(window, partFactory, save, proposedName) : fileChooserSelector((f) -> f.getParent(), new FileChooser.ExtensionFilter("Root folder MMD", "__folder__.mmd")).create(window, partFactory, save, proposedName);
+        return (window, partFactory, save, proposedName) -> save ? directorySelector().create(window, partFactory, save, proposedName) : fileChooserSelector((f) -> f.getParent(), new FileChooser.ExtensionFilter("Root folder MMD", DOORS_DB_MMD)).create(window, partFactory, save, proposedName);
     }
 
     public static ApplicationPartController dynamicPartConstructor(ApplicationPaneController appController, ApplicationPart part) {

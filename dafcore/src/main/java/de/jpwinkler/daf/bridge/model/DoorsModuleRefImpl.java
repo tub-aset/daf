@@ -79,7 +79,7 @@ class DoorsModuleRefImpl extends DoorsTreeNodeRefImpl implements DoorsModule {
             });
 
             try (ByteArrayInputStream bis = new ByteArrayInputStream(result.getBytes(ModuleCSV.CHARSET))) {
-                Map<String, String> attributes = ModuleCSV.readMetaData(doorsApplication.getDatabaseFactory(), bis);
+                Map<String, String> attributes = ModuleCSV.readMetaData(bis);
                 attributes.put(DoorsAttributes.MODULE_VIEW.getKey(), this.doorsApplication.getDatabaseView());
                 return attributes;
             } catch (IOException ex) {

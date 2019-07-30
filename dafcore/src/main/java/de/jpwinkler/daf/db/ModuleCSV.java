@@ -168,7 +168,7 @@ public class ModuleCSV {
 
     public static DoorsModule read(DatabaseFactory factory, File csvFile, File mmdFile) throws IOException {
         DoorsModule module = readModule(factory, csvFile);
-        module.getAttributes().putAll(readMetaData(factory, mmdFile));
+        module.getAttributes().putAll(readMetaData(mmdFile));
         return module;
     }
 
@@ -237,13 +237,13 @@ public class ModuleCSV {
         return module;
     }
 
-    public static Map<String, String> readMetaData(DatabaseFactory factory, final File mmdFile) throws IOException {
+    public static Map<String, String> readMetaData(final File mmdFile) throws IOException {
         try (InputStream mmdStream = new FileInputStream(mmdFile)) {
-            return readMetaData(factory, mmdStream);
+            return readMetaData(mmdStream);
         }
     }
 
-    public static Map<String, String> readMetaData(DatabaseFactory factory, final InputStream mmdStream) throws IOException {
+    public static Map<String, String> readMetaData(final InputStream mmdStream) throws IOException {
         CSVParser parser = new CSVParser(new InputStreamReader(mmdStream, CHARSET), MMD_FORMAT);
         final Map<String, String> metadata = new HashMap<>();
         for (final CSVRecord record : parser.getRecords()) {

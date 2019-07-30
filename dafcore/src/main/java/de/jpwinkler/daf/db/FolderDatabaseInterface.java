@@ -34,6 +34,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
@@ -43,6 +44,8 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 public class FolderDatabaseInterface implements DatabaseInterface {
+
+    public static final String DOORS_DB_MMD = "__doors_db__.mmd";
 
     private static final Logger LOG = Logger.getLogger(FolderDatabaseInterface.class.getName());
 
@@ -57,20 +60,24 @@ public class FolderDatabaseInterface implements DatabaseInterface {
 
         this.databasePath = databasePath;
         this.databaseRoot = executor.runBackgroundTask("Loading folder database", i -> {
-            MutableObject<DoorsFolder> root = new MutableObject<>();
             try {
-                File databaseFile = new File(databasePath.getDatabasePath());
+                File dbFile = new File(databasePath.getDatabasePath(), DOORS_DB_MMD);
+                if (!dbFile.isFile()) {
+                    return factory.createFolder(null, "Empty folder database", false);
+                }
+
+                File databaseFile = new File(databasePath.getDatabasePath(), ModuleCSV.readMetaData(dbFile).get("ROOT"));
 
                 if (openFlag == OpenFlag.CREATE_IF_INEXISTENT && !databaseFile.isDirectory()) {
                     Files.createDirectories(databaseFile.toPath());
                 } else if (openFlag == OpenFlag.ERASE_IF_EXISTS && databaseFile.exists()) {
                     FileUtils.deleteDirectory(databaseFile);
                     Files.createDirectories(databaseFile.toPath());
-                    new File(databaseFile, "__folder__.mmd").createNewFile();
                 } else if (openFlag == OpenFlag.OPEN_ONLY && !databaseFile.isDirectory()) {
                     throw new FileNotFoundException(databaseFile.getAbsolutePath());
                 }
 
+                MutableObject<DoorsFolder> root = new MutableObject<>();
                 Files.walkFileTree(databaseFile.toPath(), new SimpleFileVisitor<Path>() {
                     private final HashMap<String, DoorsFolder> folders = new HashMap<>();
 
@@ -98,7 +105,7 @@ public class FolderDatabaseInterface implements DatabaseInterface {
                         }
 
                         try {
-                            folder.getAttributes().putAll(ModuleCSV.readMetaData(factory, dir.resolve("__folder__.mmd").toFile()));
+                            folder.getAttributes().putAll(ModuleCSV.readMetaData(dir.resolve("__folder__.mmd").toFile()));
                             folders.put(dir.toAbsolutePath().toString(), folder);
                         } catch (IOException ex) {
                             LOG.log(Level.SEVERE, "Failed reading folder metadata: " + dir.resolve("__folder__.mmd").toAbsolutePath().toString(), ex);
@@ -113,10 +120,10 @@ public class FolderDatabaseInterface implements DatabaseInterface {
                 if (root.getValue() == null) {
                     throw new IOException("No root node found");
                 }
+                return root.getValue();
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
-            return root.getValue();
         });
     }
 
@@ -124,13 +131,17 @@ public class FolderDatabaseInterface implements DatabaseInterface {
     public final CompletableFuture<Void> flushAsync() {
         return this.databaseRoot.thenAccept(root -> {
             try {
-                FileUtils.deleteDirectory(new File(databasePath.getDatabasePath()));
-                root.setName(new File(databasePath.getDatabasePath()).getName());
+                File dbFile = new File(databasePath.getDatabasePath(), DOORS_DB_MMD);
+                dbFile.createNewFile();
+                ModuleCSV.writeMetaData(dbFile, Collections.singletonMap("ROOT", root.getName()));
+
+                File databaseRootDir = new File(new File(databasePath.getDatabasePath()), root.getName());
+                FileUtils.deleteDirectory(databaseRootDir);
                 root.accept(new DoorsTreeNodeVisitor<DoorsFolder, Void>(DoorsFolder.class) {
                     @Override
                     public void visitPostTraverse(DoorsFolder f) {
                         try {
-                            Path modulePath = Paths.get(Paths.get(databasePath.getDatabasePath()).getParent().toAbsolutePath().toString(), f.getFullNameSegments().toArray(new String[0]));
+                            Path modulePath = Paths.get(databaseRootDir.getAbsolutePath(), f.getFullNameSegments().toArray(new String[0]));
                             Files.createDirectories(modulePath);
 
                             ModuleCSV.writeMetaData(modulePath.resolve("__folder__.mmd").toFile(), f.getAttributes());
@@ -149,7 +160,7 @@ public class FolderDatabaseInterface implements DatabaseInterface {
                     @Override
                     public void visitPostTraverse(DoorsModule m) {
                         try {
-                            Path folderPath = Paths.get(Paths.get(databasePath.getDatabasePath()).getParent().toAbsolutePath().toString(), m.getParent().getFullNameSegments().toArray(new String[0]));
+                            Path folderPath = Paths.get(databaseRootDir.getAbsolutePath(), m.getParent().getFullNameSegments().toArray(new String[0]));
                             ModuleCSV.write(
                                     folderPath.resolve(m.getName() + ".csv").toFile(),
                                     folderPath.resolve(m.getName() + ".mmd").toFile(), m);
