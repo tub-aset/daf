@@ -217,7 +217,7 @@ public class ModuleCSV {
                     if (objectLevel == currentLevel + 1) {
                         newObject = factory.createObject(current, "");
                         inTable = false;
-                    } else if (objectLevel == currentLevel + 2) {
+                    } else if (objectLevel > currentLevel + 1) {
                         newObject = factory.createTableRow(current);
                         inTable = true;
                     } else {
