@@ -330,7 +330,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         pluginManager.getPlugins().forEach(this::addPluginMenuEntries);
         ApplicationPartFactories.registerDefault(applicationPartFactoryRegistry);
 
-        ((ArrayList<ApplicationPart>) ApplicationPreferences.EXIT_FILES.retrieve()).forEach(part -> this.open(part, OpenFlag.OPEN_ONLY));
+        ApplicationPreferences.EXIT_FILES.retrieve().forEach(part -> this.open(part, OpenFlag.OPEN_ONLY));
         ApplicationPart lastSelectedPart = ApplicationPreferences.LAST_SELECTED_FILE.retrieve();
         if (lastSelectedPart != null) {
             Tab tab = tabPane.getTabs().stream()
@@ -1073,8 +1073,8 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         uninstallPluginMenu.getItems().removeIf(mi -> Objects.equals(mi.getUserData(), pluginId));
         pluginStateMenu.getItems().removeIf(mi -> Objects.equals(mi.getUserData(), pluginId));
 
-        pluginManager.enablePlugin(pluginId);
-        pluginManager.deletePlugin(pluginId);
+        pluginManager.getPlugin(pluginId).getPluginPath().toFile().deleteOnExit();
+        pluginManager.unloadPlugin(pluginId);
     }
 
     public Collection<ApplicationPartController> getApplicationPartControllers() {
