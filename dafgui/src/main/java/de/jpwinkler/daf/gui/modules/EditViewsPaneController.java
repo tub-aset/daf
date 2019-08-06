@@ -28,7 +28,7 @@ import java.util.TreeSet;
 import java.util.stream.Stream;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableListBase;
+import javafx.collections.ModifiableObservableListBase;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -36,6 +36,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 
 public final class EditViewsPaneController extends AutoloadingPaneController<EditViewsPaneController> {
@@ -73,6 +74,7 @@ public final class EditViewsPaneController extends AutoloadingPaneController<Edi
     private ViewDefinition currentView;
     private ColumnDefinition currentCol;
     private int newCounter = 1;
+    private boolean dirtyColumnTitle = false;
 
     private final TreeSet<String> knownAttributes = new TreeSet<>();
     private static final String NEW_COLUMN_TEXT = "New column ";
@@ -87,77 +89,50 @@ public final class EditViewsPaneController extends AutoloadingPaneController<Edi
                 .filter(an -> an != null)
                 .forEach(an -> this.knownAttributes.add(an));
 
-        viewTitleTextField.textProperty().addListener((obs, oldValue, newValue) -> {
-            if (currentView != null) {
-                currentView.setName(newValue);
-                viewListView.refresh();
+        colAttributeComboBox.setItems(new ModifiableObservableListBase<String>() {
+            @Override
+            public String get(int i) {
+                return EditViewsPaneController.this.knownAttributes.stream().skip(i).findFirst().orElse(null);
             }
-        });
-        viewAllAttributesCheckBox.selectedProperty().addListener((obs, oldValue, newValue) -> {
-            if (currentView != null) {
-                currentView.setDisplayRemainingColumns(newValue);
+
+            @Override
+            public int size() {
+                return EditViewsPaneController.this.knownAttributes.size();
             }
-        });
 
-        colTitleTextField.textProperty().addListener((obs, oldValue, newValue) -> {
-            if (currentCol != null) {
-                currentCol.setTitle(newValue);
-                colListView.refresh();
+            @Override
+            protected void doAdd(int i, String e) {
+                EditViewsPaneController.this.knownAttributes.add(e);
             }
-        });
 
-        colAttributeComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
-            if (currentCol != null) {
-                if (newValue == null) {
-                    newValue = "";
-                } else if (!this.knownAttributes.contains(newValue)) {
-                    this.knownAttributes.add(newValue);
-                }
+            @Override
+            protected String doSet(int i, String e) {
+                throw new UnsupportedOperationException("Not supported");
+            }
 
-                currentCol.setAttributeName(newValue);
-
-                if (colTitleTextField.getText().startsWith(NEW_COLUMN_TEXT)
-                        || this.knownAttributes.contains(colTitleTextField.getText())) {
-                    colTitleTextField.setText(newValue);
-                }
+            @Override
+            protected String doRemove(int i) {
+                throw new UnsupportedOperationException("Not supported");
             }
         });
 
         colTypeChoiceBox.getSelectionModel().selectedItemProperty().addListener((ov, oldT, newT) -> {
-            if (currentCol != null && newT != null) {
-                currentCol.setColumnType(newT);
-
-                if (newT.isUsesAttributeName()) {
-                    colAttributeComboBox.setDisable(false);
-                    String columnAttribute = currentCol.getAttributeName() == null ? "" : currentCol.getAttributeName();
-                    this.knownAttributes.add(columnAttribute);
-
-                    colAttributeComboBox.setItems(new ObservableListBase<String>() {
-                        @Override
-                        public String get(int i) {
-                            return EditViewsPaneController.this.knownAttributes.stream().skip(i).findFirst().orElse(null);
-                        }
-
-                        @Override
-                        public int size() {
-                            return EditViewsPaneController.this.knownAttributes.size();
-                        }
-                    });
-                    colAttributeComboBox.getSelectionModel().select(columnAttribute);
-                } else {
-                    colAttributeComboBox.setDisable(true);
-                    colAttributeComboBox.setItems(FXCollections.emptyObservableList());
-                }
-            } else {
+            if (currentCol == null || newT == null || !newT.isUsesAttributeName()) {
                 colAttributeComboBox.setDisable(true);
-                colAttributeComboBox.setItems(FXCollections.emptyObservableList());
+                colAttributeComboBox.getSelectionModel().clearSelection();
+                return;
             }
+
+            colAttributeComboBox.setDisable(false);
         });
 
-        colVisibleCheckBox.selectedProperty().addListener((obs, oldValue, newValue) -> {
-            if (currentCol != null) {
-                currentCol.setVisible(newValue);
+        this.colTitleTextField.addEventFilter(KeyEvent.KEY_TYPED, (t) -> this.dirtyColumnTitle = true);
+
+        colAttributeComboBox.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
+            if (this.dirtyColumnTitle) {
+                return;
             }
+            this.colTitleTextField.setText(newValue);
         });
 
         viewListView.getSelectionModel().getSelectedItems().addListener((ListChangeListener.Change<? extends ViewDefinition> event) -> {
@@ -170,6 +145,13 @@ public final class EditViewsPaneController extends AutoloadingPaneController<Edi
     }
 
     private void setViewEnabled(ViewDefinition vd) {
+        if (this.currentView != null) {
+            currentView.setName(viewTitleTextField.getText());
+            currentView.setDisplayRemainingColumns(viewAllAttributesCheckBox.isSelected());
+
+            viewListView.refresh();
+        }
+
         this.currentView = vd;
         if (vd != null) {
             colListView.setItems(FXCollections.observableList(vd.getColumns()));
@@ -197,11 +179,19 @@ public final class EditViewsPaneController extends AutoloadingPaneController<Edi
     }
 
     private void setColEnabled(ColumnDefinition cd) {
+        if (currentCol != null) {
+            currentCol.setTitle(colTitleTextField.getText());
+            currentCol.setVisible(colVisibleCheckBox.isSelected());
+            currentCol.setColumnType(colTypeChoiceBox.getValue());
+            colAttributeComboBox.commitValue();
+            colAttributeComboBox.getItems().add(colAttributeComboBox.getValue());
+            currentCol.setAttributeName(colAttributeComboBox.getValue());
+
+            colListView.refresh();
+        }
+
         this.currentCol = cd;
         if (cd != null) {
-            colTitleTextField.setText(cd.getTitle());
-            colTitleTextField.setDisable(false);
-
             colTypeChoiceBox.setDisable(false);
             colTypeChoiceBox.setItems(FXCollections.observableArrayList(ViewDefinition.ColumnType.values()));
             colTypeChoiceBox.getSelectionModel().select(cd.getColumnType());
@@ -211,7 +201,21 @@ public final class EditViewsPaneController extends AutoloadingPaneController<Edi
             colVisibleCheckBox.setDisable(false);
             colVisibleCheckBox.setSelected(cd.isVisible());
 
+            colAttributeComboBox.setDisable(!currentCol.getColumnType().isUsesAttributeName());
+            if (currentCol.getColumnType().isUsesAttributeName()) {
+                colAttributeComboBox.getSelectionModel().select(currentCol.getAttributeName() == null ? "" : currentCol.getAttributeName());
+            } else {
+                colAttributeComboBox.getSelectionModel().clearSelection();
+            }
+
             colDeleteButton.setDisable(false);
+
+            // set title last -- dirtyColumnTitle == true && colAttributeComboBox.select may overwrite it
+            colTitleTextField.setText(cd.getTitle());
+            colTitleTextField.setDisable(false);
+            
+            this.dirtyColumnTitle = !cd.getTitle().trim().isEmpty() && !knownAttributes.contains(cd.getTitle());
+
         } else {
             colTitleTextField.setText("");
             colTitleTextField.setDisable(true);
@@ -222,6 +226,9 @@ public final class EditViewsPaneController extends AutoloadingPaneController<Edi
             colPositionHbox.setDisable(true);
             colVisibleCheckBox.setDisable(true);
             colVisibleCheckBox.setSelected(false);
+
+            colAttributeComboBox.setDisable(true);
+            colAttributeComboBox.getSelectionModel().clearSelection();
 
             colDeleteButton.setDisable(true);
         }
@@ -305,7 +312,7 @@ public final class EditViewsPaneController extends AutoloadingPaneController<Edi
             this.viewListView.getItems().remove(vd);
         }
     }
-    
+
     @FXML
     public void copyViewButtonClicked() {
         this.viewListView.getSelectionModel().getSelectedItems().stream()
