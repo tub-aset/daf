@@ -39,6 +39,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Region;
+import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.pf4j.PluginWrapper;
 
 /**
@@ -57,7 +58,10 @@ public class ExtensionPane<T extends ApplicationPartExtension> extends Autoloadi
         this.selectionChangeListener = (obs, oldValue, newValue) -> {
             this.extensionPane.setContent(newValue == null ? null : newValue.node);
             updateVisibleProperty();
-            onSelected.accept(newValue == null ? null : newValue.extensionPaneId);
+            String newPaneId = newValue == null ? null : newValue.extensionPaneId;
+            if (defaultSelectionAllowUnset.isTrue() || newPaneId != null) {
+                onSelected.accept(newPaneId);
+            }
         };
         extensionChoiceBox.getSelectionModel().selectedItemProperty().addListener(this.selectionChangeListener);
 
@@ -68,6 +72,8 @@ public class ExtensionPane<T extends ApplicationPartExtension> extends Autoloadi
     }
 
     private final String defaultSelection;
+    private final MutableBoolean defaultSelectionAllowUnset = new MutableBoolean(true);
+
     private final Supplier<List<T>> extensions;
     private final Function<T, List<Node>> paneGetter;
     private final BiFunction<T, Node, String> paneNameGetter;
@@ -113,10 +119,15 @@ public class ExtensionPane<T extends ApplicationPartExtension> extends Autoloadi
 
         if (!pcL.isEmpty()) {
             extensionChoiceBox.getItems().removeAll(pcL);
-            extensionChoiceBox.getSelectionModel().select(
-                    extensionChoiceBox.getItems().stream()
-                            .filter(it -> Objects.equals(it.extensionPaneId, defaultSelection))
-                            .findAny().orElse(null));
+            try {
+                defaultSelectionAllowUnset.setFalse();
+                extensionChoiceBox.getSelectionModel().select(
+                        extensionChoiceBox.getItems().stream()
+                                .filter(it -> Objects.equals(it.extensionPaneId, defaultSelection))
+                                .findAny().orElse(null));
+            } finally {
+                defaultSelectionAllowUnset.setTrue();
+            }
         }
 
         updateVisibleProperty();
