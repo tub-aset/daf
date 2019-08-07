@@ -544,7 +544,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
                     startPlugin(plugin.getPluginId());
                     setStatus("Plugin started: " + plugin.getPluginId());
                 } else {
-                    stopPlugin(plugin.getPluginId());
+                    stopPlugin(plugin.getPluginId(), true);
                     setStatus("Plugin stopped: " + plugin.getPluginId());
                 }
             } catch (Throwable ex) {
@@ -889,6 +889,9 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
             }
         }
 
+        pluginManager.getPlugins().stream()
+                .map(pl -> pl.getPluginId())
+                .forEach(plId -> this.stopPlugin(plId, false));
         ApplicationPreferences.EXIT_FILES.store(exitParts);
         ApplicationPreferences.LAST_SELECTED_FILE.store(lastSelectedPartCtrl != null ? lastSelectedPartCtrl.getApplicationPart() : null);
         return true;
@@ -1050,7 +1053,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         applicationPartControllers.values().stream().forEach(a -> a.addPlugin(plugin));
     }
 
-    private void stopPlugin(String pluginId) {
+    private void stopPlugin(String pluginId, boolean disable) {
         PluginWrapper plugin = pluginManager.getPlugin(pluginId);
         this.extensions.stream()
                 .filter(ext -> ext.getClass().getClassLoader() == plugin.getPluginClassLoader())
@@ -1064,11 +1067,13 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
         this.extensions.removeIf(ext -> ext.getClass().getClassLoader() == plugin.getPluginClassLoader());
 
         pluginManager.stopPlugin(pluginId);
-        pluginManager.disablePlugin(pluginId);
+        if (disable) {
+            pluginManager.disablePlugin(pluginId);
+        }
     }
 
     private void uninstallPlugin(String pluginId) {
-        stopPlugin(pluginId);
+        stopPlugin(pluginId, true);
 
         uninstallPluginMenu.getItems().removeIf(mi -> Objects.equals(mi.getUserData(), pluginId));
         pluginStateMenu.getItems().removeIf(mi -> Objects.equals(mi.getUserData(), pluginId));
