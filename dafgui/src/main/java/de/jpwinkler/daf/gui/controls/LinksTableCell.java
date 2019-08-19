@@ -47,7 +47,7 @@ public class LinksTableCell<T extends DoorsObject> extends CustomTextTableCell<T
 
     public LinksTableCell(TableColumn<T, T> tc, BiFunction<T, String, Boolean> editCommand, ApplicationPartInterface appPartInterface) {
         super(tc, it -> it.getOutgoingLinks().stream()
-                .map(ol -> ol.getTargetModule() + ":" + ol.getTargetObject())
+                .map(ol -> ol.formatLink())
                 .collect(Collectors.joining("\n")),
                 editCommand, (cell, it) -> {
                 }, true);
@@ -65,7 +65,7 @@ public class LinksTableCell<T extends DoorsObject> extends CustomTextTableCell<T
             this.getItem().getOutgoingLinks()
                     .stream()
                     .map(ol -> {
-                        MenuItem mi = new MenuItem(("Go to " + ol.getTargetModule() + ":" + ol.getTargetObject()).trim());
+                        MenuItem mi = new MenuItem(("Go to " + ol.formatLink()).trim());
                         mi.setMnemonicParsing(false);
                         mi.setOnAction(e -> {
                             appPartInterface.open(ol, DatabaseInterface.OpenFlag.OPEN_ONLY).whenComplete((ob, ex) -> Platform.runLater(() -> this.updateItem(getItem(), false)));
@@ -85,7 +85,7 @@ public class LinksTableCell<T extends DoorsObject> extends CustomTextTableCell<T
         }
 
         return item.getOutgoingLinks().stream()
-                .map(ol -> toDisplayString(ol.getLinkStatus()) + " " + ol.getTargetModule() + ":" + ol.getTargetObject())
+                .map(ol -> toDisplayString(ol.getLinkStatus()) + " " + ol.formatLink())
                 .collect(Collectors.joining("\n"));
     }
 

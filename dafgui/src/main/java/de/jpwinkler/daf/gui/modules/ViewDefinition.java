@@ -21,7 +21,6 @@ package de.jpwinkler.daf.gui.modules;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-import de.jpwinkler.daf.db.ModuleCSV;
 import de.jpwinkler.daf.gui.ApplicationPartInterface;
 import de.jpwinkler.daf.gui.controls.CombinedTextHeadingCell;
 import de.jpwinkler.daf.gui.controls.CustomTextTableCell;
@@ -38,6 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javafx.scene.control.Cell;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -111,7 +111,12 @@ public class ViewDefinition implements Serializable {
             return cell;
         }),
         LINKS(false, (cd, tc, i) -> {
-            BiFunction<DoorsObject, String, Boolean> edit = (it, newValue) -> i.executeCommand(new EditLinksCommand(it, ModuleCSV.parseLinks(newValue, i.getDatabaseInterface().getFactory(), it).collect(Collectors.toList())));
+            BiFunction<DoorsObject, String, Boolean> edit = (it, newValue) -> {
+                return i.executeCommand(new EditLinksCommand(it,
+                        Stream.of(newValue.split("\n"))
+                                .flatMap(lnk -> i.getDatabaseInterface().getFactory().parseLink(lnk, it).stream())
+                                .collect(Collectors.toList())));
+            };
             return new LinksTableCell<>(tc, edit, i);
         });
 

@@ -3,7 +3,9 @@
 package de.jpwinkler.daf.model;
 
 import de.jpwinkler.daf.db.BackgroundTaskExecutor;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import org.apache.commons.lang3.tuple.Pair;
 
 /*-
  * #%L
@@ -26,8 +28,6 @@ import java.util.concurrent.CompletableFuture;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Link</b></em>'.
@@ -47,11 +47,12 @@ import java.util.concurrent.CompletableFuture;
  * @generated
  */
 public interface DoorsLink {
-	/**
+
+    /**
 	 * Returns the value of the '<em><b>Source</b></em>' container reference.
 	 * It is bidirectional and its opposite is '{@link de.jpwinkler.daf.model.DoorsObject#getOutgoingLinks <em>Outgoing Links</em>}'.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @return the value of the '<em>Source</em>' container reference.
 	 * @see #setSource(DoorsObject)
 	 * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsLink_Source()
@@ -59,85 +60,119 @@ public interface DoorsLink {
 	 * @model opposite="outgoingLinks" transient="false"
 	 * @generated
 	 */
-	DoorsObject getSource();
+    DoorsObject getSource();
 
-	/**
+    /**
 	 * Sets the value of the '{@link de.jpwinkler.daf.model.DoorsLink#getSource <em>Source</em>}' container reference.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Source</em>' container reference.
 	 * @see #getSource()
 	 * @generated
 	 */
-	void setSource(DoorsObject value);
+    void setSource(DoorsObject value);
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model kind="operation" dataType="de.jpwinkler.daf.model.DoorsLinkStatus"
-	 * @generated
-	 */
-	DoorsLinkStatus getLinkStatus();
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @model kind="operation"
+     * dataType="de.jpwinkler.daf.model.DoorsLinkStatus"
+     * @generated
+     */
+    DoorsLinkStatus getLinkStatus();
 
-	/**
+    /**
 	 * Returns the value of the '<em><b>Target Module</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @return the value of the '<em>Target Module</em>' attribute.
 	 * @see #setTargetModule(String)
 	 * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsLink_TargetModule()
 	 * @model
 	 * @generated
 	 */
-	String getTargetModule();
+    String getTargetModule();
 
-	/**
+    /**
 	 * Sets the value of the '{@link de.jpwinkler.daf.model.DoorsLink#getTargetModule <em>Target Module</em>}' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Target Module</em>' attribute.
 	 * @see #getTargetModule()
 	 * @generated
 	 */
-	void setTargetModule(String value);
+    void setTargetModule(String value);
 
-	/**
+    /**
 	 * Returns the value of the '<em><b>Target Object</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @return the value of the '<em>Target Object</em>' attribute.
 	 * @see #setTargetObject(String)
 	 * @see de.jpwinkler.daf.model.DoorsPackage#getDoorsLink_TargetObject()
 	 * @model
 	 * @generated
 	 */
-	String getTargetObject();
+    String getTargetObject();
 
-	/**
+    /**
 	 * Sets the value of the '{@link de.jpwinkler.daf.model.DoorsLink#getTargetObject <em>Target Object</em>}' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Target Object</em>' attribute.
 	 * @see #getTargetObject()
 	 * @generated
 	 */
-	void setTargetObject(String value);
+    void setTargetObject(String value);
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model exceptions="de.jpwinkler.daf.model.DoorsLinkResolveException"
-	 * @generated
-	 */
-	DoorsObject resolve() throws DoorsLinkResolveException;
-        
-        /**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated NOT
-	 */
-        default CompletableFuture<DoorsObject> resolveAsync(BackgroundTaskExecutor exec) {
-            return exec.runBackgroundTask("Resolve link", i -> this.resolve());
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @model
+     * exceptions="de.jpwinkler.daf.model.DoorsLinkResolveException"
+     * @generated
+     */
+    DoorsObject resolve() throws DoorsLinkResolveException;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc --> @generated NOT
+     */
+    default CompletableFuture<DoorsObject> resolveAsync(BackgroundTaskExecutor exec) {
+        return exec.runBackgroundTask("Resolve link", i -> this.resolve());
+    }
+
+    /**
+     * Write out this DoorsLink in the canonical string format. This format is
+     * "/my_project/folder_xy/first_module:23".
+     *
+     * @generated NOT
+     * @return
+     */
+    default String formatLink() {
+        return this.getTargetModule() + ":" + this.getTargetObject();
+    }
+
+    /**
+     * Parse a link in the canonical string format into a tuple (module path,
+     * target object absolute number). This format is
+     * "/my_project/folder_xy/first_module:23".
+     *
+     * @param link link in the canonical string format
+     * @return an optional whose value will be missing if the string contains no target module
+     */
+    public static Optional<Pair<String, String>> parseLink(String link) {
+        int colonIndex = link.lastIndexOf(":");
+        String targetModule;
+        String targetObject;
+
+        if (colonIndex == -1) {
+            targetModule = link;
+            targetObject = "1";
+        } else {
+            targetModule = link.substring(0, colonIndex);
+            targetObject = link.substring(colonIndex + 1);
         }
+
+        return targetModule.isEmpty() ? Optional.empty() : Optional.of(Pair.of(targetModule.trim(), targetObject.trim()));
+    }
 
 } // DoorsLink

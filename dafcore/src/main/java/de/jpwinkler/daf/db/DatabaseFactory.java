@@ -28,6 +28,7 @@ import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsTableRow;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.RuntimeExecutionException;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -46,6 +47,11 @@ public abstract class DatabaseFactory {
     public abstract DoorsTableRow createTableRow(DoorsTreeNode parent);
 
     public abstract DoorsLink createLink(DoorsObject source, String targetModule, String targetObject);
+
+    public final Optional<DoorsLink> parseLink(String value, final DoorsObject sourceObject) {
+        return DoorsLink.parseLink(value)
+                .map(lnk -> this.createLink(sourceObject, lnk.getLeft(), lnk.getRight()));
+    }
 
     public final <T extends DoorsTreeNode> T createCopy(T source, DoorsTreeNode newParent, boolean resilient) {
         return this.createCopy(source, newParent, resilient, BackgroundTaskNotifier.SYNCHRONOUS);

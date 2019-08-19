@@ -235,7 +235,7 @@ public final class ApplicationPartFactories {
             dialog.setTitle((save ? "Save a " : "Open a ") + partFactory.getName());
             dialog.setHeaderText(headerGenerator.apply(save));
             dialog.setContentText(partFactory + ":" + proposedName != null ? proposedName : null);
-            return Main.asStream(dialog.showAndWait())
+            return dialog.showAndWait().stream()
                     .map((s) -> s.split(":"))
                     .filter(s -> s.length <= 2)
                     .map(s -> new DatabasePath(partFactory.getDatabaseInterface(), s[0], s.length == 1 ? "" : s[1]));

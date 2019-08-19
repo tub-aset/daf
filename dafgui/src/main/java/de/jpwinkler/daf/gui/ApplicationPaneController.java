@@ -816,7 +816,7 @@ public final class ApplicationPaneController extends AutoloadingPaneController<A
                                 .collect(Collectors.toList()));
                         applicationPartChooser.setTitle("Create snapshot");
                         applicationPartChooser.setHeaderText("Select a destination database type");
-                        destinationPathFuture.complete(Main.asStream(applicationPartChooser.showAndWait())
+                        destinationPathFuture.complete(applicationPartChooser.showAndWait().stream()
                                 .flatMap(part -> part.saveWithSelector(getNode().getScene().getWindow(), proposedName))
                                 .map(part -> part.getDatabasePath())
                                 .findAny().orElse(null));
