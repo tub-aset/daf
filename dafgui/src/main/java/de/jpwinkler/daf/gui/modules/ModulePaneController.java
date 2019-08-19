@@ -110,6 +110,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
 
         contentTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         MutableBoolean contentTableSelectionFlag = new MutableBoolean(false);
+
         contentTableView.getSelectionModel().selectedItemProperty().addListener((ChangeListener<DoorsObject>) (observable, oldValue, newValue) -> {
             traverseTreeItem(outlineTreeView.getRoot(), item -> {
                 if (item != null && item.getValue() != null && Objects.equals(item.getValue(), newValue)) {
@@ -577,7 +578,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
             DoorsObject localLinkTarget = this.filteredModule.accept(new DoorsTreeNodeVisitor<DoorsObject, DoorsObject>(DoorsObject.class) {
                 @Override
                 public boolean visitPreTraverse(DoorsObject object) {
-                    if (object.getAbsoluteNumber() == ((DoorsObject) node).getAbsoluteNumber()) {
+                    if (object.getSelf() == node.getSelf()) {
                         setResult(object);
                         return false;
                     }
@@ -614,7 +615,7 @@ public final class ModulePaneController extends ApplicationPartController<Module
     @FXML
     public void showExpressionGrammarClicked() throws IOException {
         MultiLineTextInputDialog controller = new MultiLineTextInputDialog(FilteredDoorsTreeNode.getGrammar());
-        Dialog dialog = controller.asDialog(getNode().getScene().getWindow(), "Expression grammar", ButtonType.OK);
+        Dialog<ButtonType> dialog = controller.asDialog(getNode().getScene().getWindow(), "Expression grammar", ButtonType.OK);
         controller.getTextArea().setEditable(false);
         dialog.setHeaderText("Expression grammar");
         dialog.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);

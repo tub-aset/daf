@@ -57,7 +57,7 @@ public class FilteredDoorsLink implements DoorsLink {
 
     @Override
     public void setSource(DoorsObject value) {
-        self.setSource(ForwardingChildrenList.unwrap(nodeMap, value));
+        self.setSource((DoorsObject) value.getSelf());
     }
 
     @Override

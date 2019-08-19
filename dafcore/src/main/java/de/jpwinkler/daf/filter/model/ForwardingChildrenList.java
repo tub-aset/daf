@@ -62,29 +62,23 @@ class ForwardingChildrenList implements List<DoorsTreeNode> {
             return node;
         } else if (!nodeMap.containsKey(node)) {
             // if we already have a recursing predicate, no need to create it again
-            nodeMap.put(node, FilteredDoorsTreeNode.createFilteredTree(node, predicate, false));
+            nodeMap.put(node, FilteredDoorsTreeNode.createFilteredTree(node, predicate, false, nodeMap));
         }
 
         return nodeMap.get(node);
-    }
-
-    @SuppressWarnings("unchecked")
-    static <T> T unwrap(WeakHashMap<DoorsTreeNode, FilteredDoorsTreeNode<?>> nodeMap, T node) {
-        if (node == null) {
-            return null;
-        } else if (node instanceof FilteredDoorsTreeNode) {
-            return (T) ((FilteredDoorsTreeNode) node).getSelf();
-        } else {
-            return node;
-        }
     }
 
     private DoorsTreeNode wrap(DoorsTreeNode node) {
         return wrap(nodeMap, predicate, node);
     }
 
+    @SuppressWarnings("unchecked")
     private <T> T unwrap(T node) {
-        return unwrap(nodeMap, node);
+        if(!(node instanceof DoorsTreeNode)) {
+            return null;
+        }
+        
+        return (T) ((DoorsTreeNode)node).getSelf();
     }
 
     private boolean classMatch(Object o) {

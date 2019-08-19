@@ -26,9 +26,9 @@ package de.jpwinkler.daf.filter.model;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import de.jpwinkler.daf.model.DoorsTreeNodeVisitor;
+import java.util.WeakHashMap;
 import java.util.function.Predicate;
 
 /**
@@ -36,28 +36,42 @@ import java.util.function.Predicate;
  * @author fwiesweg
  */
 class ForwardingVisitor<T extends DoorsTreeNode, U> extends DoorsTreeNodeVisitor<T, U> {
-    
-    private DoorsTreeNodeVisitor<T, U> self;
-    private Predicate<DoorsTreeNode> filter;
 
-    public ForwardingVisitor(DoorsTreeNodeVisitor<T, U> self, Predicate<DoorsTreeNode> filter) {
+    private final DoorsTreeNodeVisitor<T, U> self;
+    private final Predicate<DoorsTreeNode> filter;
+    private final WeakHashMap<DoorsTreeNode, FilteredDoorsTreeNode<?>> nodeMap;
+
+    public ForwardingVisitor(DoorsTreeNodeVisitor<T, U> self, Predicate<DoorsTreeNode> filter, WeakHashMap<DoorsTreeNode, FilteredDoorsTreeNode<?>> nodeMap) {
         super(self.getVisitedNodeClass());
         this.self = self;
         this.filter = filter;
+        this.nodeMap = nodeMap;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public boolean visitPreTraverse(T object) {
-        if(!filter.test(object)) {
+        if (!filter.test(object)) {
             return false;
         }
-        
-        return self.visitPreTraverse(object);
+
+        return self.visitPreTraverse((T) ForwardingChildrenList.wrap(nodeMap, filter, object));
     }
-    
+
     @Override
+    @SuppressWarnings("unchecked")
     public void visitPostTraverse(T object) {
-        self.visitPostTraverse(object);
+        self.visitPostTraverse((T) ForwardingChildrenList.wrap(nodeMap, filter, object));
     }
-    
+
+    @Override
+    public U getResult() {
+        return self.getResult();
+    }
+
+    @Override
+    protected void setResult(U result) {
+        throw new UnsupportedOperationException();
+    }
+
 }

@@ -133,7 +133,7 @@ public class DoorsModelUtil {
 
     // Defined here to prevent forward references in DoorsSystemAttributes
     static final Function<String, List<?>> LIST_PARSER = s -> (s == null || s.isEmpty()) ? Collections.emptyList() : Arrays.asList(s.split("\n"));
-    static final Function<List<?>, String> LIST_WRITER = l -> (l == null) ? null : (String) l.stream()
+    static final Function<List<?>, String> LIST_WRITER = l -> (l == null) ? null : l.stream()
             .filter(s1 -> s1 != null).map(s1 -> s1.toString()).reduce((s1, s2) -> s1 + "\n" + s2).orElse(null);
 
     static final Function<String, Integer> INT_PARSER = s -> (s == null || s.isEmpty()) ? 0 : Integer.parseInt(s);
@@ -163,17 +163,25 @@ public class DoorsModelUtil {
             throw new DoorsLinkResolveException(link, "Target module is not a DoorsModule");
         }
 
-        DoorsObject object = pathTreeNode.accept(new DoorsTreeNodeVisitor<DoorsObject, DoorsObject>(DoorsObject.class) {
-            @Override
-            public boolean visitPreTraverse(DoorsObject object) {
-                if (targetAbsoluteNumber == object.getAbsoluteNumber()) {
-                    this.setResult(object);
-                    return false;
+        DoorsObject object;
+        if(targetAbsoluteNumber > 0) {
+            object = pathTreeNode.accept(new DoorsTreeNodeVisitor<DoorsObject, DoorsObject>(DoorsObject.class) {
+                @Override
+                public boolean visitPreTraverse(DoorsObject object) {
+                    if (targetAbsoluteNumber == object.getAbsoluteNumber()) {
+                        this.setResult(object);
+                        return false;
+                    }
+                    return true;
                 }
-                return true;
-            }
 
-        });
+            });
+        } else if (!pathTreeNode.getChildren().isEmpty()) {
+            object = (DoorsObject) pathTreeNode.getChildren().get(0);
+        } else {
+            object = null;
+        }
+        
         if (object == null) {
             throw new DoorsLinkResolveException(link, "Target object not found: no such absolute number");
         }

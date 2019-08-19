@@ -114,7 +114,7 @@ public class ViewDefinition implements Serializable {
             BiFunction<DoorsObject, String, Boolean> edit = (it, newValue) -> {
                 return i.executeCommand(new EditLinksCommand(it,
                         Stream.of(newValue.split("\n"))
-                                .flatMap(lnk -> i.getDatabaseInterface().getFactory().parseLink(lnk, it).stream())
+                                .flatMap(lnk -> i.getDatabaseInterface().getFactory().parseLink(lnk, (DoorsObject) it.getSelf()).stream())
                                 .collect(Collectors.toList())));
             };
             return new LinksTableCell<>(tc, edit, i);

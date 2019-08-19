@@ -315,5 +315,13 @@ public interface DoorsTreeNode {
 
         return node == null ? null : parentClass.cast(node);
     }
+    
+    /**
+     * If this is a proxy object, return the backing object; otherwise return this.
+     * @return 
+     */
+    default DoorsTreeNode getSelf() {
+        return this;
+    }
 
 } // DoorsTreeNode

@@ -47,7 +47,7 @@ public abstract class DoorsTreeNodeVisitor<T extends DoorsTreeNode, U> {
         }
 
         if (!traverseChildren) {
-            return result;
+            return this.getResult();
         }
 
         for (final DoorsTreeNode child : node.getChildren()) {
@@ -60,7 +60,7 @@ public abstract class DoorsTreeNodeVisitor<T extends DoorsTreeNode, U> {
             visitPostTraverse(nodeCast);
         }
 
-        return result;
+        return this.getResult();
     }
 
     public boolean visitPreTraverse(final T object) {
@@ -71,11 +71,11 @@ public abstract class DoorsTreeNodeVisitor<T extends DoorsTreeNode, U> {
 
     }
 
-    public final U getResult() {
+    public U getResult() {
         return result;
     }
 
-    protected final void setResult(U result) {
+    protected void setResult(U result) {
         this.result = result;
     }
 

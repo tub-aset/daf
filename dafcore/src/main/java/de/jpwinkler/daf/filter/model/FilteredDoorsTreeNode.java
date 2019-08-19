@@ -52,8 +52,12 @@ import org.apache.commons.io.IOUtils;
  * @author fwiesweg
  */
 public class FilteredDoorsTreeNode<T extends DoorsTreeNode> implements DoorsTreeNode {
-
+    
     public static FilteredDoorsTreeNode<?> createFilteredTree(DoorsTreeNode node, Predicate<DoorsTreeNode> predicate, boolean recursing) {
+        return createFilteredTree(node, predicate, recursing, new WeakHashMap<>());
+    }
+
+    static FilteredDoorsTreeNode<?> createFilteredTree(DoorsTreeNode node, Predicate<DoorsTreeNode> predicate, boolean recursing, WeakHashMap<DoorsTreeNode, FilteredDoorsTreeNode<?>> nodeMap) {
         Predicate<DoorsTreeNode> fullPredicate = !recursing ? predicate : predicate.or(t -> {
             boolean matched = false;
             Stack<DoorsTreeNode> tbd = new Stack<>();
@@ -74,13 +78,13 @@ public class FilteredDoorsTreeNode<T extends DoorsTreeNode> implements DoorsTree
         });
 
         if (node instanceof DoorsFolder) {
-            return new FilteredDoorsFolder((DoorsFolder) node, fullPredicate, new WeakHashMap<>());
+            return new FilteredDoorsFolder((DoorsFolder) node, fullPredicate, nodeMap);
         } else if (node instanceof DoorsModule) {
-            return new FilteredDoorsModule((DoorsModule) node, fullPredicate, new WeakHashMap<>());
+            return new FilteredDoorsModule((DoorsModule) node, fullPredicate, nodeMap);
         } else if (node instanceof DoorsTableRow) {
-            return new FilteredDoorsTableRow((DoorsObject) node, fullPredicate, new WeakHashMap<>());
+            return new FilteredDoorsTableRow((DoorsObject) node, fullPredicate, nodeMap);
         } else if (node instanceof DoorsObject) {
-            return new FilteredDoorsObject((DoorsObject) node, fullPredicate, new WeakHashMap<>());
+            return new FilteredDoorsObject((DoorsObject) node, fullPredicate, nodeMap);
         } else {
             throw new AssertionError();
         }
@@ -103,6 +107,7 @@ public class FilteredDoorsTreeNode<T extends DoorsTreeNode> implements DoorsTree
         this.nodeMap = nodeMap;
     }
 
+    @Override
     public T getSelf() {
         return self;
     }
@@ -160,12 +165,12 @@ public class FilteredDoorsTreeNode<T extends DoorsTreeNode> implements DoorsTree
 
     @Override
     public <T extends DoorsTreeNode, U> U accept(DoorsTreeNodeVisitor<T, U> visitor) {
-        return self.accept(new ForwardingVisitor<>(visitor, children.predicate));
+        return self.accept(new ForwardingVisitor<>(visitor, children.predicate, nodeMap));
     }
 
     @Override
     public <T extends DoorsTreeNode, U> CompletableFuture<U> acceptAsync(BackgroundTaskExecutor executor, DoorsTreeNodeVisitor<T, U> visitor) {
-        return self.acceptAsync(executor, new ForwardingVisitor<>(visitor, children.predicate));
+        return self.acceptAsync(executor, new ForwardingVisitor<>(visitor, children.predicate, nodeMap));
     }
 
     @Override
@@ -222,7 +227,11 @@ public class FilteredDoorsTreeNode<T extends DoorsTreeNode> implements DoorsTree
 
     @Override
     public boolean equals(Object o) {
-        return self.equals(o);
+        if(!(o instanceof DoorsTreeNode)) {
+            return false;
+        }
+        
+        return self.equals(((DoorsTreeNode)o).getSelf());
     }
 
     @Override
