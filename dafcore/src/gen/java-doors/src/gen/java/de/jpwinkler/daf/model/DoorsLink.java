@@ -5,7 +5,6 @@ package de.jpwinkler.daf.model;
 import de.jpwinkler.daf.db.BackgroundTaskExecutor;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import org.apache.commons.lang3.tuple.Pair;
 
 /*-
  * #%L
@@ -76,6 +75,7 @@ public interface DoorsLink {
      * <!-- begin-user-doc -->
      * <!-- end-user-doc --> @model kind="operation"
      * dataType="de.jpwinkler.daf.model.DoorsLinkStatus"
+     *
      * @generated
      */
     DoorsLinkStatus getLinkStatus();
@@ -128,6 +128,7 @@ public interface DoorsLink {
      * <!-- begin-user-doc -->
      * <!-- end-user-doc --> @model
      * exceptions="de.jpwinkler.daf.model.DoorsLinkResolveException"
+     *
      * @generated
      */
     DoorsObject resolve() throws DoorsLinkResolveException;
@@ -152,14 +153,21 @@ public interface DoorsLink {
     }
 
     /**
-     * Parse a link in the canonical string format into a tuple (module path,
-     * target object absolute number). This format is
-     * "/my_project/folder_xy/first_module:23".
+     * Parse a link in the canonical string format into a "dumb" DoorsLink
+     * without backing database.This format is
+     * "/my_project/folder_xy/first_module:23". These are meant for transitional
+     * use. If you want to build links to be persisted, please use the
+     * respective methods of your database's DatabaseFactory.
      *
-     * @param link link in the canonical string format
-     * @return an optional whose value will be missing if the string contains no target module
+     * @param simulatedSource A node in the database that contains the link
+     * target; considered the source, although this link will never be added
+     * to that source's outgoingLinks attribute. Can be null if the link is not 
+     * meant to be resolved.
+     * @param link Link in the canonical string format.
+     * @return An optional whose value will be missing if the string contains no
+     * target module.
      */
-    public static Optional<Pair<String, String>> parseLink(String link) {
+    public static Optional<DoorsLink> parseLink(DoorsObject simulatedSource, String link) {
         int colonIndex = link.lastIndexOf(":");
         String targetModule;
         String targetObject;
@@ -172,7 +180,63 @@ public interface DoorsLink {
             targetObject = link.substring(colonIndex + 1);
         }
 
-        return targetModule.isEmpty() ? Optional.empty() : Optional.of(Pair.of(targetModule.trim(), targetObject.trim()));
+        return targetModule.isEmpty() ? Optional.empty() : Optional.of(new DoorsLink() {
+            private DoorsLinkStatus targetStatus = DoorsLinkStatus.UNRESOLVED;
+            private DoorsObject target;
+
+            @Override
+            public DoorsObject getSource() {
+                return simulatedSource;
+            }
+
+            @Override
+            public DoorsLinkStatus getLinkStatus() {
+                return targetStatus;
+            }
+
+            @Override
+            public String getTargetModule() {
+                return targetModule;
+            }
+
+            @Override
+            public String getTargetObject() {
+                return targetObject;
+            }
+
+            @Override
+            public void setSource(DoorsObject value) {
+                throw new UnsupportedOperationException("Not supported");
+            }
+
+            @Override
+            public void setTargetModule(String value) {
+                throw new UnsupportedOperationException("Not supported");
+            }
+
+            @Override
+            public void setTargetObject(String value) {
+                throw new UnsupportedOperationException("Not supported");
+            }
+
+            @Override
+            public DoorsObject resolve() throws DoorsLinkResolveException {
+                if (simulatedSource == null) {
+                    throw new UnsupportedOperationException("Not supported");
+                }
+
+                if (targetStatus != DoorsLinkStatus.RESOLVED) {
+                    try {
+                        this.target = DoorsModelUtil.resolve(this);
+                        this.targetStatus = DoorsLinkStatus.RESOLVED;
+                    } catch (DoorsLinkResolveException ex) {
+                        this.targetStatus = DoorsLinkStatus.RESOLVE_FAILED;
+                        throw ex;
+                    }
+                }
+                return target;
+            }
+        });
     }
 
 } // DoorsLink
