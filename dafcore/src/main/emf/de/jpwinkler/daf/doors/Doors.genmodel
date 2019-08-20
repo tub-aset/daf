@@ -85,6 +85,9 @@
         <genClasses image="false" ecoreClass="Doors.ecore#//DoorsLink">
             <genOperations ecoreOperation="Doors.ecore#//DoorsLink/getLinkStatus"/>
             <genOperations ecoreOperation="Doors.ecore#//DoorsLink/resolve"/>
+            <genOperations ecoreOperation="Doors.ecore#//DoorsLink/resolve.1">
+                <genParameters ecoreParameter="Doors.ecore#//DoorsLink/resolve.1/sourceOverride"/>
+            </genOperations>
             
             <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//DoorsLink/targetModule"/>
             <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Doors.ecore#//DoorsLink/targetObject"/>

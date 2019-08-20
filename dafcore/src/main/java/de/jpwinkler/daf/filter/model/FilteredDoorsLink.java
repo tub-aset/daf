@@ -61,8 +61,8 @@ public class FilteredDoorsLink implements DoorsLink {
     }
 
     @Override
-    public DoorsObject resolve() throws DoorsLinkResolveException {
-        DoorsObject target = self.resolve();
+    public DoorsObject resolve(DoorsTreeNode sourceOverride) throws DoorsLinkResolveException {
+        DoorsObject target = self.resolve(sourceOverride);
         if (!predicate.test(target)) {
             return null;
         }

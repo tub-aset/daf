@@ -637,6 +637,16 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 	 * @generated
 	 */
 	@Override
+	public EOperation getDoorsLink__Resolve__DoorsTreeNode() {
+		return doorsLinkEClass.getEOperations().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EDataType getDoorsTreeNodeVisitor() {
 		return doorsTreeNodeVisitorEDataType;
 	}
@@ -768,6 +778,7 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		createEReference(doorsLinkEClass, DOORS_LINK__SOURCE);
 		createEOperation(doorsLinkEClass, DOORS_LINK___GET_LINK_STATUS);
 		createEOperation(doorsLinkEClass, DOORS_LINK___RESOLVE);
+		createEOperation(doorsLinkEClass, DOORS_LINK___RESOLVE__DOORSTREENODE);
 
 		// Create data types
 		doorsTreeNodeVisitorEDataType = createEDataType(DOORS_TREE_NODE_VISITOR);
@@ -883,6 +894,10 @@ public class DoorsPackageImpl extends EPackageImpl implements DoorsPackage {
 		initEOperation(getDoorsLink__GetLinkStatus(), this.getDoorsLinkStatus(), "getLinkStatus", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		op = initEOperation(getDoorsLink__Resolve(), this.getDoorsObject(), "resolve", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEException(op, this.getDoorsLinkResolveException());
+
+		op = initEOperation(getDoorsLink__Resolve__DoorsTreeNode(), this.getDoorsObject(), "resolve", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getDoorsTreeNode(), "sourceOverride", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEException(op, this.getDoorsLinkResolveException());
 
 		// Initialize data types

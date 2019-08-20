@@ -1204,13 +1204,22 @@ public interface DoorsPackage extends EPackage {
 	int DOORS_LINK___RESOLVE = 1;
 
 	/**
+	 * The operation id for the '<em>Resolve</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOORS_LINK___RESOLVE__DOORSTREENODE = 2;
+
+	/**
 	 * The number of operations of the '<em>Link</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DOORS_LINK_OPERATION_COUNT = 2;
+	int DOORS_LINK_OPERATION_COUNT = 3;
 
 	/**
 	 * The meta object id for the '<em>Tree Node Visitor</em>' data type.
@@ -1716,6 +1725,16 @@ public interface DoorsPackage extends EPackage {
 	EOperation getDoorsLink__Resolve();
 
 	/**
+	 * Returns the meta object for the '{@link de.jpwinkler.daf.model.DoorsLink#resolve(de.jpwinkler.daf.model.DoorsTreeNode) <em>Resolve</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Resolve</em>' operation.
+	 * @see de.jpwinkler.daf.model.DoorsLink#resolve(de.jpwinkler.daf.model.DoorsTreeNode)
+	 * @generated
+	 */
+	EOperation getDoorsLink__Resolve__DoorsTreeNode();
+
+	/**
 	 * Returns the meta object for data type '{@link de.jpwinkler.daf.model.DoorsTreeNodeVisitor <em>Tree Node Visitor</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2153,6 +2172,14 @@ public interface DoorsPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation DOORS_LINK___RESOLVE = eINSTANCE.getDoorsLink__Resolve();
+
+		/**
+		 * The meta object literal for the '<em><b>Resolve</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation DOORS_LINK___RESOLVE__DOORSTREENODE = eINSTANCE.getDoorsLink__Resolve__DoorsTreeNode();
 
 		/**
 		 * The meta object literal for the '<em>Tree Node Visitor</em>' data type.

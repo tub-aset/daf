@@ -129,16 +129,36 @@ public interface DoorsLink {
      * <!-- end-user-doc --> @model
      * exceptions="de.jpwinkler.daf.model.DoorsLinkResolveException"
      *
-     * @generated
+     * @generated NOT
      */
-    DoorsObject resolve() throws DoorsLinkResolveException;
+    default DoorsObject resolve() throws DoorsLinkResolveException {
+        return this.resolve(this.getSource());
+    }
+
+    /**
+	 * <!-- begin-user-doc -->
+    * <!-- end-user-doc -->
+	 * @model exceptions="de.jpwinkler.daf.model.DoorsLinkResolveException"
+	 * @generated
+	 */
+    DoorsObject resolve(DoorsTreeNode sourceOverride) throws DoorsLinkResolveException;
 
     /**
      * <!-- begin-user-doc -->
-     * <!-- end-user-doc --> @generated NOT
+     * <!-- end-user-doc -->
+     * @generated NOT
      */
     default CompletableFuture<DoorsObject> resolveAsync(BackgroundTaskExecutor exec) {
-        return exec.runBackgroundTask("Resolve link", i -> this.resolve());
+        return this.resolveAsync(exec, this.getSource());
+    }
+    
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated NOT
+     */
+    default CompletableFuture<DoorsObject> resolveAsync(BackgroundTaskExecutor exec, DoorsTreeNode sourceOverride) {
+        return exec.runBackgroundTask("Resolve link", i -> this.resolve(sourceOverride));
     }
 
     /**
@@ -154,20 +174,21 @@ public interface DoorsLink {
 
     /**
      * Parse a link in the canonical string format into a "dumb" DoorsLink
-     * without backing database.This format is
-     * "/my_project/folder_xy/first_module:23". These are meant for transitional
-     * use. If you want to build links to be persisted, please use the
-     * respective methods of your database's DatabaseFactory.
+     * without backing database.
+     * 
+     * This format is "/my_project/folder_xy/first_module:23".
+     * 
+     * The link meant for transitional use. If you want to build links to be 
+     * persisted, please use the respective methods of your database's DatabaseFactory.
+     * 
+     * To resolve the link, you MUST use DoorsLink.resolve(DatabaseInterface),
+     * resolve() will 
      *
-     * @param simulatedSource A node in the database that contains the link
-     * target; considered the source, although this link will never be added
-     * to that source's outgoingLinks attribute. Can be null if the link is not 
-     * meant to be resolved.
      * @param link Link in the canonical string format.
      * @return An optional whose value will be missing if the string contains no
      * target module.
      */
-    public static Optional<DoorsLink> parseLink(DoorsObject simulatedSource, String link) {
+    public static Optional<DoorsLink> parseLink(String link) {
         int colonIndex = link.lastIndexOf(":");
         String targetModule;
         String targetObject;
@@ -186,7 +207,7 @@ public interface DoorsLink {
 
             @Override
             public DoorsObject getSource() {
-                return simulatedSource;
+                return null;
             }
 
             @Override
@@ -220,21 +241,8 @@ public interface DoorsLink {
             }
 
             @Override
-            public DoorsObject resolve() throws DoorsLinkResolveException {
-                if (simulatedSource == null) {
-                    throw new UnsupportedOperationException("Not supported");
-                }
-
-                if (targetStatus != DoorsLinkStatus.RESOLVED) {
-                    try {
-                        this.target = DoorsModelUtil.resolve(this);
-                        this.targetStatus = DoorsLinkStatus.RESOLVED;
-                    } catch (DoorsLinkResolveException ex) {
-                        this.targetStatus = DoorsLinkStatus.RESOLVE_FAILED;
-                        throw ex;
-                    }
-                }
-                return target;
+            public DoorsObject resolve(DoorsTreeNode sourceOverride) throws DoorsLinkResolveException {
+                return DoorsModelUtil.resolve(this, sourceOverride, () -> this.target, t -> this.target = t, s -> this.targetStatus = s);
             }
         });
     }

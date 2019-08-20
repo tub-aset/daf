@@ -31,6 +31,7 @@ import de.jpwinkler.daf.model.DoorsLinkResolveException;
 import de.jpwinkler.daf.model.DoorsLinkStatus;
 import de.jpwinkler.daf.model.DoorsModelUtil;
 import de.jpwinkler.daf.model.DoorsObject;
+import de.jpwinkler.daf.model.DoorsTreeNode;
 
 /**
  *
@@ -62,20 +63,6 @@ public class DoorsLinkRefImpl implements DoorsLink {
     }
 
     @Override
-    public DoorsObject resolve() throws DoorsLinkResolveException {
-        if (targetStatus != DoorsLinkStatus.RESOLVED) {
-            try {
-                this.target = DoorsModelUtil.resolve(this);
-                this.targetStatus = DoorsLinkStatus.RESOLVED;
-            } catch (DoorsLinkResolveException ex) {
-                this.targetStatus = DoorsLinkStatus.RESOLVE_FAILED;
-                throw ex;
-            }
-        }
-        return target;
-    }
-
-    @Override
     public String getTargetModule() {
         return targetModule;
     }
@@ -98,6 +85,11 @@ public class DoorsLinkRefImpl implements DoorsLink {
     @Override
     public DoorsLinkStatus getLinkStatus() {
         return targetStatus;
+    }
+
+    @Override
+    public DoorsObject resolve(DoorsTreeNode sourceOverride) throws DoorsLinkResolveException {
+        return DoorsModelUtil.resolve(this, sourceOverride, () -> this.target, t -> this.target = t, s -> this.targetStatus = s);
     }
 
 }

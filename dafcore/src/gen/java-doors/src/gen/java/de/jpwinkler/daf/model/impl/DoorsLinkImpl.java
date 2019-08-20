@@ -29,6 +29,7 @@ import de.jpwinkler.daf.model.DoorsLinkStatus;
 import de.jpwinkler.daf.model.DoorsModelUtil;
 import de.jpwinkler.daf.model.DoorsObject;
 import de.jpwinkler.daf.model.DoorsPackage;
+import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.lang.reflect.InvocationTargetException;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -206,31 +207,35 @@ public class DoorsLinkImpl extends MinimalEObjectImpl.Container implements Doors
     private DoorsLinkStatus targetStatus = DoorsLinkStatus.UNRESOLVED;
     
     /**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated NOT
-	 */
-	@Override
-	public DoorsLinkStatus getLinkStatus() {
-		return targetStatus;
-	}
+    * <!-- begin-user-doc -->
+    * <!-- end-user-doc -->
+    * @generated NOT
+    */
+    @Override
+    public DoorsLinkStatus getLinkStatus() {
+            return targetStatus;
+    }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc --> @generated NOT
-     */
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public DoorsObject resolve() throws DoorsLinkResolveException {
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
+	}
+
+				/**
+    * <!-- begin-user-doc -->
+    * <!-- end-user-doc -->
+    * @generated NOT
+    */
     @Override
-    public DoorsObject resolve() throws DoorsLinkResolveException {
-        if (targetStatus != DoorsLinkStatus.RESOLVED) {
-            try {
-                this.target = DoorsModelUtil.resolve(this);
-                this.targetStatus = DoorsLinkStatus.RESOLVED;
-            } catch(DoorsLinkResolveException ex) {
-                this.targetStatus = DoorsLinkStatus.RESOLVE_FAILED;
-                throw ex;
-            }
-        }
-        return target;
+    public DoorsObject resolve(DoorsTreeNode sourceOverride) throws DoorsLinkResolveException {
+        return DoorsModelUtil.resolve(this, sourceOverride, () -> this.target, t -> this.target = t, s -> this.targetStatus = s);
     }
 
     /**
@@ -361,6 +366,13 @@ public class DoorsLinkImpl extends MinimalEObjectImpl.Container implements Doors
 			case DoorsPackage.DOORS_LINK___RESOLVE:
 				try {
 					return resolve();
+				}
+				catch (Throwable throwable) {
+					throw new InvocationTargetException(throwable);
+				}
+			case DoorsPackage.DOORS_LINK___RESOLVE__DOORSTREENODE:
+				try {
+					return resolve((DoorsTreeNode)arguments.get(0));
 				}
 				catch (Throwable throwable) {
 					throw new InvocationTargetException(throwable);

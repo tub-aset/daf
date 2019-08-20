@@ -63,6 +63,9 @@
     <eClassifiers xsi:type="ecore:EClass" name="DoorsLink">
         <eOperations name="getLinkStatus" eType="#//DoorsLinkStatus"/>
         <eOperations name="resolve" eType="#//DoorsObject" eExceptions="#//DoorsLinkResolveException"/>
+        <eOperations name="resolve" eType="#//DoorsObject" eExceptions="#//DoorsLinkResolveException">
+            <eParameters name="sourceOverride" eType="#//DoorsTreeNode"/>
+        </eOperations>
         
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="targetModule" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="targetObject" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

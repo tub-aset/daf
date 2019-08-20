@@ -33,7 +33,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class DoorsModelUtil {
 
@@ -141,30 +143,37 @@ public class DoorsModelUtil {
 
     static final Function<String, String> IDENTITY = s -> s;
 
-    public static DoorsObject resolve(DoorsLink link) throws DoorsLinkResolveException {
+    public static DoorsObject resolve(DoorsLink link, DoorsTreeNode sourceOverride, Supplier<DoorsObject> targetGetter, Consumer<DoorsObject> targetSetter, Consumer<DoorsLinkStatus> statusSetter) throws DoorsLinkResolveException {
+        if (targetGetter.get() != null) {
+            return targetGetter.get();
+        }
+
         int targetAbsoluteNumber;
         try {
             targetAbsoluteNumber = Integer.parseInt(link.getTargetObject());
         } catch (NumberFormatException ex) {
+            statusSetter.accept(DoorsLinkStatus.RESOLVE_FAILED);
             throw new DoorsLinkResolveException(link, "Illegal target number");
         }
 
-        DoorsTreeNode root = link.getSource();
+        DoorsTreeNode root = sourceOverride;
         while (root.getParent() != null && !Objects.equals(root.getFullName(), link.getTargetModule())) {
             root = root.getParent();
         }
 
         DoorsTreeNode pathTreeNode = Objects.equals(root.getFullName(), link.getTargetModule()) ? root : root.getChild(link.getTargetModule());
         if (pathTreeNode == null) {
+            statusSetter.accept(DoorsLinkStatus.RESOLVE_FAILED);
             throw new DoorsLinkResolveException(link, "Target module not found");
         }
 
         if (!(pathTreeNode instanceof DoorsModule)) {
+            statusSetter.accept(DoorsLinkStatus.RESOLVE_FAILED);
             throw new DoorsLinkResolveException(link, "Target module is not a DoorsModule");
         }
 
         DoorsObject object;
-        if(targetAbsoluteNumber > 0) {
+        if (targetAbsoluteNumber > 0) {
             object = pathTreeNode.accept(new DoorsTreeNodeVisitor<DoorsObject, DoorsObject>(DoorsObject.class) {
                 @Override
                 public boolean visitPreTraverse(DoorsObject object) {
@@ -181,11 +190,14 @@ public class DoorsModelUtil {
         } else {
             object = null;
         }
-        
+
         if (object == null) {
+            statusSetter.accept(DoorsLinkStatus.RESOLVE_FAILED);
             throw new DoorsLinkResolveException(link, "Target object not found: no such absolute number");
         }
 
+        targetSetter.accept(object);
+        statusSetter.accept(DoorsLinkStatus.RESOLVED);
         return object;
     }
 }

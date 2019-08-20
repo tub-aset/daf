@@ -49,7 +49,7 @@ public abstract class DatabaseFactory {
     public abstract DoorsLink createLink(DoorsObject source, String targetModule, String targetObject);
 
     public final Optional<DoorsLink> parseLink(String value, final DoorsObject sourceObject) {
-        return DoorsLink.parseLink(null, value).map(lnk -> this.createLink(sourceObject, lnk.getTargetModule(), lnk.getTargetObject()));
+        return DoorsLink.parseLink(value).map(lnk -> this.createLink(sourceObject, lnk.getTargetModule(), lnk.getTargetObject()));
     }
 
     public final <T extends DoorsTreeNode> T createCopy(T source, DoorsTreeNode newParent, boolean resilient) {
