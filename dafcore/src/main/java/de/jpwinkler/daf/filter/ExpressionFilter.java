@@ -24,12 +24,25 @@ package de.jpwinkler.daf.filter;
 import de.jpwinkler.daf.model.DoorsTreeNode;
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.Stack;
 import java.util.function.Predicate;
-import org.antlr.v4.runtime.BailErrorStrategy;
+import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.Recognizer;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
 
 public final class ExpressionFilter {
+
+    private static class ThrowingErrorListener extends BaseErrorListener {
+
+        @Override
+        public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e)
+                throws ParseCancellationException {
+            throw new ParseCancellationException("line " + line + ":" + charPositionInLine + " " + msg);
+        }
+    }
 
     /**
      * Create a DoorsTreeNodeFilter
@@ -41,18 +54,45 @@ public final class ExpressionFilter {
      * @return
      */
     public static Predicate<DoorsTreeNode> compileExpression(String filter, boolean caseSensitive, int patternFlags) {
-        final DoorsTreeNodeFilterLexer lexer = new DoorsTreeNodeFilterLexer(CharStreams.fromString(filter));
-        final DoorsTreeNodeFilterParser parser = new DoorsTreeNodeFilterParser(new CommonTokenStream(lexer));
-        final DoorsTreeNodeFilterListener listener = new DoorsTreeNodeFilterListener(caseSensitive, patternFlags);
+        ThrowingErrorListener errorListener = new ThrowingErrorListener();
 
+        final DoorsTreeNodeFilterLexer lexer = new DoorsTreeNodeFilterLexer(CharStreams.fromString(filter));
+        lexer.removeErrorListeners();
+        lexer.addErrorListener(errorListener);
+
+        final DoorsTreeNodeFilterParser parser = new DoorsTreeNodeFilterParser(new CommonTokenStream(lexer));
+        parser.removeErrorListeners();
+        parser.addErrorListener(errorListener);
+
+        final DoorsTreeNodeFilterListener listener = new DoorsTreeNodeFilterListener(caseSensitive, patternFlags);
         parser.addParseListener(listener);
-        parser.setErrorHandler(new BailErrorStrategy());
         parser.filterExpression();
         return listener.getFilter();
     }
-    
+
     public static Predicate<DoorsTreeNode> compileSimple(String filter, boolean caseSensitive) {
         return new SimpleFilter(filter, caseSensitive);
+    }
+
+    public static Predicate<DoorsTreeNode> recursePredicate(Predicate<DoorsTreeNode> originalPredicate) {
+        return originalPredicate.or(t -> {
+            boolean matched = false;
+            Stack<DoorsTreeNode> tbd = new Stack<>();
+            tbd.push(t);
+
+            while (!matched && !tbd.isEmpty()) {
+                DoorsTreeNode next = tbd.pop();
+                if (!next.isChildrenLoaded()) {
+                    continue;
+                }
+
+                matched = next.getChildren().stream()
+                        .peek(tbd::add)
+                        .anyMatch(originalPredicate);
+            }
+
+            return matched;
+        });
     }
 
     private static class DoorsTreeNodeFilterListener extends DoorsTreeNodeFilterBaseListener {

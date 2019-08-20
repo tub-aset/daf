@@ -63,6 +63,7 @@ class DatabasePanePreferences<T extends Serializable> extends ApplicationPrefere
     public static final ApplicationPreference<Double> MODULESNAPLIST_WIDTH = new DatabasePanePreferences<>("MODULELIST_WIDTH", Double.class, 150d);
     
     public static final ApplicationPreference<TreeMap<String, SnapshotList>> SNAPSHOT_LISTS = new DatabasePanePreferences<>("SNAPSHOT_LISTS", TreeMap.class, new TreeMap<String, SnapshotList>());
+    public static final ApplicationPreference<TreeMap<String, String>> SNAPSHOT_EXPRESSIONS = new DatabasePanePreferences<>("SNAPSHOT_EXPRESSIONS", TreeMap.class, new TreeMap<String, String>());
 
     public DatabasePanePreferences(String name, Class<? super T> valueType, T defaultValue) {
         super(name, valueType, defaultValue);

@@ -39,7 +39,6 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 import java.util.WeakHashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
@@ -58,24 +57,7 @@ public class FilteredDoorsTreeNode<T extends DoorsTreeNode> implements DoorsTree
     }
 
     static FilteredDoorsTreeNode<?> createFilteredTree(DoorsTreeNode node, Predicate<DoorsTreeNode> predicate, boolean recursing, WeakHashMap<DoorsTreeNode, FilteredDoorsTreeNode<?>> nodeMap) {
-        Predicate<DoorsTreeNode> fullPredicate = !recursing ? predicate : predicate.or(t -> {
-            boolean matched = false;
-            Stack<DoorsTreeNode> tbd = new Stack<>();
-            tbd.push(t);
-
-            while (!matched && !tbd.isEmpty()) {
-                DoorsTreeNode next = tbd.pop();
-                if (!next.isChildrenLoaded()) {
-                    continue;
-                }
-
-                matched = next.getChildren().stream()
-                        .peek(tbd::add)
-                        .anyMatch(predicate);
-            }
-
-            return matched;
-        });
+        Predicate<DoorsTreeNode> fullPredicate = !recursing ? predicate : ExpressionFilter.recursePredicate(predicate);
 
         if (node instanceof DoorsFolder) {
             return new FilteredDoorsFolder((DoorsFolder) node, fullPredicate, nodeMap);

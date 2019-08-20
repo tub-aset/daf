@@ -22,6 +22,7 @@ package de.jpwinkler.daf.gui.databases;
  * #L%
  */
 import de.jpwinkler.daf.db.DatabaseInterface.OpenFlag;
+import de.jpwinkler.daf.filter.ExpressionFilter;
 import de.jpwinkler.daf.gui.ApplicationPaneController;
 import de.jpwinkler.daf.gui.ApplicationPartController;
 import de.jpwinkler.daf.gui.ApplicationPartFactoryRegistry.ApplicationPart;
@@ -33,6 +34,7 @@ import de.jpwinkler.daf.gui.controls.CustomTextTableCell;
 import de.jpwinkler.daf.gui.controls.CustomTextTreeCell;
 import de.jpwinkler.daf.gui.controls.DoorsTreeItem;
 import de.jpwinkler.daf.gui.controls.EmptySelectionModel;
+import de.jpwinkler.daf.gui.controls.ExpressionGrammarDialog;
 import de.jpwinkler.daf.gui.controls.ExtensionPane;
 import de.jpwinkler.daf.gui.controls.ForwardingSelectionModel;
 import de.jpwinkler.daf.gui.controls.MultiLineTextInputDialog;
@@ -62,6 +64,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.WeakHashMap;
@@ -74,6 +77,7 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
@@ -93,6 +97,8 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Region;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.pf4j.PluginWrapper;
 
 public final class DatabasePaneController extends ApplicationPartController<DatabasePaneController> {
@@ -203,16 +209,31 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         setupColumnWidthStorage(moduleDescriptionColumn, DatabasePanePreferences.MODULEDESC_WIDTH);
         setupColumnWidthStorage(snapshotListsColumn, DatabasePanePreferences.MODULESNAPLIST_WIDTH);
 
-        DatabasePanePreferences.SNAPSHOT_LISTS.addOnChangedHandler(t -> this.populateSnapshotMenu(((Map<String, ?>) t).keySet(), createSnapshotsMenu.getItems(), this::createSnapshotFromListClicked));
+        /**
+         * SNAPSHOT LISTS
+         */
+        DatabasePanePreferences.SNAPSHOT_LISTS.addOnChangedHandler(t -> this.populateSnapshotMenu(((Map<String, ?>) t).keySet(), createSnapshotOfListMenu.getItems(), this::createSnapshotOfListClicked));
         DatabasePanePreferences.SNAPSHOT_LISTS.addOnChangedHandler(t -> this.populateSnapshotMenu(((Map<String, ?>) t).keySet(), deleteSnapshotListMenu.getItems(), this::deleteSnapshotListClicked));
         DatabasePanePreferences.SNAPSHOT_LISTS.addOnChangedHandler(t -> this.populateSnapshotMenu(((Map<String, ?>) t).keySet(), editSnapshotListMenu.getItems(), this::editSnapshotListClicked));
         DatabasePanePreferences.SNAPSHOT_LISTS.addOnChangedHandler(t -> this.populateSnapshotMenu(((Map<String, ?>) t).keySet(), addToSnapshotListMenuButton.getItems(), this::addToSnapshotListClicked));
 
         Map<String, ?> snapshotLists = DatabasePanePreferences.SNAPSHOT_LISTS.retrieve();
-        populateSnapshotMenu(snapshotLists.keySet(), createSnapshotsMenu.getItems(), this::createSnapshotFromListClicked);
+        populateSnapshotMenu(snapshotLists.keySet(), createSnapshotOfListMenu.getItems(), this::createSnapshotOfListClicked);
         populateSnapshotMenu(snapshotLists.keySet(), deleteSnapshotListMenu.getItems(), this::deleteSnapshotListClicked);
         populateSnapshotMenu(snapshotLists.keySet(), editSnapshotListMenu.getItems(), this::editSnapshotListClicked);
         populateSnapshotMenu(snapshotLists.keySet(), addToSnapshotListMenuButton.getItems(), this::addToSnapshotListClicked);
+
+        /**
+         * SNAPSHOT EXPRESSIONS
+         */
+        DatabasePanePreferences.SNAPSHOT_EXPRESSIONS.addOnChangedHandler(t -> this.populateSnapshotMenu(((Map<String, ?>) t).keySet(), createSnapshotOfExpressionMenu.getItems(), this::createSnapshotOfExpressionClicked));
+        DatabasePanePreferences.SNAPSHOT_EXPRESSIONS.addOnChangedHandler(t -> this.populateSnapshotMenu(((Map<String, ?>) t).keySet(), editSnapshotExpressionMenu.getItems(), this::editSnapshotExpressionClicked));
+        DatabasePanePreferences.SNAPSHOT_EXPRESSIONS.addOnChangedHandler(t -> this.populateSnapshotMenu(((Map<String, ?>) t).keySet(), deleteSnapshotExpressionMenu.getItems(), this::deleteSnapshotExpressionClicked));
+
+        Map<String, ?> snapshotExpressions = DatabasePanePreferences.SNAPSHOT_EXPRESSIONS.retrieve();
+        populateSnapshotMenu(snapshotExpressions.keySet(), createSnapshotOfExpressionMenu.getItems(), this::createSnapshotOfExpressionClicked);
+        populateSnapshotMenu(snapshotExpressions.keySet(), editSnapshotExpressionMenu.getItems(), this::editSnapshotExpressionClicked);
+        populateSnapshotMenu(snapshotExpressions.keySet(), deleteSnapshotExpressionMenu.getItems(), this::deleteSnapshotExpressionClicked);
     }
 
     private static String getSnapshotLists(DoorsTreeNode node) {
@@ -267,16 +288,20 @@ public final class DatabasePaneController extends ApplicationPartController<Data
     private TableColumn<Entry<String, String>, Entry<String, String>> attributeValueColumn;
 
     @FXML
-    private Menu createSnapshotsMenu;
-
+    private Menu createSnapshotOfListMenu;
     @FXML
     private Menu editSnapshotListMenu;
-
     @FXML
     private Menu deleteSnapshotListMenu;
-
     @FXML
     private MenuButton addToSnapshotListMenuButton;
+
+    @FXML
+    private Menu createSnapshotOfExpressionMenu;
+    @FXML
+    private Menu editSnapshotExpressionMenu;
+    @FXML
+    private Menu deleteSnapshotExpressionMenu;
 
     private final ExtensionPane<DatabasePaneExtension> sideExtensionPane = new ExtensionPane<>(
             () -> super.getExtensions(DatabasePaneExtension.class), e -> e.getSidePanes(), (e, n) -> e.getPaneName(n),
@@ -437,27 +462,6 @@ public final class DatabasePaneController extends ApplicationPartController<Data
         DatabasePanePreferences.SNAPSHOT_LISTS.store(snapshotLists);
     }
 
-    @FXML
-    public void createFullSnapshotClicked() {
-        this.createSnapshot(x -> true);
-    }
-
-    private void createSnapshotFromListClicked(String snapshotListName) {
-        SnapshotList sl = ((TreeMap<String, SnapshotList>) DatabasePanePreferences.SNAPSHOT_LISTS.retrieve()).get(snapshotListName);
-        this.createSnapshot(node -> node instanceof DoorsObject || (node != null && sl.includes(node.getFullNameSegments())));
-    }
-
-    private void createSnapshot(Predicate<DoorsTreeNode> include) {
-        super.createSnapshot(include, null).thenAccept(destinationPath -> {
-            if (destinationPath != null) {
-                Platform.runLater(() -> {
-                    this.open(destinationPath, OpenFlag.OPEN_ONLY);
-                });
-            }
-        });
-
-    }
-
     private void editSnapshotListClicked(String snapshotList) {
         TreeMap<String, SnapshotList> snapshotLists = DatabasePanePreferences.SNAPSHOT_LISTS.retrieve();
         SnapshotList sl = snapshotLists.get(snapshotList);
@@ -481,6 +485,89 @@ public final class DatabasePaneController extends ApplicationPartController<Data
 
         DatabasePanePreferences.SNAPSHOT_LISTS.store(snapshotLists);
         this.updateGui(DatabasePaneController.RefreshModulesView);
+    }
+
+    @FXML
+    public void addSnapshotExpressionClicked() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Add a snapshot expression");
+        dialog.setHeaderText("Please enter a name for your expression");
+
+        dialog.showAndWait().ifPresent(ln -> {
+            this.editSnapshotExpressionClicked(ln);
+        });
+    }
+
+    public void deleteSnapshotExpressionClicked(String snapshotExpression) {
+        TreeMap<String, String> snapshotExpressions = DatabasePanePreferences.SNAPSHOT_EXPRESSIONS.retrieve();
+        snapshotExpressions.remove(snapshotExpression);
+        DatabasePanePreferences.SNAPSHOT_EXPRESSIONS.store(snapshotExpressions);
+    }
+
+    private void editSnapshotExpressionClicked(String snapshotExpression) {
+        TreeMap<String, String> snapshotExpressions = DatabasePanePreferences.SNAPSHOT_EXPRESSIONS.retrieve();
+        String se = snapshotExpressions.get(snapshotExpression);
+
+        Optional<String> resultSE = Optional.empty();
+        String errorText;
+        do {
+            TextInputDialog editor = new TextInputDialog(resultSE.orElse(se));
+            editor.setTitle("Edit a snapshot expression");
+            editor.setHeaderText("Snapshot expression " + snapshotExpression);
+            editor.initOwner(this.databaseTreeView.getScene().getWindow());
+            resultSE = editor.showAndWait();
+            if (!resultSE.isPresent()) {
+                return;
+            }
+
+            try {
+                ExpressionFilter.compileExpression(resultSE.get(), true, 0);
+                errorText = null;
+            } catch (ParseCancellationException ex) {
+                errorText = ex.getMessage();
+                ButtonType helpButton = new ButtonType("Syntax help");
+
+                Alert alert = new Alert(Alert.AlertType.ERROR, errorText, ButtonType.OK, helpButton);
+                alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+                alert.setHeaderText("Parsing error");
+                if (alert.showAndWait().orElse(ButtonType.OK) == helpButton) {
+                    ExpressionGrammarDialog.showDialog(this.databaseTreeView.getScene().getWindow());
+                }
+            }
+        } while (errorText != null);
+
+        snapshotExpressions.put(snapshotExpression, resultSE.get());
+        DatabasePanePreferences.SNAPSHOT_EXPRESSIONS.store(snapshotExpressions);
+    }
+
+    @FXML
+    public void showExpressionSyntaxClicked() {
+        ExpressionGrammarDialog.showDialog(getNode().getScene().getWindow());
+    }
+
+    @FXML
+    public void createFullSnapshotClicked() {
+        this.createSnapshot(x -> true);
+    }
+
+    private void createSnapshotOfListClicked(String snapshotListName) {
+        SnapshotList sl = DatabasePanePreferences.SNAPSHOT_LISTS.retrieve().get(snapshotListName);
+        this.createSnapshot(node -> node instanceof DoorsObject || (node != null && sl.includes(node.getFullNameSegments())));
+    }
+
+    private void createSnapshotOfExpressionClicked(String snapshotExpressionName) {
+        String snapshotExpression = DatabasePanePreferences.SNAPSHOT_EXPRESSIONS.retrieve().get(snapshotExpressionName);
+        this.createSnapshot(ExpressionFilter.recursePredicate(ExpressionFilter.compileExpression(snapshotExpression, true, 0)));
+    }
+
+    private void createSnapshot(Predicate<DoorsTreeNode> include) {
+        super.createSnapshot(include, null).thenAccept(destinationPath -> {
+            if (destinationPath != null) {
+                Platform.runLater(() -> {
+                    this.open(destinationPath, OpenFlag.OPEN_ONLY);
+                });
+            }
+        });
 
     }
 

@@ -70,11 +70,17 @@
     <Menu mnemonicParsing="false" text="Snapshot">
         <items>
             <MenuItem mnemonicParsing="false" onAction="#createFullSnapshotClicked" text="Of complete database" />
-            <Menu fx:id="createSnapshotsMenu" mnemonicParsing="false" text="Of snapshot list" />
+            <Menu fx:id="createSnapshotOfListMenu" mnemonicParsing="false" text="Of snapshot list" />
+         <Menu fx:id="createSnapshotOfExpressionMenu" mnemonicParsing="false" text="Of snapshot expression" />
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" onAction="#addSnapshotListClicked" text="Add snapshot list" />
             <Menu fx:id="deleteSnapshotListMenu" mnemonicParsing="false" text="Delete snapshot list" />
             <Menu fx:id="editSnapshotListMenu" mnemonicParsing="false" text="Edit snapshot list" />
+         <SeparatorMenuItem mnemonicParsing="false" />
+         <MenuItem mnemonicParsing="false" onAction="#addSnapshotExpressionClicked" text="Add snapshot expression" />
+         <Menu fx:id="deleteSnapshotExpressionMenu" mnemonicParsing="false" text="Delete snapshot expression" />
+         <Menu fx:id="editSnapshotExpressionMenu" mnemonicParsing="false" text="Edit snapshot expression" />
+         <MenuItem mnemonicParsing="false" onAction="#showExpressionSyntaxClicked" text="Show expression syntax" />
         </items>
     </Menu>
 </Menu>
