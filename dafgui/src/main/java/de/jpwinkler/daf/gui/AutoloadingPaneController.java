@@ -62,7 +62,9 @@ public abstract class AutoloadingPaneController<THIS extends AutoloadingPaneCont
 
     @SuppressWarnings("unchecked")
     public Optional<DialogResult> showDialog(Window owner, String title, ButtonType... buttonTypes) {
-        return asDialog(owner, title, buttonTypes).showAndWait().map(bt -> new DialogResult(bt, (THIS) this));
+        Optional<ButtonType> result = asDialog(owner, title, buttonTypes).showAndWait();
+        this.onClose(result);
+        return result.map(bt -> new DialogResult(bt, (THIS) this));
     }
 
     public Dialog<ButtonType> asDialog(Window owner, String title, ButtonType... buttonTypes) {
@@ -78,10 +80,13 @@ public abstract class AutoloadingPaneController<THIS extends AutoloadingPaneCont
         dialog.setResultConverter(bt -> bt);
         return dialog;
     }
-    
+
     @SuppressWarnings("unchecked")
     public final DialogResult resultOf(ButtonType buttonType) {
         return new DialogResult(buttonType, (THIS) this);
+    }
+
+    protected void onClose(Optional<ButtonType> closeButton) {
     }
 
     public final class DialogResult {

@@ -24,6 +24,7 @@ package de.jpwinkler.daf.gui.modules;
 import de.jpwinkler.daf.gui.AutoloadingPaneController;
 import de.jpwinkler.daf.gui.modules.ViewDefinition.ColumnDefinition;
 import java.util.List;
+import java.util.Optional;
 import java.util.TreeSet;
 import java.util.stream.Stream;
 import javafx.collections.FXCollections;
@@ -31,6 +32,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ModifiableObservableListBase;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
@@ -144,6 +146,16 @@ public final class EditViewsPaneController extends AutoloadingPaneController<Edi
         });
     }
 
+    @Override
+    protected void onClose(Optional<ButtonType> closeButton) {
+        closeButton
+                .filter(bt -> bt == ButtonType.OK)
+                .ifPresent(bt -> {
+                    this.setColEnabled(null);
+                    this.setViewEnabled(null);
+                });
+    }
+
     private void setViewEnabled(ViewDefinition vd) {
         if (this.currentView != null) {
             currentView.setName(viewTitleTextField.getText());
@@ -213,7 +225,7 @@ public final class EditViewsPaneController extends AutoloadingPaneController<Edi
             // set title last -- dirtyColumnTitle == true && colAttributeComboBox.select may overwrite it
             colTitleTextField.setText(cd.getTitle());
             colTitleTextField.setDisable(false);
-            
+
             this.dirtyColumnTitle = !cd.getTitle().trim().isEmpty() && !knownAttributes.contains(cd.getTitle());
 
         } else {
