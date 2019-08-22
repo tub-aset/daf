@@ -21,7 +21,6 @@ package de.jpwinkler.daf.gui;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import java.util.Collections;
 import java.util.List;
 import javafx.scene.control.Menu;
@@ -32,12 +31,12 @@ import org.pf4j.ExtensionPoint;
  * @author fwiesweg
  */
 public interface ApplicationPartExtension extends ExtensionPoint {
-    
+
     default void initialise(ApplicationPartInterface applicationPart) {
     }
-    
-    default List<Menu> getMenus() {
+
+    default List<? extends Menu> getMenus() {
         return Collections.emptyList();
     }
-    
+
 }

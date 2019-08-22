@@ -36,7 +36,7 @@ public interface ApplicationPaneExtension extends ExtensionPoint {
         return Collections.emptyList();
     }
     
-    default List<Menu> getApplicationMenus() {
+    default List<? extends Menu> getApplicationMenus() {
         return Collections.emptyList();
     }
 }

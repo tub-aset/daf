@@ -38,6 +38,7 @@ import java.util.Arrays;
 import java.util.List;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import org.pf4j.Extension;
 import org.pf4j.Plugin;
@@ -71,15 +72,21 @@ public class PluginMain extends Plugin {
     public static class TestApplicationPartExtension implements DatabasePaneExtension {
 
         private final List<Menu> menus = List_of(new Menu(PluginPreferences.MENU_NAME.retrieve()));
-        private final List<Node> sidePanes = List_of(new Label("Test Extension Side Panel"));
-        private final List<Node> bottomPanes = List_of(new Label("Test Extension Bottom Panel"));
+        private final List<ListView<String>> sidePanes = List_of(new ListView<>());
+        private final List<ListView<String>> bottomPanes = List_of(new ListView<>());
         private ApplicationPartInterface applicationPartInterface;
 
         @Override
         public void initialise(ApplicationPartInterface applicationPartInterface) {
             this.applicationPartInterface = applicationPartInterface;
-            this.sidePanes.forEach(sp -> sp.setUserData("Test Plugin SP"));
-            this.bottomPanes.forEach(sp -> sp.setUserData("Test Plugin BP"));
+            this.sidePanes.forEach(sp -> {
+                sp.setUserData("Test Plugin SP");
+                sp.getItems().add("Test Extension Side Panel");
+            });
+            this.bottomPanes.forEach(sp -> {
+                sp.setUserData("Test Plugin BP");
+                sp.getItems().add("Test Extension Bottom Panel");
+            });
         }
 
         @Override
@@ -88,12 +95,12 @@ public class PluginMain extends Plugin {
         }
 
         @Override
-        public List<Node> getBottomPanes() {
+        public List<? extends Node> getBottomPanes() {
             return bottomPanes;
         }
 
         @Override
-        public List<Node> getSidePanes() {
+        public List<? extends Node> getSidePanes() {
             return sidePanes;
         }
 
@@ -118,9 +125,9 @@ public class PluginMain extends Plugin {
             if (applicationPartInterface.getCurrentFolderSelectionModel().getSelectedItem() != null) {
                 System.out.println(applicationPartInterface.getCurrentFolderSelectionModel().getSelectedItem().getName());
             }
-            
+
             applicationPartInterface.getCurrentObjectSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
-                if(newValue != null) {
+                if (newValue != null) {
                     System.out.println(newValue.getText());
                 } else {
                     System.out.println("no selection");

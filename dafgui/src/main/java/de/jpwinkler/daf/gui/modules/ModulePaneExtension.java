@@ -33,15 +33,15 @@ import javafx.scene.Node;
  */
 public interface ModulePaneExtension extends ApplicationPartExtension {
 
-    default List<ViewDefinition> getAdditionalViews() {
+    default List<? extends ViewDefinition> getAdditionalViews() {
         return Collections.emptyList();
     }
     
-    default List<Node> getBottomPanes() {
+    default List<? extends Node> getBottomPanes() {
         return Collections.emptyList();
     }
 
-    default List<Node> getSidePanes() {
+    default List<? extends Node> getSidePanes() {
         return Collections.emptyList();
     }
     

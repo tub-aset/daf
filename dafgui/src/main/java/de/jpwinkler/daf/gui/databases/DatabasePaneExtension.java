@@ -32,11 +32,11 @@ import javafx.scene.Node;
  */
 public interface DatabasePaneExtension extends ApplicationPartExtension {
 
-    default List<Node> getBottomPanes() {
+    default List<? extends Node> getBottomPanes() {
         return Collections.emptyList();
     }
 
-    default List<Node> getSidePanes() {
+    default List<? extends Node> getSidePanes() {
         return Collections.emptyList();
     }
 

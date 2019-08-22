@@ -34,11 +34,13 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableBooleanValue;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.pf4j.PluginWrapper;
 
@@ -48,7 +50,7 @@ import org.pf4j.PluginWrapper;
  */
 public class ExtensionPane<T extends ApplicationPartExtension> extends AutoloadingPaneController<ExtensionPane> {
 
-    public ExtensionPane(Supplier<List<T>> extensions, Function<T, List<Node>> paneGetter, BiFunction<T, Node, String> paneNameGetter, String defaultSelection, Consumer<String> onSelected) {
+    public ExtensionPane(Supplier<List<T>> extensions, Function<T, List<? extends Node>> paneGetter, BiFunction<T, Node, String> paneNameGetter, String defaultSelection, Consumer<String> onSelected) {
         extensionChoiceBox.getItems().add(new PaneChoice(null, null, "Hide pane", null));
 
         extensionChoiceBox.getItems().stream()
@@ -56,9 +58,19 @@ public class ExtensionPane<T extends ApplicationPartExtension> extends Autoloadi
                 .findAny().ifPresent(extensionChoiceBox.getSelectionModel()::select);
 
         this.selectionChangeListener = (obs, oldValue, newValue) -> {
-            this.extensionPane.setContent(newValue == null ? null : newValue.node);
-            updateVisibleProperty();
-            String newPaneId = newValue == null ? null : newValue.extensionPaneId;
+            if (this.paneVBox.getChildren().size() == 2) {
+                this.paneVBox.getChildren().remove(1);
+            }
+
+            if (this.paneVBox.getChildren().size() > 1) {
+                throw new IllegalStateException();
+            } else if (newValue != null && newValue.node != null) {
+                this.paneVBox.getChildren().add(newValue.node);
+                VBox.setVgrow(newValue.node, Priority.ALWAYS);
+                VBox.setMargin(newValue.node, new Insets(5));
+            }
+
+            String newPaneId = updateVisibleProperty();
             if (defaultSelectionAllowUnset.isTrue() || newPaneId != null) {
                 onSelected.accept(newPaneId);
             }
@@ -75,7 +87,7 @@ public class ExtensionPane<T extends ApplicationPartExtension> extends Autoloadi
     private final MutableBoolean defaultSelectionAllowUnset = new MutableBoolean(true);
 
     private final Supplier<List<T>> extensions;
-    private final Function<T, List<Node>> paneGetter;
+    private final Function<T, List<? extends Node>> paneGetter;
     private final BiFunction<T, Node, String> paneNameGetter;
 
     private final SimpleBooleanProperty visiblePanesProperty = new SimpleBooleanProperty(false);
@@ -84,9 +96,11 @@ public class ExtensionPane<T extends ApplicationPartExtension> extends Autoloadi
         return visiblePanesProperty;
     }
 
-    private void updateVisibleProperty() {
-        visiblePanesProperty.set(extensionChoiceBox.getItems().size() > 1
-                && !extensionChoiceBox.getSelectionModel().isEmpty() && extensionChoiceBox.getSelectionModel().getSelectedItem().node != null);
+    private String updateVisibleProperty() {
+        PaneChoice newValue = extensionChoiceBox.getSelectionModel().getSelectedItem();
+
+        visiblePanesProperty.set(extensionChoiceBox.getItems().size() > 1 && newValue != null && newValue.node != null);
+        return (newValue == null || newValue.node == null) ? null : newValue.extensionPaneId;
     }
 
     private final ChangeListener<PaneChoice> selectionChangeListener;
@@ -95,10 +109,10 @@ public class ExtensionPane<T extends ApplicationPartExtension> extends Autoloadi
         extensions.get().stream()
                 .filter(e -> e.getClass().getClassLoader() == plugin.getPluginClassLoader())
                 .forEach(e -> {
-                    List<Node> extensionNodes = paneGetter.apply(e);
+                    List<? extends Node> extensionNodes = paneGetter.apply(e);
                     for (int i = 0; i < extensionNodes.size(); i++) {
                         PaneChoice pc = new PaneChoice(e.getClass().getCanonicalName() + "__" + i,
-                                extensionNodes.get(i), paneNameGetter.apply(e, extensionNodes.get(i)), plugin);
+                                extensionNodes.get(i), paneNameGetter.apply(e, (Node) extensionNodes.get(i)), plugin);
                         extensionChoiceBox.getItems().add(pc);
                     }
                 });
@@ -175,6 +189,6 @@ public class ExtensionPane<T extends ApplicationPartExtension> extends Autoloadi
     private ChoiceBox<PaneChoice> extensionChoiceBox;
 
     @FXML
-    private ScrollPane extensionPane;
+    private VBox paneVBox;
 
 }
